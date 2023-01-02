@@ -1,0 +1,15 @@
+use aoc::year2015::day02::*;
+
+const EXAMPLE: &str = "2x3x4\n1x1x10";
+
+#[test]
+fn part1_example() {
+    let input = parse(EXAMPLE);
+    assert_eq!(part1(&input), 101);
+}
+
+#[test]
+fn part2_example() {
+    let input = parse(EXAMPLE);
+    assert_eq!(part2(&input), 48);
+}
