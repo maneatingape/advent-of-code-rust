@@ -1,4 +1,4 @@
-pub fn to_i32(string: &&str) -> i32 {
+pub fn to_i32(string: &str) -> i32 {
     string.parse().unwrap()
 }
 
