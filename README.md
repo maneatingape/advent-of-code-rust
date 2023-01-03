@@ -1,6 +1,6 @@
 # Advent of Code
 
-Entries for the annual [Advent of Code](https://adventofcode.com/) challenge, written in Rust.
+\[WIP\] Entries for the annual [Advent of Code](https://adventofcode.com/) challenge, written in Rust.
 
 ## Years
 
