@@ -39,5 +39,6 @@ pub fn solutions() -> Vec<Solution> {
 
         solution!(year2022, day01),
         solution!(year2022, day02),
+        solution!(year2022, day03),
     ]
 }
