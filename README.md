@@ -2,6 +2,8 @@
 
 \[WIP\] Entries for the annual [Advent of Code](https://adventofcode.com/) challenge, written in Rust.
 
+[![Rust CI](https://github.com/maneatingape/advent-of-code-rust/actions/workflows/rust.yml/badge.svg)](https://github.com/maneatingape/advent-of-code-rust/actions)
+
 ## Years
 
 * [2022](#2022)
