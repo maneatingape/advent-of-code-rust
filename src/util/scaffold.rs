@@ -3,20 +3,27 @@ use crate::*;
 pub struct Solution {
     pub year: u32,
     pub day: u8,
-    pub raw: &'static str,
+    pub input: &'static str,
     pub wrapper: fn(&str) -> (String, String),
 }
 
 macro_rules! solution {
-    ($year:literal, $day:literal, $file:literal, $year_token:tt, $day_token:tt) => {
+    ($year:tt, $day:tt) => {
         Solution {
-            year: $year,
-            day: $day,
-            raw: include_str!($file),
+            year: {
+                stringify!($year)[4..8].parse().unwrap()
+            },
+            day: {
+                stringify!($day)[3..5].parse().unwrap()
+            },
+            input: {
+                include_str!(concat!["../../input/", stringify!($year), "/", stringify!($day), ".txt"])
+            },
             wrapper: |raw: &str| {
-                let input = $year_token::$day_token::parse(raw);
-                let part1 = $year_token::$day_token::part1(&input).to_string();
-                let part2 = $year_token::$day_token::part2(&input).to_string();
+                use $year::$day::*;
+                let input = parse(raw);
+                let part1 = part1(&input).to_string();
+                let part2 = part2(&input).to_string();
                 (part1, part2)
             },
         }
@@ -25,12 +32,12 @@ macro_rules! solution {
 
 pub fn solutions() -> Vec<Solution> {
     vec![
-        solution!(2015,  1, "../../input/year2015/day01.txt", year2015, day01),
-        solution!(2015,  2, "../../input/year2015/day02.txt", year2015, day02),
-        solution!(2015,  3, "../../input/year2015/day03.txt", year2015, day03),
-        //solution!(2015,  4, "../../input/year2015/day04.txt", year2015, day04), // Very slow
+        solution!(year2015, day01),
+        solution!(year2015, day02),
+        solution!(year2015, day03),
+        //solution!(year2015, day04), // Very slow
 
-        solution!(2022,  1, "../../input/year2022/day01.txt", year2022, day01),
-        solution!(2022,  2, "../../input/year2022/day02.txt", year2022, day02),
+        solution!(year2022, day01),
+        solution!(year2022, day02),
     ]
 }
