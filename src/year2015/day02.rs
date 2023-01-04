@@ -6,7 +6,7 @@ pub fn parse(input: &str) -> Vec<Gift> {
     fn helper(line: &str) -> Gift {
         let mut tokens = to_u32_3(line);
         tokens.sort_unstable();
-        tokens 
+        tokens
     }
     input.lines().map(helper).collect()
 }

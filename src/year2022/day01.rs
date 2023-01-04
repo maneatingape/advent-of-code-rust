@@ -1,6 +1,6 @@
 use crate::util::parse::to_u32;
 
-pub fn parse(input: &str) -> Vec<u32> {    
+pub fn parse(input: &str) -> Vec<u32> {
     let mut elves: Vec<u32> = input
         .split("\n\n")
         .map(|s| s.lines().map(to_u32).sum())

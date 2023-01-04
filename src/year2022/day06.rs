@@ -1,4 +1,4 @@
-pub fn parse(input: &str) -> Vec<usize> {    
+pub fn parse(input: &str) -> Vec<usize> {
     input.trim().chars().map(|c| c as usize).collect()
 }
 
@@ -10,7 +10,7 @@ pub fn part2(input: &[usize]) -> usize {
     find(input, 14)
 }
 
-fn find(input: &[usize], marker: usize) -> usize {    
+fn find(input: &[usize], marker: usize) -> usize {
     let mut letters = [0; 128];
     let mut different = 0;
 

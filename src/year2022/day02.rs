@@ -7,7 +7,7 @@ pub fn part1(input: &[&str]) -> usize {
 }
 
 pub fn part2(input: &[&str]) -> usize {
-    play(input, &["", "B X", "C X", "A X", "A Y", "B Y", "C Y", "C Z", "A Z", "B Z"])    
+    play(input, &["", "B X", "C X", "A X", "A Y", "B Y", "C Y", "C Z", "A Z", "B Z"])
 }
 
 fn play(input: &[&str], order: &[&str]) -> usize {

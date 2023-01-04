@@ -38,5 +38,5 @@ fn deliver(input: &[Point], predicate: fn(usize) -> bool) -> usize {
         }
     }
 
-    set.len()    
+    set.len()
 }

@@ -15,7 +15,7 @@ pub fn part1(input: &[i32]) -> i32 {
 
 pub fn part2(input: &[i32]) -> usize {
     let mut floor = 0;
-    
+
     for (i, x) in input.iter().enumerate() {
         floor += x;
         if floor < 0 { return i + 1 }

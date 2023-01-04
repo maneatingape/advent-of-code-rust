@@ -5,11 +5,11 @@ pub fn hash(message: &str) -> (u32, u32, u32, u32) {
     let mut d0: u32 = 0x10325476;
 
     let mut chunk: [u8; 64] = [0; 64];
-    
+
     let raw = message.as_bytes();
     let len = raw.len();
     chunk[..len].copy_from_slice(&raw[..len]);
-    
+
     chunk[len] = 0x80;
     let qux = (len * 8).to_le_bytes();
     chunk[56..64].copy_from_slice(&qux[..8]);
@@ -18,7 +18,7 @@ pub fn hash(message: &str) -> (u32, u32, u32, u32) {
     for i in 0..16 {
         let slice = &chunk[i*4..(i*4+4)];
         m[i] = u32::from_le_bytes(slice.try_into().unwrap());
-    }    
+    }
 
     let mut a = a0;
     let mut b = b0;

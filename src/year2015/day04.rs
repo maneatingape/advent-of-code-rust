@@ -17,7 +17,7 @@ fn find(input: &str, mask: u32) -> u32 {
     let mut index = 0;
     let mut s = String::with_capacity(32);
     let mut a = 0x12345678;
-    
+
     while (a & mask) != 0 {
         index += 1;
         s.clear();

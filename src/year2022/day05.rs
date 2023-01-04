@@ -9,7 +9,7 @@ pub fn parse(input: &str) -> Input {
     let width = (lines[0].len() + 1) / 4;
     let height = lines.iter().position(|s| s.is_empty()).unwrap();
 
-    let mut stack: Stack = (0..width).map(|_| Vec::new()).collect();    
+    let mut stack: Stack = (0..width).map(|_| Vec::new()).collect();
     for row in lines.iter().take(height - 1).rev() {
         for (i, c) in row.chars().skip(1).step_by(4).enumerate() {
             if c != ' ' {
@@ -48,6 +48,6 @@ fn play(input: &Input, reverse: bool) -> String {
             stack[*to].extend(crates.iter());
         }
     }
-    
+
     stack.iter().map(|v| v.last().unwrap()).collect()
 }
