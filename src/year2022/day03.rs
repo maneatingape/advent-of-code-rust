@@ -12,10 +12,7 @@ pub fn part1(input: &[&str]) -> u32 {
 
 pub fn part2(input: &[&str]) -> u32 {
     fn helper(rucksacks: &[&str]) -> u32 {
-        match rucksacks {
-            [a, b, c] => priority(mask(a) & mask(b) & mask(c)),
-            _ => unreachable!()
-        }
+        priority(mask(rucksacks[0]) & mask(rucksacks[1]) & mask(rucksacks[2]))
     }
     input.chunks_exact(3).map(helper).sum()
 }
