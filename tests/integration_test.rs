@@ -14,4 +14,5 @@ mod year2022 {
     mod day06_test;
     mod day07_test;
     mod day08_test;
+    mod day09_test;
 }

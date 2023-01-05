@@ -1,6 +1,6 @@
 use std::ops::{Add, AddAssign};
 
-#[derive(Copy, Clone, Eq, PartialEq, Hash)]
+#[derive(Copy, Clone, Debug, Eq, Hash, PartialEq)]
 pub struct Point(pub i32, pub i32);
 
 pub const UP: Point = Point(0, -1);
