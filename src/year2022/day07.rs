@@ -6,7 +6,7 @@ pub fn parse(input: &str) -> Vec<u32> {
     let mut sizes: Vec<u32> = vec![];
 
     for line in input.lines() {
-        let tokens: Vec<&str> = line.split(" ").collect();
+        let tokens: Vec<&str> = line.split(' ').collect();
         match tokens[..] {
             ["$", "cd", ".."] => {
                 sizes.push(total);
