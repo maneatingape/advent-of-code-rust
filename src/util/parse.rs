@@ -1,3 +1,7 @@
+pub fn to_i32(string: &str) -> i32 {
+    string.parse().unwrap()
+}
+
 pub fn to_u32(string: &str) -> u32 {
     string.parse().unwrap()
 }
