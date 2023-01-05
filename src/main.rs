@@ -3,7 +3,7 @@ use aoc::util::scaffold::*;
 fn main() {
     solutions()
         .iter()
-        .filter(|s| s.year == 2022)
+        .filter(|s| s.year == 2022 && s.day == 8)
         .for_each(run);
 }
 
