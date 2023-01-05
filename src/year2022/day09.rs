@@ -31,14 +31,14 @@ pub fn part2(input: &[Point]) -> usize {
 }
 
 fn simulate(input: &[Point], size: usize) -> usize {
-    let mut rope: Vec<Point> = (0..size).map(|_| Point(0, 0)).collect();
+    let mut rope: Vec<Point> = (0..size).map(|_| ORIGIN).collect();
     let mut tail: HashSet<Point> = HashSet::new();
 
     for step in input {
         rope[0] += *step;
         for i in 1..size {
-            if apart(rope[i - 1], rope[i]) {
-                let next = delta(rope[i - 1], rope[i]);
+            if apart(&rope[i - 1], &rope[i]) {
+                let next = delta(&rope[i - 1], &rope[i]);
                 rope[i] += next;
             }
         }
@@ -48,10 +48,10 @@ fn simulate(input: &[Point], size: usize) -> usize {
     tail.len()
 }
 
-fn apart(a: Point, b: Point) -> bool {
+fn apart(a: &Point, b: &Point) -> bool {
     (a.0 - b.0).abs() > 1 || (a.1 - b.1).abs() > 1
 }
 
-fn delta(a: Point, b: Point) -> Point {
+fn delta(a: &Point, b: &Point) -> Point {
     Point((a.0 - b.0).signum(), (a.1 - b.1).signum())
 }
