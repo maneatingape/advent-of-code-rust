@@ -1,4 +1,5 @@
 pub mod util {
+    pub mod macros;
     pub mod md5;
     pub mod parse;
     pub mod point;
