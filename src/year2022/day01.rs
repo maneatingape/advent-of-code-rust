@@ -1,9 +1,9 @@
-use crate::util::parse::to_u32;
+use crate::util::parse::to;
 
 pub fn parse(input: &str) -> Vec<u32> {
     let mut elves: Vec<u32> = input
         .split("\n\n")
-        .map(|s| s.lines().map(to_u32).sum())
+        .map(|s| s.lines().map(to::<u32>).sum())
         .collect();
     elves.sort_unstable();
     elves

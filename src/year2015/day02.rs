@@ -1,10 +1,10 @@
-use crate::util::parse::to_u32_3;
+use crate::util::parse::to_array3;
 
 type Gift = [u32; 3];
 
 pub fn parse(input: &str) -> Vec<Gift> {
     fn helper(line: &str) -> Gift {
-        let mut tokens = to_u32_3(line);
+        let mut tokens: Gift = to_array3(line);
         tokens.sort_unstable();
         tokens
     }

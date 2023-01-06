@@ -8,7 +8,7 @@ pub fn parse(input: &str) -> Vec<Point> {
             'v' => DOWN,
             '<' => LEFT,
             '>' => RIGHT,
-            _ => panic!("Unexpected input")
+            _ => unreachable!()
         }
     }
     input.trim().chars().map(helper).collect()

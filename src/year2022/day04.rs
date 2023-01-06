@@ -1,9 +1,9 @@
-use crate::util::parse::to_u32_4;
+use crate::util::parse::to_array4;
 
 type Pairs = [u32; 4];
 
 pub fn parse(input: &str) -> Vec<Pairs> {
-    input.lines().map(to_u32_4).collect()
+    input.lines().map(to_array4::<u32>).collect()
 }
 
 pub fn part1(input: &[Pairs]) -> usize {

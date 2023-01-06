@@ -1,4 +1,4 @@
-use crate::util::parse::to_u32_3;
+use crate::util::parse::to_array3;
 
 type Input = (Stack, Vec<Move>);
 type Stack = Vec<Vec<char>>;
@@ -19,8 +19,8 @@ pub fn parse(input: &str) -> Input {
     }
 
     fn helper(line: &&str) -> Move {
-        let [amount, from, to] = to_u32_3(line);
-        [amount as usize, (from - 1) as usize, (to - 1) as usize]
+        let [amount, from, to]: Move = to_array3(line);
+        [amount, from - 1, to - 1]
     }
     let moves: Vec<Move> = lines.iter().skip(height + 1).map(helper).collect();
 
