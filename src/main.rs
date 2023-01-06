@@ -3,7 +3,7 @@ use aoc::*;
 fn main() {
     solutions()
         .iter()
-        .filter(|s| s.year == 2022 && s.day == 10)
+        .filter(|s| s.year == 2022 && s.day == 11)
         .for_each(run);
 }
 
@@ -14,6 +14,7 @@ fn run(solution: &Solution) {
     println!("    Part 1: {answer1}");
     println!("    Part 2: {answer2}");
 }
+
 pub struct Solution {
     pub year: u32,
     pub day: u8,
@@ -61,5 +62,6 @@ pub fn solutions() -> Vec<Solution> {
         solution!(year2022, day08),
         solution!(year2022, day09),
         solution!(year2022, day10),
+        solution!(year2022, day11),
     ]
 }
