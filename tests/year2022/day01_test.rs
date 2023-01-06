@@ -17,13 +17,13 @@ const EXAMPLE: &str =
 10000";
 
 #[test]
-fn part1_example() {
+fn part1_test() {
     let input = parse(EXAMPLE);
     assert_eq!(part1(&input), 24000);
 }
 
 #[test]
-fn part2_example() {
+fn part2_test() {
     let input = parse(EXAMPLE);
     assert_eq!(part2(&input), 45000);
 }

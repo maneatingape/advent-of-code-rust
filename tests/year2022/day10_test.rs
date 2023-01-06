@@ -17,13 +17,13 @@ addx -6 addx 1 noop addx 2 addx 1 noop addx -10 noop noop addx 20 addx 1
 addx 2 addx 2 addx -6 addx -11 noop noop noop";
 
 #[test]
-fn part1_example() {
+fn part1_test() {
     let input = parse(EXAMPLE);
     assert_eq!(part1(&input), 13140);
 }
 
 #[test]
-fn part2_example() {
+fn part2_test() {
     let input = parse(EXAMPLE);
     let expected = "
 ##..##..##..##..##..##..##..##..##..##..

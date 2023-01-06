@@ -8,13 +8,13 @@ const EXAMPLE: &str =
 35390";
 
 #[test]
-fn part1_example() {
+fn part1_test() {
     let input = parse(EXAMPLE);
     assert_eq!(part1(&input), 21);
 }
 
 #[test]
-fn part2_example() {
+fn part2_test() {
     let input = parse(EXAMPLE);
     assert_eq!(part2(&input), 8);
 }
