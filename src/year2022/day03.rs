@@ -19,7 +19,7 @@ pub fn part2(input: &[&str]) -> u32 {
 }
 
 fn mask(s: &str) -> u128 {
-    s.chars().fold(0, |acc, c| acc | 1 << (c as u8))
+    s.as_bytes().iter().fold(0, |acc, b| acc | 1 << b)
 }
 
 fn priority(mask: u128) -> u32 {

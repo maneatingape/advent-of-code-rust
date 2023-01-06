@@ -1,5 +1,5 @@
 pub fn parse(input: &str) -> Vec<usize> {
-    input.trim().chars().map(|c| c as usize).collect()
+    input.as_bytes().iter().map(|&b| b as usize).collect()
 }
 
 pub fn part1(input: &[usize]) -> usize {

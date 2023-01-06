@@ -1,12 +1,12 @@
 pub fn parse(input: &str) -> Vec<i32> {
-    fn helper(c:char) -> i32 {
-        match c {
-            '(' => 1,
-            ')' => -1,
-            _ => unreachable!()
+    fn helper(b: &u8) -> i32 {
+        match b {
+            b'(' => 1,
+            b')' => -1,
+            _ => 0
         }
     }
-    input.trim().chars().map(helper).collect()
+    input.as_bytes().iter().map(helper).collect()
 }
 
 pub fn part1(input: &[i32]) -> i32 {

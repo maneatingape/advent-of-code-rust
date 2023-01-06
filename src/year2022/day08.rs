@@ -3,8 +3,9 @@ use crate::util::collection::VecOps;
 type Input = (usize, Vec<usize>);
 
 pub fn parse(input: &str) -> Input {
-    let width = input.chars().position(|c| c.is_ascii_whitespace()).unwrap();
-    let digits: Vec<usize> = input.chars().filter(|c| c.is_ascii_digit()).map(|c| (c as usize) - 47).collect();
+    let bytes = input.as_bytes();
+    let width = bytes.iter().position(|b| b.is_ascii_whitespace()).unwrap();
+    let digits: Vec<usize> = bytes.iter().filter(|b| b.is_ascii_digit()).map(|b| (b - 47) as usize).collect();
     (width, digits)
 }
 
