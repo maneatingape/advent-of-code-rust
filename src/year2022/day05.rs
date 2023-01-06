@@ -1,3 +1,4 @@
+use crate::util::collection::VecOps;
 use crate::util::parse::to_array3;
 
 type Input = (Stack, Vec<Move>);
@@ -9,7 +10,7 @@ pub fn parse(input: &str) -> Input {
     let width = (lines[0].len() + 1) / 4;
     let height = lines.iter().position(|s| s.is_empty()).unwrap();
 
-    let mut stack: Stack = (0..width).map(|_| Vec::new()).collect();
+    let mut stack: Stack = Vec::tabulate(width, |_| Vec::new());
     for row in lines.iter().take(height - 1).rev() {
         for (i, c) in row.chars().skip(1).step_by(4).enumerate() {
             if c != ' ' {

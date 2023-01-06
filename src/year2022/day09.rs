@@ -1,4 +1,5 @@
 use std::collections::HashSet;
+use crate::util::collection::VecOps;
 use crate::util::point::*;
 
 pub fn parse(input: &str) -> Vec<Point> {
@@ -31,7 +32,7 @@ pub fn part2(input: &[Point]) -> usize {
 }
 
 fn simulate(input: &[Point], size: usize) -> usize {
-    let mut rope: Vec<Point> = (0..size).map(|_| ORIGIN).collect();
+    let mut rope: Vec<Point> = Vec::tabulate(size, |_| ORIGIN);
     let mut tail: HashSet<Point> = HashSet::new();
 
     for step in input {

@@ -1,3 +1,5 @@
+use crate::util::collection::VecOps;
+
 type Input = (usize, Vec<usize>);
 
 pub fn parse(input: &str) -> Input {
@@ -8,7 +10,7 @@ pub fn parse(input: &str) -> Input {
 
 pub fn part1(input: &Input) -> usize {
     let (width, digits) = input;
-    let mut visible: Vec<bool> = digits.iter().map(|_| false).collect();
+    let mut visible: Vec<bool> = Vec::tabulate(digits.len(), |_| false);
 
     for i in 0..*width {
         let mut left_max = 0;
@@ -48,7 +50,7 @@ pub fn part1(input: &Input) -> usize {
 
 pub fn part2(input: &Input) -> usize {
     let (width, digits) = input;
-    let mut scenic: Vec<usize> = digits.iter().map(|_| 1).collect();
+    let mut scenic: Vec<usize> = Vec::tabulate(digits.len(), |_| 1);
 
     for i in 1..(*width - 1) {
         let mut left_max = [0; 11];
