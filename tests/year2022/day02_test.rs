@@ -1,6 +1,9 @@
 use aoc::year2022::day02::*;
 
-const EXAMPLE: &str = "A Y\nB X\nC Z";
+const EXAMPLE: &str =
+"A Y
+B X
+C Z";
 
 #[test]
 fn part1_example() {

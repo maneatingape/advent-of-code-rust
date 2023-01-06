@@ -1,12 +1,12 @@
 use aoc::year2022::day03::*;
 
 const EXAMPLE: &str =
-    "vJrwpWtwJgWrhcsFMMfFFhFp\n\
-    jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL\n\
-    PmmdzqPrVvPwwTWBwg\n\
-    wMqvLMZHhHMvwLHjbvcjnnSBnvTQFn\n\
-    ttgJtRGJQctTZtZT\n\
-    CrZsJsPPZsGzwwsLwLmpwMDw";
+"vJrwpWtwJgWrhcsFMMfFFhFp
+jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL
+PmmdzqPrVvPwwTWBwg
+wMqvLMZHhHMvwLHjbvcjnnSBnvTQFn
+ttgJtRGJQctTZtZT
+CrZsJsPPZsGzwwsLwLmpwMDw";
 
 #[test]
 fn part1_example() {

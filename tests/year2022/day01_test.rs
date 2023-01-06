@@ -1,6 +1,20 @@
 use aoc::year2022::day01::*;
 
-const EXAMPLE: &str = "1000\n2000\n3000\n\n4000\n\n5000\n6000\n\n7000\n8000\n9000\n\n10000";
+const EXAMPLE: &str =
+"1000
+2000
+3000
+
+4000
+
+5000
+6000
+
+7000
+8000
+9000
+
+10000";
 
 #[test]
 fn part1_example() {

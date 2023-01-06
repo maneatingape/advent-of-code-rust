@@ -1,6 +1,8 @@
 use aoc::year2015::day02::*;
 
-const EXAMPLE: &str = "2x3x4\n1x1x10";
+const EXAMPLE: &str =
+"2x3x4
+1x1x10";
 
 #[test]
 fn part1_example() {
