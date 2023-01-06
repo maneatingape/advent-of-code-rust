@@ -7,7 +7,6 @@ pub struct Monkey {
     test: u64,
     yes: usize,
     no: usize,
-    count: usize,
 }
 
 #[derive(Clone, Copy)]
@@ -30,48 +29,34 @@ pub fn parse(input: &str) -> Vec<Monkey> {
         let [test] = to_array1::<u64>(chunk[3]);
         let [yes] = to_array1::<usize>(chunk[4]);
         let [no] = to_array1::<usize>(chunk[5]);
-        let count = 0;
-        Monkey { items, operation, test, yes, no, count }
+        Monkey { items, operation, test, yes, no, }
     }
     input.lines().collect::<Vec<&str>>().chunks(7).map(helper).collect()
 }
 
 pub fn part1(input: &[Monkey]) -> usize {
-    let helper = |operation: Operation, x: u64| {
-        match operation {
-            Operation::Square => (x * x) / 3,
-            Operation::Multiply(y) => (x * y) / 3,
-            Operation::Add(y) => (x + y) / 3,
-        }
-    };
-    play(input, helper, 20)
+    play(input, 20, |x| x / 3)
 }
 
 pub fn part2(input: &[Monkey]) -> usize {
-    let product = input.iter().map(|m| m.test).product::<u64>();
-    let helper = move |operation: Operation, x: u64| {
-        match operation {
-            Operation::Square => (x * x) % product,
-            Operation::Multiply(y) => (x * y) % product,
-            Operation::Add(y) => (x + y) % product,
-        }
-    };
-    play(input, helper, 10000)
+    let product: u64 = input.iter().map(|m| m.test).product();
+    play(input, 10000, |x| x % product)
 }
 
-fn play(input: &[Monkey], helper: impl Fn(Operation, u64) -> u64, rounds: u32) -> usize {
+fn play(input: &[Monkey], rounds: u32, adjust: impl Fn(u64) -> u64) -> usize {
     let mut monkeys: Vec<Monkey> = input.iter().map(|x| x.clone()).collect();
+    let mut business: Vec<usize> = (0..monkeys.len()).map(|_| 0).collect();
 
     for _ in 0..rounds {
         for i in 0..monkeys.len() {
             let monkey = &mut monkeys[i];
             let (pass, fail): (Vec<u64>, Vec<u64>) = monkey.items.iter()
-                .map(|&x| helper(monkey.operation, x))
+                .map(|&x| adjust(worry(monkey.operation, x)))
                 .partition(|&x| x % monkey.test == 0);
             let yes = monkey.yes;
             let no = monkey.no;
 
-            monkey.count += monkey.items.len();
+            business[i] += monkey.items.len();
             monkey.items.clear();
 
             monkeys[yes].items.extend(pass);
@@ -79,7 +64,14 @@ fn play(input: &[Monkey], helper: impl Fn(Operation, u64) -> u64, rounds: u32) -
         }
     }
 
-    let mut totals: Vec<usize> = monkeys.iter().map(|m| m.count).collect();
-    totals.sort_unstable();
-    totals.iter().rev().take(2).product::<usize>()
+    business.sort_unstable();
+    business.iter().rev().take(2).product()
+}
+
+fn worry(operation: Operation, x: u64) -> u64 {
+    match operation {
+        Operation::Square => x * x,
+        Operation::Multiply(y) => x * y,
+        Operation::Add(y) => x + y,
+    }
 }
