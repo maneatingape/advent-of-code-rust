@@ -45,7 +45,7 @@ pub fn part2(input: &[Monkey]) -> usize {
 }
 
 fn play(input: &[Monkey], rounds: u32, adjust: impl Fn(u64) -> u64) -> usize {
-    let mut monkeys: Vec<Monkey> = input.iter().cloned().collect();
+    let mut monkeys: Vec<Monkey> = input.to_vec();
     let mut business: Vec<usize> = Vec::tabulate(monkeys.len(), |_| 0);
 
     for _ in 0..rounds {

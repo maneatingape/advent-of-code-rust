@@ -1,3 +1,5 @@
+#![allow(clippy::needless_range_loop)]
+
 use crate::util::collection::VecOps;
 
 type Input = (usize, Vec<usize>);

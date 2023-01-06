@@ -12,8 +12,7 @@ pub fn part1(input: &[&str]) -> u32 {
 
 pub fn part2(input: &[&str]) -> u32 {
     fn helper(rucksacks: &[&str]) -> u32 {
-        let [a, b, c]: [&str; 3] = rucksacks.try_into().unwrap();
-        priority(mask(a) & mask(b) & mask(c))
+        priority(mask(rucksacks[0]) & mask(rucksacks[1]) & mask(rucksacks[2]))
     }
     input.chunks_exact(3).map(helper).sum()
 }

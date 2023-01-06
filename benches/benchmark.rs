@@ -1,4 +1,5 @@
 #![feature(test)]
+
 extern crate test;
 
 use aoc::*;
