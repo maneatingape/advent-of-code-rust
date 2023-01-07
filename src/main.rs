@@ -3,10 +3,12 @@ use aoc::*;
 
 fn main() {
     for Solution { year, day, input, wrapper } in solutions() {
-        let (answer1, answer2) = (wrapper)(input);
-        println!("Year {year} Day {day:02}");
-        println!("    Part 1: {answer1}");
-        println!("    Part 2: {answer2}");
+        if year == 2022 && day == 13 {
+            let (answer1, answer2) = (wrapper)(input);
+            println!("Year {year} Day {day:02}");
+            println!("    Part 1: {answer1}");
+            println!("    Part 2: {answer2}");
+        }
     }
 }
 
@@ -31,5 +33,6 @@ fn solutions() -> Vec<Solution> {
         solution!(year2022, day10),
         solution!(year2022, day11),
         solution!(year2022, day12),
+        solution!(year2022, day13),
     ]
 }
