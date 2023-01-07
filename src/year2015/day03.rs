@@ -23,10 +23,9 @@ pub fn part2(input: &[Point]) -> usize {
 }
 
 fn deliver(input: &[Point], predicate: fn(usize) -> bool) -> usize {
-    let origin = Point(0, 0);
-    let mut santa = origin;
-    let mut robot = origin;
-    let mut set = HashSet::from([origin]);
+    let mut santa = ORIGIN;
+    let mut robot = ORIGIN;
+    let mut set = HashSet::from([ORIGIN]);
 
     for (index, point) in input.iter().enumerate() {
         if predicate(index) {
