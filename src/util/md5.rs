@@ -16,7 +16,7 @@ pub fn hash(message: &str) -> (u32, u32, u32, u32) {
 
     let mut m: [u32; 16] = [0; 16];
     for i in 0..16 {
-        let slice = &chunk[i*4..(i*4+4)];
+        let slice = &chunk[i * 4..(i * 4 + 4)];
         m[i] = u32::from_le_bytes(slice.try_into().unwrap());
     }
 
@@ -122,5 +122,9 @@ fn round4(a: u32, b: u32, c: u32, d: u32, m: u32, s: u32, k: u32) -> u32 {
 }
 
 fn common(f: u32, a: u32, b: u32, m: u32, s: u32, k: u32) -> u32 {
-    f.wrapping_add(a).wrapping_add(k).wrapping_add(m).rotate_left(s).wrapping_add(b)
+    f.wrapping_add(a)
+        .wrapping_add(k)
+        .wrapping_add(m)
+        .rotate_left(s)
+        .wrapping_add(b)
 }

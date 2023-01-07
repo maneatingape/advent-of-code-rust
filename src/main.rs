@@ -1,5 +1,5 @@
-use aoc::*;
 use aoc::util::macros::*;
+use aoc::*;
 
 fn main() {
     for Solution { year, day, input, wrapper } in solutions() {
@@ -12,11 +12,13 @@ fn main() {
 
 fn solutions() -> Vec<Solution> {
     vec![
+        // 2015
         solution!(year2015, day01),
         solution!(year2015, day02),
         solution!(year2015, day03),
         //solution!(year2015, day04), // Very slow
 
+        // 2022
         solution!(year2022, day01),
         solution!(year2022, day02),
         solution!(year2022, day03),

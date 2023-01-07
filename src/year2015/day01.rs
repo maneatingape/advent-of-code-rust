@@ -3,7 +3,7 @@ pub fn parse(input: &str) -> Vec<i32> {
         match b {
             b'(' => 1,
             b')' => -1,
-            _ => 0
+            _ => 0,
         }
     }
     input.as_bytes().iter().map(helper).collect()
@@ -18,7 +18,9 @@ pub fn part2(input: &[i32]) -> usize {
 
     for (i, x) in input.iter().enumerate() {
         floor += x;
-        if floor < 0 { return i + 1 }
+        if floor < 0 {
+            return i + 1;
+        }
     }
 
     unreachable!()

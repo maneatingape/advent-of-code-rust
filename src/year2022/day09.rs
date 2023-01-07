@@ -1,6 +1,6 @@
-use std::collections::HashSet;
 use crate::util::collection::VecOps;
 use crate::util::point::*;
+use std::collections::HashSet;
 
 pub fn parse(input: &str) -> Vec<Point> {
     let mut iter = input.split_ascii_whitespace();
@@ -12,7 +12,7 @@ pub fn parse(input: &str) -> Vec<Point> {
             "D" => DOWN,
             "L" => LEFT,
             "R" => RIGHT,
-            _ => unreachable!()
+            _ => unreachable!(),
         };
         let amount: u32 = n.parse().unwrap();
         for _ in 0..amount {

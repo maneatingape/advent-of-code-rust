@@ -11,5 +11,8 @@ pub fn part2(input: &[&str]) -> usize {
 }
 
 fn play(input: &[&str], order: &[&str]) -> usize {
-    input.iter().map(|a| order.iter().position(|b| a == b).unwrap()).sum()
+    input
+        .iter()
+        .map(|a| order.iter().position(|b| a == b).unwrap())
+        .sum()
 }

@@ -26,6 +26,6 @@ fn priority(mask: u128) -> u32 {
     match zeroes {
         65..=90 => zeroes - 38,
         97..=122 => zeroes - 96,
-        _ => unreachable!()
+        _ => unreachable!(),
     }
 }

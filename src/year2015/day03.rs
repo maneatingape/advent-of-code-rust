@@ -1,5 +1,5 @@
-use std::collections::HashSet;
 use crate::util::point::*;
+use std::collections::HashSet;
 
 pub fn parse(input: &str) -> Vec<Point> {
     fn helper(b: &u8) -> Point {

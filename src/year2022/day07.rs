@@ -19,7 +19,7 @@ pub fn parse(input: &str) -> Vec<u32> {
             [size, _] if size != "$" && size != "dir" => {
                 total += to::<u32>(size);
             }
-            _ => ()
+            _ => (),
         }
     }
 

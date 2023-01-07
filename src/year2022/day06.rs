@@ -17,15 +17,21 @@ fn find(input: &[usize], marker: usize) -> usize {
     for i in 0..input.len() {
         let new = input[i];
         letters[new] += 1;
-        if letters[new] == 1 { different += 1; }
+        if letters[new] == 1 {
+            different += 1;
+        }
 
         if i >= marker {
             let old = input[i - marker];
             letters[old] -= 1;
-            if letters[old] == 0 { different -= 1; }
+            if letters[old] == 0 {
+                different -= 1;
+            }
         }
 
-        if different == marker { return i + 1 }
+        if different == marker {
+            return i + 1;
+        }
     }
 
     unreachable!()

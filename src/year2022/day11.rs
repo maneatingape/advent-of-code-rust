@@ -25,14 +25,19 @@ pub fn parse(input: &str) -> Vec<Monkey> {
             ["old", _] => Operation::Square,
             [y, "*"] => Operation::Multiply(to(y)),
             [y, "+"] => Operation::Add(to(y)),
-            _ => unreachable!()
+            _ => unreachable!(),
         };
         let [test] = to_array1::<u64>(chunk[3]);
         let [yes] = to_array1::<usize>(chunk[4]);
         let [no] = to_array1::<usize>(chunk[5]);
         Monkey { items, operation, test, yes, no, }
     }
-    input.lines().collect::<Vec<&str>>().chunks(7).map(helper).collect()
+    input
+        .lines()
+        .collect::<Vec<&str>>()
+        .chunks(7)
+        .map(helper)
+        .collect()
 }
 
 pub fn part1(input: &[Monkey]) -> usize {
@@ -51,7 +56,9 @@ fn play(input: &[Monkey], rounds: u32, adjust: impl Fn(u64) -> u64) -> usize {
     for _ in 0..rounds {
         for i in 0..monkeys.len() {
             let monkey = &mut monkeys[i];
-            let (pass, fail): (Vec<u64>, Vec<u64>) = monkey.items.iter()
+            let (pass, fail): (Vec<u64>, Vec<u64>) = monkey
+                .items
+                .iter()
                 .map(|&x| adjust(worry(monkey.operation, x)))
                 .partition(|&x| x % monkey.test == 0);
             let yes = monkey.yes;

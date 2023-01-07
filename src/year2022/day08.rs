@@ -7,7 +7,11 @@ type Input = (usize, Vec<usize>);
 pub fn parse(input: &str) -> Input {
     let bytes = input.as_bytes();
     let width = bytes.iter().position(|b| b.is_ascii_whitespace()).unwrap();
-    let digits: Vec<usize> = bytes.iter().filter(|b| b.is_ascii_digit()).map(|b| (b - 47) as usize).collect();
+    let digits: Vec<usize> = bytes
+        .iter()
+        .filter(|b| b.is_ascii_digit())
+        .map(|b| (b - 47) as usize)
+        .collect();
     (width, digits)
 }
 

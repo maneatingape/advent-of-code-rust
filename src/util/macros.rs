@@ -28,15 +28,15 @@ macro_rules! solution {
                 }
             },
         }
-    }
+    };
 }
 
 #[macro_export]
 macro_rules! benchmark {
     ($prefix:ident, $year:tt, $day:tt) => {
         mod $prefix {
-            use test::Bencher;
             use aoc::$year::$day::*;
+            use test::Bencher;
 
             const RAW: &str = include_str!(concat!["../input/", stringify!($year), "/", stringify!($day), ".txt"]);
 
@@ -57,5 +57,5 @@ macro_rules! benchmark {
                 b.iter(|| part2(&input));
             }
         }
-    }
+    };
 }

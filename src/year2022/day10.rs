@@ -8,7 +8,7 @@ pub fn parse(input: &str) -> Vec<i32> {
         match token {
             "noop" => (),
             "addx" => (),
-            dx => x += to::<i32>(dx)
+            dx => x += to::<i32>(dx),
         }
         xs.push(x);
     }
@@ -17,7 +17,13 @@ pub fn parse(input: &str) -> Vec<i32> {
 }
 
 pub fn part1(input: &[i32]) -> i32 {
-    input.iter().enumerate().skip(19).step_by(40).map(|(i, x)| ((i + 1) as i32) * x).sum()
+    input
+        .iter()
+        .enumerate()
+        .skip(19)
+        .step_by(40)
+        .map(|(i, x)| ((i + 1) as i32) * x)
+        .sum()
 }
 
 pub fn part2(input: &[i32]) -> String {

@@ -1,5 +1,5 @@
-use std::fmt::Write;
 use crate::util::md5::hash;
+use std::fmt::Write;
 
 pub fn parse(input: &str) -> &str {
     input.trim()
