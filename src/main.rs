@@ -1,15 +1,28 @@
-use aoc::util::macros::*;
 use aoc::*;
+use aoc::util::macros::*;
+use std::time::Instant;
+
+const RESET: &str = "\u{001b}[0m";
+const BOLD: &str = "\u{001b}[1m";
+const RED: &str = "\u{001b}[31m";
+const GREEN: &str = "\u{001b}[32m";
+const YELLOW: &str = "\u{001b}[33m";
 
 fn main() {
+    let now = Instant::now();
+    let mut total = 0;
+
     for Solution { year, day, input, wrapper } in solutions() {
-        if year == 2022 && day == 13 {
-            let (answer1, answer2) = (wrapper)(input);
-            println!("Year {year} Day {day:02}");
-            println!("    Part 1: {answer1}");
-            println!("    Part 2: {answer2}");
-        }
+        let (answer1, answer2) = (wrapper)(input);
+        total += 1;
+
+        println!("{YELLOW}{BOLD}{year} Day {day:02}{RESET}");
+        println!("    Part 1: {answer1}");
+        println!("    Part 2: {answer2}");
     }
+
+    println!("{BOLD}{RED}Solutions: {total}{RESET}");
+    println!("{BOLD}{GREEN}Elapsed: {} ms{RESET}", now.elapsed().as_millis());
 }
 
 fn solutions() -> Vec<Solution> {
