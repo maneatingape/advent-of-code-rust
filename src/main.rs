@@ -13,12 +13,14 @@ fn main() {
     let mut total = 0;
 
     for Solution { year, day, input, wrapper } in solutions() {
-        let (answer1, answer2) = (wrapper)(input);
-        total += 1;
+        if year == 2022 && day == 14 {
+            let (answer1, answer2) = (wrapper)(input);
+            total += 1;
 
-        println!("{YELLOW}{BOLD}{year} Day {day:02}{RESET}");
-        println!("    Part 1: {answer1}");
-        println!("    Part 2: {answer2}");
+            println!("{YELLOW}{BOLD}{year} Day {day:02}{RESET}");
+            println!("    Part 1: {answer1}");
+            println!("    Part 2: {answer2}");
+        }
     }
 
     println!("{BOLD}{RED}Solutions: {total}{RESET}");
@@ -47,5 +49,6 @@ fn solutions() -> Vec<Solution> {
         solution!(year2022, day11),
         solution!(year2022, day12),
         solution!(year2022, day13),
+        solution!(year2022, day14),
     ]
 }
