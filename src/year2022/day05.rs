@@ -1,4 +1,4 @@
-use crate::util::collection::VecOps;
+use crate::util::collection::*;
 use crate::util::parse::to_array3;
 
 type Input = (Stack, Vec<Move>);

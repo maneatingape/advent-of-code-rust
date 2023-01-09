@@ -1,4 +1,4 @@
-use crate::util::collection::VecOps;
+use crate::util::collection::*;
 use crate::util::parse::*;
 
 #[derive(Clone)]
@@ -51,7 +51,7 @@ pub fn part2(input: &[Monkey]) -> usize {
 
 fn play(input: &[Monkey], rounds: u32, adjust: impl Fn(u64) -> u64) -> usize {
     let mut monkeys: Vec<Monkey> = input.to_vec();
-    let mut business: Vec<usize> = Vec::tabulate(monkeys.len(), |_| 0);
+    let mut business: Vec<usize> = Vec::fill(monkeys.len(), 0);
 
     for _ in 0..rounds {
         for i in 0..monkeys.len() {

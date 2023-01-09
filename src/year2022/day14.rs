@@ -39,7 +39,7 @@ pub fn parse(input: &str) -> State {
     let width = 2 * max_y + 5;
     let height = max_y + 3;
     let start = max_y + 2;
-    let mut cave = Vec::tabulate((width * height) as usize, |_| false);
+    let mut cave = Vec::fill((width * height) as usize, false);
 
     for row in points {
         for window in row.windows(4).step_by(2) {

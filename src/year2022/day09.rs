@@ -1,4 +1,4 @@
-use crate::util::collection::VecOps;
+use crate::util::collection::*;
 use crate::util::point::*;
 use std::collections::HashSet;
 
@@ -32,7 +32,7 @@ pub fn part2(input: &[Point]) -> usize {
 }
 
 fn simulate(input: &[Point], size: usize) -> usize {
-    let mut rope: Vec<Point> = Vec::tabulate(size, |_| ORIGIN);
+    let mut rope: Vec<Point> = Vec::fill(size, ORIGIN);
     let mut tail: HashSet<Point> = HashSet::new();
 
     for step in input {

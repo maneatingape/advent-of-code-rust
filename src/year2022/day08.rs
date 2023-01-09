@@ -1,6 +1,6 @@
 #![allow(clippy::needless_range_loop)]
 
-use crate::util::collection::VecOps;
+use crate::util::collection::*;
 
 type Input = (usize, Vec<usize>);
 
@@ -17,7 +17,7 @@ pub fn parse(input: &str) -> Input {
 
 pub fn part1(input: &Input) -> usize {
     let (width, digits) = input;
-    let mut visible: Vec<bool> = Vec::tabulate(digits.len(), |_| false);
+    let mut visible: Vec<bool> = Vec::fill(digits.len(), false);
 
     for i in 0..*width {
         let mut left_max = 0;
@@ -57,7 +57,7 @@ pub fn part1(input: &Input) -> usize {
 
 pub fn part2(input: &Input) -> usize {
     let (width, digits) = input;
-    let mut scenic: Vec<usize> = Vec::tabulate(digits.len(), |_| 1);
+    let mut scenic: Vec<usize> = Vec::fill(digits.len(), 1);
 
     for i in 1..(*width - 1) {
         let mut left_max = [0; 11];
