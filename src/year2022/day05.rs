@@ -1,9 +1,9 @@
 use crate::util::collection::*;
-use crate::util::parse::to_array3;
+use crate::util::parse::to_tuple_3;
 
 type Input = (Stack, Vec<Move>);
 type Stack = Vec<Vec<char>>;
-type Move = [usize; 3];
+type Move = (usize, usize, usize);
 
 pub fn parse(input: &str) -> Input {
     let lines: Vec<&str> = input.lines().collect();
@@ -20,8 +20,8 @@ pub fn parse(input: &str) -> Input {
     }
 
     fn helper(line: &&str) -> Move {
-        let [amount, from, to]: Move = to_array3(line);
-        [amount, from - 1, to - 1]
+        let (amount, from, to): Move = to_tuple_3(line);
+        (amount, from - 1, to - 1)
     }
     let moves: Vec<Move> = lines.iter().skip(height + 1).map(helper).collect();
 
@@ -40,7 +40,7 @@ fn play(input: &Input, reverse: bool) -> String {
     let (initial, moves) = input;
     let mut stack = initial.clone();
 
-    for [amount, from, to] in moves {
+    for (amount, from, to) in moves {
         let start = stack[*from].len() - amount;
         let crates: Vec<char> = stack[*from].drain(start..).collect();
         if reverse {

@@ -27,9 +27,9 @@ pub fn parse(input: &str) -> Vec<Monkey> {
             [y, "+"] => Operation::Add(to(y)),
             _ => unreachable!(),
         };
-        let [test] = to_array1::<u64>(chunk[3]);
-        let [yes] = to_array1::<usize>(chunk[4]);
-        let [no] = to_array1::<usize>(chunk[5]);
+        let test = to_tuple_1::<u64>(chunk[3]);
+        let yes = to_tuple_1::<usize>(chunk[4]);
+        let no = to_tuple_1::<usize>(chunk[5]);
         Monkey { items, operation, test, yes, no, }
     }
     input
