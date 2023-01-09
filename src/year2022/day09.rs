@@ -1,4 +1,5 @@
 use crate::util::collection::*;
+use crate::util::parse::*;
 use crate::util::point::*;
 use std::collections::HashSet;
 
@@ -14,7 +15,7 @@ pub fn parse(input: &str) -> Vec<Point> {
             "R" => RIGHT,
             _ => unreachable!(),
         };
-        let amount: u32 = n.parse().unwrap();
+        let amount = to::<u32>(n);
         for _ in 0..amount {
             points.push(point);
         }
