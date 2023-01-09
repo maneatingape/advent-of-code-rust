@@ -15,19 +15,16 @@ impl State {
     fn fall(&mut self, unit: Point) -> bool {
         if self.cave[(unit.1 * self.width + unit.0) as usize] {
             true
-        }
-        else if unit.1 == self.height - 1 {
+        } else if unit.1 == self.height - 1 {
             self.floor
-        }
-        else if self.fall(Point(unit.0, unit.1 + 1))
+        } else if self.fall(Point(unit.0, unit.1 + 1))
             && self.fall(Point(unit.0 - 1, unit.1 + 1))
             && self.fall(Point(unit.0 + 1, unit.1 + 1))
         {
             self.cave[(unit.1 * self.width + unit.0) as usize] = true;
             self.count += 1;
             true
-        }
-        else {
+        } else {
             false
         }
     }
@@ -35,7 +32,11 @@ impl State {
 
 pub fn parse(input: &str) -> State {
     let points: Vec<Vec<i32>> = input.lines().map(to_vec::<i32>).collect();
-    let max_y = points.iter().flat_map(|row| row.iter().skip(1).step_by(2).max()).max().unwrap();
+    let max_y = points
+        .iter()
+        .flat_map(|row| row.iter().skip(1).step_by(2).max())
+        .max()
+        .unwrap();
     let width = 2 * max_y + 5;
     let height = max_y + 3;
     let start = max_y + 2;
@@ -65,7 +66,11 @@ pub fn part2(input: &State) -> i32 {
 }
 
 fn simulate(input: &State, floor: bool) -> i32 {
-    let mut state = State { cave: input.cave.clone(), floor, ..*input };
+    let mut state = State {
+        cave: input.cave.clone(),
+        floor,
+        ..*input
+    };
     state.fall(Point(state.start, 0));
     state.count
 }

@@ -42,11 +42,11 @@ fn compare(left: &str, right: &str) -> bool {
             ('[', b) => {
                 right.push(']');
                 right.push(b);
-            },
+            }
             (a, '[') => {
                 left.push(']');
                 left.push(a);
-            },
+            }
             (a, b) => return a < b,
         }
     }

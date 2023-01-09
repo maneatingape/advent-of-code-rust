@@ -9,14 +9,16 @@ pub struct Solution {
 macro_rules! solution {
     ($year:tt, $day:tt) => {
         Solution {
-            year: {
-                stringify!($year)[4..8].parse().unwrap()
-            },
-            day: {
-                stringify!($day)[3..5].parse().unwrap()
-            },
+            year: { stringify!($year)[4..8].parse().unwrap() },
+            day: { stringify!($day)[3..5].parse().unwrap() },
             input: {
-                include_str!(concat!["../input/", stringify!($year), "/", stringify!($day), ".txt"])
+                include_str!(concat![
+                    "../input/",
+                    stringify!($year),
+                    "/",
+                    stringify!($day),
+                    ".txt"
+                ])
             },
             wrapper: {
                 |raw: &str| {
@@ -38,7 +40,13 @@ macro_rules! benchmark {
             use aoc::$year::$day::*;
             use test::Bencher;
 
-            const RAW: &str = include_str!(concat!["../input/", stringify!($year), "/", stringify!($day), ".txt"]);
+            const RAW: &str = include_str!(concat![
+                "../input/",
+                stringify!($year),
+                "/",
+                stringify!($day),
+                ".txt"
+            ]);
 
             #[bench]
             fn parse_bench(b: &mut Bencher) {
