@@ -21,8 +21,9 @@ pub fn part2(input: &[String]) -> u32 {
     for packet in input.iter() {
         if compare(packet, "[[2]]") {
             first += 1;
+            second += 1;
         }
-        if compare(packet, "[[6]]") {
+        else if compare(packet, "[[6]]") {
             second += 1;
         }
     }
