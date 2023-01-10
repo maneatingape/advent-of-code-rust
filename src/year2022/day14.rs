@@ -2,8 +2,8 @@ use crate::util::collection::*;
 use crate::util::parse::to_vec;
 use crate::util::point::*;
 
-pub struct State {
-    cave: Vec<bool>,
+pub struct Cave {
+    sand: Vec<bool>,
     width: i32,
     height: i32,
     start: i32,
@@ -11,9 +11,9 @@ pub struct State {
     count: i32,
 }
 
-impl State {
+impl Cave {
     fn fall(&mut self, unit: Point) -> bool {
-        if self.cave[(unit.1 * self.width + unit.0) as usize] {
+        if self.sand[(unit.1 * self.width + unit.0) as usize] {
             true
         } else if unit.1 == self.height - 1 {
             self.floor
@@ -21,7 +21,7 @@ impl State {
             && self.fall(Point(unit.0 - 1, unit.1 + 1))
             && self.fall(Point(unit.0 + 1, unit.1 + 1))
         {
-            self.cave[(unit.1 * self.width + unit.0) as usize] = true;
+            self.sand[(unit.1 * self.width + unit.0) as usize] = true;
             self.count += 1;
             true
         } else {
@@ -30,7 +30,7 @@ impl State {
     }
 }
 
-pub fn parse(input: &str) -> State {
+pub fn parse(input: &str) -> Cave {
     let points: Vec<Vec<i32>> = input.lines().map(to_vec::<i32>).collect();
     let max_y = points
         .iter()
@@ -54,23 +54,23 @@ pub fn parse(input: &str) -> State {
         }
     }
 
-    State { cave, width, height, start, floor: false, count: 0 }
+    Cave { sand: cave, width, height, start, floor: false, count: 0 }
 }
 
-pub fn part1(input: &State) -> i32 {
+pub fn part1(input: &Cave) -> i32 {
     simulate(input, false)
 }
 
-pub fn part2(input: &State) -> i32 {
+pub fn part2(input: &Cave) -> i32 {
     simulate(input, true)
 }
 
-fn simulate(input: &State, floor: bool) -> i32 {
-    let mut state = State {
-        cave: input.cave.clone(),
+fn simulate(input: &Cave, floor: bool) -> i32 {
+    let mut cave = Cave {
+        sand: input.sand.clone(),
         floor,
         ..*input
     };
-    state.fall(Point(state.start, 0));
-    state.count
+    cave.fall(Point(cave.start, 0));
+    cave.count
 }
