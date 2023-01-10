@@ -22,7 +22,7 @@ fn find(input: &str, mask: u32) -> u32 {
         index += 1;
         s.clear();
         write!(&mut s, "{input}{index}").expect("Not enough space");
-        a = hash(&s).0;
+        a = hash(s.as_bytes()).0;
     }
 
     index

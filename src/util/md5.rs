@@ -1,24 +1,19 @@
-pub fn hash(message: &str) -> (u32, u32, u32, u32) {
+pub fn hash(message: &[u8]) -> (u32, u32, u32, u32) {
+    let mut padded = [0u8; 56];
+    let size = message.len();
+    padded[..size].copy_from_slice(message);
+    padded[size] = 0x80;
+
+    let mut m = [0u32; 16];
+    for (i, chunk) in padded.chunks_exact(4).enumerate() {
+        m[i] = u32::from_le_bytes(chunk.try_into().unwrap());
+    }
+    m[14] = 8 * (size as u32);
+
     let mut a0: u32 = 0x67452301;
     let mut b0: u32 = 0xefcdab89;
     let mut c0: u32 = 0x98badcfe;
     let mut d0: u32 = 0x10325476;
-
-    let mut chunk: [u8; 64] = [0; 64];
-
-    let raw = message.as_bytes();
-    let len = raw.len();
-    chunk[..len].copy_from_slice(&raw[..len]);
-
-    chunk[len] = 0x80;
-    let qux = (len * 8).to_le_bytes();
-    chunk[56..64].copy_from_slice(&qux[..8]);
-
-    let mut m: [u32; 16] = [0; 16];
-    for i in 0..16 {
-        let slice = &chunk[i * 4..(i * 4 + 4)];
-        m[i] = u32::from_le_bytes(slice.try_into().unwrap());
-    }
 
     let mut a = a0;
     let mut b = b0;
@@ -101,26 +96,31 @@ pub fn hash(message: &str) -> (u32, u32, u32, u32) {
     (a0.to_be(), b0.to_be(), c0.to_be(), d0.to_be())
 }
 
+#[inline]
 fn round1(a: u32, b: u32, c: u32, d: u32, m: u32, s: u32, k: u32) -> u32 {
     let f = (b & c) | (!b & d);
     common(f, a, b, m, s, k)
 }
 
+#[inline]
 fn round2(a: u32, b: u32, c: u32, d: u32, m: u32, s: u32, k: u32) -> u32 {
     let f = (b & d) | (c & !d);
     common(f, a, b, m, s, k)
 }
 
+#[inline]
 fn round3(a: u32, b: u32, c: u32, d: u32, m: u32, s: u32, k: u32) -> u32 {
     let f = b ^ c ^ d;
     common(f, a, b, m, s, k)
 }
 
+#[inline]
 fn round4(a: u32, b: u32, c: u32, d: u32, m: u32, s: u32, k: u32) -> u32 {
     let f = c ^ (b | !d);
     common(f, a, b, m, s, k)
 }
 
+#[inline]
 fn common(f: u32, a: u32, b: u32, m: u32, s: u32, k: u32) -> u32 {
     f.wrapping_add(a)
         .wrapping_add(k)
