@@ -39,15 +39,17 @@ pub fn part2(input: &Input) -> String {
 fn play(input: &Input, reverse: bool) -> String {
     let (initial, moves) = input;
     let mut stack = initial.clone();
+    let mut crates: Vec<char> = Vec::new();
 
     for (amount, from, to) in moves {
         let start = stack[*from].len() - amount;
-        let crates: Vec<char> = stack[*from].drain(start..).collect();
+        crates.extend(stack[*from].drain(start..));
         if reverse {
             stack[*to].extend(crates.iter().rev());
         } else {
             stack[*to].extend(crates.iter());
         }
+        crates.clear();
     }
 
     stack.iter().map(|v| v.last().unwrap()).collect()
