@@ -22,8 +22,7 @@ pub fn part2(input: &[String]) -> u32 {
         if compare(packet, "[[2]]") {
             first += 1;
             second += 1;
-        }
-        else if compare(packet, "[[6]]") {
+        } else if compare(packet, "[[6]]") {
             second += 1;
         }
     }
@@ -32,21 +31,26 @@ pub fn part2(input: &[String]) -> u32 {
 }
 
 fn compare(left: &str, right: &str) -> bool {
-    let mut left: Vec<char> = left.chars().rev().collect();
-    let mut right: Vec<char> = right.chars().rev().collect();
+    let mut left_iter = left.chars();
+    let mut right_iter = right.chars();
+    let mut left_extra: Vec<char> = Vec::new();
+    let mut right_extra: Vec<char> = Vec::new();
 
-    while let (Some(a), Some(b)) = (left.pop(), right.pop()) {
+    while let (Some(a), Some(b)) = (
+        left_extra.pop().or_else(|| left_iter.next()),
+        right_extra.pop().or_else(|| right_iter.next()),
+    ) {
         match (a, b) {
             (a, b) if a == b => (),
             (']', _) => return true,
             (_, ']') => return false,
             ('[', b) => {
-                right.push(']');
-                right.push(b);
+                right_extra.push(']');
+                right_extra.push(b);
             }
             (a, '[') => {
-                left.push(']');
-                left.push(a);
+                left_extra.push(']');
+                left_extra.push(a);
             }
             (a, b) => return a < b,
         }
