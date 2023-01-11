@@ -9,22 +9,24 @@ const GREEN: &str = "\u{001b}[32m";
 const YELLOW: &str = "\u{001b}[33m";
 
 fn main() {
-    let now = Instant::now();
-    let mut total = 0;
+    let total_time = Instant::now();
+    let mut total_solutions = 0;
 
     for Solution { year, day, input, wrapper } in solutions() {
-        if year == 2022 && day == 14 {
+        if year == 2022 && day == day {
+            let time = Instant::now();
             let (answer1, answer2) = (wrapper)(input);
-            total += 1;
+            total_solutions += 1;
 
             println!("{YELLOW}{BOLD}{year} Day {day:02}{RESET}");
             println!("    Part 1: {answer1}");
             println!("    Part 2: {answer2}");
+            println!("    Duration: {} μs", time.elapsed().as_micros());
         }
     }
 
-    println!("{BOLD}{RED}Solutions: {total}{RESET}");
-    println!("{BOLD}{GREEN}Elapsed: {} ms{RESET}", now.elapsed().as_millis());
+    println!("{BOLD}{RED}Solutions: {total_solutions}{RESET}");
+    println!("{BOLD}{GREEN}Elapsed: {} ms{RESET}", total_time.elapsed().as_millis());
 }
 
 fn solutions() -> Vec<Solution> {
