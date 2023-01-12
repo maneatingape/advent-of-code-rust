@@ -25,3 +25,13 @@ impl AddAssign for Point {
         self.1 += rhs.1;
     }
 }
+
+pub trait PointExt {
+    fn manhattan(self, other: Point) -> i32;
+}
+
+impl PointExt for Point {
+    fn manhattan(self, other: Point) -> i32 {
+        (self.0 - other.0).abs() + (self.1 - other.1).abs()
+    }
+}

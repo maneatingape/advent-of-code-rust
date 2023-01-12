@@ -12,28 +12,35 @@ pub fn to<T: Integer>(s: &str) -> T {
     }
 }
 
-pub fn to_iter<'a, T>(s: &'a str) -> impl Iterator<Item = T> + 'a
+pub fn to_unsigned_iter<'a, T>(s: &'a str) -> impl Iterator<Item = T> + 'a
 where T: Integer + 'a
 {
+    fn not_numeric(c: char) -> bool {
+        !c.is_ascii_digit()
+    }
+
+    fn not_empty(s: &&str) -> bool {
+        !s.is_empty()
+    }
     s.split(not_numeric).filter(not_empty).map(to::<T>)
 }
 
 pub fn to_vec<T: Integer>(s: &str) -> Vec<T> {
-    to_iter(s).collect()
+    to_unsigned_iter(s).collect()
 }
 
 pub fn to_tuple_1<T: Integer>(s: &str) -> T {
-    let mut iter = to_iter(s);
+    let mut iter = to_unsigned_iter(s);
     iter.next().unwrap()
 }
 
 pub fn to_tuple_2<T: Integer>(s: &str) -> (T, T) {
-    let mut iter = to_iter(s);
+    let mut iter = to_unsigned_iter(s);
     (iter.next().unwrap(), iter.next().unwrap())
 }
 
 pub fn to_tuple_3<T: Integer>(s: &str) -> (T, T, T) {
-    let mut iter = to_iter(s);
+    let mut iter = to_unsigned_iter(s);
     (
         iter.next().unwrap(),
         iter.next().unwrap(),
@@ -42,7 +49,7 @@ pub fn to_tuple_3<T: Integer>(s: &str) -> (T, T, T) {
 }
 
 pub fn to_tuple_4<T: Integer>(s: &str) -> (T, T, T, T) {
-    let mut iter = to_iter(s);
+    let mut iter = to_unsigned_iter(s);
     (
         iter.next().unwrap(),
         iter.next().unwrap(),
@@ -51,10 +58,12 @@ pub fn to_tuple_4<T: Integer>(s: &str) -> (T, T, T, T) {
     )
 }
 
-fn not_numeric(c: char) -> bool {
-    !c.is_ascii_digit()
-}
-
-fn not_empty(s: &&str) -> bool {
-    !s.is_empty()
+pub fn to_signed_vec<T: Integer>(s: &str) -> Vec<T> {
+    fn not_numeric(c: char) -> bool {
+        !c.is_ascii_digit() && c != '-'
+    }
+    fn not_empty(s: &&str) -> bool {
+        !s.is_empty()
+    }
+    s.split(not_numeric).filter(not_empty).map(to::<T>).collect()
 }
