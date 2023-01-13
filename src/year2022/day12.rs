@@ -10,7 +10,7 @@ pub fn parse(input: &str) -> Input {
 
     for (y, line) in input.lines().enumerate() {
         for (x, value) in line.chars().enumerate() {
-            let key = Point(x as i32, y as i32);
+            let key = Point { x: x as i32, y: y as i32 };
             map.insert(key, value);
             if value == 'E' {
                 start = Some(key);

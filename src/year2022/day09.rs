@@ -51,9 +51,9 @@ fn simulate(input: &[Point], size: usize) -> usize {
 }
 
 fn apart(a: Point, b: Point) -> bool {
-    (a.0 - b.0).abs() > 1 || (a.1 - b.1).abs() > 1
+    (a.x - b.x).abs() > 1 || (a.y - b.y).abs() > 1
 }
 
 fn delta(a: Point, b: Point) -> Point {
-    Point((a.0 - b.0).signum(), (a.1 - b.1).signum())
+    Point { x: (a.x - b.x).signum(), y: (a.y - b.y).signum() }
 }
