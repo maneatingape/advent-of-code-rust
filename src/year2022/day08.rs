@@ -19,13 +19,13 @@ pub fn part1(input: &Input) -> usize {
     let (width, digits) = input;
     let mut visible: Vec<bool> = Vec::fill(digits.len(), false);
 
-    for i in 0..*width {
+    for i in 1..(*width - 1) {
         let mut left_max = 0;
         let mut right_max = 0;
         let mut top_max = 0;
         let mut bottom_max = 0;
 
-        for j in 0..*width {
+        for j in 0..(*width - 1) {
             let left = (i * width) + j;
             if digits[left] > left_max {
                 visible[left] = true;
@@ -52,7 +52,7 @@ pub fn part1(input: &Input) -> usize {
         }
     }
 
-    visible.iter().filter(|&&b| b).count()
+    4 + visible.iter().filter(|&&b| b).count()
 }
 
 pub fn part2(input: &Input) -> usize {
