@@ -1,18 +1,21 @@
-pub fn parse(input: &str) -> Vec<&str> {
-    input.lines().collect()
-}
+use crate::util::collection::Tupled;
 
-pub fn part1(input: &[&str]) -> usize {
-    play(input, &["", "B X", "C Y", "A Z", "A X", "B Y", "C Z", "C X", "A Y", "B Z"])
-}
-
-pub fn part2(input: &[&str]) -> usize {
-    play(input, &["", "B X", "C X", "A X", "A Y", "B Y", "C Y", "C Z", "A Z", "B Z"])
-}
-
-fn play(input: &[&str], order: &[&str]) -> usize {
+pub fn parse(input: &str) -> Vec<usize> {
     input
-        .iter()
-        .map(|a| order.iter().position(|b| a == b).unwrap())
-        .sum()
+        .as_bytes()
+        .split(|b| b.is_ascii_whitespace())
+        .filter(|s| !s.is_empty())
+        .tupled2()
+        .map(|(a, b)| 3 * ((a[0] as usize) - 65) + ((b[0] as usize) - 88))
+        .collect()
+}
+
+pub fn part1(input: &[usize]) -> u32 {
+    let score = [4, 8, 3, 1, 5, 9, 7, 2, 6];
+    input.iter().map(|&i| score[i]).sum()
+}
+
+pub fn part2(input: &[usize]) -> u32 {
+    let score = [3, 4, 8, 1, 5, 9, 2, 6, 7];
+    input.iter().map(|&i| score[i]).sum()
 }
