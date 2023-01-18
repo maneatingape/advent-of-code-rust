@@ -1,17 +1,17 @@
 use crate::util::collection::*;
-use crate::util::parse::to_tuple_3;
+use crate::util::parse::*;
 
 type Input = (Stack, Vec<Move>);
 type Stack = Vec<Vec<char>>;
 type Move = (usize, usize, usize);
 
 pub fn parse(input: &str) -> Input {
-    let lines: Vec<&str> = input.lines().collect();
+    let (prefix, suffix) = input.split_once("\n\n").unwrap();
+    let lines: Vec<&str> = prefix.lines().collect();
     let width = (lines[0].len() + 1) / 4;
-    let height = lines.iter().position(|s| s.is_empty()).unwrap();
 
     let mut stack: Stack = Vec::tabulate(width, |_| Vec::new());
-    for row in lines.iter().take(height - 1).rev() {
+    for row in lines.iter().rev() {
         for (i, c) in row.chars().skip(1).step_by(4).enumerate() {
             if c != ' ' {
                 stack[i].push(c);
@@ -19,11 +19,11 @@ pub fn parse(input: &str) -> Input {
         }
     }
 
-    fn helper(line: &&str) -> Move {
-        let (amount, from, to): Move = to_tuple_3(line);
+    fn helper(tuple: Move) -> Move {
+        let (amount, from, to) = tuple;
         (amount, from - 1, to - 1)
     }
-    let moves: Vec<Move> = lines.iter().skip(height + 1).map(helper).collect();
+    let moves: Vec<Move> = suffix.to_unsigned_iter().tupled3().map(helper).collect();
 
     (stack, moves)
 }

@@ -1,14 +1,15 @@
-use crate::util::parse::to_tuple_3;
+use crate::util::collection::*;
+use crate::util::parse::*;
 
 type Gift = (u32, u32, u32);
 
 pub fn parse(input: &str) -> Vec<Gift> {
-    fn helper(line: &str) -> Gift {
-        let mut gift: Gift = to_tuple_3(line);
+    fn helper(tuple: Gift) -> Gift {
+        let mut gift: Gift = tuple;
         sort(&mut gift);
         gift
     }
-    input.lines().map(helper).collect()
+    input.to_unsigned_iter().tupled3().map(helper).collect()
 }
 
 pub fn part1(input: &[Gift]) -> u32 {

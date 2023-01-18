@@ -15,7 +15,7 @@ pub fn parse(input: &str) -> Vec<Point> {
             "R" => RIGHT,
             _ => unreachable!(),
         };
-        let amount = to::<u32>(n);
+        let amount = from(n);
         for _ in 0..amount {
             points.push(point);
         }

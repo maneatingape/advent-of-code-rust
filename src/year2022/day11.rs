@@ -27,17 +27,17 @@ impl Operation {
 
 pub fn parse(input: &str) -> Vec<Monkey> {
     fn helper(chunk: &[&str]) -> Monkey {
-        let items = to_vec::<u64>(chunk[1]);
+        let items = chunk[1].to_unsigned_iter().collect();
         let tokens: Vec<&str> = chunk[2].split(' ').rev().take(2).collect();
         let operation = match tokens[..] {
             ["old", _] => Operation::Square,
-            [y, "*"] => Operation::Multiply(to(y)),
-            [y, "+"] => Operation::Add(to(y)),
+            [y, "*"] => Operation::Multiply(from(y)),
+            [y, "+"] => Operation::Add(from(y)),
             _ => unreachable!(),
         };
-        let test = to_tuple_1::<u64>(chunk[3]);
-        let yes = to_tuple_1::<usize>(chunk[4]);
-        let no = to_tuple_1::<usize>(chunk[5]);
+        let test = chunk[3].to_unsigned_iter().next().unwrap();
+        let yes = chunk[4].to_unsigned_iter().next().unwrap();
+        let no = chunk[5].to_unsigned_iter().next().unwrap();
         Monkey { items, operation, test, yes, no, }
     }
     input

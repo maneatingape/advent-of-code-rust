@@ -1,4 +1,4 @@
-use crate::util::parse::to;
+use crate::util::parse::*;
 
 pub fn parse(input: &str) -> Vec<i32> {
     let mut x = 1;
@@ -8,7 +8,7 @@ pub fn parse(input: &str) -> Vec<i32> {
         match token {
             "noop" => (),
             "addx" => (),
-            dx => x += to::<i32>(dx),
+            delta => x += from::<i32>(delta),
         }
         xs.push(x);
     }

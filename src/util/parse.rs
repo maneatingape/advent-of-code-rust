@@ -1,69 +1,45 @@
-pub trait Integer: std::str::FromStr {}
-impl Integer for u8 {}
-impl Integer for u32 {}
-impl Integer for u64 {}
-impl Integer for usize {}
-impl Integer for i32 {}
+use std::iter::Filter;
+use std::iter::Map;
+use std::str::FromStr;
+use std::str::Split;
 
-pub fn to<T: Integer>(s: &str) -> T {
+type Wrapper<'a, T> = Map<Filter<Split<'a, fn(char) -> bool>, fn(&&str) -> bool>, fn(&str) -> T>;
+
+pub fn from<T>(s: &str) -> T where T: FromStr {
     match s.parse() {
         Ok(t) => t,
         Err(_) => panic!("Unable to parse \"{s}\""),
     }
 }
 
-pub fn to_unsigned_iter<'a, T>(s: &'a str) -> impl Iterator<Item = T> + 'a
-where T: Integer + 'a
-{
-    fn not_numeric(c: char) -> bool {
-        !c.is_ascii_digit()
+pub trait Unsigned: FromStr {}
+impl Unsigned for u32 {}
+impl Unsigned for u64 {}
+impl Unsigned for usize {}
+
+pub trait ParseUnsigned<T> where T: Unsigned {
+    fn to_unsigned_iter<'a>(&'a self) -> Wrapper<'a, T>;
+}
+
+impl<T> ParseUnsigned<T> for &str where T: Unsigned {
+    fn to_unsigned_iter<'a>(&'a self) -> Wrapper<'a, T> {
+        let not_numeric: fn(char) -> bool = |c| !c.is_ascii_digit();
+        let not_empty: fn(&&str) -> bool = |s| !s.is_empty();
+        self.split(not_numeric).filter(not_empty).map(from)
     }
+}
 
-    fn not_empty(s: &&str) -> bool {
-        !s.is_empty()
+pub trait Signed: FromStr {}
+impl Signed for i32 {}
+
+pub trait ParseSigned<T> where T: Signed {
+    fn to_signed_iter<'a>(&'a self) -> Wrapper<'a, T>;
+}
+
+impl<T> ParseSigned<T> for &str where T: Signed {
+    fn to_signed_iter<'a>(&'a self) -> Wrapper<'a, T> {
+        let not_numeric: fn(char) -> bool = |c| !c.is_ascii_digit() && c != '-';
+        let not_empty: fn(&&str) -> bool = |s| !s.is_empty();
+        self.split(not_numeric).filter(not_empty).map(from)
     }
-    s.split(not_numeric).filter(not_empty).map(to::<T>)
-}
-
-pub fn to_vec<T: Integer>(s: &str) -> Vec<T> {
-    to_unsigned_iter(s).collect()
-}
-
-pub fn to_tuple_1<T: Integer>(s: &str) -> T {
-    let mut iter = to_unsigned_iter(s);
-    iter.next().unwrap()
-}
-
-pub fn to_tuple_2<T: Integer>(s: &str) -> (T, T) {
-    let mut iter = to_unsigned_iter(s);
-    (iter.next().unwrap(), iter.next().unwrap())
-}
-
-pub fn to_tuple_3<T: Integer>(s: &str) -> (T, T, T) {
-    let mut iter = to_unsigned_iter(s);
-    (
-        iter.next().unwrap(),
-        iter.next().unwrap(),
-        iter.next().unwrap(),
-    )
-}
-
-pub fn to_tuple_4<T: Integer>(s: &str) -> (T, T, T, T) {
-    let mut iter = to_unsigned_iter(s);
-    (
-        iter.next().unwrap(),
-        iter.next().unwrap(),
-        iter.next().unwrap(),
-        iter.next().unwrap(),
-    )
-}
-
-pub fn to_signed_vec<T: Integer>(s: &str) -> Vec<T> {
-    fn not_numeric(c: char) -> bool {
-        !c.is_ascii_digit() && c != '-'
-    }
-    fn not_empty(s: &&str) -> bool {
-        !s.is_empty()
-    }
-    s.split(not_numeric).filter(not_empty).map(to::<T>).collect()
 }

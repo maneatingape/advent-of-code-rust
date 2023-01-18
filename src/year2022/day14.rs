@@ -1,5 +1,5 @@
 use crate::util::collection::*;
-use crate::util::parse::to_vec;
+use crate::util::parse::*;
 
 pub struct Cave {
     sand: Vec<bool>,
@@ -28,7 +28,10 @@ impl Cave {
 }
 
 pub fn parse(input: &str) -> Cave {
-    let points: Vec<Vec<u32>> = input.lines().map(to_vec::<u32>).collect();
+    let points: Vec<Vec<u32>> = input
+        .lines()
+        .map(|line| line.to_unsigned_iter().collect())
+        .collect();
     let max_y = points
         .iter()
         .flat_map(|row| row.iter().skip(1).step_by(2).max())

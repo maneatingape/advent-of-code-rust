@@ -1,4 +1,4 @@
-use crate::util::parse::to;
+use crate::util::parse::*;
 
 pub fn parse(input: &str) -> Vec<u32> {
     let mut total = 0;
@@ -17,7 +17,8 @@ pub fn parse(input: &str) -> Vec<u32> {
                 total = 0;
             }
             [size, _] if size != "$" && size != "dir" => {
-                total += to::<u32>(size);
+                let file: u32 = from(size);
+                total += file;
             }
             _ => (),
         }

@@ -1,3 +1,4 @@
+use crate::util::collection::*;
 use crate::util::parse::*;
 use crate::util::point::*;
 use std::ops::Range;
@@ -10,14 +11,14 @@ pub struct Input {
 }
 
 pub fn parse(input: &str) -> Vec<Input> {
-    fn helper(line: &str) -> Input {
-        let tokens = to_signed_vec::<i32>(line);
-        let sensor = Point { x: tokens[0], y: tokens[1] };
-        let beacon = Point { x: tokens[2], y: tokens[3] };
+    fn helper(tuple: (i32, i32, i32, i32)) -> Input {
+        let (x1, y1, x2, y2) = tuple;
+        let sensor = Point { x: x1, y: y1 };
+        let beacon = Point { x: x2, y: y2 };
         let manhattan = sensor.manhattan(beacon);
         Input { sensor, beacon, manhattan }
     }
-    input.lines().map(helper).collect()
+    input.to_signed_iter().tupled4().map(helper).collect()
 }
 
 pub fn part1(input: &[Input]) -> i32 {
