@@ -1,26 +1,28 @@
 use crate::util::parse::*;
 
 pub fn parse(input: &str) -> Vec<u32> {
+    let mut cd = false;
     let mut total = 0;
     let mut stack: Vec<u32> = vec![];
     let mut sizes: Vec<u32> = vec![];
 
-    for line in input.lines() {
-        let tokens: Vec<&str> = line.split(' ').collect();
-        match tokens[..] {
-            ["$", "cd", ".."] => {
+    for token in input.split_ascii_whitespace() {
+        if cd == true {
+            if token == ".." {
                 sizes.push(total);
                 total += stack.pop().unwrap();
-            }
-            ["$", "cd", _] => {
+            } else {
                 stack.push(total);
                 total = 0;
             }
-            [size, _] if size != "$" && size != "dir" => {
-                let file: u32 = from(size);
-                total += file;
+            cd = false;
+        } else {
+            if token == "cd" {
+                cd = true
             }
-            _ => (),
+            else if token.as_bytes()[0].is_ascii_digit() {
+                total += from::<u32>(token)
+            }
         }
     }
 
