@@ -1,3 +1,5 @@
+use crate::util::collection::Tupled;
+
 pub fn parse(input: &str) -> Vec<&str> {
     input.lines().collect()
 }
@@ -11,10 +13,11 @@ pub fn part1(input: &[&str]) -> u32 {
 }
 
 pub fn part2(input: &[&str]) -> u32 {
-    fn helper(rucksacks: &[&str]) -> u32 {
-        priority(mask(rucksacks[0]) & mask(rucksacks[1]) & mask(rucksacks[2]))
+    fn helper(rucksacks: (&&str, &&str, &&str)) -> u32 {
+        let (a, b, c) = rucksacks;
+        priority(mask(a) & mask(b) & mask(c))
     }
-    input.chunks_exact(3).map(helper).sum()
+    input.iter().tupled3().map(helper).sum()
 }
 
 fn mask(s: &str) -> u128 {
