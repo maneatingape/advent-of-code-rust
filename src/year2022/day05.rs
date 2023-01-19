@@ -19,11 +19,11 @@ pub fn parse(input: &str) -> Input {
         }
     }
 
-    fn helper(tuple: Move) -> Move {
-        let (amount, from, to) = tuple;
-        (amount, from - 1, to - 1)
-    }
-    let moves: Vec<Move> = suffix.to_unsigned_iter().tupled3().map(helper).collect();
+    let moves: Vec<Move> = suffix
+        .to_unsigned_iter()
+        .tupled3()
+        .map(|(amount, from, to)| (amount, from - 1, to - 1))
+        .collect();
 
     (stack, moves)
 }

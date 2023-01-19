@@ -5,19 +5,21 @@ pub fn parse(input: &str) -> Vec<&str> {
 }
 
 pub fn part1(input: &[&str]) -> u32 {
-    fn helper(rucksack: &&str) -> u32 {
-        let (a, b) = rucksack.split_at(rucksack.len() / 2);
-        priority(mask(a) & mask(b))
-    }
-    input.iter().map(helper).sum()
+    input
+        .iter()
+        .map(|rucksack| {
+            let (a, b) = rucksack.split_at(rucksack.len() / 2);
+            priority(mask(a) & mask(b))
+        })
+        .sum()
 }
 
 pub fn part2(input: &[&str]) -> u32 {
-    fn helper(rucksacks: (&&str, &&str, &&str)) -> u32 {
-        let (a, b, c) = rucksacks;
-        priority(mask(a) & mask(b) & mask(c))
-    }
-    input.iter().tupled3().map(helper).sum()
+    input
+        .iter()
+        .tupled3()
+        .map(|(a, b, c)| priority(mask(a) & mask(b) & mask(c)))
+        .sum()
 }
 
 fn mask(s: &str) -> u128 {
