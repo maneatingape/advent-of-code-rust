@@ -1,4 +1,3 @@
-use crate::util::collection::*;
 use crate::util::parse::*;
 
 pub struct Monkey {
@@ -58,7 +57,7 @@ pub fn part2(input: &[Monkey]) -> u64 {
 }
 
 fn play(monkeys: &[Monkey], rounds: u32, adjust: impl Fn(u64) -> u64) -> u64 {
-    let mut business: Vec<u64> = Vec::fill(monkeys.len(), 0);
+    let mut business: Vec<u64> = vec![0; monkeys.len()];
 
     for start_index in 0..monkeys.len() {
         for start_item in monkeys[start_index].items.iter() {

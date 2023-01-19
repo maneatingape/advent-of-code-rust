@@ -1,4 +1,3 @@
-use crate::util::collection::*;
 use crate::util::parse::*;
 
 pub struct Cave {
@@ -40,7 +39,7 @@ pub fn parse(input: &str) -> Cave {
     let width = 2 * max_y + 5;
     let height = max_y + 3;
     let start = max_y + 2;
-    let mut sand = Vec::fill((width * height) as usize, false);
+    let mut sand = vec![false; (width * height) as usize];
 
     for row in points {
         for window in row.windows(4).step_by(2) {
