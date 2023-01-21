@@ -7,7 +7,7 @@ pub fn parse(input: &str) -> Vec<u32> {
     let mut sizes: Vec<u32> = vec![];
 
     for token in input.split_ascii_whitespace() {
-        if cd == true {
+        if cd {
             if token == ".." {
                 sizes.push(total);
                 total += stack.pop().unwrap();
@@ -16,13 +16,11 @@ pub fn parse(input: &str) -> Vec<u32> {
                 total = 0;
             }
             cd = false;
-        } else {
-            if token == "cd" {
-                cd = true
-            }
-            else if token.as_bytes()[0].is_ascii_digit() {
-                total += from::<u32>(token)
-            }
+        } else if token == "cd" {
+            cd = true
+        }
+        else if token.as_bytes()[0].is_ascii_digit() {
+            total += from::<u32>(token)
         }
     }
 

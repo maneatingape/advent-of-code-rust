@@ -1,3 +1,5 @@
+#![allow(clippy::needless_lifetimes)]
+
 use std::iter::Filter;
 use std::iter::Map;
 use std::str::FromStr;
