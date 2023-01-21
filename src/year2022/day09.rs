@@ -1,49 +1,51 @@
+use crate::util::collection::Tupled;
 use crate::util::parse::*;
 use crate::util::point::*;
 use std::collections::HashSet;
 
-pub fn parse(input: &str) -> Vec<Point> {
-    let mut iter = input.split_ascii_whitespace();
-    let mut points: Vec<Point> = vec![];
+type Input = (Point, u32);
 
-    while let (Some(d), Some(n)) = (iter.next(), iter.next()) {
-        let point = match d {
-            "U" => UP,
-            "D" => DOWN,
-            "L" => LEFT,
-            "R" => RIGHT,
-            _ => unreachable!(),
-        };
-        let amount = from(n);
-        for _ in 0..amount {
-            points.push(point);
-        }
-    }
-
-    points
+pub fn parse(input: &str) -> Vec<Input> {
+    input
+        .split_ascii_whitespace()
+        .tupled2()
+        .map(|(d, n)| {
+            let point = match d {
+                "U" => UP,
+                "D" => DOWN,
+                "L" => LEFT,
+                "R" => RIGHT,
+                _ => unreachable!(),
+            };
+            let amount = from(n);
+            (point, amount)
+        })
+        .collect()
 }
 
-pub fn part1(input: &[Point]) -> usize {
+pub fn part1(input: &[Input]) -> usize {
     simulate(input, 2)
 }
 
-pub fn part2(input: &[Point]) -> usize {
+pub fn part2(input: &[Input]) -> usize {
     simulate(input, 10)
 }
 
-fn simulate(input: &[Point], size: usize) -> usize {
+fn simulate(input: &[Input], size: usize) -> usize {
     let mut rope: Vec<Point> = vec![ORIGIN; size];
     let mut tail: HashSet<Point> = HashSet::new();
 
-    for step in input {
-        rope[0] += *step;
-        for i in 1..size {
-            if apart(rope[i - 1], rope[i]) {
-                let next = delta(rope[i - 1], rope[i]);
-                rope[i] += next;
+    for (step, amount) in input {
+        for _ in 0..*amount {
+            rope[0] += *step;
+            for i in 1..size {
+                if apart(rope[i - 1], rope[i]) {
+                    let next = delta(rope[i - 1], rope[i]);
+                    rope[i] += next;
+                }
             }
+            tail.insert(rope[size - 1]);
         }
-        tail.insert(rope[size - 1]);
     }
 
     tail.len()
