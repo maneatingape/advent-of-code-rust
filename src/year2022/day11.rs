@@ -1,5 +1,6 @@
 use crate::util::parse::*;
 
+#[derive(Clone)]
 pub struct Monkey {
     items: Vec<u64>,
     operation: Operation,
@@ -8,6 +9,7 @@ pub struct Monkey {
     no: usize,
 }
 
+#[derive(Copy, Clone)]
 pub enum Operation {
     Square,
     Multiply(u64),
@@ -56,7 +58,8 @@ pub fn part2(input: &[Monkey]) -> u64 {
     play(input, 10000, |x| x % product)
 }
 
-fn play(monkeys: &[Monkey], rounds: u32, adjust: impl Fn(u64) -> u64) -> u64 {
+fn play(input: &[Monkey], rounds: u32, adjust: impl Fn(u64) -> u64) -> u64 {
+    let monkeys: Vec<Monkey> = Vec::from(input);
     let mut business: Vec<u64> = vec![0; monkeys.len()];
 
     for start_index in 0..monkeys.len() {
@@ -66,10 +69,10 @@ fn play(monkeys: &[Monkey], rounds: u32, adjust: impl Fn(u64) -> u64) -> u64 {
             let mut count = 0;
 
             while count < rounds {
-                let Monkey { items: _, operation, test, yes, no } = &monkeys[index];
+                let Monkey { items: _, operation, test, yes, no } = monkeys[index];
                 business[index] += 1;
                 item = adjust(operation.worry(item));
-                let next = if item % test == 0 { *yes } else { *no };
+                let next = if item % test == 0 { yes } else { no };
                 if next < index { count += 1; }
                 index = next;
             }
