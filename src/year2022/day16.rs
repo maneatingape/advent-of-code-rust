@@ -1,6 +1,6 @@
 use crate::util::parse::*;
 use std::cmp::Ordering;
-use std::collections::HashMap;
+use std::collections::{HashMap, VecDeque};
 
 pub struct Valve<'a> {
     name: &'a str,
@@ -82,18 +82,100 @@ pub fn parse(input: &str) -> Input {
     let flow: Vec<u32> = valves.iter().take(size).map(|v| v.flow).collect();
     distance.iter_mut().for_each(|d| *d += 1);
 
+
     Input { size, todo, flow, distance }
 }
 
 pub fn part1(input: &Input) -> u32 {
-    let mut score = vec![0; 1 << (input.size - 1)];
-    explore(input, input.todo, 0, input.size - 1, 30, 0, &mut score);
-    *score.iter().max().unwrap()
+    struct State {
+        todo: u32,
+        from: usize,
+        time: u32,
+        pressure: u32,
+        unopened: u32,
+    }
+
+    let start = State {
+        todo: input.todo,
+        from: input.size - 1,
+        time: 30,
+        pressure: 0,
+        unopened: input.flow.iter().sum(),
+    };
+
+    let mut score = 0;
+    let mut queue = VecDeque::from([start]);
+
+    while let Some(State { todo, from, time, pressure, unopened }) = queue.pop_front() {
+        score = score.max(pressure);
+        let mut valves = todo;
+
+        while valves != 0 {
+            let to = valves.trailing_zeros() as usize;
+            let mask = 1 << to;
+            valves ^= mask;
+            let needed = input.distance[from * input.size + to];
+            if needed < time {
+                let remaining = time - needed;
+                if pressure + remaining * unopened > score {
+                    let flow = input.flow[to];
+                    let next = State {
+                        todo: todo ^ mask,
+                        from: to,
+                        time: remaining,
+                        pressure: pressure + remaining * flow,
+                        unopened: unopened - flow,
+                    };
+                    queue.push_back(next);
+                }
+            }
+        }
+    }
+
+    score
 }
 
 pub fn part2(input: &Input) -> u32 {
+    struct State {
+        todo: u32,
+        from: usize,
+        time: u32,
+        pressure: u32,
+    }
+
+    let start = State {
+        todo: input.todo,
+        from: input.size - 1,
+        time: 26,
+        pressure: 0,
+    };
+
     let mut score = vec![0; 1 << (input.size - 1)];
-    explore(input, input.todo, 0, input.size - 1, 26, 0, &mut score);
+    let mut queue = VecDeque::from([start]);
+
+    while let Some(State { todo, from, time, pressure }) = queue.pop_front() {
+        let done = (todo ^ input.todo) as usize;
+        score[done] = score[done].max(pressure);
+        let mut valves = todo;
+
+        while valves != 0 {
+            let to = valves.trailing_zeros() as usize;
+            let mask = 1 << to;
+            valves ^= mask;
+            let needed = input.distance[from * input.size + to];
+            if needed < time {
+                let remaining = time - needed;
+                let flow = input.flow[to];
+                let next = State {
+                    todo: todo ^ mask,
+                    from: to,
+                    time: remaining,
+                    pressure: pressure + remaining * flow,
+                };
+                queue.push_back(next);
+            }
+        }
+    }
 
     let mut visited = vec![false; 1 << (input.size - 1)];
     subsets(input.todo, input.size - 1, &mut score, &mut visited);
@@ -107,34 +189,19 @@ pub fn part2(input: &Input) -> u32 {
     result
 }
 
-fn explore(input: &Input, todo: u32, done: u32, from: usize, time: u32, pressure: u32, score: &mut Vec<u32>) {
-    score[done as usize] = score[done as usize].max(pressure);
-
-    for to in 0..(input.size - 1) {
-        let mask = 1 << to;
-        if todo & mask != 0 {
-            let needed = input.distance[from * input.size + to];
-            if needed < time {
-                let remaining = time - needed;
-                let extra = remaining * input.flow[to];
-                explore(input, todo ^ mask, done ^ mask, to, remaining, pressure + extra, score);
-            }
-        }
-    }
-}
-
 fn subsets(todo: u32, size: usize, score: &mut [u32], visited: &mut [bool]) -> u32 {
     let index = todo as usize;
     if visited[index] {
         score[index]
     } else {
         let mut max = score[index];
+        let mut valves = todo;
 
-        for to in 0..size {
+        while valves != 0 {
+            let to = valves.trailing_zeros() as usize;
             let mask = 1 << to;
-            if todo & mask != 0 {
-                max = max.max(subsets(todo ^ mask, size, score, visited));
-            }
+            valves ^= mask;
+            max = max.max(subsets(todo ^ mask, size, score, visited));
         }
 
         score[index] = max;
