@@ -2,6 +2,21 @@ use crate::util::parse::*;
 use std::cmp::Ordering;
 use std::collections::{HashMap, VecDeque};
 
+pub struct Input {
+    size: usize,
+    todo: usize,
+    flow: Vec<u32>,
+    distance: Vec<u32>,
+}
+
+struct State {
+    todo: usize,
+    from: usize,
+    time: u32,
+    pressure: u32,
+    unopened: u32,
+}
+
 pub struct Valve<'a> {
     name: &'a str,
     flow: u32,
@@ -24,13 +39,6 @@ impl Valve<'_> {
         let first = other.flow.cmp(&self.flow);
         if first != Ordering::Equal { first } else { self.name.cmp(other.name) }
     }
-}
-
-pub struct Input {
-    size: usize,
-    todo: u32,
-    flow: Vec<u32>,
-    distance: Vec<u32>,
 }
 
 pub fn parse(input: &str) -> Input {
@@ -78,23 +86,14 @@ pub fn parse(input: &str) -> Input {
         }
     }
 
-    let todo: u32 = (1 << (size - 1)) - 1;
+    let todo = (1 << (size - 1)) - 1;
     let flow: Vec<u32> = valves.iter().take(size).map(|v| v.flow).collect();
     distance.iter_mut().for_each(|d| *d += 1);
-
 
     Input { size, todo, flow, distance }
 }
 
 pub fn part1(input: &Input) -> u32 {
-    struct State {
-        todo: u32,
-        from: usize,
-        time: u32,
-        pressure: u32,
-        unopened: u32,
-    }
-
     let start = State {
         todo: input.todo,
         from: input.size - 1,
@@ -136,25 +135,19 @@ pub fn part1(input: &Input) -> u32 {
 }
 
 pub fn part2(input: &Input) -> u32 {
-    struct State {
-        todo: u32,
-        from: usize,
-        time: u32,
-        pressure: u32,
-    }
-
     let start = State {
         todo: input.todo,
         from: input.size - 1,
         time: 26,
         pressure: 0,
+        unopened: 0,
     };
 
-    let mut score = vec![0; 1 << (input.size - 1)];
+    let mut score = vec![0; input.todo + 1];
     let mut queue = VecDeque::from([start]);
 
-    while let Some(State { todo, from, time, pressure }) = queue.pop_front() {
-        let done = (todo ^ input.todo) as usize;
+    while let Some(State { todo, from, time, pressure, .. }) = queue.pop_front() {
+        let done = todo ^ input.todo;
         score[done] = score[done].max(pressure);
         let mut valves = todo;
 
@@ -171,41 +164,42 @@ pub fn part2(input: &Input) -> u32 {
                     from: to,
                     time: remaining,
                     pressure: pressure + remaining * flow,
+                    unopened: 0,
                 };
                 queue.push_back(next);
             }
         }
     }
 
-    let mut visited = vec![false; 1 << (input.size - 1)];
-    subsets(input.todo, input.size - 1, &mut score, &mut visited);
-
     let mut result = 0;
-    for i in 0..=input.todo {
-        let you = i as usize;
-        let elephant = (input.todo ^ i) as usize;
-        result = result.max(score[you] + score[elephant]);
+    let mut visited = vec![false; input.todo + 1];
+
+    subsets(input.todo, &mut score, &mut visited);
+
+    for (i, you) in score.iter().enumerate() {
+        let elephant = score[input.todo ^ i];
+        result = result.max(you + elephant);
     }
+
     result
 }
 
-fn subsets(todo: u32, size: usize, score: &mut [u32], visited: &mut [bool]) -> u32 {
-    let index = todo as usize;
-    if visited[index] {
-        score[index]
-    } else {
-        let mut max = score[index];
-        let mut valves = todo;
-
-        while valves != 0 {
-            let to = valves.trailing_zeros() as usize;
-            let mask = 1 << to;
-            valves ^= mask;
-            max = max.max(subsets(todo ^ mask, size, score, visited));
-        }
-
-        score[index] = max;
-        visited[index] = true;
-        max
+fn subsets(todo: usize, score: &mut [u32], visited: &mut [bool]) -> u32 {
+    if visited[todo] {
+        return score[todo]
     }
+
+    let mut valves = todo;
+    let mut max = score[todo];
+
+    while valves != 0 {
+        let mask = 1 << valves.trailing_zeros();
+        let result = subsets(todo ^ mask, score, visited);
+        valves ^= mask;
+        max = max.max(result);
+    }
+
+    score[todo] = max;
+    visited[todo] = true;
+    max
 }
