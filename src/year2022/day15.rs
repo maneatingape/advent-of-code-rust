@@ -82,8 +82,8 @@ pub fn part2_testable(input: &[Input], size: i32) -> u64 {
     let vertical: Vec<&i32> = left.intersection(&right).collect();
     let range = 0..(size + 1);
 
-    for x in vertical.iter() {
-        for y in horizontal.iter() {
+    for x in &vertical {
+        for y in &horizontal {
             // Rotate intersection point counter clockwise and scale by 1 / √2
             // to return to original coordinates.
             let point = Point { x: (**x + **y) / 2, y: (**y - **x) / 2 };

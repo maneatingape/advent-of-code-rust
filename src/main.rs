@@ -1,5 +1,5 @@
-use aoc::*;
 use aoc::util::macros::*;
+use aoc::*;
 use std::time::Instant;
 
 const RESET: &str = "\u{001b}[0m";
@@ -18,7 +18,7 @@ fn main() {
             let (answer1, answer2) = (wrapper)(input);
             total_solutions += 1;
 
-            println!("{YELLOW}{BOLD}{year} Day {day:02}{RESET}");
+            println!("{BOLD}{YELLOW}{year} Day {day:02}{RESET}");
             println!("    Part 1: {answer1}");
             println!("    Part 2: {answer2}");
             println!("    Duration: {} μs", time.elapsed().as_micros());

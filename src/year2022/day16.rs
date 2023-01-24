@@ -56,17 +56,17 @@ pub fn parse(input: &str) -> Input {
     // Eliminate zero valves
     for (from, valve) in valves.iter().enumerate().take(size) {
         distance[from * size + from] = 0;
-        for edge in valve.edges.iter() {
+        for edge in &valve.edges {
             let mut prev = valve.name;
             let mut cur = edge;
-            let mut to = *indices.get(cur).unwrap();
+            let mut to = indices[cur];
             let mut total = 1;
 
             while to >= size {
                 let next = valves[to].edges.iter().find(|&&e| e != prev).unwrap();
                 prev = cur;
                 cur = next;
-                to = *indices.get(cur).unwrap();
+                to = indices[cur];
                 total += 1;
             }
 
