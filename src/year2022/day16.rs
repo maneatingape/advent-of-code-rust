@@ -94,16 +94,15 @@ pub fn parse(input: &str) -> Input {
 }
 
 pub fn part1(input: &Input) -> u32 {
-    let start = State {
+    let mut score = 0;
+    let mut queue = VecDeque::with_capacity(input.todo);
+    queue.push_back(State {
         todo: input.todo,
         from: input.size - 1,
         time: 30,
         pressure: 0,
         unopened: input.flow.iter().sum(),
-    };
-
-    let mut score = 0;
-    let mut queue = VecDeque::from([start]);
+    });
 
     while let Some(State { todo, from, time, pressure, unopened }) = queue.pop_front() {
         score = score.max(pressure);
@@ -135,16 +134,15 @@ pub fn part1(input: &Input) -> u32 {
 }
 
 pub fn part2(input: &Input) -> u32 {
-    let start = State {
+    let mut score = vec![0; input.todo + 1];
+    let mut queue = VecDeque::with_capacity(input.todo);
+    queue.push_back(State {
         todo: input.todo,
         from: input.size - 1,
         time: 26,
         pressure: 0,
         unopened: 0,
-    };
-
-    let mut score = vec![0; input.todo + 1];
-    let mut queue = VecDeque::from([start]);
+    });
 
     while let Some(State { todo, from, time, pressure, .. }) = queue.pop_front() {
         let done = todo ^ input.todo;
@@ -172,8 +170,7 @@ pub fn part2(input: &Input) -> u32 {
     }
 
     let mut result = 0;
-    let mut visited = vec![false; input.todo + 1];
-
+    let mut visited: Vec<bool> = score.iter().map(|&s| s > 0).collect();
     subsets(input.todo, &mut score, &mut visited);
 
     for (i, you) in score.iter().enumerate() {
@@ -185,16 +182,17 @@ pub fn part2(input: &Input) -> u32 {
 }
 
 fn subsets(todo: usize, score: &mut [u32], visited: &mut [bool]) -> u32 {
-    if visited[todo] {
-        return score[todo]
-    }
-
     let mut valves = todo;
     let mut max = score[todo];
 
     while valves != 0 {
         let mask = 1 << valves.trailing_zeros();
-        let result = subsets(todo ^ mask, score, visited);
+        let next = todo ^ mask;
+        let result = if visited[next] {
+            score[next]
+        } else {
+            subsets(next, score, visited)
+        };
         valves ^= mask;
         max = max.max(result);
     }
