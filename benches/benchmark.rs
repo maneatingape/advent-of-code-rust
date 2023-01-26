@@ -26,3 +26,4 @@ benchmark!(year2022_day14, year2022, day14);
 benchmark!(year2022_day15, year2022, day15);
 benchmark!(year2022_day16, year2022, day16);
 benchmark!(year2022_day17, year2022, day17);
+benchmark!(year2022_day18, year2022, day18);
