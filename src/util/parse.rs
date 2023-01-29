@@ -33,6 +33,7 @@ impl<T> ParseUnsigned<T> for &str where T: Unsigned {
 
 pub trait Signed: FromStr {}
 impl Signed for i32 {}
+impl Signed for i64 {}
 
 pub trait ParseSigned<T> where T: Signed {
     fn to_signed_iter<'a>(&'a self) -> Wrapper<'a, T>;
