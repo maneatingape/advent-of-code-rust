@@ -1,32 +1,20 @@
 use crate::util::parse::*;
-use std::cmp::Ordering;
-use std::collections::VecDeque;
 use std::ops::{Add, Mul, Sub};
 
-const ZERO: Resources = Resources { ore: 0, clay: 0, obsidian: 0, geode: 0 };
-const ORE_BOT: Resources = Resources { ore: 1, clay: 0, obsidian: 0, geode: 0 };
-const CLAY_BOT: Resources = Resources { ore: 0, clay: 1, obsidian: 0, geode: 0 };
-const OBSIDIAN_BOT: Resources = Resources { ore: 0, clay: 0, obsidian: 1, geode: 0 };
-const GEODE_BOT: Resources = Resources { ore: 0, clay: 0, obsidian: 0, geode: 1 };
+const ZERO: Resources = Resources(0);
+const ORE_BOT: Resources = Resources(1 << 24);
+const CLAY_BOT: Resources = Resources(1 << 16);
+const OBSIDIAN_BOT: Resources = Resources(1 << 8);
+const GEODE_BOT: Resources = Resources(1);
 
-#[derive(Clone, Copy, PartialEq)]
-pub struct Resources {
-    ore: u32,
-    clay: u32,
-    obsidian: u32,
-    geode: u32,
-}
+#[derive(Clone, Copy)]
+pub struct Resources(u32);
 
 impl Add for Resources {
     type Output = Resources;
 
     fn add(self, rhs: Resources) -> Resources {
-        Resources {
-            ore: self.ore + rhs.ore,
-            clay: self.clay + rhs.clay,
-            obsidian: self.obsidian + rhs.obsidian,
-            geode: self.geode + rhs.geode,
-        }
+        Resources(self.0 + rhs.0)
     }
 }
 
@@ -34,12 +22,7 @@ impl Sub for Resources {
     type Output = Resources;
 
     fn sub(self, rhs: Resources) -> Resources {
-        Resources {
-            ore: self.ore - rhs.ore,
-            clay: self.clay - rhs.clay,
-            obsidian: self.obsidian - rhs.obsidian,
-            geode: self.geode - rhs.geode,
-        }
+        Resources(self.0 - rhs.0)
     }
 }
 
@@ -47,24 +30,32 @@ impl Mul<u32> for Resources {
     type Output = Resources;
 
     fn mul(self, rhs: u32) -> Resources {
-        Resources {
-            ore: self.ore * rhs,
-            clay: self.clay * rhs,
-            obsidian: self.obsidian * rhs,
-            geode: self.geode * rhs,
-        }
+        Resources(self.0 * rhs)
     }
 }
 
-impl PartialOrd for Resources {
-    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
-        {
-            self.ore > other.ore
-            || self.clay > other.clay
-            || self.obsidian > other.obsidian
-            || self.geode > other.geode
-        }
-        .then_some(Ordering::Greater)
+impl Resources {
+    pub fn less_than_equal(self, other: &Self) -> bool {
+        self.ore() <= other.ore()
+        && self.clay() <= other.clay()
+        && self.obsidian() <= other.obsidian()
+        && self.geode() <= other.geode()
+    }
+
+    pub fn ore(self) -> u32 {
+        (self.0 >> 24) & 0xff
+    }
+
+    pub fn clay(self) -> u32 {
+        (self.0 >> 16) & 0xff
+    }
+
+    pub fn obsidian(self) -> u32 {
+        (self.0 >> 8) & 0xff
+    }
+
+    pub fn geode(self) -> u32 {
+        self.0 & 0xff
     }
 }
 
@@ -94,18 +85,12 @@ impl Blueprint {
             max_ore: ore1.max(ore2).max(ore3).max(ore4),
             max_clay: clay,
             max_obsidian: obsidian,
-            ore_bot_cost: Resources { ore: ore1, clay: 0, obsidian: 0, geode: 0 },
-            clay_bot_cost: Resources { ore: ore2, clay: 0, obsidian: 0, geode: 0 },
-            obsidian_bot_cost: Resources { ore: ore3, clay: clay, obsidian: 0, geode: 0 },
-            geode_bot_cost: Resources { ore: ore4, clay: 0, obsidian: obsidian, geode: 0 },
+            ore_bot_cost: Resources(ore1 << 24),
+            clay_bot_cost: Resources(ore2 << 24),
+            obsidian_bot_cost: Resources((ore3 << 24) + (clay << 16)),
+            geode_bot_cost: Resources((ore4 << 24) + (obsidian << 8)),
         }
     }
-}
-
-struct State {
-    time: u32,
-    bots: Resources,
-    resources: Resources,
 }
 
 pub fn parse(input: &str) -> Vec<Blueprint> {
@@ -120,7 +105,7 @@ pub fn parse(input: &str) -> Vec<Blueprint> {
 pub fn part1(input: &[Blueprint]) -> u32 {
     input
         .iter()
-        .map(|blueprint| blueprint.id * maximize(blueprint, 24))
+        .map(|blueprint| blueprint.id * maximize(blueprint, 24, ORE_BOT, ZERO, 0))
         .sum()
 }
 
@@ -128,85 +113,76 @@ pub fn part2(input: &[Blueprint]) -> u32 {
     input
         .iter()
         .take(3)
-        .map(|blueprint| maximize(blueprint, 32))
+        .map(|blueprint| maximize(blueprint, 32, ORE_BOT, ZERO, 0))
         .product()
 }
 
-fn maximize(blueprint: &Blueprint, time: u32) -> u32 {
-    let start = State {
-        time,
-        bots: ORE_BOT,
-        resources: ZERO,
-    };
-    let mut todo = VecDeque::from([start]);
-    let mut result = 0;
+fn maximize(blueprint: &Blueprint, time: u32, bots: Resources, resources: Resources, geodes: u32) -> u32 {
+    let baseline = resources.geode() + bots.geode() * time;
+    let mut geodes = geodes.max(baseline);
 
-    while let Some(state) = todo.pop_front() {
-        let State { time, bots, resources } = state;
+    // Simple pruning
+    let need_geode =
+        time > 1
+        && {
+            let n = time - 1;
+            let extra = (n * (n + 1)) / 2;
+            baseline + extra > geodes
+        };
 
-        let baseline = resources.geode + bots.geode * time;
-        result = result.max(baseline);
+    let need_obsidian =
+        need_geode
+        && bots.obsidian() < blueprint.max_obsidian
+        && time > 3
+        && resources.obsidian() < (blueprint.max_obsidian - bots.obsidian()) * (time - 3);
 
-        // Simple pruning
-        let need_geode =
-            time > 1
-            && {
-                let n = time - 1;
-                let extra = (n * (n + 1)) / 2;
-                baseline + extra > result
-            };
+    let need_clay =
+        need_obsidian
+        && bots.clay() < blueprint.max_clay
+        && time > 5
+        && resources.clay() < (blueprint.max_clay - bots.clay()) * (time - 5);
 
-        let need_obsidian =
-            need_geode
-            && bots.obsidian < blueprint.max_obsidian
-            && time > 3
-            && resources.obsidian < (blueprint.max_obsidian - bots.obsidian) * (time - 3);
+    let need_ore =
+        need_geode
+        && bots.ore() < blueprint.max_ore
+        && time > 3
+        && (resources.ore() < (blueprint.max_ore - bots.ore()) * (time - 3));
 
-        let need_clay =
-            need_obsidian
-            && bots.clay < blueprint.max_clay
-            && time > 5
-            && resources.clay < (blueprint.max_clay - bots.clay) * (time - 5);
-
-        let need_ore =
-            need_geode
-            && bots.ore < blueprint.max_ore
-            && time > 3
-            && (resources.ore < (blueprint.max_ore - bots.ore) * (time - 3));
-
-        if need_geode && bots.obsidian > 0 {
-            push(&mut todo, &state, GEODE_BOT, blueprint.geode_bot_cost);
-        }
-
-        if need_obsidian && bots.clay > 0 {
-            push(&mut todo, &state, OBSIDIAN_BOT, blueprint.obsidian_bot_cost);
-        }
-
-        if need_clay {
-            push(&mut todo, &state, CLAY_BOT, blueprint.clay_bot_cost);
-        }
-
-        if need_ore {
-            push(&mut todo, &state, ORE_BOT, blueprint.ore_bot_cost);
-        }
+    if need_geode && bots.obsidian() > 0 {
+        let result = next(blueprint, time, bots, resources, geodes, GEODE_BOT, blueprint.geode_bot_cost);
+        geodes = geodes.max(result);
     }
 
-    result
+    if need_obsidian && bots.clay() > 0 {
+        let result = next(blueprint, time, bots, resources, geodes, OBSIDIAN_BOT, blueprint.obsidian_bot_cost);
+        geodes = geodes.max(result);
+    }
+
+    if need_clay {
+        let result = next(blueprint, time, bots, resources, geodes, CLAY_BOT, blueprint.clay_bot_cost);
+        geodes = geodes.max(result);
+    }
+
+    if need_ore {
+        let result = next(blueprint, time, bots, resources, geodes, ORE_BOT, blueprint.ore_bot_cost);
+        geodes = geodes.max(result);
+    }
+
+    geodes
 }
 
-fn push(todo: &mut VecDeque<State>, state: &State, bot: Resources, cost: Resources) {
-    let State { time, bots, resources } = state;
-
+fn next(blueprint: &Blueprint, time: u32, bots: Resources, resources: Resources, geodes: u32, bot: Resources, cost: Resources) -> u32 {
     for jump in 0..(time - 1) {
-        let next = *resources + *bots * jump;
-        if !(cost > next) {
-            let state = State {
-                time: time - jump - 1,
-                bots: *bots + bot,
-                resources: next + *bots - cost,
-            };
-            todo.push_back(state);
-            break;
+        let next = resources + bots * jump;
+        if cost.less_than_equal(&next) {
+            return maximize(
+                blueprint,
+                time - jump - 1,
+                bots + bot,
+                next + bots - cost,
+                geodes);
         }
     }
+
+    0
 }
