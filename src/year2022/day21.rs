@@ -35,9 +35,9 @@ impl Monkey {
 
 pub struct Input {
     root: usize,
+    monkeys: Vec<Monkey>,
     yell: Vec<i64>,
     unknown: Vec<bool>,
-    monkeys: Vec<Monkey>,
 }
 
 pub fn parse(input: &str) -> Input {
@@ -61,9 +61,9 @@ pub fn parse(input: &str) -> Input {
     let humn = indices["humn".as_bytes()];
     let mut input = Input {
         root,
+        monkeys,
         yell: vec![0; lines.len()],
         unknown: vec![false; lines.len()],
-        monkeys,
     };
 
     compute(&mut input, root);
@@ -72,7 +72,7 @@ pub fn parse(input: &str) -> Input {
 }
 
 pub fn part1(input: &Input) -> i64 {
-    let Input { root, yell, .. } = input;
+    let Input { yell, root, .. } = input;
     yell[*root]
 }
 
