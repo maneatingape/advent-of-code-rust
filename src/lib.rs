@@ -1,6 +1,7 @@
 pub mod util {
     pub mod collection;
     pub mod macros;
+    pub mod math;
     pub mod md5;
     pub mod parse;
     pub mod point;
@@ -35,7 +36,7 @@ pub mod year2022 {
     pub mod day19;
     pub mod day20;
     pub mod day21;
-
+    pub mod day22;
 
     pub mod day24;
     pub mod day25;
