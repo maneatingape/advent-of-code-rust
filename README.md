@@ -13,6 +13,7 @@ Continuous integration is provided using [GitHub Actions](https://docs.github.co
 ## Years
 
 * [2022](#2022) (45 ms total benchmark)
+* [2021](#2021) (in progress)
 
 ## 2022
 
@@ -43,3 +44,9 @@ Continuous integration is provided using [GitHub Actions](https://docs.github.co
 | 23 | [Unstable Diffusion](https://adventofcode.com/2022/day/23) | [Source](src/year2022/day23.rs) | 20.275 |
 | 24 | [Blizzard Basin](https://adventofcode.com/2022/day/24) | [Source](src/year2022/day24.rs) | 0.082 |
 | 25 | [Full of Hot Air](https://adventofcode.com/2022/day/25) | [Source](src/year2022/day25.rs) | 0.003 |
+
+## 2021
+
+| Day | Problem | Solution | Benchmark (ms) |
+| --- | --- | --- | --- |
+| 1 | [Sonar Sweep](https://adventofcode.com/2021/day/1) | [Source](src/year2021/day01.rs) | 0.022 |

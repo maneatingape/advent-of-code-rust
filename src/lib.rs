@@ -7,13 +7,6 @@ pub mod util {
     pub mod point;
 }
 
-pub mod year2015 {
-    pub mod day01;
-    pub mod day02;
-    pub mod day03;
-    pub mod day04;
-}
-
 pub mod year2022 {
     pub mod day01;
     pub mod day02;
@@ -40,4 +33,15 @@ pub mod year2022 {
     pub mod day23;
     pub mod day24;
     pub mod day25;
+}
+
+pub mod year2021 {
+    pub mod day01;
+}
+
+pub mod year2015 {
+    pub mod day01;
+    pub mod day02;
+    pub mod day03;
+    pub mod day04;
 }
