@@ -31,11 +31,12 @@ fn count(cube: &[u32], adjust: fn(u32) -> u32) -> u32 {
         if cube[i] == 1 {
             total += adjust(
                 cube[i - 1]
-                + cube[i + 1]
-                + cube[i - SIZE]
-                + cube[i + SIZE]
-                + cube[i - SIZE * SIZE]
-                + cube[i + SIZE * SIZE]);
+                    + cube[i + 1]
+                    + cube[i - SIZE]
+                    + cube[i + SIZE]
+                    + cube[i - SIZE * SIZE]
+                    + cube[i + SIZE * SIZE],
+            );
         }
     }
 

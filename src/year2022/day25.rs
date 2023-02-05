@@ -1,8 +1,5 @@
 pub fn parse(input: &str) -> Vec<&[u8]> {
-    input
-        .lines()
-        .map(|line| line.as_bytes())
-        .collect()
+    input.lines().map(|line| line.as_bytes()).collect()
 }
 
 pub fn part1(input: &[&[u8]]) -> String {
@@ -14,19 +11,17 @@ pub fn part2(_input: &[&[u8]]) -> &'static str {
 }
 
 fn from_snafu(snafu: &&[u8]) -> i64 {
-    snafu
-        .iter()
-        .fold(0, |acc, c| {
-            let digit = match c {
-                b'=' => -2,
-                b'-' => -1,
-                b'0' => 0,
-                b'1' => 1,
-                b'2' => 2,
-                _ => unreachable!(),
-            };
-            5 * acc + digit
-        })
+    snafu.iter().fold(0, |acc, c| {
+        let digit = match c {
+            b'=' => -2,
+            b'-' => -1,
+            b'0' => 0,
+            b'1' => 1,
+            b'2' => 2,
+            _ => unreachable!(),
+        };
+        5 * acc + digit
+    })
 }
 
 fn to_snafu(decimal: i64) -> String {

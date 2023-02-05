@@ -4,11 +4,26 @@ use std::iter::{Copied, Cycle};
 const FLOOR: u8 = 0xff;
 const WALLS: u32 = 0x01010101;
 const ROCKS: [Rock; 5] = [
-    Rock { size: 1, shape: 0x0000003c },
-    Rock { size: 3, shape: 0x00103810 },
-    Rock { size: 3, shape: 0x00080838 },
-    Rock { size: 4, shape: 0x20202020 },
-    Rock { size: 2, shape: 0x00003030 },
+    Rock {
+        size: 1,
+        shape: 0x0000003c,
+    },
+    Rock {
+        size: 3,
+        shape: 0x00103810,
+    },
+    Rock {
+        size: 3,
+        shape: 0x00080838,
+    },
+    Rock {
+        size: 4,
+        shape: 0x20202020,
+    },
+    Rock {
+        size: 2,
+        shape: 0x00003030,
+    },
 ];
 
 #[derive(Copy, Clone)]

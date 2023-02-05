@@ -14,13 +14,19 @@ pub struct Tupled2<I>(I);
 pub struct Tupled3<I>(I);
 pub struct Tupled4<I>(I);
 
-pub trait Tupled where Self: Sized {
+pub trait Tupled
+where
+    Self: Sized,
+{
     fn tupled2(self) -> Tupled2<Self>;
     fn tupled3(self) -> Tupled3<Self>;
     fn tupled4(self) -> Tupled4<Self>;
 }
 
-impl<I> Tupled for I where I: Iterator {
+impl<I> Tupled for I
+where
+    I: Iterator,
+{
     fn tupled2(self) -> Tupled2<Self> {
         Tupled2(self)
     }
@@ -34,7 +40,10 @@ impl<I> Tupled for I where I: Iterator {
     }
 }
 
-impl<I, T> Iterator for Tupled2<I> where I: Iterator<Item = T> {
+impl<I, T> Iterator for Tupled2<I>
+where
+    I: Iterator<Item = T>,
+{
     type Item = (T, T);
 
     fn next(&mut self) -> Option<Self::Item> {
@@ -44,7 +53,10 @@ impl<I, T> Iterator for Tupled2<I> where I: Iterator<Item = T> {
     }
 }
 
-impl<I, T> Iterator for Tupled3<I> where I: Iterator<Item = T> {
+impl<I, T> Iterator for Tupled3<I>
+where
+    I: Iterator<Item = T>,
+{
     type Item = (T, T, T);
 
     fn next(&mut self) -> Option<Self::Item> {
@@ -55,7 +67,10 @@ impl<I, T> Iterator for Tupled3<I> where I: Iterator<Item = T> {
     }
 }
 
-impl<I, T> Iterator for Tupled4<I> where I: Iterator<Item = T> {
+impl<I, T> Iterator for Tupled4<I>
+where
+    I: Iterator<Item = T>,
+{
     type Item = (T, T, T, T);
 
     fn next(&mut self) -> Option<Self::Item> {

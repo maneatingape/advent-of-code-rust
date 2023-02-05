@@ -26,7 +26,7 @@ impl Monkey {
                 b'-' => Operation::Sub,
                 b'*' => Operation::Mul,
                 b'/' => Operation::Div,
-                _ => unreachable!()
+                _ => unreachable!(),
             };
             Monkey::Result(left, operation, right)
         }
@@ -41,10 +41,7 @@ pub struct Input {
 }
 
 pub fn parse(input: &str) -> Input {
-    let lines: Vec<&[u8]> = input
-        .lines()
-        .map(|line| line.as_bytes())
-        .collect();
+    let lines: Vec<&[u8]> = input.lines().map(|line| line.as_bytes()).collect();
 
     let indices: HashMap<&[u8], usize> = lines
         .iter()
@@ -84,14 +81,12 @@ pub fn part2(input: &Input) -> i64 {
 fn compute(input: &mut Input, index: usize) -> i64 {
     let result = match input.monkeys[index] {
         Monkey::Number(n) => n,
-        Monkey::Result(left, operation, right) => {
-            match operation {
-                Operation::Add => compute(input, left) + compute(input, right),
-                Operation::Sub => compute(input, left) - compute(input, right),
-                Operation::Mul => compute(input, left) * compute(input, right),
-                Operation::Div => compute(input, left) / compute(input, right),
-            }
-        }
+        Monkey::Result(left, operation, right) => match operation {
+            Operation::Add => compute(input, left) + compute(input, right),
+            Operation::Sub => compute(input, left) - compute(input, right),
+            Operation::Mul => compute(input, left) * compute(input, right),
+            Operation::Div => compute(input, left) / compute(input, right),
+        },
     };
     input.yell[index] = result;
     result
@@ -100,9 +95,7 @@ fn compute(input: &mut Input, index: usize) -> i64 {
 fn find(input: &mut Input, humn: usize, index: usize) -> bool {
     let result = match input.monkeys[index] {
         Monkey::Number(_) => humn == index,
-        Monkey::Result(left, _, right) => {
-            find(input, humn, left) || find(input, humn, right)
-        }
+        Monkey::Result(left, _, right) => find(input, humn, left) || find(input, humn, right),
     };
     input.unknown[index] = result;
     result
@@ -119,7 +112,7 @@ fn inverse(input: &Input, index: usize, value: i64) -> i64 {
             } else {
                 inverse(input, right, yell[left])
             }
-        },
+        }
         Monkey::Result(left, operation, right) => {
             if unknown[left] {
                 match operation {

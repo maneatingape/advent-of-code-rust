@@ -1,8 +1,8 @@
 use crate::util::collection::*;
 use crate::util::parse::*;
 use crate::util::point::*;
-use std::ops::Range;
 use std::collections::HashSet;
+use std::ops::Range;
 
 pub struct Input {
     sensor: Point,
@@ -29,7 +29,11 @@ pub fn part1_testable(input: &[Input], row: i32) -> i32 {
     fn build_range(input: &Input, row: i32) -> Option<Range<i32>> {
         let Input { sensor, beacon: _, manhattan } = input;
         let extra = manhattan - (sensor.y - row).abs();
-        if extra >= 0 { Some((sensor.x - extra)..(sensor.x + extra)) } else { None }
+        if extra >= 0 {
+            Some((sensor.x - extra)..(sensor.x + extra))
+        } else {
+            None
+        }
     }
 
     let mut ranges: Vec<Range<i32>> = input.iter().filter_map(|i| build_range(i, row)).collect();
@@ -86,9 +90,14 @@ pub fn part2_testable(input: &[Input], size: i32) -> u64 {
         for y in &horizontal {
             // Rotate intersection point counter clockwise and scale by 1 / √2
             // to return to original coordinates.
-            let point = Point { x: (**x + **y) / 2, y: (**y - **x) / 2 };
-            if range.contains(&point.x) && range.contains(&point.y)
-                && input.iter().all(|i| i.sensor.manhattan(point) > i.manhattan) {
+            let point = Point {
+                x: (**x + **y) / 2,
+                y: (**y - **x) / 2,
+            };
+            if range.contains(&point.x)
+                && range.contains(&point.y)
+                && input.iter().all(|i| i.sensor.manhattan(point) > i.manhattan)
+            {
                 return 4_000_000 * (point.x as u64) + (point.y as u64);
             }
         }

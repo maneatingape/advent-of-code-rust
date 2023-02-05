@@ -37,7 +37,11 @@ impl Valve<'_> {
 
     fn cmp(&self, other: &Valve) -> Ordering {
         let first = other.flow.cmp(&self.flow);
-        if first != Ordering::Equal { first } else { self.name.cmp(other.name) }
+        if first != Ordering::Equal {
+            first
+        } else {
+            self.name.cmp(other.name)
+        }
     }
 }
 

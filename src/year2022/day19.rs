@@ -37,9 +37,9 @@ impl Mul<u32> for Resources {
 impl Resources {
     pub fn less_than_equal(self, other: &Self) -> bool {
         self.ore() <= other.ore()
-        && self.clay() <= other.clay()
-        && self.obsidian() <= other.obsidian()
-        && self.geode() <= other.geode()
+            && self.clay() <= other.clay()
+            && self.obsidian() <= other.obsidian()
+            && self.geode() <= other.geode()
     }
 
     pub fn ore(self) -> u32 {
@@ -122,28 +122,23 @@ fn maximize(blueprint: &Blueprint, time: u32, bots: Resources, resources: Resour
     let mut geodes = geodes.max(baseline);
 
     // Simple pruning
-    let need_geode =
-        time > 1
-        && {
-            let n = time - 1;
-            let extra = (n * (n + 1)) / 2;
-            baseline + extra > geodes
-        };
+    let need_geode = time > 1 && {
+        let n = time - 1;
+        let extra = (n * (n + 1)) / 2;
+        baseline + extra > geodes
+    };
 
-    let need_obsidian =
-        need_geode
+    let need_obsidian = need_geode
         && bots.obsidian() < blueprint.max_obsidian
         && time > 3
         && resources.obsidian() < (blueprint.max_obsidian - bots.obsidian()) * (time - 3);
 
-    let need_clay =
-        need_obsidian
+    let need_clay = need_obsidian
         && bots.clay() < blueprint.max_clay
         && time > 5
         && resources.clay() < (blueprint.max_clay - bots.clay()) * (time - 5);
 
-    let need_ore =
-        need_geode
+    let need_ore = need_geode
         && bots.ore() < blueprint.max_ore
         && time > 3
         && (resources.ore() < (blueprint.max_ore - bots.ore()) * (time - 3));
@@ -180,7 +175,8 @@ fn next(blueprint: &Blueprint, time: u32, bots: Resources, resources: Resources,
                 time - jump - 1,
                 bots + bot,
                 next + bots - cost,
-                geodes);
+                geodes,
+            );
         }
     }
 

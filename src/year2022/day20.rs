@@ -51,7 +51,7 @@ impl Tree {
                 size,
                 up: u16::MAX,
                 left,
-                right
+                right,
             });
             next.push_back(index);
         }
@@ -71,7 +71,9 @@ impl Tree {
         while cur != self.root {
             let next = self.nodes[cur as usize].up;
             let Node { left, right, .. } = self.nodes[next as usize];
-            if right == cur { offset += self.nodes[left as usize].size };
+            if right == cur {
+                offset += self.nodes[left as usize].size
+            };
             cur = next;
         }
 
@@ -86,7 +88,7 @@ impl Tree {
             let Node { size, left, right, .. } = self.nodes[cur as usize];
 
             if size == 1 {
-                break cur as usize
+                break cur as usize;
             }
 
             let size = self.nodes[left as usize].size;
@@ -107,7 +109,9 @@ impl Tree {
             let next = self.nodes[cur as usize].up;
             let Node { left, right, .. } = self.nodes[next as usize];
 
-            if right == cur { offset += self.nodes[left as usize].size };
+            if right == cur {
+                offset += self.nodes[left as usize].size
+            };
             self.nodes[next as usize].size -= 1;
             cur = next;
         }
@@ -146,7 +150,7 @@ impl Tree {
                     size: 2,
                     left: start as u16,
                     right: cur,
-                    up: up,
+                    up,
                 };
 
                 self.nodes[cur as usize].up = parent;
@@ -158,7 +162,7 @@ impl Tree {
                     self.nodes[up as usize].right = parent;
                 }
 
-                break
+                break;
             }
 
             self.nodes[cur as usize].size += 1;
@@ -186,7 +190,7 @@ pub fn part2(input: &[i64]) -> i64 {
 }
 
 fn decrypt(input: &[i64], key: i64, rounds: usize) -> i64 {
-    let mut tree = Tree::from(&input);
+    let mut tree = Tree::from(input);
 
     for _ in 0..rounds {
         for (i, n) in input.iter().enumerate() {

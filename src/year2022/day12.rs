@@ -37,11 +37,14 @@ impl Grid {
     }
 
     fn find(&self, needle: u8) -> Option<Point> {
-        self.bytes.iter().position(|&haystack| haystack == needle).map(|index| {
-            let x = (index as i32) % self.width;
-            let y = (index as i32) / self.width;
-            Point { x, y }
-        })
+        self.bytes
+            .iter()
+            .position(|&haystack| haystack == needle)
+            .map(|index| {
+                let x = (index as i32) % self.width;
+                let y = (index as i32) / self.width;
+                Point { x, y }
+            })
     }
 }
 

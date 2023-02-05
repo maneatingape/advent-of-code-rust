@@ -27,9 +27,12 @@ pub fn part1(input: &[i32]) -> i32 {
 }
 
 pub fn part2(input: &[i32]) -> String {
+    let to_char = |(i, c): (usize, &i32)| {
+        if ((i as i32) - c).abs() <= 1 { '#' } else { '.' }
+    };
     let mut result = input
         .chunks_exact(40)
-        .map(|row| row.iter().enumerate().map(|(i, c)| if ((i as i32) - c).abs() <= 1 { '#' } else { '.' }).collect())
+        .map(|row| row.iter().enumerate().map(to_char).collect())
         .collect::<Vec<String>>()
         .join("\n");
     result.insert(0, '\n');

@@ -6,7 +6,7 @@ pub fn parse(input: &str) -> Input {
     let digits = bytes
         .iter()
         .filter(|b| b.is_ascii_digit())
-        .map(|&b| ((b as i8) - 48) * 6 )
+        .map(|&b| ((b as i8) - 48) * 6)
         .collect();
     (width, digits)
 }

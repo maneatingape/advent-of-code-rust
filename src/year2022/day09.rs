@@ -56,5 +56,8 @@ fn apart(a: Point, b: Point) -> bool {
 }
 
 fn delta(a: Point, b: Point) -> Point {
-    Point { x: (a.x - b.x).signum(), y: (a.y - b.y).signum() }
+    Point {
+        x: (a.x - b.x).signum(),
+        y: (a.y - b.y).signum(),
+    }
 }

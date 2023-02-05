@@ -10,7 +10,10 @@ pub fn part1(input: &[String]) -> usize {
     input
         .chunks_exact(2)
         .enumerate()
-        .map(|(i, chunk)| if compare(&chunk[0], &chunk[1]) { i + 1 } else { 0 })
+        .map(|(i, chunk)| {
+            let ordered = compare(&chunk[0], &chunk[1]);
+            if ordered { i + 1 } else { 0 }
+        })
         .sum()
 }
 

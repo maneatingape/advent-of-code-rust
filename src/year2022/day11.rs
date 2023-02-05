@@ -71,7 +71,9 @@ fn play(monkeys: &[Monkey], rounds: u32, adjust: impl Fn(u64) -> u64) -> u64 {
                 business[index] += 1;
                 item = adjust(operation.worry(item));
                 let next = if item % test == 0 { yes } else { no };
-                if next < index { count += 1; }
+                if next < index {
+                    count += 1;
+                }
                 index = next;
             }
         }

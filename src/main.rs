@@ -14,7 +14,7 @@ fn main() {
 
     for Solution { year, day, input, wrapper } in solutions() {
         if year == 2022
-            //&& day == day
+        //&& day == day
         {
             let time = Instant::now();
             let (answer1, answer2) = (wrapper)(input);
@@ -27,8 +27,9 @@ fn main() {
         }
     }
 
+    let elapsed = total_time.elapsed().as_millis();
     println!("{BOLD}{RED}Solutions: {total_solutions}{RESET}");
-    println!("{BOLD}{GREEN}Elapsed: {} ms{RESET}", total_time.elapsed().as_millis());
+    println!("{BOLD}{GREEN}Elapsed: {} ms{RESET}", elapsed);
 }
 
 fn solutions() -> Vec<Solution> {

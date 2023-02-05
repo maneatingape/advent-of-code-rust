@@ -146,7 +146,7 @@ pub fn part2(input: &Input) -> i32 {
                 i,
                 j: i.cross(j),
                 k: i.cross(k),
-            }
+            },
         ];
 
         for next in neighbors {
@@ -172,8 +172,7 @@ pub fn part2(input: &Input) -> i32 {
             DOWN => i.cross(k),
             _ => unreachable!(),
         };
-        let next_face = faces[&next_k];
-        let Face { corner: next_corner, i: next_i, j: next_j, .. } = next_face;
+        let Face { corner: next_corner, i: next_i, j: next_j, .. } = faces[&next_k];
         let next_direction =
             if k == next_i { RIGHT }
             else if k == next_i.inverse() { LEFT }
@@ -181,22 +180,70 @@ pub fn part2(input: &Input) -> i32 {
             else if k == next_j.inverse() { UP }
             else { unreachable!() };
         let next_offset = match (direction, next_direction) {
-            (LEFT, LEFT) => Point { x: edge, y: offset.y },
-            (LEFT, RIGHT) => Point { x: 0, y: edge - offset.y },
-            (LEFT, DOWN) => Point { x: offset.y, y: 0 },
-            (LEFT, UP) => Point { x: edge - offset.y, y: edge },
-            (RIGHT, LEFT) => Point { x: edge, y: edge - offset.y },
-            (RIGHT, RIGHT) => Point { x: 0, y: offset.y },
-            (RIGHT, DOWN) => Point { x: edge - offset.y, y: 0 },
-            (RIGHT, UP) => Point { x: offset.y, y: edge },
-            (DOWN, LEFT) => Point { x: edge, y: offset.x },
-            (DOWN, RIGHT) => Point { x: 0, y: edge - offset.x },
-            (DOWN, DOWN) => Point { x: offset.x, y: 0 },
-            (DOWN, UP) => Point { x: edge - offset.x, y: edge },
-            (UP, LEFT) => Point { x: edge, y: edge - offset.x },
-            (UP, RIGHT) => Point { x: 0, y: offset.x },
-            (UP, DOWN) => Point { x: edge - offset.x, y: 0 },
-            (UP, UP) => Point { x: offset.x, y: edge },
+            (LEFT, LEFT) => Point {
+                x: edge,
+                y: offset.y,
+            },
+            (LEFT, RIGHT) => Point {
+                x: 0,
+                y: edge - offset.y,
+            },
+            (LEFT, DOWN) => Point {
+                x: offset.y,
+                y: 0
+            },
+            (LEFT, UP) => Point {
+                x: edge - offset.y,
+                y: edge,
+            },
+            (RIGHT, LEFT) => Point {
+                x: edge,
+                y: edge - offset.y,
+            },
+            (RIGHT, RIGHT) => Point {
+                x: 0,
+                y: offset.y
+            },
+            (RIGHT, DOWN) => Point {
+                x: edge - offset.y,
+                y: 0,
+            },
+            (RIGHT, UP) => Point {
+                x: offset.y,
+                y: edge,
+            },
+            (DOWN, LEFT) => Point {
+                x: edge,
+                y: offset.x,
+            },
+            (DOWN, RIGHT) => Point {
+                x: 0,
+                y: edge - offset.x,
+            },
+            (DOWN, DOWN) => Point {
+                x: offset.x,
+                y: 0
+            },
+            (DOWN, UP) => Point {
+                x: edge - offset.x,
+                y: edge,
+            },
+            (UP, LEFT) => Point {
+                x: edge,
+                y: edge - offset.x,
+            },
+            (UP, RIGHT) => Point {
+                x: 0,
+                y: offset.x
+            },
+            (UP, DOWN) => Point {
+                x: edge - offset.x,
+                y: 0,
+            },
+            (UP, UP) => Point {
+                x: offset.x,
+                y: edge,
+            },
             _ => unreachable!(),
         };
         let next_position = next_corner + next_offset;
@@ -207,10 +254,7 @@ pub fn part2(input: &Input) -> i32 {
 }
 
 fn parse_grid(input: &str) -> Grid {
-    let raw: Vec<&[u8]> = input
-        .lines()
-        .map(|line| line.as_bytes())
-        .collect();
+    let raw: Vec<&[u8]> = input.lines().map(|line| line.as_bytes()).collect();
     let width = raw.iter().map(|line| line.len()).max().unwrap();
     let height = raw.len();
     let mut tiles = vec![Tile::None; width * height];
@@ -267,12 +311,12 @@ fn password(input: &Input, handle_none: impl Fn(Point, Point) -> (Point, Point))
                                 position = next_position;
                                 direction = next_direction;
                             } else {
-                                break
+                                break;
                             }
                         }
                     }
                 }
-            },
+            }
         }
     }
 

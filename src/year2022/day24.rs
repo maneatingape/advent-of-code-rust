@@ -18,8 +18,7 @@ pub fn parse(input: &str) -> Input {
     let height = raw.len() - 2;
     let build = |kind| {
         let fold = |row: &&[u8]| {
-            row
-                .iter()
+            row.iter()
                 .fold(0, |acc, &b| (acc << 1) | if b == kind { 0 } else { 1 })
         };
         raw[1..=height].iter().map(fold).collect()
@@ -75,8 +74,7 @@ fn expedition(input: &Input, start: usize, forward: bool) -> usize {
             prev = cur;
             cur = next;
             next = state[i + 1];
-            state[i] =
-                (cur | cur >> 1 | cur << 1 | prev | next)
+            state[i] = (cur | cur >> 1 | cur << 1 | prev | next)
                 & horizontal[height * (time % width) + i]
                 & vertical[height * (time % height) + i]
         }

@@ -19,7 +19,7 @@ impl Add for Point {
     fn add(self, rhs: Point) -> Point {
         Point {
             x: self.x + rhs.x,
-            y: self.y + rhs.y
+            y: self.y + rhs.y,
         }
     }
 }
@@ -48,7 +48,7 @@ impl Sub for Point {
     fn sub(self, rhs: Point) -> Point {
         Point {
             x: self.x - rhs.x,
-            y: self.y - rhs.y
+            y: self.y - rhs.y,
         }
     }
 }

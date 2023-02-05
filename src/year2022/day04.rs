@@ -15,8 +15,5 @@ pub fn part1(input: &[Pairs]) -> usize {
 }
 
 pub fn part2(input: &[Pairs]) -> usize {
-    input
-        .iter()
-        .filter(|(a, b, c, d)| a <= d && c <= b)
-        .count()
+    input.iter().filter(|(a, b, c, d)| a <= d && c <= b).count()
 }
