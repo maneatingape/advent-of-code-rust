@@ -50,3 +50,4 @@ Continuous integration is provided using [GitHub Actions](https://docs.github.co
 | Day | Problem | Solution | Benchmark (ms) |
 | --- | --- | --- | --- |
 | 1 | [Sonar Sweep](https://adventofcode.com/2021/day/1) | [Source](src/year2021/day01.rs) | 0.022 |
+| 2 | [Dive!](https://adventofcode.com/2021/day/2) | [Source](src/year2021/day02.rs) | 0.015 |

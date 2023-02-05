@@ -14,7 +14,7 @@ fn main() {
 
     for Solution { year, day, input, wrapper } in solutions() {
         if year == 2021
-        && day == 01
+        && day == 2
         {
             let time = Instant::now();
             let (answer1, answer2) = (wrapper)(input);
@@ -63,6 +63,7 @@ fn solutions() -> Vec<Solution> {
 
         // 2021
         solution!(year2021, day01),
+        solution!(year2021, day02),
 
         // 2015
         solution!(year2015, day01),
