@@ -7,7 +7,7 @@ use aoc::*;
 benchmark!(year2015_day01, year2022, day01);
 benchmark!(year2015_day02, year2022, day02);
 benchmark!(year2015_day03, year2022, day03);
-//benchmark!(year2015_day04, year2022, day04); // Too slow for benchmarkmark
+//benchmark!(year2015_day04, year2022, day04); // Very slow
 
 benchmark!(year2022_day01, year2022, day01);
 benchmark!(year2022_day02, year2022, day02);
