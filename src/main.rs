@@ -14,22 +14,23 @@ fn main() {
 
     for Solution { year, day, input, wrapper } in solutions() {
         if year == 2021
-        && day == 2
+        && day == day
         {
             let time = Instant::now();
             let (answer1, answer2) = (wrapper)(input);
+            let duration = time.elapsed().as_micros();
             total_solutions += 1;
 
             println!("{BOLD}{YELLOW}{year} Day {day:02}{RESET}");
             println!("    Part 1: {answer1}");
             println!("    Part 2: {answer2}");
-            println!("    Duration: {} μs", time.elapsed().as_micros());
+            println!("    Duration: {} μs", duration);
         }
     }
 
     let elapsed = total_time.elapsed().as_millis();
     println!("{BOLD}{RED}Solutions: {total_solutions}{RESET}");
-    println!("{BOLD}{GREEN}Elapsed: {} ms{RESET}", elapsed);
+    println!("{BOLD}{GREEN}Elapsed: {elapsed} ms{RESET}");
 }
 
 fn solutions() -> Vec<Solution> {
@@ -60,11 +61,9 @@ fn solutions() -> Vec<Solution> {
         solution!(year2022, day23),
         solution!(year2022, day24),
         solution!(year2022, day25),
-
         // 2021
         solution!(year2021, day01),
         solution!(year2021, day02),
-
         // 2015
         solution!(year2015, day01),
         solution!(year2015, day02),

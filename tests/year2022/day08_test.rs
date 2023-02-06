@@ -1,7 +1,7 @@
 use aoc::year2022::day08::*;
 
-const EXAMPLE: &str =
-"30373
+const EXAMPLE: &str = "\
+30373
 25512
 65332
 33549

@@ -1,7 +1,7 @@
 use aoc::year2022::day25::*;
 
-const EXAMPLE: &str =
-"1=-0-2
+const EXAMPLE: &str = "\
+1=-0-2
 12111
 2=0=
 21

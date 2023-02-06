@@ -1,7 +1,7 @@
 use aoc::year2022::day11::*;
 
-const EXAMPLE: &str =
-"Monkey 0:
+const EXAMPLE: &str = "\
+Monkey 0:
 Starting items: 79, 98
 Operation: new = old * 19
 Test: divisible by 23

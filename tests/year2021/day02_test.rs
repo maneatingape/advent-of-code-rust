@@ -1,7 +1,7 @@
 use aoc::year2021::day02::*;
 
-const EXAMPLE: &str =
-"forward 5
+const EXAMPLE: &str = "\
+forward 5
 down 5
 forward 8
 up 3

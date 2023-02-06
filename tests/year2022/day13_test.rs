@@ -1,7 +1,7 @@
 use aoc::year2022::day13::*;
 
-const EXAMPLE: &str =
-"[1,1,3,1,1]
+const EXAMPLE: &str = "\
+[1,1,3,1,1]
 [1,1,5,1,1]
 
 [[1],[2,3,4]]

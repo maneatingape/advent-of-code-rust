@@ -1,7 +1,7 @@
 use aoc::year2022::day12::*;
 
-const EXAMPLE: &str =
-"Sabqponm
+const EXAMPLE: &str = "\
+Sabqponm
 abcryxxl
 accszExk
 acctuvwj

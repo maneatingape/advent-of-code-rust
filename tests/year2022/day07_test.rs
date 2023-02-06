@@ -1,7 +1,7 @@
 use aoc::year2022::day07::*;
 
-const EXAMPLE: &str =
-"$ cd /
+const EXAMPLE: &str = "\
+$ cd /
 $ ls
 dir a
 14848514 b.txt

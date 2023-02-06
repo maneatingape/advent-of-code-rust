@@ -1,7 +1,7 @@
 use aoc::year2015::day02::*;
 
-const EXAMPLE: &str =
-"2x3x4
+const EXAMPLE: &str = "\
+2x3x4
 1x1x10";
 
 #[test]

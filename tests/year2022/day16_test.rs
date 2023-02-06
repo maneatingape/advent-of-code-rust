@@ -1,7 +1,7 @@
 use aoc::year2022::day16::*;
 
-const EXAMPLE: &str =
-"Valve AA has flow rate=0; tunnels lead to valves DD, II, BB
+const EXAMPLE: &str = "\
+Valve AA has flow rate=0; tunnels lead to valves DD, II, BB
 Valve BB has flow rate=13; tunnels lead to valves CC, AA
 Valve CC has flow rate=2; tunnels lead to valves DD, BB
 Valve DD has flow rate=20; tunnels lead to valves CC, AA, EE

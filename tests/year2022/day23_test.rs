@@ -1,7 +1,7 @@
 use aoc::year2022::day23::*;
 
-const EXAMPLE: &str =
-"....#..
+const EXAMPLE: &str = "\
+....#..
 ..###.#
 #...#.#
 .#...##

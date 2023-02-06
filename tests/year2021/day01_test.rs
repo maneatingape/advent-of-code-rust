@@ -1,7 +1,7 @@
 use aoc::year2021::day01::*;
 
-const EXAMPLE: &str =
-"199
+const EXAMPLE: &str = "\
+199
 200
 208
 210
