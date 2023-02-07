@@ -4,7 +4,7 @@ Complete 2022 entries for the annual [Advent of Code](https://adventofcode.com/)
 
 Solutions depend only on the stable Rust Standard Library. The code tries it's best to stay clean and elegant, but the focus is on speed so if bit twiddling or mashing stuff into an array makes things faster, then all scruples are jettisoned!
 
-Benchmarks are measured using the built-in `cargo bench` run on an Apple M2 Max. All 25 solutions from 2022 complete sequentially in **45 milliseconds**. Performance is reasonable even on older hardware, for example a 2011 MacBook Pro with an [Intel i7-2720QM](https://ark.intel.com/content/www/us/en/ark/products/50067/intel-core-i72720qm-processor-6m-cache-up-to-3-30-ghz.html) takes only 89 milliseconds to run the solutions.
+Benchmarks are measured using the built-in `cargo bench` run on an Apple M2 Max. All 25 solutions from 2022 complete sequentially in **34 milliseconds**. Performance is reasonable even on older hardware, for example a 2011 MacBook Pro with an [Intel i7-2720QM](https://ark.intel.com/content/www/us/en/ark/products/50067/intel-core-i72720qm-processor-6m-cache-up-to-3-30-ghz.html) takes only 77 milliseconds to run the solutions.
 
 The project is structured as a library crate with a module per year and a sub-module for each day to provide convenient testing and benchmarking. Continuous integration is provided using [GitHub Actions](https://docs.github.com/en/actions) with 100% test coverage based on the example inputs from each day.
 
@@ -12,7 +12,7 @@ The project is structured as a library crate with a module per year and a sub-mo
 
 ## Years
 
-* [2022](#2022) (45 ms total benchmark)
+* [2022](#2022) (34 ms total benchmark)
 * [2021](#2021) (in progress)
 
 ## 2022
@@ -29,7 +29,7 @@ The project is structured as a library crate with a module per year and a sub-mo
 | 8 | [Treetop Tree House](https://adventofcode.com/2022/day/8) | [Source](src/year2022/day08.rs) | 62 |
 | 9 | [Rope Bridge](https://adventofcode.com/2022/day/9) | [Source](src/year2022/day09.rs) | 876 |
 | 10 | [Cathode-Ray Tube](https://adventofcode.com/2022/day/10) | [Source](src/year2022/day10.rs) | 1 |
-| 11 | [Monkey in the Middle](https://adventofcode.com/2022/day/11) | [Source](src/year2022/day11.rs) | 8915 |
+| 11 | [Monkey in the Middle](https://adventofcode.com/2022/day/11) | [Source](src/year2022/day11.rs) | 2321 |
 | 12 | [Hill Climbing Algorithm](https://adventofcode.com/2022/day/12) | [Source](src/year2022/day12.rs) | 51 |
 | 13 | [Distress Signal](https://adventofcode.com/2022/day/13) | [Source](src/year2022/day13.rs) | 53 |
 | 14 | [Regolith Reservoir](https://adventofcode.com/2022/day/14) | [Source](src/year2022/day14.rs) | 299 |
@@ -41,7 +41,7 @@ The project is structured as a library crate with a module per year and a sub-mo
 | 20 | [Grove Positioning System](https://adventofcode.com/2022/day/20) | [Source](src/year2022/day20.rs) | 7485 |
 | 21 | [Monkey Math](https://adventofcode.com/2022/day/21) | [Source](src/year2022/day21.rs) | 140 |
 | 22 | [Monkey Map](https://adventofcode.com/2022/day/22) | [Source](src/year2022/day22.rs) | 127 |
-| 23 | [Unstable Diffusion](https://adventofcode.com/2022/day/23) | [Source](src/year2022/day23.rs) | 20275 |
+| 23 | [Unstable Diffusion](https://adventofcode.com/2022/day/23) | [Source](src/year2022/day23.rs) | 16125 |
 | 24 | [Blizzard Basin](https://adventofcode.com/2022/day/24) | [Source](src/year2022/day24.rs) | 82 |
 | 25 | [Full of Hot Air](https://adventofcode.com/2022/day/25) | [Source](src/year2022/day25.rs) | 3 |
 
