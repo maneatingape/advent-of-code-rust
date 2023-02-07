@@ -41,13 +41,13 @@ fn play(input: &Input, reverse: bool) -> String {
     let mut stack = initial.clone();
     let mut crates: Vec<char> = Vec::new();
 
-    for (amount, from, to) in moves {
-        let start = stack[*from].len() - amount;
-        crates.extend(stack[*from].drain(start..));
+    for &(amount, from, to) in moves {
+        let start = stack[from].len() - amount;
+        crates.extend(stack[from].drain(start..));
         if reverse {
-            stack[*to].extend(crates.iter().rev());
+            stack[to].extend(crates.iter().rev());
         } else {
-            stack[*to].extend(crates.iter());
+            stack[to].extend(crates.iter());
         }
         crates.clear();
     }
