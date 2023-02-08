@@ -63,7 +63,11 @@ fn play(input: &[Monkey], rounds: u32, adjust: impl Fn(u64) -> u64) -> usize {
                     Operation::Add(y) => item + y,
                 };
                 let next = adjust(worry);
-                let to = if next % monkeys[i].test == 0 { monkeys[i].yes } else { monkeys[i].no };
+                let to = if next % monkeys[i].test == 0 {
+                    monkeys[i].yes
+                } else {
+                    monkeys[i].no
+                };
                 monkeys[to].items.push(next);
             }
         }

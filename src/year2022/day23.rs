@@ -122,7 +122,7 @@ pub fn parse(input: &str) -> Input {
     let offset = 70;
     let raw: Vec<&[u8]> = input.lines().map(|line| line.as_bytes()).collect();
     let default = [U256::default(); HEIGHT];
-    let mut grid = default.clone();
+    let mut grid = default;
 
     for (y, row) in raw.iter().enumerate() {
         for (x, col) in row.iter().enumerate() {
@@ -134,15 +134,15 @@ pub fn parse(input: &str) -> Input {
 
     Input {
         grid,
-        north: default.clone(),
-        south: default.clone(),
-        west: default.clone(),
-        east: default.clone(),
+        north: default,
+        south: default,
+        west: default,
+        east: default,
     }
 }
 
 pub fn part1(input: &Input) -> u32 {
-    let mut input = input.clone();
+    let mut input = *input;
     let mut order = [North, South, West, East];
 
     for _ in 0..10 {
@@ -160,7 +160,7 @@ pub fn part1(input: &Input) -> u32 {
 }
 
 pub fn part2(input: &Input) -> u32 {
-    let mut input = input.clone();
+    let mut input = *input;
     let mut order = [North, South, West, East];
     let mut moved = true;
     let mut count = 0;
@@ -198,19 +198,19 @@ fn step(input: &mut Input, order: &mut [Direction]) -> bool {
                 North => {
                     up &= remaining;
                     remaining &= !up;
-                },
+                }
                 South => {
                     down &= remaining;
                     remaining &= !down;
-                },
+                }
                 West => {
                     left &= remaining;
                     remaining &= !left;
-                },
+                }
                 East => {
                     right &= remaining;
                     remaining &= !right;
-                },
+                }
             }
         }
 

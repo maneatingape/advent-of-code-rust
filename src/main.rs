@@ -24,7 +24,7 @@ fn main() {
             println!("{BOLD}{YELLOW}{year} Day {day:02}{RESET}");
             println!("    Part 1: {answer1}");
             println!("    Part 2: {answer2}");
-            println!("    Duration: {} μs", duration);
+            println!("    Duration: {duration} μs");
         }
     }
 
