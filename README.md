@@ -12,7 +12,7 @@ The project is structured as a library crate with a module per year and a sub-mo
 
 ## Years
 
-* [2022](#2022) (21 ms total benchmark)
+* [2022](#2022) (20.2 ± 0.51 ms total benchmark)
 * [2021](#2021) (in progress)
 
 ## 2022
