@@ -106,7 +106,10 @@ pub fn part2(input: &Input) -> i32 {
     let edge = block - 1;
 
     let start = Face {
-        corner: Point { x: grid.start, y: 0 },
+        corner: Point {
+            x: grid.start - grid.start % block,
+            y: 0
+        },
         i: Vector { x: 1, y: 0, z: 0 },
         j: Vector { x: 0, y: 1, z: 0 },
         k: Vector { x: 0, y: 0, z: 1 },
@@ -278,7 +281,7 @@ fn parse_grid(input: &str) -> Grid {
 fn parse_moves(input: &str) -> Vec<Move> {
     let mut moves: Vec<Move> = Vec::new();
 
-    for token in input.trim().replace('L', " L ").replace('R', " R ").split(' ') {
+    for token in input.replace('L', " L ").replace('R', " R ").trim().split(' ') {
         let next = match token {
             "L" => Move::Left,
             "R" => Move::Right,
