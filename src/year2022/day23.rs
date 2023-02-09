@@ -2,7 +2,6 @@ use self::Direction::*;
 use std::ops::{BitAnd, BitAndAssign, BitOr, Not};
 
 const HEIGHT: usize = 210;
-const RANGE: std::ops::Range<usize> = 1..(HEIGHT - 1);
 
 #[derive(Clone, Copy, Default)]
 pub struct U256 {
@@ -175,13 +174,16 @@ pub fn part2(input: &Input) -> u32 {
 
 fn step(input: &mut Input, order: &mut [Direction]) -> bool {
     let Input { grid, north, south, west, east } = input;
+    let start = grid.iter().position(|r| r.non_zero()).unwrap() - 1;
+    let end = grid.iter().rposition(|r| r.non_zero()).unwrap() + 2;
+
     let mut moved = false;
 
     let mut prev;
     let mut cur = !(grid[0].right_shift() | grid[0] | grid[0].left_shift());
     let mut next = !(grid[1].right_shift() | grid[1] | grid[1].left_shift());
 
-    for i in RANGE {
+    for i in start..end {
         prev = cur;
         cur = next;
         next = !(grid[i + 1].right_shift() | grid[i + 1] | grid[i + 1].left_shift());
@@ -220,7 +222,7 @@ fn step(input: &mut Input, order: &mut [Direction]) -> bool {
         east[i] = right.right_shift();
     }
 
-    for i in RANGE {
+    for i in start..end {
         let up = north[i];
         let down = south[i];
         let left = west[i];
@@ -231,7 +233,7 @@ fn step(input: &mut Input, order: &mut [Direction]) -> bool {
         east[i] &= !left;
     }
 
-    for i in RANGE {
+    for i in start..end {
         let same = grid[i] & !(north[i - 1] | south[i + 1] | west[i].right_shift() | east[i].left_shift());
         let change = north[i] | south[i] | west[i] | east[i];
         grid[i] = same | change;
