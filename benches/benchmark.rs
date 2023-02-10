@@ -32,9 +32,10 @@ benchmark!(year2022_day25, year2022, day25);
 // 2021
 benchmark!(year2021_day01, year2021, day01);
 benchmark!(year2021_day02, year2021, day02);
+benchmark!(year2021_day03, year2021, day03);
 
 // 2015
-benchmark!(year2015_day01, year2022, day01);
-benchmark!(year2015_day02, year2022, day02);
-benchmark!(year2015_day03, year2022, day03);
-//benchmark!(year2015_day04, year2022, day04); // Very slow
+benchmark!(year2015_day01, year2015, day01);
+benchmark!(year2015_day02, year2015, day02);
+benchmark!(year2015_day03, year2015, day03);
+//benchmark!(year2015_day04, year2015, day04); // Very slow

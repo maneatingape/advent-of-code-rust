@@ -51,3 +51,4 @@ The project is structured as a library crate with a module per year and a sub-mo
 | --- | --- | --- | --: |
 | 1 | [Sonar Sweep](https://adventofcode.com/2021/day/1) | [Source](src/year2021/day01.rs) | 22 |
 | 2 | [Dive!](https://adventofcode.com/2021/day/2) | [Source](src/year2021/day02.rs) | 15 |
+| 3 | [Binary Diagnostic](https://adventofcode.com/2021/day/3) | [Source](src/year2021/day03.rs) | 20 |
