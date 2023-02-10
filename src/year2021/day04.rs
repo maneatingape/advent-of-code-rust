@@ -34,7 +34,7 @@ pub fn parse(input: &str) -> Vec<Input> {
             turns.iter().skip(4).step_by(5).max().unwrap(),
         ];
         let winning_turn = **row_and_cols.iter().min().unwrap();
-        let unmarked = board.iter().filter(|&&n| to_turn[n] > winning_turn).sum::<usize>();
+        let unmarked: usize = board.iter().filter(|&&n| to_turn[n] > winning_turn).sum();
         let just_called = from_turn[winning_turn];
         Input {
             turn: winning_turn,

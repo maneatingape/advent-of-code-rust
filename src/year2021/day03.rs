@@ -4,13 +4,10 @@ pub struct Input<'a> {
 }
 
 pub fn parse(input: &str) -> Input {
-    let numbers: Vec<_> = input
-        .lines()
-        .map(|line| line.as_bytes())
-        .collect();
+    let numbers: Vec<_> = input.lines().map(|line| line.as_bytes()).collect();
     Input {
         width: numbers[0].len(),
-        numbers
+        numbers,
     }
 }
 
@@ -44,7 +41,10 @@ fn sum(numbers: &[&[u8]], i: usize) -> usize {
 }
 
 fn fold(numbers: &[u8], width: usize) -> u32 {
-    numbers.iter().take(width).fold(0, |acc, &n| (acc << 1) | (n & 1) as u32)
+    numbers
+        .iter()
+        .take(width)
+        .fold(0, |acc, &n| (acc << 1) | (n & 1) as u32)
 }
 
 fn rating(input: &Input, cmp: impl Fn(usize, usize) -> bool) -> u32 {
@@ -52,10 +52,12 @@ fn rating(input: &Input, cmp: impl Fn(usize, usize) -> bool) -> u32 {
 
     for i in 0..input.width {
         let sum = sum(&numbers, i);
-        let keep = if cmp(sum, numbers.len() - sum) { b'1' } else { b'0' };
-
+        let keep = if cmp(sum, numbers.len() - sum) {
+            b'1'
+        } else {
+            b'0'
+        };
         filter(&mut numbers, i, keep);
-
         if numbers.len() == 1 {
             return fold(numbers[0], input.width);
         }

@@ -5,23 +5,29 @@ pub fn parse(input: &str) -> Input {
 }
 
 pub fn part1(input: &Input) -> usize {
-    input.iter().flatten().filter(|&&d| d == 1 || d == 4 || d == 7 || d == 8).count()
+    input
+        .iter()
+        .flatten()
+        .filter(|&&d| d == 1 || d == 4 || d == 7 || d == 8)
+        .count()
 }
 
 pub fn part2(input: &Input) -> u32 {
-    input.iter().map(|digits| digits.iter().fold(0, |acc, d| 10 * acc + d)).sum()
+    input
+        .iter()
+        .map(|digits| digits.iter().fold(0, |acc, d| 10 * acc + d))
+        .sum()
 }
 
 fn descramble(line: &str) -> Vec<u32> {
     let mut frequency = [0u8; 104];
     let bytes = line.as_bytes();
-    bytes[0..58].iter().for_each(|&b| frequency[b as usize] += 1);
+    bytes[0..58]
+        .iter()
+        .for_each(|&b| frequency[b as usize] += 1);
     bytes[61..]
         .split(|&b| b == b' ')
-        .map(|scrambled| {
-            let total = scrambled.iter().map(|&b| frequency[b as usize]).sum();
-            to_digit(total)
-        })
+        .map(|scrambled| to_digit(scrambled.iter().map(|&b| frequency[b as usize]).sum()))
         .collect()
 }
 
