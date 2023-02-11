@@ -1,6 +1,8 @@
 use core::slice::Iter;
 use std::iter::{Copied, Cycle};
 
+type Wrapper<'a, T> = Cycle<Copied<Iter<'a, T>>>;
+
 const FLOOR: u8 = 0xff;
 const WALLS: u32 = 0x01010101;
 const ROCKS: [Rock; 5] = [
@@ -33,8 +35,8 @@ struct Rock {
 }
 
 struct State<'a> {
-    rocks: Cycle<Copied<Iter<'a, Rock>>>,
-    jets: Cycle<Copied<Iter<'a, u8>>>,
+    rocks: Wrapper<'a, Rock>,
+    jets: Wrapper<'a, u8>,
     tower: Vec<u8>,
     height: usize,
 }
