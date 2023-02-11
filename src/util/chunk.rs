@@ -8,9 +8,7 @@ pub trait ChunkOps: Iterator + Sized {
 
 impl<I: Iterator> ChunkOps for I {
     fn chunk<const N: usize>(self) -> Chunk<Self, N> {
-        Chunk::<Self, N> {
-            iter: self,
-        }
+        Chunk::<Self, N> { iter: self }
     }
 }
 

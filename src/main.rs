@@ -1,11 +1,12 @@
 use aoc::*;
 use std::time::Instant;
 
-const RESET: &str = "\u{001b}[0m";
-const BOLD: &str = "\u{001b}[1m";
-const RED: &str = "\u{001b}[31m";
-const GREEN: &str = "\u{001b}[32m";
-const YELLOW: &str = "\u{001b}[33m";
+// ANSI escape codes
+const RESET: &str = "\x1b[0m";
+const BOLD: &str = "\x1b[1m";
+const RED: &str = "\x1b[31m";
+const GREEN: &str = "\x1b[32m";
+const YELLOW: &str = "\x1b[33m";
 
 struct Solution {
     year: u32,
