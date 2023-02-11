@@ -20,8 +20,8 @@ fn main() {
     let mut total_solutions = 0;
 
     for Solution { year, day, input, wrapper } in solutions() {
-        //if year == year
-        //&& day == day
+        // if year == year
+        // && day == day
         {
             let time = Instant::now();
             let (answer1, answer2) = (wrapper)(input);
@@ -105,6 +105,7 @@ fn solutions() -> Vec<Solution> {
         solution!(year2021, day07),
         solution!(year2021, day08),
         solution!(year2021, day09),
+        solution!(year2021, day10),
         // 2015
         solution!(year2015, day01),
         solution!(year2015, day02),
