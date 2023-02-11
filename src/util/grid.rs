@@ -9,15 +9,16 @@ pub struct Grid {
 
 impl Grid {
     pub fn parse(input: &str) -> Grid {
-        let raw: Vec<_> = input
-            .lines()
-            .map(|line| line.as_bytes())
-            .collect();
+        let raw: Vec<_> = input.lines().map(|line| line.as_bytes()).collect();
         let width = raw[0].len() as i32;
         let height = raw.len() as i32;
         let mut bytes = Vec::with_capacity((width * height) as usize);
         raw.iter().for_each(|slice| bytes.extend_from_slice(slice));
-        Grid { width, height, bytes }
+        Grid {
+            width,
+            height,
+            bytes,
+        }
     }
 
     pub fn empty_copy(&self) -> Grid {
@@ -29,10 +30,7 @@ impl Grid {
     }
 
     pub fn contains(&self, point: Point) -> bool {
-        point.x >= 0
-        && point.x < self.width
-        && point.y >= 0
-        && point.y < self.height
+        point.x >= 0 && point.x < self.width && point.y >= 0 && point.y < self.height
     }
 
     pub fn get(&self, point: Point) -> u8 {

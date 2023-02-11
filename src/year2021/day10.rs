@@ -37,22 +37,22 @@ fn syntax_score(line: &[u8], stack: &mut Vec<u8>) -> u64 {
                 if stack.pop().unwrap() != b'(' {
                     return 3;
                 }
-            },
+            }
             b']' => {
                 if stack.pop().unwrap() != b'[' {
                     return 57;
                 }
-            },
+            }
             b'}' => {
                 if stack.pop().unwrap() != b'{' {
                     return 1197;
                 }
-            },
+            }
             b'>' => {
                 if stack.pop().unwrap() != b'<' {
                     return 25137;
                 }
-            },
+            }
             _ => unreachable!(),
         }
     }
