@@ -1,4 +1,3 @@
-use aoc::util::macros::*;
 use aoc::*;
 use std::time::Instant;
 
@@ -7,6 +6,13 @@ const BOLD: &str = "\u{001b}[1m";
 const RED: &str = "\u{001b}[31m";
 const GREEN: &str = "\u{001b}[32m";
 const YELLOW: &str = "\u{001b}[33m";
+
+struct Solution {
+    year: u32,
+    day: u32,
+    input: &'static str,
+    wrapper: fn(&str) -> (String, String),
+}
 
 fn main() {
     let total_time = Instant::now();
@@ -31,6 +37,33 @@ fn main() {
     let elapsed = total_time.elapsed().as_millis();
     println!("{BOLD}{RED}Solutions: {total_solutions}{RESET}");
     println!("{BOLD}{GREEN}Elapsed: {elapsed} ms{RESET}");
+}
+
+macro_rules! solution {
+    ($year:tt, $day:tt) => {
+        Solution {
+            year: { stringify!($year)[4..8].parse().unwrap() },
+            day: { stringify!($day)[3..5].parse().unwrap() },
+            input: {
+                include_str!(concat![
+                    "../input/",
+                    stringify!($year),
+                    "/",
+                    stringify!($day),
+                    ".txt"
+                ])
+            },
+            wrapper: {
+                |raw: &str| {
+                    use $year::$day::*;
+                    let input = parse(raw);
+                    let part1 = part1(&input).to_string();
+                    let part2 = part2(&input).to_string();
+                    (part1, part2)
+                }
+            },
+        }
+    };
 }
 
 fn solutions() -> Vec<Solution> {
