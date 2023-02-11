@@ -1,9 +1,7 @@
 #![allow(clippy::needless_lifetimes)]
 
-use std::iter::Filter;
-use std::iter::Map;
-use std::str::FromStr;
-use std::str::Split;
+use std::iter::{Filter, Map};
+use std::str::{FromStr, Split};
 
 type Wrapper<'a, T> = Map<Filter<Split<'a, fn(char) -> bool>, fn(&&str) -> bool>, fn(&str) -> T>;
 

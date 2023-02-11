@@ -2,6 +2,8 @@ use crate::util::point::*;
 use core::panic;
 use std::collections::VecDeque;
 
+const ORTHOGONAL: [Point; 4] = [UP, DOWN, LEFT, RIGHT];
+
 type Input = (Grid, Point);
 
 pub struct Grid {

@@ -40,7 +40,7 @@ macro_rules! benchmark {
             use aoc::$year::$day::*;
             use test::Bencher;
 
-            const RAW: &str = include_str!(concat![
+            const INPUT: &str = include_str!(concat![
                 "../input/",
                 stringify!($year),
                 "/",
@@ -50,18 +50,18 @@ macro_rules! benchmark {
 
             #[bench]
             fn parse_bench(b: &mut Bencher) {
-                b.iter(|| parse(RAW));
+                b.iter(|| parse(INPUT));
             }
 
             #[bench]
             fn part1_bench(b: &mut Bencher) {
-                let input = parse(RAW);
+                let input = parse(INPUT);
                 b.iter(|| part1(&input));
             }
 
             #[bench]
             fn part2_bench(b: &mut Bencher) {
-                let input = parse(RAW);
+                let input = parse(INPUT);
                 b.iter(|| part2(&input));
             }
         }
