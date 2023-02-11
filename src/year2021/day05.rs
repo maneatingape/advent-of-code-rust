@@ -1,10 +1,10 @@
-use crate::util::collection::*;
+use crate::util::chunk::*;
 use crate::util::parse::*;
 
 type Input = [u32; 4];
 
 pub fn parse(input: &str) -> Vec<Input> {
-    input.iter_unsigned().chunked::<4>().collect()
+    input.iter_unsigned().chunk::<4>().collect()
 }
 
 pub fn part1(input: &[Input]) -> usize {

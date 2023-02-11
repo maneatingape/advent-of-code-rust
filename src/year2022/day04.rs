@@ -1,10 +1,10 @@
-use crate::util::collection::*;
+use crate::util::chunk::*;
 use crate::util::parse::*;
 
 type Pairs = [u32; 4];
 
 pub fn parse(input: &str) -> Vec<Pairs> {
-    input.iter_unsigned().chunked::<4>().collect()
+    input.iter_unsigned().chunk::<4>().collect()
 }
 
 pub fn part1(input: &[Pairs]) -> usize {

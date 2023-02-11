@@ -1,5 +1,5 @@
 pub mod util {
-    pub mod collection;
+    pub mod chunk;
     pub mod math;
     pub mod md5;
     pub mod parse;

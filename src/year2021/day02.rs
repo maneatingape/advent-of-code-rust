@@ -1,4 +1,4 @@
-use crate::util::collection::*;
+use crate::util::chunk::*;
 use crate::util::parse::*;
 
 #[derive(Clone, Copy)]
@@ -17,7 +17,7 @@ pub fn parse(input: &str) -> Vec<Sub> {
     };
     input
         .split_ascii_whitespace()
-        .chunked::<2>()
+        .chunk::<2>()
         .map(helper)
         .collect()
 }

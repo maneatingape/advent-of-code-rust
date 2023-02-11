@@ -1,4 +1,4 @@
-use crate::util::collection::*;
+use crate::util::chunk::*;
 
 pub fn parse(input: &str) -> Vec<&str> {
     input.lines().collect()
@@ -17,7 +17,7 @@ pub fn part1(input: &[&str]) -> u32 {
 pub fn part2(input: &[&str]) -> u32 {
     input
         .iter()
-        .chunked::<3>()
+        .chunk::<3>()
         .map(|[a, b, c]| priority(mask(a) & mask(b) & mask(c)))
         .sum()
 }

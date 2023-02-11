@@ -1,4 +1,4 @@
-use crate::util::collection::*;
+use crate::util::chunk::*;
 use crate::util::parse::*;
 
 type Gift = [u32; 3];
@@ -6,7 +6,7 @@ type Gift = [u32; 3];
 pub fn parse(input: &str) -> Vec<Gift> {
     input
         .iter_unsigned()
-        .chunked::<3>()
+        .chunk::<3>()
         .map(|chunk| {
             let mut gift = chunk;
             gift.sort_unstable();

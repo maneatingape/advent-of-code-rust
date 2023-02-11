@@ -1,4 +1,4 @@
-use crate::util::collection::*;
+use crate::util::chunk::*;
 use crate::util::parse::*;
 use crate::util::point::*;
 use std::collections::HashSet;
@@ -17,7 +17,7 @@ pub fn parse(input: &str) -> Vec<Input> {
         let manhattan = sensor.manhattan(beacon);
         Input { sensor, beacon, manhattan }
     }
-    input.iter_signed().chunked::<4>().map(helper).collect()
+    input.iter_signed().chunk::<4>().map(helper).collect()
 }
 
 pub fn part1(input: &[Input]) -> i32 {
