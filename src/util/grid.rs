@@ -30,9 +30,9 @@ impl Grid {
 
     pub fn contains(&self, point: Point) -> bool {
         point.x >= 0
-        && point.x < self.width as i32
+        && point.x < self.width
         && point.y >= 0
-        && point.y < self.height as i32
+        && point.y < self.height
     }
 
     pub fn get(&self, point: Point) -> u8 {
