@@ -1,71 +1,59 @@
-pub struct Tupled2<I>(I);
-pub struct Tupled3<I>(I);
-pub struct Tupled4<I>(I);
+pub struct Chunked<I, const N: usize>(I);
 
-pub trait Tupled
+pub trait ChunkedOps
 where
     Self: Sized,
 {
-    fn tupled2(self) -> Tupled2<Self>;
-    fn tupled3(self) -> Tupled3<Self>;
-    fn tupled4(self) -> Tupled4<Self>;
+    fn chunked<const N: usize>(self) -> Chunked<Self, N>;
 }
 
-impl<I> Tupled for I
+impl<I> ChunkedOps for I
 where
     I: Iterator,
 {
-    fn tupled2(self) -> Tupled2<Self> {
-        Tupled2(self)
-    }
-
-    fn tupled3(self) -> Tupled3<Self> {
-        Tupled3(self)
-    }
-
-    fn tupled4(self) -> Tupled4<Self> {
-        Tupled4(self)
+    fn chunked<const N: usize>(self) -> Chunked<Self, N> {
+        Chunked::<Self, N>(self)
     }
 }
 
-impl<I, T> Iterator for Tupled2<I>
+impl<I, T> Iterator for Chunked<I, 2>
 where
     I: Iterator<Item = T>,
 {
-    type Item = (T, T);
+    type Item = [T; 2];
 
     fn next(&mut self) -> Option<Self::Item> {
         let a = self.0.next()?;
         let b = self.0.next()?;
-        Some((a, b))
+        Some([a, b])
     }
 }
 
-impl<I, T> Iterator for Tupled3<I>
+impl<I, T> Iterator for Chunked<I, 3>
 where
     I: Iterator<Item = T>,
 {
-    type Item = (T, T, T);
+    type Item = [T; 3];
 
     fn next(&mut self) -> Option<Self::Item> {
         let a = self.0.next()?;
         let b = self.0.next()?;
         let c = self.0.next()?;
-        Some((a, b, c))
+        Some([a, b, c])
     }
 }
 
-impl<I, T> Iterator for Tupled4<I>
+impl<I, T> Iterator for Chunked<I, 4>
 where
     I: Iterator<Item = T>,
 {
-    type Item = (T, T, T, T);
+    type Item = [T; 4];
 
     fn next(&mut self) -> Option<Self::Item> {
         let a = self.0.next()?;
         let b = self.0.next()?;
         let c = self.0.next()?;
         let d = self.0.next()?;
-        Some((a, b, c, d))
+        Some([a, b, c, d])
     }
 }

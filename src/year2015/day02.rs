@@ -6,9 +6,9 @@ type Gift = [u32; 3];
 pub fn parse(input: &str) -> Vec<Gift> {
     input
         .to_unsigned_iter()
-        .tupled3()
-        .map(|(a, b, c)| {
-            let mut gift = [a, b, c];
+        .chunked::<3>()
+        .map(|chunk| {
+            let mut gift = chunk;
             gift.sort_unstable();
             gift
         })

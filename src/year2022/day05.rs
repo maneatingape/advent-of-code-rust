@@ -1,9 +1,9 @@
 use crate::util::collection::*;
 use crate::util::parse::*;
 
-type Input = (Stack, Vec<Move>);
 type Stack = Vec<Vec<char>>;
-type Move = (usize, usize, usize);
+type Move = [usize; 3];
+type Input = (Stack, Vec<Move>);
 
 pub fn parse(input: &str) -> Input {
     let (prefix, suffix) = input.split_once("\n\n").unwrap();
@@ -21,8 +21,8 @@ pub fn parse(input: &str) -> Input {
 
     let moves: Vec<Move> = suffix
         .to_unsigned_iter()
-        .tupled3()
-        .map(|(amount, from, to)| (amount, from - 1, to - 1))
+        .chunked::<3>()
+        .map(|[amount, from, to]| [amount, from - 1, to - 1])
         .collect();
 
     (stack, moves)
@@ -41,7 +41,7 @@ fn play(input: &Input, reverse: bool) -> String {
     let mut stack = initial.clone();
     let mut crates: Vec<char> = Vec::new();
 
-    for &(amount, from, to) in moves {
+    for &[amount, from, to] in moves {
         let start = stack[from].len() - amount;
         crates.extend(stack[from].drain(start..));
         if reverse {

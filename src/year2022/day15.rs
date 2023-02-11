@@ -11,14 +11,13 @@ pub struct Input {
 }
 
 pub fn parse(input: &str) -> Vec<Input> {
-    fn helper(tuple: (i32, i32, i32, i32)) -> Input {
-        let (x1, y1, x2, y2) = tuple;
+    fn helper([x1, y1, x2, y2]: [i32; 4]) -> Input {
         let sensor = Point { x: x1, y: y1 };
         let beacon = Point { x: x2, y: y2 };
         let manhattan = sensor.manhattan(beacon);
         Input { sensor, beacon, manhattan }
     }
-    input.to_signed_iter().tupled4().map(helper).collect()
+    input.to_signed_iter().chunked::<4>().map(helper).collect()
 }
 
 pub fn part1(input: &[Input]) -> i32 {

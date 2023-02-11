@@ -1,4 +1,4 @@
-use crate::util::collection::Tupled;
+use crate::util::collection::*;
 
 pub fn parse(input: &str) -> Vec<&str> {
     input.lines().collect()
@@ -17,8 +17,8 @@ pub fn part1(input: &[&str]) -> u32 {
 pub fn part2(input: &[&str]) -> u32 {
     input
         .iter()
-        .tupled3()
-        .map(|(a, b, c)| priority(mask(a) & mask(b) & mask(c)))
+        .chunked::<3>()
+        .map(|[a, b, c]| priority(mask(a) & mask(b) & mask(c)))
         .sum()
 }
 

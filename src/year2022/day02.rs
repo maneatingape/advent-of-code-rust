@@ -1,11 +1,11 @@
-use crate::util::collection::Tupled;
+use crate::util::collection::*;
 
 pub fn parse(input: &str) -> Vec<usize> {
     input
         .as_bytes()
         .split(|b| b.is_ascii_whitespace())
-        .tupled2()
-        .map(|(a, b)| 3 * ((a[0] as usize) - 65) + ((b[0] as usize) - 88))
+        .chunked::<2>()
+        .map(|[a, b]| 3 * ((a[0] as usize) - 65) + ((b[0] as usize) - 88))
         .collect()
 }
 

@@ -9,7 +9,7 @@ pub enum Sub {
 }
 
 pub fn parse(input: &str) -> Vec<Sub> {
-    let helper = |(a, b)| match a {
+    let helper = |[a, b]: [&str; 2]| match a {
         "up" => Sub::Up(from(b)),
         "down" => Sub::Down(from(b)),
         "forward" => Sub::Forward(from(b)),
@@ -17,7 +17,7 @@ pub fn parse(input: &str) -> Vec<Sub> {
     };
     input
         .split_ascii_whitespace()
-        .tupled2()
+        .chunked::<2>()
         .map(helper)
         .collect()
 }

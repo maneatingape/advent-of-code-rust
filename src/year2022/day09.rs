@@ -1,4 +1,4 @@
-use crate::util::collection::Tupled;
+use crate::util::collection::*;
 use crate::util::parse::*;
 use crate::util::point::*;
 use std::collections::HashSet;
@@ -8,8 +8,8 @@ type Input = (Point, u32);
 pub fn parse(input: &str) -> Vec<Input> {
     input
         .split_ascii_whitespace()
-        .tupled2()
-        .map(|(d, n)| {
+        .chunked::<2>()
+        .map(|[d, n]| {
             let point = match d {
                 "U" => UP,
                 "D" => DOWN,

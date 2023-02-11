@@ -1,4 +1,4 @@
-use crate::util::collection::Tupled;
+use crate::util::collection::*;
 use crate::util::parse::*;
 
 const SIZE: usize = 22;
@@ -7,8 +7,8 @@ pub fn parse(input: &str) -> Vec<u32> {
     let mut cube = vec![0; SIZE * SIZE * SIZE];
     input
         .to_unsigned_iter()
-        .tupled3()
-        .for_each(|(x, y, z): (usize, usize, usize)| {
+        .chunked::<3>()
+        .for_each(|[x, y, z]: [usize; 3]| {
             cube[(x + 1) * SIZE * SIZE + (y + 1) * SIZE + (z + 1)] = 1;
         });
     cube

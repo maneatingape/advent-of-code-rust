@@ -13,8 +13,8 @@ fn main() {
     let mut total_solutions = 0;
 
     for Solution { year, day, input, wrapper } in solutions() {
-        if year == 2021
-        && day == 8
+        //if year == year
+        //&& day == day
         {
             let time = Instant::now();
             let (answer1, answer2) = (wrapper)(input);
