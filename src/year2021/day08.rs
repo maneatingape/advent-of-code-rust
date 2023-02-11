@@ -1,4 +1,6 @@
-type Input = Vec<Vec<u32>>;
+use crate::util::chunk::*;
+
+type Input = Vec<[u32; 4]>;
 
 pub fn parse(input: &str) -> Input {
     input.lines().map(descramble).collect()
@@ -19,7 +21,7 @@ pub fn part2(input: &Input) -> u32 {
         .sum()
 }
 
-fn descramble(line: &str) -> Vec<u32> {
+fn descramble(line: &str) -> [u32; 4] {
     let mut frequency = [0u8; 104];
     let bytes = line.as_bytes();
     bytes[0..58]
@@ -28,7 +30,9 @@ fn descramble(line: &str) -> Vec<u32> {
     bytes[61..]
         .split(|&b| b == b' ')
         .map(|scrambled| to_digit(scrambled.iter().map(|&b| frequency[b as usize]).sum()))
-        .collect()
+        .chunk::<4>()
+        .next()
+        .unwrap()
 }
 
 fn to_digit(total: u8) -> u32 {
