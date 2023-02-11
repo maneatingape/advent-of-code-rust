@@ -10,13 +10,7 @@ pub fn parse(input: &str) -> Vec<Input> {
         .split_ascii_whitespace()
         .chunk::<2>()
         .map(|[d, n]| {
-            let point = match d {
-                "U" => UP,
-                "D" => DOWN,
-                "L" => LEFT,
-                "R" => RIGHT,
-                _ => unreachable!(),
-            };
+            let point = Point::from_string(d);
             let amount = from(n);
             (point, amount)
         })

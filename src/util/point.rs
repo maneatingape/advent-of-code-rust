@@ -53,6 +53,26 @@ impl AddAssign for Point {
 }
 
 impl Point {
+    pub fn from_byte(b: &u8) -> Point {
+        match b {
+            b'^' => UP,
+            b'v' => DOWN,
+            b'<' => LEFT,
+            b'>' => RIGHT,
+            _ => unreachable!(),
+        }
+    }
+
+    pub fn from_string(s: &str) -> Point {
+        match s {
+            "U" => UP,
+            "D" => DOWN,
+            "L" => LEFT,
+            "R" => RIGHT,
+            _ => unreachable!(),
+        }
+    }
+
     pub fn clockwise(self) -> Point {
         Point {
             x: -self.y,

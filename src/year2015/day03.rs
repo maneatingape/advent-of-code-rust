@@ -2,16 +2,7 @@ use crate::util::point::*;
 use std::collections::HashSet;
 
 pub fn parse(input: &str) -> Vec<Point> {
-    fn helper(b: &u8) -> Point {
-        match b {
-            b'^' => UP,
-            b'v' => DOWN,
-            b'<' => LEFT,
-            b'>' => RIGHT,
-            _ => ORIGIN,
-        }
-    }
-    input.as_bytes().iter().map(helper).collect()
+    input.trim().as_bytes().iter().map(Point::from_byte).collect()
 }
 
 pub fn part1(input: &[Point]) -> usize {
