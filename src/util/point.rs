@@ -5,6 +5,7 @@ pub const UP: Point = Point { x: 0, y: -1 };
 pub const DOWN: Point = Point { x: 0, y: 1 };
 pub const LEFT: Point = Point { x: -1, y: 0 };
 pub const RIGHT: Point = Point { x: 1, y: 0 };
+pub const ORTHOGONAL: [Point; 4] = [UP, DOWN, LEFT, RIGHT];
 
 #[derive(Copy, Clone, Debug, Eq, Hash, PartialEq)]
 pub struct Point {
