@@ -10,7 +10,7 @@ pub fn parse(input: &str) -> Input {
     let lines: Vec<&str> = prefix.lines().collect();
     let width = (lines[0].len() + 1) / 4;
 
-    let mut stack: Stack = Vec::tabulate(width, |_| Vec::new());
+    let mut stack: Stack = vec![Vec::new(); width];
     for row in lines.iter().rev() {
         for (i, c) in row.chars().skip(1).step_by(4).enumerate() {
             if c != ' ' {

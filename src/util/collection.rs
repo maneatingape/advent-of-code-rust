@@ -1,15 +1,3 @@
-pub trait VecExt<T> {
-    fn tabulate(n: usize, f: impl Fn(usize) -> T) -> Vec<T>;
-}
-
-impl<T> VecExt<T> for Vec<T> {
-    fn tabulate(n: usize, f: impl Fn(usize) -> T) -> Vec<T> {
-        let mut vec: Vec<T> = Vec::with_capacity(n);
-        (0..n).for_each(|i| vec.push(f(i)));
-        vec
-    }
-}
-
 pub struct Tupled2<I>(I);
 pub struct Tupled3<I>(I);
 pub struct Tupled4<I>(I);
