@@ -1,7 +1,7 @@
 use crate::util::parse::*;
 
 pub fn parse(input: &str) -> Vec<i32> {
-    input.to_signed_iter().collect()
+    input.iter_signed().collect()
 }
 
 pub fn part1(input: &[i32]) -> i32 {

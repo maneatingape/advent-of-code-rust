@@ -20,7 +20,7 @@ pub fn parse(input: &str) -> Input {
     }
 
     let moves: Vec<Move> = suffix
-        .to_unsigned_iter()
+        .iter_unsigned()
         .chunked::<3>()
         .map(|[amount, from, to]| [amount, from - 1, to - 1])
         .collect();

@@ -178,7 +178,7 @@ impl Tree {
 }
 
 pub fn parse(input: &str) -> Vec<i64> {
-    input.to_signed_iter().collect()
+    input.iter_signed().collect()
 }
 
 pub fn part1(input: &[i64]) -> i64 {

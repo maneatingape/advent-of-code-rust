@@ -11,7 +11,7 @@ pub fn parse(input: &str) -> Vec<Input> {
 
     let chunks: Vec<Vec<usize>> = input
         .split("\n\n")
-        .map(|s| s.to_unsigned_iter().collect())
+        .map(|s| s.iter_unsigned().collect())
         .collect();
 
     for (i, &n) in chunks[0].iter().enumerate() {

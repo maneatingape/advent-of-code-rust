@@ -95,7 +95,7 @@ impl Blueprint {
 
 pub fn parse(input: &str) -> Vec<Blueprint> {
     input
-        .to_unsigned_iter()
+        .iter_unsigned()
         .collect::<Vec<u32>>()
         .chunks_exact(7)
         .map(Blueprint::parse)

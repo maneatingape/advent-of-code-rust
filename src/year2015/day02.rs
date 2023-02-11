@@ -5,7 +5,7 @@ type Gift = [u32; 3];
 
 pub fn parse(input: &str) -> Vec<Gift> {
     input
-        .to_unsigned_iter()
+        .iter_unsigned()
         .chunked::<3>()
         .map(|chunk| {
             let mut gift = chunk;

@@ -17,7 +17,7 @@ pub fn parse(input: &str) -> Vec<Input> {
         let manhattan = sensor.manhattan(beacon);
         Input { sensor, beacon, manhattan }
     }
-    input.to_signed_iter().chunked::<4>().map(helper).collect()
+    input.iter_signed().chunked::<4>().map(helper).collect()
 }
 
 pub fn part1(input: &[Input]) -> i32 {

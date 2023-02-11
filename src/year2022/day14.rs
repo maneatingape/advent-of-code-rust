@@ -29,7 +29,7 @@ impl Cave {
 pub fn parse(input: &str) -> Cave {
     let points: Vec<Vec<u32>> = input
         .lines()
-        .map(|line| line.to_unsigned_iter().collect())
+        .map(|line| line.iter_unsigned().collect())
         .collect();
     let max_y = points
         .iter()

@@ -18,7 +18,7 @@ pub enum Operation {
 
 pub fn parse(input: &str) -> Vec<Monkey> {
     fn helper(chunk: &[&str]) -> Monkey {
-        let items = chunk[1].to_unsigned_iter().collect();
+        let items = chunk[1].iter_unsigned().collect();
         let tokens: Vec<&str> = chunk[2].split(' ').rev().take(2).collect();
         let operation = match tokens[..] {
             ["old", _] => Operation::Square,
@@ -26,9 +26,9 @@ pub fn parse(input: &str) -> Vec<Monkey> {
             [y, "+"] => Operation::Add(from(y)),
             _ => unreachable!(),
         };
-        let test = chunk[3].to_unsigned_iter().next().unwrap();
-        let yes = chunk[4].to_unsigned_iter().next().unwrap();
-        let no = chunk[5].to_unsigned_iter().next().unwrap();
+        let test = chunk[3].iter_unsigned().next().unwrap();
+        let yes = chunk[4].iter_unsigned().next().unwrap();
+        let no = chunk[5].iter_unsigned().next().unwrap();
         Monkey { items, operation, test, yes, no, }
     }
     input

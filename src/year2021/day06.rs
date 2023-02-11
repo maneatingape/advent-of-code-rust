@@ -4,7 +4,7 @@ type Input = [u64; 9];
 
 pub fn parse(input: &str) -> Input {
     let mut fish = [0_u64; 9];
-    input.to_unsigned_iter().for_each(|i: usize| fish[i] += 1);
+    input.iter_unsigned().for_each(|i: usize| fish[i] += 1);
     fish
 }
 
