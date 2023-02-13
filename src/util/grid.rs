@@ -1,14 +1,14 @@
 use crate::util::point::*;
+use std::ops::{Index, IndexMut};
 
-#[derive(Clone)]
-pub struct Grid {
+pub struct Grid<T> {
     pub width: i32,
     pub height: i32,
-    pub bytes: Vec<u8>,
+    pub bytes: Vec<T>,
 }
 
-impl Grid {
-    pub fn parse(input: &str) -> Grid {
+impl Grid<u8> {
+    pub fn parse(input: &str) -> Grid<u8> {
         let raw: Vec<_> = input.lines().map(|line| line.as_bytes()).collect();
         let width = raw[0].len() as i32;
         let height = raw.len() as i32;
@@ -20,12 +20,14 @@ impl Grid {
             bytes,
         }
     }
+}
 
-    pub fn empty_copy(&self) -> Grid {
+impl<T: Copy + PartialEq> Grid<T> {
+    pub fn default_copy<U: Default + Copy>(&self) -> Grid<U> {
         Grid {
             width: self.width,
             height: self.height,
-            bytes: vec![0; (self.width * self.height) as usize],
+            bytes: vec![U::default(); (self.width * self.height) as usize],
         }
     }
 
@@ -33,20 +35,26 @@ impl Grid {
         point.x >= 0 && point.x < self.width && point.y >= 0 && point.y < self.height
     }
 
-    pub fn get(&self, point: Point) -> u8 {
-        self.bytes[(self.width * point.y + point.x) as usize]
-    }
-
-    pub fn set(&mut self, point: Point, value: u8) {
-        self.bytes[(self.width * point.y + point.x) as usize] = value;
-    }
-
-    pub fn find(&self, needle: u8) -> Option<Point> {
+    pub fn find(&self, needle: T) -> Option<Point> {
         let to_point = |index| {
             let x = (index as i32) % self.width;
             let y = (index as i32) / self.width;
             Point { x, y }
         };
         self.bytes.iter().position(|&h| h == needle).map(to_point)
+    }
+}
+
+impl<T> Index<Point> for Grid<T> {
+    type Output = T;
+
+    fn index(&self, point: Point) -> &Self::Output {
+        &self.bytes[(self.width * point.y + point.x) as usize]
+    }
+}
+
+impl<T> IndexMut<Point> for Grid<T> {
+    fn index_mut(&mut self, point: Point) -> &mut Self::Output {
+        &mut self.bytes[(self.width * point.y + point.x) as usize]
     }
 }
