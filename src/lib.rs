@@ -51,6 +51,7 @@ pub mod year2021 {
     pub mod day13;
     pub mod day14;
     pub mod day15;
+    pub mod day16;
 }
 
 pub mod year2015 {

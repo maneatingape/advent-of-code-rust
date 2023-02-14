@@ -42,6 +42,7 @@ mod year2021 {
     mod day13_test;
     mod day14_test;
     mod day15_test;
+    mod day16_test;
 }
 
 mod year2015 {
