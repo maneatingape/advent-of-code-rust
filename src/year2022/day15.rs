@@ -1,7 +1,7 @@
 use crate::util::chunk::*;
+use crate::util::hash::*;
 use crate::util::parse::*;
 use crate::util::point::*;
-use std::collections::HashSet;
 use std::ops::Range;
 
 pub struct Input {
@@ -55,7 +55,7 @@ pub fn part1_testable(input: &[Input], row: i32) -> i32 {
         let Input { sensor: _, beacon, manhattan: _ } = input;
         if beacon.y == row { Some(beacon.x) } else { None }
     }
-    let beacons: HashSet<i32> = input.iter().filter_map(|i| build_beacons(i, row)).collect();
+    let beacons: FastSet<i32> = input.iter().filter_map(|i| build_beacons(i, row)).collect();
 
     total - (beacons.len() as i32)
 }
@@ -65,10 +65,10 @@ pub fn part2(input: &[Input]) -> u64 {
 }
 
 pub fn part2_testable(input: &[Input], size: i32) -> u64 {
-    let mut top: HashSet<i32> = HashSet::new();
-    let mut left: HashSet<i32> = HashSet::new();
-    let mut bottom: HashSet<i32> = HashSet::new();
-    let mut right: HashSet<i32> = HashSet::new();
+    let mut top: FastSet<i32> = FastSetBuilder::new();
+    let mut left: FastSet<i32> = FastSetBuilder::new();
+    let mut bottom: FastSet<i32> = FastSetBuilder::new();
+    let mut right: FastSet<i32> = FastSetBuilder::new();
 
     // Rotate points clockwise by 45 degrees, scale by √2 and extend edge by 1.
     // This transform each sensor into an axis aligned bounding box.

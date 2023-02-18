@@ -1,5 +1,5 @@
+use crate::util::hash::*;
 use crate::util::point::*;
-use std::collections::HashSet;
 
 pub fn parse(input: &str) -> Vec<Point> {
     input
@@ -21,7 +21,8 @@ pub fn part2(input: &[Point]) -> usize {
 fn deliver(input: &[Point], predicate: fn(usize) -> bool) -> usize {
     let mut santa = ORIGIN;
     let mut robot = ORIGIN;
-    let mut set = HashSet::from([ORIGIN]);
+    let mut set = FastSetBuilder::with_capacity(10_000);
+    set.insert(ORIGIN);
 
     for (index, point) in input.iter().enumerate() {
         if predicate(index) {

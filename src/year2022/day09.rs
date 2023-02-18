@@ -1,7 +1,7 @@
 use crate::util::chunk::*;
+use crate::util::hash::*;
 use crate::util::parse::*;
 use crate::util::point::*;
-use std::collections::HashSet;
 
 type Input = (Point, u32);
 
@@ -27,7 +27,7 @@ pub fn part2(input: &[Input]) -> usize {
 
 fn simulate(input: &[Input], size: usize) -> usize {
     let mut rope: Vec<Point> = vec![ORIGIN; size];
-    let mut tail: HashSet<Point> = HashSet::new();
+    let mut tail: FastSet<Point> = FastSetBuilder::with_capacity(5_000);
 
     for (step, amount) in input {
         for _ in 0..*amount {

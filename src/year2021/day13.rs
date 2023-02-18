@@ -1,7 +1,7 @@
 use crate::util::chunk::*;
+use crate::util::hash::*;
 use crate::util::parse::*;
 use crate::util::point::*;
-use std::collections::HashSet;
 
 #[derive(Clone, Copy)]
 pub enum Fold {
@@ -41,13 +41,13 @@ pub fn part1(input: &Input) -> usize {
             .points
             .iter()
             .map(|&p| fold_horizontal(x, p))
-            .collect::<HashSet<_>>()
+            .collect::<FastSet<_>>()
             .len(),
         Fold::Vertical(y) => input
             .points
             .iter()
             .map(|&p| fold_vertical(y, p))
-            .collect::<HashSet<_>>()
+            .collect::<FastSet<_>>()
             .len(),
     }
 }
