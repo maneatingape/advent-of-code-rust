@@ -1,3 +1,4 @@
+use std::hash::{Hash, Hasher};
 use std::ops::{Add, AddAssign, Mul, Sub};
 
 pub const ORIGIN: Point = Point { x: 0, y: 0 };
@@ -7,7 +8,7 @@ pub const LEFT: Point = Point { x: -1, y: 0 };
 pub const RIGHT: Point = Point { x: 1, y: 0 };
 pub const ORTHOGONAL: [Point; 4] = [UP, DOWN, LEFT, RIGHT];
 
-#[derive(Copy, Clone, Debug, Eq, Hash, PartialEq)]
+#[derive(Copy, Clone, Debug, Eq, PartialEq)]
 pub struct Point {
     pub x: i32,
     pub y: i32,
@@ -50,6 +51,13 @@ impl AddAssign for Point {
     fn add_assign(&mut self, rhs: Point) {
         self.x += rhs.x;
         self.y += rhs.y;
+    }
+}
+
+impl Hash for Point {
+    fn hash<H: Hasher>(&self, hasher: &mut H) {
+        hasher.write_u32(self.x as u32);
+        hasher.write_u32(self.y as u32);
     }
 }
 

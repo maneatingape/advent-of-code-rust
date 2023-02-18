@@ -1,6 +1,6 @@
 use crate::util::chunk::*;
+use crate::util::hash::*;
 use crate::util::parse::*;
-use std::collections::HashSet;
 use std::ops::{Add, Sub};
 
 #[derive(Copy, Clone, Hash, PartialEq, Eq)]
@@ -75,14 +75,14 @@ impl Sub for Point3D {
 
 pub struct Scanner {
     beacons: Vec<Point3D>,
-    signature: HashSet<i32>,
+    signature: FastSet<i32>,
 }
 
 impl Scanner {
     fn parse(lines: &[&str]) -> Scanner {
         let beacons: Vec<_> = lines.iter().skip(1).map(Point3D::parse).collect();
 
-        let mut signature = HashSet::with_capacity(1_000);
+        let mut signature: FastSet<_> = FastSetBuilder::with_capacity(1_000);
         for i in 0..(beacons.len() - 1) {
             for j in (i + 1)..beacons.len() {
                 signature.insert(beacons[i].euclidean(&beacons[j]));
@@ -94,29 +94,29 @@ impl Scanner {
 }
 
 pub struct Located {
-    beacons: HashSet<Point3D>,
-    signature: HashSet<i32>,
-    deltas: HashSet<Point3D>,
+    signature: FastSet<i32>,
+    deltas: FastSet<Point3D>,
+    beacons: FastSet<Point3D>,
     offset: Point3D,
 }
 
 impl Located {
-    fn from(beacons: Vec<Point3D>, signature: HashSet<i32>, offset: Point3D) -> Located {
-        let mut deltas = HashSet::with_capacity(1_000);
-        for (i, a) in beacons.iter().enumerate() {
-            for (j, b) in beacons.iter().enumerate() {
+    fn from(relative_beacons: Vec<Point3D>, signature: FastSet<i32>, offset: Point3D) -> Located {
+        let mut deltas = FastSetBuilder::with_capacity(1_000);
+        for (i, a) in relative_beacons.iter().enumerate() {
+            for (j, b) in relative_beacons.iter().enumerate() {
                 if i != j {
                     deltas.insert(*a - *b);
                 }
             }
         }
 
-        let beacons: HashSet<_> = beacons
-            .iter()
-            .map(|&p| p + offset)
-            .collect();
+        let mut beacons = FastSetBuilder::with_capacity(30);
+        for &point in relative_beacons.iter() {
+            beacons.insert(point + offset);
+        }
 
-        Located { beacons, signature, deltas, offset }
+        Located { signature, deltas, beacons, offset }
     }
 }
 
@@ -132,7 +132,7 @@ pub fn parse(input: &str) -> Vec<Located> {
 }
 
 pub fn part1(input: &[Located]) -> usize {
-    let mut result = HashSet::with_capacity(1_000);
+    let mut result = FastSetBuilder::with_capacity(1_000);
 
     for located in input.iter() {
         for beacon in located.beacons.iter() {
@@ -181,12 +181,12 @@ fn locate(unknown: &mut Vec<Scanner>) -> Vec<Located> {
 }
 
 fn check(known: &Located, scanner: &Scanner) -> Option<Located> {
-    let matching: HashSet<_> = known.signature.intersection(&scanner.signature).copied().collect();
+    let matching: FastSet<_> = known.signature.intersection(&scanner.signature).copied().collect();
     if matching.len() < 66 {
         return None;
     }
 
-    let mut beacons_of_interest = HashSet::new();
+    let mut beacons_of_interest = FastSetBuilder::new();
     for i in 0..(scanner.beacons.len() - 1) {
         for j in (i + 1)..scanner.beacons.len() {
             if matching.contains(&scanner.beacons[i].euclidean(&scanner.beacons[j])) {
@@ -240,7 +240,10 @@ fn check_offsets(known: &Located, next: &[Point3D]) -> Option<Point3D> {
     for first in known.beacons.iter() {
         for second in next.iter() {
             let offset = *first - *second;
-            let candidates: HashSet<_> = next.iter().map(|&p| p + offset).collect();
+            let mut candidates = FastSetBuilder::with_capacity(30);
+            for &point in next.iter() {
+                candidates.insert(point + offset);
+            }
 
             if known.beacons.intersection(&candidates).count() >= 12 {
                 return Some(offset);

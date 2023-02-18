@@ -1,6 +1,7 @@
 pub mod util {
     pub mod chunk;
     pub mod grid;
+    pub mod hash;
     pub mod math;
     pub mod md5;
     pub mod parse;
