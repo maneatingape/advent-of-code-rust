@@ -10,7 +10,7 @@ pub type FastMap<T> = HashMap<T, BuildFxHasher>;
 pub struct FastSetBuilder;
 
 impl FastSetBuilder {
-    pub fn new<T>() -> FastSet<T> {
+    pub fn empty<T>() -> FastSet<T> {
         HashSet::with_hasher(BuildFxHasher)
     }
 
@@ -45,7 +45,7 @@ impl Hasher for FxHasher {
     #[inline]
     fn write(&mut self, mut bytes: &[u8]) {
         while bytes.len() >= 8 {
-            self.add_to_hash(u64::from_ne_bytes(bytes[..8].try_into().unwrap()) as u64);
+            self.add_to_hash(u64::from_ne_bytes(bytes[..8].try_into().unwrap()));
             bytes = &bytes[8..];
         }
         if bytes.len() >= 4 {
@@ -56,7 +56,7 @@ impl Hasher for FxHasher {
             self.add_to_hash(u16::from_ne_bytes(bytes[..2].try_into().unwrap()) as u64);
             bytes = &bytes[2..];
         }
-        if bytes.len() >= 1 {
+        if !bytes.is_empty() {
             self.add_to_hash(bytes[0] as u64);
         }
     }
@@ -78,7 +78,7 @@ impl Hasher for FxHasher {
 
     #[inline]
     fn write_u64(&mut self, i: u64) {
-        self.add_to_hash(i as u64);
+        self.add_to_hash(i);
     }
 
     #[inline]

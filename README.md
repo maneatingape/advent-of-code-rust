@@ -4,7 +4,7 @@ Complete 2022 entries for the annual [Advent of Code](https://adventofcode.com/)
 
 Solutions depend only on the stable Rust Standard Library. The code tries it's best to stay clean and elegant, but the focus is on speed so if bit twiddling or mashing stuff into an array makes things faster, then all scruples are jettisoned!
 
-Benchmarks are measured using the built-in `cargo bench` tool run on an Apple M2 Max. All 25 solutions from 2022 complete sequentially in **20 milliseconds**. Performance is reasonable even on older hardware, for example a 2011 MacBook Pro with an [Intel i7-2720QM](https://ark.intel.com/content/www/us/en/ark/products/50067/intel-core-i72720qm-processor-6m-cache-up-to-3-30-ghz.html) processor takes 60 milliseconds to run the solutions.
+Benchmarks are measured using the built-in `cargo bench` tool run on an Apple M2 Max. All 25 solutions from 2022 complete sequentially in **19 milliseconds**. Performance is reasonable even on older hardware, for example a 2011 MacBook Pro with an [Intel i7-2720QM](https://ark.intel.com/content/www/us/en/ark/products/50067/intel-core-i72720qm-processor-6m-cache-up-to-3-30-ghz.html) processor takes 60 milliseconds to run the solutions.
 
 The project is structured as a library crate with a module per year and a sub-module for each day to allow convenient testing and benchmarking. Continuous integration is provided using [GitHub Actions](https://docs.github.com/en/actions) with 100% test coverage based on the example inputs from each day.
 
@@ -12,7 +12,7 @@ The project is structured as a library crate with a module per year and a sub-mo
 
 ## Years
 
-* [2022](#2022) (19.1 ± 0.5 ms total benchmark)
+* [2022](#2022) (18.6 ± 0.3 ms total benchmark)
 * [2021](#2021) (in progress)
 
 ## 2022

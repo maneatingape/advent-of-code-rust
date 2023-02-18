@@ -181,12 +181,16 @@ fn locate(unknown: &mut Vec<Scanner>) -> Vec<Located> {
 }
 
 fn check(known: &Located, scanner: &Scanner) -> Option<Located> {
-    let matching: FastSet<_> = known.signature.intersection(&scanner.signature).copied().collect();
+    let matching: FastSet<_> = known
+        .signature
+        .intersection(&scanner.signature)
+        .copied()
+        .collect();
     if matching.len() < 66 {
         return None;
     }
 
-    let mut beacons_of_interest = FastSetBuilder::new();
+    let mut beacons_of_interest = FastSetBuilder::empty();
     for i in 0..(scanner.beacons.len() - 1) {
         for j in (i + 1)..scanner.beacons.len() {
             if matching.contains(&scanner.beacons[i].euclidean(&scanner.beacons[j])) {
@@ -202,10 +206,7 @@ fn check(known: &Located, scanner: &Scanner) -> Option<Located> {
         let next: Vec<_> = candidates.iter().map(|&rotations| rotations[i]).collect();
         if check_deltas(known, &next) {
             if let Some(offset) = check_offsets(known, &next) {
-                let oriented: Vec<_> = scanner.beacons
-                    .iter()
-                    .map(|p| p.rotations()[i])
-                    .collect();
+                let oriented: Vec<_> = scanner.beacons.iter().map(|p| p.rotations()[i]).collect();
                 let located = Located::from(oriented, scanner.signature.clone(), offset);
                 return Some(located);
             }

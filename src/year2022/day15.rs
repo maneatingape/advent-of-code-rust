@@ -65,10 +65,10 @@ pub fn part2(input: &[Input]) -> u64 {
 }
 
 pub fn part2_testable(input: &[Input], size: i32) -> u64 {
-    let mut top: FastSet<i32> = FastSetBuilder::new();
-    let mut left: FastSet<i32> = FastSetBuilder::new();
-    let mut bottom: FastSet<i32> = FastSetBuilder::new();
-    let mut right: FastSet<i32> = FastSetBuilder::new();
+    let mut top: FastSet<i32> = FastSetBuilder::empty();
+    let mut left: FastSet<i32> = FastSetBuilder::empty();
+    let mut bottom: FastSet<i32> = FastSetBuilder::empty();
+    let mut right: FastSet<i32> = FastSetBuilder::empty();
 
     // Rotate points clockwise by 45 degrees, scale by √2 and extend edge by 1.
     // This transform each sensor into an axis aligned bounding box.

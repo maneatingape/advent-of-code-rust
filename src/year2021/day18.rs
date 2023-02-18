@@ -66,8 +66,7 @@ fn add(left: &Snailfish, right: &Snailfish) -> Snailfish {
         }
     }
 
-    while split(&mut tree) {};
-
+    while split(&mut tree) {}
     tree
 }
 
