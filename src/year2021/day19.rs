@@ -42,10 +42,14 @@ impl Point3D {
         ]
     }
 
+    fn euclidean(&self, other: &Point3D) -> i32 {
+        let [dx, dy, dz] = (*self - *other).0;
+        dx * dx + dy * dy + dz * dz
+    }
+
     fn manhattan(&self, other: &Point3D) -> i32 {
-        let [x1, y1, z1] = self.0;
-        let [x2, y2, z2] = other.0;
-        (x1 - x2).abs() + (y1 - y2).abs() + (z1 - z2).abs()
+        let [dx, dy, dz] = (*self - *other).0;
+        dx.abs() + dy.abs() + dz.abs()
     }
 }
 
@@ -70,15 +74,34 @@ impl Sub for Point3D {
 }
 
 pub struct Scanner {
-    beacons: HashSet<Point3D>,
-    deltas: HashSet<Point3D>,
-    offset: Point3D,
+    beacons: Vec<Point3D>,
+    signature: HashSet<i32>,
 }
 
 impl Scanner {
     fn parse(lines: &[&str]) -> Scanner {
-        let beacons: HashSet<_> = lines.iter().skip(1).map(Point3D::parse).collect();
+        let beacons: Vec<_> = lines.iter().skip(1).map(Point3D::parse).collect();
 
+        let mut signature = HashSet::with_capacity(1_000);
+        for i in 0..(beacons.len() - 1) {
+            for j in (i + 1)..beacons.len() {
+                signature.insert(beacons[i].euclidean(&beacons[j]));
+            }
+        }
+
+        Scanner { beacons, signature }
+    }
+}
+
+pub struct Located {
+    beacons: HashSet<Point3D>,
+    signature: HashSet<i32>,
+    deltas: HashSet<Point3D>,
+    offset: Point3D,
+}
+
+impl Located {
+    fn from(beacons: Vec<Point3D>, signature: HashSet<i32>, offset: Point3D) -> Located {
         let mut deltas = HashSet::with_capacity(1_000);
         for (i, a) in beacons.iter().enumerate() {
             for (j, b) in beacons.iter().enumerate() {
@@ -88,59 +111,16 @@ impl Scanner {
             }
         }
 
-        let offset = Point3D([0, 0, 0]);
-        Scanner { beacons, deltas, offset }
-    }
+        let beacons: HashSet<_> = beacons
+            .iter()
+            .map(|&p| p + offset)
+            .collect();
 
-    fn rotations(&self) -> Vec<Scanner> {
-        let mut scanners = Vec::new();
-        for _ in 0..24 {
-            scanners.push(Scanner {
-                beacons: HashSet::with_capacity(30),
-                deltas: HashSet::with_capacity(1_000),
-                offset: Point3D([0, 0, 0]),
-            });
-        }
-
-        for point in self.beacons.iter() {
-            for (i, rotation) in point.rotations().into_iter().enumerate() {
-                scanners[i].beacons.insert(rotation);
-            }
-        }
-
-        for point in self.deltas.iter() {
-            for (i, rotation) in point.rotations().into_iter().enumerate() {
-                scanners[i].deltas.insert(rotation);
-            }
-        }
-
-        scanners
-    }
-
-    fn possible_overlap(&self, other: &Scanner) -> bool {
-        self.deltas.intersection(&other.deltas).count() >= 12 * 11
-    }
-
-    fn definite_overlap(&self, other: &Scanner) -> Option<Scanner> {
-        for first in self.beacons.iter() {
-            for second in other.beacons.iter() {
-                let offset = *first - *second;
-                let candidate: HashSet<_> = other.beacons.iter().map(|&p| p + offset).collect();
-                if candidate.intersection(&self.beacons).count() >= 12 {
-                    let located = Scanner {
-                        beacons: candidate,
-                        deltas: other.deltas.clone(),
-                        offset,
-                    };
-                    return Some(located);
-                }
-            }
-        }
-        None
+        Located { beacons, signature, deltas, offset }
     }
 }
 
-pub fn parse(input: &str) -> Vec<Scanner> {
+pub fn parse(input: &str) -> Vec<Located> {
     let lines: Vec<_> = input.lines().collect();
 
     let mut scanners: Vec<_> = lines
@@ -151,11 +131,11 @@ pub fn parse(input: &str) -> Vec<Scanner> {
     locate(&mut scanners)
 }
 
-pub fn part1(input: &[Scanner]) -> usize {
+pub fn part1(input: &[Located]) -> usize {
     let mut result = HashSet::with_capacity(1_000);
 
-    for scanner in input.iter() {
-        for beacon in scanner.beacons.iter() {
+    for located in input.iter() {
+        for beacon in located.beacons.iter() {
             result.insert(beacon);
         }
     }
@@ -163,7 +143,7 @@ pub fn part1(input: &[Scanner]) -> usize {
     result.len()
 }
 
-pub fn part2(input: &[Scanner]) -> i32 {
+pub fn part2(input: &[Located]) -> i32 {
     let mut result = 0;
 
     for first in input.iter() {
@@ -175,36 +155,98 @@ pub fn part2(input: &[Scanner]) -> i32 {
     result
 }
 
-fn locate(scanners: &mut Vec<Scanner>) -> Vec<Scanner> {
+fn locate(unknown: &mut Vec<Scanner>) -> Vec<Located> {
     let mut done = Vec::new();
-    let mut todo = Vec::from([scanners.pop().unwrap()]);
-    let mut unknown: Vec<_> = scanners.iter().map(|s| s.rotations()).collect();
+    let mut todo = Vec::new();
+
+    let Scanner { beacons, signature } = unknown.pop().unwrap();
+    todo.push(Located::from(beacons, signature, Point3D([0, 0, 0])));
 
     while let Some(known) = todo.pop() {
         let mut next_unknown = Vec::new();
 
-        while let Some(candidates) = unknown.pop() {
-            if let Some(located) = check(&known, &candidates) {
+        while let Some(scanner) = unknown.pop() {
+            if let Some(located) = check(&known, &scanner) {
                 todo.push(located);
             } else {
-                next_unknown.push(candidates);
+                next_unknown.push(scanner);
             }
         }
 
         done.push(known);
-        unknown = next_unknown;
+        *unknown = next_unknown;
     }
 
     done
 }
 
-fn check(known: &Scanner, candidates: &[Scanner]) -> Option<Scanner> {
-    for rotation in candidates.iter() {
-        if known.possible_overlap(rotation) {
-            if let Some(located) = known.definite_overlap(rotation) {
+fn check(known: &Located, scanner: &Scanner) -> Option<Located> {
+    let matching: HashSet<_> = known.signature.intersection(&scanner.signature).copied().collect();
+    if matching.len() < 66 {
+        return None;
+    }
+
+    let mut beacons_of_interest = HashSet::new();
+    for i in 0..(scanner.beacons.len() - 1) {
+        for j in (i + 1)..scanner.beacons.len() {
+            if matching.contains(&scanner.beacons[i].euclidean(&scanner.beacons[j])) {
+                beacons_of_interest.insert(scanner.beacons[i]);
+                beacons_of_interest.insert(scanner.beacons[j]);
+            }
+        }
+    }
+
+    let candidates: Vec<_> = beacons_of_interest.iter().map(|p| p.rotations()).collect();
+
+    for i in 0..24 {
+        let next: Vec<_> = candidates.iter().map(|&rotations| rotations[i]).collect();
+        if check_deltas(known, &next) {
+            if let Some(offset) = check_offsets(known, &next) {
+                let oriented: Vec<_> = scanner.beacons
+                    .iter()
+                    .map(|p| p.rotations()[i])
+                    .collect();
+                let located = Located::from(oriented, scanner.signature.clone(), offset);
                 return Some(located);
             }
         }
     }
+
+    None
+}
+
+fn check_deltas(known: &Located, next: &[Point3D]) -> bool {
+    let max_no = (next.len() * (next.len() - 1)) - (12 * 11);
+    let mut no = 0;
+
+    for (i, first) in next.iter().enumerate() {
+        for (j, second) in next.iter().enumerate() {
+            if i != j {
+                let delta = *first - *second;
+                if !known.deltas.contains(&delta) {
+                    no += 1;
+                    if no > max_no {
+                        return false;
+                    }
+                }
+            }
+        }
+    }
+
+    true
+}
+
+fn check_offsets(known: &Located, next: &[Point3D]) -> Option<Point3D> {
+    for first in known.beacons.iter() {
+        for second in next.iter() {
+            let offset = *first - *second;
+            let candidates: HashSet<_> = next.iter().map(|&p| p + offset).collect();
+
+            if known.beacons.intersection(&candidates).count() >= 12 {
+                return Some(offset);
+            }
+        }
+    }
+
     None
 }
