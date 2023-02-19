@@ -1,3 +1,5 @@
+// Chunk duplicates the functionality of the unstable
+// std::iter::Iterator::array_chunks
 pub struct Chunk<I: Iterator, const N: usize> {
     iter: I,
 }

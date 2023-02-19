@@ -1,4 +1,4 @@
-use crate::util::chunk::*;
+use crate::util::iter::*;
 
 type Elements = [u64; 26];
 type Pairs = [u64; 26 * 26];

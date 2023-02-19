@@ -1,4 +1,4 @@
-use crate::util::chunk::*;
+use crate::util::iter::*;
 use crate::util::parse::*;
 
 type Pairs = [u32; 4];
