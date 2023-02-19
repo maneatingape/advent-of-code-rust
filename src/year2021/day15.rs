@@ -1,25 +1,35 @@
 use crate::util::grid::*;
 use crate::util::point::*;
-use std::cmp::Ordering;
-use std::collections::BinaryHeap;
 
-#[derive(PartialEq, Eq)]
+#[derive(Clone, Copy)]
 struct State {
     point: Point,
     risk: u16,
 }
 
-impl PartialOrd for State {
-    #[inline]
-    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
-        Some(other.risk.cmp(&self.risk))
-    }
+struct PriorityQueue {
+    todo: Vec<Vec<State>>,
+    head: usize,
 }
 
-impl Ord for State {
-    #[inline]
-    fn cmp(&self, other: &Self) -> std::cmp::Ordering {
-        self.partial_cmp(other).unwrap()
+impl PriorityQueue {
+    fn new() -> PriorityQueue {
+        PriorityQueue {
+            todo: vec![vec![]; 10_000],
+            head: 0,
+        }
+    }
+
+    fn pop(&mut self) -> State {
+        while self.todo[self.head].is_empty() {
+            self.head += 1;
+        }
+        self.todo[self.head].pop().unwrap()
+    }
+
+    fn push(&mut self, state: State) {
+        self.head = self.head.min(state.risk as usize);
+        self.todo[state.risk as usize].push(state);
     }
 }
 
@@ -70,11 +80,12 @@ fn dijkstra(grid: &Grid<u8>) -> u16 {
         y: grid.height - 1,
     };
 
-    let mut todo = BinaryHeap::from([start]);
+    let mut todo = PriorityQueue::new();
     let mut cost = grid.default_copy::<Option<u16>>();
+    todo.push(start);
 
-    while let Some(state) = todo.pop() {
-        let State { point, risk } = state;
+    loop {
+        let State { point, risk } = todo.pop();
 
         if point == end {
             return risk;
@@ -96,6 +107,4 @@ fn dijkstra(grid: &Grid<u8>) -> u16 {
             }
         }
     }
-
-    unreachable!()
 }
