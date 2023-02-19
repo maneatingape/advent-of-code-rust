@@ -10,12 +10,14 @@ struct State {
 }
 
 impl PartialOrd for State {
+    #[inline]
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
         Some(other.risk.cmp(&self.risk))
     }
 }
 
 impl Ord for State {
+    #[inline]
     fn cmp(&self, other: &Self) -> std::cmp::Ordering {
         self.partial_cmp(other).unwrap()
     }
