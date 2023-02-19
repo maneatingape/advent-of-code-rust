@@ -4,4 +4,4 @@ version = 3
 
 [[package]]
 name = "aoc"
-version = "25.12.2022"
+version = "2022.12.25"

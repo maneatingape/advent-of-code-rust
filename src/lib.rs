@@ -1,3 +1,6 @@
+//! # Rust solutions to the annual Advent of Code challenge tuned for speed.
+
+/// # Utility modules to handle common recurring Advent of Code patterns.
 pub mod util {
     pub mod grid;
     pub mod hash;
@@ -8,6 +11,7 @@ pub mod util {
     pub mod point;
 }
 
+/// # Assist the Elves on their annual jungle expedition.
 pub mod year2022 {
     pub mod day01;
     pub mod day02;
@@ -36,6 +40,7 @@ pub mod year2022 {
     pub mod day25;
 }
 
+/// # Retrieve the keys to Santa's sleigh with an underwater submarine adventure.
 pub mod year2021 {
     pub mod day01;
     pub mod day02;
@@ -59,6 +64,7 @@ pub mod year2021 {
     pub mod day21;
 }
 
+/// # Help Santa by solving puzzles to fix the weather machine's snow function.
 pub mod year2015 {
     pub mod day01;
     pub mod day02;
