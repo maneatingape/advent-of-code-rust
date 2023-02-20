@@ -9,13 +9,12 @@ use crate::util::iter::*;
 ///
 /// Notes:
 /// * `chunk` is a convenience extension method to `iter` that groups the iterator's elements into arrays of a fixed size.
-/// * 65 is the ASCII code for "A" and 88 is the ASCII code for "X".
 pub fn parse(input: &str) -> Vec<usize> {
     input
         .as_bytes()
         .split(|b| b.is_ascii_whitespace())
         .chunk::<2>()
-        .map(|[a, b]| 3 * ((a[0] as usize) - 65) + ((b[0] as usize) - 88))
+        .map(|[a, b]| (3 * (a[0] - b'A') + b[0] - b'X') as usize)
         .collect()
 }
 

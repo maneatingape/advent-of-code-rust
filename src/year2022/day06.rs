@@ -1,5 +1,5 @@
 pub fn parse(input: &str) -> Vec<usize> {
-    input.as_bytes().iter().map(|&b| b as usize).collect()
+    input.trim().as_bytes().iter().map(|&b| (b - b'a') as usize).collect()
 }
 
 pub fn part1(input: &[usize]) -> usize {
@@ -11,7 +11,7 @@ pub fn part2(input: &[usize]) -> usize {
 }
 
 fn find(input: &[usize], marker: usize) -> usize {
-    let mut letters = [0; 128];
+    let mut letters = [0; 26];
     let mut different = 0;
 
     for i in 0..input.len() {
