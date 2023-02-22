@@ -10,7 +10,7 @@
 //!
 //! `a > d || c > b`
 //!
-//! then the 2 ranges can't overlap. Using [DeMorgan's laws](https://en.wikipedia.org/wiki/De_Morgan%27s_laws)
+//! the 2 ranges can't overlap. Using [DeMorgan's laws](https://en.wikipedia.org/wiki/De_Morgan%27s_laws)
 //! this can be inverted to:
 //!
 //! `a <= d && c <= b`
@@ -25,7 +25,9 @@ type Pairs = [u32; 4];
 ///
 /// Notes:
 /// * Extracting integers from redundant text is a very common theme in AoC that
-///   the `aoc::util::iter_unsigned` method handles.
+///   the [`iter_unsigned`] method handles.
+///
+/// [`iter_unsigned`]: ParseUnsigned::iter_unsigned
 pub fn parse(input: &str) -> Vec<Pairs> {
     input.iter_unsigned().chunk::<4>().collect()
 }

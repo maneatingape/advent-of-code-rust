@@ -1,11 +1,14 @@
 //! # Calorie Counting
 //! Sums groups of numbers separated by blank lines into an `vec` sorted in ascending order.
 //!
-//! Since we don't care what order the highest values are returned in `select_nth_unstable` would
+//! Since we don't care what order the highest values are returned in [`select_nth_unstable`] would
 //! also work, and in theory is a little faster, however the difference was negligible when benchmarking.
 //!
 //! Notes:
-//! * `from` is a convenience wrapper around `parse` that unwraps the number or panics if it can't be parsed.
+//! * [`from`] is a convenience wrapper around [`parse`] that unwraps the number or panics if it can't be parsed.
+//!
+//! [`select_nth_unstable`]: slice::select_nth_unstable
+//! [`parse`]: str::parse
 use crate::util::parse::*;
 
 /// Parse and group lines.

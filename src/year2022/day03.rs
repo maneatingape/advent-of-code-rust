@@ -14,13 +14,15 @@
 //!
 //! `a & b`
 //!
-//! To obtain the score we can use the `trailing_zeroes` method to find the first set bit. On most
+//! To obtain the score we can use the [`trailing_zeroes`] method to find the first set bit. On most
 //! architectures this also compiles down to a single instruction (`LZCNT` on x86 or `CLZ` on ARM)
 //! that is blazing fast.
 //!
 //! Notes:
 //! * We could get away with a `u64` for the set, but by using an `u128` we can shift directly by the
 //! raw ASCII codes and not bother computing offsets until the very end.
+//!
+//! [`trailing_zeroes`]: u128
 use crate::util::iter::*;
 
 /// Collect each line into a `vec` of string slices.
