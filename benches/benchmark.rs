@@ -83,9 +83,3 @@ benchmark!(year2021_day17, year2021, day17);
 benchmark!(year2021_day18, year2021, day18);
 benchmark!(year2021_day19, year2021, day19);
 benchmark!(year2021_day21, year2021, day21);
-
-// 2015
-benchmark!(year2015_day01, year2015, day01);
-benchmark!(year2015_day02, year2015, day02);
-benchmark!(year2015_day03, year2015, day03);
-//benchmark!(year2015_day04, year2015, day04); // Very slow
