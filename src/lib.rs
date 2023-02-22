@@ -1,3 +1,5 @@
+#![doc(html_logo_url = "https://maneatingape.github.io/advent-of-code-rust/logo.png")]
+
 //! # Rust solutions to the annual Advent of Code challenge tuned for speed.
 
 /// # Utility modules to handle common recurring Advent of Code patterns.
