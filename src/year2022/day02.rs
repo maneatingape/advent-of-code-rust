@@ -8,7 +8,8 @@ use crate::util::iter::*;
 /// to between 0 and 8 inclusive.
 ///
 /// Notes:
-/// * [`chunk`] is a convenience extension method to [`Iterator`] that groups the iterator's elements into arrays of a fixed size.
+/// * [`chunk`] is a convenience extension method to [`Iterator`] that groups the iterator's
+/// elements into arrays of a fixed size.
 ///
 /// [`chunk`]: ChunkOps::chunk
 /// [`Iterator`]: std::iter::Iterator

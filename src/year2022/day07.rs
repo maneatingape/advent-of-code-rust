@@ -27,6 +27,10 @@
 //!   all the way to the root. Another nice side effect is that the root directory is always the
 //!   last element in our `vec`.
 //!
+//! For example, the sample input reduces to essentially only:
+//!
+//! `down 14848514 8504156 down 29116 2557 62596 down 584 up up down 4060174 8033020 5626152 7214296 [implicit up up]`
+//!
 //! This means that the algorithm is extremely efficient and the data structures are very
 //! straightforward. For example there's no need to store the current path names, or to recursively
 //! update upwards whenever a file is encountered.
