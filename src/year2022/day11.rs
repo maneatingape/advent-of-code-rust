@@ -56,7 +56,7 @@ pub enum Operation {
     Add(u64),
 }
 
-/// Extract each Monkey's info the flavor text. With the exception of the lines starting
+/// Extract each Monkey's info from the flavor text. With the exception of the lines starting
 /// `Operation` we are only interested in the numbers on each line.
 pub fn parse(input: &str) -> Vec<Monkey> {
     /// Inner helper function to keep the parsing logic readable.

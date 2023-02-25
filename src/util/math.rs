@@ -1,5 +1,8 @@
+//! Extended mathematical operations.
 use std::ops::Rem;
 
+/// Greatest common divisor of 2 numbers using the
+/// [Euclidean algorithm](https://en.wikipedia.org/wiki/Euclidean_algorithm).
 pub fn gcd<T>(a: T, b: T) -> T
 where
     T: Copy,

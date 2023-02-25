@@ -1,13 +1,20 @@
-// Simplified implementation of the fast Rust C
-// hash algorithm, also used by Firefox.
-// https://github.com/rust-lang/rustc-hash
+//! Provides fast [`HashSet`] and [`HashMap`] implementations based on a simplified implementation of
+//! the fast [Rust C hash algorithm](https://github.com/rust-lang/rustc-hash) also used by
+//! [Firefox](https://nnethercote.github.io/2021/12/08/a-brutally-effective-hash-function-in-rust.html).
+//
+//! By default, Rust's [`HashMap`] and [`HashSet`] use a [DDoS](https://en.wikipedia.org/wiki/Denial-of-service_attack)
+//! resistant but slower hashing algorithm. [`FxHasher`] is much faster (between 2x to 5x from my testing).
 use std::collections::{HashMap, HashSet};
 use std::hash::{BuildHasher, Hasher};
 
+/// Type alias for [`HashSet`] using [`FxHasher`].
 pub type FastSet<T> = HashSet<T, BuildFxHasher>;
+/// Type alias for [`HashMap`] using [`FxHasher`].
 pub type FastMap<K, V> = HashMap<K, V, BuildFxHasher>;
 
+/// Convenience methods to contruct a [`FastSet`].
 pub struct FastSetBuilder;
+/// Convenience methods to contruct a [`FastMap`].
 pub struct FastMapBuilder;
 
 impl FastSetBuilder {
@@ -30,6 +37,7 @@ impl FastMapBuilder {
     }
 }
 
+/// If you want an instance of [`FxHasher`] then this has you covered.
 #[derive(Clone, Copy, Default)]
 pub struct BuildFxHasher;
 
@@ -41,6 +49,10 @@ impl BuildHasher for BuildFxHasher {
     }
 }
 
+/// Simplified implementation, in particular running on a system with 64 bit `usize` is assumed.
+///
+/// Checkout the [Firefox code](https://searchfox.org/mozilla-central/rev/633345116df55e2d37be9be6555aa739656c5a7d/mfbt/HashFunctions.h#109-153)
+/// for a full description.
 pub struct FxHasher {
     state: u64,
 }

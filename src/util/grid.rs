@@ -1,3 +1,22 @@
+//! Fast 2 dimensional Grid backed by a single `vec`. This module is designed to work with [`Point`].
+//!
+//! The traits [`Index`] and [`IndexMut`] are implemented for [`Point`] to allow usage like:
+//!
+//! ```
+//!   let grid = Grid { .. }
+//!   let point = Point { .. }
+//!   let foo = grid[point];
+//!   grid[point] = foo;
+//! ```
+//!
+//! A convenience [`parse`] method creates a `Grid` directly from a 2 dimenionsal set of
+//! ASCII characters, a common occurence in AoC inputs. The [`default_copy`] function creates a
+//! grid of the same size, that can be used for in BFS algorithms for tracking visited location
+//! or for tracking cost in Djikstra.
+//!
+//! [`Point`]: crate::util::point
+//! [`parse`]: Grid::parse
+//! [`default_copy`]: Grid::default_copy
 use crate::util::point::*;
 use std::ops::{Index, IndexMut};
 

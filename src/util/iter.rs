@@ -1,5 +1,10 @@
-// Chunk duplicates the functionality of the unstable
-// std::iter::Iterator::array_chunks
+//! Add a `chunk` method to [`Iterator`] that duplicates the functionality of the unstable
+//! [`array_chunks`] method.
+//!
+//! Using Rust's const generics, concrete implementations are provided for sizes 2, 3 and 4 to handle
+//! the most common situations. Once [`array_chunks`] is stablized then this module can be removed.
+//!
+//! [`array_chunks`]: std::iter::Iterator::array_chunks
 pub struct Chunk<I: Iterator, const N: usize> {
     iter: I,
 }
