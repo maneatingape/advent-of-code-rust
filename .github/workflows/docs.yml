@@ -20,7 +20,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Build docs
-        run: RUSTDOCFLAGS="--default-theme=ayu" cargo doc --document-private-items
+        run: RUSTDOCFLAGS="--document-private-items --default-theme=ayu" cargo doc
+      - name: Cleanup
+        run: rm target/doc/.lock
       - name: Copy static assets
         run: cp docs/* target/doc
       - name: Upload artifact

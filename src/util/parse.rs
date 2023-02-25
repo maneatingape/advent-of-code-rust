@@ -3,10 +3,10 @@
 //! A common pattern in AoC is to parse and return `123`, `456` and `789` from input resembling:
 //!
 //! ```none
-//!   Lorem ipsum 123 dolor sit 456 amet 789
+//!   Lorem ipsum 123 dolor 456 sit 789 amet
 //! ```
 //!
-//! This module provides two extension methods on [`&str`], [`iter_signed`] and [`iter_unsigned`]. The
+//! This module provides two [`&str`] extension methods [`iter_signed`] and [`iter_unsigned`]. The
 //! reason for the separate methods is that some AoC inputs contains the `-` character as a
 //! delimeter and this would cause numbers to be incorrectly parsed as negative.
 //!
@@ -15,7 +15,7 @@
 use std::iter::{Filter, Map};
 use std::str::{FromStr, Split};
 
-/// Short alias for the trait return type.
+/// Much shorter alias for the trait return type.
 type Wrapper<'a, T> = Map<Filter<Split<'a, fn(char) -> bool>, fn(&&str) -> bool>, fn(&str) -> T>;
 
 /// This convenience method does the same thing as `s.parse().unwrap()` but without the
@@ -55,7 +55,7 @@ pub trait Signed: FromStr {}
 impl Signed for i32 {}
 impl Signed for i64 {}
 
-/// Essentially the same as `ParseUnsigned` by also considers the `-` character as part
+/// Essentially the same as `ParseUnsigned` but also considers the `-` character as part
 /// of a number.
 pub trait ParseSigned {
     fn iter_signed<T: Signed>(&self) -> Wrapper<'_, T>;
