@@ -1,4 +1,5 @@
 #![doc(html_logo_url = "https://maneatingape.github.io/advent-of-code-rust/logo.png")]
+#![allow(rustdoc::private_intra_doc_links)]
 
 //! # Rust solutions to the annual Advent of Code challenge tuned for speed.
 //!
