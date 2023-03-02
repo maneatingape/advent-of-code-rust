@@ -3,10 +3,17 @@
 //! The traits [`Index`] and [`IndexMut`] are implemented for [`Point`] to allow usage like:
 //!
 //! ```
-//!   let grid = Grid { .. }
-//!   let point = Point { .. }
+//!   # use aoc::util::grid::Grid;
+//!   # use aoc::util::point::Point;
+//!
+//!   let mut grid = Grid::parse("1");
+//!   let point = Point { x: 0, y: 0 };
+//!
 //!   let foo = grid[point];
-//!   grid[point] = foo;
+//!   assert_eq!(foo, b'1');
+//!
+//!   grid[point] = foo + 1;
+//!   assert_eq!(grid[point], b'2');
 //! ```
 //!
 //! A convenience [`parse`] method creates a `Grid` directly from a 2 dimenionsal set of

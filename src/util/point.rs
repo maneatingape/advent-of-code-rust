@@ -6,6 +6,8 @@
 //! operator overloading, that allows shorthand expressions such as:
 //!
 //! ```
+//!   # use aoc::util::point::Point;
+//!
 //!   let a = Point { x: 1, y: 2 };
 //!   let b = Point { x: 3, y: 4 };
 //!   let k = 2;
