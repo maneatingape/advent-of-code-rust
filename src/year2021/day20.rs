@@ -59,11 +59,7 @@ fn enhance(input: &Input, steps: usize) -> usize {
                 result << shift
             };
 
-            let mut index = if default == 1 {
-                0b11011011
-            } else {
-                0b00000000
-            };
+            let mut index = if default == 1 { 0b11011011 } else { 0b00000000 };
 
             for x in (start - 1)..(end + 1) {
                 index = ((index << 1) & 0b110110110)
