@@ -19,11 +19,8 @@ impl<I: Iterator> ChunkOps for I {
     }
 }
 
-impl<I, T> Iterator for Chunk<I, 2>
-where
-    I: Iterator<Item = T>,
-{
-    type Item = [T; 2];
+impl<I: Iterator> Iterator for Chunk<I, 2> {
+    type Item = [I::Item; 2];
 
     fn next(&mut self) -> Option<Self::Item> {
         let a = self.iter.next()?;
@@ -32,11 +29,8 @@ where
     }
 }
 
-impl<I, T> Iterator for Chunk<I, 3>
-where
-    I: Iterator<Item = T>,
-{
-    type Item = [T; 3];
+impl<I: Iterator> Iterator for Chunk<I, 3> {
+    type Item = [I::Item; 3];
 
     fn next(&mut self) -> Option<Self::Item> {
         let a = self.iter.next()?;
@@ -46,11 +40,8 @@ where
     }
 }
 
-impl<I, T> Iterator for Chunk<I, 4>
-where
-    I: Iterator<Item = T>,
-{
-    type Item = [T; 4];
+impl<I: Iterator> Iterator for Chunk<I, 4> {
+    type Item = [I::Item; 4];
 
     fn next(&mut self) -> Option<Self::Item> {
         let a = self.iter.next()?;
@@ -61,11 +52,8 @@ where
     }
 }
 
-impl<I, T> Iterator for Chunk<I, 5>
-where
-    I: Iterator<Item = T>,
-{
-    type Item = [T; 5];
+impl<I: Iterator> Iterator for Chunk<I, 5> {
+    type Item = [I::Item; 5];
 
     fn next(&mut self) -> Option<Self::Item> {
         let a = self.iter.next()?;
@@ -77,11 +65,8 @@ where
     }
 }
 
-impl<I, T> Iterator for Chunk<I, 6>
-where
-    I: Iterator<Item = T>,
-{
-    type Item = [T; 6];
+impl<I: Iterator> Iterator for Chunk<I, 6> {
+    type Item = [I::Item; 6];
 
     fn next(&mut self) -> Option<Self::Item> {
         let a = self.iter.next()?;
