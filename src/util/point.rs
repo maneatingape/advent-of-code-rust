@@ -44,6 +44,7 @@ pub struct Point {
 impl Add for Point {
     type Output = Point;
 
+    #[inline]
     fn add(self, rhs: Point) -> Point {
         Point {
             x: self.x + rhs.x,
@@ -55,6 +56,7 @@ impl Add for Point {
 impl Sub for Point {
     type Output = Point;
 
+    #[inline]
     fn sub(self, rhs: Point) -> Point {
         Point {
             x: self.x - rhs.x,
@@ -66,6 +68,7 @@ impl Sub for Point {
 impl Mul<i32> for Point {
     type Output = Point;
 
+    #[inline]
     fn mul(self, rhs: i32) -> Self::Output {
         Point {
             x: self.x * rhs,
@@ -75,6 +78,7 @@ impl Mul<i32> for Point {
 }
 
 impl AddAssign for Point {
+    #[inline]
     fn add_assign(&mut self, rhs: Point) {
         self.x += rhs.x;
         self.y += rhs.y;
@@ -82,6 +86,7 @@ impl AddAssign for Point {
 }
 
 impl Hash for Point {
+    #[inline]
     fn hash<H: Hasher>(&self, hasher: &mut H) {
         hasher.write_u32(self.x as u32);
         hasher.write_u32(self.y as u32);
@@ -89,6 +94,7 @@ impl Hash for Point {
 }
 
 impl Point {
+    #[inline]
     pub fn from_byte(b: &u8) -> Point {
         match b {
             b'^' => UP,
@@ -99,6 +105,7 @@ impl Point {
         }
     }
 
+    #[inline]
     pub fn from_string(s: &str) -> Point {
         match s {
             "U" => UP,
@@ -109,6 +116,7 @@ impl Point {
         }
     }
 
+    #[inline]
     pub fn clockwise(self) -> Point {
         Point {
             x: -self.y,
@@ -116,6 +124,7 @@ impl Point {
         }
     }
 
+    #[inline]
     pub fn counter_clockwise(self) -> Point {
         Point {
             x: self.y,
@@ -123,6 +132,7 @@ impl Point {
         }
     }
 
+    #[inline]
     pub fn manhattan(self, other: Point) -> i32 {
         (self.x - other.x).abs() + (self.y - other.y).abs()
     }

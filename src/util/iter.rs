@@ -22,6 +22,7 @@ impl<I: Iterator> ChunkOps for I {
 impl<I: Iterator> Iterator for Chunk<I, 2> {
     type Item = [I::Item; 2];
 
+    #[inline]
     fn next(&mut self) -> Option<Self::Item> {
         let a = self.iter.next()?;
         let b = self.iter.next()?;
@@ -32,6 +33,7 @@ impl<I: Iterator> Iterator for Chunk<I, 2> {
 impl<I: Iterator> Iterator for Chunk<I, 3> {
     type Item = [I::Item; 3];
 
+    #[inline]
     fn next(&mut self) -> Option<Self::Item> {
         let a = self.iter.next()?;
         let b = self.iter.next()?;
@@ -43,6 +45,7 @@ impl<I: Iterator> Iterator for Chunk<I, 3> {
 impl<I: Iterator> Iterator for Chunk<I, 4> {
     type Item = [I::Item; 4];
 
+    #[inline]
     fn next(&mut self) -> Option<Self::Item> {
         let a = self.iter.next()?;
         let b = self.iter.next()?;
@@ -55,6 +58,7 @@ impl<I: Iterator> Iterator for Chunk<I, 4> {
 impl<I: Iterator> Iterator for Chunk<I, 5> {
     type Item = [I::Item; 5];
 
+    #[inline]
     fn next(&mut self) -> Option<Self::Item> {
         let a = self.iter.next()?;
         let b = self.iter.next()?;
@@ -68,6 +72,7 @@ impl<I: Iterator> Iterator for Chunk<I, 5> {
 impl<I: Iterator> Iterator for Chunk<I, 6> {
     type Item = [I::Item; 6];
 
+    #[inline]
     fn next(&mut self) -> Option<Self::Item> {
         let a = self.iter.next()?;
         let b = self.iter.next()?;
