@@ -1,3 +1,12 @@
+//! # Binary Diagnostic
+//!
+//! Part 1 uses bit manipulation to build up the binary numbers directly one digit at a time.
+//!
+//! Part 2 clones the input `vec` then uses [`swap_remove`] to efficiently discard numbers that
+//! don't meet the criteria without having to move all subsequent elements.
+//!
+//! [`swap_remove`]: Vec::swap_remove
+
 pub struct Input<'a> {
     width: usize,
     numbers: Vec<&'a [u8]>,
