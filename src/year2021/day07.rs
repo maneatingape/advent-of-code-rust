@@ -1,3 +1,11 @@
+//! # The Treachery of Whales
+//!
+//! Part 1 is a disguised definition of the mathematical [median](https://en.wikipedia.org/wiki/Median).
+//! We can calculate the result immediately using the standard algorithm.
+//!
+//! Part 2 is found by using the [mean](https://en.wikipedia.org/wiki/Mean).
+//! However since this could a floating point value and we are using integers we need to check
+//! 3 values total, the rounded result and one value on either side to ensure the correct answer.
 use crate::util::parse::*;
 
 pub fn parse(input: &str) -> Vec<i32> {

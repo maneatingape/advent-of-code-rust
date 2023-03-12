@@ -1,3 +1,11 @@
+//! # Lanternfish
+//!
+//! The key observation is that all fish of the same age behave the same, so we only
+//! need to store the *total* of each fish per day, rather than each fish individually.
+//!
+//! Another optimization trick is rather than modifying the array by removing the fish at day 0,
+//! then shifting each fish total down by 1, we can simply increment what we consider the
+//! head of the array modulo 9 to achieve the same effect in place.
 use crate::util::parse::*;
 
 type Input = [u64; 9];

@@ -1,3 +1,31 @@
+//! # Seven Segment Search
+//!
+//! Listing each digit and the number of segments that are lit when that digit is displayed:
+//!
+//! | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 |
+//! |---|---|---|---|---|---|---|---|---|---|
+//! | 6 | 2 | 5 | 5 | 4 | 5 | 6 | 3 | 7 | 6 |
+//!
+//! shows that 3 digits share 5 segments and another 3 share 6 segments so we don't have enough
+//! information just yet. Listing the total occurences of each segment summing across all 10 digits:
+//!
+//! | a | b | c | d | e | f | g |
+//! |---|---|---|---|---|---|---|
+//! | 8 | 6 | 8 | 7 | 4 | 9 | 7 |
+//!
+//! shows that 2 segments share 7 occurences and 2 share 8 occurences so this is still not quite enough
+//! information. However if we combine these 2 tables by *summing* the segment occurences for each
+//! digit, for example `1` has segments `c` and `f` for a total of 17, then the table looks like:
+//!
+//! | 0  |  1 |  2 |  3 |  4 |  5 |  6 |  7 |  8 |  9 |
+//! |----|----|----|----|----|----|----|----|----|----|
+//! | 42 | 17 | 34 | 39 | 30 | 37 | 41 | 25 | 49 | 45 |
+//!
+//! Now each digit can be uniquely identified. Our algorithm is as follows:
+//! * Calculate the occurences of each scrambled segment letter before the `|` symbol. Since the
+//!   cardinality of the set is fixed, we can use an array instead of a `HashMap` for speed.
+//! * Add the occurences of each scrambled segment for each digit after the `|` symbol, then
+//!   lookup the total and map directly to the unscrambled digit.
 use crate::util::iter::*;
 
 type Input = Vec<[u32; 4]>;
