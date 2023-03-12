@@ -1,3 +1,13 @@
+//! # Syntax Scoring
+//!
+//! This day is a variation of the classic parentheses balancing problem. To solve we use a `vec`
+//! as a stack, pushing opening delimiters onto the stack, then popping the top of the stack
+//! whenever we encounter a closing delimiter. If there is a mismatch between opening and closing
+//! delimiters then we return the specified error value immediately.
+//!
+//! For part 2 the completion score is the remaining items on the stack, reversed and converted from
+//! corresponding closing delimiters. For example the completion string `])}>` would have a stack
+//! that looks like `<{([`, where the right hand side is the top of the stack.
 pub fn parse(input: &str) -> Vec<&[u8]> {
     input.lines().map(|line| line.as_bytes()).collect()
 }

@@ -1,3 +1,18 @@
+//! # Smoke Basin
+//!
+//! Part 2 is the classic [flood fill](https://en.wikipedia.org/wiki/Flood_fill) algorithm with a
+//! twist to return the size of the filled area. This algorithm can be implemented either as a
+//! [DFS](https://en.wikipedia.org/wiki/Depth-first_search) using recursion or as a
+//! [BFS](https://en.wikipedia.org/wiki/Breadth-first_search) using an auxilary data structure
+//! such as a [`VecDeque`].
+//!
+//! This solution uses a DFS approach as it's faster and Rust's stack size limit seems enough
+//! to accommodate the maximum basin size. 2 dimensional grids are common in AoC problems so we
+//! use our utility [`Grid`] and [`Point`] modules.
+//!
+//! [`VecDeque`]: std::collections::VecDeque
+//! [`Grid`]: crate::util::grid
+//! [`Point`]: crate::util::point
 use crate::util::grid::*;
 use crate::util::point::*;
 

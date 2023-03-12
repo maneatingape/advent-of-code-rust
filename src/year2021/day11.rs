@@ -1,3 +1,11 @@
+//! # Dumbo Octopus
+//!
+//! This puzzle resembles the [`day 9`] flood fill a little. Since there are only 100 octopuses
+//! a fixed size array is used both to track current energy levels and a second array to track
+//! if an octopus has flashed this turn. Each time an octopus flashes it bumps its neighbors
+//! energy levels, which can propagate recursively through the entire grid.
+//!
+//! [`day 9`]: crate::year2021::day09
 type Input = [u8; 100];
 
 pub fn parse(input: &str) -> Input {
@@ -69,7 +77,6 @@ fn bump(grid: &mut [u8; 100], flashed: &mut [bool; 100], x: i32, y: i32) -> u32 
     count += bump(grid, flashed, x, y - 1);
     count += bump(grid, flashed, x + 1, y - 1);
     count += bump(grid, flashed, x - 1, y);
-    count += bump(grid, flashed, x, y);
     count += bump(grid, flashed, x + 1, y);
     count += bump(grid, flashed, x - 1, y + 1);
     count += bump(grid, flashed, x, y + 1);
