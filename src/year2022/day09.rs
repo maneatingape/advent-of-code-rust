@@ -34,12 +34,12 @@ pub fn parse(input: &str) -> Vec<Input> {
 
 /// Simulate a rope length of 2
 pub fn part1(input: &[Input]) -> usize {
-    simulate(input, 2)
+    simulate::<2>(input)
 }
 
 /// Simulate a rope length of 10
 pub fn part2(input: &[Input]) -> usize {
-    simulate(input, 10)
+    simulate::<10>(input)
 }
 
 /// Simulates a rope of arbitrary length.
@@ -47,20 +47,20 @@ pub fn part2(input: &[Input]) -> usize {
 /// The head knot always moves according the instructions from the problem input. Remaining knots
 /// move according to their delta from the head (2nd knot) or the previous knot
 /// (3rd and subsequent knots). A `FastSet` stores unique points visited by the tail.
-fn simulate(input: &[Input], size: usize) -> usize {
-    let mut rope: Vec<Point> = vec![ORIGIN; size];
+fn simulate<const N: usize>(input: &[Input]) -> usize {
+    let mut rope: Vec<Point> = vec![ORIGIN; N];
     let mut tail: FastSet<Point> = FastSetBuilder::with_capacity(5_000);
 
     for (step, amount) in input {
         for _ in 0..*amount {
             rope[0] += *step;
-            for i in 1..size {
+            for i in 1..N {
                 if apart(rope[i - 1], rope[i]) {
                     let next = delta(rope[i - 1], rope[i]);
                     rope[i] += next;
                 }
             }
-            tail.insert(rope[size - 1]);
+            tail.insert(rope[N - 1]);
         }
     }
 
