@@ -1,3 +1,12 @@
+//! # Extended Polymerization
+//!
+//! The key insight to this problem is the same as [`Day 6`]. We track the *total* number of
+//! each pair as the positions don't affect the final result.
+//!
+//! Fixed sized arrays are used for speed as we know that the elements are limited to 26 values
+//! and the possible pairs to 26 * 26 values.
+//!
+//! [`Day 6`]: crate::year2021::day06
 use crate::util::iter::*;
 
 type Elements = [u64; 26];
@@ -27,6 +36,7 @@ pub struct Input {
     rules: Rules,
 }
 
+/// Count the initial pairs and elements and parse each instruction into a [`Rule`] struct.
 pub fn parse(input: &str) -> Input {
     let (prefix, suffix) = input.split_once("\n\n").unwrap();
     let prefix = prefix.trim().as_bytes();
@@ -48,14 +58,20 @@ pub fn parse(input: &str) -> Input {
     Input { elements, pairs, rules }
 }
 
+/// Apply 10 steps.
 pub fn part1(input: &Input) -> u64 {
     steps(input, 10)
 }
 
+/// Apply 40 steps.
 pub fn part2(input: &Input) -> u64 {
     steps(input, 40)
 }
 
+/// Simulate an arbitrary number of steps.
+///
+/// A rule `AC` -> `ABC` implies that for each pair `AC` we create an equal number of pairs
+/// `AB` and `BC`, then increment the amount of element `B`.
 fn steps(input: &Input, rounds: usize) -> u64 {
     let mut elements = input.elements;
     let mut pairs = input.pairs;
@@ -79,10 +95,12 @@ fn steps(input: &Input, rounds: usize) -> u64 {
     max - min
 }
 
+/// Convert a single uppercase ASCII character to an index between 0 and 25
 fn element(byte: u8) -> usize {
-    (byte - 65) as usize
+    (byte - b'A') as usize
 }
 
+/// Convert two uppercase ASCII characters to an index between 0 and 675.
 fn pair(first: u8, second: u8) -> usize {
     26 * element(first) + element(second)
 }

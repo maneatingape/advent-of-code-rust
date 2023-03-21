@@ -47,6 +47,9 @@ pub fn part2(input: &[Input]) -> usize {
 /// The head knot always moves according the instructions from the problem input. Remaining knots
 /// move according to their delta from the head (2nd knot) or the previous knot
 /// (3rd and subsequent knots). A `FastSet` stores unique points visited by the tail.
+///
+/// Using const generics for the rope length allows the compiler to optimize the loop and speeds
+/// things up by about 40%.
 fn simulate<const N: usize>(input: &[Input]) -> usize {
     let mut rope: Vec<Point> = vec![ORIGIN; N];
     let mut tail: FastSet<Point> = FastSetBuilder::with_capacity(5_000);

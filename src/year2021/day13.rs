@@ -1,3 +1,14 @@
+//! # Transparent Origami
+//!
+//! There are 2 possible approaches to tracking the position of dots after each fold:
+//! * A `HashSet` that will collapse duplicate entries
+//! * An array of sufficient dimensions to track every possible coordinate.
+//!
+//! We will use both approaches for speed, the first in part 1 and the second in part 2.
+//!
+//! For part 2 we can determine the final size of the paper by taking the *last* x and y
+//! coordinates from the fold instructions. It's then faster and more convenienent to process
+//! each point completely and update the final location, than to step through intermediate folds.
 use crate::util::hash::*;
 use crate::util::iter::*;
 use crate::util::parse::*;
@@ -14,6 +25,7 @@ pub struct Input {
     folds: Vec<Fold>,
 }
 
+/// Parse the input into collections of [`Point`] and [`Fold`] structs.
 pub fn parse(input: &str) -> Input {
     let (prefix, suffix) = input.split_once("\n\n").unwrap();
 
@@ -35,6 +47,8 @@ pub fn parse(input: &str) -> Input {
     Input { points, folds }
 }
 
+/// Fold once then count dots. The sample data folds along `y` and my input folded along `x`
+/// testing both possibilities.
 pub fn part1(input: &Input) -> usize {
     match input.folds[0] {
         Fold::Horizontal(x) => input
@@ -52,6 +66,10 @@ pub fn part1(input: &Input) -> usize {
     }
 }
 
+/// Decode secret message.
+///
+/// The output is a multi-line string to allow integration testing. The final dimensions of the
+/// paper are found from the last `x` and `y` fold coordinates.
 pub fn part2(input: &Input) -> String {
     let mut width = 0;
     let mut height = 0;
@@ -89,11 +107,13 @@ pub fn part2(input: &Input) -> String {
     code
 }
 
+/// Fold point at `x` coordinate, doing nothing if the point is to the left of the fold line.
 #[inline]
 fn fold_horizontal(x: i32, p: Point) -> Point {
     if p.x < x { p } else { Point { x: 2 * x - p.x, y: p.y } }
 }
 
+/// Fold point at `y` coordinate, doing nothing if the point is above the fold line.
 #[inline]
 fn fold_vertical(y: i32, p: Point) -> Point {
     if p.y < y { p } else { Point { x: p.x, y: 2 * y - p.y } }
