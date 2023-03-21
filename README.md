@@ -19,6 +19,18 @@ Each solution is thoroughly commented to help explain the approach, browse the s
 
 ## 2022
 
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'pie1': '#7cb5ec', 'pie2': '#90ed7d', 'pie3': '#f7a35c', 'pie4': '#e4d354', 'pie5': '#2b908f', 'pie6': '#c6cdd5'}}}%%
+pie
+    title Year 2022 Benchmark time by percentage of total
+    "Day 20" : 7509
+    "Day 19" : 3402
+    "Day 11" : 2317
+    "Day 16" : 2222
+    "Day 23" : 1503
+    "Others" : 1646
+```
+
 | Day | Problem | Solution | Benchmark (μs) |
 | --- | --- | --- | --: |
 | 1 | [Calorie Counting](https://adventofcode.com/2022/day/1) | [Source](src/year2022/day01.rs) | 30 |
