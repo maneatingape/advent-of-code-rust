@@ -1,3 +1,21 @@
+//! # Chiton
+//!
+//! Traversing a graph with different non-negative edge weights is a job for the classic
+//! [Djisktra's algorithm](https://www.redblobgames.com/pathfinding/a-star/introduction.html),
+//! explained really well in the linked blog post.
+//!
+//! To speed things up we use a trick. Classic Djisktra uses a generic priority queue that
+//! can be implemented in Rust using a [`BinaryHeap`]. However the total cost follows a (mostly)
+//! increasing pattern in a constrained range of values, so we can use a much faster single purpose
+//! data structure instead.
+//!
+//! We create a `vec` of `vec`, where the maximum length of the parent `vec` is higher than the
+//! maximum possible cost. Each child `vec` is then used to store candidate states where the cost
+//! is equal to its index. We keep track of the "head" of the `vec` and then linearly search for
+//! the next element once all candidates for that cost are processed. The next value should
+//! generally be quite close to the current value resulting in a quick search.
+//!
+//! [`BinaryHeap`]: std::collections::BinaryHeap
 use crate::util::grid::*;
 use crate::util::point::*;
 
@@ -12,6 +30,9 @@ struct PriorityQueue {
     head: usize,
 }
 
+/// Special purpose priority queue faster than generic [`BinaryHeap`] for this problem.
+///
+/// [`BinaryHeap`]: std::collections::BinaryHeap
 impl PriorityQueue {
     fn new() -> PriorityQueue {
         PriorityQueue {
@@ -33,16 +54,21 @@ impl PriorityQueue {
     }
 }
 
+/// Use our utility [`Grid`] class to store risk levels.
+///
+/// [`Grid`]: crate::util::grid
 pub fn parse(input: &str) -> Grid<u8> {
     let mut grid = Grid::parse(input);
     grid.bytes.iter_mut().for_each(|b| *b -= 48);
     grid
 }
 
+/// Search the regular size grid.
 pub fn part1(input: &Grid<u8>) -> u16 {
     dijkstra(input)
 }
 
+/// Create then search an expanded grid.
 pub fn part2(input: &Grid<u8>) -> u16 {
     let mut expanded = Grid {
         width: 5 * input.width,
@@ -70,6 +96,8 @@ pub fn part2(input: &Grid<u8>) -> u16 {
     dijkstra(&expanded)
 }
 
+/// Implementation of [Dijkstra's algorithm](https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm)
+/// without using the decrease-key functionality.
 fn dijkstra(grid: &Grid<u8>) -> u16 {
     let start = State {
         point: ORIGIN,
