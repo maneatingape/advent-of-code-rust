@@ -1,3 +1,6 @@
+[![Tests](https://github.com/maneatingape/advent-of-code-rust/actions/workflows/tests.yml/badge.svg)](https://github.com/maneatingape/advent-of-code-rust/actions/workflows/tests.yml)
+[![Docs](https://github.com/maneatingape/advent-of-code-rust/actions/workflows/docs.yml/badge.svg?style=for-the-badge&color=blue&logo=rust)](https://github.com/maneatingape/advent-of-code-rust/actions/workflows/docs.yml)
+
 # Advent of Code
 
 Complete 2022 entries for the annual [Advent of Code](https://adventofcode.com/) challenge, written in performant Rust.
@@ -9,8 +12,6 @@ Benchmarks are measured using the built-in `cargo bench` tool run on an Apple M2
 The project is structured as a library crate with a module per year and a sub-module for each day to allow convenient testing and benchmarking. Continuous integration is provided using [GitHub Actions](https://docs.github.com/en/actions) with 100% test coverage based on the example inputs from each day.
 
 Each solution is thoroughly commented to help explain the approach, browse the source or checkout the online [rustdocs](https://maneatingape.github.io/advent-of-code-rust/aoc/).
-
-[![Rust CI](https://github.com/maneatingape/advent-of-code-rust/actions/workflows/rust.yml/badge.svg)](https://github.com/maneatingape/advent-of-code-rust/actions)
 
 ## Years
 
