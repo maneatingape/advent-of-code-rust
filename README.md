@@ -1,5 +1,5 @@
-[![Tests](https://github.com/maneatingape/advent-of-code-rust/actions/workflows/tests.yml/badge.svg)](https://github.com/maneatingape/advent-of-code-rust/actions/workflows/tests.yml)
-[![Docs](https://github.com/maneatingape/advent-of-code-rust/actions/workflows/docs.yml/badge.svg?style=for-the-badge&color=blue&logo=rust)](https://github.com/maneatingape/advent-of-code-rust/actions/workflows/docs.yml)
+[![Tests](https://img.shields.io/github/actions/workflow/status/maneatingape/advent-of-code-rust/tests.yml?label=tests&style=for-the-badge)](https://github.com/maneatingape/advent-of-code-rust/actions/workflows/tests.yml)
+[![Docs](https://img.shields.io/github/actions/workflow/status/maneatingape/advent-of-code-rust/docs.yml?color=blue&label=docs&style=for-the-badge)](https://github.com/maneatingape/advent-of-code-rust/actions/workflows/docs.yml)
 
 # Advent of Code
 
