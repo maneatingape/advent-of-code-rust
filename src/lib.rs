@@ -11,6 +11,7 @@ pub mod util {
     pub mod hash;
     pub mod iter;
     pub mod math;
+    pub mod md5;
     pub mod parse;
     pub mod point;
     pub mod slice;
@@ -69,4 +70,12 @@ pub mod year2021 {
     pub mod day20;
     pub mod day21;
     pub mod day22;
+}
+
+/// # Help Santa by solving puzzles to fix the weather machine's snow function.
+pub mod year2015 {
+    pub mod day01;
+    pub mod day02;
+    pub mod day03;
+    pub mod day04;
 }

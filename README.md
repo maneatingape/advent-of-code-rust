@@ -44,6 +44,7 @@ Each solution is thoroughly commented to help explain the approach, browse the s
 
 * [2022](#2022) (18.6 ± 0.3 ms total benchmark)
 * [2021](#2021) (in progress)
+* [2015](#2015)
 
 ## 2022
 
@@ -113,3 +114,12 @@ pie
 | 20 | [Trench Map](https://adventofcode.com/2021/day/20) | [Source](src/year2021/day20.rs) | 2072 |
 | 21 | [Dirac Dice](https://adventofcode.com/2021/day/21) | [Source](src/year2021/day21.rs) | 1042 |
 | 22 | [Reactor Reboot](https://adventofcode.com/2021/day/22) | [Source](src/year2021/day22.rs) | 414 |
+
+## 2015
+
+| Day | Problem | Solution |
+| --- | --- | --- |
+| 1 | [Not Quite Lisp](https://adventofcode.com/2015/day/1) | [Source](src/year2015/day01.rs) |
+| 2 | [I Was Told There Would Be No Math](https://adventofcode.com/2015/day/2) | [Source](src/year2015/day02.rs) |
+| 3 | [Perfectly Spherical Houses in a Vacuum](https://adventofcode.com/2015/day/3) | [Source](src/year2015/day03.rs) |
+| 4 | [The Ideal Stocking Stuffer](https://adventofcode.com/2015/day/4) | [Source](src/year2015/day04.rs) |
