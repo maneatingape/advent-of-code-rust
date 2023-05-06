@@ -1,6 +1,7 @@
 pub fn hash(message: &[u8]) -> (u32, u32, u32, u32) {
-    let mut padded = [0u8; 56];
     let size = message.len();
+
+    let mut padded = [0u8; 56];
     padded[..size].copy_from_slice(message);
     padded[size] = 0x80;
 
@@ -8,7 +9,7 @@ pub fn hash(message: &[u8]) -> (u32, u32, u32, u32) {
     for (i, chunk) in padded.chunks_exact(4).enumerate() {
         m[i] = u32::from_le_bytes(chunk.try_into().unwrap());
     }
-    m[14] = 8 * (size as u32);
+    m[14] = (8 * size) as u32;
 
     let mut a0: u32 = 0x67452301;
     let mut b0: u32 = 0xefcdab89;
