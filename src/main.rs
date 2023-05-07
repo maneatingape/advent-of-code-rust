@@ -170,5 +170,6 @@ fn all_solutions() -> Vec<Solution> {
         solution!(year2015, day02),
         solution!(year2015, day03),
         // solution!(year2015, day04),  // Very slow
+        solution!(year2015, day05),
     ]
 }
