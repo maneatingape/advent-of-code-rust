@@ -85,6 +85,7 @@ benchmark!(year2021_day19, year2021, day19);
 benchmark!(year2021_day20, year2021, day20);
 benchmark!(year2021_day21, year2021, day21);
 benchmark!(year2021_day22, year2021, day22);
+benchmark!(year2021_day23, year2021, day23);
 
 // 2015
 benchmark!(year2015_day01, year2015, day01);
