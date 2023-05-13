@@ -92,3 +92,4 @@ benchmark!(year2015_day02, year2015, day02);
 benchmark!(year2015_day03, year2015, day03);
 //benchmark!(year2015_day04, year2015, day04); // Very slow
 benchmark!(year2015_day05, year2015, day05);
+benchmark!(year2015_day06, year2015, day06);
