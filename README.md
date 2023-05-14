@@ -1,5 +1,5 @@
 [![Tests](https://img.shields.io/github/actions/workflow/status/maneatingape/advent-of-code-rust/tests.yml?label=tests&style=for-the-badge)](https://github.com/maneatingape/advent-of-code-rust/actions/workflows/tests.yml)
-[![Docs](https://img.shields.io/github/actions/workflow/status/maneatingape/advent-of-code-rust/docs.yml?color=blue&label=docs&style=for-the-badge)](https://github.com/maneatingape/advent-of-code-rust/actions/workflows/docs.yml)
+[![Docs](https://img.shields.io/github/actions/workflow/status/maneatingape/advent-of-code-rust/docs.yml?color=blue&label=docs&style=for-the-badge)](https://maneatingape.github.io/advent-of-code-rust/aoc/)
 
 # Advent of Code
 
@@ -12,6 +12,32 @@ Benchmarks are measured using the built-in `cargo bench` tool run on an Apple M2
 The project is structured as a library crate with a module per year and a sub-module for each day to allow convenient testing and benchmarking. Continuous integration is provided using [GitHub Actions](https://docs.github.com/en/actions) with 100% test coverage based on the example inputs from each day.
 
 Each solution is thoroughly commented to help explain the approach, browse the source or checkout the online [rustdocs](https://maneatingape.github.io/advent-of-code-rust/aoc/).
+
+## Cargo commands
+
+**Run**
+* Debug `cargo run`
+* Release `cargo run --release`
+* Release optimized for current CPU architecture `RUSTFLAGS="-C target-cpu=native" cargo run --release`
+
+**Test**
+* Everything `cargo test`
+* Show STDOUT for debugging `cargo test -- --nocapture`
+* Specific year `cargo test year2022`
+* Specific day `cargo test year2022::day01`
+
+**Benchmark**
+* Everything `cargo bench`
+* Specific year `cargo bench -- year2022`
+* Specific day `cargo bench -- year2022_day01`
+
+**Document**
+* Build docs including private items `cargo doc --document-private-items`
+* Build doc then open HTML landing page `cargo doc --document-private-items --open`
+
+**Miscellaneous**
+* Code quality lints `cargo clippy`
+* Consistent code formatting `cargo fmt`
 
 ## Years
 
