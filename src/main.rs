@@ -1,4 +1,6 @@
 use aoc::*;
+use std::env;
+use std::ops::Range;
 use std::time::Instant;
 
 // ANSI escape codes
@@ -15,28 +17,80 @@ struct Solution {
     wrapper: fn(&str) -> (String, String),
 }
 
+struct Config {
+    years: Range<u32>,
+    days: Range<u32>,
+}
+
 fn main() {
+    match parse_config() {
+        Ok(config) => run(config),
+        Err(message) => eprintln!("{message}"),
+    }
+}
+
+fn parse_config() -> Result<Config, String> {
+    let args: Vec<String> = env::args().collect();
+    let args: Vec<&str> = args.iter().map(|s| s.as_str()).collect();
+
+    let all_years = 2015..2023;
+    let all_days = 1..26;
+
+    match args[..] {
+        [_] => Ok(Config { years: all_years, days: all_days }),
+        [_, "--year", year] => {
+            let year = parse_number(year)?;
+            let years = parse_range(year, all_years)?;
+            Ok(Config { years, days: all_days })
+        },
+        [_, "--year", year, "--day", day] => {
+            let year = parse_number(year)?;
+            let years = parse_range(year, all_years)?;
+            let day = parse_number(day)?;
+            let days = parse_range(day, all_days)?;
+            Ok(Config { years, days })
+
+        },
+        _ => Err("Usage: [--year YYYY] [--day DD]".to_string())
+    }
+}
+
+fn parse_range(x: u32, valid_range: Range<u32>) -> Result<Range<u32>, String> {
+    if valid_range.contains(&x) {
+        Ok(x..x + 1)
+    } else {
+        Err(format!("{} should be from {} to {}", x, valid_range.start, valid_range.end - 1))
+    }
+}
+
+fn parse_number(s: &str) -> Result<u32, String> {
+    s.parse().map_err(|_| format!("{s} should be a number"))
+}
+
+fn run(config: Config) {
+    let solutions = all_solutions();
+    let filtered: Vec<_> = solutions
+        .into_iter()
+        .filter(|s| config.years.contains(&s.year))
+        .filter(|s| config.days.contains(&s.day))
+        .collect();
+
+    let total_size = filtered.len();
     let total_time = Instant::now();
-    let mut total_solutions = 0;
 
-    for Solution { year, day, input, wrapper } in solutions() {
-        // if year == year
-        // && day == day
-        {
-            let time = Instant::now();
-            let (answer1, answer2) = (wrapper)(input);
-            let duration = time.elapsed().as_micros();
-            total_solutions += 1;
+    for Solution { year, day, input, wrapper } in filtered {
+        let time = Instant::now();
+        let (answer1, answer2) = (wrapper)(input);
+        let duration = time.elapsed().as_micros();
 
-            println!("{BOLD}{YELLOW}{year} Day {day:02}{RESET}");
-            println!("    Part 1: {answer1}");
-            println!("    Part 2: {answer2}");
-            println!("    Duration: {duration} μs");
-        }
+        println!("{BOLD}{YELLOW}{year} Day {day:02}{RESET}");
+        println!("    Part 1: {answer1}");
+        println!("    Part 2: {answer2}");
+        println!("    Duration: {duration} μs");
     }
 
     let elapsed = total_time.elapsed().as_millis();
-    println!("{BOLD}{RED}Solutions: {total_solutions}{RESET}");
+    println!("{BOLD}{RED}Solutions: {total_size}{RESET}");
     println!("{BOLD}{GREEN}Elapsed: {elapsed} ms{RESET}");
 }
 
@@ -67,7 +121,7 @@ macro_rules! solution {
     };
 }
 
-fn solutions() -> Vec<Solution> {
+fn all_solutions() -> Vec<Solution> {
     vec![
         // 2022
         solution!(year2022, day01),
