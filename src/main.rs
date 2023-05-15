@@ -1,6 +1,5 @@
 use aoc::*;
-use std::env;
-use std::ops::Range;
+use std::env::args;
 use std::time::Instant;
 
 // ANSI escape codes
@@ -18,8 +17,8 @@ struct Solution {
 }
 
 struct Config {
-    years: Range<u32>,
-    days: Range<u32>,
+    year: Option<u32>,
+    day: Option<u32>,
 }
 
 fn main() {
@@ -30,55 +29,49 @@ fn main() {
 }
 
 fn parse_config() -> Result<Config, String> {
-    let args: Vec<String> = env::args().collect();
+    let args: Vec<String> = args().skip(1).collect();
     let args: Vec<&str> = args.iter().map(|s| s.as_str()).collect();
+    let mut config = Config { year: None, day: None };
 
-    let all_years = 2015..2023;
-    let all_days = 1..26;
+    for chunk in args.chunks(2) {
+        match chunk {
+            ["--year", year] => {
+                let year = parse_range(year, 2015, 2022)?;
+                config.year = year;
+            },
+            ["--day", day] => {
+                let day = parse_range(day, 1, 25)?;
+                config.day = day;
 
-    match args[..] {
-        [_] => Ok(Config { years: all_years, days: all_days }),
-        [_, "--year", year] => {
-            let year = parse_number(year)?;
-            let years = parse_range(year, all_years)?;
-            Ok(Config { years, days: all_days })
-        },
-        [_, "--year", year, "--day", day] => {
-            let year = parse_number(year)?;
-            let years = parse_range(year, all_years)?;
-            let day = parse_number(day)?;
-            let days = parse_range(day, all_days)?;
-            Ok(Config { years, days })
-
-        },
-        _ => Err("Usage: [--year YYYY] [--day DD]".to_string())
+            },
+            _ => return Err("Usage: [--year YYYY] [--day DD]".to_string())
+        }
     }
+
+    Ok(config)
 }
 
-fn parse_range(x: u32, valid_range: Range<u32>) -> Result<Range<u32>, String> {
-    if valid_range.contains(&x) {
-        Ok(x..x + 1)
+fn parse_range(s: &str, lower: u32, upper: u32) -> Result<Option<u32>, String> {
+    let x = s.parse().map_err(|_| format!("{s} should be a number"))?;
+
+    if lower <= x && x <= upper {
+        Ok(Some(x))
     } else {
-        Err(format!("{} should be from {} to {}", x, valid_range.start, valid_range.end - 1))
+        Err(format!("{} should be from {} to {}", x, lower, upper))
     }
-}
-
-fn parse_number(s: &str) -> Result<u32, String> {
-    s.parse().map_err(|_| format!("{s} should be a number"))
 }
 
 fn run(config: Config) {
-    let solutions = all_solutions();
-    let filtered: Vec<_> = solutions
+    let solutions: Vec<_> = all_solutions()
         .into_iter()
-        .filter(|s| config.years.contains(&s.year))
-        .filter(|s| config.days.contains(&s.day))
+        .filter(|s| if let Some(year) = config.year { year == s.year } else { true })
+        .filter(|s| if let Some(day) = config.day { day == s.day } else { true })
         .collect();
 
-    let total_size = filtered.len();
+    let total_size = solutions.len();
     let total_time = Instant::now();
 
-    for Solution { year, day, input, wrapper } in filtered {
+    for Solution { year, day, input, wrapper } in solutions {
         let time = Instant::now();
         let (answer1, answer2) = (wrapper)(input);
         let duration = time.elapsed().as_micros();
