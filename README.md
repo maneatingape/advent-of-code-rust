@@ -1,7 +1,6 @@
-[![Tests](https://img.shields.io/github/actions/workflow/status/maneatingape/advent-of-code-rust/tests.yml?label=tests&style=for-the-badge)](https://github.com/maneatingape/advent-of-code-rust/actions/workflows/tests.yml)
-[![Docs](https://img.shields.io/github/actions/workflow/status/maneatingape/advent-of-code-rust/docs.yml?color=blue&label=docs&style=for-the-badge)](https://maneatingape.github.io/advent-of-code-rust/aoc/)
-
 # Advent of Code
+
+[![Tests](https://img.shields.io/github/actions/workflow/status/maneatingape/advent-of-code-rust/tests.yml?label=tests)](https://github.com/maneatingape/advent-of-code-rust/actions/workflows/tests.yml) [![Docs](https://img.shields.io/github/actions/workflow/status/maneatingape/advent-of-code-rust/docs.yml?color=blue&label=docs)](https://maneatingape.github.io/advent-of-code-rust/aoc/)
 
 Complete 2022 entries for the annual [Advent of Code](https://adventofcode.com/) challenge, written in performant Rust.
 
