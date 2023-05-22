@@ -2,7 +2,7 @@ pub fn parse(input: &str) -> Vec<&[u8]> {
     input.lines().map(|line| line.as_bytes()).collect()
 }
 
-pub fn part1(input: &Vec<&[u8]>) -> usize {
+pub fn part1(input: &[&[u8]]) -> usize {
     let nice = |line: &&&[u8]| {
         let mut vowels = 0;
         let mut pairs = 0;
@@ -29,7 +29,7 @@ pub fn part1(input: &Vec<&[u8]>) -> usize {
     input.iter().filter(nice).count()
 }
 
-pub fn part2(input: &Vec<&[u8]>) -> usize {
+pub fn part2(input: &[&[u8]]) -> usize {
     let mut pairs = [0; 729];
 
     let nice = |(base, line): &(usize, &&[u8])| {
