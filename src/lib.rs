@@ -13,6 +13,7 @@ pub mod util {
     pub mod math;
     pub mod parse;
     pub mod point;
+    pub mod slice;
 }
 
 /// # Assist the Elves on their annual jungle expedition.
