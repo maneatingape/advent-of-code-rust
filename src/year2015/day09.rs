@@ -31,20 +31,29 @@ pub fn parse(input: &str) -> Result {
         distances[stride * end + start] = distance;
     }
 
-    let mut indices: Vec<_> = (0..stride).collect();
-    let mut min = u32::MAX;
-    let mut max = u32::MIN;
+    let mut global_min = u32::MAX;
+    let mut global_max = u32::MIN;
+    let mut middle: Vec<_> = (1..stride).collect();
 
-    indices.as_mut_slice().permutations(|slice| {
-        let result: u32 = slice
-            .windows(2)
-            .map(|w| distances[stride * w[0] + w[1]])
-            .sum();
-        min = min.min(result);
-        max = max.max(result);
+    middle.permutations(|slice| {
+        let first = distances[slice[0]];
+        let last = distances[slice[stride - 2]];
+        let mut sum = first + last;
+        let mut local_min = first.min(last);
+        let mut local_max = first.max(last);
+
+        for w in slice.windows(2) {
+            let trip = distances[stride * w[0] + w[1]];
+            sum += trip;
+            local_min = local_min.min(trip);
+            local_max = local_max.max(trip);
+        }
+
+        global_min = global_min.min(sum - local_max);
+        global_max = global_max.max(sum - local_min);
     });
 
-    (min, max)
+    (global_min, global_max)
 }
 
 pub fn part1(input: &Result) -> u32 {
