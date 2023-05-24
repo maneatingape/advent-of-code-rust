@@ -94,30 +94,24 @@ impl Blueprint {
 }
 
 pub fn parse(input: &str) -> Vec<Blueprint> {
-    input
-        .iter_unsigned()
-        .collect::<Vec<u32>>()
-        .chunks_exact(7)
-        .map(Blueprint::parse)
-        .collect()
+    input.iter_unsigned().collect::<Vec<u32>>().chunks_exact(7).map(Blueprint::parse).collect()
 }
 
 pub fn part1(input: &[Blueprint]) -> u32 {
-    input
-        .iter()
-        .map(|blueprint| blueprint.id * maximize(blueprint, 24, ORE_BOT, ZERO, 0))
-        .sum()
+    input.iter().map(|blueprint| blueprint.id * maximize(blueprint, 24, ORE_BOT, ZERO, 0)).sum()
 }
 
 pub fn part2(input: &[Blueprint]) -> u32 {
-    input
-        .iter()
-        .take(3)
-        .map(|blueprint| maximize(blueprint, 32, ORE_BOT, ZERO, 0))
-        .product()
+    input.iter().take(3).map(|blueprint| maximize(blueprint, 32, ORE_BOT, ZERO, 0)).product()
 }
 
-fn maximize(blueprint: &Blueprint, time: u32, bots: Resources, resources: Resources, geodes: u32) -> u32 {
+fn maximize(
+    blueprint: &Blueprint,
+    time: u32,
+    bots: Resources,
+    resources: Resources,
+    geodes: u32,
+) -> u32 {
     let baseline = resources.geode() + bots.geode() * time;
     let mut geodes = geodes.max(baseline);
 
@@ -144,39 +138,52 @@ fn maximize(blueprint: &Blueprint, time: u32, bots: Resources, resources: Resour
         && (resources.ore() < (blueprint.max_ore - bots.ore()) * (time - 3));
 
     if need_geode && bots.obsidian() > 0 {
-        let result = next(blueprint, time, bots, resources, geodes, GEODE_BOT, blueprint.geode_bot_cost);
+        let result =
+            next(blueprint, time, bots, resources, geodes, GEODE_BOT, blueprint.geode_bot_cost);
         geodes = geodes.max(result);
     }
 
     if need_obsidian && bots.clay() > 0 {
-        let result = next(blueprint, time, bots, resources, geodes, OBSIDIAN_BOT, blueprint.obsidian_bot_cost);
+        let result = next(
+            blueprint,
+            time,
+            bots,
+            resources,
+            geodes,
+            OBSIDIAN_BOT,
+            blueprint.obsidian_bot_cost,
+        );
         geodes = geodes.max(result);
     }
 
     if need_clay {
-        let result = next(blueprint, time, bots, resources, geodes, CLAY_BOT, blueprint.clay_bot_cost);
+        let result =
+            next(blueprint, time, bots, resources, geodes, CLAY_BOT, blueprint.clay_bot_cost);
         geodes = geodes.max(result);
     }
 
     if need_ore {
-        let result = next(blueprint, time, bots, resources, geodes, ORE_BOT, blueprint.ore_bot_cost);
+        let result =
+            next(blueprint, time, bots, resources, geodes, ORE_BOT, blueprint.ore_bot_cost);
         geodes = geodes.max(result);
     }
 
     geodes
 }
 
-fn next(blueprint: &Blueprint, time: u32, bots: Resources, resources: Resources, geodes: u32, bot: Resources, cost: Resources) -> u32 {
+fn next(
+    blueprint: &Blueprint,
+    time: u32,
+    bots: Resources,
+    resources: Resources,
+    geodes: u32,
+    bot: Resources,
+    cost: Resources,
+) -> u32 {
     for jump in 0..(time - 1) {
         let next = resources + bots * jump;
         if cost.less_than_equal(&next) {
-            return maximize(
-                blueprint,
-                time - jump - 1,
-                bots + bot,
-                next + bots - cost,
-                geodes,
-            );
+            return maximize(blueprint, time - jump - 1, bots + bot, next + bots - cost, geodes);
         }
     }
 

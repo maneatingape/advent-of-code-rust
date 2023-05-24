@@ -9,12 +9,7 @@ struct BitStream<'a> {
 
 impl BitStream<'_> {
     fn from(s: &str) -> BitStream {
-        BitStream {
-            available: 0,
-            bits: 0,
-            read: 0,
-            iter: s.as_bytes().iter(),
-        }
+        BitStream { available: 0, bits: 0, read: 0, iter: s.as_bytes().iter() }
     }
 
     fn next(&mut self, amount: u64) -> u64 {
@@ -42,16 +37,8 @@ impl BitStream<'_> {
 }
 
 pub enum Packet {
-    Literal {
-        version: u64,
-        type_id: u64,
-        value: u64,
-    },
-    Operator {
-        version: u64,
-        type_id: u64,
-        packets: Vec<Packet>,
-    },
+    Literal { version: u64, type_id: u64, value: u64 },
+    Operator { version: u64, type_id: u64, packets: Vec<Packet> },
 }
 
 impl Packet {
@@ -118,9 +105,27 @@ pub fn part2(packet: &Packet) -> u64 {
                     1 => iter.product(),
                     2 => iter.min().unwrap(),
                     3 => iter.max().unwrap(),
-                    5 => if iter.next().unwrap() > iter.next().unwrap() { 1 } else { 0 },
-                    6 => if iter.next().unwrap() < iter.next().unwrap() { 1 } else { 0 },
-                    7 => if iter.next().unwrap() == iter.next().unwrap() { 1 } else { 0 },
+                    5 => {
+                        if iter.next().unwrap() > iter.next().unwrap() {
+                            1
+                        } else {
+                            0
+                        }
+                    }
+                    6 => {
+                        if iter.next().unwrap() < iter.next().unwrap() {
+                            1
+                        } else {
+                            0
+                        }
+                    }
+                    7 => {
+                        if iter.next().unwrap() == iter.next().unwrap() {
+                            1
+                        } else {
+                            0
+                        }
+                    }
                     _ => unreachable!(),
                 }
             }

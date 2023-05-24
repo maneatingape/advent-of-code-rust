@@ -1,5 +1,6 @@
 use aoc::year2022::day05::*;
 
+#[rustfmt::skip]
 const EXAMPLE: &str =
 "    [D]    
 [N] [C]    

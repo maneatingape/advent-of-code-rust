@@ -1,5 +1,6 @@
 use aoc::year2015::day08::*;
 
+#[rustfmt::skip]
 const EXAMPLE: &str =
 r#"""
 "abc"

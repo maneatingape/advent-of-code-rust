@@ -8,15 +8,13 @@ pub fn parse(input: &str) -> &[u8] {
 }
 
 pub fn part1(input: &[u8]) -> u32 {
-    let (_, result) = input
-        .iter()
-        .fold((false, 0), |(flag, count), &b| match (flag, b) {
-            (true, ESCAPE) => (false, count + 3),
-            (true, _) => (false, count + 1),
-            (false, SLASH) => (true, count),
-            (false, NEWLINE) => (false, count + 2),
-            _ => (false, count),
-        });
+    let (_, result) = input.iter().fold((false, 0), |(flag, count), &b| match (flag, b) {
+        (true, ESCAPE) => (false, count + 3),
+        (true, _) => (false, count + 1),
+        (false, SLASH) => (true, count),
+        (false, NEWLINE) => (false, count + 2),
+        _ => (false, count),
+    });
     result
 }
 

@@ -1,5 +1,5 @@
-use crate::util::parse::*;
 use crate::util::hash::*;
+use crate::util::parse::*;
 
 type Result = (u16, u16);
 
@@ -49,9 +49,13 @@ pub fn parse(input: &str) -> Result {
     (result1, result2)
 }
 
-fn signal<'a>(key: &'a str, circuit: &FastMap<&'a str, Gate<'a>>, cache: &mut FastMap<&'a str, u16>) -> u16 {
+fn signal<'a>(
+    key: &'a str,
+    circuit: &FastMap<&'a str, Gate<'a>>,
+    cache: &mut FastMap<&'a str, u16>,
+) -> u16 {
     if let Some(result) = cache.get(key) {
-        return *result
+        return *result;
     }
 
     let result = if key.chars().next().unwrap().is_ascii_digit() {

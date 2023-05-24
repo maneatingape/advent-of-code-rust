@@ -1,8 +1,8 @@
 type Snailfish = [i32; 63];
 
 const IN_ORDER: [usize; 30] = [
-    1, 3,  7, 15, 16,  8, 17, 18, 4,  9, 19, 20, 10, 21, 22,
-    2, 5, 11, 23, 24, 12, 25, 26, 6, 13, 27, 28, 14, 29, 30,
+    1, 3, 7, 15, 16, 8, 17, 18, 4, 9, 19, 20, 10, 21, 22, 2, 5, 11, 23, 24, 12, 25, 26, 6, 13, 27,
+    28, 14, 29, 30,
 ];
 
 pub fn parse(input: &str) -> Vec<Snailfish> {
@@ -25,11 +25,7 @@ pub fn parse(input: &str) -> Vec<Snailfish> {
 }
 
 pub fn part1(input: &[Snailfish]) -> i32 {
-    let mut sum = input
-        .iter()
-        .copied()
-        .reduce(|acc, n| add(&acc, &n))
-        .unwrap();
+    let mut sum = input.iter().copied().reduce(|acc, n| add(&acc, &n)).unwrap();
     magnitude(&mut sum)
 }
 

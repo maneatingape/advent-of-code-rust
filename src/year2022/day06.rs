@@ -19,12 +19,7 @@
 ///
 /// [`trim`]: str::trim
 pub fn parse(input: &str) -> Vec<usize> {
-    input
-        .trim()
-        .as_bytes()
-        .iter()
-        .map(|&b| (b - b'a') as usize)
-        .collect()
+    input.trim().as_bytes().iter().map(|&b| (b - b'a') as usize).collect()
 }
 
 /// Find the first unique set of size 4

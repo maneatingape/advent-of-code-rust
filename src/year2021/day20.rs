@@ -13,10 +13,8 @@ pub fn parse(input: &str) -> Input {
         }
     }
 
-    let bits: Vec<Vec<_>> = input
-        .lines()
-        .map(|line| line.as_bytes().iter().map(convert).collect())
-        .collect();
+    let bits: Vec<Vec<_>> =
+        input.lines().map(|line| line.as_bytes().iter().map(convert).collect()).collect();
 
     let size = bits.len() - 2;
     let algorithm = bits[0][..512].try_into().unwrap();

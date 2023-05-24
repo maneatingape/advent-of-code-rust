@@ -17,9 +17,8 @@ type Vent = [u32; 4];
 
 pub fn parse(input: &str) -> [usize; 2] {
     let all: Vec<_> = input.iter_unsigned().chunk::<4>().collect();
-    let (orthogonal, diagonal): (Vec<_>, Vec<_>) = all
-        .iter()
-        .partition(|[x1, y1, x2, y2]| x1 == x2 || y1 == y2);
+    let (orthogonal, diagonal): (Vec<_>, Vec<_>) =
+        all.iter().partition(|[x1, y1, x2, y2]| x1 == x2 || y1 == y2);
 
     let mut grid = [0u8; 1_000_000];
     let first = vents(&orthogonal, &mut grid);

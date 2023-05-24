@@ -38,13 +38,12 @@ fn parse_config() -> Result<Config, String> {
             ["--year", year] => {
                 let year = parse_range(year, 2015, 2022)?;
                 config.year = year;
-            },
+            }
             ["--day", day] => {
                 let day = parse_range(day, 1, 25)?;
                 config.day = day;
-
-            },
-            _ => return Err("Usage: [--year YYYY] [--day DD]".to_string())
+            }
+            _ => return Err("Usage: [--year YYYY] [--day DD]".to_string()),
         }
     }
 
@@ -93,13 +92,7 @@ macro_rules! solution {
             year: { stringify!($year)[4..8].parse().unwrap() },
             day: { stringify!($day)[3..5].parse().unwrap() },
             input: {
-                include_str!(concat![
-                    "../input/",
-                    stringify!($year),
-                    "/",
-                    stringify!($day),
-                    ".txt"
-                ])
+                include_str!(concat!["../input/", stringify!($year), "/", stringify!($day), ".txt"])
             },
             wrapper: {
                 |raw: &str| {

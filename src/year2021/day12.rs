@@ -56,10 +56,8 @@ struct State {
 /// Finally all small caves are added to a single `u32`, for example the
 /// sample data looks like `111011`.
 pub fn parse(input: &str) -> Input {
-    let tokens: Vec<_> = input
-        .split(|c: char| !c.is_ascii_alphabetic())
-        .filter(|s| !s.is_empty())
-        .collect();
+    let tokens: Vec<_> =
+        input.split(|c: char| !c.is_ascii_alphabetic()).filter(|s| !s.is_empty()).collect();
 
     let mut indices = HashMap::from([("start", START), ("end", END)]);
     for token in &tokens {
@@ -98,11 +96,7 @@ pub fn part2(input: &Input) -> u32 {
 
 /// Convenience method to create initial state.
 fn explore(input: &Input, twice: bool) -> u32 {
-    let state = State {
-        from: START,
-        visited: 0,
-        twice,
-    };
+    let state = State { from: START, visited: 0, twice };
     let mut cache = HashMap::new();
     paths(input, state, &mut cache)
 }
@@ -143,11 +137,7 @@ fn paths(input: &Input, state: State, cache: &mut HashMap<State, u32>) -> u32 {
 
         let once = input.small & mask == 0 || visited & mask == 0;
         if once || twice {
-            let next = State {
-                from: to,
-                visited: visited | mask,
-                twice: once && twice,
-            };
+            let next = State { from: to, visited: visited | mask, twice: once && twice };
             total += paths(input, next, cache);
         }
     }

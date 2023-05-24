@@ -1,15 +1,12 @@
-use crate::util::iter::*;
 use crate::util::hash::*;
+use crate::util::iter::*;
 use crate::util::parse::*;
 use crate::util::slice::*;
 
 type Result = (u32, u32);
 
 pub fn parse(input: &str) -> Result {
-    let tokens: Vec<_> = input
-        .split_ascii_whitespace()
-        .chunk::<5>()
-        .collect();
+    let tokens: Vec<_> = input.split_ascii_whitespace().chunk::<5>().collect();
 
     let mut indices = FastMapBuilder::empty();
     for [start, _, end, ..] in tokens.iter() {

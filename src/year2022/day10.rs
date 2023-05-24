@@ -22,19 +22,17 @@ pub fn parse(input: &str) -> Vec<i32> {
 /// Converts between the 0-based indexing produced by the `parse` function and the 1-based indexing
 /// used by the problem statement.
 pub fn part1(input: &[i32]) -> i32 {
-    input
-        .iter()
-        .enumerate()
-        .skip(19)
-        .step_by(40)
-        .map(|(i, x)| ((i + 1) as i32) * x)
-        .sum()
+    input.iter().enumerate().skip(19).step_by(40).map(|(i, x)| ((i + 1) as i32) * x).sum()
 }
 
 /// Returns pixels as a multi-line [`String`] so that the entire function can be integration tested.
 pub fn part2(input: &[i32]) -> String {
     let to_char = |(i, c): (usize, &i32)| {
-        if ((i as i32) - c).abs() <= 1 { '#' } else { '.' }
+        if ((i as i32) - c).abs() <= 1 {
+            '#'
+        } else {
+            '.'
+        }
     };
     let mut result = input
         .chunks_exact(40)

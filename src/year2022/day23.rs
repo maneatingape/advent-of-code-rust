@@ -47,17 +47,11 @@ impl U256 {
     }
 
     fn left_shift(&self) -> U256 {
-        U256 {
-            left: (self.left << 1) | (self.right >> 127),
-            right: (self.right << 1),
-        }
+        U256 { left: (self.left << 1) | (self.right >> 127), right: (self.right << 1) }
     }
 
     fn right_shift(&self) -> U256 {
-        U256 {
-            left: (self.left >> 1),
-            right: (self.left << 127) | (self.right >> 1),
-        }
+        U256 { left: (self.left >> 1), right: (self.left << 127) | (self.right >> 1) }
     }
 }
 
@@ -65,10 +59,7 @@ impl BitAnd for U256 {
     type Output = U256;
 
     fn bitand(self, rhs: U256) -> U256 {
-        U256 {
-            left: self.left & rhs.left,
-            right: self.right & rhs.right,
-        }
+        U256 { left: self.left & rhs.left, right: self.right & rhs.right }
     }
 }
 
@@ -76,10 +67,7 @@ impl BitOr for U256 {
     type Output = U256;
 
     fn bitor(self, rhs: U256) -> U256 {
-        U256 {
-            left: self.left | rhs.left,
-            right: self.right | rhs.right,
-        }
+        U256 { left: self.left | rhs.left, right: self.right | rhs.right }
     }
 }
 
@@ -87,10 +75,7 @@ impl Not for U256 {
     type Output = U256;
 
     fn not(self) -> U256 {
-        U256 {
-            left: !self.left,
-            right: !self.right,
-        }
+        U256 { left: !self.left, right: !self.right }
     }
 }
 
@@ -131,13 +116,7 @@ pub fn parse(input: &str) -> Input {
         }
     }
 
-    Input {
-        grid,
-        north: default,
-        south: default,
-        west: default,
-        east: default,
-    }
+    Input { grid, north: default, south: default, west: default, east: default }
 }
 
 pub fn part1(input: &Input) -> u32 {
@@ -234,7 +213,8 @@ fn step(input: &mut Input, order: &mut [Direction]) -> bool {
     }
 
     for i in start..end {
-        let same = grid[i] & !(north[i - 1] | south[i + 1] | west[i].right_shift() | east[i].left_shift());
+        let same =
+            grid[i] & !(north[i - 1] | south[i + 1] | west[i].right_shift() | east[i].left_shift());
         let change = north[i] | south[i] | west[i] | east[i];
         grid[i] = same | change;
         moved |= change.non_zero();

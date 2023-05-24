@@ -72,14 +72,9 @@ pub fn parse(input: &str) -> Vec<Monkey> {
         let test = chunk[3].iter_unsigned().next().unwrap();
         let yes = chunk[4].iter_unsigned().next().unwrap();
         let no = chunk[5].iter_unsigned().next().unwrap();
-        Monkey { items, operation, test, yes, no, }
+        Monkey { items, operation, test, yes, no }
     }
-    input
-        .lines()
-        .collect::<Vec<&str>>()
-        .chunks(7)
-        .map(helper)
-        .collect()
+    input.lines().collect::<Vec<&str>>().chunks(7).map(helper).collect()
 }
 
 /// Play 20 rounds dividing the worry level by 3 each inspection.
@@ -110,11 +105,7 @@ fn play(input: &[Monkey], rounds: u32, adjust: impl Fn(u64) -> u64) -> usize {
                     Operation::Add(y) => item + y,
                 };
                 let next = adjust(worry);
-                let to = if next % monkeys[i].test == 0 {
-                    monkeys[i].yes
-                } else {
-                    monkeys[i].no
-                };
+                let to = if next % monkeys[i].test == 0 { monkeys[i].yes } else { monkeys[i].no };
                 monkeys[to].items.push(next);
             }
         }

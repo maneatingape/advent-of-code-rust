@@ -27,15 +27,8 @@ impl Cave {
 }
 
 pub fn parse(input: &str) -> Cave {
-    let points: Vec<Vec<u32>> = input
-        .lines()
-        .map(|line| line.iter_unsigned().collect())
-        .collect();
-    let max_y = points
-        .iter()
-        .flat_map(|row| row.iter().skip(1).step_by(2).max())
-        .max()
-        .unwrap();
+    let points: Vec<Vec<u32>> = input.lines().map(|line| line.iter_unsigned().collect()).collect();
+    let max_y = points.iter().flat_map(|row| row.iter().skip(1).step_by(2).max()).max().unwrap();
     let width = 2 * max_y + 5;
     let height = max_y + 3;
     let start = max_y + 2;
@@ -65,11 +58,7 @@ pub fn part2(input: &Cave) -> u32 {
 }
 
 fn simulate(input: &Cave, floor: bool) -> u32 {
-    let mut cave = Cave {
-        sand: input.sand.clone(),
-        floor,
-        ..*input
-    };
+    let mut cave = Cave { sand: input.sand.clone(), floor, ..*input };
     cave.fall(cave.start, 0);
     cave.count
 }

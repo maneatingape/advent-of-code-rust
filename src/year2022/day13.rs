@@ -21,11 +21,7 @@
 
 /// Replace `10` with `A` in each packet and strip empty lines.
 pub fn parse(input: &str) -> Vec<String> {
-    input
-        .lines()
-        .filter(|line| !line.is_empty())
-        .map(|line| line.replace("10", "A"))
-        .collect()
+    input.lines().filter(|line| !line.is_empty()).map(|line| line.replace("10", "A")).collect()
 }
 
 /// Count adjacent pairs of packets that are in order.
@@ -35,7 +31,11 @@ pub fn part1(input: &[String]) -> usize {
         .enumerate()
         .map(|(i, chunk)| {
             let ordered = compare(&chunk[0], &chunk[1]);
-            if ordered { i + 1 } else { 0 }
+            if ordered {
+                i + 1
+            } else {
+                0
+            }
         })
         .sum()
 }

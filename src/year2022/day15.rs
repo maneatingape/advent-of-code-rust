@@ -51,9 +51,13 @@ pub fn part1_testable(input: &[Input], row: i32) -> i32 {
         }
     }
 
-    fn build_beacons(input: &Input, row:  i32) -> Option<i32> {
+    fn build_beacons(input: &Input, row: i32) -> Option<i32> {
         let Input { sensor: _, beacon, manhattan: _ } = input;
-        if beacon.y == row { Some(beacon.x) } else { None }
+        if beacon.y == row {
+            Some(beacon.x)
+        } else {
+            None
+        }
     }
     let beacons: FastSet<i32> = input.iter().filter_map(|i| build_beacons(i, row)).collect();
 
@@ -89,10 +93,7 @@ pub fn part2_testable(input: &[Input], size: i32) -> u64 {
         for y in &horizontal {
             // Rotate intersection point counter clockwise and scale by 1 / √2
             // to return to original coordinates.
-            let point = Point {
-                x: (**x + **y) / 2,
-                y: (**y - **x) / 2,
-            };
+            let point = Point { x: (**x + **y) / 2, y: (**y - **x) / 2 };
             if range.contains(&point.x)
                 && range.contains(&point.y)
                 && input.iter().all(|i| i.sensor.manhattan(point) > i.manhattan)

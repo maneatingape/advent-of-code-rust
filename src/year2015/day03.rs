@@ -2,12 +2,7 @@ use crate::util::hash::*;
 use crate::util::point::*;
 
 pub fn parse(input: &str) -> Vec<Point> {
-    input
-        .trim()
-        .as_bytes()
-        .iter()
-        .map(Point::from_byte)
-        .collect()
+    input.trim().as_bytes().iter().map(Point::from_byte).collect()
 }
 
 pub fn part1(input: &[Point]) -> usize {

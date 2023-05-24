@@ -123,9 +123,5 @@ fn round4(a: u32, b: u32, c: u32, d: u32, m: u32, s: u32, k: u32) -> u32 {
 
 #[inline]
 fn common(f: u32, a: u32, b: u32, m: u32, s: u32, k: u32) -> u32 {
-    f.wrapping_add(a)
-        .wrapping_add(k)
-        .wrapping_add(m)
-        .rotate_left(s)
-        .wrapping_add(b)
+    f.wrapping_add(a).wrapping_add(k).wrapping_add(m).rotate_left(s).wrapping_add(b)
 }

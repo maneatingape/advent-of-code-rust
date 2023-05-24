@@ -2,7 +2,9 @@ use crate::util::iter::*;
 use crate::util::parse::*;
 
 enum Command {
-    On, Off, Toggle
+    On,
+    Off,
+    Toggle,
 }
 
 impl Command {

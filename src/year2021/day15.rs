@@ -35,10 +35,7 @@ struct PriorityQueue {
 /// [`BinaryHeap`]: std::collections::BinaryHeap
 impl PriorityQueue {
     fn new() -> PriorityQueue {
-        PriorityQueue {
-            todo: vec![vec![]; 10_000],
-            head: 0,
-        }
+        PriorityQueue { todo: vec![vec![]; 10_000], head: 0 }
     }
 
     fn pop(&mut self) -> State {
@@ -83,10 +80,7 @@ pub fn part2(input: &Grid<u8>) -> u16 {
 
             for x2 in 0..5 {
                 for y2 in 0..5 {
-                    let point = Point {
-                        x: x2 * input.width + x1,
-                        y: y2 * input.height + y1,
-                    };
+                    let point = Point { x: x2 * input.width + x1, y: y2 * input.height + y1 };
                     expanded[point] = (1 + (base - 1 + x2 + y2) % 9) as u8;
                 }
             }
@@ -99,14 +93,8 @@ pub fn part2(input: &Grid<u8>) -> u16 {
 /// Implementation of [Dijkstra's algorithm](https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm)
 /// without using the decrease-key functionality.
 fn dijkstra(grid: &Grid<u8>) -> u16 {
-    let start = State {
-        point: ORIGIN,
-        risk: 0,
-    };
-    let end = Point {
-        x: grid.width - 1,
-        y: grid.height - 1,
-    };
+    let start = State { point: ORIGIN, risk: 0 };
+    let end = Point { x: grid.width - 1, y: grid.height - 1 };
 
     let mut todo = PriorityQueue::new();
     let mut cost = grid.default_copy::<Option<u16>>();
@@ -119,17 +107,10 @@ fn dijkstra(grid: &Grid<u8>) -> u16 {
             return risk;
         }
 
-        for next in ORTHOGONAL
-            .iter()
-            .map(|&n| point + n)
-            .filter(|&n| grid.contains(n))
-        {
+        for next in ORTHOGONAL.iter().map(|&n| point + n).filter(|&n| grid.contains(n)) {
             let next_cost = risk + grid[next] as u16;
             if cost[next].is_none() || next_cost < cost[next].unwrap() {
-                let next_state = State {
-                    point: next,
-                    risk: next_cost,
-                };
+                let next_state = State { point: next, risk: next_cost };
                 todo.push(next_state);
                 cost[next] = Some(next_cost);
             }

@@ -22,12 +22,7 @@ impl Tree {
         let mut next: VecDeque<u16> = VecDeque::with_capacity(len);
 
         for i in 0..len {
-            nodes.push(Node {
-                size: 1,
-                left: u16::MAX,
-                right: u16::MAX,
-                up: u16::MAX,
-            });
+            nodes.push(Node { size: 1, left: u16::MAX, right: u16::MAX, up: u16::MAX });
             todo.push_back(i as u16);
         }
 
@@ -35,7 +30,11 @@ impl Tree {
         Tree { root, size: (len - 1) as i64, nodes }
     }
 
-    fn next_layer(nodes: &mut Vec<Node>, todo: &mut VecDeque<u16>, next: &mut VecDeque<u16>) -> u16 {
+    fn next_layer(
+        nodes: &mut Vec<Node>,
+        todo: &mut VecDeque<u16>,
+        next: &mut VecDeque<u16>,
+    ) -> u16 {
         let root = todo.len() == 2;
 
         while todo.len() > 1 {
@@ -47,12 +46,7 @@ impl Tree {
             nodes[left as usize].up = index;
             nodes[right as usize].up = index;
 
-            nodes.push(Node {
-                size,
-                up: u16::MAX,
-                left,
-                right,
-            });
+            nodes.push(Node { size, up: u16::MAX, left, right });
             next.push_back(index);
         }
 
@@ -146,12 +140,7 @@ impl Tree {
             let Node { size, left, right, up, .. } = self.nodes[cur as usize];
 
             if size == 1 {
-                self.nodes[parent as usize] = Node {
-                    size: 2,
-                    left: start as u16,
-                    right: cur,
-                    up,
-                };
+                self.nodes[parent as usize] = Node { size: 2, left: start as u16, right: cur, up };
 
                 self.nodes[cur as usize].up = parent;
                 self.nodes[start].up = parent;

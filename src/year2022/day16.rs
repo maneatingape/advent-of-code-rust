@@ -51,11 +51,8 @@ pub fn parse(input: &str) -> Input {
 
     let size = valves.iter().filter(|v| v.flow > 0).count() + 1;
     let mut distance = vec![u32::MAX; size * size];
-    let indices: HashMap<&str, usize> = valves
-        .iter()
-        .enumerate()
-        .map(|(i, v)| (v.name, i))
-        .collect();
+    let indices: HashMap<&str, usize> =
+        valves.iter().enumerate().map(|(i, v)| (v.name, i)).collect();
 
     // Eliminate zero valves
     for (from, valve) in valves.iter().enumerate().take(size) {
@@ -192,11 +189,7 @@ fn subsets(todo: usize, score: &mut [u32], visited: &mut [bool]) -> u32 {
     while valves != 0 {
         let mask = 1 << valves.trailing_zeros();
         let next = todo ^ mask;
-        let result = if visited[next] {
-            score[next]
-        } else {
-            subsets(next, score, visited)
-        };
+        let result = if visited[next] { score[next] } else { subsets(next, score, visited) };
         valves ^= mask;
         max = max.max(result);
     }

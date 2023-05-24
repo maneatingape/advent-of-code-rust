@@ -24,7 +24,7 @@ impl<T> SliceOps<T> for &mut [T] {
         let mut i = 1;
 
         while i < n {
-            if  c[i] < i {
+            if c[i] < i {
                 if i % 2 == 0 {
                     self.swap(0, i);
                 } else {

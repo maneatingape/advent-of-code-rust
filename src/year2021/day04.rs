@@ -23,10 +23,8 @@ pub fn parse(input: &str) -> Vec<Input> {
     let mut to_turn = [0; 100];
     let mut from_turn = [0; 100];
 
-    let chunks: Vec<Vec<usize>> = input
-        .split("\n\n")
-        .map(|s| s.iter_unsigned().collect())
-        .collect();
+    let chunks: Vec<Vec<usize>> =
+        input.split("\n\n").map(|s| s.iter_unsigned().collect()).collect();
 
     for (i, &n) in chunks[0].iter().enumerate() {
         to_turn[n] = i;
@@ -50,10 +48,7 @@ pub fn parse(input: &str) -> Vec<Input> {
         let winning_turn = **row_and_cols.iter().min().unwrap();
         let unmarked: usize = board.iter().filter(|&&n| to_turn[n] > winning_turn).sum();
         let just_called = from_turn[winning_turn];
-        Input {
-            turn: winning_turn,
-            score: unmarked * just_called,
-        }
+        Input { turn: winning_turn, score: unmarked * just_called }
     };
 
     let mut result: Vec<_> = chunks.iter().skip(1).map(score).collect();

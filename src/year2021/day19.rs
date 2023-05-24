@@ -123,10 +123,7 @@ impl Located {
 pub fn parse(input: &str) -> Vec<Located> {
     let lines: Vec<_> = input.lines().collect();
 
-    let mut scanners: Vec<_> = lines
-        .split(|line| line.is_empty())
-        .map(Scanner::parse)
-        .collect();
+    let mut scanners: Vec<_> = lines.split(|line| line.is_empty()).map(Scanner::parse).collect();
 
     locate(&mut scanners)
 }
@@ -181,11 +178,7 @@ fn locate(unknown: &mut Vec<Scanner>) -> Vec<Located> {
 }
 
 fn check(known: &Located, scanner: &Scanner) -> Option<Located> {
-    let matching: FastSet<_> = known
-        .signature
-        .intersection(&scanner.signature)
-        .copied()
-        .collect();
+    let matching: FastSet<_> = known.signature.intersection(&scanner.signature).copied().collect();
     if matching.len() < 66 {
         return None;
     }

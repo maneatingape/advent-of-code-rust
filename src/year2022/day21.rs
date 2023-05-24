@@ -43,25 +43,16 @@ pub struct Input {
 pub fn parse(input: &str) -> Input {
     let lines: Vec<&[u8]> = input.lines().map(|line| line.as_bytes()).collect();
 
-    let indices: HashMap<&[u8], usize> = lines
-        .iter()
-        .enumerate()
-        .map(|(index, line)| (&line[0..4], index))
-        .collect();
+    let indices: HashMap<&[u8], usize> =
+        lines.iter().enumerate().map(|(index, line)| (&line[0..4], index)).collect();
 
-    let monkeys: Vec<Monkey> = lines
-        .iter()
-        .map(|line| Monkey::parse(&line[6..], &indices))
-        .collect();
+    let monkeys: Vec<Monkey> =
+        lines.iter().map(|line| Monkey::parse(&line[6..], &indices)).collect();
 
     let root = indices["root".as_bytes()];
     let humn = indices["humn".as_bytes()];
-    let mut input = Input {
-        root,
-        monkeys,
-        yell: vec![0; lines.len()],
-        unknown: vec![false; lines.len()],
-    };
+    let mut input =
+        Input { root, monkeys, yell: vec![0; lines.len()], unknown: vec![false; lines.len()] };
 
     compute(&mut input, root);
     find(&mut input, humn, root);

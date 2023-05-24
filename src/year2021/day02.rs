@@ -22,11 +22,7 @@ pub fn parse(input: &str) -> Vec<Sub> {
         "forward" => Sub::Forward(from(b)),
         _ => unreachable!(),
     };
-    input
-        .split_ascii_whitespace()
-        .chunk::<2>()
-        .map(helper)
-        .collect()
+    input.split_ascii_whitespace().chunk::<2>().map(helper).collect()
 }
 
 pub fn part1(input: &[Sub]) -> i32 {

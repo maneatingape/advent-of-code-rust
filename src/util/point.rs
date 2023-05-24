@@ -46,10 +46,7 @@ impl Add for Point {
 
     #[inline]
     fn add(self, rhs: Point) -> Point {
-        Point {
-            x: self.x + rhs.x,
-            y: self.y + rhs.y,
-        }
+        Point { x: self.x + rhs.x, y: self.y + rhs.y }
     }
 }
 
@@ -58,10 +55,7 @@ impl Sub for Point {
 
     #[inline]
     fn sub(self, rhs: Point) -> Point {
-        Point {
-            x: self.x - rhs.x,
-            y: self.y - rhs.y,
-        }
+        Point { x: self.x - rhs.x, y: self.y - rhs.y }
     }
 }
 
@@ -70,10 +64,7 @@ impl Mul<i32> for Point {
 
     #[inline]
     fn mul(self, rhs: i32) -> Self::Output {
-        Point {
-            x: self.x * rhs,
-            y: self.y * rhs,
-        }
+        Point { x: self.x * rhs, y: self.y * rhs }
     }
 }
 
@@ -118,18 +109,12 @@ impl Point {
 
     #[inline]
     pub fn clockwise(self) -> Point {
-        Point {
-            x: -self.y,
-            y: self.x,
-        }
+        Point { x: -self.y, y: self.x }
     }
 
     #[inline]
     pub fn counter_clockwise(self) -> Point {
-        Point {
-            x: self.y,
-            y: -self.x,
-        }
+        Point { x: self.y, y: -self.x }
     }
 
     #[inline]

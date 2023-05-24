@@ -43,11 +43,7 @@ pub fn part1(input: &[&str]) -> u32 {
 
 /// Group lines into chunks of 3, then compute the mutual set intersection.
 pub fn part2(input: &[&str]) -> u32 {
-    input
-        .iter()
-        .chunk::<3>()
-        .map(|[a, b, c]| priority(mask(a) & mask(b) & mask(c)))
-        .sum()
+    input.iter().chunk::<3>().map(|[a, b, c]| priority(mask(a) & mask(b) & mask(c))).sum()
 }
 
 /// Build a set from a slice of ASCII characters, using the `fold` function to repeatedly OR

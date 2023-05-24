@@ -61,14 +61,7 @@ pub fn parse(input: &str) -> Vec<RebootStep> {
 }
 
 pub fn part1(input: &[RebootStep]) -> i64 {
-    let region = Cube {
-        x1: -50,
-        x2: 50,
-        y1: -50,
-        y2: 50,
-        z1: -50,
-        z2: 50,
-    };
+    let region = Cube { x1: -50, x2: 50, y1: -50, y2: 50, z1: -50, z2: 50 };
 
     let filtered: Vec<_> = input
         .iter()
@@ -83,10 +76,7 @@ pub fn part1(input: &[RebootStep]) -> i64 {
 pub fn part2(input: &[RebootStep]) -> i64 {
     let mut total = 0;
     let mut candidates = Vec::new();
-    let on_cubes = input
-        .iter()
-        .enumerate()
-        .filter_map(|(i, rs)| rs.on.then_some((i, rs.cube)));
+    let on_cubes = input.iter().enumerate().filter_map(|(i, rs)| rs.on.then_some((i, rs.cube)));
 
     for (i, cube) in on_cubes {
         input[(i + 1)..]

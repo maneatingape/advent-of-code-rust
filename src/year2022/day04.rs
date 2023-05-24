@@ -34,10 +34,7 @@ pub fn parse(input: &str) -> Vec<Pairs> {
 
 /// Count ranges completely enclosed by each other.
 pub fn part1(input: &[Pairs]) -> usize {
-    input
-        .iter()
-        .filter(|[a, b, c, d]| (a >= c && b <= d) || (c >= a && d <= b))
-        .count()
+    input.iter().filter(|[a, b, c, d]| (a >= c && b <= d) || (c >= a && d <= b)).count()
 }
 
 /// Count ranges with any intersection.
