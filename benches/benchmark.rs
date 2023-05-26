@@ -96,3 +96,4 @@ benchmark!(year2015_day06, year2015, day06);
 benchmark!(year2015_day07, year2015, day07);
 benchmark!(year2015_day08, year2015, day08);
 benchmark!(year2015_day09, year2015, day09);
+benchmark!(year2015_day10, year2015, day10);
