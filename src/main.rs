@@ -1,24 +1,27 @@
 use aoc::*;
+use ansi::*;
 use std::env::args;
 use std::time::Instant;
 
-// ANSI escape codes
-const RESET: &str = "\x1b[0m";
-const BOLD: &str = "\x1b[1m";
-const RED: &str = "\x1b[31m";
-const GREEN: &str = "\x1b[32m";
-const YELLOW: &str = "\x1b[33m";
+/// ANSI escape codes
+mod ansi {
+    pub const RESET: &str = "\x1b[0m";
+    pub const BOLD: &str = "\x1b[1m";
+    pub const RED: &str = "\x1b[31m";
+    pub const GREEN: &str = "\x1b[32m";
+    pub const YELLOW: &str = "\x1b[33m";
+}
+
+struct Config {
+    year: Option<u32>,
+    day: Option<u32>,
+}
 
 struct Solution {
     year: u32,
     day: u32,
     input: &'static str,
     wrapper: fn(&str) -> (String, String),
-}
-
-struct Config {
-    year: Option<u32>,
-    day: Option<u32>,
 }
 
 fn main() {
