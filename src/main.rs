@@ -1,5 +1,5 @@
-use aoc::*;
 use ansi::*;
+use aoc::*;
 use std::env::args;
 use std::time::Instant;
 

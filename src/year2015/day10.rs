@@ -97,10 +97,8 @@ const ELEMENTS: &str = "\
 type Result = (usize, usize);
 
 pub fn parse(input: &str) -> Result {
-    let elements: Vec<Vec<_>> = ELEMENTS
-        .lines()
-        .map(|line| line.split_ascii_whitespace().collect())
-        .collect();
+    let elements: Vec<Vec<_>> =
+        ELEMENTS.lines().map(|line| line.split_ascii_whitespace().collect()).collect();
     let mut indices = FastMapBuilder::with_capacity(92);
 
     for (i, tokens) in elements.iter().enumerate() {
