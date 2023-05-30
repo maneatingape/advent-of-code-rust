@@ -71,6 +71,7 @@ pub mod year2021 {
     pub mod day21;
     pub mod day22;
     pub mod day23;
+    pub mod day24;
 }
 
 /// # Help Santa by solving puzzles to fix the weather machine's snow function.
