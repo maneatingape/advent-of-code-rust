@@ -44,6 +44,7 @@ Each solution is thoroughly commented to help explain the approach, browse the s
 
 * [2022](#2022) (18.6 ± 0.3 ms total benchmark)
 * [2021](#2021) (18.5 ± 0.3 ms total benchmark)
+* [2020](#2020) (in progress)
 * [2015](#2015) (in progress)
 
 ## 2022
@@ -130,6 +131,12 @@ pie
 | 23 | [Amphipod](https://adventofcode.com/2021/day/23) | [Source](src/year2021/day23.rs) | 4821 |
 | 24 | [Arithmetic Logic Unit](https://adventofcode.com/2021/day/24) | [Source](src/year2021/day24.rs) | 4 |
 | 25 | [Sea Cucumber](https://adventofcode.com/2021/day/25) | [Source](src/year2021/day25.rs) | 635 |
+
+## 2020
+
+| Day | Problem | Solution | Benchmark (μs) |
+| --- | --- | --- | --: |
+| 1 | [Report Repair](https://adventofcode.com/2020/day/1) | [Source](src/year2020/day01.rs) | 5 |
 
 ## 2015
 
