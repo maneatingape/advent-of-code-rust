@@ -8,7 +8,7 @@ Solutions depend only on the stable Rust Standard Library. The code tries it's b
 
 Benchmarks are measured using the built-in `cargo bench` tool run on an Apple M2 Max. All 50 solutions from 2022 to 2021 complete sequentially in **38 milliseconds**. Performance is reasonable even on older hardware, for example a 2011 MacBook Pro with an [Intel i7-2720QM](https://ark.intel.com/content/www/us/en/ark/products/50067/intel-core-i72720qm-processor-6m-cache-up-to-3-30-ghz.html) processor takes 112 milliseconds to run all 50 solutions.
 
-The project is structured as a library crate with a module per year and a sub-module for each day to allow convenient testing and benchmarking. Continuous integration is provided using [GitHub Actions](https://docs.github.com/en/actions) with 100% test coverage based on the example inputs from each day.
+The project is structured as a library crate with a module per year and a sub-module for each day to allow convenient testing and benchmarking. Continuous integration is provided using [GitHub Actions](https://docs.github.com/en/actions) with test coverage based on the example inputs from each day.
 
 Each solution is thoroughly commented to help explain the approach, browse the source or checkout the online [rustdocs](https://maneatingape.github.io/advent-of-code-rust/aoc/).
 
@@ -137,6 +137,7 @@ pie
 | Day | Problem | Solution | Benchmark (μs) |
 | --- | --- | --- | --: |
 | 1 | [Report Repair](https://adventofcode.com/2020/day/1) | [Source](src/year2020/day01.rs) | 5 |
+| 2 | [Password Philosophy](https://adventofcode.com/2020/day/2) | [Source](src/year2020/day02.rs) | 38 |
 
 ## 2015
 

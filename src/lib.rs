@@ -78,6 +78,7 @@ pub mod year2021 {
 /// # Try to enjoy a well deserved vacation, what could go wrong?
 pub mod year2020 {
     pub mod day01;
+    pub mod day02;
 }
 
 /// # Help Santa by solving puzzles to fix the weather machine's snow function.
