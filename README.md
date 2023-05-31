@@ -2,11 +2,11 @@
 
 [![Tests](https://img.shields.io/github/actions/workflow/status/maneatingape/advent-of-code-rust/tests.yml?label=tests)](https://github.com/maneatingape/advent-of-code-rust/actions/workflows/tests.yml) [![Docs](https://img.shields.io/github/actions/workflow/status/maneatingape/advent-of-code-rust/docs.yml?color=blue&label=docs)](https://maneatingape.github.io/advent-of-code-rust/aoc/)
 
-Complete 2022 entries for the annual [Advent of Code](https://adventofcode.com/) challenge, written in performant Rust.
+Complete 2022 to 2021 entries for the annual [Advent of Code](https://adventofcode.com/) challenge, written in performant Rust.
 
 Solutions depend only on the stable Rust Standard Library. The code tries it's best to stay clean and elegant, but the focus is on speed so if bit twiddling or mashing stuff into an array makes things faster, then all scruples are jettisoned!
 
-Benchmarks are measured using the built-in `cargo bench` tool run on an Apple M2 Max. All 25 solutions from 2022 complete sequentially in **19 milliseconds**. Performance is reasonable even on older hardware, for example a 2011 MacBook Pro with an [Intel i7-2720QM](https://ark.intel.com/content/www/us/en/ark/products/50067/intel-core-i72720qm-processor-6m-cache-up-to-3-30-ghz.html) processor takes 60 milliseconds to run the solutions.
+Benchmarks are measured using the built-in `cargo bench` tool run on an Apple M2 Max. All 50 solutions from 2022 to 2021 complete sequentially in **38 milliseconds**. Performance is reasonable even on older hardware, for example a 2011 MacBook Pro with an [Intel i7-2720QM](https://ark.intel.com/content/www/us/en/ark/products/50067/intel-core-i72720qm-processor-6m-cache-up-to-3-30-ghz.html) processor takes 112 milliseconds to run all 50 solutions.
 
 The project is structured as a library crate with a module per year and a sub-module for each day to allow convenient testing and benchmarking. Continuous integration is provided using [GitHub Actions](https://docs.github.com/en/actions) with 100% test coverage based on the example inputs from each day.
 
@@ -43,7 +43,7 @@ Each solution is thoroughly commented to help explain the approach, browse the s
 ## Years
 
 * [2022](#2022) (18.6 ± 0.3 ms total benchmark)
-* [2021](#2021) (in progress)
+* [2021](#2021) (18.5 ± 0.3 ms total benchmark)
 * [2015](#2015) (in progress)
 
 ## 2022
@@ -51,7 +51,7 @@ Each solution is thoroughly commented to help explain the approach, browse the s
 ```mermaid
 %%{init: {'theme': 'base', 'themeVariables': { 'pie1': '#7cb5ec', 'pie2': '#90ed7d', 'pie3': '#f7a35c', 'pie4': '#e4d354', 'pie5': '#2b908f', 'pie6': '#c6cdd5'}}}%%
 pie
-    title Year 2022 Benchmark time by percentage of total
+    title Year 2022 Benchmark time by % of total
     "Day 20" : 7509
     "Day 19" : 3402
     "Day 11" : 2317
@@ -89,6 +89,19 @@ pie
 | 25 | [Full of Hot Air](https://adventofcode.com/2022/day/25) | [Source](src/year2022/day25.rs) | 3 |
 
 ## 2021
+
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'pie1': '#7cb5ec', 'pie2': '#90ed7d', 'pie3': '#f7a35c', 'pie4': '#e4d354', 'pie5': '#2b908f', 'pie6': '#8085e9', 'pie7': '#c6cdd5'}}}%%
+pie
+    title Year 2021 Benchmark time by % of total
+    "Day 15" : 5700
+    "Day 23" : 4821
+    "Day 20" : 2072
+    "Day 18" : 1904
+    "Day 21" : 1042
+    "Day 19" : 933
+    "Others" : 1978
+```
 
 | Day | Problem | Solution | Benchmark (μs) |
 | --- | --- | --- | --: |
