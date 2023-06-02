@@ -1,3 +1,17 @@
+//! # Report Repair
+//!
+//! The straightforward approach is to compare every possible pair of elements for part 1 and
+//! every possible triple for part 2. This would have `O(n²)` and `O(n³)`time complexity respectively.
+//!
+//! We can do better with `O(n)` complexity for part 1 and `O(n²)` for part 2, with an shared
+//! upfront cost of `O(logn)`.
+//!
+//! First sort the slice in ascending order. Then maintain two pointers starting at the beginning
+//! and end of the slice. If the sum if greater then decrement the end pointer. If the sum is less
+//! decrement the end pointer. If equal then return the product of the pair.
+//!
+//! Part 2 reuses the pair finding logic, finding the third element by stepping through the slice
+//! one by one and adjusting the target total.
 use crate::util::parse::*;
 use std::cmp::Ordering::*;
 

@@ -75,7 +75,7 @@ pub mod year2021 {
     pub mod day25;
 }
 
-/// # Try to enjoy a well deserved vacation, what could go wrong?
+/// # What could go wrong trying to enjoy a well deserved vacation?
 pub mod year2020 {
     pub mod day01;
     pub mod day02;
