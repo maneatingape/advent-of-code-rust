@@ -1,3 +1,15 @@
+//! MD5 hash algorithm
+//!
+//! Computes a 128bit [MD5 hash](https://en.wikipedia.org/wiki/MD5) for a slice of `u8`.
+//! The hash is returned as a tuple of four `u32` values.
+//!
+//! To maximize speed the loop for each of the four rounds used to create the hash is unrolled and
+//! all internal utility functions marked as
+//! [`#[inline]`](https://doc.rust-lang.org/reference/attributes/codegen.html#the-inline-attribute).
+//!
+//! Currently limited to short messages that can fit into a single block. MD5 blocks are 512 bits
+//! long with the final block also containing a padding byte and 8 bytes of length,
+//! so the maximum message length is 440 bits.
 pub fn hash(message: &[u8]) -> (u32, u32, u32, u32) {
     let size = message.len();
 
