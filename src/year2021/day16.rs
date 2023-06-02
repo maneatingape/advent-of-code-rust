@@ -1,3 +1,17 @@
+//! Packet Decoder
+//!
+//! [`BitStream`] is the key to making this problem tractable. It works like an iterator, allowing
+//! us to consume an arbitrary number of bits from the input and convert this to a number.
+//!
+//! It works by maintaining an internal `u64` buffer. If the requested number of bits is larger than
+//! the buffer's current size then additional bits are added to the buffer 4 at a time from each
+//! hexadecimal digit of the input data.
+//!
+//! Additionally it keeps track of the total number of bits consumed so far. This is needed when
+//! parsing packets that use the total length in bits to determine sub-packets.
+//!
+//! The decoded packet data is stored as a tree-like struct allowing recursive solutions to part 1
+//! and part 2 to reuse the same decoded input.
 use std::slice::Iter;
 
 struct BitStream<'a> {
