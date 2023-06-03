@@ -7,7 +7,7 @@
 //! For example launching a probe at a y-velocity of 5 initially,
 //! would result in a  speed and y-position:
 //!
-//! ```
+//! ```text
 //!     Time:       0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12
 //!     Speed:      5,  4,  3,  2,  1,  0, -1, -2, -3, -4, -5, -6, -7
 //!     Y-Position: 0,  5,  9, 12, 14, 15, 15, 14, 12,  9,  5,  0, -6
@@ -31,7 +31,8 @@
 //! counts how many are still in the target area at time `t`.
 //!
 //! For example using the sample `target area: x=20..30, y=-10..-5` gives a progression:
-//! ```
+//!
+//! ```text
 //!     X-Velocity : 6
 //!     Time:        0,  1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20
 //!     New:         0,  0, 0, 0, 0, 1, 0, 0, 0, 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0
@@ -59,7 +60,8 @@
 //! this happens we add *both* `new` and `continuing` to the total. For subsequent times while we're
 //! still in the target area we add only the `new` values, as the `continuing` are trajectories
 //! that we've already considered. For example for an initial y-velocity of 0:
-//! ```
+//!
+//! ```text
 //!     Time:       0,   1,   2,     3,   4
 //!     Speed:      0,  -1,  -2,    -3,  -4
 //!     Y-Position: 0,  -1,  -3,    -6, -10
