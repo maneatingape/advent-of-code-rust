@@ -64,6 +64,7 @@ mod year2020 {
     mod day07_test;
     mod day08_test;
     mod day09_test;
+    mod day10_test;
 }
 
 mod year2015 {
