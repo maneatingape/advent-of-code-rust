@@ -105,6 +105,7 @@ benchmark!(year2020_day12, year2020, day12);
 benchmark!(year2020_day13, year2020, day13);
 benchmark!(year2020_day14, year2020, day14);
 // benchmark!(year2020_day15, year2020, day15); // Very slow
+benchmark!(year2020_day16, year2020, day16);
 
 // 2015
 benchmark!(year2015_day01, year2015, day01);
