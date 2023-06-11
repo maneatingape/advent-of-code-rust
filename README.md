@@ -30,7 +30,7 @@ Each solution is thoroughly commented to help explain the approach, browse the s
 **Benchmark**
 * Everything `cargo bench`
 * Specific year `cargo bench year2022`
-* Specific day `cargo bench year2022_day01`
+* Specific day `cargo bench year2022::day01`
 
 **Document**
 * Build docs including private items `cargo doc --document-private-items`
