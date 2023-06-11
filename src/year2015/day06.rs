@@ -1,3 +1,65 @@
+//! # Probably a Fire Hazard
+//!
+//! This problem is easy to brute force but more challenging to solve efficiently.
+//!
+//! To trick to speed things up is to consider rectangles that have the same instructions instead of
+//! calculating point by point. Then for each rectangle we apply the instructions only once and
+//! multiply by its area.
+//!
+//! For example say there is only a single instruction `turn on 300,300 through 700,500`. This
+//! looks a little like:
+//!
+//! ```none
+//!     (0,0)
+//!     ┌────────────┐
+//!     │            │
+//!     │   ┌────┐   │
+//!     │   │    │   │
+//!     │   └────┘   │
+//!     │            │
+//!     └────────────┘(1000,1000)
+//! ```
+//!
+//! First we compute the x and y intervals:
+//!
+//! ```none
+//!     x: [0, 300, 701, 1000]
+//!     y: [0, 300, 501, 1000]
+//! ```
+//!
+//! The intervals are *inclusive*, so the interval after the instruction starts 1 higher. Next we
+//! break the grid into 3 x 3 = 9 rectangles, much fewer than the 1,000,000 individual elements.
+//!
+//! ```none
+//!     ┌───────────┐
+//!     │ A | B | C │
+//!     │...┌───┐...│
+//!     │ D │ E │ F │
+//!     │...└───┘...│
+//!     │ G | H | I │
+//!     └───────────┘
+//! ```
+//!
+//! For each of these rectangles we store a boolean if the rectangle to the left or above crosses an
+//! instruction boundary.
+//!
+//! ```none
+//!     Left             Up
+//!     ┌───────────┐    ┌───────────┐
+//!     │ T | F | F │    │ T | T | T │
+//!     │...┌───┐...│    │...┌───┐...│
+//!     │ T │ T │ T │    │ F │ T │ F │
+//!     │...└───┘...│    │...└───┘...│
+//!     │ T | F | F │    │ F | T | F │
+//!     └───────────┘    └───────────┘
+//! ```
+//!
+//! If there is no boundary then we can re-use the value either from the rectangle to the left or
+//! above. For example `D` is the same as `A`, `B` is also the same as `A` and `I` is the same as
+//! both `F` and `H`. This further reduces the different instruction sets to compute.
+//!
+//! For my input, there was ~100,000 rectangles but only ~20,000 different instructions regions
+//! needed to be computed. This is a 50x reduction from looking at each light individually.
 use crate::util::iter::*;
 use crate::util::parse::*;
 

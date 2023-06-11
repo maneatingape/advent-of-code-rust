@@ -1,3 +1,11 @@
+//! # Some Assembly Required
+//!
+//! To obtain the result we recursively compute the inputs starting at gate `a` and working
+//! backwards. To make things faster we memoize the result of each wire in a cache, so that each
+//! wire is computed at most once.
+//!
+//! For part two we pre-seed the value of `b` in the cache with the result from part one then
+//! re-run the same process.
 use crate::util::hash::*;
 use crate::util::parse::*;
 

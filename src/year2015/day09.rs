@@ -1,3 +1,23 @@
+//! # All in a Single Night
+//!
+//! This is a variant of the classic NP-hard
+//! [Travelling Salesman Problem](https://en.wikipedia.org/wiki/Travelling_salesman_problem).
+//!
+//! There are 8 locations, so naively it would require checking 8! = 40,320 permutations. We can
+//! reduce this to 7! = 5,040 permutations by arbitrarily choosing one of the locations as the
+//! start.
+//!
+//! We then compute the distance to complete the trip and return to the original location.
+//! Since the problem does not ask us to end up in the same location we then "break" the cycle.
+//! To compute the shortest journey we remove the longest single journey and to compute the
+//! longest journey we remove the shortest single journey.
+//!
+//! For speed we first convert each location into an index, then store the distances between
+//! every pair of locations in an array for fast lookup. Our utility [`permutations`] method uses
+//! [Heap's algorithm](https://en.wikipedia.org/wiki/Heap%27s_algorithm) for efficiency,
+//! modifying the slice in place.
+//!
+//! [`permutations`]: crate::util::slice
 use crate::util::hash::*;
 use crate::util::iter::*;
 use crate::util::parse::*;

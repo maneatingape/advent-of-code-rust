@@ -1,3 +1,19 @@
+//! # Matchsticks
+//!
+//! While [regular expressions](https://en.wikipedia.org/wiki/Regular_expression) may feel like a
+//! natural choice, it's much faster and easier to simply treat the input as a stream of raw
+//! ASCII `u8` bytes including newlines.
+//!
+//! For part one we run a small state machine using [`fold`] to keep track of the current and
+//! previous characters. If we encounter a hexadecimal escape then four characters become one so the
+//! difference increases by three. The sequences `\\` and `\"` both increase the difference by one.
+//! Each newline increases the difference by two since every line is enclosed with two quotes.
+//!
+//! Part two is even more straightforward with no need for statekeeping. Quotes and backslashes
+//! need to be escaped so increase the difference by one. As before each newline increases by the
+//! difference by two.
+//!
+//! [`fold`]: Iterator::fold
 const NEWLINE: u8 = 10;
 const QUOTE: u8 = 34;
 const SLASH: u8 = 92;

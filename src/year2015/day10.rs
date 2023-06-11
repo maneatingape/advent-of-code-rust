@@ -1,3 +1,17 @@
+//! # Elves Look, Elves Say
+//!
+//! There is a trick to solve this problem in constant time and space. While this is not possible
+//! for any arbitrary sequence, in AoC *we only need to solve for our given input*.
+//!
+//! Examining the input shows that it consists of one of Conway's
+//! [atomic elements](https://en.wikipedia.org/wiki/Look-and-say_sequence#Cosmological_decay).
+//! Each element breaks down into other elements that do not interact with each other. This means
+//! that we only need to track the *count* of each element, rather than deal with the sequence
+//! as a whole. Each step we replace the count of each element with its decay products. For example
+//! if we had five `Ni` then next step we would decay to five `Zn` and five `Co`.
+//!
+//! Computing the result is simply multiplying the number of each element by its length. There are
+//! 92 elements total so we can use a fixed size array to store the decay chain information.
 use crate::util::hash::*;
 
 const ELEMENTS: &str = "\
