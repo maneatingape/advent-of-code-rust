@@ -1,3 +1,21 @@
+//! # The Ideal Stocking Stuffer
+//!
+//! This solution relies on brute forcing combinations as quickly as possible using our own internal
+//! implementation of the [`MD5`] hashing algorithm.
+//!
+//! Using the [`write!`] macro to join the secret key to the number is quite slow. To speed things
+//! up we reuse the same `u8` buffer, incrementing digits one at a time. If a carry occurs we
+//! propagate from right to left. Hitting the start of the secret key means that we have
+//! transitioned to a new power of ten, for example from 9 to 10 or 99 to 100, so we increase the
+//! size of the buffer by one.
+//!
+//! Interestingly the total time to solve this problem is *extremely* sensitive to the secret key
+//! provided as input. For example my key required ~10⁷ iterations to find the answer to part two.
+//! However for unit testing, I was able to randomly find a value that takes only 455 iterations,
+//! about 22,000 times faster!
+//!
+//! [`MD5`]: crate::util::md5
+//! [`write!`]: std::write
 use crate::util::md5::hash;
 
 pub fn parse(input: &str) -> &[u8] {
