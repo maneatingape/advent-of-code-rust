@@ -1,3 +1,29 @@
+//! # Doesn't He Have Intern-Elves For This?
+//!
+//! [Regular expressions](https://en.wikipedia.org/wiki/Regular_expression) are a good fit for this
+//! problem. However in the interest of speed we'll take a different approach for both parts.
+//!
+//! ## Part One
+//! Each string consists only of lowercase ASCII characters so the cardinality is 26. We can
+//! test for vowels and invalid characters more quickly by converting each character into a bitmask
+//! that fits into a `i32`. For example `a` becomes `1`, b becomes `10` and so on.
+//!
+//! To check if a character is a vowel we logically `AND` against `100000100000100010001` which is
+//! "aeiou" converted to a bitmask. Similarly to check for the invalid sequence "ab" we `AND`
+//! against a mask that has `b` set and notice the previous character is always one less, so we
+//! can left shift to reuse the same mask.
+//!
+//! ## Part Two
+//! We can check for non-overlapping pairs in `O(n)` complexity by storing the last seen index of
+//! each pair in the string. If the difference is more than one, then we know that the pairs are
+//! non-overlapping.
+//!
+//! Instead of using a `HashMap` we rely on the fact there at most 26² possible combinations
+//! in order to use a fixed size array as an implicit data structure. Using zero as a special
+//! starting value gives 27² or 729 possibilities. To avoid having to clear the array for each
+//! string, we bump the index by 1000 (any value larger than the length of the string would do).
+//! This means that if the difference is greater than the current position in the string we can
+//! sure that we haven't encountered this pair in this particular string before.
 pub fn parse(input: &str) -> Vec<&[u8]> {
     input.lines().map(|line| line.as_bytes()).collect()
 }
