@@ -1,9 +1,6 @@
 //! # Perfectly Spherical Houses in a Vacuum
 //!
 //! We store Santa's path in a [`FastSet`] of [`Point`] objects that deduplicates visited points.
-//! Another approach would be use a large array to keep track of visited points, however
-//! benchmarking showed that the set approach was slightly slower.
-//!
 //! For part two we alternate between Santa and the robot, tracking two points simultaneously and
 //! reusing the same deduplicating logic as part one.
 //!
