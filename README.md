@@ -15,17 +15,17 @@ Each solution is thoroughly commented to help explain the approach, browse the s
 ## Cargo commands
 
 **Run**
-* Everything as debug (slow) `cargo run`
-* Everything as release (fast) `cargo run --release`
-* Optimized for current CPU architecture `RUSTFLAGS="-C target-cpu=native" cargo run --release`
+* Everything `cargo run`
 * Specific year `cargo run year2022`
 * Specific day `cargo run year2022::day01`
+* Release profile (faster) `cargo run --release`
+* Optimized for current CPU architecture (fastest) `RUSTFLAGS="-C target-cpu=native" cargo run --release`
 
 **Test**
 * Everything `cargo test`
-* Show STDOUT for debugging `cargo test -- --nocapture`
 * Specific year `cargo test year2022`
 * Specific day `cargo test year2022::day01`
+* Show STDOUT for debugging `cargo test -- --nocapture`
 
 **Benchmark**
 * Everything `cargo bench`
