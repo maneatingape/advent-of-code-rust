@@ -32,34 +32,30 @@ fn main() {
 }
 
 fn parse_config() -> Result<Config, String> {
-    let args: Vec<String> = args().skip(1).collect();
-    let args: Vec<&str> = args.iter().map(|s| s.as_str()).collect();
-    let mut config = Config { year: None, day: None };
+    if args().len() == 2 {
+        let arg = args().nth(1).unwrap();
 
-    for chunk in args.chunks(2) {
-        match chunk {
-            ["--year", year] => {
-                let year = parse_range(year, 2015, 2022)?;
-                config.year = year;
-            }
-            ["--day", day] => {
-                let day = parse_range(day, 1, 25)?;
-                config.day = day;
-            }
-            _ => return Err("Usage: [--year YYYY] [--day DD]".to_string()),
+        if arg.len() == 15 {
+            let year = parse_range(&arg[4..8], "Year", 2015, 2022)?;
+            let day = parse_range(&arg[13..15], "Day", 1, 25)?;
+            return Ok(Config { year, day })
+        }
+        if arg.len() == 8 {
+            let year = parse_range(&arg[4..8], "Year", 2015, 2022)?;
+            return Ok(Config { year, day: None })
         }
     }
 
-    Ok(config)
+    return Err(format!("Usage: year{BOLD}YYYY{RESET}::day{BOLD}DD{RESET}"))
 }
 
-fn parse_range(s: &str, lower: u32, upper: u32) -> Result<Option<u32>, String> {
-    let x = s.parse().map_err(|_| format!("{s} should be a number"))?;
+fn parse_range(s: &str, name: &str, lower: u32, upper: u32) -> Result<Option<u32>, String> {
+    let x = s.parse().map_err(|_| format!("{name} must be a number"))?;
 
     if lower <= x && x <= upper {
         Ok(Some(x))
     } else {
-        Err(format!("{} should be from {} to {}", x, lower, upper))
+        Err(format!("{name} must be between {lower} and {upper}"))
     }
 }
 

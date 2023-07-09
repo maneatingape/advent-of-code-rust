@@ -18,8 +18,8 @@ Each solution is thoroughly commented to help explain the approach, browse the s
 * Everything as debug (slow) `cargo run`
 * Everything as release (fast) `cargo run --release`
 * Optimized for current CPU architecture `RUSTFLAGS="-C target-cpu=native" cargo run --release`
-* Specific year `cargo run -- --year 2022`
-* Specific day `cargo run -- --year 2022 --day 01`
+* Specific year `cargo run year2022`
+* Specific day `cargo run year2022::day01`
 
 **Test**
 * Everything `cargo test`
