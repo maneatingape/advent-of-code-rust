@@ -34,23 +34,24 @@ pub fn parse(input: &str) -> Haversack {
     for line in lines.iter() {
         let mut tokens = line.split_ascii_whitespace().chunk::<2>();
         let [first_name, second_name] = tokens.next().unwrap();
-        indices.insert((first_name, second_name), indices.len());
+        indices.insert([first_name, second_name], indices.len());
     }
 
     for line in lines.iter() {
         let tokens = line.split_ascii_whitespace().chunk::<4>().skip(1).enumerate();
         let mut bag = [None; 4];
 
-        for (index, [amount, first_name, second_name, _]) in tokens {
+        for (index, chunk) in tokens {
+            let [amount, first_name, second_name, _] = chunk;
             let amount = from(amount);
-            let next = indices[&(first_name, second_name)];
+            let next = indices[&[first_name, second_name]];
             bag[index] = Some(Rule { amount, next });
         }
 
         bags.push(bag);
     }
 
-    let shiny_gold = indices[&("shiny", "gold")];
+    let shiny_gold = indices[&["shiny", "gold"]];
     Haversack { shiny_gold, bags }
 }
 

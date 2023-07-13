@@ -32,21 +32,24 @@ fn main() {
 }
 
 fn parse_config() -> Result<Config, String> {
+    if args().len() == 1 {
+        return Ok(Config { year: None, day: None });
+    }
     if args().len() == 2 {
         let arg = args().nth(1).unwrap();
 
         if arg.len() == 15 {
             let year = parse_range(&arg[4..8], "Year", 2015, 2022)?;
             let day = parse_range(&arg[13..15], "Day", 1, 25)?;
-            return Ok(Config { year, day })
+            return Ok(Config { year, day });
         }
         if arg.len() == 8 {
             let year = parse_range(&arg[4..8], "Year", 2015, 2022)?;
-            return Ok(Config { year, day: None })
+            return Ok(Config { year, day: None });
         }
     }
 
-    return Err(format!("Usage: year{BOLD}YYYY{RESET}::day{BOLD}DD{RESET}"))
+    Err(format!("Usage: year{BOLD}YYYY{RESET}::day{BOLD}DD{RESET}"))
 }
 
 fn parse_range(s: &str, name: &str, lower: u32, upper: u32) -> Result<Option<u32>, String> {

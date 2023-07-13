@@ -7,7 +7,7 @@
 use crate::util::iter::*;
 use std::ops::RangeInclusive;
 
-type Passport<'a> = Vec<(&'a str, &'a str)>;
+type Passport<'a> = Vec<[&'a str; 2]>;
 
 pub fn parse(input: &str) -> Vec<Passport> {
     input.split("\n\n").map(parse_block).collect()
@@ -28,16 +28,16 @@ pub fn part2(input: &[Passport]) -> usize {
 fn parse_block(block: &str) -> Passport {
     let mut fields = Vec::with_capacity(7);
 
-    for [key, value] in block.split([':', ' ', '\n']).chunk::<2>() {
+    for pair @ [key, _] in block.split([':', ' ', '\n']).chunk::<2>() {
         if key != "cid" {
-            fields.push((key, value));
+            fields.push(pair);
         }
     }
 
     fields
 }
 
-fn validate_field(&(key, value): &(&str, &str)) -> bool {
+fn validate_field(&[key, value]: &[&str; 2]) -> bool {
     match key {
         "byr" => validate_range(value, 1920..=2022),
         "iyr" => validate_range(value, 2010..=2020),
