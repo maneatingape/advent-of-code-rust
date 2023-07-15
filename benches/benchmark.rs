@@ -108,6 +108,7 @@ mod year2020 {
     benchmark!(year2020, day14);
     // benchmark!(year2020, day15); // Very slow
     benchmark!(year2020, day16);
+    benchmark!(year2020, day17);
 }
 
 mod year2015 {
