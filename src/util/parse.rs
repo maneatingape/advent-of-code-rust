@@ -30,6 +30,7 @@ pub fn from<T: FromStr>(s: &str) -> T {
 /// This trait allows us to keep type safety, restricting the possiblities to only
 /// `u32`, `u64` and `usize`.
 pub trait Unsigned: FromStr {}
+impl Unsigned for u8 {}
 impl Unsigned for u32 {}
 impl Unsigned for u64 {}
 impl Unsigned for usize {}
