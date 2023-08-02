@@ -3,7 +3,7 @@ use aoc::*;
 use std::env::args;
 use std::time::Instant;
 
-/// ANSI escape codes
+/// [ANSI escape codes](https://en.wikipedia.org/wiki/ANSI_escape_code)
 mod ansi {
     pub const RESET: &str = "\x1b[0m";
     pub const BOLD: &str = "\x1b[1m";
@@ -193,7 +193,7 @@ fn all_solutions() -> Vec<Solution> {
         solution!(year2015, day01),
         solution!(year2015, day02),
         solution!(year2015, day03),
-        // solution!(year2015, day04),  // Very slow
+        solution!(year2015, day04),
         solution!(year2015, day05),
         solution!(year2015, day06),
         solution!(year2015, day07),

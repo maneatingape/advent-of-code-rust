@@ -106,7 +106,7 @@ mod year2020 {
     benchmark!(year2020, day12);
     benchmark!(year2020, day13);
     benchmark!(year2020, day14);
-    // benchmark!(year2020, day15); // Very slow
+    benchmark!(year2020, day15);
     benchmark!(year2020, day16);
     benchmark!(year2020, day17);
     benchmark!(year2020, day18);
@@ -123,7 +123,7 @@ mod year2015 {
     benchmark!(year2015, day01);
     benchmark!(year2015, day02);
     benchmark!(year2015, day03);
-    //benchmark!(year2015, day04); // Very slow
+    benchmark!(year2015, day04);
     benchmark!(year2015, day05);
     benchmark!(year2015, day06);
     benchmark!(year2015, day07);
