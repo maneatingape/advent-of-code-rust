@@ -2,7 +2,7 @@
 
 [![Tests](https://img.shields.io/github/actions/workflow/status/maneatingape/advent-of-code-rust/tests.yml?label=tests)](https://github.com/maneatingape/advent-of-code-rust/actions/workflows/tests.yml) [![Docs](https://img.shields.io/github/actions/workflow/status/maneatingape/advent-of-code-rust/docs.yml?color=blue&label=docs)](https://maneatingape.github.io/advent-of-code-rust/aoc/)
 
-Complete 2022 to 2021 entries for the annual [Advent of Code](https://adventofcode.com/) challenge, written in performant Rust.
+Complete 2022 to 2020 entries for the annual [Advent of Code](https://adventofcode.com/) challenge, written in performant Rust.
 
 Solutions depend only on the stable Rust Standard Library. The code tries it's best to stay clean and elegant, but the focus is on speed so if bit twiddling or mashing stuff into an array makes things faster, then all scruples are jettisoned!
 
@@ -42,9 +42,18 @@ Each solution is thoroughly commented to help explain the approach, browse the s
 
 ## Years
 
-* [2022](#2022) (18.6 ± 0.3 ms total benchmark)
-* [2021](#2021) (18.5 ± 0.3 ms total benchmark)
-* [2020](#2020) (in progress)
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'pie1': '#7cb5ec', 'pie2': '#90ed7d', 'pie3': '#f7a35c'}}}%%
+pie
+    title Each year Benchmark time by % of total
+    "Year 2020" : 290
+    "Year 2021" : 19
+    "Year 2022" : 19
+```
+
+* [2022](#2022) (19 ms)
+* [2021](#2021) (19 ms)
+* [2020](#2020) (290 ms)
 * [2015](#2015) (in progress)
 
 ## 2022
@@ -133,6 +142,15 @@ pie
 | 25 | [Sea Cucumber](https://adventofcode.com/2021/day/25) | [Source](src/year2021/day25.rs) | 635 |
 
 ## 2020
+
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'pie1': '#7cb5ec', 'pie2': '#90ed7d', 'pie3': '#c6cdd5'}}}%%
+pie
+    title Year 2020 Benchmark time by % of total
+    "Day 15" : 163000
+    "Day 23" : 110000
+    "Others" : 16425
+```
 
 | Day | Problem | Solution | Benchmark (μs) |
 | --- | --- | --- | --: |
