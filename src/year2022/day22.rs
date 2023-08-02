@@ -201,7 +201,7 @@ fn parse_grid(input: &str) -> Grid {
     }
 
     let start = tiles.iter().position(|&t| t == Tile::Open).unwrap() as i32;
-    let block = gcd(width, height) as i32;
+    let block = (width as u64).gcd(height as u64) as i32;
     Grid { width, height, tiles, start, block }
 }
 

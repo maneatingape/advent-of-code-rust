@@ -3,33 +3,25 @@
 //! * Greatest common divisor
 //! * Modular exponentation
 //! * Modular inverse
-use std::ops::Rem;
-
-/// Greatest common divisor of 2 numbers using the
-/// [Euclidean algorithm](https://en.wikipedia.org/wiki/Euclidean_algorithm).
-pub fn gcd<T>(a: T, b: T) -> T
-where
-    T: Copy,
-    T: Eq,
-    T: Default,
-    T: Rem + Rem<Output = T>,
-{
-    let mut a = a;
-    let mut b = b;
-
-    while b != Default::default() {
-        (a, b) = (b, a.rem(b));
-    }
-
-    a
-}
-
 pub trait MathOps {
+    fn gcd(&self, b: u64) -> u64;
     fn mod_pow(&self, e: u64, m: u64) -> u64;
     fn mod_inv(&self, m: u64) -> u64;
 }
 
 impl MathOps for u64 {
+    /// Greatest common divisor of 2 numbers using the
+    /// [Euclidean algorithm](https://en.wikipedia.org/wiki/Euclidean_algorithm).
+    fn gcd(&self, mut b: u64) -> u64 {
+        let mut a = *self;
+
+        while b != 0 {
+            (a, b) = (b, a % b);
+        }
+
+        a
+    }
+
     /// Calculates bᵉ mod m efficiently using
     /// [exponentiation by squaring](https://en.wikipedia.org/wiki/Exponentiation_by_squaring).
     fn mod_pow(&self, mut e: u64, m: u64) -> u64 {
