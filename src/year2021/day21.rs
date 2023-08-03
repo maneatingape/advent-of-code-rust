@@ -1,4 +1,3 @@
-use crate::util::hash::*;
 use crate::util::iter::*;
 use crate::util::parse::*;
 
@@ -34,17 +33,20 @@ pub fn part1(input: &State) -> u64 {
 }
 
 pub fn part2(input: &State) -> u64 {
-    let mut cache: FastMap<State, Pair> = FastMapBuilder::empty();
+    let mut cache: [Option<Pair>; 44100] = [None; 44100];
     let (win, lose) = dirac(*input, &mut cache);
     win.max(lose)
 }
 
-fn dirac(state: State, cache: &mut FastMap<State, Pair>) -> Pair {
-    if let Some(result) = cache.get(&state) {
-        return *result;
+fn dirac(state: State, cache: &mut [Option<Pair>]) -> Pair {
+    let ((player_position, player_score), (other_position, other_score)) = state;
+
+    // 10, 10, 21 ,21
+    let index = player_position + 10 * other_position + 100 * player_score + 2100 * other_score;
+    if let Some(result) = cache[index as usize] {
+        return result;
     }
 
-    let ((player_position, player_score), (other_position, other_score)) = state;
     let helper = |(win, lose), &(dice, frequency)| {
         let next_position = (player_position + dice) % 10;
         let next_score = player_score + next_position + 1;
@@ -59,6 +61,6 @@ fn dirac(state: State, cache: &mut FastMap<State, Pair>) -> Pair {
     };
 
     let result = DIRAC.iter().fold((0, 0), helper);
-    cache.insert(state, result);
+    cache[index as usize] = Some(result);
     result
 }
