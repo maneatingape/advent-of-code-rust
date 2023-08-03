@@ -43,7 +43,7 @@ pub fn parse(input: &str) -> Haversack {
 
         for (index, chunk) in tokens {
             let [amount, first_name, second_name, _] = chunk;
-            let amount = from(amount);
+            let amount = amount.unsigned();
             let next = indices[&[first_name, second_name]];
             bag[index] = Some(Rule { amount, next });
         }

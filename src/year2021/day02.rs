@@ -16,11 +16,14 @@ pub enum Sub {
 }
 
 pub fn parse(input: &str) -> Vec<Sub> {
-    let helper = |[a, b]: [&str; 2]| match a {
-        "up" => Sub::Up(from(b)),
-        "down" => Sub::Down(from(b)),
-        "forward" => Sub::Forward(from(b)),
-        _ => unreachable!(),
+    let helper = |[a, b]: [&str; 2]| {
+        let amount = b.signed();
+        match a {
+            "up" => Sub::Up(amount),
+            "down" => Sub::Down(amount),
+            "forward" => Sub::Forward(amount),
+            _ => unreachable!(),
+        }
     };
     input.split_ascii_whitespace().chunk::<2>().map(helper).collect()
 }

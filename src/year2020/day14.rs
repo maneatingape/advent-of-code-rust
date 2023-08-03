@@ -133,8 +133,8 @@ pub fn parse(input: &str) -> Vec<Instruction> {
             Instruction::mask(&line[7..])
         } else {
             let (address, value) = line[4..].split_once("] = ").unwrap();
-            let address = from(address);
-            let value = from(value);
+            let address = address.unsigned();
+            let value = value.unsigned();
             Instruction::Mem { address, value }
         };
         instructions.push(instruction);

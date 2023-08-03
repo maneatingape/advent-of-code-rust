@@ -30,7 +30,7 @@ impl Valve<'_> {
             .filter(|s| !s.is_empty())
             .collect();
         let name = tokens[1];
-        let flow = from(tokens[2]);
+        let flow = tokens[2].unsigned();
         tokens.drain(..3);
         Valve { name, flow, edges: tokens }
     }

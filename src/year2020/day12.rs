@@ -9,7 +9,7 @@ use crate::util::point::*;
 type Command = (u8, i32);
 
 pub fn parse(input: &str) -> Vec<Command> {
-    input.lines().map(|line| (line.as_bytes()[0], from(&line[1..]))).collect()
+    input.lines().map(|line| (line.as_bytes()[0], (&line[1..]).signed())).collect()
 }
 
 pub fn part1(input: &[Command]) -> i32 {

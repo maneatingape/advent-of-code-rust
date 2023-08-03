@@ -37,8 +37,8 @@ pub fn parse(input: &str) -> Result {
             match second {
                 "AND" => Gate::And(first, third),
                 "OR" => Gate::Or(first, third),
-                "LSHIFT" => Gate::LeftShift(first, from(third)),
-                "RSHIFT" => Gate::RightShift(first, from(third)),
+                "LSHIFT" => Gate::LeftShift(first, third.unsigned()),
+                "RSHIFT" => Gate::RightShift(first, third.unsigned()),
                 _ => unreachable!(),
             }
         };
@@ -67,7 +67,7 @@ fn signal<'a>(
     }
 
     let result = if key.chars().next().unwrap().is_ascii_digit() {
-        from(key)
+        key.unsigned()
     } else {
         match circuit[key] {
             Gate::Wire(w) => signal(w, circuit, cache),

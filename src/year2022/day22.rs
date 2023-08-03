@@ -212,7 +212,7 @@ fn parse_moves(input: &str) -> Vec<Move> {
         let next = match token {
             "L" => Move::Left,
             "R" => Move::Right,
-            n => Move::Forward(from(n)),
+            n => Move::Forward(n.unsigned()),
         };
         moves.push(next);
     }

@@ -28,7 +28,7 @@ pub fn parse(input: &str) -> Vec<Constraint> {
         .map(|chunk| {
             let helper = |i: usize| {
                 let token = chunk[i].split_ascii_whitespace().last().unwrap();
-                from(token)
+                token.signed()
             };
             if helper(4) == 1 {
                 Push(helper(15))

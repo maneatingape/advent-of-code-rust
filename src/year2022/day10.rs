@@ -11,7 +11,7 @@ pub fn parse(input: &str) -> Vec<i32> {
         match token {
             "noop" => (),
             "addx" => (),
-            delta => x += from::<i32>(delta),
+            delta => x += delta.signed::<i32>(),
         }
         xs.push(x);
     }

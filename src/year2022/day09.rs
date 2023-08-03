@@ -26,7 +26,7 @@ pub fn parse(input: &str) -> Vec<Input> {
         .chunk::<2>()
         .map(|[d, n]| {
             let point = Point::from_string(d);
-            let amount = from(n);
+            let amount = n.unsigned();
             (point, amount)
         })
         .collect()

@@ -43,7 +43,7 @@ pub fn parse(input: &str) -> Result {
     for [start, _, end, _, distance] in tokens.iter() {
         let start = indices[start];
         let end = indices[end];
-        let distance = from(distance);
+        let distance = distance.unsigned();
         distances[stride * start + end] = distance;
         distances[stride * end + start] = distance;
     }

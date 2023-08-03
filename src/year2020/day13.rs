@@ -17,12 +17,12 @@ pub struct Input {
 
 pub fn parse(input: &str) -> Input {
     let lines: Vec<_> = input.lines().collect();
-    let timestamp = from(lines[0]);
+    let timestamp = lines[0].unsigned();
     let buses: Vec<(usize, usize)> = lines[1]
         .split(',')
         .enumerate()
         .filter(|&(_, id)| id != "x")
-        .map(|(offset, id)| (offset, from(id)))
+        .map(|(offset, id)| (offset, id.unsigned()))
         .collect();
     Input { timestamp, buses }
 }

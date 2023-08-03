@@ -71,7 +71,7 @@ impl Tile {
     ];
 
     fn from(chunk: &[&str]) -> Tile {
-        let id = from(&chunk[0][5..9]);
+        let id = (&chunk[0][5..9]).unsigned();
 
         let pixels: [[u8; 10]; 10] =
             std::array::from_fn(|i| chunk[i + 1].as_bytes().try_into().unwrap());

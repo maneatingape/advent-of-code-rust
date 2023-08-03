@@ -65,8 +65,8 @@ pub fn parse(input: &str) -> Vec<Monkey> {
         let tokens: Vec<&str> = chunk[2].split(' ').rev().take(2).collect();
         let operation = match tokens[..] {
             ["old", _] => Operation::Square,
-            [y, "*"] => Operation::Multiply(from(y)),
-            [y, "+"] => Operation::Add(from(y)),
+            [y, "*"] => Operation::Multiply(y.unsigned()),
+            [y, "+"] => Operation::Add(y.unsigned()),
             _ => unreachable!(),
         };
         let test = chunk[3].iter_unsigned().next().unwrap();

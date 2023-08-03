@@ -12,60 +12,145 @@
 //!
 //! [`iter_unsigned`]: ParseUnsigned::iter_unsigned
 //! [`iter_signed`]: ParseSigned::iter_signed
-use std::iter::{Filter, Map};
-use std::str::{FromStr, Split};
+use std::marker::PhantomData;
+use std::ops::{Add, Neg, Shl};
+use std::str::Bytes;
 
-/// Much shorter alias for the trait return type.
-type Wrapper<'a, T> = Map<Filter<Split<'a, fn(char) -> bool>, fn(&&str) -> bool>, fn(&str) -> T>;
+/// Traits allow us to keep type safety, restricting the possiblities to only integer types.
+pub trait Common: Copy + From<u8> + Add<Output = Self> + Shl<u8, Output = Self> {}
+impl Common for u8 {}
+impl Common for u16 {}
+impl Common for u32 {}
+impl Common for u64 {}
+impl Common for usize {}
+impl Common for i16 {}
+impl Common for i32 {}
+impl Common for i64 {}
 
-/// This convenience method does the same thing as `s.parse().unwrap()` but without the
-/// extra `<F as FromStr>::Err` type bound so that we can have shorter type signatures.
-pub fn from<T: FromStr>(s: &str) -> T {
-    match s.parse() {
-        Ok(t) => t,
-        Err(_) => panic!("Unable to parse \"{s}\""),
-    }
-}
-
-/// This trait allows us to keep type safety, restricting the possiblities to only
-/// `u32`, `u64` and `usize`.
-pub trait Unsigned: FromStr {}
+pub trait Unsigned: Common {}
 impl Unsigned for u8 {}
+impl Unsigned for u16 {}
 impl Unsigned for u32 {}
 impl Unsigned for u64 {}
 impl Unsigned for usize {}
 
-/// Rust closures have an unique type that only the compiler knows and that us mere
-/// mortals are not allowed to ascertain. Fortunately we can coerce the type to a known
-/// function signature by using intermediate variables.
-pub trait ParseUnsigned {
-    fn iter_unsigned<T: Unsigned>(&self) -> Wrapper<'_, T>;
-}
-
-impl ParseUnsigned for &str {
-    fn iter_unsigned<T: Unsigned>(&self) -> Wrapper<'_, T> {
-        let not_numeric: fn(char) -> bool = |c| !c.is_ascii_digit();
-        let not_empty: fn(&&str) -> bool = |s| !s.is_empty();
-        self.split(not_numeric).filter(not_empty).map(from)
-    }
-}
-
-/// This trait allows us to keep type safety, restricting the possiblities to only
-/// `i32` and `i64`.
-pub trait Signed: FromStr {}
+pub trait Signed: Common + Neg<Output = Self> {}
+impl Signed for i16 {}
 impl Signed for i32 {}
 impl Signed for i64 {}
 
-/// Essentially the same as `ParseUnsigned` but also considers the `-` character as part
-/// of a number.
-pub trait ParseSigned {
-    fn iter_signed<T: Signed>(&self) -> Wrapper<'_, T>;
+pub struct ParseUnsigned<'a, T> {
+    bytes: Bytes<'a>,
+    phantom: PhantomData<T>,
 }
 
-impl ParseSigned for &str {
-    fn iter_signed<T: Signed>(&self) -> Wrapper<'_, T> {
-        let not_numeric: fn(char) -> bool = |c| !c.is_ascii_digit() && c != '-';
-        let not_empty: fn(&&str) -> bool = |s| !s.is_empty();
-        self.split(not_numeric).filter(not_empty).map(from)
+pub struct ParseSigned<'a, T> {
+    bytes: Bytes<'a>,
+    phantom: PhantomData<T>,
+}
+
+pub trait ParseOps {
+    fn unsigned<T: Unsigned>(&self) -> T;
+    fn signed<T: Signed>(&self) -> T;
+    fn iter_unsigned<T: Unsigned>(&self) -> ParseUnsigned<'_, T>;
+    fn iter_signed<T: Signed>(&self) -> ParseSigned<'_, T>;
+}
+
+impl ParseOps for &str {
+    fn unsigned<T: Unsigned>(&self) -> T {
+        match try_unsigned(&mut self.bytes()) {
+            Some(t) => t,
+            None => panic!("Unable to parse \"{self}\""),
+        }
+    }
+
+    fn signed<T: Signed>(&self) -> T {
+        match try_signed(&mut self.bytes()) {
+            Some(t) => t,
+            None => panic!("Unable to parse \"{self}\""),
+        }
+    }
+
+    fn iter_unsigned<T: Unsigned>(&self) -> ParseUnsigned<'_, T> {
+        ParseUnsigned { bytes: self.bytes(), phantom: PhantomData }
+    }
+
+    fn iter_signed<T: Signed>(&self) -> ParseSigned<'_, T> {
+        ParseSigned { bytes: self.bytes(), phantom: PhantomData }
+    }
+}
+
+impl<T: Unsigned> Iterator for ParseUnsigned<'_, T> {
+    type Item = T;
+
+    fn size_hint(&self) -> (usize, Option<usize>) {
+        let (lower, upper) = self.bytes.size_hint();
+        (lower / 3, upper.map(|u| u / 3))
+    }
+
+    fn next(&mut self) -> Option<Self::Item> {
+        try_unsigned(&mut self.bytes)
+    }
+}
+
+impl<T: Signed> Iterator for ParseSigned<'_, T> {
+    type Item = T;
+
+    fn size_hint(&self) -> (usize, Option<usize>) {
+        let (lower, upper) = self.bytes.size_hint();
+        (lower / 3, upper.map(|u| u / 3))
+    }
+
+    fn next(&mut self) -> Option<Self::Item> {
+        try_signed(&mut self.bytes)
+    }
+}
+
+fn try_unsigned<T: Unsigned>(bytes: &mut Bytes) -> Option<T> {
+    let mut n = loop {
+        let b = bytes.next()?;
+        let d = b.wrapping_sub(b'0');
+
+        if d < 10 {
+            break T::from(d);
+        }
+    };
+
+    loop {
+        let Some(b) = bytes.next() else { break Some(n) };
+        let d = b.wrapping_sub(b'0');
+
+        if d < 10 {
+            n = (n << 3) + (n << 1) + T::from(d);
+        } else {
+            break Some(n);
+        }
+    }
+}
+
+fn try_signed<T: Signed>(bytes: &mut Bytes) -> Option<T> {
+    let (mut n, negative) = loop {
+        let b = bytes.next()?;
+        let d = b.wrapping_sub(b'0');
+
+        if d == 253 {
+            break (T::from(0), true);
+        }
+        if d < 10 {
+            break (T::from(d), false);
+        }
+    };
+
+    loop {
+        let Some(b) = bytes.next() else {
+            break Some(if negative { -n } else { n });
+        };
+        let d = b.wrapping_sub(b'0');
+
+        if d < 10 {
+            n = (n << 3) + (n << 1) + T::from(d);
+        } else {
+            break Some(if negative { -n } else { n });
+        }
     }
 }

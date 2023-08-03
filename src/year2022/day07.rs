@@ -56,7 +56,7 @@ pub fn parse(input: &str) -> Vec<u32> {
         } else if token == "cd" {
             cd = true;
         } else if token.as_bytes()[0].is_ascii_digit() {
-            total += from::<u32>(token);
+            total += token.unsigned::<u32>();
         }
     }
 

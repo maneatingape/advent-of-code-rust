@@ -34,8 +34,8 @@ pub fn parse(input: &str) -> Input {
     let folds: Vec<_> = suffix
         .lines()
         .map(|line| match line.split_once('=').unwrap() {
-            ("fold along x", x) => Fold::Horizontal(from(x)),
-            ("fold along y", y) => Fold::Vertical(from(y)),
+            ("fold along x", x) => Fold::Horizontal(x.signed()),
+            ("fold along y", y) => Fold::Vertical(y.signed()),
             _ => unreachable!(),
         })
         .collect();
