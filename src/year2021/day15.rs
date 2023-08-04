@@ -40,10 +40,7 @@ pub fn part1(input: &Square) -> usize {
 pub fn part2(input: &Square) -> usize {
     let Square { size, bytes } = input;
 
-    let mut expanded = Square {
-        size: 5 * size,
-        bytes: vec![0; 25 * size * size],
-    };
+    let mut expanded = Square { size: 5 * size, bytes: vec![0; 25 * size * size] };
 
     for (i, b) in bytes.iter().enumerate() {
         let x1 = i % size;

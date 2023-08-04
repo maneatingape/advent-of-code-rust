@@ -45,7 +45,7 @@ Each solution is thoroughly commented to help explain the approach, browse the s
 ```mermaid
 %%{init: {'theme': 'base', 'themeVariables': { 'pie1': '#7cb5ec', 'pie2': '#90ed7d', 'pie3': '#f7a35c'}}}%%
 pie
-    title Each year Benchmark time by % of total
+    title Each year benchmark time by % of total
     "Year 2020" : 290
     "Year 2021" : 15
     "Year 2022" : 19
@@ -61,7 +61,7 @@ pie
 ```mermaid
 %%{init: {'theme': 'base', 'themeVariables': { 'pie1': '#7cb5ec', 'pie2': '#90ed7d', 'pie3': '#f7a35c', 'pie4': '#e4d354', 'pie5': '#2b908f', 'pie6': '#c6cdd5'}}}%%
 pie
-    title Year 2022 Benchmark time by % of total
+    title Year 2022 benchmark time by % of total
     "Day 20" : 7509
     "Day 19" : 3402
     "Day 11" : 2317
@@ -103,7 +103,7 @@ pie
 ```mermaid
 %%{init: {'theme': 'base', 'themeVariables': { 'pie1': '#7cb5ec', 'pie2': '#90ed7d', 'pie3': '#f7a35c', 'pie4': '#e4d354', 'pie5': '#2b908f', 'pie6': '#c6cdd5'}}}%%
 pie
-    title Year 2021 Benchmark time by % of total
+    title Year 2021 benchmark time by % of total
     "Day 23" : 4821
     "Day 15" : 2547
     "Day 20" : 2072
@@ -145,7 +145,7 @@ pie
 ```mermaid
 %%{init: {'theme': 'base', 'themeVariables': { 'pie1': '#7cb5ec', 'pie2': '#90ed7d', 'pie3': '#c6cdd5'}}}%%
 pie
-    title Year 2020 Benchmark time by % of total
+    title Year 2020 benchmark time by % of total
     "Day 15" : 163000
     "Day 23" : 110000
     "Others" : 16425

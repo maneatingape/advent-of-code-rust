@@ -130,8 +130,9 @@ fn paths(input: &Input, state: State, cache: &mut [u32]) -> u32 {
     // Subtle nuance, by not multiplying "visited" by 2 and also dividing by 2 we ignore the
     // two least significant bits for start and end cave, as these will always be 0 and 1
     // respectively.
-    let index =
-        state.twice as usize + 2 * (state.from) + (input.edges.len() * (state.visited as usize / 2));
+    let index = state.twice as usize
+        + 2 * (state.from)
+        + (input.edges.len() * (state.visited as usize / 2));
     let total = cache[index];
     if total > 0 {
         return total;
