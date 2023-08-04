@@ -5,84 +5,55 @@
 //! explained really well in the linked blog post.
 //!
 //! To speed things up we use a trick. Classic Djisktra uses a generic priority queue that
-//! can be implemented in Rust using a [`BinaryHeap`]. However the total cost follows a (mostly)
-//! increasing pattern in a constrained range of values, so we can use a much faster single purpose
+//! can be implemented in Rust using a [`BinaryHeap`]. However the total cost follows a strictly
+//! increasing order in a constrained range of values, so we can use a much faster single purpose
 //! data structure instead.
 //!
-//! We create a `vec` of `vec`, where the maximum length of the parent `vec` is higher than the
-//! maximum possible cost. Each child `vec` is then used to store candidate states where the cost
-//! is equal to its index. We keep track of the "head" of the `vec` and then linearly search for
-//! the next element once all candidates for that cost are processed. The next value should
-//! generally be quite close to the current value resulting in a quick search.
+//! The maximum possible increase in risk in 9, so we create an array of 10 `vec`s. The current
+//! list of items to process is at `risk % 10` and each new item is added at `risk % 10 + new_cost`.
+//! Once we have processed the current risk level we clear the vec to avoid having to reallocate
+//! memory.
 //!
 //! [`BinaryHeap`]: std::collections::BinaryHeap
-use crate::util::grid::*;
-use crate::util::point::*;
-
-#[derive(Clone, Copy)]
-struct State {
-    point: Point,
-    risk: u16,
+pub struct Square {
+    size: usize,
+    bytes: Vec<u8>,
 }
 
-struct PriorityQueue {
-    todo: Vec<Vec<State>>,
-    head: usize,
-}
+pub fn parse(input: &str) -> Square {
+    let raw: Vec<_> = input.lines().map(|line| line.as_bytes()).collect();
+    let size = raw.len();
+    let mut bytes = Vec::with_capacity(size * size);
 
-/// Special purpose priority queue faster than generic [`BinaryHeap`] for this problem.
-///
-/// [`BinaryHeap`]: std::collections::BinaryHeap
-impl PriorityQueue {
-    fn new() -> PriorityQueue {
-        PriorityQueue { todo: vec![vec![]; 10_000], head: 0 }
-    }
+    raw.iter().for_each(|slice| bytes.extend_from_slice(slice));
+    bytes.iter_mut().for_each(|b| *b -= b'0');
 
-    fn pop(&mut self) -> State {
-        while self.todo[self.head].is_empty() {
-            self.head += 1;
-        }
-        self.todo[self.head].pop().unwrap()
-    }
-
-    fn push(&mut self, state: State) {
-        self.head = self.head.min(state.risk as usize);
-        self.todo[state.risk as usize].push(state);
-    }
-}
-
-/// Use our utility [`Grid`] class to store risk levels.
-///
-/// [`Grid`]: crate::util::grid
-pub fn parse(input: &str) -> Grid<u8> {
-    let mut grid = Grid::parse(input);
-    grid.bytes.iter_mut().for_each(|b| *b -= 48);
-    grid
+    Square { size, bytes }
 }
 
 /// Search the regular size grid.
-pub fn part1(input: &Grid<u8>) -> u16 {
+pub fn part1(input: &Square) -> usize {
     dijkstra(input)
 }
 
-/// Create then search an expanded grid.
-pub fn part2(input: &Grid<u8>) -> u16 {
-    let mut expanded = Grid {
-        width: 5 * input.width,
-        height: 5 * input.height,
-        bytes: vec![0u8; 25 * input.bytes.len()],
+/// Create an expanded grid then search.
+pub fn part2(input: &Square) -> usize {
+    let Square { size, bytes } = input;
+
+    let mut expanded = Square {
+        size: 5 * size,
+        bytes: vec![0; 25 * size * size],
     };
 
-    for x1 in 0..input.width {
-        for y1 in 0..input.height {
-            let point = Point { x: x1, y: y1 };
-            let base = input[point] as i32;
+    for (i, b) in bytes.iter().enumerate() {
+        let x1 = i % size;
+        let y1 = i / size;
+        let base = *b as usize;
 
-            for x2 in 0..5 {
-                for y2 in 0..5 {
-                    let point = Point { x: x2 * input.width + x1, y: y2 * input.height + y1 };
-                    expanded[point] = (1 + (base - 1 + x2 + y2) % 9) as u8;
-                }
+        for x2 in 0..5 {
+            for y2 in 0..5 {
+                let index = (5 * size) * (y2 * size + y1) + (x2 * size + x1);
+                expanded.bytes[index] = (1 + (base - 1 + x2 + y2) % 9) as u8;
             }
         }
     }
@@ -92,28 +63,54 @@ pub fn part2(input: &Grid<u8>) -> u16 {
 
 /// Implementation of [Dijkstra's algorithm](https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm)
 /// without using the decrease-key functionality.
-fn dijkstra(grid: &Grid<u8>) -> u16 {
-    let start = State { point: ORIGIN, risk: 0 };
-    let end = Point { x: grid.width - 1, y: grid.height - 1 };
+fn dijkstra(square: &Square) -> usize {
+    let Square { size, bytes } = square;
+    let edge = size - 1;
+    let end = size * size - 1;
 
-    let mut todo = PriorityQueue::new();
-    let mut cost = grid.default_copy::<Option<u16>>();
-    todo.push(start);
+    // Initialise our specialized priority queue with 10 vecs.
+    let mut todo: [Vec<u32>; 10] = std::array::from_fn(|_| Vec::with_capacity(1_000));
+    let mut cost = vec![u16::MAX; size * size];
+    let mut risk = 0;
+
+    // Start location and risk are both zero.
+    todo[0].push(0);
+    cost[0] = 0;
 
     loop {
-        let State { point, risk } = todo.pop();
+        let i = risk % 10;
 
-        if point == end {
-            return risk;
-        }
+        for j in 0..todo[i].len() {
+            let current = todo[i][j] as usize;
+            if current == end {
+                return risk;
+            }
 
-        for next in ORTHOGONAL.iter().map(|&n| point + n).filter(|&n| grid.contains(n)) {
-            let next_cost = risk + grid[next] as u16;
-            if cost[next].is_none() || next_cost < cost[next].unwrap() {
-                let next_state = State { point: next, risk: next_cost };
-                todo.push(next_state);
-                cost[next] = Some(next_cost);
+            let mut check = |next: usize| {
+                let next_cost = risk as u16 + bytes[next] as u16;
+                if next_cost < cost[next] {
+                    todo[(next_cost % 10) as usize].push(next as u32);
+                    cost[next] = next_cost;
+                }
+            };
+            let x = current % size;
+            let y = current / size;
+
+            if x > 0 {
+                check(current - 1)
+            }
+            if x < edge {
+                check(current + 1)
+            }
+            if y > 0 {
+                check(current - size)
+            }
+            if y < edge {
+                check(current + size)
             }
         }
+
+        todo[i].clear();
+        risk += 1;
     }
 }

@@ -6,7 +6,7 @@ Complete 2022 to 2020 entries for the annual [Advent of Code](https://adventofco
 
 Solutions depend only on the stable Rust Standard Library. The code tries it's best to stay clean and elegant, but the focus is on speed so if bit twiddling or mashing stuff into an array makes things faster, then all scruples are jettisoned!
 
-Benchmarks are measured using the built-in `cargo bench` tool run on an Apple M2 Max. All 50 solutions from 2022 to 2021 complete sequentially in **37 milliseconds**. Performance is reasonable even on older hardware, for example a 2011 MacBook Pro with an [Intel i7-2720QM](https://ark.intel.com/content/www/us/en/ark/products/50067/intel-core-i72720qm-processor-6m-cache-up-to-3-30-ghz.html) processor takes 112 milliseconds to run all 50 solutions.
+Benchmarks are measured using the built-in `cargo bench` tool run on an Apple M2 Max. All 50 solutions from 2022 to 2021 complete sequentially in **34 milliseconds**. Performance is reasonable even on older hardware, for example a 2011 MacBook Pro with an [Intel i7-2720QM](https://ark.intel.com/content/www/us/en/ark/products/50067/intel-core-i72720qm-processor-6m-cache-up-to-3-30-ghz.html) processor takes 112 milliseconds to run all 50 solutions.
 
 The project is structured as a library crate with a module per year and a sub-module for each day to allow convenient testing and benchmarking. Continuous integration is provided using [GitHub Actions](https://docs.github.com/en/actions) with test coverage based on the example inputs from each day.
 
@@ -47,12 +47,12 @@ Each solution is thoroughly commented to help explain the approach, browse the s
 pie
     title Each year Benchmark time by % of total
     "Year 2020" : 290
-    "Year 2021" : 18
+    "Year 2021" : 15
     "Year 2022" : 19
 ```
 
 * [2022](#2022) (19 ms)
-* [2021](#2021) (18 ms)
+* [2021](#2021) (15 ms)
 * [2020](#2020) (290 ms)
 * [2015](#2015) (in progress)
 
@@ -104,12 +104,12 @@ pie
 %%{init: {'theme': 'base', 'themeVariables': { 'pie1': '#7cb5ec', 'pie2': '#90ed7d', 'pie3': '#f7a35c', 'pie4': '#e4d354', 'pie5': '#2b908f', 'pie6': '#c6cdd5'}}}%%
 pie
     title Year 2021 Benchmark time by % of total
-    "Day 15" : 5700
     "Day 23" : 4821
+    "Day 15" : 2547
     "Day 20" : 2072
     "Day 18" : 1904
     "Day 19" : 933
-    "Others" : 2258
+    "Others" : 2338
 ```
 
 | Day | Problem | Solution | Benchmark (μs) |
@@ -128,7 +128,7 @@ pie
 | 12 | [Passage Pathing](https://adventofcode.com/2021/day/12) | [Source](src/year2021/day12.rs) | 261 |
 | 13 | [Transparent Origami](https://adventofcode.com/2021/day/13) | [Source](src/year2021/day13.rs) | 40 |
 | 14 | [Extended Polymerization](https://adventofcode.com/2021/day/14) | [Source](src/year2021/day14.rs) | 12 |
-| 15 | [Chiton](https://adventofcode.com/2021/day/15) | [Source](src/year2021/day15.rs) | 5700 |
+| 15 | [Chiton](https://adventofcode.com/2021/day/15) | [Source](src/year2021/day15.rs) | 2547 |
 | 16 | [Packet Decoder](https://adventofcode.com/2021/day/16) | [Source](src/year2021/day16.rs) | 6 |
 | 17 | [Trick Shot](https://adventofcode.com/2021/day/17) | [Source](src/year2021/day17.rs) | 8 |
 | 18 | [Snailfish](https://adventofcode.com/2021/day/18) | [Source](src/year2021/day18.rs) | 1904 |
