@@ -23,7 +23,6 @@ pub struct Input {
     edges: Vec<u32>,
 }
 
-#[derive(Hash, PartialEq, Eq)]
 struct State {
     from: usize,
     visited: u32,
@@ -96,8 +95,14 @@ pub fn part2(input: &Input) -> u32 {
 
 /// Convenience method to create initial state.
 fn explore(input: &Input, twice: bool) -> u32 {
+    // Calculate the needed size of the cache as the product of:
+    // * 2 states for boolean "twice".
+    // * n states for the number of caves including start and end.
+    // * 2^(n-2) states for the possible visited combinations, not including start and end cave.
+    let size = 2 * input.edges.len() * (1 << (input.edges.len() - 2));
+    let mut cache = vec![0; size];
+
     let state = State { from: START, visited: 0, twice };
-    let mut cache = HashMap::new();
     paths(input, state, &mut cache)
 }
 
@@ -117,22 +122,33 @@ fn explore(input: &Input, twice: bool) -> u32 {
 /// `once && twice` sets this value to `false` whenever we need to use it to visit a small cave.
 ///
 /// [`trailing_zeros`]: u32::trailing_zeros
-fn paths(input: &Input, state: State, cache: &mut HashMap<State, u32>) -> u32 {
+fn paths(input: &Input, state: State, cache: &mut [u32]) -> u32 {
     let State { from, visited, twice } = state;
 
-    if from == END {
-        return 1;
-    }
-    if let Some(total) = cache.get(&state) {
-        return *total;
+    // Calculate index by converting "twice" to either 1 or 0, then multiplying "from" by 2
+    // (the cardinality of "twice") and "visited" by "edges.len()".
+    // Subtle nuance, by not multiplying "visited" by 2 and also dividing by 2 we ignore the
+    // two least significant bits for start and end cave, as these will always be 0 and 1
+    // respectively.
+    let index =
+        state.twice as usize + 2 * (state.from) + (input.edges.len() * (state.visited as usize / 2));
+    let total = cache[index];
+    if total > 0 {
+        return total;
     }
 
     let mut caves = input.edges[from];
     let mut total = 0;
+    let mut mask = 1 << END;
+
+    if caves & mask != 0 {
+        caves ^= mask;
+        total += 1;
+    }
 
     while caves != 0 {
         let to = caves.trailing_zeros() as usize;
-        let mask = 1 << to;
+        mask = 1 << to;
         caves ^= mask;
 
         let once = input.small & mask == 0 || visited & mask == 0;
@@ -142,6 +158,6 @@ fn paths(input: &Input, state: State, cache: &mut HashMap<State, u32>) -> u32 {
         }
     }
 
-    cache.insert(state, total);
+    cache[index] = total;
     total
 }
