@@ -6,80 +6,87 @@
 //! energy levels, which can propagate recursively through the entire grid.
 //!
 //! [`Day 9`]: crate::year2021::day09
-type Input = [u8; 100];
+
+/// Pad the 10x10 grid by 1 on either side so that we can avoid boundary checks.
+type Input = [u8; 144];
+/// Offsets for each of the eight neighbors. The last four offsets will wrap around when
+/// added to `u8` to give a smaller index.
+const NEIGHBORS: [u8; 8] = [1, 11, 12, 13, 243, 244, 245, 255];
 
 pub fn parse(input: &str) -> Input {
-    let mut grid = [0; 100];
-    input
-        .as_bytes()
-        .iter()
-        .filter(|b| b.is_ascii_digit())
-        .enumerate()
-        .for_each(|(i, b)| grid[i] = b - 48);
+    let bytes: Vec<_> = input.lines().map(|line| line.as_bytes()).collect();
+    let mut grid = [0; 144];
+
+    for y in 0..10 {
+        for x in 0..10 {
+            grid[12 * (y + 1) + (x + 1)] = bytes[y][x] - b'0';
+        }
+    }
+
     grid
 }
 
-pub fn part1(input: &Input) -> u32 {
-    let mut grid = *input;
-    let mut total = 0;
-
-    for _ in 0..100 {
-        total += step(&mut grid);
-    }
-
+pub fn part1(input: &Input) -> usize {
+    let (total, _) = simulate(input, |_, steps| steps < 100);
     total
 }
 
-pub fn part2(input: &Input) -> u32 {
-    let mut grid = *input;
-    let mut total = 0;
-    let mut steps = 0;
-
-    while total < 100 {
-        total = step(&mut grid);
-        steps += 1
-    }
-
+pub fn part2(input: &Input) -> usize {
+    let (_, steps) = simulate(input, |flashes, _| flashes < 100);
     steps
 }
 
-fn step(grid: &mut [u8; 100]) -> u32 {
+fn simulate(input: &Input, predicate: impl Fn(usize, usize) -> bool) -> (usize, usize) {
+    let mut grid = *input;
+    let mut flashed = [true; 144];
+    let mut todo = Vec::with_capacity(100);
+
+    let mut flashes = 0;
+    let mut steps = 0;
     let mut total = 0;
-    let mut flashed = [false; 100];
-    for x in 0..10 {
+
+    while predicate(flashes, steps) {
+        flashes = 0;
+
+        // Bump each octopus' energy level by one. If it flashes then add to `todo` queue.
         for y in 0..10 {
-            total += bump(grid, &mut flashed, x, y);
+            for x in 0..10 {
+                let index = 12 * (y + 1) + (x + 1);
+
+                if grid[index] < 9 {
+                    grid[index] += 1;
+                    flashed[index] = false;
+                } else {
+                    grid[index] = 0;
+                    flashed[index] = true;
+                    todo.push(index as u8);
+                }
+            }
         }
+
+        // Process each flash, possibly adding more to the queue.
+        while let Some(index) = todo.pop() {
+            flashes += 1;
+
+            for offset in NEIGHBORS {
+                let next = index.wrapping_add(offset) as usize;
+                if flashed[next] {
+                    continue;
+                }
+
+                if grid[next] < 9 {
+                    grid[next] += 1;
+                } else {
+                    grid[next] = 0;
+                    flashed[next] = true;
+                    todo.push(next as u8);
+                }
+            }
+        }
+
+        steps += 1;
+        total += flashes;
     }
-    total
-}
 
-fn bump(grid: &mut [u8; 100], flashed: &mut [bool; 100], x: i32, y: i32) -> u32 {
-    if !(0..10).contains(&x) || !(0..10).contains(&y) {
-        return 0;
-    }
-
-    let index = (y * 10 + x) as usize;
-    if flashed[index] {
-        return 0;
-    }
-
-    grid[index] += 1;
-    if grid[index] <= 9 {
-        return 0;
-    }
-
-    grid[index] = 0;
-    flashed[index] = true;
-
-    let mut count = 1;
-    count += bump(grid, flashed, x - 1, y - 1);
-    count += bump(grid, flashed, x, y - 1);
-    count += bump(grid, flashed, x + 1, y - 1);
-    count += bump(grid, flashed, x - 1, y);
-    count += bump(grid, flashed, x + 1, y);
-    count += bump(grid, flashed, x - 1, y + 1);
-    count += bump(grid, flashed, x, y + 1);
-    count += bump(grid, flashed, x + 1, y + 1);
-    count
+    (total, steps)
 }
