@@ -27,7 +27,7 @@ type Pairs = [u32; 4];
 /// * Extracting integers from redundant text is a very common theme in AoC that
 ///   the [`iter_unsigned`] method handles.
 ///
-/// [`iter_unsigned`]: ParseUnsigned::iter_unsigned
+/// [`iter_unsigned`]: ParseOps::iter_unsigned
 pub fn parse(input: &str) -> Vec<Pairs> {
     input.iter_unsigned().chunk::<4>().collect()
 }

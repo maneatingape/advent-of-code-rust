@@ -1,9 +1,10 @@
-#![doc(html_logo_url = "https://maneatingape.github.io/advent-of-code-rust/logo.png")]
-#![allow(rustdoc::private_intra_doc_links)]
-
 //! # Rust solutions to the annual Advent of Code challenge tuned for speed.
 //!
 //! [GitHub Repo](https://github.com/maneatingape/advent-of-code-rust)
+
+// Configure rustdoc
+#![doc(html_logo_url = "https://maneatingape.github.io/advent-of-code-rust/logo.png")]
+#![allow(rustdoc::private_intra_doc_links)]
 
 /// # Utility modules to handle common recurring Advent of Code patterns.
 pub mod util {

@@ -10,8 +10,8 @@
 //! reason for the separate methods is that some AoC inputs contains the `-` character as a
 //! delimeter and this would cause numbers to be incorrectly parsed as negative.
 //!
-//! [`iter_unsigned`]: ParseUnsigned::iter_unsigned
-//! [`iter_signed`]: ParseSigned::iter_signed
+//! [`iter_unsigned`]: ParseOps::iter_unsigned
+//! [`iter_signed`]: ParseOps::iter_signed
 use std::marker::PhantomData;
 use std::ops::{Add, Neg, Shl};
 use std::str::Bytes;

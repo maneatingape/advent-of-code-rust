@@ -37,7 +37,7 @@
 //!   8 % 5 = 3
 //! ```
 //!
-//! [`iter_unsigned`]: ParseUnsigned::iter_unsigned
+//! [`iter_unsigned`]: ParseOps::iter_unsigned
 use crate::util::parse::*;
 
 #[derive(Clone)]
