@@ -67,12 +67,12 @@ pie
     "Day 11" : 2386
     "Day 16" : 2331
     "Day 23" : 2017
-    "Others" : 1340
+    "Others" : 1331
 ```
 
 | Day | Problem | Solution | Benchmark (μs) |
 | --- | --- | --- | --: |
-| 1 | [Calorie Counting](https://adventofcode.com/2022/day/1) | [Source](src/year2022/day01.rs) | 25 |
+| 1 | [Calorie Counting](https://adventofcode.com/2022/day/1) | [Source](src/year2022/day01.rs) | 14 |
 | 2 | [Rock Paper Scissors](https://adventofcode.com/2022/day/2) | [Source](src/year2022/day02.rs) | 9 |
 | 3 | [Rucksack Reorganization](https://adventofcode.com/2022/day/3) | [Source](src/year2022/day03.rs) | 15 |
 | 4 | [Camp Cleanup](https://adventofcode.com/2022/day/4) | [Source](src/year2022/day04.rs) | 7 |

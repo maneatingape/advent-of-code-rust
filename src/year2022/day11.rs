@@ -69,9 +69,9 @@ pub fn parse(input: &str) -> Vec<Monkey> {
             [y, "+"] => Operation::Add(y.unsigned()),
             _ => unreachable!(),
         };
-        let test = chunk[3].iter_unsigned().next().unwrap();
-        let yes = chunk[4].iter_unsigned().next().unwrap();
-        let no = chunk[5].iter_unsigned().next().unwrap();
+        let test = chunk[3].unsigned();
+        let yes = chunk[4].unsigned();
+        let no = chunk[5].unsigned();
         Monkey { items, operation, test, yes, no }
     }
     input.lines().collect::<Vec<&str>>().chunks(7).map(helper).collect()
