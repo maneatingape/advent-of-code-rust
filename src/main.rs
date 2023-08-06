@@ -1,74 +1,34 @@
-use ansi::*;
+use aoc::util::parse::*;
 use aoc::*;
 use std::env::args;
 use std::time::Instant;
 
-/// [ANSI escape codes](https://en.wikipedia.org/wiki/ANSI_escape_code)
-mod ansi {
-    pub const RESET: &str = "\x1b[0m";
-    pub const BOLD: &str = "\x1b[1m";
-    pub const RED: &str = "\x1b[31m";
-    pub const GREEN: &str = "\x1b[32m";
-    pub const YELLOW: &str = "\x1b[33m";
-}
-
-struct Config {
-    year: Option<u32>,
-    day: Option<u32>,
-}
-
-struct Solution {
-    year: u32,
-    day: u32,
-    input: &'static str,
-    wrapper: fn(&str) -> (String, String),
-}
-
 fn main() {
-    match parse_config() {
-        Ok(config) => run(config),
-        Err(message) => eprintln!("{message}"),
-    }
-}
+    // ANSI escape codes
+    const RESET: &str = "\x1b[0m";
+    const BOLD: &str = "\x1b[1m";
+    const RED: &str = "\x1b[31m";
+    const GREEN: &str = "\x1b[32m";
+    const YELLOW: &str = "\x1b[33m";
 
-fn parse_config() -> Result<Config, String> {
-    if args().len() == 1 {
-        return Ok(Config { year: None, day: None });
-    }
-    if args().len() == 2 {
-        let arg = args().nth(1).unwrap();
-
-        if arg.len() == 15 {
-            let year = parse_range(&arg[4..8], "Year", 2015, 2022)?;
-            let day = parse_range(&arg[13..15], "Day", 1, 25)?;
-            return Ok(Config { year, day });
+    // Parse command line options
+    let (year, day) = match args().nth(1) {
+        Some(arg) => {
+            let str = arg.as_str();
+            let mut iter = str.iter_unsigned();
+            (iter.next(), iter.next())
         }
-        if arg.len() == 8 {
-            let year = parse_range(&arg[4..8], "Year", 2015, 2022)?;
-            return Ok(Config { year, day: None });
-        }
-    }
+        None => (None, None),
+    };
 
-    Err(format!("Usage: year{BOLD}YYYY{RESET}::day{BOLD}DD{RESET}"))
-}
-
-fn parse_range(s: &str, name: &str, lower: u32, upper: u32) -> Result<Option<u32>, String> {
-    let x = s.parse().map_err(|_| format!("{name} must be a number"))?;
-
-    if lower <= x && x <= upper {
-        Ok(Some(x))
-    } else {
-        Err(format!("{name} must be between {lower} and {upper}"))
-    }
-}
-
-fn run(config: Config) {
+    // Filter solutions
     let solutions: Vec<_> = all_solutions()
         .into_iter()
-        .filter(|s| if let Some(year) = config.year { year == s.year } else { true })
-        .filter(|s| if let Some(day) = config.day { day == s.day } else { true })
+        .filter(|solution| year == Some(solution.year) || year.is_none())
+        .filter(|solution| day == Some(solution.day) || day.is_none())
         .collect();
 
+    // Pretty print output and timing for each solution
     let total_size = solutions.len();
     let total_time = Instant::now();
 
@@ -83,27 +43,37 @@ fn run(config: Config) {
         println!("    Duration: {duration} μs");
     }
 
+    // Print totals
     let elapsed = total_time.elapsed().as_millis();
     println!("{BOLD}{RED}Solutions: {total_size}{RESET}");
     println!("{BOLD}{GREEN}Elapsed: {elapsed} ms{RESET}");
 }
 
+struct Solution {
+    year: u32,
+    day: u32,
+    input: &'static str,
+    wrapper: fn(&str) -> (String, String),
+}
+
 macro_rules! solution {
     ($year:tt, $day:tt) => {
         Solution {
-            year: { stringify!($year)[4..8].parse().unwrap() },
-            day: { stringify!($day)[3..5].parse().unwrap() },
-            input: {
-                include_str!(concat!["../input/", stringify!($year), "/", stringify!($day), ".txt"])
-            },
-            wrapper: {
-                |raw: &str| {
-                    use $year::$day::*;
-                    let input = parse(raw);
-                    let part1 = part1(&input).to_string();
-                    let part2 = part2(&input).to_string();
-                    (part1, part2)
-                }
+            year: (&stringify!($year)).unsigned(),
+            day: (&stringify!($day)).unsigned(),
+            input: include_str!(concat![
+                "../input/",
+                stringify!($year),
+                "/",
+                stringify!($day),
+                ".txt"
+            ]),
+            wrapper: |raw: &str| {
+                use $year::$day::*;
+                let input = parse(raw);
+                let part1 = part1(&input).to_string();
+                let part2 = part2(&input).to_string();
+                (part1, part2)
             },
         }
     };
