@@ -54,16 +54,22 @@ fn simulate<const N: usize>(input: &[Input]) -> usize {
     let mut rope: Vec<Point> = vec![ORIGIN; N];
     let mut tail: FastSet<Point> = FastSetBuilder::with_capacity(5_000);
 
-    for (step, amount) in input {
-        for _ in 0..*amount {
-            rope[0] += *step;
+    let mut last = ORIGIN;
+    tail.insert(last);
+
+    for &(step, amount) in input {
+        for _ in 0..amount {
+            rope[0] += step;
             for i in 1..N {
                 if apart(rope[i - 1], rope[i]) {
                     let next = delta(rope[i - 1], rope[i]);
                     rope[i] += next;
                 }
             }
-            tail.insert(rope[N - 1]);
+            if rope[N - 1] != last {
+                last = rope[N - 1];
+                tail.insert(last);
+            }
         }
     }
 
