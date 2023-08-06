@@ -15,6 +15,8 @@
 //! memory.
 //!
 //! [`BinaryHeap`]: std::collections::BinaryHeap
+use std::array::from_fn;
+
 pub struct Square {
     size: usize,
     bytes: Vec<u8>,
@@ -66,7 +68,7 @@ fn dijkstra(square: &Square) -> usize {
     let end = size * size - 1;
 
     // Initialise our specialized priority queue with 10 vecs.
-    let mut todo: [Vec<u32>; 10] = std::array::from_fn(|_| Vec::with_capacity(1_000));
+    let mut todo: [Vec<u32>; 10] = from_fn(|_| Vec::with_capacity(1_000));
     let mut cost = vec![u16::MAX; size * size];
     let mut risk = 0;
 

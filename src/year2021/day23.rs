@@ -1,4 +1,5 @@
 use crate::util::hash::*;
+use std::array::from_fn;
 use std::cmp::Ordering;
 use std::collections::BinaryHeap;
 use std::hash::*;
@@ -83,7 +84,7 @@ struct Burrow {
 
 impl Burrow {
     fn new(rooms: [[usize; 4]; 4]) -> Burrow {
-        Burrow { hallway: Hallway::new(), rooms: std::array::from_fn(|i| Room::new(rooms[i])) }
+        Burrow { hallway: Hallway::new(), rooms: from_fn(|i| Room::new(rooms[i])) }
     }
 }
 
@@ -142,7 +143,7 @@ fn organize(burrow: Burrow) -> usize {
 
     while let Some(state) = todo.pop() {
         let State { mut burrow, energy } = state;
-        let open: [bool; 4] = std::array::from_fn(|i| burrow.rooms[i].open(i));
+        let open: [bool; 4] = from_fn(|i| burrow.rooms[i].open(i));
 
         let mut changed = false;
         for (i, &open) in open.iter().enumerate() {

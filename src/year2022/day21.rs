@@ -1,4 +1,5 @@
 use crate::util::hash::*;
+use crate::util::parse::*;
 
 #[derive(Clone, Copy)]
 enum Operation {
@@ -14,14 +15,13 @@ enum Monkey {
 }
 
 impl Monkey {
-    fn parse(bytes: &[u8], indices: &FastMap<&[u8], usize>) -> Monkey {
-        if bytes.len() < 11 {
-            let number = std::str::from_utf8(bytes).unwrap().parse().unwrap();
-            Monkey::Number(number)
+    fn parse(str: &str, indices: &FastMap<&str, usize>) -> Monkey {
+        if str.len() < 11 {
+            Monkey::Number(str.signed())
         } else {
-            let left = indices[&bytes[0..4]];
-            let right = indices[&bytes[7..11]];
-            let operation = match bytes[5] {
+            let left = indices[&str[0..4]];
+            let right = indices[&str[7..11]];
+            let operation = match str.as_bytes()[5] {
                 b'+' => Operation::Add,
                 b'-' => Operation::Sub,
                 b'*' => Operation::Mul,
@@ -41,16 +41,16 @@ pub struct Input {
 }
 
 pub fn parse(input: &str) -> Input {
-    let lines: Vec<&[u8]> = input.lines().map(|line| line.as_bytes()).collect();
+    let lines: Vec<_> = input.lines().collect();
 
-    let indices: FastMap<&[u8], usize> =
+    let indices: FastMap<&str, usize> =
         lines.iter().enumerate().map(|(index, line)| (&line[0..4], index)).collect();
 
     let monkeys: Vec<Monkey> =
         lines.iter().map(|line| Monkey::parse(&line[6..], &indices)).collect();
 
-    let root = indices["root".as_bytes()];
-    let humn = indices["humn".as_bytes()];
+    let root = indices["root"];
+    let humn = indices["humn"];
     let mut input =
         Input { root, monkeys, yell: vec![0; lines.len()], unknown: vec![false; lines.len()] };
 

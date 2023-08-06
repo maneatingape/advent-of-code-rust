@@ -12,6 +12,7 @@
 //!
 //! [`day 17`]: crate::year2020::day17
 use crate::util::hash::*;
+use std::array::from_fn;
 
 #[derive(PartialEq, Eq, Hash)]
 pub struct Hex {
@@ -85,7 +86,7 @@ pub fn part2(input: &FastSet<Hex>) -> usize {
     let width = q2 - q1 + 203;
     let height = r2 - r1 + 203;
     let neighbors: [i32; 6] = [-1, 1, -width, width, 1 - width, width - 1];
-    let neighbors: [usize; 6] = std::array::from_fn(|i| neighbors[i] as usize);
+    let neighbors: [usize; 6] = from_fn(|i| neighbors[i] as usize);
 
     let mut active = Vec::with_capacity(5_000);
     let mut candidates = Vec::with_capacity(5_000);
