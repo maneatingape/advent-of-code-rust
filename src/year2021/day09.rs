@@ -42,15 +42,15 @@ pub fn part1(grid: &Grid<u8>) -> u32 {
     risk_levels
 }
 
-pub fn part2(grid: &Grid<u8>) -> u32 {
-    let mut visited = grid.default_copy::<bool>();
+pub fn part2(input: &Grid<u8>) -> u32 {
+    let mut grid = input.clone();
     let mut basins = Vec::new();
 
     for x in 0..grid.width {
         for y in 0..grid.height {
             let next = Point { x, y };
-            if grid[next] < b'9' && !visited[next] {
-                basins.push(flood_fill(grid, &mut visited, next));
+            if grid[next] < b'9' {
+                basins.push(flood_fill(&mut grid, next));
             }
         }
     }
@@ -59,13 +59,13 @@ pub fn part2(grid: &Grid<u8>) -> u32 {
     basins.iter().rev().take(3).product()
 }
 
-fn flood_fill(grid: &Grid<u8>, visited: &mut Grid<bool>, point: Point) -> u32 {
-    visited[point] = true;
+fn flood_fill(grid: &mut Grid<u8>, point: Point) -> u32 {
+    grid[point] = b'9';
     let mut size = 1;
 
     for next in ORTHOGONAL.iter().map(|&n| point + n) {
-        if grid.contains(next) && grid[next] < b'9' && !visited[next] {
-            size += flood_fill(grid, visited, next)
+        if grid.contains(next) && grid[next] < b'9' {
+            size += flood_fill(grid, next)
         }
     }
 

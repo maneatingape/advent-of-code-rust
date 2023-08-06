@@ -27,6 +27,7 @@
 use crate::util::point::*;
 use std::ops::{Index, IndexMut};
 
+#[derive(Clone)]
 pub struct Grid<T> {
     pub width: i32,
     pub height: i32,
