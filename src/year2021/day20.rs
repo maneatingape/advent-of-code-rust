@@ -5,7 +5,7 @@ pub struct Input {
 }
 
 pub fn parse(input: &str) -> Input {
-    fn convert(b: &u8) -> u8 {
+    fn convert(b: u8) -> u8 {
         match b {
             b'#' => 1,
             b'.' => 0,
@@ -13,8 +13,7 @@ pub fn parse(input: &str) -> Input {
         }
     }
 
-    let bits: Vec<Vec<_>> =
-        input.lines().map(|line| line.as_bytes().iter().map(convert).collect()).collect();
+    let bits: Vec<Vec<_>> = input.lines().map(|line| line.bytes().map(convert).collect()).collect();
 
     let size = bits.len() - 2;
     let algorithm = bits[0][..512].try_into().unwrap();

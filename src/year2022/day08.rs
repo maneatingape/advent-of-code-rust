@@ -27,7 +27,7 @@ pub fn parse(input: &str) -> Input {
     let mut digits = Vec::new();
 
     for line in &raw {
-        let iter = line.as_bytes().iter().map(|&b| 6 * (b - b'0') as i8);
+        let iter = line.bytes().map(|b| 6 * (b - b'0') as i8);
         digits.extend(iter);
     }
 

@@ -4,14 +4,14 @@
 //! Then each parenthesis is parsed into either +1 or -1, treating the trailing newline
 //! as a special case of 0.
 pub fn parse(input: &str) -> Vec<i32> {
-    fn helper(b: &u8) -> i32 {
+    fn helper(b: u8) -> i32 {
         match b {
             b'(' => 1,
             b')' => -1,
             _ => 0,
         }
     }
-    input.as_bytes().iter().map(helper).collect()
+    input.bytes().map(helper).collect()
 }
 
 pub fn part1(input: &[i32]) -> i32 {

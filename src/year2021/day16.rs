@@ -12,18 +12,18 @@
 //!
 //! The decoded packet data is stored as a tree-like struct allowing recursive solutions to part 1
 //! and part 2 to reuse the same decoded input.
-use std::slice::Iter;
+use std::str::Bytes;
 
 struct BitStream<'a> {
     available: u64,
     bits: u64,
     read: u64,
-    iter: Iter<'a, u8>,
+    iter: Bytes<'a>,
 }
 
 impl BitStream<'_> {
     fn from(s: &str) -> BitStream {
-        BitStream { available: 0, bits: 0, read: 0, iter: s.as_bytes().iter() }
+        BitStream { available: 0, bits: 0, read: 0, iter: s.bytes() }
     }
 
     fn next(&mut self, amount: u64) -> u64 {

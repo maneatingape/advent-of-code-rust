@@ -43,6 +43,7 @@
 //! For speed the monster bit patterns are rotated and flipped instead of the image, then stored
 //! in hardcoded arrays. The search ends as soon as we find monsters in any orientation.
 use crate::util::parse::*;
+use std::array::from_fn;
 
 pub struct Tile {
     id: u64,
@@ -73,8 +74,7 @@ impl Tile {
     fn from(chunk: &[&str]) -> Tile {
         let id = (&chunk[0][5..9]).unsigned();
 
-        let pixels: [[u8; 10]; 10] =
-            std::array::from_fn(|i| chunk[i + 1].as_bytes().try_into().unwrap());
+        let pixels: [[u8; 10]; 10] = from_fn(|i| chunk[i + 1].as_bytes().try_into().unwrap());
 
         // The ASCII code for "#" 35 is odd and the code for "." 46 is even
         // so we can convert to a 1 or 0 bit using bitwise AND with 1.

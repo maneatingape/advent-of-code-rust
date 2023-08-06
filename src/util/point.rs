@@ -86,7 +86,7 @@ impl Hash for Point {
 
 impl Point {
     #[inline]
-    pub fn from_byte(b: &u8) -> Point {
+    pub fn from_byte(b: u8) -> Point {
         match b {
             b'^' => UP,
             b'v' => DOWN,

@@ -21,7 +21,7 @@ pub struct Rule {
 }
 
 impl Rule {
-    fn parse([&a, &b, &c]: [&u8; 3]) -> Rule {
+    fn parse([a, b, c]: [u8; 3]) -> Rule {
         let from = pair(a, b);
         let to_left = pair(a, c);
         let to_right = pair(c, b);
@@ -47,13 +47,8 @@ pub fn parse(input: &str) -> Input {
     let mut pairs = [0; 26 * 26];
     prefix.windows(2).for_each(|w| pairs[pair(w[0], w[1])] += 1);
 
-    let rules: Vec<_> = suffix
-        .as_bytes()
-        .iter()
-        .filter(|b| b.is_ascii_uppercase())
-        .chunk::<3>()
-        .map(Rule::parse)
-        .collect();
+    let rules: Vec<_> =
+        suffix.bytes().filter(|b| b.is_ascii_uppercase()).chunk::<3>().map(Rule::parse).collect();
 
     Input { elements, pairs, rules }
 }
