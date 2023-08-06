@@ -13,6 +13,7 @@
 //! score for each board. Sort each result by turn and the answers for part 1 and part1 are the
 //! first and last values respectively.
 use crate::util::parse::*;
+use std::array::from_fn;
 
 pub struct Input {
     turn: usize,
@@ -23,23 +24,25 @@ pub fn parse(input: &str) -> Vec<Input> {
     let mut to_turn = [0; 100];
     let mut from_turn = [0; 100];
 
-    let chunks: Vec<Vec<usize>> =
-        input.split("\n\n").map(|s| s.iter_unsigned().collect()).collect();
+    let mut chunks = input.split("\n\n");
 
-    for (i, &n) in chunks[0].iter().enumerate() {
+    for (i, n) in chunks.next().unwrap().iter_unsigned().enumerate() {
         to_turn[n] = i;
         from_turn[i] = n;
     }
 
-    let score = |board: &Vec<usize>| {
-        let turns: Vec<_> = board.iter().map(|&n| to_turn[n]).collect();
+    let score = |chunk: &str| {
+        let mut iter = chunk.iter_unsigned();
+        let board: [usize; 25] = from_fn(|_| iter.next().unwrap());
+        let turns: [usize; 25] = from_fn(|i| to_turn[board[i]]);
+
         let row_and_cols = [
             turns[0..5].iter().max().unwrap(),
             turns[5..10].iter().max().unwrap(),
             turns[10..15].iter().max().unwrap(),
             turns[15..20].iter().max().unwrap(),
             turns[20..25].iter().max().unwrap(),
-            turns.iter().skip(0).step_by(5).max().unwrap(),
+            turns.iter().step_by(5).max().unwrap(),
             turns.iter().skip(1).step_by(5).max().unwrap(),
             turns.iter().skip(2).step_by(5).max().unwrap(),
             turns.iter().skip(3).step_by(5).max().unwrap(),
@@ -48,18 +51,19 @@ pub fn parse(input: &str) -> Vec<Input> {
         let winning_turn = **row_and_cols.iter().min().unwrap();
         let unmarked: usize = board.iter().filter(|&&n| to_turn[n] > winning_turn).sum();
         let just_called = from_turn[winning_turn];
+
         Input { turn: winning_turn, score: unmarked * just_called }
     };
 
-    let mut result: Vec<_> = chunks.iter().skip(1).map(score).collect();
-    result.sort_unstable_by(|a, b| a.turn.cmp(&b.turn));
-    result
+    let mut scores: Vec<_> = chunks.map(score).collect();
+    scores.sort_unstable_by_key(|s| s.turn);
+    scores
 }
 
 pub fn part1(input: &[Input]) -> usize {
-    input[0].score
+    input.first().unwrap().score
 }
 
 pub fn part2(input: &[Input]) -> usize {
-    input[input.len() - 1].score
+    input.last().unwrap().score
 }
