@@ -23,7 +23,7 @@ pub struct Square {
 }
 
 pub fn parse(input: &str) -> Square {
-    let raw: Vec<_> = input.lines().map(|line| line.as_bytes()).collect();
+    let raw: Vec<_> = input.lines().map(str::as_bytes).collect();
     let size = raw.len();
     let mut bytes = Vec::with_capacity(size * size);
 
@@ -96,16 +96,16 @@ fn dijkstra(square: &Square) -> usize {
             let y = current / size;
 
             if x > 0 {
-                check(current - 1)
+                check(current - 1);
             }
             if x < edge {
-                check(current + 1)
+                check(current + 1);
             }
             if y > 0 {
-                check(current - size)
+                check(current - size);
             }
             if y < edge {
-                check(current + size)
+                check(current + size);
             }
         }
 

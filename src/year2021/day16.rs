@@ -29,7 +29,7 @@ impl BitStream<'_> {
     fn next(&mut self, amount: u64) -> u64 {
         while self.available < amount {
             self.available += 4;
-            self.bits = (self.bits << 4) | self.hex_to_binary()
+            self.bits = (self.bits << 4) | self.hex_to_binary();
         }
 
         self.available -= amount;
@@ -119,27 +119,9 @@ pub fn part2(packet: &Packet) -> u64 {
                     1 => iter.product(),
                     2 => iter.min().unwrap(),
                     3 => iter.max().unwrap(),
-                    5 => {
-                        if iter.next().unwrap() > iter.next().unwrap() {
-                            1
-                        } else {
-                            0
-                        }
-                    }
-                    6 => {
-                        if iter.next().unwrap() < iter.next().unwrap() {
-                            1
-                        } else {
-                            0
-                        }
-                    }
-                    7 => {
-                        if iter.next().unwrap() == iter.next().unwrap() {
-                            1
-                        } else {
-                            0
-                        }
-                    }
+                    5 => (iter.next().unwrap() > iter.next().unwrap()) as u64,
+                    6 => (iter.next().unwrap() < iter.next().unwrap()) as u64,
+                    7 => (iter.next().unwrap() == iter.next().unwrap()) as u64,
                     _ => unreachable!(),
                 }
             }

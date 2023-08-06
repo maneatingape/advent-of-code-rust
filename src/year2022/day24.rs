@@ -17,8 +17,7 @@ pub fn parse(input: &str) -> Input {
     let width = raw[0].len();
     let height = raw.len() - 2;
     let build = |kind| {
-        let fold =
-            |row: &&[u8]| row.iter().fold(0, |acc, &b| (acc << 1) | if b == kind { 0 } else { 1 });
+        let fold = |row: &&[u8]| row.iter().fold(0, |acc, &b| (acc << 1) | (b != kind) as u128);
         raw[1..=height].iter().map(fold).collect()
     };
     let left: Vec<u128> = build(b'<');
@@ -74,7 +73,7 @@ fn expedition(input: &Input, start: usize, forward: bool) -> usize {
             next = state[i + 1];
             state[i] = (cur | cur >> 1 | cur << 1 | prev | next)
                 & horizontal[height * (time % width) + i]
-                & vertical[height * (time % height) + i]
+                & vertical[height * (time % height) + i];
         }
 
         if forward {

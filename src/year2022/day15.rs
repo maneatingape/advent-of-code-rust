@@ -47,17 +47,13 @@ pub fn part1_testable(input: &[Input], row: i32) -> i32 {
             max = end;
         } else {
             total += (end - max).max(0);
-            max = max.max(end)
+            max = max.max(end);
         }
     }
 
     fn build_beacons(input: &Input, row: i32) -> Option<i32> {
-        let Input { sensor: _, beacon, manhattan: _ } = input;
-        if beacon.y == row {
-            Some(beacon.x)
-        } else {
-            None
-        }
+        let Input { beacon, .. } = input;
+        (beacon.y == row).then_some(beacon.x)
     }
     let beacons: FastSet<i32> = input.iter().filter_map(|i| build_beacons(i, row)).collect();
 
@@ -78,7 +74,7 @@ pub fn part2_testable(input: &[Input], size: i32) -> u64 {
     // This transform each sensor into an axis aligned bounding box.
     // The distress beacon is located where the top, left, bottom and right
     // edges of 4 separate bounding boxes intersect.
-    for Input { sensor, beacon: _, manhattan } in input.iter() {
+    for Input { sensor, beacon: _, manhattan } in input {
         top.insert(sensor.x + sensor.y - manhattan - 1);
         left.insert(sensor.x - sensor.y - manhattan - 1);
         bottom.insert(sensor.x + sensor.y + manhattan + 1);

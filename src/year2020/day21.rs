@@ -84,10 +84,10 @@ pub fn parse(input: &str) -> Input {
         let mut impossible = 0;
 
         for (i, allergens) in allergens_per_food.iter().enumerate() {
-            if ingredient.food & (1 << i) != 0 {
-                possible |= allergens;
-            } else {
+            if ingredient.food & (1 << i) == 0 {
                 impossible |= allergens;
+            } else {
+                possible |= allergens;
             }
         }
 
@@ -121,7 +121,7 @@ pub fn part2(input: &Input) -> String {
         ingredients.remove(next);
         done.push(pair);
 
-        for (name, ingredient) in ingredients.iter_mut() {
+        for (name, ingredient) in &mut ingredients {
             ingredient.candidates &= !allergen;
             if ingredient.candidates.count_ones() == 1 {
                 todo.push((name, ingredient.candidates));

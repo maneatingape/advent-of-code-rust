@@ -72,9 +72,9 @@ fn enhance(input: &Input, steps: usize) -> usize {
         start -= 1;
         end += 1;
         if default == 0 {
-            default = algorithm[0]
+            default = algorithm[0];
         } else {
-            default = algorithm[511]
+            default = algorithm[511];
         }
     }
 

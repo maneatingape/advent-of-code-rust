@@ -9,7 +9,7 @@
 //! corresponding closing delimiters. For example the completion string `])}>` would have a stack
 //! that looks like `<{([`, where the right hand side is the top of the stack.
 pub fn parse(input: &str) -> Vec<&[u8]> {
-    input.lines().map(|line| line.as_bytes()).collect()
+    input.lines().map(str::as_bytes).collect()
 }
 
 pub fn part1(input: &[&[u8]]) -> u64 {
@@ -40,7 +40,7 @@ pub fn part2(input: &[&[u8]]) -> u64 {
 }
 
 fn syntax_score(line: &[u8], stack: &mut Vec<u8>) -> u64 {
-    for &b in line.iter() {
+    for &b in line {
         match b {
             b'(' | b'[' | b'{' | b'<' => stack.push(b),
             b')' => {

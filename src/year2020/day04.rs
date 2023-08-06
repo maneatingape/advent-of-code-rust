@@ -66,7 +66,7 @@ fn validate_height(hgt: &str) -> bool {
 
 fn validate_hair_color(hcl: &str) -> bool {
     let hcl = hcl.as_bytes();
-    hcl.len() == 7 && hcl[0] == b'#' && hcl[1..].iter().all(|b| b.is_ascii_hexdigit())
+    hcl.len() == 7 && hcl[0] == b'#' && hcl[1..].iter().all(u8::is_ascii_hexdigit)
 }
 
 fn validate_eye_color(ecl: &str) -> bool {

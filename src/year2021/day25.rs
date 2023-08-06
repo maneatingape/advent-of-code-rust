@@ -77,7 +77,7 @@ pub struct State {
 }
 
 pub fn parse(input: &str) -> State {
-    let raw: Vec<&[u8]> = input.lines().map(|line| line.as_bytes()).collect();
+    let raw: Vec<&[u8]> = input.lines().map(str::as_bytes).collect();
     let width = raw[0].len();
     let height = raw.len();
     let mut across = Vec::new();

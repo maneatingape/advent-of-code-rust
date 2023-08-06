@@ -18,10 +18,7 @@ pub fn parse(input: &str) -> Input {
     let mut xor = 0;
 
     for line in input.lines() {
-        let id = line.bytes().fold(0, |acc, b| {
-            let bit = if b == b'B' || b == b'R' { 1 } else { 0 };
-            (acc << 1) | bit
-        });
+        let id = line.bytes().fold(0, |acc, b| (acc << 1) | (b == b'B' || b == b'R') as u32);
         min = min.min(id);
         max = max.max(id);
         xor ^= id;

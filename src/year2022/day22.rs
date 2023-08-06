@@ -185,7 +185,7 @@ pub fn part2(input: &Input) -> i32 {
 }
 
 fn parse_grid(input: &str) -> Grid {
-    let raw: Vec<&[u8]> = input.lines().map(|line| line.as_bytes()).collect();
+    let raw: Vec<&[u8]> = input.lines().map(str::as_bytes).collect();
     let width = raw.iter().map(|line| line.len()).max().unwrap();
     let height = raw.len();
     let mut tiles = vec![Tile::None; width * height];

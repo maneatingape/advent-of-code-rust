@@ -14,7 +14,7 @@ type Input = [u8; 144];
 const NEIGHBORS: [u8; 8] = [1, 11, 12, 13, 243, 244, 245, 255];
 
 pub fn parse(input: &str) -> Input {
-    let bytes: Vec<_> = input.lines().map(|line| line.as_bytes()).collect();
+    let bytes: Vec<_> = input.lines().map(str::as_bytes).collect();
     let mut grid = [0; 144];
 
     for y in 0..10 {

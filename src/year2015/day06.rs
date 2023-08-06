@@ -111,14 +111,14 @@ impl Instruction {
 }
 
 pub fn parse(input: &str) -> (u32, u32) {
-    let first = input.lines().map(|line| line.as_bytes());
+    let first = input.lines().map(str::as_bytes);
     let second = input.iter_unsigned().chunk::<4>();
     let instructions: Vec<_> = first.zip(second).map(Instruction::from).collect();
 
     let mut xs = vec![0, 1000];
     let mut ys = vec![0, 1000];
 
-    for instruction in instructions.iter() {
+    for instruction in &instructions {
         let Rectangle { x1, x2, y1, y2 } = instruction.rectangle;
         xs.push(x1);
         xs.push(x2 + 1);
@@ -147,7 +147,7 @@ pub fn parse(input: &str) -> (u32, u32) {
     let mut left = vec![false; capacity];
     let mut previous = vec![(false, 0); capacity];
 
-    for instruction in instructions.iter() {
+    for instruction in &instructions {
         let Rectangle { x1, x2, y1, y2 } = instruction.rectangle;
         let x1 = x_index_from[x1 as usize];
         let x2 = x_index_from[(x2 + 1) as usize];
@@ -185,7 +185,7 @@ pub fn parse(input: &str) -> (u32, u32) {
                 let mut light = false;
                 let mut brightness: u8 = 0;
 
-                for instruction in instructions.iter() {
+                for instruction in &instructions {
                     if instruction.rectangle.contains(x1, y1) {
                         match instruction.command {
                             Command::On => {

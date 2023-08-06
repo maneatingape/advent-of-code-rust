@@ -1,5 +1,5 @@
 pub fn parse(input: &str) -> Vec<&[u8]> {
-    input.lines().map(|line| line.as_bytes()).collect()
+    input.lines().map(str::as_bytes).collect()
 }
 
 pub fn part1(input: &[&[u8]]) -> String {

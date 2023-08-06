@@ -192,7 +192,7 @@ pub fn part1(input: &[Tile]) -> u64 {
             + frequency[tile.bottom[0]]
             + frequency[tile.right[0]];
         if total == 6 {
-            result *= tile.id
+            result *= tile.id;
         }
     }
 
@@ -271,7 +271,7 @@ pub fn part2(input: &[Tile]) -> u32 {
         [0b00010010010010010010, 0b11100001100001100001, 0b01000000000000000000],
     ];
 
-    for monster in monsters.iter_mut() {
+    for monster in &mut monsters {
         if let Some(rough) = find(monster, 20, 3) {
             return rough;
         }
@@ -285,7 +285,7 @@ pub fn part2(input: &[Tile]) -> u32 {
         [2, 6, 2, 1, 0, 0, 1, 2, 2, 1, 0, 0, 1, 2, 2, 1, 0, 0, 1, 2],
     ];
 
-    for monster in monsters.iter_mut() {
+    for monster in &mut monsters {
         if let Some(rough) = find(monster, 3, 20) {
             return rough;
         }

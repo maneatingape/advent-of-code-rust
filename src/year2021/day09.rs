@@ -65,7 +65,7 @@ fn flood_fill(grid: &mut Grid<u8>, point: Point) -> u32 {
 
     for next in ORTHOGONAL.iter().map(|&n| point + n) {
         if grid.contains(next) && grid[next] < b'9' {
-            size += flood_fill(grid, next)
+            size += flood_fill(grid, next);
         }
     }
 

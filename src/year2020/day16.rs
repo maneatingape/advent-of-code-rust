@@ -113,7 +113,7 @@ fn solve_part_two(
 
         for (&valid, &n) in valid.iter().zip(ticket.iter()) {
             if valid {
-                remaining.retain(|rule| rule.check(n))
+                remaining.retain(|rule| rule.check(n));
             }
         }
 
@@ -130,7 +130,7 @@ fn solve_part_two(
                 }
 
                 for remaining in &mut rules_by_column {
-                    remaining.retain(|&rule| rule != found)
+                    remaining.retain(|&rule| rule != found);
                 }
             }
         }

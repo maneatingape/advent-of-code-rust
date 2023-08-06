@@ -46,7 +46,7 @@ pub fn part1(input: &[Instruction]) -> i32 {
 
     match execute(input, 0, 0, &mut visited) {
         State::Infinite(acc) => acc,
-        _ => unreachable!(),
+        State::Halted(_) => unreachable!(),
     }
 }
 
@@ -64,15 +64,15 @@ pub fn part2(input: &[Instruction]) -> i32 {
             Instruction::Jmp(arg) => {
                 let speculative = pc + 1;
                 match execute(input, speculative, acc, visited) {
+                    State::Infinite(_) => pc = pc.wrapping_add(arg as usize),
                     State::Halted(acc) => break acc,
-                    _ => pc = pc.wrapping_add(arg as usize),
                 }
             }
             Instruction::Nop(arg) => {
                 let speculative = pc.wrapping_add(arg as usize);
                 match execute(input, speculative, acc, visited) {
+                    State::Infinite(_) => pc += 1,
                     State::Halted(acc) => break acc,
-                    _ => pc += 1,
                 }
             }
         }
@@ -85,9 +85,9 @@ fn execute(input: &[Instruction], mut pc: usize, mut acc: i32, visited: &mut [bo
             break State::Halted(acc);
         } else if visited[pc] {
             break State::Infinite(acc);
-        } else {
-            visited[pc] = true;
         }
+
+        visited[pc] = true;
 
         match input[pc] {
             Instruction::Acc(arg) => {

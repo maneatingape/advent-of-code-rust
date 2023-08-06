@@ -93,8 +93,8 @@ fn boot_process(input: &Grid<u8>, size: i32, base: i32, fourth_dimension: &[i32]
     for _ in 0..6 {
         let mut state: Vec<u8> = vec![0; size as usize];
 
-        for &cube in active.iter() {
-            for &offset in neighbors.iter() {
+        for &cube in &active {
+            for &offset in &neighbors {
                 // Earlier we converted the offsets from signed `i32` to unsigned `usize`. To
                 // achieve subtraction for negative indices, we use a `wrapping_add` that performs
                 // [two's complement](https://en.wikipedia.org/wiki/Two%27s_complement) arithmetic.
@@ -108,14 +108,14 @@ fn boot_process(input: &Grid<u8>, size: i32, base: i32, fourth_dimension: &[i32]
         }
 
         // Active cubes remain active with both two and three neighbors.
-        for &cube in active.iter() {
+        for &cube in &active {
             if state[cube] == 2 {
                 next_active.push(cube);
             }
         }
 
         // Check that the neighbor count for inactive cubes hasn't exceeded three.
-        for &cube in candidates.iter() {
+        for &cube in &candidates {
             if state[cube] == 3 {
                 next_active.push(cube);
             }

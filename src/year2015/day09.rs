@@ -29,7 +29,7 @@ pub fn parse(input: &str) -> Result {
     let tokens: Vec<_> = input.split_ascii_whitespace().chunk::<5>().collect();
 
     let mut indices = FastMapBuilder::empty();
-    for [start, _, end, ..] in tokens.iter() {
+    for [start, _, end, ..] in &tokens {
         if !indices.contains_key(start) {
             indices.insert(start, indices.len());
         }
@@ -40,7 +40,7 @@ pub fn parse(input: &str) -> Result {
 
     let stride = indices.len();
     let mut distances = vec![0_u32; stride * stride];
-    for [start, _, end, _, distance] in tokens.iter() {
+    for [start, _, end, _, distance] in &tokens {
         let start = indices[start];
         let end = indices[end];
         let distance = distance.unsigned();

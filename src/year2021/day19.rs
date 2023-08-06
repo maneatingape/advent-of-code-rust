@@ -101,7 +101,7 @@ pub struct Located {
 }
 
 impl Located {
-    fn from(relative_beacons: Vec<Point3D>, signature: FastSet<i32>, offset: Point3D) -> Located {
+    fn from(relative_beacons: &[Point3D], signature: FastSet<i32>, offset: Point3D) -> Located {
         let mut deltas = FastSetBuilder::with_capacity(1_000);
         for (i, a) in relative_beacons.iter().enumerate() {
             for (j, b) in relative_beacons.iter().enumerate() {
@@ -112,7 +112,7 @@ impl Located {
         }
 
         let mut beacons = FastSetBuilder::with_capacity(30);
-        for &point in relative_beacons.iter() {
+        for &point in relative_beacons {
             beacons.insert(point + offset);
         }
 
@@ -131,8 +131,8 @@ pub fn parse(input: &str) -> Vec<Located> {
 pub fn part1(input: &[Located]) -> usize {
     let mut result = FastSetBuilder::with_capacity(1_000);
 
-    for located in input.iter() {
-        for beacon in located.beacons.iter() {
+    for located in input {
+        for beacon in &located.beacons {
             result.insert(beacon);
         }
     }
@@ -143,8 +143,8 @@ pub fn part1(input: &[Located]) -> usize {
 pub fn part2(input: &[Located]) -> i32 {
     let mut result = 0;
 
-    for first in input.iter() {
-        for second in input.iter() {
+    for first in input {
+        for second in input {
             result = result.max(first.offset.manhattan(&second.offset));
         }
     }
@@ -157,7 +157,7 @@ fn locate(unknown: &mut Vec<Scanner>) -> Vec<Located> {
     let mut todo = Vec::new();
 
     let Scanner { beacons, signature } = unknown.pop().unwrap();
-    todo.push(Located::from(beacons, signature, Point3D([0, 0, 0])));
+    todo.push(Located::from(&beacons, signature, Point3D([0, 0, 0])));
 
     while let Some(known) = todo.pop() {
         let mut next_unknown = Vec::new();
@@ -193,14 +193,14 @@ fn check(known: &Located, scanner: &Scanner) -> Option<Located> {
         }
     }
 
-    let candidates: Vec<_> = beacons_of_interest.iter().map(|p| p.rotations()).collect();
+    let candidates: Vec<_> = beacons_of_interest.iter().map(Point3D::rotations).collect();
 
     for i in 0..24 {
         let next: Vec<_> = candidates.iter().map(|&rotations| rotations[i]).collect();
         if check_deltas(known, &next) {
             if let Some(offset) = check_offsets(known, &next) {
                 let oriented: Vec<_> = scanner.beacons.iter().map(|p| p.rotations()[i]).collect();
-                let located = Located::from(oriented, scanner.signature.clone(), offset);
+                let located = Located::from(&oriented, scanner.signature.clone(), offset);
                 return Some(located);
             }
         }
@@ -231,11 +231,11 @@ fn check_deltas(known: &Located, next: &[Point3D]) -> bool {
 }
 
 fn check_offsets(known: &Located, next: &[Point3D]) -> Option<Point3D> {
-    for first in known.beacons.iter() {
-        for second in next.iter() {
+    for first in &known.beacons {
+        for second in next {
             let offset = *first - *second;
             let mut candidates = FastSetBuilder::with_capacity(30);
-            for &point in next.iter() {
+            for &point in next {
                 candidates.insert(point + offset);
             }
 

@@ -48,7 +48,7 @@ pub fn parse(input: &str) -> Vec<Snailfish> {
         let mut tree = [-1; 63];
         let mut i = 0;
 
-        for &b in bytes.iter() {
+        for &b in bytes {
             match b {
                 b'[' => i = 2 * i + 1,
                 b',' => i += 1,
@@ -159,7 +159,7 @@ fn explode(tree: &mut Snailfish, pair: usize) {
 /// as we know that the prior optimzation in the [`add`] function means that this is the only
 /// explosion possible.
 fn split(tree: &mut Snailfish) -> bool {
-    for &i in IN_ORDER.iter() {
+    for &i in &IN_ORDER {
         if tree[i] >= 10 {
             tree[2 * i + 1] = tree[i] / 2;
             tree[2 * i + 2] = (tree[i] + 1) / 2;

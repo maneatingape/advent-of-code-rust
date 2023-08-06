@@ -9,8 +9,7 @@ pub fn parse(input: &str) -> Vec<i32> {
 
     for token in input.split_ascii_whitespace() {
         match token {
-            "noop" => (),
-            "addx" => (),
+            "noop" | "addx" => (),
             delta => x += delta.signed::<i32>(),
         }
         xs.push(x);

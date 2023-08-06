@@ -16,7 +16,7 @@ use crate::util::iter::*;
 pub fn parse(input: &str) -> Vec<usize> {
     input
         .as_bytes()
-        .split(|b| b.is_ascii_whitespace())
+        .split(u8::is_ascii_whitespace)
         .chunk::<2>()
         .map(|[a, b]| (3 * (a[0] - b'A') + b[0] - b'X') as usize)
         .collect()

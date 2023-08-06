@@ -84,7 +84,7 @@ pub fn parse(input: &str) -> Input {
         tokens.clear();
     }
 
-    let messages = suffix.lines().map(|line| line.as_bytes()).collect();
+    let messages = suffix.lines().map(str::as_bytes).collect();
     (rules, messages)
 }
 

@@ -57,7 +57,7 @@ pub fn part2(input: &[String]) -> u32 {
     let mut first = 1;
     let mut second = 2;
 
-    for packet in input.iter() {
+    for packet in input {
         if compare(packet, "[[2]]") {
             first += 1;
             second += 1;

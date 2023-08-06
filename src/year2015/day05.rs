@@ -25,7 +25,7 @@
 //! This means that if the difference is greater than the current position in the string we can
 //! sure that we haven't encountered this pair in this particular string before.
 pub fn parse(input: &str) -> Vec<&[u8]> {
-    input.lines().map(|line| line.as_bytes()).collect()
+    input.lines().map(str::as_bytes).collect()
 }
 
 pub fn part1(input: &[&[u8]]) -> usize {

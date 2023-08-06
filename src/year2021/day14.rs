@@ -48,7 +48,7 @@ pub fn parse(input: &str) -> Input {
     prefix.windows(2).for_each(|w| pairs[pair(w[0], w[1])] += 1);
 
     let rules: Vec<_> =
-        suffix.bytes().filter(|b| b.is_ascii_uppercase()).chunk::<3>().map(Rule::parse).collect();
+        suffix.bytes().filter(u8::is_ascii_uppercase).chunk::<3>().map(Rule::parse).collect();
 
     Input { elements, pairs, rules }
 }

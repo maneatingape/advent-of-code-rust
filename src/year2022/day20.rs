@@ -66,7 +66,7 @@ impl Tree {
             let next = self.nodes[cur as usize].up;
             let Node { left, right, .. } = self.nodes[next as usize];
             if right == cur {
-                offset += self.nodes[left as usize].size
+                offset += self.nodes[left as usize].size;
             };
             cur = next;
         }
@@ -104,7 +104,7 @@ impl Tree {
             let Node { left, right, .. } = self.nodes[next as usize];
 
             if right == cur {
-                offset += self.nodes[left as usize].size
+                offset += self.nodes[left as usize].size;
             };
             self.nodes[next as usize].size -= 1;
             cur = next;

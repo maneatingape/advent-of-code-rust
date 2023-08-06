@@ -45,9 +45,8 @@ fn two_sum(slice: &[usize], target: usize, hash: &mut [usize], round: usize) -> 
         if i < target {
             if hash[i] == round {
                 return Some(i * (target - i));
-            } else {
-                hash[target - i] = round;
             }
+            hash[target - i] = round;
         }
     }
 

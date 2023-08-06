@@ -31,13 +31,13 @@ pub fn parse(input: &str) -> Haversack {
     let mut indices = FastMapBuilder::with_capacity(1_000);
     let mut bags = Vec::with_capacity(1_000);
 
-    for line in lines.iter() {
+    for line in &lines {
         let mut tokens = line.split_ascii_whitespace().chunk::<2>();
         let [first_name, second_name] = tokens.next().unwrap();
         indices.insert([first_name, second_name], indices.len());
     }
 
-    for line in lines.iter() {
+    for line in &lines {
         let tokens = line.split_ascii_whitespace().chunk::<4>().skip(1).enumerate();
         let mut bag = [None; 4];
 

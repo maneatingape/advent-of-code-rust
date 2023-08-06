@@ -101,8 +101,8 @@ pub fn part2(input: &FastSet<Hex>) -> usize {
     for _ in 0..100 {
         let mut state: Vec<u8> = vec![0; (width * height) as usize];
 
-        for &tile in active.iter() {
-            for &offset in neighbors.iter() {
+        for &tile in &active {
+            for &offset in &neighbors {
                 // Earlier we converted the offsets from signed `i32` to unsigned `usize`. To
                 // achieve subtraction for negative indices, we use a `wrapping_add` that performs
                 // [two's complement](https://en.wikipedia.org/wiki/Two%27s_complement) arithmetic.
@@ -116,14 +116,14 @@ pub fn part2(input: &FastSet<Hex>) -> usize {
         }
 
         // Active tiles remain active with both one and two neighbors.
-        for &tile in active.iter() {
+        for &tile in &active {
             if state[tile] == 1 {
                 next_active.push(tile);
             }
         }
 
         // Check that the neighbor count for inactive tiles hasn't exceeded two.
-        for &tile in candidates.iter() {
+        for &tile in &candidates {
             if state[tile] == 2 {
                 next_active.push(tile);
             }

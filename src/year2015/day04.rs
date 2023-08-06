@@ -49,10 +49,9 @@ fn find(input: &[u8], mask: u32) -> u32 {
                 buffer[index] = b'1';
                 size += 1;
                 break;
-            } else {
-                buffer[index] = b'0';
-                index -= 1;
             }
+            buffer[index] = b'0';
+            index -= 1;
         }
 
         if hash(&buffer[..(size + 1)]).0 & mask == 0 {

@@ -13,7 +13,7 @@ pub struct Input<'a> {
 }
 
 pub fn parse(input: &str) -> Input {
-    let numbers: Vec<_> = input.lines().map(|line| line.as_bytes()).collect();
+    let numbers: Vec<_> = input.lines().map(str::as_bytes).collect();
     Input { width: numbers[0].len(), numbers }
 }
 

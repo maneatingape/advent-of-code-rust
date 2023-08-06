@@ -25,10 +25,10 @@ pub fn part1(input: &State) -> u64 {
         rolls += 3;
 
         if next_score >= 1000 {
-            return other_score * rolls;
-        } else {
-            state = ((other_position, other_score), (next_position, next_score));
+            break other_score * rolls;
         }
+
+        state = ((other_position, other_score), (next_position, next_score));
     }
 }
 

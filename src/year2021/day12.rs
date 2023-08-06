@@ -74,7 +74,7 @@ pub fn parse(input: &str) -> Input {
     edges.iter_mut().for_each(|edge| *edge &= not_start);
 
     let mut small = 0;
-    for (key, value) in indices.iter() {
+    for (key, value) in &indices {
         if key.chars().next().unwrap().is_ascii_lowercase() {
             small |= 1 << value;
         }

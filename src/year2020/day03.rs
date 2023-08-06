@@ -29,7 +29,7 @@ fn toboggan(grid: &Grid<u8>, dx: i32, dy: i32) -> u64 {
 
     while point.y < grid.height {
         if grid[point] == b'#' {
-            trees += 1
+            trees += 1;
         }
         point.x = (point.x + dx) % grid.width;
         point.y += dy;

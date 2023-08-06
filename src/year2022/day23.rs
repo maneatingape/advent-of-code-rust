@@ -104,7 +104,7 @@ pub struct Input {
 
 pub fn parse(input: &str) -> Input {
     let offset = 70;
-    let raw: Vec<&[u8]> = input.lines().map(|line| line.as_bytes()).collect();
+    let raw: Vec<&[u8]> = input.lines().map(str::as_bytes).collect();
     let default = [U256::default(); HEIGHT];
     let mut grid = default;
 
@@ -128,11 +128,11 @@ pub fn part1(input: &Input) -> u32 {
     }
 
     let grid = input.grid;
-    let elves: u32 = grid.iter().map(|r| r.count_ones()).sum();
-    let min_x = grid.iter().flat_map(|r| r.min_set()).min().unwrap();
-    let max_x = grid.iter().flat_map(|r| r.max_set()).max().unwrap();
-    let min_y = grid.iter().position(|r| r.non_zero()).unwrap() as u32;
-    let max_y = grid.iter().rposition(|r| r.non_zero()).unwrap() as u32;
+    let elves: u32 = grid.iter().map(U256::count_ones).sum();
+    let min_x = grid.iter().flat_map(U256::min_set).min().unwrap();
+    let max_x = grid.iter().flat_map(U256::max_set).max().unwrap();
+    let min_y = grid.iter().position(U256::non_zero).unwrap() as u32;
+    let max_y = grid.iter().rposition(U256::non_zero).unwrap() as u32;
 
     (max_x - min_x + 1) * (max_y - min_y + 1) - elves
 }
@@ -145,7 +145,7 @@ pub fn part2(input: &Input) -> u32 {
 
     while moved {
         moved = step(&mut input, &mut order);
-        count += 1
+        count += 1;
     }
 
     count
@@ -153,8 +153,8 @@ pub fn part2(input: &Input) -> u32 {
 
 fn step(input: &mut Input, order: &mut [Direction]) -> bool {
     let Input { grid, north, south, west, east } = input;
-    let start = grid.iter().position(|r| r.non_zero()).unwrap() - 1;
-    let end = grid.iter().rposition(|r| r.non_zero()).unwrap() + 2;
+    let start = grid.iter().position(U256::non_zero).unwrap() - 1;
+    let end = grid.iter().rposition(U256::non_zero).unwrap() + 2;
 
     let mut moved = false;
 

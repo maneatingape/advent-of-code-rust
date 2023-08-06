@@ -54,7 +54,7 @@ impl MathOps for u64 {
         }
 
         if t < 0 {
-            t += m as i64
+            t += m as i64;
         }
         t as u64
     }
