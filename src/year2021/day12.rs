@@ -12,8 +12,8 @@
 //!   cave connections as an [adjacency matrix](https://en.wikipedia.org/wiki/Adjacency_matrix)
 //!   and the list of visited caves compressed into a single `u32` is the low level strategy to
 //!   quickly and efficiently store the small cardinality set of caves.
+use crate::util::hash::*;
 use crate::util::iter::*;
-use std::collections::HashMap;
 
 const START: usize = 0;
 const END: usize = 1;
@@ -58,7 +58,7 @@ pub fn parse(input: &str) -> Input {
     let tokens: Vec<_> =
         input.split(|c: char| !c.is_ascii_alphabetic()).filter(|s| !s.is_empty()).collect();
 
-    let mut indices = HashMap::from([("start", START), ("end", END)]);
+    let mut indices = FastMapBuilder::from([("start", START), ("end", END)]);
     for token in &tokens {
         if !indices.contains_key(token) {
             indices.insert(token, indices.len());

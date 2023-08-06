@@ -1,6 +1,7 @@
+use crate::util::hash::*;
 use crate::util::parse::*;
 use std::cmp::Ordering;
-use std::collections::{HashMap, VecDeque};
+use std::collections::VecDeque;
 
 pub struct Input {
     size: usize,
@@ -51,7 +52,7 @@ pub fn parse(input: &str) -> Input {
 
     let size = valves.iter().filter(|v| v.flow > 0).count() + 1;
     let mut distance = vec![u32::MAX; size * size];
-    let indices: HashMap<&str, usize> =
+    let indices: FastMap<&str, usize> =
         valves.iter().enumerate().map(|(i, v)| (v.name, i)).collect();
 
     // Eliminate zero valves

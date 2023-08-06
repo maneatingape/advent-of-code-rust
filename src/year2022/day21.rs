@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use crate::util::hash::*;
 
 #[derive(Clone, Copy)]
 enum Operation {
@@ -14,7 +14,7 @@ enum Monkey {
 }
 
 impl Monkey {
-    fn parse(bytes: &[u8], indices: &HashMap<&[u8], usize>) -> Monkey {
+    fn parse(bytes: &[u8], indices: &FastMap<&[u8], usize>) -> Monkey {
         if bytes.len() < 11 {
             let number = std::str::from_utf8(bytes).unwrap().parse().unwrap();
             Monkey::Number(number)
@@ -43,7 +43,7 @@ pub struct Input {
 pub fn parse(input: &str) -> Input {
     let lines: Vec<&[u8]> = input.lines().map(|line| line.as_bytes()).collect();
 
-    let indices: HashMap<&[u8], usize> =
+    let indices: FastMap<&[u8], usize> =
         lines.iter().enumerate().map(|(index, line)| (&line[0..4], index)).collect();
 
     let monkeys: Vec<Monkey> =

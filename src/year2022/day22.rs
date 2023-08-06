@@ -1,7 +1,8 @@
+use crate::util::hash::*;
 use crate::util::math::*;
 use crate::util::parse::*;
 use crate::util::point::*;
-use std::collections::{HashMap, VecDeque};
+use std::collections::VecDeque;
 
 #[derive(Clone, Copy, PartialEq, Eq)]
 enum Tile {
@@ -108,8 +109,8 @@ pub fn part2(input: &Input) -> i32 {
         k: Vector { x: 0, y: 0, z: 1 },
     };
     let mut todo = VecDeque::from([start]);
-    let mut faces = HashMap::from([(start.k, start)]);
-    let mut corners = HashMap::from([(start.corner, start)]);
+    let mut faces = FastMapBuilder::from([(start.k, start)]);
+    let mut corners = FastMapBuilder::from([(start.corner, start)]);
 
     while let Some(next) = todo.pop_front() {
         let Face { corner, i, j, k } = next;

@@ -5,7 +5,7 @@
 //! By default, Rust's [`HashMap`] and [`HashSet`] use a [DDoS](https://en.wikipedia.org/wiki/Denial-of-service_attack)
 //! resistant but slower hashing algorithm. [`FxHasher`] is much faster (between 2x to 5x from my testing).
 use std::collections::{HashMap, HashSet};
-use std::hash::{BuildHasher, Hasher};
+use std::hash::{BuildHasher, Hash, Hasher};
 
 /// Type alias for [`HashSet`] using [`FxHasher`].
 pub type FastSet<T> = HashSet<T, BuildFxHasher>;
@@ -28,6 +28,12 @@ impl FastSetBuilder {
 }
 
 impl FastMapBuilder {
+    pub fn from<K: Eq + Hash, V, const N: usize>(array: [(K, V); N]) -> FastMap<K, V> {
+        let mut map = Self::empty();
+        map.extend(array);
+        map
+    }
+
     pub fn empty<K, V>() -> FastMap<K, V> {
         HashMap::with_hasher(BuildFxHasher)
     }
