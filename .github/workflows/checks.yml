@@ -1,0 +1,20 @@
+name: Checks
+
+on:
+  push:
+    branches: main
+  pull_request:
+    branches: main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+    - name: Check code formatting is consistent
+      run: cargo fmt --check
+    - name: Lint code
+      run: cargo clippy -- --deny warnings
+    - name: Run all tests
+      run: cargo test
