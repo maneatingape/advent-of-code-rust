@@ -18,19 +18,29 @@
 //! * Do a similar push if the second character is an opening `[` and the first anything else.
 //! * Finally compare the 2 characters by value. Since we've already covered the equal case, one
 //!   is guaranteed to be greater or less than the other.
+struct Packet<'a> {
+    slice: &'a [u8],
+    index: usize,
+    extra: Vec<u8>,
+}
 
-/// Replace `10` with `A` in each packet and strip empty lines.
-pub fn parse(input: &str) -> Vec<String> {
-    input.lines().filter(|line| !line.is_empty()).map(|line| line.replace("10", "A")).collect()
+impl Packet<'_> {
+    fn new(str: &str) -> Packet {
+        Packet { slice: str.as_bytes(), index: 0, extra: Vec::new() }
+    }
+}
+
+pub fn parse(input: &str) -> Vec<&str> {
+    input.lines().filter(|line| !line.is_empty()).collect()
 }
 
 /// Count adjacent pairs of packets that are in order.
-pub fn part1(input: &[String]) -> usize {
+pub fn part1(input: &[&str]) -> usize {
     input
         .chunks_exact(2)
         .enumerate()
         .map(|(i, chunk)| {
-            let ordered = compare(&chunk[0], &chunk[1]);
+            let ordered = compare(chunk[0], chunk[1]);
             if ordered {
                 i + 1
             } else {
@@ -53,7 +63,7 @@ pub fn part1(input: &[String]) -> usize {
 /// the second index if the 2 packets are in order.
 ///
 /// This obtains the relative indices of `[[2]]` and `[[6]]` efficiently in fewer than `2n` comparisons.
-pub fn part2(input: &[String]) -> u32 {
+pub fn part2(input: &[&str]) -> u32 {
     let mut first = 1;
     let mut second = 2;
 
@@ -78,30 +88,45 @@ pub fn part2(input: &[String]) -> u32 {
 /// [`VecDeque`]: std::collections::VecDeque
 /// [`or_else`]: Option::or_else
 fn compare(left: &str, right: &str) -> bool {
-    let mut left_iter = left.chars();
-    let mut right_iter = right.chars();
-    let mut left_extra: Vec<char> = Vec::new();
-    let mut right_extra: Vec<char> = Vec::new();
+    let mut left = Packet::new(left);
+    let mut right = Packet::new(right);
 
-    while let (Some(a), Some(b)) = (
-        left_extra.pop().or_else(|| left_iter.next()),
-        right_extra.pop().or_else(|| right_iter.next()),
-    ) {
+    while let (Some(a), Some(b)) = (left.next(), right.next()) {
         match (a, b) {
             (a, b) if a == b => (),
-            (']', _) => return true,
-            (_, ']') => return false,
-            ('[', b) => {
-                right_extra.push(']');
-                right_extra.push(b);
+            (b']', _) => return true,
+            (_, b']') => return false,
+            (b'[', b) => {
+                right.extra.push(b']');
+                right.extra.push(b);
             }
-            (a, '[') => {
-                left_extra.push(']');
-                left_extra.push(a);
+            (a, b'[') => {
+                left.extra.push(b']');
+                left.extra.push(a);
             }
             (a, b) => return a < b,
         }
     }
 
     unreachable!();
+}
+
+impl Iterator for Packet<'_> {
+    type Item = u8;
+
+    // Rely on the fact that all input is valid to avoid bounds checks
+    fn next(&mut self) -> Option<Self::Item> {
+        self.extra.pop().or_else(|| {
+            let (index, slice) = (self.index, self.slice);
+
+            // Replace occurences of "10" with "A"
+            if slice[index] == b'1' && slice[index + 1] == b'0' {
+                self.index += 2;
+                Some(b'A')
+            } else {
+                self.index += 1;
+                Some(slice[index])
+            }
+        })
+    }
 }
