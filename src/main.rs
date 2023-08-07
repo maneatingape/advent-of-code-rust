@@ -4,8 +4,6 @@ use std::env::args;
 use std::time::Instant;
 
 fn main() {
-    let foo = "Hello";
-
     // ANSI escape codes
     const RESET: &str = "\x1b[0m";
     const BOLD: &str = "\x1b[1m";
