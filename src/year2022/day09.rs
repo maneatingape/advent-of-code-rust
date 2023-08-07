@@ -1,44 +1,49 @@
 //! # Rope Bridge
 //!
-//! This solution relies on two of our utility classes. Two dimensional problems are common in AoC,
-//! so having a decent [`Point`] (or `Coord` or `Pos`) class in your back pocket is handy.
-//!
-//! The second utility class is [`FastSet`]. By default, Rust's [`HashMap`] and [`HashSet`] use
-//! a [DDoS](https://en.wikipedia.org/wiki/Denial-of-service_attack) resistant but slower hashing
-//! algorithm. The [`FastSet`] class replaces this with a much faster (between 2x to 5x from my testing)
-//! algorithm, used by both the [RustC compiler](https://github.com/rust-lang/rustc-hash) and also
-//! used by [Firefox](https://nnethercote.github.io/2021/12/08/a-brutally-effective-hash-function-in-rust.html).
-//!
-//! [`HashSet`]: std::collections::HashSet
-//! [`HashMap`]: std::collections::HashMap
-use crate::util::hash::*;
+//! This solution relies on the [`Point`] utility class. Two dimensional problems are common in AoC,
+//! so having a decent `Point` (or `Coord` or `Pos`) class in your back pocket is handy.
 use crate::util::iter::*;
 use crate::util::parse::*;
 use crate::util::point::*;
 
-type Input = (Point, u32);
+type Pair = (Point, i32);
+type Input = ([i32; 4], Vec<Pair>);
 
 /// Converts input lines into a pair of [`Point`] and integer amount, to indicate direction and
-/// magnitude respectively.
-pub fn parse(input: &str) -> Vec<Input> {
-    input
+/// magnitude respectively. Then determines the maximum extent of the head so that we can allocate
+/// a two dimensional grid.
+pub fn parse(input: &str) -> Input {
+    let pairs: Vec<_> = input
         .split_ascii_whitespace()
         .chunk::<2>()
-        .map(|[d, n]| {
-            let point = Point::from_string(d);
-            let amount = n.unsigned();
-            (point, amount)
-        })
-        .collect()
+        .map(|[d, n]| (Point::from_string(d), n.signed()))
+        .collect();
+
+    // Determine maximum extents
+    let mut x1 = i32::MAX;
+    let mut y1 = i32::MAX;
+    let mut x2 = i32::MIN;
+    let mut y2 = i32::MIN;
+    let mut point = ORIGIN;
+
+    for &(step, amount) in &pairs {
+        point += step * amount;
+        x1 = x1.min(point.x);
+        y1 = y1.min(point.y);
+        x2 = x2.max(point.x);
+        y2 = y2.max(point.y);
+    }
+
+    ([x1, y1, x2, y2], pairs)
 }
 
 /// Simulate a rope length of 2
-pub fn part1(input: &[Input]) -> usize {
+pub fn part1(input: &Input) -> u32 {
     simulate::<2>(input)
 }
 
 /// Simulate a rope length of 10
-pub fn part2(input: &[Input]) -> usize {
+pub fn part2(input: &Input) -> u32 {
     simulate::<10>(input)
 }
 
@@ -46,34 +51,42 @@ pub fn part2(input: &[Input]) -> usize {
 ///
 /// The head knot always moves according the instructions from the problem input. Remaining knots
 /// move according to their delta from the head (2nd knot) or the previous knot
-/// (3rd and subsequent knots). A `FastSet` stores unique points visited by the tail.
+/// (3rd and subsequent knots).
 ///
 /// Using const generics for the rope length allows the compiler to optimize the loop and speeds
 /// things up by about 40%.
-fn simulate<const N: usize>(input: &[Input]) -> usize {
-    let mut rope: Vec<Point> = vec![ORIGIN; N];
-    let mut tail: FastSet<Point> = FastSetBuilder::with_capacity(5_000);
+fn simulate<const N: usize>(input: &Input) -> u32 {
+    let ([x1, y1, x2, y2], pairs) = input;
+    let width = x2 - x1 + 1;
+    let height = y2 - y1 + 1;
+    let start = Point { x: -x1, y: -y1 };
 
-    let mut last = ORIGIN;
-    tail.insert(last);
+    let mut distinct = 0;
+    let mut rope = [start; N];
+    let mut grid = vec![false; (width * height) as usize];
 
-    for &(step, amount) in input {
+    for &(step, amount) in pairs {
         for _ in 0..amount {
             rope[0] += step;
             for i in 1..N {
-                if apart(rope[i - 1], rope[i]) {
-                    let next = delta(rope[i - 1], rope[i]);
-                    rope[i] += next;
+                if !apart(rope[i - 1], rope[i]) {
+                    break;
                 }
+                let next = delta(rope[i - 1], rope[i]);
+                rope[i] += next;
             }
-            if rope[N - 1] != last {
-                last = rope[N - 1];
-                tail.insert(last);
+
+            let tail = rope[N - 1];
+            let index = (width * tail.y + tail.x) as usize;
+
+            if !grid[index] {
+                grid[index] = true;
+                distinct += 1;
             }
         }
     }
 
-    tail.len()
+    distinct
 }
 
 /// Two knots are considered "apart" if the they are not diagonally adjacent, that is the absolute
