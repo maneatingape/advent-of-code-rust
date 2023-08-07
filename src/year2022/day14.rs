@@ -1,64 +1,86 @@
 use crate::util::parse::*;
+use Kind::*;
 
+#[derive(Clone, Copy, PartialEq, Eq)]
+enum Kind {
+    Air,
+    Falling,
+    Stopped,
+}
+
+#[derive(Clone)]
 pub struct Cave {
-    sand: Vec<bool>,
-    width: u32,
-    height: u32,
-    start: u32,
-    floor: bool,
+    width: usize,
+    height: usize,
+    size: usize,
+    kind: Vec<Kind>,
+    floor: Kind,
     count: u32,
 }
 
 impl Cave {
-    fn fall(&mut self, x: u32, y: u32) -> bool {
-        let index = (y * self.width + x) as usize;
-        if self.sand[index] {
-            true
-        } else if y == self.height - 1 {
-            self.floor
-        } else if self.fall(x, y + 1) && self.fall(x - 1, y + 1) && self.fall(x + 1, y + 1) {
-            self.sand[index] = true;
+    fn fall(&mut self, index: usize) -> Kind {
+        let result = self.check(index + self.width)
+            && self.check(index + self.width - 1)
+            && self.check(index + self.width + 1);
+
+        if result {
             self.count += 1;
-            true
+            self.kind[index] = Stopped;
+            Stopped
         } else {
-            false
+            self.kind[index] = Falling;
+            Falling
         }
+    }
+
+    fn check(&mut self, index: usize) -> bool {
+        let kind = if index >= self.size {
+            self.floor
+        } else if self.kind[index] == Air {
+            self.fall(index)
+        } else {
+            self.kind[index]
+        };
+        kind == Stopped
     }
 }
 
 pub fn parse(input: &str) -> Cave {
-    let points: Vec<Vec<u32>> = input.lines().map(|line| line.iter_unsigned().collect()).collect();
-    let max_y = points.iter().flat_map(|row| row.iter().skip(1).step_by(2).max()).max().unwrap();
+    let unsigned = |line: &str| line.iter_unsigned().collect();
+    let points: Vec<Vec<usize>> = input.lines().map(unsigned).collect();
+    let max_y = points.iter().flat_map(|row| row.iter().skip(1).step_by(2)).max().unwrap();
     let width = 2 * max_y + 5;
-    let height = max_y + 3;
-    let start = max_y + 2;
-    let mut sand = vec![false; (width * height) as usize];
+    let height = max_y + 2;
+    let size = width * height;
+    let mut kind = vec![Air; size];
 
     for row in points {
         for window in row.windows(4).step_by(2) {
-            if let [x1, y1, x2, y2] = window {
-                for x in *x1.min(x2)..=*x1.max(x2) {
-                    for y in *y1.min(y2)..=*y1.max(y2) {
-                        sand[((y * width) + (x + start - 500)) as usize] = true;
+            if let &[x1, y1, x2, y2] = window {
+                for x in x1.min(x2)..=x1.max(x2) {
+                    for y in y1.min(y2)..=y1.max(y2) {
+                        kind[(width * y) + (x + height - 500)] = Stopped;
                     }
                 }
             }
         }
     }
 
-    Cave { sand, width, height, start, floor: false, count: 0 }
+    Cave { width, height, size, kind, floor: Air, count: 0 }
 }
 
 pub fn part1(input: &Cave) -> u32 {
-    simulate(input, false)
+    simulate(input, Falling)
 }
 
 pub fn part2(input: &Cave) -> u32 {
-    simulate(input, true)
+    simulate(input, Stopped)
 }
 
-fn simulate(input: &Cave, floor: bool) -> u32 {
-    let mut cave = Cave { sand: input.sand.clone(), floor, ..*input };
-    cave.fall(cave.start, 0);
+fn simulate(input: &Cave, floor: Kind) -> u32 {
+    let mut cave = input.clone();
+    cave.floor = floor;
+    cave.fall(cave.height);
     cave.count
 }
