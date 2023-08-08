@@ -85,7 +85,7 @@ fn eval(input: &[&[u8]], part_one: bool) -> u64 {
                     let b = stack.pop().unwrap();
                     stack.push(a * b);
                 }
-                _ => unreachable!(),
+                Token::Open => unreachable!(),
             }
         }
     }

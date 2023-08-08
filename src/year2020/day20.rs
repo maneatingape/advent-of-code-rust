@@ -147,7 +147,7 @@ impl Edge {
         *self = match self {
             Edge::Zero => Edge::One(variant),
             Edge::One(prev) => Edge::Two(*prev, variant),
-            _ => unreachable!(),
+            Edge::Two(_, _) => unreachable!(),
         }
     }
 
@@ -159,7 +159,7 @@ impl Edge {
                 Edge::One(*remaining)
             }
             Edge::One(_) => Edge::Zero,
-            _ => unreachable!(),
+            Edge::Zero => unreachable!(),
         }
     }
 }

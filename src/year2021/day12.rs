@@ -103,7 +103,7 @@ fn explore(input: &Input, twice: bool) -> u32 {
     let mut cache = vec![0; size];
 
     let state = State { from: START, visited: 0, twice };
-    paths(input, state, &mut cache)
+    paths(input, &state, &mut cache)
 }
 
 /// Core recursive DFS logic.
@@ -122,17 +122,16 @@ fn explore(input: &Input, twice: bool) -> u32 {
 /// `once && twice` sets this value to `false` whenever we need to use it to visit a small cave.
 ///
 /// [`trailing_zeros`]: u32::trailing_zeros
-fn paths(input: &Input, state: State, cache: &mut [u32]) -> u32 {
-    let State { from, visited, twice } = state;
+fn paths(input: &Input, state: &State, cache: &mut [u32]) -> u32 {
+    let State { from, visited, twice } = *state;
 
     // Calculate index by converting "twice" to either 1 or 0, then multiplying "from" by 2
     // (the cardinality of "twice") and "visited" by "edges.len()".
     // Subtle nuance, by not multiplying "visited" by 2 and also dividing by 2 we ignore the
     // two least significant bits for start and end cave, as these will always be 0 and 1
     // respectively.
-    let index = state.twice as usize
-        + 2 * (state.from)
-        + (input.edges.len() * (state.visited as usize / 2));
+    let index =
+        state.twice as usize + 2 * (state.from) + (input.edges.len() * (visited as usize / 2));
     let total = cache[index];
     if total > 0 {
         return total;
@@ -155,7 +154,7 @@ fn paths(input: &Input, state: State, cache: &mut [u32]) -> u32 {
         let once = input.small & mask == 0 || visited & mask == 0;
         if once || twice {
             let next = State { from: to, visited: visited | mask, twice: once && twice };
-            total += paths(input, next, cache);
+            total += paths(input, &next, cache);
         }
     }
 

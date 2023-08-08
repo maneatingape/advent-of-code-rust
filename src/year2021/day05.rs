@@ -20,7 +20,7 @@ pub fn parse(input: &str) -> [usize; 2] {
     let (orthogonal, diagonal): (Vec<_>, Vec<_>) =
         all.iter().partition(|[x1, y1, x2, y2]| x1 == x2 || y1 == y2);
 
-    let mut grid = [0u8; 1_000_000];
+    let mut grid = vec![0u8; 1_000_000];
     let first = vents(&orthogonal, &mut grid);
     let second = vents(&diagonal, &mut grid);
 
@@ -35,7 +35,7 @@ pub fn part2(input: &[usize]) -> usize {
     input[0] + input[1]
 }
 
-fn vents(input: &[Vent], grid: &mut [u8; 1_000_000]) -> usize {
+fn vents(input: &[Vent], grid: &mut [u8]) -> usize {
     let mut result = 0;
 
     for &[x1, y1, x2, y2] in input {

@@ -186,7 +186,7 @@ pub fn part2(input: &[Instruction]) -> u64 {
     for (i, set) in sets.iter().enumerate() {
         sets[(i + 1)..]
             .iter()
-            .flat_map(|other| set.intersect(other))
+            .filter_map(|other| set.intersect(other))
             .for_each(|next| candidates.push(next));
 
         let size = set.size() + subsets(set, -1, &candidates);

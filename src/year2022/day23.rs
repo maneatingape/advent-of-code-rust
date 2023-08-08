@@ -129,8 +129,8 @@ pub fn part1(input: &Input) -> u32 {
 
     let grid = input.grid;
     let elves: u32 = grid.iter().map(U256::count_ones).sum();
-    let min_x = grid.iter().flat_map(U256::min_set).min().unwrap();
-    let max_x = grid.iter().flat_map(U256::max_set).max().unwrap();
+    let min_x = grid.iter().filter_map(U256::min_set).min().unwrap();
+    let max_x = grid.iter().filter_map(U256::max_set).max().unwrap();
     let min_y = grid.iter().position(U256::non_zero).unwrap() as u32;
     let max_y = grid.iter().rposition(U256::non_zero).unwrap() as u32;
 
@@ -174,7 +174,7 @@ fn step(input: &mut Input, order: &mut [Direction]) -> bool {
         let mut right = horizontal.left_shift();
         let mut remaining = grid[i] & !(up & down & left & right);
 
-        for direction in order.iter() {
+        for direction in &*order {
             match direction {
                 North => {
                     up &= remaining;

@@ -65,7 +65,7 @@ pub fn part1(input: &[RebootStep]) -> i64 {
 
     let filtered: Vec<_> = input
         .iter()
-        .flat_map(|RebootStep { on, cube }| {
+        .filter_map(|RebootStep { on, cube }| {
             region.intersect(cube).map(|next| RebootStep { on: *on, cube: next })
         })
         .collect();
@@ -81,7 +81,7 @@ pub fn part2(input: &[RebootStep]) -> i64 {
     for (i, cube) in on_cubes {
         input[(i + 1)..]
             .iter()
-            .flat_map(|rs| cube.intersect(&rs.cube))
+            .filter_map(|rs| cube.intersect(&rs.cube))
             .for_each(|next| candidates.push(next));
 
         total += cube.volume() + subsets(&cube, -1, &candidates);

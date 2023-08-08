@@ -33,7 +33,7 @@ pub fn part1(input: &State) -> u64 {
 }
 
 pub fn part2(input: &State) -> u64 {
-    let mut cache: [Option<Pair>; 44100] = [None; 44100];
+    let mut cache = vec![None; 44100];
     let (win, lose) = dirac(*input, &mut cache);
     win.max(lose)
 }

@@ -23,11 +23,11 @@ impl Room {
         Room { packed: packed as u16 }
     }
 
-    fn size(&self) -> usize {
+    fn size(self) -> usize {
         ((15 - self.packed.leading_zeros()) / 3) as usize
     }
 
-    fn peek(&self) -> Option<usize> {
+    fn peek(self) -> Option<usize> {
         (self.packed > 1).then_some((self.packed & 0b111) as usize)
     }
 
@@ -37,7 +37,7 @@ impl Room {
         pod
     }
 
-    fn open(&self, kind: usize) -> bool {
+    fn open(self, kind: usize) -> bool {
         self.packed == 1
             || self.packed == (1 << 3) + (kind as u16)
             || self.packed == (1 << 6) + (kind as u16 * 9)
@@ -49,7 +49,7 @@ impl Room {
         self.packed = (self.packed << 3) | (kind as u16);
     }
 
-    fn spaces(&self, index: usize) -> usize {
+    fn spaces(self, index: usize) -> usize {
         let adjusted = 3 * (self.size() - 1 - index);
         ((self.packed >> adjusted) & 0b111) as usize
     }
@@ -65,7 +65,7 @@ impl Hallway {
         Hallway { packed: 0x55454545455 }
     }
 
-    fn get(&self, index: usize) -> usize {
+    fn get(self, index: usize) -> usize {
         (self.packed >> (index * 4)) & 0xf
     }
 

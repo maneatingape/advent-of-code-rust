@@ -35,6 +35,11 @@ pub fn part1_testable(input: &[Input], row: i32) -> i32 {
         }
     }
 
+    fn build_beacons(input: &Input, row: i32) -> Option<i32> {
+        let Input { beacon, .. } = input;
+        (beacon.y == row).then_some(beacon.x)
+    }
+
     let mut ranges: Vec<Range<i32>> = input.iter().filter_map(|i| build_range(i, row)).collect();
     ranges.sort_unstable_by(|a, b| a.start.cmp(&b.start));
 
@@ -51,12 +56,7 @@ pub fn part1_testable(input: &[Input], row: i32) -> i32 {
         }
     }
 
-    fn build_beacons(input: &Input, row: i32) -> Option<i32> {
-        let Input { beacon, .. } = input;
-        (beacon.y == row).then_some(beacon.x)
-    }
     let beacons: FastSet<i32> = input.iter().filter_map(|i| build_beacons(i, row)).collect();
-
     total - (beacons.len() as i32)
 }
 
