@@ -5,7 +5,7 @@
 // Configure rustdoc
 #![doc(html_logo_url = "https://maneatingape.github.io/advent-of-code-rust/logo.png")]
 #![allow(rustdoc::private_intra_doc_links)]
-// Include Clippy pedantic lints excluding noisy rules.
+// Clippy Pedantic lints excluding some noisy rules.
 #![warn(clippy::pedantic)]
 #![allow(clippy::similar_names)]
 #![allow(clippy::many_single_char_names)]
@@ -24,6 +24,15 @@
 #![allow(clippy::range_plus_one)]
 #![allow(clippy::naive_bytecount)]
 #![allow(clippy::implicit_hasher)]
+// Cherry pick some stylistic Clippy restriction lints
+#![warn(clippy::empty_structs_with_brackets)]
+#![warn(clippy::float_arithmetic)]
+#![warn(clippy::if_then_some_else_none)]
+#![warn(clippy::impl_trait_in_params)]
+//#![warn(clippy::redundant_type_annotations)] // Not supported by GitHub actions yet
+#![warn(clippy::rest_pat_in_fully_bound_structs)]
+#![warn(clippy::unneeded_field_pattern)]
+#![warn(clippy::unseparated_literal_suffix)]
 
 /// # Utility modules to handle common recurring Advent of Code patterns.
 pub mod util {

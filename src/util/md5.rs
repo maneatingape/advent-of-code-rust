@@ -13,11 +13,11 @@
 pub fn hash(message: &[u8]) -> (u32, u32, u32, u32) {
     let size = message.len();
 
-    let mut padded = [0u8; 56];
+    let mut padded = [0_u8; 56];
     padded[..size].copy_from_slice(message);
     padded[size] = 0x80;
 
-    let mut m = [0u32; 16];
+    let mut m = [0_u32; 16];
     for (i, chunk) in padded.chunks_exact(4).enumerate() {
         m[i] = u32::from_le_bytes(chunk.try_into().unwrap());
     }

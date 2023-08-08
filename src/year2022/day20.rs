@@ -137,7 +137,7 @@ impl Tree {
         offset = (offset as i64 + value).rem_euclid(self.size) as u16;
 
         loop {
-            let Node { size, left, right, up, .. } = self.nodes[cur as usize];
+            let Node { size, left, right, up } = self.nodes[cur as usize];
 
             if size == 1 {
                 self.nodes[parent as usize] = Node { size: 2, left: start as u16, right: cur, up };

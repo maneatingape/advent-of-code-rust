@@ -26,7 +26,7 @@ fn from_snafu(snafu: &&[u8]) -> i64 {
 
 fn to_snafu(decimal: i64) -> String {
     let mut n = decimal;
-    let mut digits: String = String::new();
+    let mut digits = String::new();
 
     while n > 0 {
         let next = match n % 5 {

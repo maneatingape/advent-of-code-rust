@@ -1,5 +1,5 @@
-use core::slice::Iter;
 use std::iter::{Copied, Cycle};
+use std::slice::Iter;
 
 type Wrapper<'a, T> = Cycle<Copied<Iter<'a, T>>>;
 
