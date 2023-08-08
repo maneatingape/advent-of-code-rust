@@ -48,7 +48,7 @@ impl Valve<'_> {
 
 pub fn parse(input: &str) -> Input {
     let mut valves: Vec<Valve> = input.lines().map(Valve::parse).collect();
-    valves.sort_unstable_by(|a, b| a.cmp(b));
+    valves.sort_unstable_by(Valve::cmp);
 
     let size = valves.iter().filter(|v| v.flow > 0).count() + 1;
     let mut distance = vec![u32::MAX; size * size];
