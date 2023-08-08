@@ -1,7 +1,7 @@
 //! # Elves Look, Elves Say
 //!
 //! There is a trick to solve this problem in constant time and space. While this is not possible
-//! for any arbitrary sequence, in AoC *we only need to solve for our given input*.
+//! for any arbitrary sequence, in Advent of Code *we only need to solve for our given input*.
 //!
 //! Examining the input shows that it consists of one of Conway's
 //! [atomic elements](https://en.wikipedia.org/wiki/Look-and-say_sequence#Cosmological_decay).

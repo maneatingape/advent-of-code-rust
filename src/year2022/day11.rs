@@ -1,8 +1,8 @@
 //! # Monkey in the Middle
 //!
-//! This problem is the combination of 2 AoC classics, extracting numbers from a wall of
-//! flavor text and modular arithmetic. For the first problem, our utility [`iter_unsigned`] method
-//! comes in handy.
+//! This problem is the combination of two Advent of Code classics, extracting numbers from a wall
+//! of flavor text and modular arithmetic. For the first problem, our utility [`iter_unsigned`]
+//! method comes in handy.
 //!
 //! For the second problem, the key insight for part 2 is that
 //! `a % m` is the same as `(a % n) % m` if `m` is a factor of `n`.

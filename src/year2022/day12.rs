@@ -2,7 +2,7 @@
 //!
 //! Pretty much textbook implementation of a BFS (Breadth First Search). If you're not familar with
 //! BFS, [this blog post is a great introduction](https://www.redblobgames.com/pathfinding/a-star/introduction.html)
-//! to the algorithm, plus some others that come in handy for AoC.
+//! to the algorithm, plus some others that come in handy for Advent of Code.
 //!
 //! Implementation notes:
 //! * A [`VecDeque`] of [`Point`] is used to store the frontier as it gives better performance

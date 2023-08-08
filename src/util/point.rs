@@ -1,8 +1,8 @@
 //! Comprehensive 2 dimensional point implementation. This class is designed to work together
 //! with the [`Grid`] class.
 //!
-//! A common theme in AoC is operations in 2 dimensions. This module provides a [`Point`] struct
-//! along with implementations of several of the [`std::ops`] traits to support
+//! A common theme in Advent of Code is operations in 2 dimensions. This module provides a
+//! [`Point`] struct along with implementations of several of the [`std::ops`] traits to support
 //! operator overloading, that allows shorthand expressions such as:
 //!
 //! ```

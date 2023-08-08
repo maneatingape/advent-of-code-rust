@@ -1,7 +1,7 @@
 //! # Toboggan Trajectory
 //!
-//! Two dimensional grids of ASCII characters are a common AoC theme, so we use our utility
-//! [`Grid`] class to parse the data.
+//! Two dimensional grids of ASCII characters are a common Advent of Code theme,
+//! so we use our utility [`Grid`] class to parse the data.
 //!
 //! [`Grid`]: crate::util::grid
 use crate::util::grid::*;

@@ -15,7 +15,7 @@
 ///
 /// Notes:
 /// * We need to [`trim`] to remove the trailing newline character
-/// * AoC input is always ASCII characters, so casting to an `u8` slice is acceptable.
+/// * Advent of Code input is always ASCII characters, so casting to an `u8` slice is acceptable.
 ///
 /// [`trim`]: str::trim
 pub fn parse(input: &str) -> Vec<usize> {

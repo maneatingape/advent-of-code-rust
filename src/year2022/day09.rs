@@ -1,7 +1,8 @@
 //! # Rope Bridge
 //!
-//! This solution relies on the [`Point`] utility class. Two dimensional problems are common in AoC,
-//! so having a decent `Point` (or `Coord` or `Pos`) class in your back pocket is handy.
+//! This solution relies on the [`Point`] utility class. Two dimensional problems are common in
+//! Advent of Code, so having a decent `Point` (or `Coord` or `Pos`) class in your back pocket
+//! is handy.
 use crate::util::iter::*;
 use crate::util::parse::*;
 use crate::util::point::*;

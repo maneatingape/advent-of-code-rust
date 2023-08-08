@@ -17,9 +17,9 @@
 //! ```
 //!
 //! A convenience [`parse`] method creates a `Grid` directly from a 2 dimenionsal set of
-//! ASCII characters, a common occurence in AoC inputs. The [`default_copy`] function creates a
-//! grid of the same size, that can be used for in BFS algorithms for tracking visited location
-//! or for tracking cost in Djikstra.
+//! ASCII characters, a common occurence in Advent of Code inputs. The [`default_copy`] function
+//! creates a grid of the same size, that can be used for in BFS algorithms for tracking visited
+//! location or for tracking cost in Djikstra.
 //!
 //! [`Point`]: crate::util::point
 //! [`parse`]: Grid::parse

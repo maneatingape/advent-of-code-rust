@@ -24,7 +24,7 @@ type Pairs = [u32; 4];
 /// Parse each line into 4 integers.
 ///
 /// Notes:
-/// * Extracting integers from redundant text is a very common theme in AoC that
+/// * Extracting integers from redundant text is a very common theme in Advent of Code that
 ///   the [`iter_unsigned`] method handles.
 ///
 /// [`iter_unsigned`]: ParseOps::iter_unsigned

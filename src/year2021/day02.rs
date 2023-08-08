@@ -1,8 +1,8 @@
 //! # Dive!
 //!
 //! Both part 1 and part 2 rely on the [`fold`] method. This method comes in useful for a lot
-//! of AoC problems so is handy to know about. The input is parsed into a tuple enum [`Sub`] for
-//! convenience.
+//! of Advent of Code problems so is handy to know about. The input is parsed into a tuple enum
+//! [`Sub`] for convenience.
 //!
 //! [`fold`]: Iterator::fold
 use crate::util::iter::*;

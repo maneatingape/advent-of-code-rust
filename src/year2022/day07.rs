@@ -1,7 +1,7 @@
 //! # No Space Left On Device
 //!
 //! Some up-front analysis of the input data helps us develop an efficient solving algorithm (this
-//! is a regular theme in AoC!). Looking at the directory commands shows 2 key insights:
+//! is a regular theme in Advent of Code!). Looking at the directory commands shows 2 key insights:
 //! * We never return to a previously visited directory
 //! * Directory traversal is only up or down in steps of one.
 //!

@@ -5,7 +5,7 @@
 //! circular buffer. Why use our own implementation when there is a perfectly good [`VecDeque`]
 //! already available? The answer is speed. As there are at most fifty cards in the pack, the Deck
 //! can use a fix sized stack allocated array, avoiding the expensive heap allocations that
-//! VecDeque must use.
+//! [`VecDeque`] must use.
 //!
 //! `Deck` also keeps the score up to date as cards are added and removed, as this comes in useful
 //! during part two. To update the score when a card is removed we subtract the card's value

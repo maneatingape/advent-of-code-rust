@@ -1,14 +1,15 @@
 //! Extracts and parses signed and unsigned integers from surrounding text and whitespace.
 //!
-//! A common pattern in AoC is to parse and return `123`, `456` and `789` from input resembling:
+//! A common pattern in Advent of Code is to parse and return `123`, `456` and `789` from input
+//! resembling:
 //!
 //! ```none
 //!   Lorem ipsum 123 dolor 456 sit 789 amet
 //! ```
 //!
 //! This module provides two [`&str`] extension methods [`iter_signed`] and [`iter_unsigned`]. The
-//! reason for the separate methods is that some AoC inputs contains the `-` character as a
-//! delimeter and this would cause numbers to be incorrectly parsed as negative.
+//! reason for the separate methods is that some Advent of Code inputs contains the `-` character
+//! as a delimeter and this would cause numbers to be incorrectly parsed as negative.
 //!
 //! [`iter_unsigned`]: ParseOps::iter_unsigned
 //! [`iter_signed`]: ParseOps::iter_signed

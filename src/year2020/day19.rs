@@ -49,7 +49,7 @@
 //!
 //! For example `42 42 31` or `42 42 42 31` or `42 42 42 31 31` matches but *not* `42 42 31 31`.
 //!
-//! Since we don't need to handle the general input case (a common pattern in AoC) we can
+//! Since we don't need to handle the general input case (a common pattern in Advent of Code) we can
 //! implement this rule directly in code.
 use crate::util::parse::*;
 use Rule::*;
