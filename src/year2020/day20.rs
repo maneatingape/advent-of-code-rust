@@ -126,44 +126,6 @@ impl Tile {
     }
 }
 
-/// A tile can have up to 8 different transformations
-#[derive(Clone, Copy, PartialEq, Eq)]
-struct Variant {
-    tile: usize,
-    permutation: usize,
-}
-
-/// Implements a stack of up to 2 elements
-#[derive(Clone, Copy, PartialEq, Eq)]
-enum Edge {
-    Zero,
-    One(Variant),
-    Two(Variant, Variant),
-}
-
-impl Edge {
-    // Add a tile variant
-    fn push(&mut self, variant: Variant) {
-        *self = match self {
-            Edge::Zero => Edge::One(variant),
-            Edge::One(prev) => Edge::Two(*prev, variant),
-            Edge::Two(_, _) => unreachable!(),
-        }
-    }
-
-    // Remove a tile variant using tile id to disambiguate if there are more than one.
-    fn pop(&mut self, tile: usize) {
-        *self = match self {
-            Edge::Two(first, second) => {
-                let remaining = if tile == first.tile { second } else { first };
-                Edge::One(*remaining)
-            }
-            Edge::One(_) => Edge::Zero,
-            Edge::Zero => unreachable!(),
-        }
-    }
-}
-
 pub fn parse(input: &str) -> Vec<Tile> {
     let lines: Vec<_> = input.lines().collect();
     lines.chunks(12).map(Tile::from).collect()
@@ -174,19 +136,13 @@ pub fn part1(input: &[Tile]) -> u64 {
     let mut result = 1;
 
     for tile in input {
-        // Original
-        frequency[tile.top[0]] += 1;
-        frequency[tile.left[0]] += 1;
-        frequency[tile.bottom[0]] += 1;
-        frequency[tile.right[0]] += 1;
-        // Reversed
-        frequency[tile.top[3]] += 1;
-        frequency[tile.left[3]] += 1;
-        frequency[tile.bottom[3]] += 1;
-        frequency[tile.right[3]] += 1;
+        for edge in tile.top {
+            frequency[edge] += 1;
+        }
     }
 
     for tile in input {
+        // Any orientation will do, pick the first.
         let total = frequency[tile.top[0]]
             + frequency[tile.left[0]]
             + frequency[tile.bottom[0]]
@@ -200,30 +156,35 @@ pub fn part1(input: &[Tile]) -> u64 {
 }
 
 pub fn part2(input: &[Tile]) -> u32 {
-    // Store mapping of tile edges to tile index and permutation in order to allow
+    // Store mapping of tile edges to tile index in order to allow
     // constant time lookup by edge when assembling the jigsaw.
-    let mut top_edge = [Edge::Zero; 1024];
-    let mut left_edge = [Edge::Zero; 1024];
+    let mut edge_to_tile = [[0; 2]; 1024];
+    let mut frequency = [0; 1024];
+    let mut placed = [false; 1024];
 
     for (i, tile) in input.iter().enumerate() {
-        for j in 0..8 {
-            let variant = Variant { tile: i, permutation: j };
-            top_edge[tile.top[j]].push(variant);
-            left_edge[tile.left[j]].push(variant);
+        for edge in tile.top {
+            edge_to_tile[edge][frequency[edge]] = i;
+            frequency[edge] += 1;
         }
     }
 
-    let find_arbitrary_corner = || {
+    let mut find_arbitrary_corner = || {
         for tile in input {
             for j in 0..8 {
-                if let Edge::One(_) = top_edge[tile.top[j]] {
-                    if let Edge::One(_) = left_edge[tile.left[j]] {
-                        return tile.top[j];
-                    }
+                if frequency[tile.top[j]] == 1 && frequency[tile.left[j]] == 1 {
+                    frequency[tile.top[j]] += 1;
+                    return tile.top[j];
                 }
             }
         }
         unreachable!();
+    };
+    let mut find_matching_tile = |edge: usize| {
+        let [first, second] = edge_to_tile[edge];
+        let next = if placed[first] { second } else { first };
+        placed[next] = true;
+        &input[next]
     };
 
     // Assemble the image
@@ -231,17 +192,21 @@ pub fn part2(input: &[Tile]) -> u32 {
     let mut image = [0; 96];
     let mut index = 0;
 
-    while let Edge::One(Variant { tile, permutation }) = top_edge[next_top] {
-        let mut next_left = input[tile].left[permutation];
+    while frequency[next_top] == 2 {
+        let tile = find_matching_tile(next_top);
+        let permutation = (0..8).position(|i| tile.top[i] == next_top).unwrap();
+        tile.transform(&mut image[index..], permutation);
+        next_top = tile.bottom[permutation];
 
-        while let Edge::One(Variant { tile, permutation }) = left_edge[next_left] {
-            input[tile].transform(&mut image[index..], permutation);
-            next_left = input[tile].right[permutation];
-            left_edge[next_left].pop(tile);
+        let mut next_left = tile.right[permutation];
+
+        while frequency[next_left] == 2 {
+            let tile = find_matching_tile(next_left);
+            let permutation = (0..8).position(|i| tile.left[i] == next_left).unwrap();
+            tile.transform(&mut image[index..], permutation);
+            next_left = tile.right[permutation];
         }
 
-        next_top = input[tile].bottom[permutation];
-        top_edge[next_top].pop(tile);
         index += 8;
     }
 
