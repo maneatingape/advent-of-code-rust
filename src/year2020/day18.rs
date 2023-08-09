@@ -28,7 +28,21 @@ pub fn part2(input: &[&[u8]]) -> u64 {
 fn eval(input: &[&[u8]], part_one: bool) -> u64 {
     let mut output = Vec::new();
     let mut operator = Vec::new();
-    let mut stack = Vec::new();
+
+    let mut push = |token| match token {
+        Token::Number(n) => output.push(n),
+        Token::Add => {
+            let a = output.pop().unwrap();
+            let b = output.pop().unwrap();
+            output.push(a + b);
+        }
+        Token::Mul => {
+            let a = output.pop().unwrap();
+            let b = output.pop().unwrap();
+            output.push(a * b);
+        }
+        Token::Open => unreachable!(),
+    };
 
     for &line in input {
         for &c in line {
@@ -38,14 +52,14 @@ fn eval(input: &[&[u8]], part_one: bool) -> u64 {
                 b')' => loop {
                     match operator.pop().unwrap() {
                         Token::Open => break,
-                        next => output.push(next),
+                        next => push(next),
                     }
                 },
                 b'+' => {
                     loop {
                         match operator.last() {
-                            Some(Token::Add) => output.push(operator.pop().unwrap()),
-                            Some(Token::Mul) if part_one => output.push(operator.pop().unwrap()),
+                            Some(Token::Add) => push(operator.pop().unwrap()),
+                            Some(Token::Mul) if part_one => push(operator.pop().unwrap()),
                             _ => break,
                         }
                     }
@@ -53,42 +67,23 @@ fn eval(input: &[&[u8]], part_one: bool) -> u64 {
                 }
                 b'*' => {
                     while let Some(Token::Add | Token::Mul) = operator.last() {
-                        output.push(operator.pop().unwrap());
+                        push(operator.pop().unwrap());
                     }
                     operator.push(Token::Mul);
                 }
                 n if n.is_ascii_digit() => {
                     let n = (n - b'0') as u64;
-                    output.push(Token::Number(n));
+                    push(Token::Number(n));
                 }
                 _ => unreachable!(),
             }
         }
 
-        // The canonical algorithm drains remaining operators to the output. We go the other
-        // direction so that we don't need to reverse when calculating the expression.
-        while let Some(token) = output.pop() {
-            operator.push(token);
-        }
-
-        // `operator` is now in reverse reverse Polish notation!
+        // Drains remaining operators to the output.
         while let Some(token) = operator.pop() {
-            match token {
-                Token::Number(n) => stack.push(n),
-                Token::Add => {
-                    let a = stack.pop().unwrap();
-                    let b = stack.pop().unwrap();
-                    stack.push(a + b);
-                }
-                Token::Mul => {
-                    let a = stack.pop().unwrap();
-                    let b = stack.pop().unwrap();
-                    stack.push(a * b);
-                }
-                Token::Open => unreachable!(),
-            }
+            push(token);
         }
     }
 
-    stack.iter().sum()
+    output.iter().sum()
 }
