@@ -1,18 +1,20 @@
-# Advent of Code
-
-[![Checks](https://img.shields.io/github/actions/workflow/status/maneatingape/advent-of-code-rust/checks.yml?label=checks)](https://github.com/maneatingape/advent-of-code-rust/actions/workflows/checks.yml) [![Docs](https://img.shields.io/github/actions/workflow/status/maneatingape/advent-of-code-rust/docs.yml?color=blue&label=docs)](https://maneatingape.github.io/advent-of-code-rust/aoc/)
+# Advent of Code [![Checks](https://img.shields.io/github/actions/workflow/status/maneatingape/advent-of-code-rust/checks.yml?label=checks)](https://github.com/maneatingape/advent-of-code-rust/actions/workflows/checks.yml) [![Docs](https://img.shields.io/github/actions/workflow/status/maneatingape/advent-of-code-rust/docs.yml?color=blue&label=docs)](https://maneatingape.github.io/advent-of-code-rust/aoc/)
 
 Complete 2022 to 2020 entries for the annual [Advent of Code](https://adventofcode.com/) challenge, written in performant Rust.
 
-Solutions depend only on the stable Rust Standard Library. The code tries it's best to stay clean and elegant, but the focus is on speed so if bit twiddling or mashing stuff into an array makes things faster, then all scruples are jettisoned!
+## Features
 
-Benchmarks are measured using the built-in `cargo bench` tool run on an Apple M2 Max. All 50 solutions from 2022 to 2021 complete sequentially in **30 milliseconds**. Performance is reasonable even on older hardware, for example a 2011 MacBook Pro with an [Intel i7-2720QM](https://ark.intel.com/content/www/us/en/ark/products/50067/intel-core-i72720qm-processor-6m-cache-up-to-3-30-ghz.html) processor takes 83 milliseconds to run all 50 solutions.
+* Each solution is blazing fast, using the most efficient algorithms to the best of my knowledge.
+* Clean, elegant and idiomatic code.
+* Consistently formatted with `rustfmt` and linted by `clippy`.
+* Thoroughly commented with `rustdoc` generated [documentation online](https://maneatingape.github.io/advent-of-code-rust/aoc/).
+* Test coverage with continuous integration provided by [GitHub Actions](https://github.com/maneatingape/advent-of-code-rust/actions/workflows/checks.yml).
+* Self contained depending only on the stable `std` Rust library. No use of `unsafe` features.
 
-The project is structured as a library crate with a module per year and a sub-module for each day to allow convenient testing and benchmarking. Continuous integration is provided using [GitHub Actions](https://docs.github.com/en/actions) with test coverage based on the example inputs from each day.
+## Quickstart
 
-Each solution is thoroughly commented to help explain the approach, browse the source or checkout the online [rustdocs](https://maneatingape.github.io/advent-of-code-rust/aoc/).
-
-## Cargo commands
+<details>
+<summary>Show details</summary><p/>
 
 **Run**
 * Everything `cargo run`
@@ -40,7 +42,11 @@ Each solution is thoroughly commented to help explain the approach, browse the s
 * Code quality lints `cargo clippy`
 * Consistent code formatting `cargo fmt`
 
-## Years
+</details>
+
+## Performance
+
+Benchmarks are measured using the built-in `cargo bench` tool run on an Apple M2 Max. For example, all 50 solutions from 2022 to 2021 complete sequentially in **30 milliseconds**. Performance is reasonable even on older hardware, for example a 2011 MacBook Pro with an [Intel i7-2720QM](https://ark.intel.com/content/www/us/en/ark/products/50067/intel-core-i72720qm-processor-6m-cache-up-to-3-30-ghz.html) processor takes 83 milliseconds to run the same 50 solutions.
 
 ```mermaid
 %%{init: {'theme': 'base', 'themeVariables': { 'pie1': '#7cb5ec', 'pie2': '#90ed7d', 'pie3': '#f7a35c'}}}%%
