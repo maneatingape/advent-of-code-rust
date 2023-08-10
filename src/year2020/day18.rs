@@ -7,9 +7,9 @@
 //! For part two whenever we encounter the lower priority `*` operator then we *implicitly* insert
 //! parentheses around the remaining expression. For example:
 //!
-//! `1 * 2 * 3 * 4 => 1 * (2 * (3 * (4)))`
-//! `1 + 2 * 3 + 4 => 1 + 2 * (3 + 4)`
-//! `1 + (2 * 3 * 4) + 5 => 1 + (2 * (3 * (4))) + 5`
+//! * 1 * 2 * 3 * 4 => 1 * (2 * (3 * (4)))
+//! * 1 + 2 * 3 + 4 => 1 + 2 * (3 + 4)
+//! * 1 + (2 * 3 * 4) + 5 => 1 + (2 * (3 * (4))) + 5
 use std::str::Bytes;
 
 pub fn parse(input: &str) -> Vec<&str> {
@@ -58,7 +58,7 @@ pub fn part2(input: &[&str]) -> u64 {
 
 /// Convenience wrapper around [`Bytes`] iterator. Encountering a `)` is also considered end of
 /// sequence. The expressions are consistently formatted so encountering a space just means
-/// skip and return the next character, which will always be present.
+/// skip and return the next character that will always be present.
 fn next(bytes: &mut Bytes) -> Option<u8> {
     match bytes.next() {
         None | Some(b')') => None,
