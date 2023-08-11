@@ -2,3 +2,4 @@
 name = "aoc"
 version = "2022.12.25"
 edition = "2021"
+rust-version = "1.71"
