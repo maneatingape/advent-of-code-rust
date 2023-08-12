@@ -15,6 +15,7 @@
 //! memory.
 //!
 //! [`BinaryHeap`]: std::collections::BinaryHeap
+use crate::util::parse::*;
 use std::array::from_fn;
 
 pub struct Square {
@@ -28,7 +29,7 @@ pub fn parse(input: &str) -> Square {
     let mut bytes = Vec::with_capacity(size * size);
 
     raw.iter().for_each(|slice| bytes.extend_from_slice(slice));
-    bytes.iter_mut().for_each(|b| *b -= b'0');
+    bytes.iter_mut().for_each(|b| *b = b.to_decimal());
 
     Square { size, bytes }
 }

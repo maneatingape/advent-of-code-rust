@@ -14,6 +14,7 @@
 //! [`Grid`]: crate::util::grid
 //! [`Point`]: crate::util::point
 use crate::util::grid::*;
+use crate::util::parse::*;
 use crate::util::point::*;
 
 pub fn parse(input: &str) -> Grid<u8> {
@@ -34,7 +35,7 @@ pub fn part1(grid: &Grid<u8>) -> u32 {
                 .all(|n| grid[n] > cur);
 
             if low_point {
-                risk_levels += 1 + (cur - b'0') as u32;
+                risk_levels += 1 + cur.to_decimal() as u32;
             }
         }
     }

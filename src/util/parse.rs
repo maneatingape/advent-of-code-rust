@@ -14,28 +14,29 @@
 //! [`iter_unsigned`]: ParseOps::iter_unsigned
 //! [`iter_signed`]: ParseOps::iter_signed
 use std::marker::PhantomData;
-use std::ops::{Add, Neg, Shl};
+use std::ops::{Add, Mul, Neg};
 use std::str::Bytes;
 
-/// Traits allow us to keep type safety, restricting the possiblities to only integer types.
-pub trait Common: Copy + From<u8> + Add<Output = Self> + Shl<u8, Output = Self> {}
-impl Common for u8 {}
-impl Common for u16 {}
-impl Common for u32 {}
-impl Common for u64 {}
-impl Common for usize {}
-impl Common for i16 {}
-impl Common for i32 {}
-impl Common for i64 {}
+pub trait ParseByte {
+    fn to_decimal(self) -> u8;
+}
 
-pub trait Unsigned: Common {}
+impl ParseByte for u8 {
+    #[inline]
+    fn to_decimal(self) -> u8 {
+        self.wrapping_sub(b'0')
+    }
+}
+
+// Traits allow us to keep type safety, restricting the possiblities to only integer types.
+pub trait Unsigned: From<u8> + Add<Output = Self> + Mul<Output = Self> {}
 impl Unsigned for u8 {}
 impl Unsigned for u16 {}
 impl Unsigned for u32 {}
 impl Unsigned for u64 {}
 impl Unsigned for usize {}
 
-pub trait Signed: Common + Neg<Output = Self> {}
+pub trait Signed: From<u8> + Add<Output = Self> + Mul<Output = Self> + Neg<Output = Self> {}
 impl Signed for i16 {}
 impl Signed for i32 {}
 impl Signed for i64 {}
@@ -109,20 +110,20 @@ impl<T: Signed> Iterator for ParseSigned<'_, T> {
 
 fn try_unsigned<T: Unsigned>(bytes: &mut Bytes) -> Option<T> {
     let mut n = loop {
-        let b = bytes.next()?;
-        let d = b.wrapping_sub(b'0');
+        let byte = bytes.next()?;
+        let digit = byte.to_decimal();
 
-        if d < 10 {
-            break T::from(d);
+        if digit < 10 {
+            break T::from(digit);
         }
     };
 
     loop {
-        let Some(b) = bytes.next() else { break Some(n) };
-        let d = b.wrapping_sub(b'0');
+        let Some(byte) = bytes.next() else { break Some(n) };
+        let digit = byte.to_decimal();
 
-        if d < 10 {
-            n = (n << 3) + (n << 1) + T::from(d);
+        if digit < 10 {
+            n = T::from(10) * n + T::from(digit);
         } else {
             break Some(n);
         }
@@ -131,25 +132,25 @@ fn try_unsigned<T: Unsigned>(bytes: &mut Bytes) -> Option<T> {
 
 fn try_signed<T: Signed>(bytes: &mut Bytes) -> Option<T> {
     let (mut n, negative) = loop {
-        let b = bytes.next()?;
-        let d = b.wrapping_sub(b'0');
+        let byte = bytes.next()?;
+        let digit = byte.to_decimal();
 
-        if d == 253 {
+        if digit == 253 {
             break (T::from(0), true);
         }
-        if d < 10 {
-            break (T::from(d), false);
+        if digit < 10 {
+            break (T::from(digit), false);
         }
     };
 
     loop {
-        let Some(b) = bytes.next() else {
+        let Some(byte) = bytes.next() else {
             break Some(if negative { -n } else { n });
         };
-        let d = b.wrapping_sub(b'0');
+        let digit = byte.to_decimal();
 
-        if d < 10 {
-            n = (n << 3) + (n << 1) + T::from(d);
+        if digit < 10 {
+            n = T::from(10) * n + T::from(digit);
         } else {
             break Some(if negative { -n } else { n });
         }

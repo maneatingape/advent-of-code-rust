@@ -11,8 +11,10 @@
 //!   Using `u32` instead of `usize` increases speed due to better cache locality.
 //! * Cups use one based indexing so the vec is one longer than the number of cups and the zeroth
 //!   index is unused.
+use crate::util::parse::*;
+
 pub fn parse(input: &str) -> Vec<u32> {
-    input.trim().bytes().map(|b| (b - b'0') as u32).collect()
+    input.trim().bytes().map(|b| b.to_decimal() as u32).collect()
 }
 
 pub fn part1(input: &[u32]) -> u32 {

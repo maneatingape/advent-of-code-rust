@@ -10,6 +10,7 @@
 //! * 1 * 2 * 3 * 4 => 1 * (2 * (3 * (4)))
 //! * 1 + 2 * 3 + 4 => 1 + 2 * (3 + 4)
 //! * 1 + (2 * 3 * 4) + 5 => 1 + (2 * (3 * (4))) + 5
+use crate::util::parse::*;
 use std::str::Bytes;
 
 pub fn parse(input: &str) -> Vec<&str> {
@@ -72,6 +73,6 @@ fn next(bytes: &mut Bytes) -> Option<u8> {
 fn value(bytes: &mut Bytes, helper: impl Fn(&mut Bytes) -> u64) -> u64 {
     match next(bytes).unwrap() {
         b'(' => helper(bytes),
-        b => (b - b'0') as u64,
+        b => b.to_decimal() as u64,
     }
 }
