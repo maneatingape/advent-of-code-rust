@@ -36,7 +36,7 @@ pub fn part1_testable(input: &[Input], row: i32) -> i32 {
         (beacon.y == row).then_some(beacon.x)
     }
 
-    let mut ranges: Vec<Range<i32>> = input.iter().filter_map(|i| build_range(i, row)).collect();
+    let mut ranges: Vec<_> = input.iter().filter_map(|i| build_range(i, row)).collect();
     ranges.sort_unstable_by(|a, b| a.start.cmp(&b.start));
 
     let mut total = 0;
@@ -52,7 +52,7 @@ pub fn part1_testable(input: &[Input], row: i32) -> i32 {
         }
     }
 
-    let beacons: FastSet<i32> = input.iter().filter_map(|i| build_beacons(i, row)).collect();
+    let beacons: FastSet<_> = input.iter().filter_map(|i| build_beacons(i, row)).collect();
     total - (beacons.len() as i32)
 }
 
@@ -61,10 +61,10 @@ pub fn part2(input: &[Input]) -> u64 {
 }
 
 pub fn part2_testable(input: &[Input], size: i32) -> u64 {
-    let mut top: FastSet<i32> = FastSetBuilder::empty();
-    let mut left: FastSet<i32> = FastSetBuilder::empty();
-    let mut bottom: FastSet<i32> = FastSetBuilder::empty();
-    let mut right: FastSet<i32> = FastSetBuilder::empty();
+    let mut top = FastSetBuilder::empty();
+    let mut left = FastSetBuilder::empty();
+    let mut bottom = FastSetBuilder::empty();
+    let mut right = FastSetBuilder::empty();
 
     // Rotate points clockwise by 45 degrees, scale by √2 and extend edge by 1.
     // This transform each sensor into an axis aligned bounding box.
@@ -77,8 +77,8 @@ pub fn part2_testable(input: &[Input], size: i32) -> u64 {
         right.insert(sensor.x - sensor.y + manhattan + 1);
     }
 
-    let horizontal: Vec<&i32> = top.intersection(&bottom).collect();
-    let vertical: Vec<&i32> = left.intersection(&right).collect();
+    let horizontal: Vec<_> = top.intersection(&bottom).collect();
+    let vertical: Vec<_> = left.intersection(&right).collect();
     let range = 0..(size + 1);
 
     for x in &vertical {

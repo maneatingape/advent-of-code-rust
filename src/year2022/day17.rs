@@ -80,8 +80,8 @@ pub fn part1(input: &[u8]) -> usize {
 
 pub fn part2(input: &[u8]) -> usize {
     let guess = 1000;
-    let height: Vec<usize> = State::new(input).take(5 * guess).collect();
-    let deltas: Vec<usize> = height
+    let height: Vec<_> = State::new(input).take(5 * guess).collect();
+    let deltas: Vec<_> = height
         .iter()
         .scan(0, |state, &height| {
             let delta = height - *state;

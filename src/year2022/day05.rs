@@ -30,7 +30,7 @@ type Input = (Stack, Vec<Move>);
 /// [`chunk`]: ChunkOps::chunk
 pub fn parse(input: &str) -> Input {
     let (prefix, suffix) = input.split_once("\n\n").unwrap();
-    let lines: Vec<&str> = prefix.lines().collect();
+    let lines: Vec<_> = prefix.lines().collect();
     let width = (lines[0].len() + 1) / 4;
 
     let mut stack: Stack = vec![Vec::new(); width];
@@ -42,7 +42,7 @@ pub fn parse(input: &str) -> Input {
         }
     }
 
-    let moves: Vec<Move> = suffix
+    let moves: Vec<_> = suffix
         .iter_unsigned()
         .chunk::<3>()
         .map(|[amount, from, to]| [amount, from - 1, to - 1])
@@ -70,7 +70,7 @@ pub fn part2(input: &Input) -> String {
 fn play(input: &Input, reverse: bool) -> String {
     let (initial, moves) = input;
     let mut stack = initial.clone();
-    let mut crates: Vec<char> = Vec::new();
+    let mut crates = Vec::new();
 
     for &[amount, from, to] in moves {
         let start = stack[from].len() - amount;

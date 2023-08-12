@@ -13,7 +13,7 @@ pub fn parse(input: &str) -> Vec<&[u8]> {
 }
 
 pub fn part1(input: &[&[u8]]) -> u64 {
-    let mut stack: Vec<u8> = Vec::new();
+    let mut stack = Vec::new();
     let mut score = 0;
 
     for line in input {
@@ -25,7 +25,7 @@ pub fn part1(input: &[&[u8]]) -> u64 {
 }
 
 pub fn part2(input: &[&[u8]]) -> u64 {
-    let mut stack: Vec<u8> = Vec::new();
+    let mut stack = Vec::new();
     let mut scores = Vec::new();
 
     for line in input {

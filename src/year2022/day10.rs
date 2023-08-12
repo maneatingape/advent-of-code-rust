@@ -5,7 +5,7 @@ use crate::util::parse::*;
 /// instruction timing. Produces a `vec` of the absolute values of `x` from cycle 0 to 241.
 pub fn parse(input: &str) -> Vec<i32> {
     let mut x = 1;
-    let mut xs: Vec<i32> = vec![1];
+    let mut xs = vec![1];
 
     for token in input.split_ascii_whitespace() {
         match token {

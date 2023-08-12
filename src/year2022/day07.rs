@@ -40,8 +40,8 @@ use crate::util::parse::*;
 pub fn parse(input: &str) -> Vec<u32> {
     let mut cd = false;
     let mut total = 0;
-    let mut stack: Vec<u32> = vec![];
-    let mut sizes: Vec<u32> = vec![];
+    let mut stack = Vec::new();
+    let mut sizes = Vec::new();
 
     for token in input.split_ascii_whitespace() {
         if cd {

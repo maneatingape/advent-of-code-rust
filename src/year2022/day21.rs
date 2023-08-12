@@ -43,11 +43,10 @@ pub struct Input {
 pub fn parse(input: &str) -> Input {
     let lines: Vec<_> = input.lines().collect();
 
-    let indices: FastMap<&str, usize> =
+    let indices: FastMap<_, _> =
         lines.iter().enumerate().map(|(index, line)| (&line[0..4], index)).collect();
 
-    let monkeys: Vec<Monkey> =
-        lines.iter().map(|line| Monkey::parse(&line[6..], &indices)).collect();
+    let monkeys: Vec<_> = lines.iter().map(|line| Monkey::parse(&line[6..], &indices)).collect();
 
     let root = indices["root"];
     let humn = indices["humn"];

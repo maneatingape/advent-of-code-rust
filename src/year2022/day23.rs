@@ -104,7 +104,7 @@ pub struct Input {
 
 pub fn parse(input: &str) -> Input {
     let offset = 70;
-    let raw: Vec<&[u8]> = input.lines().map(str::as_bytes).collect();
+    let raw: Vec<_> = input.lines().map(str::as_bytes).collect();
     let default = [U256::default(); HEIGHT];
     let mut grid = default;
 

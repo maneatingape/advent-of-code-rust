@@ -57,7 +57,7 @@ pub fn parse(input: &str) -> Input {
 /// so they're added directly to the total.
 pub fn part1(input: &Input) -> usize {
     let (width, digits) = input;
-    let mut visible: Vec<bool> = vec![false; digits.len()];
+    let mut visible = vec![false; digits.len()];
 
     for i in 1..(*width - 1) {
         let mut left_max = -1;

@@ -17,9 +17,9 @@ struct Tree {
 impl Tree {
     fn from(input: &[i64]) -> Tree {
         let len = input.len();
-        let mut nodes: Vec<Node> = Vec::with_capacity(len * 2);
-        let mut todo: VecDeque<u16> = VecDeque::with_capacity(len);
-        let mut next: VecDeque<u16> = VecDeque::with_capacity(len);
+        let mut nodes = Vec::with_capacity(len * 2);
+        let mut todo = VecDeque::with_capacity(len);
+        let mut next = VecDeque::with_capacity(len);
 
         for i in 0..len {
             nodes.push(Node { size: 1, left: u16::MAX, right: u16::MAX, up: u16::MAX });

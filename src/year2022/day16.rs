@@ -26,7 +26,7 @@ pub struct Valve<'a> {
 
 impl Valve<'_> {
     fn parse(line: &str) -> Valve {
-        let mut tokens: Vec<&str> = line
+        let mut tokens: Vec<_> = line
             .split(|c: char| !c.is_ascii_uppercase() && !c.is_ascii_digit())
             .filter(|s| !s.is_empty())
             .collect();
@@ -47,13 +47,12 @@ impl Valve<'_> {
 }
 
 pub fn parse(input: &str) -> Input {
-    let mut valves: Vec<Valve> = input.lines().map(Valve::parse).collect();
+    let mut valves: Vec<_> = input.lines().map(Valve::parse).collect();
     valves.sort_unstable_by(Valve::cmp);
 
     let size = valves.iter().filter(|v| v.flow > 0).count() + 1;
     let mut distance = vec![u32::MAX; size * size];
-    let indices: FastMap<&str, usize> =
-        valves.iter().enumerate().map(|(i, v)| (v.name, i)).collect();
+    let indices: FastMap<_, _> = valves.iter().enumerate().map(|(i, v)| (v.name, i)).collect();
 
     // Eliminate zero valves
     for (from, valve) in valves.iter().enumerate().take(size) {
@@ -89,7 +88,7 @@ pub fn parse(input: &str) -> Input {
     }
 
     let todo = (1 << (size - 1)) - 1;
-    let flow: Vec<u32> = valves.iter().take(size).map(|v| v.flow).collect();
+    let flow: Vec<_> = valves.iter().take(size).map(|v| v.flow).collect();
     distance.iter_mut().for_each(|d| *d += 1);
 
     Input { size, todo, flow, distance }
@@ -172,7 +171,7 @@ pub fn part2(input: &Input) -> u32 {
     }
 
     let mut result = 0;
-    let mut visited: Vec<bool> = score.iter().map(|&s| s > 0).collect();
+    let mut visited: Vec<_> = score.iter().map(|&s| s > 0).collect();
     subsets(input.todo, &mut score, &mut visited);
 
     for (i, you) in score.iter().enumerate() {

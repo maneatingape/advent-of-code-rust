@@ -114,7 +114,7 @@ pub fn part2(input: &Input) -> String {
         .filter(|(_, v)| v.candidates.count_ones() == 1)
         .map(|(k, v)| (*k, v.candidates))
         .collect();
-    let mut done: Vec<_> = vec![];
+    let mut done = Vec::new();
 
     // Eliminate known allergens from other ingredients.
     while let Some(pair @ (next, allergen)) = todo.pop() {

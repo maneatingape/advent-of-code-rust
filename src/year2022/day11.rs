@@ -62,7 +62,7 @@ pub fn parse(input: &str) -> Vec<Monkey> {
     /// Inner helper function to keep the parsing logic readable.
     fn helper(chunk: &[&str]) -> Monkey {
         let items = chunk[1].iter_unsigned().collect();
-        let tokens: Vec<&str> = chunk[2].split(' ').rev().take(2).collect();
+        let tokens: Vec<_> = chunk[2].split(' ').rev().take(2).collect();
         let operation = match tokens[..] {
             ["old", _] => Operation::Square,
             [y, "*"] => Operation::Multiply(y.unsigned()),

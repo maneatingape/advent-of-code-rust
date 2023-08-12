@@ -6,7 +6,7 @@ pub struct Input {
 }
 
 pub fn parse(input: &str) -> Input {
-    let raw: Vec<&[u8]> = input
+    let raw: Vec<_> = input
         .lines()
         .map(|line| {
             let bytes = line.as_bytes();
@@ -16,14 +16,14 @@ pub fn parse(input: &str) -> Input {
 
     let width = raw[0].len();
     let height = raw.len() - 2;
-    let build = |kind| {
+    let build = |kind| -> Vec<_> {
         let fold = |row: &&[u8]| row.iter().fold(0, |acc, &b| (acc << 1) | (b != kind) as u128);
         raw[1..=height].iter().map(fold).collect()
     };
-    let left: Vec<u128> = build(b'<');
-    let right: Vec<u128> = build(b'>');
-    let up: Vec<u128> = build(b'^');
-    let down: Vec<u128> = build(b'v');
+    let left = build(b'<');
+    let right = build(b'>');
+    let up = build(b'^');
+    let down = build(b'v');
 
     let mut horizontal = Vec::with_capacity(width * height);
     for time in 0..width {
@@ -59,7 +59,7 @@ pub fn part2(input: &Input) -> usize {
 fn expedition(input: &Input, start: usize, forward: bool) -> usize {
     let Input { width, height, horizontal, vertical } = input;
     let mut time = start;
-    let mut state: Vec<u128> = vec![0; height + 1];
+    let mut state = vec![0; height + 1];
 
     loop {
         time += 1;

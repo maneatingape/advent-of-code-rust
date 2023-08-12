@@ -24,7 +24,7 @@ pub fn part2(input: &Result) -> u64 {
 }
 
 pub fn decrypt<const N: usize>(input: &str) -> Result {
-    let numbers: Vec<u64> = input.iter_unsigned().collect();
+    let numbers: Vec<_> = input.iter_unsigned().collect();
 
     let invalid = numbers
         .windows(N + 1)
