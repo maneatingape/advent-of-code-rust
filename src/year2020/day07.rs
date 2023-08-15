@@ -28,7 +28,7 @@ pub struct Haversack {
 
 pub fn parse(input: &str) -> Haversack {
     let lines: Vec<_> = input.lines().collect();
-    let mut indices = FastMapBuilder::with_capacity(1_000);
+    let mut indices = FastMap::new();
     let mut bags = Vec::with_capacity(1_000);
 
     for line in &lines {

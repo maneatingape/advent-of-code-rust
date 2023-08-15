@@ -33,7 +33,7 @@ fn play(input: &[usize], rounds: usize) -> usize {
     let mut last = input[size];
 
     let mut spoken_low = vec![0; rounds.min(THRESHOLD)];
-    let mut spoken_high = FastMapBuilder::with_capacity(rounds / 5);
+    let mut spoken_high = FastMap::with_capacity(rounds / 5);
 
     for i in 0..size {
         spoken_low[input[i]] = (i + 1) as u32;

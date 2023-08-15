@@ -82,7 +82,7 @@ impl Scanner {
     fn parse(lines: &[&str]) -> Scanner {
         let beacons: Vec<_> = lines.iter().skip(1).map(Point3D::parse).collect();
 
-        let mut signature: FastSet<_> = FastSetBuilder::with_capacity(1_000);
+        let mut signature = FastSet::with_capacity(1_000);
         for i in 0..(beacons.len() - 1) {
             for j in (i + 1)..beacons.len() {
                 signature.insert(beacons[i].euclidean(&beacons[j]));
@@ -102,7 +102,7 @@ pub struct Located {
 
 impl Located {
     fn from(relative_beacons: &[Point3D], signature: FastSet<i32>, offset: Point3D) -> Located {
-        let mut deltas = FastSetBuilder::with_capacity(1_000);
+        let mut deltas = FastSet::with_capacity(1_000);
         for (i, a) in relative_beacons.iter().enumerate() {
             for (j, b) in relative_beacons.iter().enumerate() {
                 if i != j {
@@ -111,7 +111,7 @@ impl Located {
             }
         }
 
-        let mut beacons = FastSetBuilder::with_capacity(30);
+        let mut beacons = FastSet::with_capacity(30);
         for &point in relative_beacons {
             beacons.insert(point + offset);
         }
@@ -129,7 +129,7 @@ pub fn parse(input: &str) -> Vec<Located> {
 }
 
 pub fn part1(input: &[Located]) -> usize {
-    let mut result = FastSetBuilder::with_capacity(1_000);
+    let mut result = FastSet::with_capacity(1_000);
 
     for located in input {
         for beacon in &located.beacons {
@@ -183,7 +183,7 @@ fn check(known: &Located, scanner: &Scanner) -> Option<Located> {
         return None;
     }
 
-    let mut beacons_of_interest = FastSetBuilder::empty();
+    let mut beacons_of_interest = FastSet::new();
     for i in 0..(scanner.beacons.len() - 1) {
         for j in (i + 1)..scanner.beacons.len() {
             if matching.contains(&scanner.beacons[i].euclidean(&scanner.beacons[j])) {
@@ -234,7 +234,7 @@ fn check_offsets(known: &Located, next: &[Point3D]) -> Option<Point3D> {
     for first in &known.beacons {
         for second in next {
             let offset = *first - *second;
-            let mut candidates = FastSetBuilder::with_capacity(30);
+            let mut candidates = FastSet::with_capacity(30);
             for &point in next {
                 candidates.insert(point + offset);
             }

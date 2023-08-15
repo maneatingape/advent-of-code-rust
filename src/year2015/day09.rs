@@ -28,7 +28,7 @@ type Result = (u32, u32);
 pub fn parse(input: &str) -> Result {
     let tokens: Vec<_> = input.split_ascii_whitespace().chunk::<5>().collect();
 
-    let mut indices = FastMapBuilder::empty();
+    let mut indices = FastMap::new();
     for [start, _, end, ..] in &tokens {
         if !indices.contains_key(start) {
             indices.insert(start, indices.len());

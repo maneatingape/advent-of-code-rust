@@ -21,7 +21,7 @@ pub struct Hex {
 }
 
 pub fn parse(input: &str) -> FastSet<Hex> {
-    let mut tiles = FastSetBuilder::empty();
+    let mut tiles = FastSet::new();
 
     for line in input.lines() {
         let mut iter = line.bytes();

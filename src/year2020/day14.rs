@@ -146,7 +146,7 @@ pub fn parse(input: &str) -> Vec<Instruction> {
 pub fn part1(input: &[Instruction]) -> u64 {
     let mut set = 0;
     let mut keep = 0;
-    let mut memory = FastMapBuilder::empty();
+    let mut memory = FastMap::new();
 
     for &instruction in input {
         match instruction {

@@ -58,8 +58,8 @@ pub struct Ingredient {
 }
 
 pub fn parse(input: &str) -> Input {
-    let mut ingredients: FastMap<&str, Ingredient> = FastMapBuilder::empty();
-    let mut allergens = FastMapBuilder::empty();
+    let mut ingredients: FastMap<&str, Ingredient> = FastMap::new();
+    let mut allergens = FastMap::new();
     let mut allergens_per_food = Vec::new();
 
     for (i, line) in input.lines().enumerate() {

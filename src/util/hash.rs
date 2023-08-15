@@ -13,33 +13,41 @@ pub type FastSet<T> = HashSet<T, BuildFxHasher>;
 pub type FastMap<K, V> = HashMap<K, V, BuildFxHasher>;
 
 /// Convenience methods to contruct a [`FastSet`].
-pub struct FastSetBuilder;
-/// Convenience methods to contruct a [`FastMap`].
-pub struct FastMapBuilder;
+pub trait FastSetBuilder<T> {
+    fn new() -> Self;
+    fn with_capacity(capacity: usize) -> FastSet<T>;
+}
 
-impl FastSetBuilder {
-    pub fn empty<T>() -> FastSet<T> {
+impl<T> FastSetBuilder<T> for FastSet<T> {
+    fn new() -> Self {
         HashSet::with_hasher(BuildFxHasher)
     }
 
-    pub fn with_capacity<T>(capacity: usize) -> FastSet<T> {
+    fn with_capacity(capacity: usize) -> FastSet<T> {
         HashSet::with_capacity_and_hasher(capacity, BuildFxHasher)
     }
 }
 
-impl FastMapBuilder {
-    pub fn from<K: Eq + Hash, V, const N: usize>(array: [(K, V); N]) -> FastMap<K, V> {
-        let mut map = Self::empty();
-        map.extend(array);
-        map
-    }
+/// Convenience methods to contruct a [`FastMap`].
+pub trait FastMapBuilder<K, V> {
+    fn new() -> Self;
+    fn with_capacity(capacity: usize) -> Self;
+    fn build<const N: usize>(array: [(K, V); N]) -> Self;
+}
 
-    pub fn empty<K, V>() -> FastMap<K, V> {
+impl<K: Eq + Hash, V> FastMapBuilder<K, V> for FastMap<K, V> {
+    fn new() -> Self {
         HashMap::with_hasher(BuildFxHasher)
     }
 
-    pub fn with_capacity<K, V>(capacity: usize) -> FastMap<K, V> {
+    fn with_capacity(capacity: usize) -> Self {
         HashMap::with_capacity_and_hasher(capacity, BuildFxHasher)
+    }
+
+    fn build<const N: usize>(array: [(K, V); N]) -> Self {
+        let mut map = Self::new();
+        map.extend(array);
+        map
     }
 }
 

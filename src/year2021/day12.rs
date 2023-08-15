@@ -58,7 +58,7 @@ pub fn parse(input: &str) -> Input {
     let tokens: Vec<_> =
         input.split(|c: char| !c.is_ascii_alphabetic()).filter(|s| !s.is_empty()).collect();
 
-    let mut indices = FastMapBuilder::from([("start", START), ("end", END)]);
+    let mut indices = FastMap::build([("start", START), ("end", END)]);
     for token in &tokens {
         if !indices.contains_key(token) {
             indices.insert(token, indices.len());

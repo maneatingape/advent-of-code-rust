@@ -22,7 +22,7 @@ enum Gate<'a> {
 
 pub fn parse(input: &str) -> Result {
     let mut tokens = input.split_ascii_whitespace();
-    let mut circuit = FastMapBuilder::empty();
+    let mut circuit = FastMap::new();
 
     while let (Some(first), Some(second)) = (tokens.next(), tokens.next()) {
         let gate = if first == "NOT" {
@@ -47,7 +47,7 @@ pub fn parse(input: &str) -> Result {
         circuit.insert(wire, gate);
     }
 
-    let mut cache = FastMapBuilder::empty();
+    let mut cache = FastMap::new();
     let result1 = signal("a", &circuit, &mut cache);
 
     cache.clear();

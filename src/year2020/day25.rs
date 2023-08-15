@@ -35,7 +35,7 @@ pub fn part2(_input: &[u64; 2]) -> &'static str {
 ///   of 7 to modular exponent 4495.
 fn discrete_logarithm(public_key: u64) -> u64 {
     let m = 4495;
-    let mut map = FastMapBuilder::with_capacity(m as usize);
+    let mut map = FastMap::with_capacity(m as usize);
 
     let mut a = 1;
     for j in 0..m {

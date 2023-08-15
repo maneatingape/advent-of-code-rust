@@ -137,7 +137,7 @@ pub fn part2(input: &[Vec<usize>]) -> usize {
 
 fn organize(burrow: Burrow) -> usize {
     let mut todo = BinaryHeap::with_capacity(20_000);
-    let mut seen = FastMapBuilder::with_capacity(20_000);
+    let mut seen = FastMap::with_capacity(20_000);
 
     todo.push(State { burrow, energy: best_possible(&burrow) });
 

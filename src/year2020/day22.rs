@@ -175,7 +175,7 @@ fn combat(deck1: &mut Deck, deck2: &mut Deck, cache: &mut Cache, depth: usize) -
 
     // Speed things up by re-using previously created caches, avoiding slow extra heap allocations.
     if cache.len() == depth {
-        cache.push(FastSetBuilder::with_capacity(1_000));
+        cache.push(FastSet::with_capacity(1_000));
     } else {
         cache[depth].clear();
     }
