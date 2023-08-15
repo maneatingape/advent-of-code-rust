@@ -1,15 +1,22 @@
 //! # Handy Haversacks
 //!
-//! A hashtable of hashtables would be a natural data structure for this problem but is a little
-//! slow. To make things faster we parse the input in two passes. During the first pass we assign
-//! each bag an index. Then during the second pass each bag's children are converted to this index and
-//! stored in a fixed size array large enough to represent the bag containing the highest amount of
-//! different other bags. Each bag is then stored in a `vec` using the indices computed in the first
-//! pass.
+//! A hashtable would be a natural data structure for this problem but is a little slow.
+//! To make things faster we implement the hashtable using an array and a
+//! [perfect hash function](https://en.wikipedia.org/wiki/Perfect_hash_function) that maps from
+//! each combination of bag descriptions to a unique index.
+//!
+//! There are 18 different adjectives, for example shiny, bright, dark. Taking only the first two
+//! letters in enough to discriminate.
+//!
+//! There are 33 different colors, for example white, gold, blue. The first two letters
+//! result in some duplicates, however incrementing the second letter if the length is odd
+//! is enough to discriminate.
+//!
+//! These 4 letter values are then combined with some constants determined using a brute force
+//! search to give a unique index.
 //!
 //! Part one and part two are very similar. A recursive solution with memoization of previously
 //! seen values computes the result efficiently.
-use crate::util::hash::*;
 use crate::util::iter::*;
 use crate::util::parse::*;
 
@@ -23,35 +30,26 @@ type Bag = [Option<Rule>; 4];
 
 pub struct Haversack {
     shiny_gold: usize,
-    bags: Vec<Bag>,
+    bags: [Bag; 2522],
 }
 
 pub fn parse(input: &str) -> Haversack {
-    let lines: Vec<_> = input.lines().collect();
-    let mut indices = FastMap::new();
-    let mut bags = Vec::with_capacity(1_000);
+    let mut bags = [[None; 4]; 2522];
 
-    for line in &lines {
-        let mut tokens = line.split_ascii_whitespace().chunk::<2>();
-        let [first_name, second_name] = tokens.next().unwrap();
-        indices.insert([first_name, second_name], indices.len());
-    }
+    for line in input.lines() {
+        let mut tokens = line.split_ascii_whitespace().chunk::<4>();
+        let [first, second, _, _] = tokens.next().unwrap();
+        let outer = perfect_hash(first, second);
 
-    for line in &lines {
-        let tokens = line.split_ascii_whitespace().chunk::<4>().skip(1).enumerate();
-        let mut bag = [None; 4];
-
-        for (index, chunk) in tokens {
-            let [amount, first_name, second_name, _] = chunk;
+        for (index, chunk) in tokens.enumerate() {
+            let [amount, first, second, _] = chunk;
             let amount = amount.unsigned();
-            let next = indices[&[first_name, second_name]];
-            bag[index] = Some(Rule { amount, next });
+            let next = perfect_hash(first, second);
+            bags[outer][index] = Some(Rule { amount, next });
         }
-
-        bags.push(bag);
     }
 
-    let shiny_gold = indices[&["shiny", "gold"]];
+    let shiny_gold = perfect_hash("shiny", "gold");
     Haversack { shiny_gold, bags }
 }
 
@@ -99,4 +97,16 @@ pub fn part2(input: &Haversack) -> u32 {
 
     let mut cache = vec![None; input.bags.len()];
     helper(input.shiny_gold, input, &mut cache) - 1
+}
+
+fn perfect_hash(first_name: &str, second_name: &str) -> usize {
+    let first_name = first_name.as_bytes();
+    let a = first_name[0] as usize;
+    let b = first_name[1] as usize;
+
+    let second_name = second_name.as_bytes();
+    let c = second_name[0] as usize;
+    let d = (second_name[1] as usize) + (second_name.len() % 2);
+
+    (a * 75 + b * 614 + c * 2137 + d * 1938) % 2522
 }
