@@ -1,24 +1,40 @@
 //! # Handy Haversacks
 //!
 //! A hashtable would be a natural data structure for this problem but is a little slow.
-//! To make things faster we implement the hashtable using an array and a
-//! [perfect hash function](https://en.wikipedia.org/wiki/Perfect_hash_function) that maps from
+//! To make things faster we implement the hashtable using an array and a combination of three
+//! [perfect hash functions](https://en.wikipedia.org/wiki/Perfect_hash_function) that map from
 //! each combination of bag descriptions to a unique index.
 //!
 //! There are 18 different adjectives, for example shiny, bright, dark. Taking only the first two
-//! letters in enough to discriminate.
+//! letters in enough to discriminate. For example the hash value for "shiny" is:
+//!
+//! ```none
+//!     "sh" =>
+//!     26 * 's' + 'h' =>
+//!     26 * (115 - 97) + (104 - 97) =>
+//!     26 * 115 + 104 - 2619 =>
+//!     475
+//! ```
 //!
 //! There are 33 different colors, for example white, gold, blue. The first two letters
 //! result in some duplicates, however incrementing the second letter if the length is odd
 //! is enough to discriminate.
 //!
-//! These 4 letter values are then combined with some constants determined using a brute force
-//! search to give a unique index.
+//! These first two hash values are then used to lookup consecutive indices from
+//! 0 to 17 and 0 to 32 respectively, which are then combined into a *third* hash value from
+//! 0 to 593 to form a perfect minimal hash function.
 //!
 //! Part one and part two are very similar. A recursive solution with memoization of previously
 //! seen values computes the result efficiently.
 use crate::util::iter::*;
 use crate::util::parse::*;
+
+const FIRST_HASH: [usize; 18] =
+    [43, 63, 78, 86, 92, 95, 98, 130, 294, 320, 332, 390, 401, 404, 475, 487, 554, 572];
+const SECOND_HASH: [usize; 33] = [
+    16, 31, 37, 38, 43, 44, 59, 67, 70, 76, 151, 170, 173, 174, 221, 286, 294, 312, 313, 376, 381,
+    401, 410, 447, 468, 476, 495, 498, 508, 515, 554, 580, 628,
+];
 
 #[derive(Clone, Copy)]
 pub struct Rule {
@@ -30,26 +46,43 @@ type Bag = [Option<Rule>; 4];
 
 pub struct Haversack {
     shiny_gold: usize,
-    bags: [Bag; 2522],
+    bags: [Bag; 594],
 }
 
 pub fn parse(input: &str) -> Haversack {
-    let mut bags = [[None; 4]; 2522];
+    let mut first_indices = [0; 676];
+    let mut second_indices = [0; 676];
+    let mut bags = [[None; 4]; 594];
+
+    FIRST_HASH.iter().enumerate().for_each(|(i, &h)| first_indices[h] = i);
+    SECOND_HASH.iter().enumerate().for_each(|(i, &h)| second_indices[h] = i);
+
+    let perfect_minimal_hash = |first: &str, second: &str| {
+        let first = first.as_bytes();
+        let a = first[0] as usize;
+        let b = first[1] as usize;
+
+        let second = second.as_bytes();
+        let c = second[0] as usize;
+        let d = (second[1] as usize) + (second.len() % 2);
+
+        first_indices[26 * a + b - 2619] + 18 * second_indices[26 * c + d - 2619]
+    };
 
     for line in input.lines() {
         let mut tokens = line.split_ascii_whitespace().chunk::<4>();
         let [first, second, _, _] = tokens.next().unwrap();
-        let outer = perfect_hash(first, second);
+        let outer = perfect_minimal_hash(first, second);
 
         for (index, chunk) in tokens.enumerate() {
             let [amount, first, second, _] = chunk;
             let amount = amount.unsigned();
-            let next = perfect_hash(first, second);
+            let next = perfect_minimal_hash(first, second);
             bags[outer][index] = Some(Rule { amount, next });
         }
     }
 
-    let shiny_gold = perfect_hash("shiny", "gold");
+    let shiny_gold = perfect_minimal_hash("shiny", "gold");
     Haversack { shiny_gold, bags }
 }
 
@@ -97,16 +130,4 @@ pub fn part2(input: &Haversack) -> u32 {
 
     let mut cache = vec![None; input.bags.len()];
     helper(input.shiny_gold, input, &mut cache) - 1
-}
-
-fn perfect_hash(first_name: &str, second_name: &str) -> usize {
-    let first_name = first_name.as_bytes();
-    let a = first_name[0] as usize;
-    let b = first_name[1] as usize;
-
-    let second_name = second_name.as_bytes();
-    let c = second_name[0] as usize;
-    let d = (second_name[1] as usize) + (second_name.len() % 2);
-
-    (a * 75 + b * 614 + c * 2137 + d * 1938) % 2522
 }
