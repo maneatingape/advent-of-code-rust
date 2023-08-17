@@ -1,13 +1,14 @@
 //! # The Ideal Stocking Stuffer
 //!
-//! This solution relies on brute forcing combinations as quickly as possible using our own internal
+//! This solution relies on brute forcing combinations as quickly as possible using an internal
 //! implementation of the [`MD5`] hashing algorithm.
 //!
-//! Using the [`write!`] macro to join the secret key to the number is quite slow. To speed things
-//! up we reuse the same `u8` buffer, incrementing digits one at a time. If a carry occurs we
-//! propagate from right to left. Hitting the start of the secret key means that we have
-//! transitioned to a new power of ten, for example from 9 to 10 or 99 to 100, so we increase the
-//! size of the buffer by one.
+//! Each number's hash is independent of the others, so we speed things up by using threading
+//! to search in parallel in blocks of 1000 numbers at a time.
+//!
+//! Using the [`format!`] macro to join the secret key to the number is quite slow. To go faster
+//! we reuse the same `u8` buffer, incrementing digits one at a time.
+//! The numbers from 1 to 999 are handled specially.
 //!
 //! Interestingly the total time to solve this problem is *extremely* sensitive to the secret key
 //! provided as input. For example my key required ~10⁷ iterations to find the answer to part two.
@@ -15,47 +16,98 @@
 //! about 22,000 times faster!
 //!
 //! [`MD5`]: crate::util::md5
-//! [`write!`]: std::write
+//! [`format!`]: std::format
 use crate::util::md5::hash;
+use std::sync::atomic::Ordering::Relaxed;
+use std::sync::atomic::{AtomicBool, AtomicU32};
+use std::sync::mpsc::{channel, Sender};
+use std::sync::Arc;
+use std::thread;
 
-pub fn parse(input: &str) -> &[u8] {
-    input.trim().as_bytes()
+type Input = (u32, u32);
+
+enum Found {
+    First(u32),
+    Second(u32),
 }
 
-pub fn part1(input: &[u8]) -> u32 {
-    find(input, 0xfffff000)
-}
+pub fn parse(input: &str) -> Input {
+    let prefix = input.trim().to_string();
+    let done = Arc::new(AtomicBool::new(false));
+    let counter = Arc::new(AtomicU32::new(1000));
+    let (tx, rx) = channel::<Found>();
 
-pub fn part2(input: &[u8]) -> u32 {
-    find(input, 0xffffff00)
-}
+    // Handle the first 999 numbers specially as the number of digits varies.
+    for n in 1..1000 {
+        let string = format!("{prefix}{n}");
+        check_hash(string.as_bytes(), n, &tx);
+    }
 
-fn find(input: &[u8], mask: u32) -> u32 {
-    let mut count = 0;
-    let mut size = input.len();
-    let mut buffer = [b'0'; 32];
+    // Use as many cores as possible to parallelize the search.
+    for _ in 0..thread::available_parallelism().unwrap().get() {
+        let prefix = prefix.clone();
+        let done = done.clone();
+        let counter = counter.clone();
+        let tx = tx.clone();
+        thread::spawn(move || worker(&prefix, &done, &counter, &tx));
+    }
 
-    buffer[..size].copy_from_slice(input);
+    // Explicitly drop the reference to the sender object so that when all search threads finish,
+    // there will be no remaining references. When this happens `rx.recv` will return
+    // `Error` and exit the loop below. This ensures we wait to receive results from all threads,
+    // to handle the edge case where two values could be close together and found out of order.
+    drop(tx);
 
-    loop {
-        count += 1;
+    // We could potentially find multiple values, keep only the first occurence of each one.
+    let mut first = u32::MAX;
+    let mut second = u32::MAX;
 
-        let mut index = size;
-        loop {
-            if buffer[index] < b'9' {
-                buffer[index] += 1;
-                break;
-            } else if index == input.len() {
-                buffer[index] = b'1';
-                size += 1;
-                break;
+    while let Ok(message) = rx.recv() {
+        match message {
+            Found::First(value) => {
+                first = first.min(value);
             }
-            buffer[index] = b'0';
-            index -= 1;
+            Found::Second(value) => {
+                second = second.min(value);
+                done.store(true, Relaxed);
+            }
         }
+    }
 
-        if hash(&buffer[..(size + 1)]).0 & mask == 0 {
-            return count;
+    (first, second)
+}
+
+pub fn part1(input: &Input) -> u32 {
+    input.0
+}
+
+pub fn part2(input: &Input) -> u32 {
+    input.1
+}
+
+fn check_hash(buffer: &[u8], n: u32, tx: &Sender<Found>) {
+    let (result, ..) = hash(buffer);
+
+    if result & 0xffffff00 == 0 {
+        let _ = tx.send(Found::Second(n));
+    } else if result & 0xfffff000 == 0 {
+        let _ = tx.send(Found::First(n));
+    }
+}
+
+fn worker(prefix: &str, done: &Arc<AtomicBool>, counter: &Arc<AtomicU32>, tx: &Sender<Found>) {
+    while !done.load(Relaxed) {
+        let start = counter.fetch_add(1000, Relaxed);
+        let string = format!("{prefix}{start}");
+        let size = string.len() - 3;
+        let mut buffer = string.as_bytes().to_vec();
+
+        for n in 0..1000 {
+            // Format macro is very slow, so update digits directly
+            buffer[size] = b'0' + (n / 100) as u8;
+            buffer[size + 1] = b'0' + ((n / 10) % 10) as u8;
+            buffer[size + 2] = b'0' + (n % 10) as u8;
+            check_hash(&buffer, start + n, tx);
         }
     }
 }
