@@ -82,6 +82,10 @@ mod year2020 {
     mod day25_test;
 }
 
+mod year2019 {
+    mod day01_test;
+}
+
 mod year2015 {
     mod day01_test;
     mod day02_test;

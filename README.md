@@ -65,7 +65,7 @@ pie
 * [2022](#2022) (19 ms)
 * [2021](#2021) (11 ms)
 * [2020](#2020) (286 ms)
-* [2015](#2015) (in progress)
+* [Earlier](#2019) (in progress)
 
 ## 2022
 
@@ -188,6 +188,12 @@ pie
 | 23 | [Crab Cups](https://adventofcode.com/2020/day/23) | [Source](src/year2020/day23.rs) | 110000 |
 | 24 | [Lobby Layout](https://adventofcode.com/2020/day/24) | [Source](src/year2020/day24.rs) | 4346 |
 | 25 | [Combo Breaker](https://adventofcode.com/2020/day/25) | [Source](src/year2020/day25.rs) | 24 |
+
+## 2019
+
+| Day | Problem | Solution | Benchmark (μs) |
+| --- | --- | --- | --: |
+| 1 | [The Tyranny of the Rocket Equation](https://adventofcode.com/2019/day/1) | [Source](src/year2019/day01.rs) | 1 |
 
 ## 2015
 
