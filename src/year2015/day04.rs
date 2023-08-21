@@ -20,85 +20,72 @@
 use crate::util::md5::hash;
 use std::sync::atomic::Ordering::Relaxed;
 use std::sync::atomic::{AtomicBool, AtomicU32};
-use std::sync::mpsc::{channel, Sender};
 use std::sync::Arc;
 use std::thread;
 
-type Input = (u32, u32);
-
-enum Found {
-    First(u32),
-    Second(u32),
+#[derive(Clone)]
+pub struct Shared {
+    prefix: String,
+    done: Arc<AtomicBool>,
+    counter: Arc<AtomicU32>,
+    first: Arc<AtomicU32>,
+    second: Arc<AtomicU32>,
 }
 
-pub fn parse(input: &str) -> Input {
-    let prefix = input.trim().to_string();
-    let done = Arc::new(AtomicBool::new(false));
-    let counter = Arc::new(AtomicU32::new(1000));
-    let (tx, rx) = channel::<Found>();
+pub fn parse(input: &str) -> Shared {
+    let shared = Shared {
+        prefix: input.trim().to_string(),
+        done: Arc::new(AtomicBool::new(false)),
+        counter: Arc::new(AtomicU32::new(1000)),
+        first: Arc::new(AtomicU32::new(u32::MAX)),
+        second: Arc::new(AtomicU32::new(u32::MAX)),
+    };
 
     // Handle the first 999 numbers specially as the number of digits varies.
     for n in 1..1000 {
-        let string = format!("{prefix}{n}");
-        check_hash(string.as_bytes(), n, &tx);
+        let string = format!("{}{}", shared.prefix, n);
+        check_hash(string.as_bytes(), n, &shared);
     }
 
-    // Use as many cores as possible to parallelize the search.
-    for _ in 0..thread::available_parallelism().unwrap().get() {
-        let prefix = prefix.clone();
-        let done = done.clone();
-        let counter = counter.clone();
-        let tx = tx.clone();
-        thread::spawn(move || worker(&prefix, &done, &counter, &tx));
+    // Use as many cores as possible to parallelize the remaining search.
+    let handles: Vec<_> = (0..thread::available_parallelism().unwrap().get())
+        .map(|_| {
+            let shared_clone = shared.clone();
+            thread::spawn(move || worker(&shared_clone))
+        })
+        .collect();
+
+    // Wait for threads to finish
+    for handle in handles {
+        let _ = handle.join();
     }
 
-    // Explicitly drop the reference to the sender object so that when all search threads finish,
-    // there will be no remaining references. When this happens `rx.recv` will return
-    // `Error` and exit the loop below. This ensures we wait to receive results from all threads,
-    // to handle the edge case where two values could be close together and found out of order.
-    drop(tx);
-
-    // We could potentially find multiple values, keep only the first occurence of each one.
-    let mut first = u32::MAX;
-    let mut second = u32::MAX;
-
-    while let Ok(message) = rx.recv() {
-        match message {
-            Found::First(value) => {
-                first = first.min(value);
-            }
-            Found::Second(value) => {
-                second = second.min(value);
-                done.store(true, Relaxed);
-            }
-        }
-    }
-
-    (first, second)
+    shared
 }
 
-pub fn part1(input: &Input) -> u32 {
-    input.0
+pub fn part1(input: &Shared) -> u32 {
+    input.first.load(Relaxed)
 }
 
-pub fn part2(input: &Input) -> u32 {
-    input.1
+pub fn part2(input: &Shared) -> u32 {
+    input.second.load(Relaxed)
 }
 
-fn check_hash(buffer: &[u8], n: u32, tx: &Sender<Found>) {
+fn check_hash(buffer: &[u8], n: u32, shared: &Shared) {
     let (result, ..) = hash(buffer);
 
     if result & 0xffffff00 == 0 {
-        let _ = tx.send(Found::Second(n));
+        shared.done.store(true, Relaxed);
+        shared.second.fetch_min(n, Relaxed);
     } else if result & 0xfffff000 == 0 {
-        let _ = tx.send(Found::First(n));
+        shared.first.fetch_min(n, Relaxed);
     }
 }
 
-fn worker(prefix: &str, done: &Arc<AtomicBool>, counter: &Arc<AtomicU32>, tx: &Sender<Found>) {
-    while !done.load(Relaxed) {
-        let start = counter.fetch_add(1000, Relaxed);
-        let string = format!("{prefix}{start}");
+fn worker(shared: &Shared) {
+    while !shared.done.load(Relaxed) {
+        let offset = shared.counter.fetch_add(1000, Relaxed);
+        let string = format!("{}{}", shared.prefix, offset);
         let size = string.len() - 3;
         let mut buffer = string.as_bytes().to_vec();
 
@@ -107,7 +94,7 @@ fn worker(prefix: &str, done: &Arc<AtomicBool>, counter: &Arc<AtomicU32>, tx: &S
             buffer[size] = b'0' + (n / 100) as u8;
             buffer[size + 1] = b'0' + ((n / 10) % 10) as u8;
             buffer[size + 2] = b'0' + (n % 10) as u8;
-            check_hash(&buffer, start + n, tx);
+            check_hash(&buffer, offset + n, shared);
         }
     }
 }
