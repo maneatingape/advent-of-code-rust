@@ -2,10 +2,14 @@
 //!
 //! [GitHub Repo](https://github.com/maneatingape/advent-of-code-rust)
 
+//
 // Configure rustdoc
+//
 #![doc(html_logo_url = "https://maneatingape.github.io/advent-of-code-rust/logo.png")]
 #![allow(rustdoc::private_intra_doc_links)]
+//
 // Stricter Rustc lints
+//
 #![warn(
     absolute_paths_not_starting_with_crate,
     elided_lifetimes_in_paths,
@@ -35,34 +39,42 @@
     unused_tuple_struct_fields,
     variant_size_differences
 )]
+//
 // Clippy Pedantic lints excluding some noisy rules.
+//
 #![warn(clippy::pedantic)]
-#![allow(clippy::similar_names)]
-#![allow(clippy::many_single_char_names)]
-#![allow(clippy::module_name_repetitions)]
-#![allow(clippy::unreadable_literal)]
-#![allow(clippy::cast_lossless)]
-#![allow(clippy::cast_sign_loss)]
-#![allow(clippy::cast_possible_wrap)]
-#![allow(clippy::cast_possible_truncation)]
-#![allow(clippy::enum_glob_use)]
-#![allow(clippy::wildcard_imports)]
-#![allow(clippy::must_use_candidate)]
-#![allow(clippy::return_self_not_must_use)]
-#![allow(clippy::missing_panics_doc)]
-#![allow(clippy::match_on_vec_items)]
-#![allow(clippy::range_plus_one)]
-#![allow(clippy::naive_bytecount)]
-#![allow(clippy::implicit_hasher)]
+#![allow(
+    clippy::similar_names,
+    clippy::many_single_char_names,
+    clippy::module_name_repetitions,
+    clippy::unreadable_literal,
+    clippy::cast_lossless,
+    clippy::cast_sign_loss,
+    clippy::cast_possible_wrap,
+    clippy::cast_possible_truncation,
+    clippy::enum_glob_use,
+    clippy::wildcard_imports,
+    clippy::must_use_candidate,
+    clippy::return_self_not_must_use,
+    clippy::missing_panics_doc,
+    clippy::match_on_vec_items,
+    clippy::range_plus_one,
+    clippy::naive_bytecount,
+    clippy::implicit_hasher
+)]
+//
 // Cherry pick some stylistic Clippy restriction lints
-#![warn(clippy::empty_structs_with_brackets)]
-#![warn(clippy::float_arithmetic)]
-#![warn(clippy::if_then_some_else_none)]
-#![warn(clippy::impl_trait_in_params)]
-//#![warn(clippy::redundant_type_annotations)] // Not supported by GitHub actions yet
-#![warn(clippy::rest_pat_in_fully_bound_structs)]
-#![warn(clippy::unneeded_field_pattern)]
-#![warn(clippy::unseparated_literal_suffix)]
+//
+#![warn(
+    clippy::empty_structs_with_brackets,
+    clippy::float_arithmetic,
+    clippy::if_then_some_else_none,
+    clippy::impl_trait_in_params,
+    // clippy::redundant_type_annotations)] // Not supported by GitHub actions yet
+    clippy::rest_pat_in_fully_bound_structs,
+    clippy::unneeded_field_pattern,
+    clippy::unseparated_literal_suffix
+)]
 
 /// # Utility modules to handle common recurring Advent of Code patterns.
 pub mod util {
