@@ -20,7 +20,7 @@ pub struct Rule<'a> {
 }
 
 impl Rule<'_> {
-    fn from([a, b, c, d]: [&str; 4]) -> Rule {
+    fn from([a, b, c, d]: [&str; 4]) -> Rule<'_> {
         let start = a.unsigned();
         let end = b.unsigned();
         let letter = c.as_bytes()[0];
@@ -29,7 +29,7 @@ impl Rule<'_> {
     }
 }
 
-pub fn parse(input: &str) -> Vec<Rule> {
+pub fn parse(input: &str) -> Vec<Rule<'_>> {
     input
         .split(['-', ':', ' ', '\n'])
         .filter(|s| !s.is_empty())
@@ -38,7 +38,7 @@ pub fn parse(input: &str) -> Vec<Rule> {
         .collect()
 }
 
-pub fn part1(input: &[Rule]) -> usize {
+pub fn part1(input: &[Rule<'_>]) -> usize {
     input
         .iter()
         .filter(|rule| {
@@ -48,7 +48,7 @@ pub fn part1(input: &[Rule]) -> usize {
         .count()
 }
 
-pub fn part2(input: &[Rule]) -> usize {
+pub fn part2(input: &[Rule<'_>]) -> usize {
     input
         .iter()
         .filter(|rule| {

@@ -22,7 +22,7 @@ struct BitStream<'a> {
 }
 
 impl BitStream<'_> {
-    fn from(s: &str) -> BitStream {
+    fn from(s: &str) -> BitStream<'_> {
         BitStream { available: 0, bits: 0, read: 0, iter: s.bytes() }
     }
 
@@ -56,7 +56,7 @@ pub enum Packet {
 }
 
 impl Packet {
-    fn from(bit_stream: &mut BitStream) -> Packet {
+    fn from(bit_stream: &mut BitStream<'_>) -> Packet {
         let version = bit_stream.next(3);
         let type_id = bit_stream.next(3);
 

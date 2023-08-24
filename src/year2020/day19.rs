@@ -65,7 +65,7 @@ pub enum Rule {
 
 type Input<'a> = (Vec<Rule>, Vec<&'a [u8]>);
 
-pub fn parse(input: &str) -> Input {
+pub fn parse(input: &str) -> Input<'_> {
     let (prefix, suffix) = input.split_once("\n\n").unwrap();
     let mut tokens = Vec::new();
     let mut rules = vec![Letter(0); 640]; // 640 rules ought to be enough for anybody.
@@ -88,12 +88,12 @@ pub fn parse(input: &str) -> Input {
     (rules, messages)
 }
 
-pub fn part1(input: &Input) -> usize {
+pub fn part1(input: &Input<'_>) -> usize {
     let (rules, messages) = input;
     messages.iter().filter(|message| check(rules, 0, message, 0) == Some(message.len())).count()
 }
 
-pub fn part2(input: &Input) -> usize {
+pub fn part2(input: &Input<'_>) -> usize {
     let (rules, messages) = input;
     let predicate = |message: &&&[u8]| {
         let mut index = 0;

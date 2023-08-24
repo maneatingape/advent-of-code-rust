@@ -57,7 +57,7 @@ pub struct Ingredient {
     candidates: usize,
 }
 
-pub fn parse(input: &str) -> Input {
+pub fn parse(input: &str) -> Input<'_> {
     let mut ingredients: FastMap<&str, Ingredient> = FastMap::new();
     let mut allergens = FastMap::new();
     let mut allergens_per_food = Vec::new();
@@ -97,11 +97,11 @@ pub fn parse(input: &str) -> Input {
     Input { ingredients, allergens }
 }
 
-pub fn part1(input: &Input) -> u32 {
+pub fn part1(input: &Input<'_>) -> u32 {
     input.ingredients.values().filter(|i| i.candidates == 0).map(|i| i.food.count_ones()).sum()
 }
 
-pub fn part2(input: &Input) -> String {
+pub fn part2(input: &Input<'_>) -> String {
     let mut ingredients = input.ingredients.clone();
     ingredients.retain(|_, v| v.candidates != 0);
 

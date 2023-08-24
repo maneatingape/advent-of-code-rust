@@ -18,7 +18,7 @@ use crate::util::point::*;
 /// axis per round (one positive and one negative). Adding padding at the edges to avoid boundary
 /// checks gives a maximum width of 8 + 2 * (6 + 1) = 22 for the x and y dimensions and
 /// 1 + 2 * (6 + 1) = 15 for the z and w dimensions.
-mod size {
+pub mod size {
     pub const X: i32 = 22;
     pub const Y: i32 = 22;
     pub const Z: i32 = 15;
@@ -27,7 +27,7 @@ mod size {
 
 /// Pack a four dimensional array into a one dimensional vec to avoid the speed penalty of
 /// following multiple pointers and increase memory locality for caching.
-mod stride {
+pub mod stride {
     use super::size;
     pub const X: i32 = 1;
     pub const Y: i32 = size::X * X;

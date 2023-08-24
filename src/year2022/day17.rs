@@ -27,7 +27,7 @@ struct State<'a> {
 }
 
 impl State<'_> {
-    fn new(input: &[u8]) -> State {
+    fn new(input: &[u8]) -> State<'_> {
         let mut state = State {
             rocks: ROCKS.iter().copied().cycle(),
             jets: input.iter().copied().cycle(),
@@ -39,7 +39,7 @@ impl State<'_> {
     }
 }
 
-impl<'a> Iterator for State<'a> {
+impl Iterator for State<'_> {
     type Item = usize;
 
     fn next(&mut self) -> Option<Self::Item> {

@@ -12,12 +12,12 @@ pub struct Input<'a> {
     numbers: Vec<&'a [u8]>,
 }
 
-pub fn parse(input: &str) -> Input {
+pub fn parse(input: &str) -> Input<'_> {
     let numbers: Vec<_> = input.lines().map(str::as_bytes).collect();
     Input { width: numbers[0].len(), numbers }
 }
 
-pub fn part1(input: &Input) -> u32 {
+pub fn part1(input: &Input<'_>) -> u32 {
     let mut gamma = 0;
     let mut epsilon = 0;
 
@@ -35,7 +35,7 @@ pub fn part1(input: &Input) -> u32 {
     gamma * epsilon
 }
 
-pub fn part2(input: &Input) -> u32 {
+pub fn part2(input: &Input<'_>) -> u32 {
     let gamma = rating(input, |a, b| a >= b);
     let epsilon = rating(input, |a, b| a < b);
     gamma * epsilon
@@ -50,7 +50,7 @@ fn fold(numbers: &[u8], width: usize) -> u32 {
     numbers.iter().take(width).fold(0, |acc, &n| (acc << 1) | (n & 1) as u32)
 }
 
-fn rating(input: &Input, cmp: impl Fn(usize, usize) -> bool) -> u32 {
+fn rating(input: &Input<'_>, cmp: impl Fn(usize, usize) -> bool) -> u32 {
     let mut numbers = input.numbers.clone();
 
     for i in 0..input.width {

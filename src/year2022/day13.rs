@@ -25,7 +25,7 @@ struct Packet<'a> {
 }
 
 impl Packet<'_> {
-    fn new(str: &str) -> Packet {
+    fn new(str: &str) -> Packet<'_> {
         Packet { slice: str.as_bytes(), index: 0, extra: Vec::new() }
     }
 }

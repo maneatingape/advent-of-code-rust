@@ -57,7 +57,7 @@ pub fn parse(input: &str) -> Shared {
 
     // Wait for threads to finish
     for handle in handles {
-        let _ = handle.join();
+        let _unused = handle.join();
     }
 
     shared

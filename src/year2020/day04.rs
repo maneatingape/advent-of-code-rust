@@ -9,15 +9,15 @@ use std::ops::RangeInclusive;
 
 type Passport<'a> = Vec<[&'a str; 2]>;
 
-pub fn parse(input: &str) -> Vec<Passport> {
+pub fn parse(input: &str) -> Vec<Passport<'_>> {
     input.split("\n\n").map(parse_block).collect()
 }
 
-pub fn part1(input: &[Passport]) -> usize {
+pub fn part1(input: &[Passport<'_>]) -> usize {
     input.iter().filter(|passport| passport.len() == 7).count()
 }
 
-pub fn part2(input: &[Passport]) -> usize {
+pub fn part2(input: &[Passport<'_>]) -> usize {
     input
         .iter()
         .filter(|passport| passport.len() == 7)
@@ -25,7 +25,7 @@ pub fn part2(input: &[Passport]) -> usize {
         .count()
 }
 
-fn parse_block(block: &str) -> Passport {
+fn parse_block(block: &str) -> Passport<'_> {
     let mut fields = Vec::with_capacity(7);
 
     for pair @ [key, _] in block.split([':', ' ', '\n']).chunk::<2>() {

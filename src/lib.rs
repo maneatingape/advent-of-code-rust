@@ -5,6 +5,36 @@
 // Configure rustdoc
 #![doc(html_logo_url = "https://maneatingape.github.io/advent-of-code-rust/logo.png")]
 #![allow(rustdoc::private_intra_doc_links)]
+// Stricter Rustc lints
+#![warn(
+    absolute_paths_not_starting_with_crate,
+    elided_lifetimes_in_paths,
+    explicit_outlives_requirements,
+    ffi_unwind_calls,
+    //invalid_reference_casting, // Not supported by GitHub actions yet
+    keyword_idents,
+    let_underscore_drop,
+    macro_use_extern_crate,
+    meta_variable_misuse,
+    missing_abi,
+    non_ascii_idents,
+    noop_method_call,
+    pointer_structural_match,
+    single_use_lifetimes,
+    trivial_casts,
+    trivial_numeric_casts,
+    unreachable_pub,
+    unsafe_code,
+    unsafe_op_in_unsafe_fn,
+    unused_crate_dependencies,
+    unused_extern_crates,
+    unused_import_braces,
+    unused_lifetimes,
+    unused_macro_rules,
+    unused_qualifications,
+    unused_tuple_struct_fields,
+    variant_size_differences
+)]
 // Clippy Pedantic lints excluding some noisy rules.
 #![warn(clippy::pedantic)]
 #![allow(clippy::similar_names)]

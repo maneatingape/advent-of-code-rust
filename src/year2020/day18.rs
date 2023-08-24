@@ -18,7 +18,7 @@ pub fn parse(input: &str) -> Vec<&str> {
 }
 
 pub fn part1(input: &[&str]) -> u64 {
-    fn helper(bytes: &mut Bytes) -> u64 {
+    fn helper(bytes: &mut Bytes<'_>) -> u64 {
         let mut total = value(bytes, helper);
 
         while let Some(operation) = next(bytes) {
@@ -37,7 +37,7 @@ pub fn part1(input: &[&str]) -> u64 {
 }
 
 pub fn part2(input: &[&str]) -> u64 {
-    fn helper(bytes: &mut Bytes) -> u64 {
+    fn helper(bytes: &mut Bytes<'_>) -> u64 {
         let mut total = value(bytes, helper);
 
         while let Some(operation) = next(bytes) {
@@ -60,7 +60,7 @@ pub fn part2(input: &[&str]) -> u64 {
 /// Convenience wrapper around [`Bytes`] iterator. Encountering a `)` is also considered end of
 /// sequence. The expressions are consistently formatted so encountering a space just means
 /// skip and return the next character that will always be present.
-fn next(bytes: &mut Bytes) -> Option<u8> {
+fn next(bytes: &mut Bytes<'_>) -> Option<u8> {
     match bytes.next() {
         None | Some(b')') => None,
         Some(b' ') => bytes.next(),
@@ -70,7 +70,7 @@ fn next(bytes: &mut Bytes) -> Option<u8> {
 
 /// Convenience wrapper to return the value of either the next raw digit literal or a
 /// sub-expression nested in parentheses.
-fn value(bytes: &mut Bytes, helper: impl Fn(&mut Bytes) -> u64) -> u64 {
+fn value(bytes: &mut Bytes<'_>, helper: impl Fn(&mut Bytes<'_>) -> u64) -> u64 {
     match next(bytes).unwrap() {
         b'(' => helper(bytes),
         b => b.to_decimal() as u64,

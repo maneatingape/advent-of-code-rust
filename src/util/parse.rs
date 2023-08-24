@@ -108,7 +108,7 @@ impl<T: Signed> Iterator for ParseSigned<'_, T> {
     }
 }
 
-fn try_unsigned<T: Unsigned>(bytes: &mut Bytes) -> Option<T> {
+fn try_unsigned<T: Unsigned>(bytes: &mut Bytes<'_>) -> Option<T> {
     let mut n = loop {
         let byte = bytes.next()?;
         let digit = byte.to_decimal();
@@ -130,7 +130,7 @@ fn try_unsigned<T: Unsigned>(bytes: &mut Bytes) -> Option<T> {
     }
 }
 
-fn try_signed<T: Signed>(bytes: &mut Bytes) -> Option<T> {
+fn try_signed<T: Signed>(bytes: &mut Bytes<'_>) -> Option<T> {
     let (mut n, negative) = loop {
         let byte = bytes.next()?;
         let digit = byte.to_decimal();

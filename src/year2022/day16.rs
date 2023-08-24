@@ -25,7 +25,7 @@ pub struct Valve<'a> {
 }
 
 impl Valve<'_> {
-    fn parse(line: &str) -> Valve {
+    fn parse(line: &str) -> Valve<'_> {
         let mut tokens: Vec<_> = line
             .split(|c: char| !c.is_ascii_uppercase() && !c.is_ascii_digit())
             .filter(|s| !s.is_empty())
@@ -36,7 +36,7 @@ impl Valve<'_> {
         Valve { name, flow, edges: tokens }
     }
 
-    fn cmp(&self, other: &Valve) -> Ordering {
+    fn cmp(&self, other: &Valve<'_>) -> Ordering {
         let first = other.flow.cmp(&self.flow);
         if first == Ordering::Equal {
             self.name.cmp(other.name)
