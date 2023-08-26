@@ -1,4 +1,9 @@
-# Advent of Code [![Checks](https://img.shields.io/github/actions/workflow/status/maneatingape/advent-of-code-rust/checks.yml?label=checks)](https://github.com/maneatingape/advent-of-code-rust/actions/workflows/checks.yml) [![Docs](https://img.shields.io/github/actions/workflow/status/maneatingape/advent-of-code-rust/docs.yml?color=blue&label=docs)](https://maneatingape.github.io/advent-of-code-rust/aoc/)
+# Advent of Code [![checks-badge]][checks-link] [![docs-badge]][docs-link]
+
+[checks-badge]: https://img.shields.io/github/actions/workflow/status/maneatingape/advent-of-code-rust/checks.yml?label=checks
+[checks-link]: https://github.com/maneatingape/advent-of-code-rust/actions/workflows/checks.yml
+[docs-badge]: https://img.shields.io/github/actions/workflow/status/maneatingape/advent-of-code-rust/docs.yml?color=blue&label=docs
+[docs-link]: https://maneatingape.github.io/advent-of-code-rust/aoc/
 
 Complete 2022 to 2020 entries for the annual [Advent of Code](https://adventofcode.com/) challenge, written in performant Rust.
 
@@ -7,8 +12,8 @@ Complete 2022 to 2020 entries for the annual [Advent of Code](https://adventofco
 * Each solution is blazing fast, using the most efficient algorithms to the best of my knowledge.
 * Clean, elegant and idiomatic code.
 * Consistently formatted with `rustfmt` and linted by `clippy`.
-* Thoroughly commented with `rustdoc` generated [documentation online](https://maneatingape.github.io/advent-of-code-rust/aoc/).
-* Test coverage with continuous integration provided by [GitHub Actions](https://github.com/maneatingape/advent-of-code-rust/actions/workflows/checks.yml).
+* Thoroughly commented with `rustdoc` generated [documentation online][docs-link].
+* Test coverage with continuous integration provided by [GitHub Actions][checks-link].
 * Self contained depending only on the stable `std` Rust library. No use of `unsafe` features.
 
 ## Quickstart
