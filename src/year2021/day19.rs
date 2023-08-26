@@ -13,7 +13,7 @@
 //! matter what the rotation of the beacons, as this will reduce the number of comparisons by a
 //! factor of 24.
 //!
-//! The set of euclidean distance squared between all beacons is a good choice, as it's invariant
+//! The set of Euclidean distance squared between all beacons is a good choice, as it's invariant
 //! under rotation, quick to calculate and a good discriminant. To check for an overlap of 12
 //! beacons, we look for an overlap of a least 12 * 11 / 2 = 66 distances. (12 pairs is 12 * 11
 //! different distances but divided by 2 since the distance from a -> b is the same as b -> a).
@@ -28,54 +28,55 @@ use std::ops::{Add, Sub};
 
 /// Stores coordinates in x, y, z order.
 #[derive(Copy, Clone, Hash, PartialEq, Eq)]
-pub struct Point3D([i32; 3]);
+struct Point3D(i32, i32, i32);
 
 impl Point3D {
     fn parse(line: &&str) -> Point3D {
-        let mut iter = line.iter_signed().chunk::<3>();
-        Point3D(iter.next().unwrap())
+        let [x, y, z] = line.iter_signed().chunk::<3>().next().unwrap();
+        Point3D(x, y, z)
     }
 
     /// There are 24 possible 3D rotations of each point in increments of 90 degrees.
-    fn rotations(&self) -> [Point3D; 24] {
-        let [x, y, z] = self.0;
-        [
-            Point3D([x, y, z]),
-            Point3D([x, z, -y]),
-            Point3D([x, -z, y]),
-            Point3D([x, -y, -z]),
-            Point3D([-x, -z, -y]),
-            Point3D([-x, y, -z]),
-            Point3D([-x, -y, z]),
-            Point3D([-x, z, y]),
-            Point3D([y, z, x]),
-            Point3D([y, -x, z]),
-            Point3D([y, x, -z]),
-            Point3D([y, -z, -x]),
-            Point3D([-y, x, z]),
-            Point3D([-y, z, -x]),
-            Point3D([-y, -z, x]),
-            Point3D([-y, -x, -z]),
-            Point3D([z, x, y]),
-            Point3D([z, y, -x]),
-            Point3D([z, -y, x]),
-            Point3D([z, -x, -y]),
-            Point3D([-z, y, x]),
-            Point3D([-z, -x, y]),
-            Point3D([-z, x, -y]),
-            Point3D([-z, -y, -x]),
-        ]
+    fn transform(&self, index: usize) -> Point3D {
+        let Point3D(x, y, z) = *self;
+        match index {
+            0 => Point3D(x, y, z),
+            1 => Point3D(x, z, -y),
+            2 => Point3D(x, -z, y),
+            3 => Point3D(x, -y, -z),
+            4 => Point3D(-x, -z, -y),
+            5 => Point3D(-x, y, -z),
+            6 => Point3D(-x, -y, z),
+            7 => Point3D(-x, z, y),
+            8 => Point3D(y, z, x),
+            9 => Point3D(y, -x, z),
+            10 => Point3D(y, x, -z),
+            11 => Point3D(y, -z, -x),
+            12 => Point3D(-y, x, z),
+            13 => Point3D(-y, z, -x),
+            14 => Point3D(-y, -z, x),
+            15 => Point3D(-y, -x, -z),
+            16 => Point3D(z, x, y),
+            17 => Point3D(z, y, -x),
+            18 => Point3D(z, -y, x),
+            19 => Point3D(z, -x, -y),
+            20 => Point3D(-z, y, x),
+            21 => Point3D(-z, -x, y),
+            22 => Point3D(-z, x, -y),
+            23 => Point3D(-z, -y, -x),
+            _ => unreachable!(),
+        }
     }
 
     /// No need to take the square root as it's faster and easier to just use the integer
     /// value of the distance squared directly.
     fn euclidean(&self, other: &Point3D) -> i32 {
-        let [dx, dy, dz] = (*self - *other).0;
+        let Point3D(dx, dy, dz) = *self - *other;
         dx * dx + dy * dy + dz * dz
     }
 
     fn manhattan(&self, other: &Point3D) -> i32 {
-        let [dx, dy, dz] = (*self - *other).0;
+        let Point3D(dx, dy, dz) = *self - *other;
         dx.abs() + dy.abs() + dz.abs()
     }
 }
@@ -85,9 +86,9 @@ impl Add for Point3D {
     type Output = Point3D;
 
     fn add(self, rhs: Point3D) -> Point3D {
-        let [x1, y1, z1] = self.0;
-        let [x2, y2, z2] = rhs.0;
-        Point3D([x1 + x2, y1 + y2, z1 + z2])
+        let Point3D(x1, y1, z1) = self;
+        let Point3D(x2, y2, z2) = rhs;
+        Point3D(x1 + x2, y1 + y2, z1 + z2)
     }
 }
 
@@ -95,29 +96,31 @@ impl Sub for Point3D {
     type Output = Point3D;
 
     fn sub(self, rhs: Point3D) -> Point3D {
-        let [x1, y1, z1] = self.0;
-        let [x2, y2, z2] = rhs.0;
-        Point3D([x1 - x2, y1 - y2, z1 - z2])
+        let Point3D(x1, y1, z1) = self;
+        let Point3D(x2, y2, z2) = rhs;
+        Point3D(x1 - x2, y1 - y2, z1 - z2)
     }
 }
 
-/// Represents an unknown scanner that could at any orientation and an unknown translation
+/// Represents an unknown scanner that could be at any orientation and translation
 /// from our initial reference scanner.
-pub struct Scanner {
+struct Scanner {
     beacons: Vec<Point3D>,
-    signature: FastSet<i32>,
+    signature: FastMap<i32, [usize; 2]>,
 }
 
 impl Scanner {
-    /// Calculate the signature as the set of euclidean distance squared between every possible
+    /// Calculate the signature as the set of Euclidean distance squared between every possible
     /// pair of beacons.
     fn parse(lines: &[&str]) -> Scanner {
         let beacons: Vec<_> = lines.iter().skip(1).map(Point3D::parse).collect();
 
-        let mut signature = FastSet::with_capacity(1_000);
+        let mut signature = FastMap::with_capacity(1_000);
         for i in 0..(beacons.len() - 1) {
             for j in (i + 1)..beacons.len() {
-                signature.insert(beacons[i].euclidean(&beacons[j]));
+                let key = beacons[i].euclidean(&beacons[j]);
+                let value = [i, j];
+                signature.insert(key, value);
             }
         }
 
@@ -125,41 +128,40 @@ impl Scanner {
     }
 }
 
+/// Returns the correct orientation and translation to link a new scanner to an existing
+/// reference scanner.
+#[derive(Clone, Copy)]
+struct Found {
+    orientation: usize,
+    translation: Point3D,
+}
+
 /// Represents a known scanner with the same orientation and a known translation from
 /// our initial reference scanner.
 pub struct Located {
-    signature: FastSet<i32>,
-    deltas: FastSet<Point3D>,
-    beacons: FastSet<Point3D>,
-    offset: Point3D,
+    beacons: Vec<Point3D>,
+    signature: FastMap<i32, [usize; 2]>,
+    oriented: FastSet<Point3D>,
+    translation: Point3D,
 }
 
 impl Located {
-    /// Delta are *not* invariant under rotation, so we can use them to determine the correct
-    /// orientation of other scanners relative to this one.
-    fn from(relative_beacons: &[Point3D], signature: FastSet<i32>, offset: Point3D) -> Located {
-        let mut deltas = FastSet::with_capacity(1_000);
-        for (i, a) in relative_beacons.iter().enumerate() {
-            for (j, b) in relative_beacons.iter().enumerate() {
-                if i != j {
-                    deltas.insert(*a - *b);
-                }
-            }
-        }
+    fn from(scanner: Scanner, found: Found) -> Located {
+        let Scanner { beacons, signature } = scanner;
+        let Found { orientation, translation } = found;
 
-        // Translate the beacons by the offset of this scanner from the reference, so that
-        // we can build "chains" of scanners, for example A -> B -> C, where A and B overlap,
+        // Rotate and translate the beacons by the offset of this scanner from the reference, so
+        // that we can build "chains" of scanners, for example A -> B -> C, where A and B overlap,
         // B and C overlap, but not A and C.
-        let mut beacons = FastSet::with_capacity(30);
-        for &point in relative_beacons {
-            beacons.insert(point + offset);
-        }
+        let beacons: Vec<_> =
+            beacons.iter().map(|b| b.transform(orientation) + translation).collect();
+        let oriented = beacons.iter().copied().collect();
 
-        Located { signature, deltas, beacons, offset }
+        Located { beacons, signature, oriented, translation }
     }
 }
 
-/// Convert the raw input into a vec of unkown scanners, then do all the heavy lifting of figuring
+/// Convert the raw input into a vec of unknown scanners, then do all the heavy lifting of figuring
 /// out the relative orientations and translations of each scanner.
 pub fn parse(input: &str) -> Vec<Located> {
     let lines: Vec<_> = input.lines().collect();
@@ -186,7 +188,7 @@ pub fn part2(input: &[Located]) -> i32 {
 
     for first in input {
         for second in input {
-            result = result.max(first.offset.manhattan(&second.offset));
+            result = result.max(first.translation.manhattan(&second.translation));
         }
     }
 
@@ -206,15 +208,16 @@ fn locate(unknown: &mut Vec<Scanner>) -> Vec<Located> {
     let mut done = Vec::new();
     let mut todo = Vec::new();
 
-    let Scanner { beacons, signature } = unknown.pop().unwrap();
-    todo.push(Located::from(&beacons, signature, Point3D([0, 0, 0])));
+    let scanner = unknown.pop().unwrap();
+    let found = Found { orientation: 0, translation: Point3D(0, 0, 0) };
+    todo.push(Located::from(scanner, found));
 
     while let Some(known) = todo.pop() {
         let mut next_unknown = Vec::new();
 
         while let Some(scanner) = unknown.pop() {
-            if let Some(located) = check(&known, &scanner) {
-                todo.push(located);
+            if let Some(found) = check(&known, &scanner) {
+                todo.push(Located::from(scanner, found));
             } else {
                 next_unknown.push(scanner);
             }
@@ -227,36 +230,19 @@ fn locate(unknown: &mut Vec<Scanner>) -> Vec<Located> {
     done
 }
 
-fn check(known: &Located, scanner: &Scanner) -> Option<Located> {
-    // At least 66 euclidean distances must overlap
-    let matching: FastSet<_> = known.signature.intersection(&scanner.signature).copied().collect();
-    if matching.len() < 66 {
-        return None;
-    }
+/// At least 66 Euclidean distances must overlap for a potential match.
+fn check(known: &Located, scanner: &Scanner) -> Option<Found> {
+    let mut matching = 0;
 
-    // We only need to double check beacons that form part of the matching signature.
-    let mut beacons_of_interest = FastSet::new();
-    for i in 0..(scanner.beacons.len() - 1) {
-        for j in (i + 1)..scanner.beacons.len() {
-            if matching.contains(&scanner.beacons[i].euclidean(&scanner.beacons[j])) {
-                beacons_of_interest.insert(scanner.beacons[i]);
-                beacons_of_interest.insert(scanner.beacons[j]);
-            }
-        }
-    }
-
-    // The confirmation takes place in two parts. First we confirm that the rotated beacons of
-    // interest can be oriented the same way as our known scanner. Then we check that the beacons
-    // can be translated so that at least 12 beacons overlap.
-    let candidates: Vec<_> = beacons_of_interest.iter().map(Point3D::rotations).collect();
-
-    for i in 0..24 {
-        let next: Vec<_> = candidates.iter().map(|&rotations| rotations[i]).collect();
-        if check_deltas(known, &next) {
-            if let Some(offset) = check_offsets(known, &next) {
-                let oriented: Vec<_> = scanner.beacons.iter().map(|p| p.rotations()[i]).collect();
-                let located = Located::from(&oriented, scanner.signature.clone(), offset);
-                return Some(located);
+    for key in known.signature.keys() {
+        if scanner.signature.contains_key(key) {
+            matching += 1;
+            if matching == 66 {
+                let [a, b] = known.signature[key];
+                let [x, y] = scanner.signature[key];
+                let points =
+                    [known.beacons[a], known.beacons[b], scanner.beacons[x], scanner.beacons[y]];
+                return detailed_check(known, scanner, points);
             }
         }
     }
@@ -264,43 +250,33 @@ fn check(known: &Located, scanner: &Scanner) -> Option<Located> {
     None
 }
 
-/// Check for at least 66 overlapping delta. Unlike the signature, deltas are *not* invariant
-/// under rotation, so we can use them to determine the correct orientation of the unknown
-/// scanner.
-fn check_deltas(known: &Located, next: &[Point3D]) -> bool {
-    let max_no = (next.len() * (next.len() - 1)) - (12 * 11);
-    let mut no = 0;
+/// The correct translation and orientation is found when we have at least 12 beacons overlapping.
+fn detailed_check(known: &Located, scanner: &Scanner, points: [Point3D; 4]) -> Option<Found> {
+    let [a, b, x, y] = points;
+    let delta = a - b;
 
-    for (i, first) in next.iter().enumerate() {
-        for (j, second) in next.iter().enumerate() {
-            if i != j {
-                let delta = *first - *second;
-                if !known.deltas.contains(&delta) {
-                    no += 1;
-                    if no > max_no {
-                        return false;
-                    }
+    for orientation in 0..24 {
+        let rotate_x = x.transform(orientation);
+        let rotate_y = y.transform(orientation);
+
+        let translation = if rotate_x - rotate_y == delta {
+            b - rotate_y
+        } else if rotate_y - rotate_x == delta {
+            b - rotate_x
+        } else {
+            continue;
+        };
+
+        let mut count = 0;
+
+        for candidate in &scanner.beacons {
+            let point = candidate.transform(orientation) + translation;
+
+            if known.oriented.contains(&point) {
+                count += 1;
+                if count == 12 {
+                    return Some(Found { orientation, translation });
                 }
-            }
-        }
-    }
-
-    true
-}
-
-/// Now that we know the correct orientation, try every possible combination of beacons pairs.
-/// The correct translation offset is found when we have at least 12 beacons overlapping.
-fn check_offsets(known: &Located, next: &[Point3D]) -> Option<Point3D> {
-    for first in &known.beacons {
-        for second in next {
-            let offset = *first - *second;
-            let mut candidates = FastSet::with_capacity(30);
-            for &point in next {
-                candidates.insert(point + offset);
-            }
-
-            if known.beacons.intersection(&candidates).count() >= 12 {
-                return Some(offset);
             }
         }
     }
