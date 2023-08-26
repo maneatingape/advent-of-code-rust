@@ -1,15 +1,13 @@
-//! # Rust solutions to the annual Advent of Code challenge tuned for speed.
+//! # Advent of Code solutions in Rust, tuned for speed.
+//! [![github]](https://github.com/maneatingape/advent-of-code-rust)
 //!
-//! [GitHub Repo](https://github.com/maneatingape/advent-of-code-rust)
+//! [github]: https://img.shields.io/badge/github-blue?style=for-the-badge&logo=github&labelColor=grey
 
-//
-// Configure rustdoc
-//
+//! <!-- Configure rustdoc -->
 #![doc(html_logo_url = "https://maneatingape.github.io/advent-of-code-rust/logo.png")]
 #![allow(rustdoc::private_intra_doc_links)]
-//
-// Stricter Rustc lints
-//
+
+//! <!-- Stricter Rustc lints -->
 #![warn(
     absolute_paths_not_starting_with_crate,
     elided_lifetimes_in_paths,
@@ -39,9 +37,8 @@
     unused_tuple_struct_fields,
     variant_size_differences
 )]
-//
-// Clippy Pedantic lints excluding some noisy rules.
-//
+
+//! <!-- Clippy Pedantic lints excluding some noisy rules -->
 #![warn(clippy::pedantic)]
 #![allow(
     clippy::similar_names,
@@ -62,9 +59,8 @@
     clippy::naive_bytecount,
     clippy::implicit_hasher
 )]
-//
-// Cherry pick some stylistic Clippy restriction lints
-//
+
+//! <!-- Cherry pick some stylistic Clippy restriction lints -->
 #![warn(
     clippy::empty_structs_with_brackets,
     clippy::float_arithmetic,
