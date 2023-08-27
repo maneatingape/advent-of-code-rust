@@ -14,9 +14,10 @@
 //! factor of 24.
 //!
 //! The set of Euclidean distance squared between all beacons is a good choice, as it's invariant
-//! under rotation, quick to calculate and a good discriminant. To check for an overlap of 12
-//! beacons, we look for an overlap of a least 12 * 11 / 2 = 66 distances. (12 pairs is 12 * 11
-//! different distances but divided by 2 since the distance from a -> b is the same as b -> a).
+//! under rotation and translation, quick to calculate and a good discriminant. To check for an
+//! overlap of 12 beacons, we look for an overlap of a least 12 * 11 / 2 = 66 distances.
+//! (12 beacons gives 12 * 11 = 132 pairs of distances but divided by 2 since the distance from
+//! a -> b is the same as b -> a).
 //!
 //! An overlap indicates a potential match, but we need to confirm by checking the beacons against
 //! each other in two steps. First confirming orientation by matching the deltas between
@@ -31,8 +32,7 @@ use std::ops::{Add, Sub};
 struct Point3D(i32, i32, i32);
 
 impl Point3D {
-    fn parse(line: &&str) -> Point3D {
-        let [x, y, z] = line.iter_signed().chunk::<3>().next().unwrap();
+    fn parse([x, y, z]: [i32; 3]) -> Point3D {
         Point3D(x, y, z)
     }
 
@@ -112,9 +112,14 @@ struct Scanner {
 impl Scanner {
     /// Calculate the signature as the set of Euclidean distance squared between every possible
     /// pair of beacons.
-    fn parse(lines: &[&str]) -> Scanner {
-        let beacons: Vec<_> = lines.iter().skip(1).map(Point3D::parse).collect();
+    fn parse(block: &str) -> Scanner {
+        // Each beacon header results in 5 mangled numbers at the start that should be skipped.
+        let beacons: Vec<_> =
+            block.iter_signed().skip(5).chunk::<3>().map(Point3D::parse).collect();
 
+        // Include indices of the points so that we can match translation and rotation for
+        // points that have the same signature. Use indices so that we don't need to recalculate
+        // signature when rotating and translation a beacon from unknown to known.
         let mut signature = FastMap::with_capacity(1_000);
         for i in 0..(beacons.len() - 1) {
             for j in (i + 1)..beacons.len() {
@@ -163,10 +168,41 @@ impl Located {
 
 /// Convert the raw input into a vec of unknown scanners, then do all the heavy lifting of figuring
 /// out the relative orientations and translations of each scanner.
+///
+/// First choose an arbitrary scanner that determines the reference orientation and that we
+/// decide is located at the origin.
+///
+/// Then for each remaining unknown scanner, check if the signature indicates a potential
+/// match. If confirmed, we determine the orientation and translation then add the scanner
+/// to a todo list to recheck against other unknown scanners.
+///
+/// This works for situations such as A -> B -> C, where A and B overlap, B and C overlap, but not
+/// A and C.
 pub fn parse(input: &str) -> Vec<Located> {
-    let lines: Vec<_> = input.lines().collect();
-    let mut scanners: Vec<_> = lines.split(|line| line.is_empty()).map(Scanner::parse).collect();
-    locate(&mut scanners)
+    let mut unknown: Vec<_> = input.split("\n\n").map(Scanner::parse).collect();
+    let mut todo = Vec::new();
+    let mut done = Vec::new();
+
+    let scanner = unknown.pop().unwrap();
+    let found = Found { orientation: 0, translation: Point3D(0, 0, 0) };
+    todo.push(Located::from(scanner, found));
+
+    while let Some(known) = todo.pop() {
+        let mut next_unknown = Vec::new();
+
+        while let Some(scanner) = unknown.pop() {
+            if let Some(found) = check(&known, &scanner) {
+                todo.push(Located::from(scanner, found));
+            } else {
+                next_unknown.push(scanner);
+            }
+        }
+
+        done.push(known);
+        unknown = next_unknown;
+    }
+
+    done
 }
 
 /// Calculate the total number of distinct beacons.
@@ -195,41 +231,6 @@ pub fn part2(input: &[Located]) -> i32 {
     result
 }
 
-/// First choose an arbitrary scanner that determines the reference orientation and that we
-/// decide is located at the origin.
-///
-/// Then for each remaining unknown scanner, check if the signature indicates a potential
-/// match. If confirmed, we determine the orientation and translation then add the scanner
-/// to a todo list to recheck against other unknown scanners.
-///
-/// This works for situations such as A -> B -> C, where A and B overlap, B and C overlap, but not
-/// A and C.
-fn locate(unknown: &mut Vec<Scanner>) -> Vec<Located> {
-    let mut done = Vec::new();
-    let mut todo = Vec::new();
-
-    let scanner = unknown.pop().unwrap();
-    let found = Found { orientation: 0, translation: Point3D(0, 0, 0) };
-    todo.push(Located::from(scanner, found));
-
-    while let Some(known) = todo.pop() {
-        let mut next_unknown = Vec::new();
-
-        while let Some(scanner) = unknown.pop() {
-            if let Some(found) = check(&known, &scanner) {
-                todo.push(Located::from(scanner, found));
-            } else {
-                next_unknown.push(scanner);
-            }
-        }
-
-        done.push(known);
-        *unknown = next_unknown;
-    }
-
-    done
-}
-
 /// At least 66 Euclidean distances must overlap for a potential match.
 fn check(known: &Located, scanner: &Scanner) -> Option<Found> {
     let mut matching = 0;
@@ -238,6 +239,7 @@ fn check(known: &Located, scanner: &Scanner) -> Option<Found> {
         if scanner.signature.contains_key(key) {
             matching += 1;
             if matching == 66 {
+                // Choose any arbitrary pair of points that have a matching signature.
                 let [a, b] = known.signature[key];
                 let [x, y] = scanner.signature[key];
                 let points =
