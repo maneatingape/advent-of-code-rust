@@ -37,7 +37,7 @@ pub fn part1(input: &[u32]) -> u32 {
 pub fn part2(input: &[u32]) -> usize {
     let start = input[0] as usize;
     let mut current = start;
-    let mut cups = vec![0; 1_000_001];
+    let mut cups: Vec<_> = (1..1_000_002).collect();
 
     // Link the 9 input cups, continuing to the extra elements.
     for &next in &input[1..] {
@@ -46,12 +46,7 @@ pub fn part2(input: &[u32]) -> usize {
     }
     cups[current] = 10;
 
-    // Fill in the rest, wrapping around to the start
-    // Disable clippy lint, current readability is better in my opinion.
-    #[allow(clippy::needless_range_loop)]
-    for i in 10..1_000_000 {
-        cups[i] = (i + 1) as u32;
-    }
+    // Wrap around to the start
     cups[1_000_000] = start as u32;
 
     play(&mut cups, start, 10_000_000);
