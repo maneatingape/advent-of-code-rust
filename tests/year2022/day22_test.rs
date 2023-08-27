@@ -1,8 +1,7 @@
 use aoc::year2022::day22::*;
 
-#[rustfmt::skip]
-const EXAMPLE: &str =
-"        ...#
+const EXAMPLE: &str = "\
+@       ...#
         .#..
         #...
         ....

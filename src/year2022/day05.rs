@@ -34,9 +34,9 @@ pub fn parse(input: &str) -> Input {
     let width = (lines[0].len() + 1) / 4;
 
     let mut stack: Stack = vec![Vec::new(); width];
-    for row in lines.iter().rev() {
+    for row in lines.iter().rev().skip(1) {
         for (i, c) in row.chars().skip(1).step_by(4).enumerate() {
-            if c != ' ' {
+            if c.is_ascii_alphabetic() {
                 stack[i].push(c);
             }
         }

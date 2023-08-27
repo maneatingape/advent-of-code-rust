@@ -1,12 +1,10 @@
 use aoc::year2015::day08::*;
 
-#[rustfmt::skip]
-const EXAMPLE: &str =
-r#"""
+const EXAMPLE: &str = r#"
+""
 "abc"
 "aaa\"aaa"
-"\x27"
-"#;
+"\x27""#;
 
 #[test]
 fn part1_test() {

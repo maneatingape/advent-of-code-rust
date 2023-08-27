@@ -1,11 +1,10 @@
 use aoc::year2022::day05::*;
 
-#[rustfmt::skip]
-const EXAMPLE: &str =
-"    [D]    
-[N] [C]    
-[Z] [M] [P]
- 1   2   3 
+const EXAMPLE: &str = "\
+....[D]....
+[N].[C]....
+[Z].[M].[P]
+.1...2...3.
 
 move 1 from 2 to 1
 move 3 from 1 to 3
