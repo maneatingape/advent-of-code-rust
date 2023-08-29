@@ -194,6 +194,7 @@ pie
 | Day | Problem | Solution | Benchmark (μs) |
 | --- | --- | --- | --: |
 | 1 | [The Tyranny of the Rocket Equation](https://adventofcode.com/2019/day/1) | [Source](src/year2019/day01.rs) | 1 |
+| 2 | [1202 Program Alarm](https://adventofcode.com/2019/day/2) | [Source](src/year2019/day02.rs) | 1 |
 
 ## 2015
 

@@ -174,6 +174,7 @@ pub mod year2020 {
 /// # Rescue Santa from deep space with a solar system adventure.
 pub mod year2019 {
     pub mod day01;
+    pub mod day02;
 }
 
 /// # Help Santa by solving puzzles to fix the weather machine's snow function.
