@@ -88,10 +88,10 @@ impl Point {
     #[inline]
     pub fn from_byte(b: u8) -> Point {
         match b {
-            b'^' => UP,
-            b'v' => DOWN,
-            b'<' => LEFT,
-            b'>' => RIGHT,
+            b'^' | b'U' => UP,
+            b'v' | b'D' => DOWN,
+            b'<' | b'L' => LEFT,
+            b'>' | b'R' => RIGHT,
             _ => unreachable!(),
         }
     }
@@ -120,5 +120,10 @@ impl Point {
     #[inline]
     pub fn manhattan(self, other: Point) -> i32 {
         (self.x - other.x).abs() + (self.y - other.y).abs()
+    }
+
+    #[inline]
+    pub fn signum(self, other: Point) -> Point {
+        Point { x: (self.x - other.x).signum(), y: (self.y - other.y).signum() }
     }
 }
