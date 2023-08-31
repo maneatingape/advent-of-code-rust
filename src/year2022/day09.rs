@@ -3,7 +3,6 @@
 //! This solution relies on the [`Point`] utility class. Two dimensional problems are common in
 //! Advent of Code, so having a decent `Point` (or `Coord` or `Pos`) class in your back pocket
 //! is handy.
-use crate::util::iter::*;
 use crate::util::parse::*;
 use crate::util::point::*;
 
@@ -14,11 +13,9 @@ type Input = ([i32; 4], Vec<Pair>);
 /// magnitude respectively. Then determines the maximum extent of the head so that we can allocate
 /// a two dimensional grid.
 pub fn parse(input: &str) -> Input {
-    let pairs: Vec<_> = input
-        .split_ascii_whitespace()
-        .chunk::<2>()
-        .map(|[d, n]| (Point::from_string(d), n.signed()))
-        .collect();
+    let first = input.bytes().filter(u8::is_ascii_alphabetic).map(Point::from);
+    let second = input.iter_signed::<i32>();
+    let pairs = first.zip(second).collect();
 
     // Determine maximum extents
     let mut x1 = i32::MAX;

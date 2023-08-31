@@ -44,7 +44,7 @@ pub fn parse(input: &str) -> Input {
     let mut horizontal = BTreeMap::new();
 
     for (direction, amount) in steps(0) {
-        let delta = Point::from_byte(direction);
+        let delta = Point::from(direction);
         let end = start + delta * amount;
         let line = Line { start, end, distance };
 
@@ -65,7 +65,7 @@ pub fn parse(input: &str) -> Input {
     let mut delay = i32::MAX;
 
     for (direction, amount) in steps(1) {
-        let delta = Point::from_byte(direction);
+        let delta = Point::from(direction);
         let end = start + delta * amount;
 
         // Use a block to scope the `update` lamdbas mutable borrow of `distance`.

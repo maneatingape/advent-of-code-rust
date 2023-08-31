@@ -84,10 +84,10 @@ impl Hash for Point {
     }
 }
 
-impl Point {
+impl From<u8> for Point {
     #[inline]
-    pub fn from_byte(b: u8) -> Point {
-        match b {
+    fn from(value: u8) -> Self {
+        match value {
             b'^' | b'U' => UP,
             b'v' | b'D' => DOWN,
             b'<' | b'L' => LEFT,
@@ -95,18 +95,9 @@ impl Point {
             _ => unreachable!(),
         }
     }
+}
 
-    #[inline]
-    pub fn from_string(s: &str) -> Point {
-        match s {
-            "U" => UP,
-            "D" => DOWN,
-            "L" => LEFT,
-            "R" => RIGHT,
-            _ => unreachable!(),
-        }
-    }
-
+impl Point {
     #[inline]
     pub fn clockwise(self) -> Point {
         Point { x: -self.y, y: self.x }
