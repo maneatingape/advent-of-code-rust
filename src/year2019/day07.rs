@@ -10,7 +10,7 @@
 //! [`permutations`]: crate::util::slice
 //! [`Sender`]: std::sync::mpsc::Sender
 //! [`Receiver`]: std::sync::mpsc::Receiver
-use super::day05::IntCode;
+use super::day09::intcode::*; // Time travel
 use crate::util::parse::*;
 use crate::util::slice::*;
 
@@ -26,7 +26,7 @@ pub fn part1(input: &[i64]) -> i64 {
 
         // Send exactly 2 inputs and receive exactly 1 output per amplifier.
         for &phase in slice {
-            let (tx, rx) = IntCode::spawn(input);
+            let (tx, rx) = Computer::spawn(input);
             let _ = tx.send(phase);
             let _ = tx.send(signal);
             signal = rx.recv().unwrap();
@@ -43,7 +43,7 @@ pub fn part2(input: &[i64]) -> i64 {
     let mut result = 0;
 
     let feedback = |slice: &[i64]| {
-        let (senders, receivers): (Vec<_>, Vec<_>) = (0..5).map(|_| IntCode::spawn(input)).unzip();
+        let (senders, receivers): (Vec<_>, Vec<_>) = (0..5).map(|_| Computer::spawn(input)).unzip();
 
         // Send each initial phase setting exactly once.
         for (tx, &phase) in senders.iter().zip(slice.iter()) {
