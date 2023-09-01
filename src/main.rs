@@ -1,16 +1,10 @@
+use aoc::util::ansi::*;
 use aoc::util::parse::*;
 use aoc::*;
 use std::env::args;
 use std::time::Instant;
 
 fn main() {
-    // ANSI escape codes
-    const RESET: &str = "\x1b[0m";
-    const BOLD: &str = "\x1b[1m";
-    const RED: &str = "\x1b[31m";
-    const GREEN: &str = "\x1b[32m";
-    const YELLOW: &str = "\x1b[33m";
-
     // Parse command line options
     let (year, day) = match args().nth(1) {
         Some(arg) => {
