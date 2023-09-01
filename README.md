@@ -197,6 +197,7 @@ pie
 | 2 | [1202 Program Alarm](https://adventofcode.com/2019/day/2) | [Source](src/year2019/day02.rs) | 1 |
 | 3 | [Crossed Wires](https://adventofcode.com/2019/day/3) | [Source](src/year2019/day03.rs) | 19 |
 | 4 | [Secure Container](https://adventofcode.com/2019/day/4) | [Source](src/year2019/day04.rs) | 7 |
+| 5 | [Sunny with a Chance of Asteroids](https://adventofcode.com/2019/day/5) | [Source](src/year2019/day05.rs) | 34 |
 
 ## 2015
 
