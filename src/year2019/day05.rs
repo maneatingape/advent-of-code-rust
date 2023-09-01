@@ -3,7 +3,7 @@ use crate::util::parse::*;
 use std::sync::mpsc::*;
 use std::thread;
 
-struct IntCode {
+pub struct IntCode {
     pc: usize,
     code: Vec<i64>,
     input_rx: Receiver<i64>,
@@ -13,7 +13,7 @@ struct IntCode {
 impl IntCode {
     const FACTOR: [i64; 4] = [0, 100, 1000, 10000];
 
-    fn spawn(code: &[i64]) -> (Sender<i64>, Receiver<i64>) {
+    pub fn spawn(code: &[i64]) -> (Sender<i64>, Receiver<i64>) {
         let pc = 0;
         let code = code.to_vec();
         let (input_tx, input_rx) = channel();

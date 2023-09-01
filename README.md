@@ -199,6 +199,7 @@ pie
 | 4 | [Secure Container](https://adventofcode.com/2019/day/4) | [Source](src/year2019/day04.rs) | 7 |
 | 5 | [Sunny with a Chance of Asteroids](https://adventofcode.com/2019/day/5) | [Source](src/year2019/day05.rs) | 34 |
 | 6 | [Universal Orbit Map](https://adventofcode.com/2019/day/6) | [Source](src/year2019/day06.rs) | 28 |
+| 7 | [Amplification Circuit](https://adventofcode.com/2019/day/7) | [Source](src/year2019/day07.rs) | 30000 |
 
 ## 2015
 
