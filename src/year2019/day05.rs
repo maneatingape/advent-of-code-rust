@@ -17,12 +17,12 @@ pub fn part2(input: &[i64]) -> i64 {
 /// Start `IntCode` computer in its own thread, sending a single initial value.
 /// Receives multiple values from the output channel returning only the last one.
 fn run(input: &[i64], value: i64) -> i64 {
-    let (tx, rx) = Computer::spawn(input);
-    let _ = tx.send(value);
+    let mut computer = Computer::new(input);
+    computer.input(&[value]);
 
     let mut result = 0;
-    while let Ok(output) = rx.recv() {
-        result = output;
+    while let State::Output(next) = computer.run() {
+        result = next;
     }
     result
 }

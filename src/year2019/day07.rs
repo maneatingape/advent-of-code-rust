@@ -26,10 +26,12 @@ pub fn part1(input: &[i64]) -> i64 {
 
         // Send exactly 2 inputs and receive exactly 1 output per amplifier.
         for &phase in slice {
-            let (tx, rx) = Computer::spawn(input);
-            let _ = tx.send(phase);
-            let _ = tx.send(signal);
-            signal = rx.recv().unwrap();
+            let mut computer = Computer::new(input);
+            computer.input(&[phase, signal]);
+            match computer.run() {
+                State::Output(next) => signal = next,
+                _ => unreachable!(),
+            }
         }
 
         result = result.max(signal);
@@ -43,23 +45,23 @@ pub fn part2(input: &[i64]) -> i64 {
     let mut result = 0;
 
     let feedback = |slice: &[i64]| {
-        let (senders, receivers): (Vec<_>, Vec<_>) = (0..5).map(|_| Computer::spawn(input)).unzip();
+        let mut computers: Vec<_> = (0..5).map(|_| Computer::new(input)).collect();
 
         // Send each initial phase setting exactly once.
-        for (tx, &phase) in senders.iter().zip(slice.iter()) {
-            let _ = tx.send(phase);
+        for (computer, &phase) in computers.iter_mut().zip(slice.iter()) {
+            computer.input(&[phase]);
         }
 
         // Chain amplifier inputs and ouputs in a loop until all threads finish.
         let mut signal = 0;
 
         'outer: loop {
-            for (tx, rx) in senders.iter().zip(receivers.iter()) {
-                let _ = tx.send(signal);
-                let Ok(next) = rx.recv() else {
-                    break 'outer;
-                };
-                signal = next;
+            for computer in &mut computers {
+                computer.input(&[signal]);
+                match computer.run() {
+                    State::Output(next) => signal = next,
+                    _ => break 'outer,
+                }
             }
         }
 

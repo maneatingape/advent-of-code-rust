@@ -1,119 +1,120 @@
 //! # Sensor Boost
 //!
-//! This problem is essentially an unit test for the canonical full intcode computer
-//! used heavily by other days.
+//! This problem is essentially a unit test for the full intcode computer used by other days.
 use crate::util::parse::*;
 use intcode::*;
 
 pub mod intcode {
-    use std::sync::mpsc::*;
-    use std::thread;
+    use std::collections::VecDeque;
+
+    pub enum State {
+        Input,
+        Output(i64),
+        Halted,
+    }
 
     pub struct Computer {
         pc: usize,
         base: i64,
         code: Vec<i64>,
-        input_rx: Receiver<i64>,
-        output_tx: Sender<i64>,
+        input: VecDeque<i64>,
     }
 
     impl Computer {
-        /// Spawns an `IntCode` computer in a new thread, returning an input and output channel
-        /// for communicating asynchronously with the computer via the opcodes 3 and 4.
-        pub fn spawn(code: &[i64]) -> (Sender<i64>, Receiver<i64>) {
-            let pc = 0;
-            let base = 0;
-            let code = code.to_vec();
-            let (input_tx, input_rx) = channel();
-            let (output_tx, output_rx) = channel();
-
-            let mut computer = Computer { pc, base, code, input_rx, output_tx };
-            thread::spawn(move || computer.run());
-
-            (input_tx, output_rx)
+        pub fn new(code: &[i64]) -> Computer {
+            Computer { pc: 0, base: 0, code: code.to_vec(), input: VecDeque::new() }
         }
 
-        /// Runs until a `99` opcode instruction is encountered.
-        fn run(&mut self) {
+        pub fn input(&mut self, slice: &[i64]) {
+            self.input.extend(slice);
+        }
+
+        /// Runs until either the program needs input, outputs a value or encounters the halt
+        /// opcode. In the first two cases, the computer can be restarted by calling `run` again.
+        pub fn run(&mut self) -> State {
             loop {
-                match self.code[self.pc] % 100 {
+                let code = self.code[self.pc];
+
+                match code % 100 {
                     // Add
                     1 => {
-                        let value = self.read(1) + self.read(2);
-                        self.write(3, value);
+                        let first = self.address(code / 100, 1);
+                        let second = self.address(code / 1000, 2);
+                        let third = self.address(code / 10000, 3);
+                        self.code[third] = self.code[first] + self.code[second];
                         self.pc += 4;
                     }
                     // Multiply
                     2 => {
-                        let value = self.read(1) * self.read(2);
-                        self.write(3, value);
+                        let first = self.address(code / 100, 1);
+                        let second = self.address(code / 1000, 2);
+                        let third = self.address(code / 10000, 3);
+                        self.code[third] = self.code[first] * self.code[second];
                         self.pc += 4;
                     }
                     // Read input channel
                     3 => {
-                        let value = self.input_rx.recv().unwrap();
-                        self.write(1, value);
+                        let Some(value) = self.input.pop_front() else {
+                            break State::Input;
+                        };
+                        let first = self.address(code / 100, 1);
+                        self.code[first] = value;
                         self.pc += 2;
                     }
                     // Write output channel
                     4 => {
-                        let value = self.read(1);
-                        let _ = self.output_tx.send(value);
+                        let first = self.address(code / 100, 1);
+                        let value = self.code[first];
                         self.pc += 2;
+                        break State::Output(value);
                     }
                     // Jump if true
                     5 => {
-                        let first = self.read(1);
-                        let second = self.read(2);
-                        self.pc = if first == 0 { self.pc + 3 } else { second as usize };
+                        let first = self.address(code / 100, 1);
+                        let second = self.address(code / 1000, 2);
+                        let value = self.code[first] == 0;
+                        self.pc = if value { self.pc + 3 } else { self.code[second] as usize };
                     }
                     // Jump if false
                     6 => {
-                        let first = self.read(1);
-                        let second = self.read(2);
-                        self.pc = if first == 0 { second as usize } else { self.pc + 3 };
+                        let first = self.address(code / 100, 1);
+                        let second = self.address(code / 1000, 2);
+                        let value = self.code[first] == 0;
+                        self.pc = if value { self.code[second] as usize } else { self.pc + 3 };
                     }
                     // Less than
                     7 => {
-                        let value = self.read(1) < self.read(2);
-                        self.write(3, value as i64);
+                        let first = self.address(code / 100, 1);
+                        let second = self.address(code / 1000, 2);
+                        let third = self.address(code / 10000, 3);
+                        let value = self.code[first] < self.code[second];
+                        self.code[third] = value as i64;
                         self.pc += 4;
                     }
                     // Equals
                     8 => {
-                        let value = self.read(1) == self.read(2);
-                        self.write(3, value as i64);
+                        let first = self.address(code / 100, 1);
+                        let second = self.address(code / 1000, 2);
+                        let third = self.address(code / 10000, 3);
+                        let value = self.code[first] == self.code[second];
+                        self.code[third] = value as i64;
                         self.pc += 4;
                     }
                     // Adjust relative base
                     9 => {
-                        let value = self.read(1);
-                        self.base += value;
+                        let first = self.address(code / 100, 1);
+                        self.base += self.code[first];
                         self.pc += 2;
                     }
-                    _ => break,
+                    _ => break State::Halted,
                 }
             }
         }
 
-        /// Convenience wrapper for reading a value
-        fn read(&mut self, offset: usize) -> i64 {
-            let index = self.address(offset);
-            self.code[index]
-        }
-
-        /// Convenience wrapper for writing a value
-        fn write(&mut self, offset: usize, value: i64) {
-            let index = self.address(offset);
-            self.code[index] = value;
-        }
-
         /// Calculates an address using one of the three possible address modes.
         /// If the address exceeds the size of the `code` vector then it is extended with 0 values.
-        fn address(&mut self, offset: usize) -> usize {
-            const FACTOR: [i64; 4] = [0, 100, 1000, 10000];
-            let mode = self.code[self.pc] / FACTOR[offset];
-
+        #[inline]
+        fn address(&mut self, mode: i64, offset: usize) -> usize {
             let index = match mode % 10 {
                 0 => self.code[self.pc + offset] as usize,
                 1 => self.pc + offset,
@@ -143,7 +144,10 @@ pub fn part2(input: &[i64]) -> i64 {
 }
 
 fn run(input: &[i64], value: i64) -> i64 {
-    let (tx, rx) = Computer::spawn(input);
-    let _ = tx.send(value);
-    rx.recv().unwrap()
+    let mut computer = Computer::new(input);
+    computer.input(&[value]);
+    match computer.run() {
+        State::Output(result) => result,
+        _ => unreachable!(),
+    }
 }
