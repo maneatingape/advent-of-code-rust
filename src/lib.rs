@@ -85,8 +85,35 @@ pub mod util {
     pub mod slice;
 }
 
-/// # Assist the Elves on their annual jungle expedition.
-pub mod year2022 {
+/// # Help Santa by solving puzzles to fix the weather machine's snow function.
+pub mod year2015 {
+    pub mod day01;
+    pub mod day02;
+    pub mod day03;
+    pub mod day04;
+    pub mod day05;
+    pub mod day06;
+    pub mod day07;
+    pub mod day08;
+    pub mod day09;
+    pub mod day10;
+}
+
+/// # Rescue Santa from deep space with a solar system adventure.
+pub mod year2019 {
+    pub mod day01;
+    pub mod day02;
+    pub mod day03;
+    pub mod day04;
+    pub mod day05;
+    pub mod day06;
+    pub mod day07;
+    pub mod day08;
+    pub mod day09;
+}
+
+/// # What could go wrong trying to enjoy a well deserved vacation?
+pub mod year2020 {
     pub mod day01;
     pub mod day02;
     pub mod day03;
@@ -143,8 +170,8 @@ pub mod year2021 {
     pub mod day25;
 }
 
-/// # What could go wrong trying to enjoy a well deserved vacation?
-pub mod year2020 {
+/// # Assist the Elves on their annual jungle expedition.
+pub mod year2022 {
     pub mod day01;
     pub mod day02;
     pub mod day03;
@@ -170,31 +197,4 @@ pub mod year2020 {
     pub mod day23;
     pub mod day24;
     pub mod day25;
-}
-
-/// # Rescue Santa from deep space with a solar system adventure.
-pub mod year2019 {
-    pub mod day01;
-    pub mod day02;
-    pub mod day03;
-    pub mod day04;
-    pub mod day05;
-    pub mod day06;
-    pub mod day07;
-    pub mod day08;
-    pub mod day09;
-}
-
-/// # Help Santa by solving puzzles to fix the weather machine's snow function.
-pub mod year2015 {
-    pub mod day01;
-    pub mod day02;
-    pub mod day03;
-    pub mod day04;
-    pub mod day05;
-    pub mod day06;
-    pub mod day07;
-    pub mod day08;
-    pub mod day09;
-    pub mod day10;
 }

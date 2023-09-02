@@ -1,4 +1,29 @@
-mod year2022 {
+mod year2015 {
+    mod day01_test;
+    mod day02_test;
+    mod day03_test;
+    mod day04_test;
+    mod day05_test;
+    mod day06_test;
+    mod day07_test;
+    mod day08_test;
+    mod day09_test;
+    mod day10_test;
+}
+
+mod year2019 {
+    mod day01_test;
+    mod day02_test;
+    mod day03_test;
+    mod day04_test;
+    mod day05_test;
+    mod day06_test;
+    mod day07_test;
+    mod day08_test;
+    mod day09_test;
+}
+
+mod year2020 {
     mod day01_test;
     mod day02_test;
     mod day03_test;
@@ -54,7 +79,7 @@ mod year2021 {
     mod day25_test;
 }
 
-mod year2020 {
+mod year2022 {
     mod day01_test;
     mod day02_test;
     mod day03_test;
@@ -80,29 +105,4 @@ mod year2020 {
     mod day23_test;
     mod day24_test;
     mod day25_test;
-}
-
-mod year2019 {
-    mod day01_test;
-    mod day02_test;
-    mod day03_test;
-    mod day04_test;
-    mod day05_test;
-    mod day06_test;
-    mod day07_test;
-    mod day08_test;
-    mod day09_test;
-}
-
-mod year2015 {
-    mod day01_test;
-    mod day02_test;
-    mod day03_test;
-    mod day04_test;
-    mod day05_test;
-    mod day06_test;
-    mod day07_test;
-    mod day08_test;
-    mod day09_test;
-    mod day10_test;
 }
