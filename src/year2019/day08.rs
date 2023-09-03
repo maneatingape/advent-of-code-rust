@@ -8,6 +8,8 @@ pub fn parse(input: &str) -> &str {
 /// It's faster to count pixels 8 at a time by parsing the bytes as `u64` then using bitwise logic
 /// and the [`count_ones`] intrinsic. The only minor wrinkle is that 8 does not divide 150 evenly
 /// so we must handle the last 6 bytes specially.
+///
+/// [`count_ones`]: u64::count_ones
 pub fn part1(input: &str) -> u32 {
     let bytes = input.as_bytes();
     let mut index = 0;
