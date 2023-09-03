@@ -12,14 +12,14 @@ use std::mem::swap;
 
 const FLOOR: u8 = b'.';
 const DIRECTIONS: [Point; 8] = [
-    Point { x: -1, y: -1 },
-    Point { x: 0, y: -1 },
-    Point { x: 1, y: -1 },
-    Point { x: -1, y: 0 },
-    Point { x: 1, y: 0 },
-    Point { x: -1, y: 1 },
-    Point { x: 0, y: 1 },
-    Point { x: 1, y: 1 },
+    Point::new(-1, -1),
+    Point::new(0, -1),
+    Point::new(1, -1),
+    Point::new(-1, 0),
+    Point::new(1, 0),
+    Point::new(-1, 1),
+    Point::new(0, 1),
+    Point::new(1, 1),
 ];
 
 struct Seat {
@@ -55,7 +55,7 @@ pub fn simulate(input: &Grid<u8>, part_one: bool, limit: u8) -> u32 {
 
     for y in 0..height {
         for x in 0..width {
-            let point = Point { x, y };
+            let point = Point::new(x, y);
             if input[point] == FLOOR {
                 continue;
             }

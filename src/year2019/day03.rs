@@ -90,22 +90,22 @@ pub fn parse(input: &str) -> Input {
             match direction {
                 b'U' => {
                     for (&y, line) in horizontal.range(end.y..=start.y) {
-                        update(line, Point { x: start.x, y });
+                        update(line, Point::new(start.x, y));
                     }
                 }
                 b'D' => {
                     for (&y, line) in horizontal.range(start.y..=end.y) {
-                        update(line, Point { x: start.x, y });
+                        update(line, Point::new(start.x, y));
                     }
                 }
                 b'L' => {
                     for (&x, line) in vertical.range(end.x..=start.x) {
-                        update(line, Point { x, y: start.y });
+                        update(line, Point::new(x, start.y));
                     }
                 }
                 b'R' => {
                     for (&x, line) in vertical.range(start.x..=end.x) {
-                        update(line, Point { x, y: start.y });
+                        update(line, Point::new(x, start.y));
                     }
                 }
                 _ => unreachable!(),

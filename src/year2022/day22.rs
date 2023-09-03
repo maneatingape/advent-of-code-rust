@@ -103,7 +103,7 @@ pub fn part2(input: &Input) -> i32 {
     let edge = block - 1;
 
     let start = Face {
-        corner: Point { x: grid.start - grid.start % block, y: 0 },
+        corner: Point::new(grid.start - grid.start % block, 0),
         i: Vector { x: 1, y: 0, z: 0 },
         j: Vector { x: 0, y: 1, z: 0 },
         k: Vector { x: 0, y: 0, z: 1 },
@@ -117,13 +117,13 @@ pub fn part2(input: &Input) -> i32 {
 
         let neighbors = [
             // Left
-            Face { corner: corner + Point { x: -block, y: 0 }, i: j.cross(i), j, k: j.cross(k) },
+            Face { corner: corner + Point::new(-block, 0), i: j.cross(i), j, k: j.cross(k) },
             // Right
-            Face { corner: corner + Point { x: block, y: 0 }, i: i.cross(j), j, k: k.cross(j) },
+            Face { corner: corner + Point::new(block, 0), i: i.cross(j), j, k: k.cross(j) },
             // Up
-            Face { corner: corner + Point { x: 0, y: -block }, i, j: j.cross(i), k: k.cross(i) },
+            Face { corner: corner + Point::new(0, -block), i, j: j.cross(i), k: k.cross(i) },
             // Down
-            Face { corner: corner + Point { x: 0, y: block }, i, j: i.cross(j), k: i.cross(k) },
+            Face { corner: corner + Point::new(0, block), i, j: i.cross(j), k: i.cross(k) },
         ];
 
         for next in neighbors {
@@ -136,7 +136,7 @@ pub fn part2(input: &Input) -> i32 {
     }
 
     let handle_none = |position: Point, direction| {
-        let offset = Point { x: position.x % block, y: position.y % block };
+        let offset = Point::new(position.x % block, position.y % block);
         let corner = position - offset;
         let Face { i, j, k, .. } = corners[&corner];
         let next_k = match direction {
@@ -159,22 +159,22 @@ pub fn part2(input: &Input) -> i32 {
             unreachable!()
         };
         let next_offset = match (direction, next_direction) {
-            (LEFT, LEFT) => Point { x: edge, y: offset.y },
-            (LEFT, RIGHT) => Point { x: 0, y: edge - offset.y },
-            (LEFT, DOWN) => Point { x: offset.y, y: 0 },
-            (LEFT, UP) => Point { x: edge - offset.y, y: edge },
-            (RIGHT, LEFT) => Point { x: edge, y: edge - offset.y },
-            (RIGHT, RIGHT) => Point { x: 0, y: offset.y },
-            (RIGHT, DOWN) => Point { x: edge - offset.y, y: 0 },
-            (RIGHT, UP) => Point { x: offset.y, y: edge },
-            (DOWN, LEFT) => Point { x: edge, y: offset.x },
-            (DOWN, RIGHT) => Point { x: 0, y: edge - offset.x },
-            (DOWN, DOWN) => Point { x: offset.x, y: 0 },
-            (DOWN, UP) => Point { x: edge - offset.x, y: edge },
-            (UP, LEFT) => Point { x: edge, y: edge - offset.x },
-            (UP, RIGHT) => Point { x: 0, y: offset.x },
-            (UP, DOWN) => Point { x: edge - offset.x, y: 0 },
-            (UP, UP) => Point { x: offset.x, y: edge },
+            (LEFT, LEFT) => Point::new(edge, offset.y),
+            (LEFT, RIGHT) => Point::new(0, edge - offset.y),
+            (LEFT, DOWN) => Point::new(offset.y, 0),
+            (LEFT, UP) => Point::new(edge - offset.y, edge),
+            (RIGHT, LEFT) => Point::new(edge, edge - offset.y),
+            (RIGHT, RIGHT) => Point::new(0, offset.y),
+            (RIGHT, DOWN) => Point::new(edge - offset.y, 0),
+            (RIGHT, UP) => Point::new(offset.y, edge),
+            (DOWN, LEFT) => Point::new(edge, offset.x),
+            (DOWN, RIGHT) => Point::new(0, edge - offset.x),
+            (DOWN, DOWN) => Point::new(offset.x, 0),
+            (DOWN, UP) => Point::new(edge - offset.x, edge),
+            (UP, LEFT) => Point::new(edge, edge - offset.x),
+            (UP, RIGHT) => Point::new(0, offset.x),
+            (UP, DOWN) => Point::new(edge - offset.x, 0),
+            (UP, UP) => Point::new(offset.x, edge),
             _ => unreachable!(),
         };
         let next_position = next_corner + next_offset;
@@ -223,8 +223,8 @@ fn parse_moves(input: &str) -> Vec<Move> {
 
 fn password(input: &Input, handle_none: impl Fn(Point, Point) -> (Point, Point)) -> i32 {
     let Input { grid, moves } = input;
-    let mut position = Point { x: grid.start, y: 0 };
-    let mut direction = Point { x: 1, y: 0 };
+    let mut position = Point::new(grid.start, 0);
+    let mut direction = Point::new(1, 0);
 
     for command in moves {
         match command {

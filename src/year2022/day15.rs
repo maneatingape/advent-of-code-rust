@@ -13,8 +13,8 @@ pub struct Input {
 
 pub fn parse(input: &str) -> Vec<Input> {
     fn helper([x1, y1, x2, y2]: [i32; 4]) -> Input {
-        let sensor = Point { x: x1, y: y1 };
-        let beacon = Point { x: x2, y: y2 };
+        let sensor = Point::new(x1, y1);
+        let beacon = Point::new(x2, y2);
         let manhattan = sensor.manhattan(beacon);
         Input { sensor, beacon, manhattan }
     }
@@ -112,7 +112,7 @@ pub fn part2_testable(input: &[Input], size: i32) -> u64 {
         for &&y in &horizontal {
             // Rotate intersection point counter clockwise and scale by 1 / √2
             // to return to original coordinates.
-            let point = Point { x: (x + y) / 2, y: (y - x) / 2 };
+            let point = Point::new((x + y) / 2, (y - x) / 2);
             // As we're mixing overlaps from different boxes there may some spurious false
             // positives, so double check all points are within the specified area
             // and outside the range of all scanners.

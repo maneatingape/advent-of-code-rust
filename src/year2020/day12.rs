@@ -14,7 +14,7 @@ pub fn parse(input: &str) -> Vec<Command> {
 
 pub fn part1(input: &[Command]) -> i32 {
     let mut position = ORIGIN;
-    let mut direction = Point { x: 1, y: 0 };
+    let mut direction = Point::new(1, 0);
 
     for &(command, amount) in input {
         match command {
@@ -34,7 +34,7 @@ pub fn part1(input: &[Command]) -> i32 {
 
 pub fn part2(input: &[Command]) -> i32 {
     let mut position = ORIGIN;
-    let mut waypoint = Point { x: 10, y: -1 };
+    let mut waypoint = Point::new(10, -1);
 
     for &(command, amount) in input {
         match command {

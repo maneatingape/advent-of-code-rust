@@ -57,7 +57,7 @@ fn simulate<const N: usize>(input: &Input) -> u32 {
     let ([x1, y1, x2, y2], pairs) = input;
     let width = x2 - x1 + 1;
     let height = y2 - y1 + 1;
-    let start = Point { x: -x1, y: -y1 };
+    let start = Point::new(-x1, -y1);
 
     let mut distinct = 0;
     let mut rope = [start; N];
@@ -70,8 +70,7 @@ fn simulate<const N: usize>(input: &Input) -> u32 {
                 if !apart(rope[i - 1], rope[i]) {
                     break;
                 }
-                let next = delta(rope[i - 1], rope[i]);
-                rope[i] += next;
+                rope[i] += rope[i - 1].signum(rope[i]);
             }
 
             let tail = rope[N - 1];
@@ -92,12 +91,4 @@ fn simulate<const N: usize>(input: &Input) -> u32 {
 #[inline]
 fn apart(a: Point, b: Point) -> bool {
     (a.x - b.x).abs() > 1 || (a.y - b.y).abs() > 1
-}
-
-/// The [`signum`] function comes in handy to figure out the direction that knots should move.
-///
-/// [`signum`]: i32::signum
-#[inline]
-fn delta(a: Point, b: Point) -> Point {
-    Point { x: (a.x - b.x).signum(), y: (a.y - b.y).signum() }
 }

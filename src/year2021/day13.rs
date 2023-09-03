@@ -29,7 +29,7 @@ pub struct Input {
 pub fn parse(input: &str) -> Input {
     let (prefix, suffix) = input.split_once("\n\n").unwrap();
 
-    let points: Vec<_> = prefix.iter_signed().chunk::<2>().map(|[x, y]| Point { x, y }).collect();
+    let points: Vec<_> = prefix.iter_signed().chunk::<2>().map(|[x, y]| Point::new(x, y)).collect();
 
     let folds: Vec<_> = suffix
         .lines()
@@ -103,7 +103,7 @@ fn fold_horizontal(x: i32, p: Point) -> Point {
     if p.x < x {
         p
     } else {
-        Point { x: 2 * x - p.x, y: p.y }
+        Point::new(2 * x - p.x, p.y)
     }
 }
 
@@ -113,6 +113,6 @@ fn fold_vertical(y: i32, p: Point) -> Point {
     if p.y < y {
         p
     } else {
-        Point { x: p.x, y: 2 * y - p.y }
+        Point::new(p.x, 2 * y - p.y)
     }
 }

@@ -26,7 +26,7 @@ pub fn part1(grid: &Grid<u8>) -> u32 {
 
     for x in 0..grid.width {
         for y in 0..grid.height {
-            let point = Point { x, y };
+            let point = Point::new(x, y);
             let cur = grid[point];
             let low_point = ORTHOGONAL
                 .iter()
@@ -49,7 +49,7 @@ pub fn part2(input: &Grid<u8>) -> u32 {
 
     for x in 0..grid.width {
         for y in 0..grid.height {
-            let next = Point { x, y };
+            let next = Point::new(x, y);
             if grid[next] < b'9' {
                 basins.push(flood_fill(&mut grid, next));
             }

@@ -83,7 +83,7 @@ fn boot_process(input: &Grid<u8>, size: i32, base: i32, fourth_dimension: &[i32]
     // dimension. This allows six for growth, plus one for padding to prevent needing edge checks.
     for x in 0..input.width {
         for y in 0..input.height {
-            if input[Point { x, y }] == b'#' {
+            if input[Point::new(x, y)] == b'#' {
                 let index = 7 * base + x + y * stride::Y;
                 active.push(index as usize);
             }

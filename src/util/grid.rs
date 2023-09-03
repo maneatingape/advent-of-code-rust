@@ -7,7 +7,7 @@
 //!   # use aoc::util::point::Point;
 //!
 //!   let mut grid = Grid::parse("1");
-//!   let point = Point { x: 0, y: 0 };
+//!   let point = Point::new(0, 0);
 //!
 //!   let foo = grid[point];
 //!   assert_eq!(foo, b'1');
@@ -58,7 +58,7 @@ impl<T: Copy + PartialEq> Grid<T> {
         let to_point = |index| {
             let x = (index as i32) % self.width;
             let y = (index as i32) / self.width;
-            Point { x, y }
+            Point::new(x, y)
         };
         self.bytes.iter().position(|&h| h == needle).map(to_point)
     }

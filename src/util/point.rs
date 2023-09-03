@@ -8,13 +8,13 @@
 //! ```
 //!   # use aoc::util::point::Point;
 //!
-//!   let a = Point { x: 1, y: 2 };
-//!   let b = Point { x: 3, y: 4 };
+//!   let a = Point::new(1, 2);
+//!   let b = Point::new(3, 4);
 //!   let k = 2;
 //!
-//!   assert_eq!(a + b, Point { x: 4, y: 6 });
-//!   assert_eq!(a - b, Point { x: -2, y: -2 });
-//!   assert_eq!(a * k, Point { x: 2, y: 4 });
+//!   assert_eq!(a + b, Point::new(4, 6));
+//!   assert_eq!(a - b, Point::new(-2, -2));
+//!   assert_eq!(a * k, Point::new(2, 4));
 //! ```
 //!
 //! Additionally there are [`clockwise`] and [`counter_clockwise`] functions for 90 degree rotations
@@ -26,13 +26,13 @@
 //! [`manhattan`]: Point::manhattan
 //! [`Grid`]: crate::util::grid
 use std::hash::{Hash, Hasher};
-use std::ops::{Add, AddAssign, Mul, Sub};
+use std::ops::{Add, AddAssign, Mul, Sub, SubAssign};
 
-pub const ORIGIN: Point = Point { x: 0, y: 0 };
-pub const UP: Point = Point { x: 0, y: -1 };
-pub const DOWN: Point = Point { x: 0, y: 1 };
-pub const LEFT: Point = Point { x: -1, y: 0 };
-pub const RIGHT: Point = Point { x: 1, y: 0 };
+pub const ORIGIN: Point = Point::new(0, 0);
+pub const UP: Point = Point::new(0, -1);
+pub const DOWN: Point = Point::new(0, 1);
+pub const LEFT: Point = Point::new(-1, 0);
+pub const RIGHT: Point = Point::new(1, 0);
 pub const ORTHOGONAL: [Point; 4] = [UP, DOWN, LEFT, RIGHT];
 
 #[derive(Copy, Clone, Debug, Eq, PartialEq)]
@@ -41,46 +41,30 @@ pub struct Point {
     pub y: i32,
 }
 
-impl Add for Point {
-    type Output = Point;
-
+impl Point {
     #[inline]
-    fn add(self, rhs: Point) -> Point {
-        Point { x: self.x + rhs.x, y: self.y + rhs.y }
+    pub const fn new(x: i32, y: i32) -> Self {
+        Point { x, y }
     }
-}
-
-impl Sub for Point {
-    type Output = Point;
 
     #[inline]
-    fn sub(self, rhs: Point) -> Point {
-        Point { x: self.x - rhs.x, y: self.y - rhs.y }
+    pub fn clockwise(self) -> Point {
+        Point::new(-self.y, self.x)
     }
-}
-
-impl Mul<i32> for Point {
-    type Output = Point;
 
     #[inline]
-    fn mul(self, rhs: i32) -> Self::Output {
-        Point { x: self.x * rhs, y: self.y * rhs }
+    pub fn counter_clockwise(self) -> Point {
+        Point::new(self.y, -self.x)
     }
-}
 
-impl AddAssign for Point {
     #[inline]
-    fn add_assign(&mut self, rhs: Point) {
-        self.x += rhs.x;
-        self.y += rhs.y;
+    pub fn manhattan(self, other: Point) -> i32 {
+        (self.x - other.x).abs() + (self.y - other.y).abs()
     }
-}
 
-impl Hash for Point {
     #[inline]
-    fn hash<H: Hasher>(&self, hasher: &mut H) {
-        hasher.write_u32(self.x as u32);
-        hasher.write_u32(self.y as u32);
+    pub fn signum(self, other: Point) -> Point {
+        Point::new((self.x - other.x).signum(), (self.y - other.y).signum())
     }
 }
 
@@ -97,24 +81,53 @@ impl From<u8> for Point {
     }
 }
 
-impl Point {
+impl Hash for Point {
     #[inline]
-    pub fn clockwise(self) -> Point {
-        Point { x: -self.y, y: self.x }
+    fn hash<H: Hasher>(&self, hasher: &mut H) {
+        hasher.write_u32(self.x as u32);
+        hasher.write_u32(self.y as u32);
     }
+}
+
+impl Add for Point {
+    type Output = Point;
 
     #[inline]
-    pub fn counter_clockwise(self) -> Point {
-        Point { x: self.y, y: -self.x }
+    fn add(self, rhs: Point) -> Point {
+        Point::new(self.x + rhs.x, self.y + rhs.y)
     }
+}
+
+impl AddAssign for Point {
+    #[inline]
+    fn add_assign(&mut self, rhs: Point) {
+        self.x += rhs.x;
+        self.y += rhs.y;
+    }
+}
+
+impl Mul<i32> for Point {
+    type Output = Point;
 
     #[inline]
-    pub fn manhattan(self, other: Point) -> i32 {
-        (self.x - other.x).abs() + (self.y - other.y).abs()
+    fn mul(self, rhs: i32) -> Self::Output {
+        Point::new(self.x * rhs, self.y * rhs)
     }
+}
+
+impl Sub for Point {
+    type Output = Point;
 
     #[inline]
-    pub fn signum(self, other: Point) -> Point {
-        Point { x: (self.x - other.x).signum(), y: (self.y - other.y).signum() }
+    fn sub(self, rhs: Point) -> Point {
+        Point::new(self.x - rhs.x, self.y - rhs.y)
+    }
+}
+
+impl SubAssign for Point {
+    #[inline]
+    fn sub_assign(&mut self, rhs: Point) {
+        self.x -= rhs.x;
+        self.y -= rhs.y;
     }
 }
