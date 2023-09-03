@@ -13,7 +13,7 @@
 //!
 //! [`iter_unsigned`]: ParseOps::iter_unsigned
 //! [`iter_signed`]: ParseOps::iter_signed
-use crate::util::numeric::*;
+use crate::util::integer::*;
 use std::marker::PhantomData;
 use std::str::Bytes;
 

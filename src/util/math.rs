@@ -3,19 +3,21 @@
 //! * Greatest common divisor
 //! * Modular exponentation
 //! * Modular inverse
-pub trait MathOps {
-    fn gcd(&self, b: u64) -> u64;
-    fn mod_pow(&self, e: u64, m: u64) -> u64;
-    fn mod_inv(&self, m: u64) -> u64;
+use crate::util::integer::*;
+
+pub trait MathOps<T: Integer<T>> {
+    fn gcd(self, b: T) -> T;
+    fn mod_pow(self, e: T, m: T) -> T;
+    fn mod_inv(self, m: T) -> T;
 }
 
-impl MathOps for u64 {
+impl<T: Integer<T>> MathOps<T> for T {
     /// Greatest common divisor of 2 numbers using the
     /// [Euclidean algorithm](https://en.wikipedia.org/wiki/Euclidean_algorithm).
-    fn gcd(&self, mut b: u64) -> u64 {
-        let mut a = *self;
+    fn gcd(self, mut b: T) -> T {
+        let mut a = self;
 
-        while b != 0 {
+        while b != T::ZERO {
             (a, b) = (b, a % b);
         }
 
@@ -24,16 +26,16 @@ impl MathOps for u64 {
 
     /// Calculates bᵉ mod m efficiently using
     /// [exponentiation by squaring](https://en.wikipedia.org/wiki/Exponentiation_by_squaring).
-    fn mod_pow(&self, mut e: u64, m: u64) -> u64 {
-        let mut b = *self;
-        let mut c = 1;
+    fn mod_pow(self, mut e: T, m: T) -> T {
+        let mut b = self;
+        let mut c = T::ONE;
 
-        while e > 0 {
-            if e & 1 == 1 {
+        while e > T::ZERO {
+            if e & T::ONE == T::ONE {
                 c = (c * b) % m;
             }
             b = (b * b) % m;
-            e >>= 1;
+            e = e >> T::ONE;
         }
 
         c
@@ -41,21 +43,21 @@ impl MathOps for u64 {
 
     /// [Modular multiplicative inverse](https://en.wikipedia.org/wiki/Modular_multiplicative_inverse)
     /// calculated using the [extended Euclidean algorithm](https://en.wikipedia.org/wiki/Extended_Euclidean_algorithm).
-    fn mod_inv(&self, m: u64) -> u64 {
-        let mut t = 0;
-        let mut newt = 1;
-        let mut r = m as i64;
-        let mut newr = *self as i64;
+    fn mod_inv(self, m: T) -> T {
+        let mut t = T::ZERO;
+        let mut newt = T::ONE;
+        let mut r = m;
+        let mut newr = self;
 
-        while newr != 0 {
+        while newr != T::ZERO {
             let quotient = r / newr;
             (t, newt) = (newt, t - quotient * newt);
             (r, newr) = (newr, r - quotient * newr);
         }
 
-        if t < 0 {
-            t += m as i64;
+        if t < T::ZERO {
+            t = t + m;
         }
-        t as u64
+        t
     }
 }

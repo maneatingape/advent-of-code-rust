@@ -77,7 +77,7 @@ pub fn parse(input: &str) -> Input {
             let mut delta = points[j] - points[i];
 
             // Key insight is that points on the same line are integer multiples of each other.
-            let factor = (delta.x.unsigned_abs() as u64).gcd(delta.y.unsigned_abs() as u64) as i32;
+            let factor = delta.x.gcd(delta.y).abs();
             delta.x /= factor;
             delta.y /= factor;
 
