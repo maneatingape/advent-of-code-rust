@@ -46,7 +46,6 @@
 //! sorting a second time in this order.
 //!
 //! [`atan2`]: f64::atan2
-use crate::util::hash::*;
 use crate::util::math::*;
 use crate::util::point::*;
 use std::cmp::Ordering;
@@ -54,8 +53,11 @@ use std::cmp::Ordering;
 type Input = (i32, i32);
 
 pub fn parse(input: &str) -> Input {
-    // Convert asteroids to `Point` objects.
     let raw: Vec<_> = input.lines().map(str::as_bytes).collect();
+    let width = raw[0].len() as i32;
+    let height = raw.len() as i32;
+
+    // Convert asteroids to `Point` objects.
     let mut points = Vec::new();
 
     for (y, row) in raw.iter().enumerate() {
@@ -68,7 +70,7 @@ pub fn parse(input: &str) -> Input {
 
     // Find asteroid with the highest visibility.
     let mut visible = vec![0; points.len()];
-    let mut seen = FastSet::new();
+    let mut seen = vec![0; (4 * width * height) as usize];
     let mut max_visible = 0;
     let mut max_index = 0;
 
@@ -83,7 +85,10 @@ pub fn parse(input: &str) -> Input {
 
             // This works as the points are in order from left to right and top to bottom,
             // so we process points from nearest to furthest.
-            if seen.insert(delta) {
+            let index = (2 * width) * (height + delta.y) + (width + delta.x);
+
+            if seen[index as usize] <= i {
+                seen[index as usize] = i + 1;
                 visible[i] += 1;
                 visible[j] += 1;
             }
@@ -93,8 +98,6 @@ pub fn parse(input: &str) -> Input {
             max_visible = visible[i];
             max_index = i;
         }
-
-        seen.clear();
     }
 
     // Remove our new base of operations, then sort remaining asteroids in clockwise order to
