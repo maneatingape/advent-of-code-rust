@@ -80,6 +80,7 @@ pub mod util {
     pub mod iter;
     pub mod math;
     pub mod md5;
+    pub mod numeric;
     pub mod parse;
     pub mod point;
     pub mod slice;

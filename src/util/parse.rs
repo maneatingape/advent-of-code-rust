@@ -13,8 +13,8 @@
 //!
 //! [`iter_unsigned`]: ParseOps::iter_unsigned
 //! [`iter_signed`]: ParseOps::iter_signed
+use crate::util::numeric::*;
 use std::marker::PhantomData;
-use std::ops::{Add, Mul, Neg};
 use std::str::Bytes;
 
 pub trait ParseByte {
@@ -28,19 +28,6 @@ impl ParseByte for u8 {
     }
 }
 
-// Traits allow us to keep type safety, restricting the possiblities to only integer types.
-pub trait Unsigned: From<u8> + Add<Output = Self> + Mul<Output = Self> {}
-impl Unsigned for u8 {}
-impl Unsigned for u16 {}
-impl Unsigned for u32 {}
-impl Unsigned for u64 {}
-impl Unsigned for usize {}
-
-pub trait Signed: From<u8> + Add<Output = Self> + Mul<Output = Self> + Neg<Output = Self> {}
-impl Signed for i16 {}
-impl Signed for i32 {}
-impl Signed for i64 {}
-
 pub struct ParseUnsigned<'a, T> {
     bytes: Bytes<'a>,
     phantom: PhantomData<T>,
@@ -52,37 +39,37 @@ pub struct ParseSigned<'a, T> {
 }
 
 pub trait ParseOps {
-    fn unsigned<T: Unsigned>(&self) -> T;
-    fn signed<T: Signed>(&self) -> T;
-    fn iter_unsigned<T: Unsigned>(&self) -> ParseUnsigned<'_, T>;
-    fn iter_signed<T: Signed>(&self) -> ParseSigned<'_, T>;
+    fn unsigned<T: Unsigned<T>>(&self) -> T;
+    fn signed<T: Signed<T>>(&self) -> T;
+    fn iter_unsigned<T: Unsigned<T>>(&self) -> ParseUnsigned<'_, T>;
+    fn iter_signed<T: Signed<T>>(&self) -> ParseSigned<'_, T>;
 }
 
 impl ParseOps for &str {
-    fn unsigned<T: Unsigned>(&self) -> T {
+    fn unsigned<T: Unsigned<T>>(&self) -> T {
         match try_unsigned(&mut self.bytes()) {
             Some(t) => t,
             None => panic!("Unable to parse \"{self}\""),
         }
     }
 
-    fn signed<T: Signed>(&self) -> T {
+    fn signed<T: Signed<T>>(&self) -> T {
         match try_signed(&mut self.bytes()) {
             Some(t) => t,
             None => panic!("Unable to parse \"{self}\""),
         }
     }
 
-    fn iter_unsigned<T: Unsigned>(&self) -> ParseUnsigned<'_, T> {
+    fn iter_unsigned<T: Unsigned<T>>(&self) -> ParseUnsigned<'_, T> {
         ParseUnsigned { bytes: self.bytes(), phantom: PhantomData }
     }
 
-    fn iter_signed<T: Signed>(&self) -> ParseSigned<'_, T> {
+    fn iter_signed<T: Signed<T>>(&self) -> ParseSigned<'_, T> {
         ParseSigned { bytes: self.bytes(), phantom: PhantomData }
     }
 }
 
-impl<T: Unsigned> Iterator for ParseUnsigned<'_, T> {
+impl<T: Unsigned<T>> Iterator for ParseUnsigned<'_, T> {
     type Item = T;
 
     fn size_hint(&self) -> (usize, Option<usize>) {
@@ -95,7 +82,7 @@ impl<T: Unsigned> Iterator for ParseUnsigned<'_, T> {
     }
 }
 
-impl<T: Signed> Iterator for ParseSigned<'_, T> {
+impl<T: Signed<T>> Iterator for ParseSigned<'_, T> {
     type Item = T;
 
     fn size_hint(&self) -> (usize, Option<usize>) {
@@ -108,7 +95,7 @@ impl<T: Signed> Iterator for ParseSigned<'_, T> {
     }
 }
 
-fn try_unsigned<T: Unsigned>(bytes: &mut Bytes<'_>) -> Option<T> {
+fn try_unsigned<T: Unsigned<T>>(bytes: &mut Bytes<'_>) -> Option<T> {
     let mut n = loop {
         let byte = bytes.next()?;
         let digit = byte.to_decimal();
@@ -123,20 +110,20 @@ fn try_unsigned<T: Unsigned>(bytes: &mut Bytes<'_>) -> Option<T> {
         let digit = byte.to_decimal();
 
         if digit < 10 {
-            n = T::from(10) * n + T::from(digit);
+            n = T::TEN * n + T::from(digit);
         } else {
             break Some(n);
         }
     }
 }
 
-fn try_signed<T: Signed>(bytes: &mut Bytes<'_>) -> Option<T> {
+fn try_signed<T: Signed<T>>(bytes: &mut Bytes<'_>) -> Option<T> {
     let (mut n, negative) = loop {
         let byte = bytes.next()?;
         let digit = byte.to_decimal();
 
         if digit == 253 {
-            break (T::from(0), true);
+            break (T::ZERO, true);
         }
         if digit < 10 {
             break (T::from(digit), false);
@@ -150,7 +137,7 @@ fn try_signed<T: Signed>(bytes: &mut Bytes<'_>) -> Option<T> {
         let digit = byte.to_decimal();
 
         if digit < 10 {
-            n = T::from(10) * n + T::from(digit);
+            n = T::TEN * n + T::from(digit);
         } else {
             break Some(if negative { -n } else { n });
         }
