@@ -19,7 +19,11 @@ pub trait Integer<T>:
     const TEN: T;
 }
 
-macro_rules! Integer {
+pub trait Unsigned<T>: Integer<T> {}
+
+pub trait Signed<T>: Integer<T> + Neg<Output = T> {}
+
+macro_rules! integer {
     ($($t:ty)*) => ($(
         impl Integer<$t> for $t {
             const ZERO: $t = 0;
@@ -30,24 +34,12 @@ macro_rules! Integer {
     )*)
 }
 
-Integer!(u8 u16 u32 u64 usize i16 i32 i64);
-
-pub trait Unsigned<T>: Integer<T> {}
-
-macro_rules! unsigned {
-    ($($t:ty)*) => ($(
-        impl Unsigned<$t> for $t {}
+macro_rules! empty_trait {
+    ($name:ident for $($t:ty)*) => ($(
+        impl $name<$t> for $t {}
     )*)
 }
 
-unsigned!(u8 u16 u32 u64 usize);
-
-pub trait Signed<T>: Integer<T> + Neg<Output = T> {}
-
-macro_rules! signed {
-    ($($t:ty)*) => ($(
-        impl Signed<$t> for $t {}
-    )*)
-}
-
-signed!(i16 i32 i64);
+integer!(u8 u16 u32 u64 usize i16 i32 i64);
+empty_trait!(Unsigned for u8 u16 u32 u64 usize);
+empty_trait!(Signed for i16 i32 i64);
