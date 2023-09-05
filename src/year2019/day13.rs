@@ -99,22 +99,23 @@ fn _draw(tiles: &[i64], score: i64, blocks: i64) {
     }
 
     let mut s = String::new();
-    s.push_str(&format!("{HOME}{CLEAR}{WHITE}{BOLD}Blocks: {blocks}\tScore: {score} {RESET}\n"));
+    s.push_str(&format!("{WHITE}{BOLD}Blocks: {blocks}\tScore: {score} {RESET}\n"));
 
     for y in 0..20 {
         for x in 0..44 {
             match tiles[44 * y + x] {
                 0 => s.push(' '),
-                1 => s.push_str(&format!("{GREEN}#{RESET}")),
-                2 => s.push_str(&format!("{BLUE}o{RESET}")),
+                1 if y == 0 => s.push_str(&format!("{GREEN}_{RESET}")),
+                1 => s.push_str(&format!("{GREEN}|{RESET}")),
+                2 => s.push_str(&format!("{BLUE}#{RESET}")),
                 3 => s.push_str(&format!("{WHITE}{BOLD}={RESET}")),
-                4 => s.push_str(&format!("{YELLOW}{BOLD}.{RESET}")),
+                4 => s.push_str(&format!("{YELLOW}{BOLD}o{RESET}")),
                 _ => unreachable!(),
             }
         }
         s.push('\n');
     }
 
-    println!("{s}");
+    println!("{HOME}{CLEAR}{s}");
     sleep(Duration::from_millis(20));
 }
