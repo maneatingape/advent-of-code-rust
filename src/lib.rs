@@ -13,7 +13,7 @@
     elided_lifetimes_in_paths,
     explicit_outlives_requirements,
     ffi_unwind_calls,
-    //invalid_reference_casting, // Not supported by GitHub actions yet
+    invalid_reference_casting,
     keyword_idents,
     let_underscore_drop,
     macro_use_extern_crate,
@@ -66,7 +66,8 @@
     clippy::float_arithmetic,
     clippy::if_then_some_else_none,
     clippy::impl_trait_in_params,
-    // clippy::redundant_type_annotations)] // Not supported by GitHub actions yet
+    clippy::needless_raw_strings,
+    clippy::redundant_type_annotations,
     clippy::rest_pat_in_fully_bound_structs,
     clippy::unneeded_field_pattern,
     clippy::unseparated_literal_suffix
