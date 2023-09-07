@@ -9,16 +9,15 @@ use std::hash::{BuildHasher, Hash, Hasher};
 
 /// Type alias for [`HashSet`] using [`FxHasher`].
 pub type FastSet<T> = HashSet<T, BuildFxHasher>;
-/// Type alias for [`HashMap`] using [`FxHasher`].
-pub type FastMap<K, V> = HashMap<K, V, BuildFxHasher>;
 
 /// Convenience methods to contruct a [`FastSet`].
 pub trait FastSetBuilder<T> {
     fn new() -> Self;
     fn with_capacity(capacity: usize) -> FastSet<T>;
+    fn build<const N: usize>(array: [T; N]) -> Self;
 }
 
-impl<T> FastSetBuilder<T> for FastSet<T> {
+impl<T: Eq + Hash> FastSetBuilder<T> for FastSet<T> {
     fn new() -> Self {
         HashSet::with_hasher(BuildFxHasher)
     }
@@ -26,7 +25,16 @@ impl<T> FastSetBuilder<T> for FastSet<T> {
     fn with_capacity(capacity: usize) -> FastSet<T> {
         HashSet::with_capacity_and_hasher(capacity, BuildFxHasher)
     }
+
+    fn build<const N: usize>(array: [T; N]) -> Self {
+        let mut set = Self::new();
+        set.extend(array);
+        set
+    }
 }
+
+/// Type alias for [`HashMap`] using [`FxHasher`].
+pub type FastMap<K, V> = HashMap<K, V, BuildFxHasher>;
 
 /// Convenience methods to contruct a [`FastMap`].
 pub trait FastMapBuilder<K, V> {
