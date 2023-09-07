@@ -12,25 +12,20 @@ permissions:
 
 jobs:
   deploy:
+    runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Build docs
-        run: RUSTDOCFLAGS="--document-private-items --default-theme=ayu -Dwarnings" cargo doc
-      - name: Cleanup
-        run: rm target/doc/.lock
-      - name: Copy static assets
-        run: cp docs/* target/doc
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v1
+      - uses: actions/checkout@v3
+      - run: cargo doc
+        env:
+          RUSTDOCFLAGS: "--document-private-items --default-theme=ayu -Dwarnings"
+      - run: rm target/doc/.lock
+      - run: cp docs/* target/doc
+      - uses: actions/upload-pages-artifact@v1
         with:
           path: 'target/doc'
-      - name: Setup Pages
-        uses: actions/configure-pages@v3
-      - name: Deploy to GitHub Pages
+      - uses: actions/configure-pages@v3
+      - uses: actions/deploy-pages@v1
         id: deployment
-        uses: actions/deploy-pages@v1
