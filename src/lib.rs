@@ -117,6 +117,7 @@ pub mod year2019 {
     pub mod day12;
     pub mod day13;
     pub mod day14;
+    pub mod day15;
 }
 
 /// # What could go wrong trying to enjoy a well deserved vacation?

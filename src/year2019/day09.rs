@@ -13,6 +13,7 @@ pub mod intcode {
         Halted,
     }
 
+    #[derive(Clone)]
     pub struct Computer {
         pc: usize,
         base: i64,
