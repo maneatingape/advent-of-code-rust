@@ -138,9 +138,20 @@ pub fn part2(input: &[u8]) -> usize {
         // 100 coefficients pre-multiplied by the input. This means we only need a working array
         // of 100 items instead of a large subset of the input.
         next[0] = (digits[index % size] + current[0]) % 10;
+        next[1] = (current[0] + current[1]) % 10;
+        next[2] = (current[1] + current[2]) % 10;
+        next[3] = (current[2] + current[3]) % 10;
 
-        for j in 1..100 {
+        // Partially unroll the loop
+        for j in (4..100).step_by(8) {
             next[j] = (current[j - 1] + current[j]) % 10;
+            next[j + 1] = (current[j] + current[j + 1]) % 10;
+            next[j + 2] = (current[j + 1] + current[j + 2]) % 10;
+            next[j + 3] = (current[j + 2] + current[j + 3]) % 10;
+            next[j + 4] = (current[j + 3] + current[j + 4]) % 10;
+            next[j + 5] = (current[j + 4] + current[j + 5]) % 10;
+            next[j + 6] = (current[j + 5] + current[j + 6]) % 10;
+            next[j + 7] = (current[j + 6] + current[j + 7]) % 10;
         }
 
         (current, next) = (next, current);
