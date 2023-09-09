@@ -23,8 +23,8 @@ impl Computer {
         self.input.push_back(value);
     }
 
-    pub fn input_ascii(&mut self, ascii: &[u8]) {
-        self.input.extend(ascii.iter().map(|&b| b as i64));
+    pub fn input_ascii(&mut self, ascii: &str) {
+        self.input.extend(ascii.bytes().map(|b| b as i64));
     }
 
     /// Runs until either the program needs input, outputs a value or encounters the halt opcode.
