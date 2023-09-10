@@ -1,3 +1,4 @@
+//! Implementation of the full Intcode computer specification.
 use std::collections::VecDeque;
 
 pub enum State {
@@ -26,8 +27,8 @@ impl Computer {
         self.input.extend(ascii.iter().map(|&b| b as i64));
     }
 
-    /// Runs until either the program needs input, outputs a value or encounters the halt
-    /// opcode. In the first two cases, the computer can be restarted by calling `run` again.
+    /// Runs until either the program needs input, outputs a value or encounters the halt opcode.
+    /// In the first two cases, the computer can be resumed by calling `run` again.
     pub fn run(&mut self) -> State {
         loop {
             let code = self.code[self.pc];

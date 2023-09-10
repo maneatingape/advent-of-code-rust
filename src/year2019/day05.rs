@@ -14,7 +14,7 @@ pub fn part2(input: &[i64]) -> i64 {
     run(input, 5)
 }
 
-/// Start `IntCode` computer in its own thread, sending a single initial value.
+/// Start `IntCode` computer sending a single initial value.
 /// Receives multiple values from the output channel returning only the last one.
 fn run(input: &[i64], value: i64) -> i64 {
     let mut computer = Computer::new(input);
