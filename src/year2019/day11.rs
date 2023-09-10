@@ -65,7 +65,7 @@ fn paint(input: &[i64], initial: i64) -> FastMap<Point, i64> {
 
     loop {
         let panel = hull.get(&position).unwrap_or(&0);
-        computer.input(&[*panel]);
+        computer.input(*panel);
 
         match computer.run() {
             State::Output(color) => {

@@ -31,10 +31,10 @@ pub fn parse(input: &str) -> Input {
         direction = if first { direction.clockwise() } else { direction.counter_clockwise() };
 
         match direction {
-            UP => computer.input(&[1]),
-            DOWN => computer.input(&[2]),
-            LEFT => computer.input(&[3]),
-            RIGHT => computer.input(&[4]),
+            UP => computer.input(1),
+            DOWN => computer.input(2),
+            LEFT => computer.input(3),
+            RIGHT => computer.input(4),
             _ => unreachable!(),
         }
 

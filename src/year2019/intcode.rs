@@ -18,8 +18,12 @@ impl Computer {
         Computer { pc: 0, base: 0, code: code.to_vec(), input: VecDeque::new() }
     }
 
-    pub fn input(&mut self, slice: &[i64]) {
-        self.input.extend(slice);
+    pub fn input(&mut self, value: i64) {
+        self.input.push_back(value);
+    }
+
+    pub fn input_ascii(&mut self, ascii: &[u8]) {
+        self.input.extend(ascii.iter().map(|&b| b as i64));
     }
 
     /// Runs until either the program needs input, outputs a value or encounters the halt

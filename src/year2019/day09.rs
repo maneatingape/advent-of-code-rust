@@ -18,7 +18,8 @@ pub fn part2(input: &[i64]) -> i64 {
 
 fn run(input: &[i64], value: i64) -> i64 {
     let mut computer = Computer::new(input);
-    computer.input(&[value]);
+    computer.input(value);
+
     match computer.run() {
         State::Output(result) => result,
         _ => unreachable!(),

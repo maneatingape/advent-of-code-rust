@@ -50,7 +50,7 @@ pub fn part2(input: &[i64]) -> i64 {
             State::Input => {
                 // Always track the ball
                 let delta = (ball - paddle).signum();
-                computer.input(&[delta]);
+                computer.input(delta);
                 continue;
             }
             State::Output(x) => x,
