@@ -1,5 +1,5 @@
 //! # Sunny with a Chance of Asteroids
-use super::day09::intcode::*; // Time travel
+use super::intcode::*;
 use crate::util::parse::*;
 
 pub fn parse(input: &str) -> Vec<i64> {

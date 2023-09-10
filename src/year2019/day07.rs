@@ -10,7 +10,7 @@
 //! [`permutations`]: crate::util::slice
 //! [`Sender`]: std::sync::mpsc::Sender
 //! [`Receiver`]: std::sync::mpsc::Receiver
-use super::day09::intcode::*; // Time travel
+use super::intcode::*;
 use crate::util::parse::*;
 use crate::util::slice::*;
 

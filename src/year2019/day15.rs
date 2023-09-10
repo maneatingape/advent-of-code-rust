@@ -9,7 +9,7 @@
 //! corridors of width one and has no loops or rooms, then we can use the simple
 //! [wall follower](https://en.wikipedia.org/wiki/Maze-solving_algorithm#Wall_follower)
 //! algorithm to eventually trace our way through the entire maze back to the starting point.
-use super::day09::intcode::*;
+use super::intcode::*;
 use crate::util::hash::*;
 use crate::util::parse::*;
 use crate::util::point::*;
