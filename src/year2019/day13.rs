@@ -3,8 +3,8 @@
 //! Keeps track of the `x` position of both the ball and paddle then uses the [`signum`] function
 //! to provide input to the joystick that tracks the ball.
 //!
-//! Just for fun this solution will play an animated game in the console if the `_draw`
-//! function is uncommented.
+//! Just for fun this solution will play an animated game in the console if
+//! "--features frivolity" is enabled.
 //!
 //! [`signum`]: i64::signum
 use super::day09::intcode::*;
@@ -82,13 +82,15 @@ pub fn part2(input: &[i64]) -> i64 {
             tiles[index] = t;
         }
 
-        // Non essential but hilarious. Uncomment `_draw` function then
-        // run program on the command line to observe an animated game of breakout.
-        //_draw(&tiles, score, blocks);
+        // Non essential but hilarious. Enable feature then run program in a command line
+        // conosle to observe an animated game of breakout.
+        #[cfg(feature = "frivolity")]
+        draw(&tiles, score, blocks);
     }
 }
 
-fn _draw(tiles: &[i64], score: i64, blocks: i64) {
+#[cfg(feature = "frivolity")]
+fn draw(tiles: &[i64], score: i64, blocks: i64) {
     use crate::util::ansi::*;
     use std::thread::sleep;
     use std::time::Duration;
