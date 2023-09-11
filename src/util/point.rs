@@ -43,33 +43,39 @@ pub struct Point {
 
 impl Point {
     #[inline]
+    #[must_use]
     pub const fn new(x: i32, y: i32) -> Self {
         Point { x, y }
     }
 
     #[inline]
-    pub fn clockwise(self) -> Point {
+    #[must_use]
+    pub fn clockwise(self) -> Self {
         Point::new(-self.y, self.x)
     }
 
     #[inline]
-    pub fn counter_clockwise(self) -> Point {
+    #[must_use]
+    pub fn counter_clockwise(self) -> Self {
         Point::new(self.y, -self.x)
     }
 
     #[inline]
+    #[must_use]
     pub fn manhattan(self, other: Point) -> i32 {
         (self.x - other.x).abs() + (self.y - other.y).abs()
     }
 
     #[inline]
-    pub fn signum(self, other: Point) -> Point {
+    #[must_use]
+    pub fn signum(self, other: Point) -> Self {
         Point::new((self.x - other.x).signum(), (self.y - other.y).signum())
     }
 }
 
 impl From<u8> for Point {
     #[inline]
+    #[must_use]
     fn from(value: u8) -> Self {
         match value {
             b'^' | b'U' => UP,
@@ -90,17 +96,18 @@ impl Hash for Point {
 }
 
 impl Add for Point {
-    type Output = Point;
+    type Output = Self;
 
     #[inline]
-    fn add(self, rhs: Point) -> Point {
+    #[must_use]
+    fn add(self, rhs: Point) -> Self {
         Point::new(self.x + rhs.x, self.y + rhs.y)
     }
 }
 
 impl AddAssign for Point {
     #[inline]
-    fn add_assign(&mut self, rhs: Point) {
+    fn add_assign(&mut self, rhs: Self) {
         self.x += rhs.x;
         self.y += rhs.y;
     }
@@ -110,7 +117,8 @@ impl Mul<i32> for Point {
     type Output = Point;
 
     #[inline]
-    fn mul(self, rhs: i32) -> Self::Output {
+    #[must_use]
+    fn mul(self, rhs: i32) -> Self {
         Point::new(self.x * rhs, self.y * rhs)
     }
 }
@@ -119,14 +127,15 @@ impl Sub for Point {
     type Output = Point;
 
     #[inline]
-    fn sub(self, rhs: Point) -> Point {
+    #[must_use]
+    fn sub(self, rhs: Self) -> Self {
         Point::new(self.x - rhs.x, self.y - rhs.y)
     }
 }
 
 impl SubAssign for Point {
     #[inline]
-    fn sub_assign(&mut self, rhs: Point) {
+    fn sub_assign(&mut self, rhs: Self) {
         self.x -= rhs.x;
         self.y -= rhs.y;
     }
