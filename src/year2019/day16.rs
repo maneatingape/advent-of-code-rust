@@ -92,7 +92,6 @@ pub fn part1(input: &[u8]) -> i32 {
     let size = input.len();
     let mid = size / 2;
     let end = size - 1;
-    let pattern = [0, 1, 0, -1];
 
     let mut current = &mut input.iter().copied().map(i32::from).collect::<Vec<_>>();
     let mut next = &mut vec![0; size];
@@ -100,11 +99,27 @@ pub fn part1(input: &[u8]) -> i32 {
     for _ in 0..100 {
         // Brute force the first half of the input.
         for i in 0..mid {
-            let mut total = 0;
+            let phase = i + 1;
+            let skip = 2 * phase;
+            let mut remaining = &current[i..];
+            let mut total: i32 = 0;
 
-            // Skip the first `i` elements as the pattern is always zero.
-            for j in i..size {
-                total += current[j] * pattern[((j + 1) / (i + 1)) % 4];
+            while !remaining.is_empty() {
+                let take = phase.min(remaining.len());
+                total += &remaining[..take].iter().sum();
+
+                if remaining.len() <= skip {
+                    break;
+                }
+                remaining = &remaining[skip..];
+
+                let take = phase.min(remaining.len());
+                total -= &remaining[..take].iter().sum();
+
+                if remaining.len() <= skip {
+                    break;
+                }
+                remaining = &remaining[skip..];
             }
 
             next[i] = total.abs() % 10;
