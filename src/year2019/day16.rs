@@ -14,8 +14,8 @@
 //!     5*0  + 6*0  + 7*0  + 8*1
 //! ```
 //!
-//! This means that each digit is the sum of itself and subsequent digits and can be computed
-//! using a reverse rolling [prefix sum].
+//! Each digit is the sum of itself and subsequent digits and can be computed using a reverse
+//! rolling [prefix sum].
 //!
 //! ## Part Two
 //!
@@ -57,23 +57,32 @@
 //! ```
 //!
 //! We can see that the third phase is the [triangular number] sequence and that the fourth phase
-//! is the [tetrahedral number] sequence. More generally the `kth` coefficient of the `nth` phase
-//! is the [binomial coefficient] `C(n, k)`.
+//! is the [tetrahedral number] sequence. More generally the `i`th coefficient of the 100th phase
+//! is the [binomial coefficient] `(i + 99, i)`.
 //!
-//! We compute the result for part two by finding the `C(100, k)` coefficient for each number using
-//! the recursive method of summing previous coefficients from [Pascal's triangle]. This result in
-//! complexity `O(100n)` where `n` is the number of digits after the starting index in the input.
+//! We could compute the coefficient using the formula `nᵏ/k!` however this [grows rather large]
+//! and quickly will overflow even a `u128`.
 //!
-//! As a minor optimization we combine multiplying the digits of the input together with the
-//! binomial coefficient calculation.
+//! However we only need to coefficient modulo 10. [Lucas's theorem] allow us to computer binomial
+//! coefficients modulo some prime number. If we compute the coefficients modulo 2 and modulo 5
+//! then we can use the [Chinese remainder theorem] to find the result modulo 10.
 //!
 //! [prefix sum]: https://en.wikipedia.org/wiki/Prefix_sum
 //! [upper triangular matrix]: https://en.wikipedia.org/wiki/Triangular_matrix
 //! [triangular number]: https://en.wikipedia.org/wiki/Triangular_number
 //! [tetrahedral number]: https://en.wikipedia.org/wiki/Tetrahedral_number
 //! [binomial coefficient]: https://en.wikipedia.org/wiki/Binomial_coefficient
-//! [Pascal's triangle]: https://en.wikipedia.org/wiki/Pascal%27s_triangle
+//! [grows rather large]: https://oeis.org/A017763/b017763.txt
+//! [Lucas's theorem]: https://en.wikipedia.org/wiki/Lucas%27s_theorem
+//! [Chinese remainder theorem]: https://en.wikipedia.org/wiki/Chinese_remainder_theorem
+use crate::util::integer::*;
 use crate::util::parse::*;
+
+/// Lookup table for first five rows of
+/// [Pascal's triangle](https://en.wikipedia.org/wiki/Pascal%27s_triangle).
+/// A convention specifically for Lukas's theorem is that if `n` < `k` then the value is 0.
+const PASCALS_TRIANGLE: [[usize; 5]; 5] =
+    [[1, 0, 0, 0, 0], [1, 1, 0, 0, 0], [1, 2, 1, 0, 0], [1, 3, 3, 1, 0], [1, 4, 6, 4, 1]];
 
 pub fn parse(input: &str) -> Vec<u8> {
     input.trim().bytes().map(u8::to_decimal).collect()
@@ -101,7 +110,7 @@ pub fn part1(input: &[u8]) -> i32 {
             next[i] = total.abs() % 10;
         }
 
-        // Use a faster prefix sum approach similar to part two for the second half of the input.
+        // Use a faster reverse prefix sum approach for the second half of the input.
         next[end] = current[end];
 
         for i in (mid..end).rev() {
@@ -111,7 +120,7 @@ pub fn part1(input: &[u8]) -> i32 {
         (current, next) = (next, current);
     }
 
-    current.iter().take(8).fold(0, |acc, &b| 10 * acc + b)
+    fold_number(&current[..8])
 }
 
 pub fn part2(input: &[u8]) -> usize {
@@ -124,43 +133,76 @@ pub fn part2(input: &[u8]) -> usize {
     let upper = size * 10_000;
     assert!(lower <= start && start < upper);
 
-    let mut current = &mut [0; 100];
-    let mut next = &mut [0; 100];
+    let mut coefficients = [0; 8];
     let mut result = [0; 8];
 
-    for index in (start - 100..upper - 1).rev() {
-        let offset = index + 100 - start;
-        if offset < 8 {
-            result[offset] = current[99];
-        }
+    for (k, index) in (start..upper).enumerate() {
+        coefficients.rotate_right(1);
+        coefficients[0] = binomial_mod_10(k + 99, k);
 
-        // It's faster to turn the loop "inside out" and keep a window of the last
-        // 100 coefficients pre-multiplied by the input. This means we only need a working array
-        // of 100 items instead of a large subset of the input.
-        next[0] = (digits[index % size] + current[0]) % 10;
-        next[1] = (current[0] + current[1]) % 10;
-        next[2] = (current[1] + current[2]) % 10;
-        next[3] = (current[2] + current[3]) % 10;
-
-        // Partially unroll the loop
-        for j in (4..100).step_by(8) {
-            next[j] = (current[j - 1] + current[j]) % 10;
-            next[j + 1] = (current[j] + current[j + 1]) % 10;
-            next[j + 2] = (current[j + 1] + current[j + 2]) % 10;
-            next[j + 3] = (current[j + 2] + current[j + 3]) % 10;
-            next[j + 4] = (current[j + 3] + current[j + 4]) % 10;
-            next[j + 5] = (current[j + 4] + current[j + 5]) % 10;
-            next[j + 6] = (current[j + 5] + current[j + 6]) % 10;
-            next[j + 7] = (current[j + 6] + current[j + 7]) % 10;
-        }
-
-        (current, next) = (next, current);
+        let next = digits[index % size];
+        result.iter_mut().zip(coefficients).for_each(|(r, c)| *r += next * c);
     }
 
+    result.iter_mut().for_each(|r| *r %= 10);
     fold_number(&result)
 }
 
+/// Computes C(n, k) % 2
+///
+/// This collapses to a special case of a product of only 4 possible values:
+///
+/// * `C(0, 0) = 1`
+/// * `C(1, 0) = 1`
+/// * `C(1, 1) = 1`
+/// * `C(0, 1) = 0`
+///
+/// So the final value will always be one or zero. The fourth zero case happens when `k` has a
+/// bit not present in `n` so we can compute the final value using bitwise logic.
+#[inline]
+fn binomial_mod_2(n: usize, k: usize) -> usize {
+    (k & !n == 0) as usize
+}
+
+/// Computes C(n, k) % 5
+///
+/// If `k` is zero then the remaining coefficients are 1 so we can exit early.
+/// If `r` is zero then the total result is also zero so we can exit early.
+/// To save some time we only take the result modulo 5 at the end.
+#[inline]
+fn bimonial_mod_5(mut n: usize, mut k: usize) -> usize {
+    let mut r = 1;
+
+    while k > 0 && r > 0 {
+        r *= PASCALS_TRIANGLE[n % 5][k % 5];
+        n /= 5;
+        k /= 5;
+    }
+
+    r % 5
+}
+
+/// Computes C(n, k) % 10
+///
+/// Solving the Chinese remainder theorem for the special case of two congruences:
+///
+/// ```none
+///     x ​≡ a₁ (mod n₁) ​≡ a₁ (mod 2)
+///     x ​≡ a₂ (mod n₂) ≡ a₂ (mod 5)
+///     N = n₁n₂ = 10
+///     y₁ = N / n₁ = 5
+///     y₂ = N / n₂ = 2
+///     z₁ = y₁⁻¹ mod n₁ = 5⁻¹ mod 2 = 1
+///     z₂ = y₂⁻¹ mod n₂ = 2⁻¹ mod 5 = 3
+///     x ≡ a₁y₁z₁ + a₂y₂z₂ (mod 10) ≡ 5a₁ + 6a₂ (mod 10)
+/// ```
+#[inline]
+fn binomial_mod_10(n: usize, k: usize) -> usize {
+    5 * binomial_mod_2(n, k) + 6 * bimonial_mod_5(n, k)
+}
+
 /// Folds a slice of digits into an integer.
-fn fold_number(slice: &[usize]) -> usize {
-    slice.iter().fold(0, |acc, &b| 10 * acc + b)
+#[inline]
+fn fold_number<T: Integer<T>>(slice: &[T]) -> T {
+    slice.iter().fold(T::ZERO, |acc, &b| T::TEN * acc + b)
 }
