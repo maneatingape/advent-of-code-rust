@@ -1,7 +1,6 @@
 use crate::util::hash::*;
+use crate::util::heap::*;
 use std::array::from_fn;
-use std::cmp::Ordering;
-use std::collections::BinaryHeap;
 use std::hash::*;
 
 const A: usize = 0;
@@ -88,26 +87,6 @@ impl Burrow {
     }
 }
 
-#[derive(Copy, Clone, PartialEq, Eq)]
-struct State {
-    burrow: Burrow,
-    energy: usize,
-}
-
-impl PartialOrd for State {
-    #[inline]
-    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
-        Some(self.cmp(other))
-    }
-}
-
-impl Ord for State {
-    #[inline]
-    fn cmp(&self, other: &Self) -> Ordering {
-        other.energy.cmp(&self.energy)
-    }
-}
-
 pub fn parse(input: &str) -> Vec<Vec<usize>> {
     input
         .lines()
@@ -136,13 +115,12 @@ pub fn part2(input: &[Vec<usize>]) -> usize {
 }
 
 fn organize(burrow: Burrow) -> usize {
-    let mut todo = BinaryHeap::with_capacity(20_000);
+    let mut todo = MinHeap::with_capacity(20_000);
     let mut seen = FastMap::with_capacity(20_000);
 
-    todo.push(State { burrow, energy: best_possible(&burrow) });
+    todo.push(best_possible(&burrow), burrow);
 
-    while let Some(state) = todo.pop() {
-        let State { mut burrow, energy } = state;
+    while let Some((energy, mut burrow)) = todo.pop() {
         let open: [bool; 4] = from_fn(|i| burrow.rooms[i].open(i));
 
         let mut changed = false;
@@ -164,7 +142,7 @@ fn organize(burrow: Burrow) -> usize {
             // Moving back to home burrow does not change cost
             let min = seen.get(&burrow).unwrap_or(&usize::MAX);
             if energy < *min {
-                todo.push(State { burrow, energy });
+                todo.push(energy, burrow);
                 seen.insert(burrow, energy);
             }
         } else {
@@ -173,8 +151,8 @@ fn organize(burrow: Burrow) -> usize {
                     let offset = 2 + 2 * i;
                     let forward = (offset + 1)..11;
                     let reverse = (0..offset).rev();
-                    expand(&mut todo, &mut seen, &state, i, forward);
-                    expand(&mut todo, &mut seen, &state, i, reverse);
+                    expand(&mut todo, &mut seen, burrow, energy, i, forward);
+                    expand(&mut todo, &mut seen, burrow, energy, i, reverse);
                 }
             }
         }
@@ -240,13 +218,13 @@ fn condense(burrow: &mut Burrow, kind: usize, iter: impl Iterator<Item = usize>)
 }
 
 fn expand(
-    todo: &mut BinaryHeap<State>,
+    todo: &mut MinHeap<usize, Burrow>,
     seen: &mut FastMap<Burrow, usize>,
-    state: &State,
+    mut burrow: Burrow,
+    energy: usize,
     room_index: usize,
     iter: impl Iterator<Item = usize>,
 ) {
-    let State { mut burrow, energy } = state;
     let kind = burrow.rooms[room_index].pop();
 
     for hallway_index in iter {
@@ -290,7 +268,7 @@ fn expand(
                 let min = seen.get(&next).unwrap_or(&usize::MAX);
 
                 if next_energy < *min {
-                    todo.push(State { burrow: next, energy: next_energy });
+                    todo.push(next_energy, next);
                     seen.insert(next, next_energy);
                 }
             }
