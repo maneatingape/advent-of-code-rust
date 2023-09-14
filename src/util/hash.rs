@@ -13,7 +13,7 @@ pub type FastSet<T> = HashSet<T, BuildFxHasher>;
 /// Convenience methods to contruct a [`FastSet`].
 pub trait FastSetBuilder<T> {
     fn new() -> Self;
-    fn with_capacity(capacity: usize) -> FastSet<T>;
+    fn with_capacity(capacity: usize) -> Self;
     fn build<const N: usize>(array: [T; N]) -> Self;
 }
 
@@ -22,7 +22,7 @@ impl<T: Eq + Hash> FastSetBuilder<T> for FastSet<T> {
         HashSet::with_hasher(BuildFxHasher)
     }
 
-    fn with_capacity(capacity: usize) -> FastSet<T> {
+    fn with_capacity(capacity: usize) -> Self {
         HashSet::with_capacity_and_hasher(capacity, BuildFxHasher)
     }
 
