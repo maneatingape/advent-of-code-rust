@@ -210,6 +210,7 @@ pie
 | 15 | [Oxygen System](https://adventofcode.com/2019/day/15) | [Source](src/year2019/day15.rs) | 442 |
 | 16 | [Flawed Frequency Transmission](https://adventofcode.com/2019/day/16) | [Source](src/year2019/day16.rs) | 4124 |
 | 17 | [Set and Forget](https://adventofcode.com/2019/day/17) | [Source](src/year2019/day17.rs) | 425 |
+| 18 | [Many-Worlds Interpretation](https://adventofcode.com/2019/day/18) | [Source](src/year2019/day18.rs) | 1077 |
 
 ## 2015
 
