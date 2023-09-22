@@ -105,6 +105,7 @@ fn all_solutions() -> Vec<Solution> {
         solution!(year2019, day16),
         solution!(year2019, day17),
         solution!(year2019, day18),
+        solution!(year2019, day19),
         // 2020
         solution!(year2020, day01),
         solution!(year2020, day02),
