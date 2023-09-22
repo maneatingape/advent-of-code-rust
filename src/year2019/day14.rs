@@ -111,7 +111,7 @@ fn ore(reactions: &[Reaction], amount: u64) -> u64 {
     total[0] = amount;
 
     for reaction in &reactions[..reactions.len() - 1] {
-        let multiplier = div_ceil(total[reaction.chemical], reaction.amount);
+        let multiplier = total[reaction.chemical].div_ceil(reaction.amount);
 
         for ingredient in &reaction.ingredients {
             total[ingredient.chemical] += multiplier * ingredient.amount;
@@ -119,13 +119,4 @@ fn ore(reactions: &[Reaction], amount: u64) -> u64 {
     }
 
     total[1]
-}
-
-/// Stable implementation of the nightly `div_ceil` method.
-fn div_ceil(a: u64, b: u64) -> u64 {
-    if a % b == 0 {
-        a / b
-    } else {
-        (a / b) + 1
-    }
 }

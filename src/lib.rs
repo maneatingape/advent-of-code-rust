@@ -62,6 +62,7 @@
     clippy::fn_params_excessive_bools,
     clippy::from_iter_instead_of_collect,
     clippy::if_not_else,
+    clippy::ignored_unit_patterns,
     clippy::implicit_clone,
     clippy::inconsistent_struct_constructor,
     clippy::index_refutable_slice,
@@ -132,6 +133,7 @@
 
 //! <!-- Cherry pick some stylistic Clippy restriction lints -->
 #![warn(
+    clippy::absolute_paths,
     clippy::empty_structs_with_brackets,
     clippy::float_arithmetic,
     clippy::if_then_some_else_none,

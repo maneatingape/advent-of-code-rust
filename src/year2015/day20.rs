@@ -99,7 +99,7 @@ pub fn part1(input: &Input) -> usize {
         // Elves that visit at most once.
         for i in BLOCK..end / 2 {
             let presents = 10 * i as u32;
-            let j = next_multiple_of(start, i) - start;
+            let j = start.next_multiple_of(i) - start;
 
             if j < BLOCK {
                 houses[j] += presents;
@@ -109,7 +109,7 @@ pub fn part1(input: &Input) -> usize {
         // All remaining elves.
         for i in 2..BLOCK {
             let presents = 10 * i as u32;
-            let mut j = next_multiple_of(start, i) - start;
+            let mut j = start.next_multiple_of(i) - start;
 
             while j < BLOCK {
                 houses[j] += presents;
@@ -140,7 +140,7 @@ pub fn part2(input: &Input) -> usize {
         // Elves that visit at most once.
         for i in BLOCK..end / 2 {
             let presents = 11 * i as u32;
-            let j = next_multiple_of(start, i) - start;
+            let j = start.next_multiple_of(i) - start;
 
             if j < BLOCK {
                 houses[j] += presents;
@@ -150,8 +150,8 @@ pub fn part2(input: &Input) -> usize {
         // All remaining elves. We can start higher than 2.
         for i in start / 50..BLOCK {
             let presents = 11 * i as u32;
-            let mut j = next_multiple_of(start, i) - start;
-            let mut remaining = 51 - div_ceil(start, i);
+            let mut j = start.next_multiple_of(i) - start;
+            let mut remaining = 51 - start.div_ceil(i);
 
             while j < BLOCK && remaining > 0 {
                 houses[j] += presents;
@@ -167,14 +167,4 @@ pub fn part2(input: &Input) -> usize {
         start += BLOCK;
         end += BLOCK;
     }
-}
-
-#[inline]
-fn div_ceil(a: usize, b: usize) -> usize {
-    (a + b - 1) / b
-}
-
-#[inline]
-fn next_multiple_of(a: usize, b: usize) -> usize {
-    div_ceil(a, b) * b
 }
