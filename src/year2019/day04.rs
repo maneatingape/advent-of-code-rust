@@ -4,6 +4,7 @@
 //! These numbers become rapidly less dense as the password value increases and there
 //! are only 3003 total of these numbers with 6 digits.
 use crate::util::parse::*;
+use crate::util::slice::*;
 
 pub fn parse(input: &str) -> Vec<u32> {
     input.iter_unsigned().collect()
@@ -83,7 +84,7 @@ fn passwords(input: &[u32], predicate: impl Fn(bool, bool, bool, bool, bool) -> 
         }
 
         // Convert number to `u32`.
-        n = digits.iter().fold(0, |acc, d| 10 * acc + d);
+        n = digits.fold_decimal();
     }
 
     count

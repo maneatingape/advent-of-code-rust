@@ -75,8 +75,8 @@
 //! [grows rather large]: https://oeis.org/A017763/b017763.txt
 //! [Lucas's theorem]: https://en.wikipedia.org/wiki/Lucas%27s_theorem
 //! [Chinese remainder theorem]: https://en.wikipedia.org/wiki/Chinese_remainder_theorem
-use crate::util::integer::*;
 use crate::util::parse::*;
+use crate::util::slice::*;
 
 /// Lookup table for first five rows of
 /// [Pascal's triangle](https://en.wikipedia.org/wiki/Pascal%27s_triangle).
@@ -135,12 +135,12 @@ pub fn part1(input: &[u8]) -> i32 {
         (current, next) = (next, current);
     }
 
-    fold_number(&current[..8])
+    current[..8].fold_decimal()
 }
 
 pub fn part2(input: &[u8]) -> usize {
     let digits: Vec<_> = input.iter().copied().map(usize::from).collect();
-    let start = fold_number(&digits[..7]);
+    let start = digits[..7].fold_decimal();
 
     // This approach will only work if the index is in the second half of the input.
     let size = digits.len();
@@ -160,7 +160,7 @@ pub fn part2(input: &[u8]) -> usize {
     }
 
     result.iter_mut().for_each(|r| *r %= 10);
-    fold_number(&result)
+    result.fold_decimal()
 }
 
 /// Computes C(n, k) % 2
@@ -214,10 +214,4 @@ fn bimonial_mod_5(mut n: usize, mut k: usize) -> usize {
 #[inline]
 fn binomial_mod_10(n: usize, k: usize) -> usize {
     5 * binomial_mod_2(n, k) + 6 * bimonial_mod_5(n, k)
-}
-
-/// Folds a slice of digits into an integer.
-#[inline]
-fn fold_number<T: Integer<T>>(slice: &[T]) -> T {
-    slice.iter().fold(T::ZERO, |acc, &b| T::TEN * acc + b)
 }
