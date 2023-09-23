@@ -6,6 +6,7 @@
 //! resistant but slower hashing algorithm. [`FxHasher`] is much faster (between 2x to 5x from my testing).
 use std::collections::{HashMap, HashSet};
 use std::hash::{BuildHasher, Hash, Hasher};
+use std::ops::BitXor;
 
 /// Type alias for [`HashSet`] using [`FxHasher`].
 pub type FastSet<T> = HashSet<T, BuildFxHasher>;
@@ -66,8 +67,9 @@ pub struct BuildFxHasher;
 impl BuildHasher for BuildFxHasher {
     type Hasher = FxHasher;
 
+    #[inline]
     fn build_hasher(&self) -> Self::Hasher {
-        FxHasher { state: 0 }
+        FxHasher { hash: 0 }
     }
 }
 
@@ -75,14 +77,16 @@ impl BuildHasher for BuildFxHasher {
 ///
 /// Checkout the [Firefox code](https://searchfox.org/mozilla-central/rev/633345116df55e2d37be9be6555aa739656c5a7d/mfbt/HashFunctions.h#109-153)
 /// for a full description.
+const K: u64 = 0x517cc1b727220a95;
+
 pub struct FxHasher {
-    state: u64,
+    hash: u64,
 }
 
 impl FxHasher {
     #[inline]
-    fn hash(&mut self, i: u64) {
-        self.state = (self.state.rotate_left(5) ^ i).wrapping_mul(0x517cc1b727220a95);
+    fn add(&mut self, i: u64) {
+        self.hash = self.hash.rotate_left(5).bitxor(i).wrapping_mul(K);
     }
 }
 
@@ -90,49 +94,49 @@ impl Hasher for FxHasher {
     #[inline]
     fn write(&mut self, mut bytes: &[u8]) {
         while bytes.len() >= 8 {
-            self.hash(u64::from_ne_bytes(bytes[..8].try_into().unwrap()));
+            self.add(u64::from_ne_bytes(bytes[..8].try_into().unwrap()));
             bytes = &bytes[8..];
         }
         if bytes.len() >= 4 {
-            self.hash(u32::from_ne_bytes(bytes[..4].try_into().unwrap()) as u64);
+            self.add(u32::from_ne_bytes(bytes[..4].try_into().unwrap()) as u64);
             bytes = &bytes[4..];
         }
         if bytes.len() >= 2 {
-            self.hash(u16::from_ne_bytes(bytes[..2].try_into().unwrap()) as u64);
+            self.add(u16::from_ne_bytes(bytes[..2].try_into().unwrap()) as u64);
             bytes = &bytes[2..];
         }
         if !bytes.is_empty() {
-            self.hash(bytes[0] as u64);
+            self.add(bytes[0] as u64);
         }
     }
 
     #[inline]
     fn write_u8(&mut self, i: u8) {
-        self.hash(i as u64);
+        self.add(i as u64);
     }
 
     #[inline]
     fn write_u16(&mut self, i: u16) {
-        self.hash(i as u64);
+        self.add(i as u64);
     }
 
     #[inline]
     fn write_u32(&mut self, i: u32) {
-        self.hash(i as u64);
+        self.add(i as u64);
     }
 
     #[inline]
     fn write_u64(&mut self, i: u64) {
-        self.hash(i);
+        self.add(i);
     }
 
     #[inline]
     fn write_usize(&mut self, i: usize) {
-        self.hash(i as u64);
+        self.add(i as u64);
     }
 
     #[inline]
     fn finish(&self) -> u64 {
-        self.state
+        self.hash
     }
 }
