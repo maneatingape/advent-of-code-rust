@@ -32,7 +32,6 @@ macro_rules! integer {
             const ONE: $t = 1;
             const TEN: $t = 10;
         }
-
     )*)
 }
 
@@ -42,6 +41,6 @@ macro_rules! empty_trait {
     )*)
 }
 
-integer!(u8 u16 u32 u64 usize i16 i32 i64);
-empty_trait!(Unsigned for u8 u16 u32 u64 usize);
-empty_trait!(Signed for i16 i32 i64);
+integer!(u8 u16 u32 u64 u128 usize i16 i32 i64 i128);
+empty_trait!(Unsigned for u8 u16 u32 u64 u128 usize);
+empty_trait!(Signed for i16 i32 i64 i128);
