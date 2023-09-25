@@ -17,13 +17,11 @@
 //!
 //! [`MD5`]: crate::util::md5
 //! [`format!`]: std::format
-use crate::util::md5::hash;
-use std::sync::atomic::Ordering::Relaxed;
-use std::sync::atomic::{AtomicBool, AtomicU32};
+use crate::util::md5::*;
+use std::sync::atomic::{AtomicBool, AtomicU32, Ordering};
 use std::sync::Arc;
 use std::thread;
 
-#[derive(Clone)]
 pub struct Shared {
     prefix: String,
     done: Arc<AtomicBool>,
@@ -48,43 +46,37 @@ pub fn parse(input: &str) -> Shared {
     }
 
     // Use as many cores as possible to parallelize the remaining search.
-    let handles: Vec<_> = (0..thread::available_parallelism().unwrap().get())
-        .map(|_| {
-            let shared_clone = shared.clone();
-            thread::spawn(move || worker(&shared_clone))
-        })
-        .collect();
-
-    // Wait for threads to finish
-    for handle in handles {
-        let _unused = handle.join();
-    }
+    thread::scope(|scope| {
+        for _ in 0..thread::available_parallelism().unwrap().get() {
+            scope.spawn(|| worker(&shared));
+        }
+    });
 
     shared
 }
 
 pub fn part1(input: &Shared) -> u32 {
-    input.first.load(Relaxed)
+    input.first.load(Ordering::Relaxed)
 }
 
 pub fn part2(input: &Shared) -> u32 {
-    input.second.load(Relaxed)
+    input.second.load(Ordering::Relaxed)
 }
 
 fn check_hash(buffer: &[u8], n: u32, shared: &Shared) {
     let (result, ..) = hash(buffer);
 
     if result & 0xffffff00 == 0 {
-        shared.done.store(true, Relaxed);
-        shared.second.fetch_min(n, Relaxed);
+        shared.second.fetch_min(n, Ordering::Relaxed);
+        shared.done.store(true, Ordering::Relaxed);
     } else if result & 0xfffff000 == 0 {
-        shared.first.fetch_min(n, Relaxed);
+        shared.first.fetch_min(n, Ordering::Relaxed);
     }
 }
 
 fn worker(shared: &Shared) {
-    while !shared.done.load(Relaxed) {
-        let offset = shared.counter.fetch_add(1000, Relaxed);
+    while !shared.done.load(Ordering::Relaxed) {
+        let offset = shared.counter.fetch_add(1000, Ordering::Relaxed);
         let string = format!("{}{}", shared.prefix, offset);
         let size = string.len() - 3;
         let mut buffer = string.as_bytes().to_vec();
