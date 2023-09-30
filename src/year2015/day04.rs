@@ -19,24 +19,23 @@
 //! [`format!`]: std::format
 use crate::util::md5::*;
 use std::sync::atomic::{AtomicBool, AtomicU32, Ordering};
-use std::sync::Arc;
 use std::thread;
 
 pub struct Shared {
     prefix: String,
-    done: Arc<AtomicBool>,
-    counter: Arc<AtomicU32>,
-    first: Arc<AtomicU32>,
-    second: Arc<AtomicU32>,
+    done: AtomicBool,
+    counter: AtomicU32,
+    first: AtomicU32,
+    second: AtomicU32,
 }
 
 pub fn parse(input: &str) -> Shared {
     let shared = Shared {
         prefix: input.trim().to_string(),
-        done: Arc::new(AtomicBool::new(false)),
-        counter: Arc::new(AtomicU32::new(1000)),
-        first: Arc::new(AtomicU32::new(u32::MAX)),
-        second: Arc::new(AtomicU32::new(u32::MAX)),
+        done: AtomicBool::new(false),
+        counter: AtomicU32::new(1000),
+        first: AtomicU32::new(u32::MAX),
+        second: AtomicU32::new(u32::MAX),
     };
 
     // Handle the first 999 numbers specially as the number of digits varies.
