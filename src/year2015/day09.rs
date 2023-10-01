@@ -27,43 +27,49 @@ type Result = (u32, u32);
 
 pub fn parse(input: &str) -> Result {
     let tokens: Vec<_> = input.split_ascii_whitespace().chunk::<5>().collect();
-
     let mut indices = FastMap::new();
+
     for [start, _, end, ..] in &tokens {
-        if !indices.contains_key(start) {
-            indices.insert(start, indices.len());
-        }
-        if !indices.contains_key(end) {
-            indices.insert(end, indices.len());
-        }
+        let size = indices.len();
+        indices.entry(start).or_insert(size);
+
+        let size = indices.len();
+        indices.entry(end).or_insert(size);
     }
 
     let stride = indices.len();
-    let mut distances = vec![0_u32; stride * stride];
+    let mut distances = vec![0; stride * stride];
+
     for [start, _, end, _, distance] in &tokens {
         let start = indices[start];
         let end = indices[end];
         let distance = distance.unsigned();
+
         distances[stride * start + end] = distance;
         distances[stride * end + start] = distance;
     }
 
     let mut global_min = u32::MAX;
     let mut global_max = u32::MIN;
-    let mut middle: Vec<_> = (1..stride).collect();
+    let mut indices: Vec<_> = (1..stride).collect();
 
-    middle.permutations(|slice| {
-        let first = distances[slice[0]];
-        let last = distances[slice[stride - 2]];
-        let mut sum = first + last;
-        let mut local_min = first.min(last);
-        let mut local_max = first.max(last);
+    indices.permutations(|slice| {
+        let mut sum = 0;
+        let mut local_min = u32::MAX;
+        let mut local_max = u32::MIN;
 
-        for w in slice.windows(2) {
-            let trip = distances[stride * w[0] + w[1]];
-            sum += trip;
-            local_min = local_min.min(trip);
-            local_max = local_max.max(trip);
+        let mut trip = |from, to| {
+            let distance = distances[stride * from + to];
+            sum += distance;
+            local_min = local_min.min(distance);
+            local_max = local_max.max(distance);
+        };
+
+        trip(0, slice[0]);
+        trip(0, slice[slice.len() - 1]);
+
+        for i in 1..slice.len() {
+            trip(slice[i], slice[i - 1]);
         }
 
         global_min = global_min.min(sum - local_max);
