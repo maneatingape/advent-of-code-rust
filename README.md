@@ -51,13 +51,19 @@ Complete 2022 to 2019 entries for the annual [Advent of Code](https://adventofco
 
 ## Performance
 
-Benchmarks are measured using the built-in `cargo bench` tool run on an Apple M2 Max. All 100 solutions from 2022 to 2019 complete sequentially in **337 milliseconds**. Performance is reasonable even on older hardware, for example a 2011 MacBook Pro with an [Intel i7-2720QM](https://ark.intel.com/content/www/us/en/ark/products/50067/intel-core-i72720qm-processor-6m-cache-up-to-3-30-ghz.html) processor takes 83 milliseconds to run the 50 solutions from 2022 to 2021.
+Benchmarks are measured using the built-in `cargo bench` tool run on an Apple M2 Max.
+All 125 solutions from 2022 to 2019 and also 2015 complete sequentially in **430 milliseconds**.
+Interestingly 82% of the total time is just 3 days!
+Performance is reasonable even on older hardware, for example a 2011 MacBook Pro with an
+[Intel i7-2720QM](https://ark.intel.com/content/www/us/en/ark/products/50067/intel-core-i72720qm-processor-6m-cache-up-to-3-30-ghz.html)
+processor takes 83 milliseconds to run the 50 solutions from 2022 to 2021.
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': { 'pie1': '#7cb5ec', 'pie2': '#90ed7d', 'pie3': '#f7a35c', 'pie4': '#e4d354'}}}%%
+%%{init: {'theme': 'base', 'themeVariables': { 'pie1': '#7cb5ec', 'pie2': '#90ed7d', 'pie3': '#f7a35c', 'pie4': '#e4d354', 'pie5': '#e4c4fb'}}}%%
 pie
     title Each year benchmark time by % of total
     "Year 2020" : 286
+    "Year 2015" : 93
     "Year 2019" : 21
     "Year 2022" : 19
     "Year 2021" : 11
@@ -67,12 +73,12 @@ pie
 * [2021](#2021) (11 ms)
 * [2020](#2020) (286 ms)
 * [2019](#2019) (21 ms)
-* [Earlier](#2015) (in progress)
+* [2015](#2015) (93 ms)
 
 ## 2022
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': { 'pie1': '#7cb5ec', 'pie2': '#90ed7d', 'pie3': '#f7a35c', 'pie4': '#e4d354', 'pie5': '#2b908f', 'pie6': '#c6cdd5'}}}%%
+%%{init: {'theme': 'base', 'themeVariables': { 'pie1': '#7cb5ec', 'pie2': '#90ed7d', 'pie3': '#f7a35c', 'pie4': '#e4d354', 'pie5': '#e4c4fb', 'pie6': '#c6cdd5'}}}%%
 pie
     title Year 2022 benchmark time by % of total
     "Day 20" : 7449
@@ -233,6 +239,15 @@ pie
 | 25 | [Cryostasis](https://adventofcode.com/2019/day/25) | [Source](src/year2019/day25.rs) | 2721 |
 
 ## 2015
+
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'pie1': '#7cb5ec', 'pie2': '#90ed7d', 'pie3': '#c6cdd5'}}}%%
+pie
+    title Year 2022 benchmark time by % of total
+    "Day 4" : 84000
+    "Day 6" : 5780
+    "Others" : 3037
+```
 
 | Day | Problem | Solution | Benchmark (μs) |
 | --- | --- | --- | --: |
