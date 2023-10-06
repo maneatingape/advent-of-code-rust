@@ -73,6 +73,7 @@ pie
 * [2021](#2021) (11 ms)
 * [2020](#2020) (286 ms)
 * [2019](#2019) (21 ms)
+* [2016](#2016) (in progress)
 * [2015](#2015) (93 ms)
 
 ## 2022
@@ -237,6 +238,12 @@ pie
 | 23 | [Category Six](https://adventofcode.com/2019/day/23) | [Source](src/year2019/day23.rs) | 871 |
 | 24 | [Planet of Discord](https://adventofcode.com/2019/day/24) | [Source](src/year2019/day24.rs) | 139 |
 | 25 | [Cryostasis](https://adventofcode.com/2019/day/25) | [Source](src/year2019/day25.rs) | 2721 |
+
+## 2016
+
+| Day | Problem | Solution | Benchmark (μs) |
+| --- | --- | --- | --: |
+| 1 | [No Time for a Taxicab](https://adventofcode.com/2016/day/1) | [Source](src/year2016/day01.rs) | 3 |
 
 ## 2015
 

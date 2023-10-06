@@ -187,6 +187,11 @@ pub mod year2015 {
     pub mod day25;
 }
 
+/// # Defeat the Easter Bunny to save Christmas.
+pub mod year2016 {
+    pub mod day01;
+}
+
 /// # Rescue Santa from deep space with a solar system adventure.
 pub mod year2019 {
     pub mod day01;
