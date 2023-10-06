@@ -260,3 +260,4 @@ pie
 | 22 | [Wizard Simulator 20XX](https://adventofcode.com/2015/day/22) | [Source](src/year2015/day22.rs) | 257 |
 | 23 | [Opening the Turing Lock](https://adventofcode.com/2015/day/23) | [Source](src/year2015/day23.rs) | 6 |
 | 24 | [It Hangs in the Balance](https://adventofcode.com/2015/day/24) | [Source](src/year2015/day24.rs) | 360 |
+| 25 | [Let It Snow](https://adventofcode.com/2015/day/25) | [Source](src/year2015/day25.rs) | 1 |
