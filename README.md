@@ -258,3 +258,4 @@ pie
 | 20 | [Infinite Elves and Infinite Houses](https://adventofcode.com/2015/day/20) | [Source](src/year2015/day20.rs) | 1671 |
 | 21 | [RPG Simulator 20XX](https://adventofcode.com/2015/day/21) | [Source](src/year2015/day21.rs) | 3 |
 | 22 | [Wizard Simulator 20XX](https://adventofcode.com/2015/day/22) | [Source](src/year2015/day22.rs) | 257 |
+| 23 | [Opening the Turing Lock](https://adventofcode.com/2015/day/23) | [Source](src/year2015/day23.rs) | 6 |
