@@ -247,6 +247,7 @@ pie
 | 2 | [Bathroom Security](https://adventofcode.com/2016/day/2) | [Source](src/year2016/day02.rs) | 9 |
 | 3 | [Squares With Three Sides](https://adventofcode.com/2016/day/3) | [Source](src/year2016/day03.rs) | 26 |
 | 4 | [Security Through Obscurity](https://adventofcode.com/2016/day/4) | [Source](src/year2016/day04.rs) | 75 |
+| 5 | [How About a Nice Game of Chess?](https://adventofcode.com/2016/day/5) | [Source](src/year2016/day05.rs) | 229000 |
 
 ## 2015
 
