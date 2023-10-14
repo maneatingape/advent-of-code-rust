@@ -251,6 +251,7 @@ pie
 | 6 | [Signals and Noise](https://adventofcode.com/2016/day/6) | [Source](src/year2016/day06.rs) | 5 |
 | 7 | [Internet Protocol Version 7](https://adventofcode.com/2016/day/7) | [Source](src/year2016/day07.rs) | 354 |
 | 8 | [Two-Factor Authentication](https://adventofcode.com/2016/day/8) | [Source](src/year2016/day08.rs) | 10 |
+| 9 | [Explosives in Cyberspace](https://adventofcode.com/2016/day/9) | [Source](src/year2016/day09.rs) | 6 |
 
 ## 2015
 
