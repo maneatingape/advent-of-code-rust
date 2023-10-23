@@ -80,6 +80,7 @@ mod year2016 {
     benchmark!(year2016, day14);
     benchmark!(year2016, day15);
     benchmark!(year2016, day16);
+    benchmark!(year2016, day17);
 }
 
 mod year2019 {
