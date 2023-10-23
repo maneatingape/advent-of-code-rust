@@ -40,8 +40,8 @@ pub fn parse(input: &str) -> Shared {
 
     // Handle the first 999 numbers specially as the number of digits varies.
     for n in 1..1000 {
-        let string = format!("{}{}", shared.prefix, n);
-        check_hash(string.as_bytes(), n, &shared);
+        let (mut buffer, size) = format_string(&shared.prefix, n);
+        check_hash(&mut buffer, size, n, &shared);
     }
 
     // Use as many cores as possible to parallelize the remaining search.
@@ -62,8 +62,18 @@ pub fn part2(input: &Shared) -> u32 {
     input.second.load(Ordering::Relaxed)
 }
 
-fn check_hash(buffer: &[u8], n: u32, shared: &Shared) {
-    let (result, ..) = hash(buffer);
+fn format_string(prefix: &str, n: u32) -> ([u8; 64], usize) {
+    let string = format!("{prefix}{n}");
+    let size = string.len();
+
+    let mut buffer = [0; 64];
+    buffer[0..size].copy_from_slice(string.as_bytes());
+
+    (buffer, size)
+}
+
+fn check_hash(buffer: &mut [u8], size: usize, n: u32, shared: &Shared) {
+    let (result, ..) = hash(buffer, size);
 
     if result & 0xffffff00 == 0 {
         shared.second.fetch_min(n, Ordering::Relaxed);
@@ -76,16 +86,15 @@ fn check_hash(buffer: &[u8], n: u32, shared: &Shared) {
 fn worker(shared: &Shared) {
     while !shared.done.load(Ordering::Relaxed) {
         let offset = shared.counter.fetch_add(1000, Ordering::Relaxed);
-        let string = format!("{}{}", shared.prefix, offset);
-        let size = string.len() - 3;
-        let mut buffer = string.as_bytes().to_vec();
+        let (mut buffer, size) = format_string(&shared.prefix, offset);
 
         for n in 0..1000 {
             // Format macro is very slow, so update digits directly
-            buffer[size] = b'0' + (n / 100) as u8;
-            buffer[size + 1] = b'0' + ((n / 10) % 10) as u8;
-            buffer[size + 2] = b'0' + (n % 10) as u8;
-            check_hash(&buffer, offset + n, shared);
+            buffer[size - 3] = b'0' + (n / 100) as u8;
+            buffer[size - 2] = b'0' + ((n / 10) % 10) as u8;
+            buffer[size - 1] = b'0' + (n % 10) as u8;
+
+            check_hash(&mut buffer, size, offset + n, shared);
         }
     }
 }

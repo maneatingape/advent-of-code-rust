@@ -27,27 +27,40 @@ pub fn parse(input: &str) -> &str {
 
 /// Hash each key once.
 pub fn part1(input: &str) -> i32 {
-    let md5 = |n| hash(format!("{input}{n}").as_bytes());
+    let md5 = |n| {
+        let (mut buffer, size) = format_string(input, n);
+        hash(&mut buffer, size)
+    };
     generate_pad(md5)
 }
 
 /// Hash each key an additional 2016 times.
 pub fn part2(input: &str) -> i32 {
     let md5 = |n| {
-        let mut result = hash(format!("{input}{n}").as_bytes());
-        let mut buffer: [u8; 32] = [0; 32];
+        let (mut buffer, size) = format_string(input, n);
+        let mut result = hash(&mut buffer, size);
 
         for _ in 0..2016 {
             buffer[0..8].copy_from_slice(&to_ascii(result.0));
             buffer[8..16].copy_from_slice(&to_ascii(result.1));
             buffer[16..24].copy_from_slice(&to_ascii(result.2));
             buffer[24..32].copy_from_slice(&to_ascii(result.3));
-            result = hash(&buffer);
+            result = hash(&mut buffer, 32);
         }
 
         result
     };
     generate_pad(md5)
+}
+
+fn format_string(prefix: &str, n: i32) -> ([u8; 64], usize) {
+    let string = format!("{prefix}{n}");
+    let size = string.len();
+
+    let mut buffer = [0; 64];
+    buffer[0..size].copy_from_slice(string.as_bytes());
+
+    (buffer, size)
 }
 
 /// Find the first 64 keys that sastify the rules.
