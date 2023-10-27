@@ -24,7 +24,7 @@
 //! [`iter_signed`]: crate::util::parse
 use crate::util::parse::*;
 
-const RED: &[u8] = "red".as_bytes();
+const RED: &[u8] = b"red";
 
 struct Result {
     next: usize,

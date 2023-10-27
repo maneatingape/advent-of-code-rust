@@ -19,6 +19,7 @@
 use super::intcode::*;
 use crate::util::hash::*;
 use crate::util::parse::*;
+use std::fmt::Write;
 
 pub fn parse(input: &str) -> Vec<i64> {
     input.iter_signed().collect()
@@ -75,9 +76,9 @@ fn pretty_print(output: &str) {
 
     for line in output.lines() {
         if line.starts_with('=') {
-            buffer.push_str(&format!("{BOLD}{WHITE}{line}{RESET}"));
+            let _ = write!(&mut buffer, "{BOLD}{WHITE}{line}{RESET}");
         } else if line.starts_with('-') {
-            buffer.push_str(&format!("{item}{line}{RESET}"));
+            let _ = write!(&mut buffer, "{item}{line}{RESET}");
         } else if line.starts_with("Items here:") {
             item = YELLOW;
             buffer.push_str(line);
@@ -139,7 +140,7 @@ fn play_automatically(input: &[i64]) -> String {
             }
         };
 
-        if let State::Halted = movement_noisy(&mut computer, &last, &mut output) {
+        if matches!(movement_noisy(&mut computer, &last, &mut output), State::Halted) {
             // Keep only the password digits from Santa's response.
             output.retain(|b| b.is_ascii_digit());
             break;

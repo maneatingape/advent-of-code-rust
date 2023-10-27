@@ -20,11 +20,11 @@ pub trait FastSetBuilder<T> {
 
 impl<T: Eq + Hash> FastSetBuilder<T> for FastSet<T> {
     fn new() -> Self {
-        HashSet::with_hasher(BuildFxHasher)
+        Self::with_hasher(BuildFxHasher)
     }
 
     fn with_capacity(capacity: usize) -> Self {
-        HashSet::with_capacity_and_hasher(capacity, BuildFxHasher)
+        Self::with_capacity_and_hasher(capacity, BuildFxHasher)
     }
 
     fn build<const N: usize>(array: [T; N]) -> Self {
@@ -46,11 +46,11 @@ pub trait FastMapBuilder<K, V> {
 
 impl<K: Eq + Hash, V> FastMapBuilder<K, V> for FastMap<K, V> {
     fn new() -> Self {
-        HashMap::with_hasher(BuildFxHasher)
+        Self::with_hasher(BuildFxHasher)
     }
 
     fn with_capacity(capacity: usize) -> Self {
-        HashMap::with_capacity_and_hasher(capacity, BuildFxHasher)
+        Self::with_capacity_and_hasher(capacity, BuildFxHasher)
     }
 
     fn build<const N: usize>(array: [(K, V); N]) -> Self {

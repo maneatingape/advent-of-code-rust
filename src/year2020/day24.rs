@@ -35,18 +35,14 @@ pub fn parse(input: &str) -> FastSet<Hex> {
                 b'n' => {
                     if b'e' == iter.next().unwrap() {
                         q += 1;
-                        r -= 1;
-                    } else {
-                        r -= 1;
                     }
+                    r -= 1;
                 }
                 b's' => {
-                    if b'e' == iter.next().unwrap() {
-                        r += 1;
-                    } else {
+                    if b'e' != iter.next().unwrap() {
                         q -= 1;
-                        r += 1;
                     }
+                    r += 1;
                 }
                 _ => unreachable!(),
             }

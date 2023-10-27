@@ -18,6 +18,7 @@ use super::intcode::*;
 use crate::util::hash::*;
 use crate::util::parse::*;
 use crate::util::point::*;
+use std::fmt::Write;
 use std::ops::ControlFlow;
 
 pub struct Input {
@@ -150,7 +151,7 @@ fn build_path(input: &Input) -> String {
         }
 
         let direction = if direction == left { 'L' } else { 'R' };
-        path.push_str(&format!("{direction},{magnitude},"));
+        let _ = write!(path, "{direction},{magnitude},");
     }
 }
 
@@ -241,7 +242,9 @@ fn visit(mut computer: Computer) -> i64 {
 
         // Highlight the robot's position
         match ascii {
-            '^' | 'v' | '<' | '>' => buffer.push_str(&format!("{BOLD}{YELLOW}{ascii}{RESET}")),
+            '^' | 'v' | '<' | '>' => {
+                let _ = write!(&mut buffer, "{BOLD}{YELLOW}{ascii}{RESET}");
+            }
             _ => buffer.push(ascii),
         }
 

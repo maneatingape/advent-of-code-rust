@@ -92,6 +92,7 @@ pub fn part2(input: &[i64]) -> i64 {
 #[cfg(feature = "frivolity")]
 fn draw(tiles: &[i64], score: i64, blocks: i64) {
     use crate::util::ansi::*;
+    use std::fmt::Write;
     use std::thread::sleep;
     use std::time::Duration;
 
@@ -100,20 +101,20 @@ fn draw(tiles: &[i64], score: i64, blocks: i64) {
         return;
     }
 
-    let mut s = String::new();
-    s.push_str(&format!("{WHITE}{BOLD}Blocks: {blocks}\tScore: {score} {RESET}\n"));
+    let s = &mut String::new();
+    let _ = writeln!(s, "{WHITE}{BOLD}Blocks: {blocks}\tScore: {score} {RESET}");
 
     for y in 0..20 {
         for x in 0..44 {
-            match tiles[44 * y + x] {
-                0 => s.push(' '),
-                1 if y == 0 => s.push_str(&format!("{GREEN}_{RESET}")),
-                1 => s.push_str(&format!("{GREEN}|{RESET}")),
-                2 => s.push_str(&format!("{BLUE}#{RESET}")),
-                3 => s.push_str(&format!("{WHITE}{BOLD}={RESET}")),
-                4 => s.push_str(&format!("{YELLOW}{BOLD}o{RESET}")),
+            let _ = match tiles[44 * y + x] {
+                0 => write!(s, " "),
+                1 if y == 0 => write!(s, "{GREEN}_{RESET}"),
+                1 => write!(s, "{GREEN}|{RESET}"),
+                2 => write!(s, "{BLUE}#{RESET}"),
+                3 => write!(s, "{WHITE}{BOLD}={RESET}"),
+                4 => write!(s, "{YELLOW}{BOLD}o{RESET}"),
                 _ => unreachable!(),
-            }
+            };
         }
         s.push('\n');
     }

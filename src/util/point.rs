@@ -62,13 +62,13 @@ impl Point {
 
     #[inline]
     #[must_use]
-    pub fn manhattan(self, other: Point) -> i32 {
+    pub fn manhattan(self, other: Self) -> i32 {
         (self.x - other.x).abs() + (self.y - other.y).abs()
     }
 
     #[inline]
     #[must_use]
-    pub fn signum(self, other: Point) -> Self {
+    pub fn signum(self, other: Self) -> Self {
         Point::new((self.x - other.x).signum(), (self.y - other.y).signum())
     }
 }
@@ -100,7 +100,7 @@ impl Add for Point {
 
     #[inline]
     #[must_use]
-    fn add(self, rhs: Point) -> Self {
+    fn add(self, rhs: Self) -> Self {
         Point::new(self.x + rhs.x, self.y + rhs.y)
     }
 }
@@ -114,7 +114,7 @@ impl AddAssign for Point {
 }
 
 impl Mul<i32> for Point {
-    type Output = Point;
+    type Output = Self;
 
     #[inline]
     #[must_use]
@@ -124,7 +124,7 @@ impl Mul<i32> for Point {
 }
 
 impl Sub for Point {
-    type Output = Point;
+    type Output = Self;
 
     #[inline]
     #[must_use]
