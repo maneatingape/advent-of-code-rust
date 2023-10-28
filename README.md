@@ -262,6 +262,7 @@ pie
 | 17 | [Two Steps Forward](https://adventofcode.com/2016/day/17) | [Source](src/year2016/day17.rs) | 14254 |
 | 18 | [Like a Rogue](https://adventofcode.com/2016/day/18) | [Source](src/year2016/day18.rs) | 743 |
 | 19 | [An Elephant Named Joseph](https://adventofcode.com/2016/day/19) | [Source](src/year2016/day19.rs) | 1 |
+| 20 | [Firewall Rules](https://adventofcode.com/2016/day/20) | [Source](src/year2016/day20.rs) | 23 |
 
 ## 2015
 
