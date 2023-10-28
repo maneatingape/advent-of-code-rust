@@ -264,7 +264,8 @@ pie
 | 19 | [An Elephant Named Joseph](https://adventofcode.com/2016/day/19) | [Source](src/year2016/day19.rs) | 1 |
 | 20 | [Firewall Rules](https://adventofcode.com/2016/day/20) | [Source](src/year2016/day20.rs) | 23 |
 | 21 | [Scrambled Letters and Hash](https://adventofcode.com/2016/day/21) | [Source](src/year2016/day21.rs) | 10 |
-| 22 | [Grid Computing ](https://adventofcode.com/2016/day/22) | [Source](src/year2016/day22.rs) | 31 |
+| 22 | [Grid Computing](https://adventofcode.com/2016/day/22) | [Source](src/year2016/day22.rs) | 31 |
+| 23 | [Safe Cracking](https://adventofcode.com/2016/day/23) | [Source](src/year2016/day23.rs) | 1 |
 
 ## 2015
 
