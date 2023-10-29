@@ -5,7 +5,7 @@
 [docs-badge]: https://img.shields.io/github/actions/workflow/status/maneatingape/advent-of-code-rust/docs.yml?color=blue&label=docs
 [docs-link]: https://maneatingape.github.io/advent-of-code-rust/aoc/
 
-Complete 2022 to 2019 entries for the annual [Advent of Code](https://adventofcode.com/) challenge, written in performant Rust.
+Complete 2022 to 2019 and 2016 to 2015 entries for the annual [Advent of Code](https://adventofcode.com/) challenge, written in performant Rust.
 
 ## Features
 
@@ -52,34 +52,33 @@ Complete 2022 to 2019 entries for the annual [Advent of Code](https://adventofco
 ## Performance
 
 Benchmarks are measured using the built-in `cargo bench` tool run on an Apple M2 Max.
-All 125 solutions from 2022 to 2019 and also 2015 complete sequentially in **422 milliseconds**.
-Interestingly 82% of the total time is spent on just 3 solutions.
+All 150 solutions from 2022 to 2019 and also 2016 to 2015 complete sequentially in **1085 milliseconds**.
+Interestingly 93% of the total time is spent on just 6 solutions.
 Performance is reasonable even on older hardware, for example a 2011 MacBook Pro with an
 [Intel i7-2720QM](https://ark.intel.com/content/www/us/en/ark/products/50067/intel-core-i72720qm-processor-6m-cache-up-to-3-30-ghz.html)
 processor takes 83 milliseconds to run the 50 solutions from 2022 to 2021.
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': { 'pie1': '#7cb5ec', 'pie2': '#90ed7d', 'pie3': '#f7a35c', 'pie4': '#e4d354', 'pie5': '#e4c4fb'}}}%%
+%%{init: {"themeVariables": { "pie1": "#7cb5ec", "pie2": "#90ed7d", "pie3": "#f7a35c", "pie4": "#e4d354", "pie5": "#e4c4fb", "pie6": "#c6cdd5"}}}%%
 pie
     title Each year benchmark time by % of total
+    "Year 2016" : 664
     "Year 2020" : 286
     "Year 2015" : 85
-    "Year 2019" : 21
-    "Year 2022" : 19
-    "Year 2021" : 11
+    "Years 2019, 2021 and 2022" : 51
 ```
 
 * [2022](#2022) (19 ms)
 * [2021](#2021) (11 ms)
 * [2020](#2020) (286 ms)
 * [2019](#2019) (21 ms)
-* [2016](#2016) (in progress)
+* [2016](#2016) (663 ms)
 * [2015](#2015) (85 ms)
 
 ## 2022
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': { 'pie1': '#7cb5ec', 'pie2': '#90ed7d', 'pie3': '#f7a35c', 'pie4': '#e4d354', 'pie5': '#e4c4fb', 'pie6': '#c6cdd5'}}}%%
+%%{init: {"themeVariables": { "pie1": "#7cb5ec", "pie2": "#90ed7d", "pie3": "#f7a35c", "pie4": "#e4d354", "pie5": "#e4c4fb", "pie6": "#c6cdd5"}}}%%
 pie
     title Year 2022 benchmark time by % of total
     "Day 20" : 7449
@@ -121,7 +120,7 @@ pie
 ## 2021
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': { 'pie1': '#7cb5ec', 'pie2': '#90ed7d', 'pie3': '#f7a35c', 'pie4': '#e4d354', 'pie5': '#c6cdd5'}}}%%
+%%{init: {"themeVariables": { "pie1": "#7cb5ec", "pie2": "#90ed7d", "pie3": "#f7a35c", "pie4": "#e4d354", "pie5": "#c6cdd5"}}}%%
 pie
     title Year 2021 benchmark time by % of total
     "Day 15" : 2567
@@ -162,7 +161,7 @@ pie
 ## 2020
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': { 'pie1': '#7cb5ec', 'pie2': '#90ed7d', 'pie3': '#c6cdd5'}}}%%
+%%{init: {"themeVariables": { "pie1": "#7cb5ec", "pie2": "#90ed7d", "pie3": "#c6cdd5"}}}%%
 pie
     title Year 2020 benchmark time by % of total
     "Day 15" : 160000
@@ -201,7 +200,7 @@ pie
 ## 2019
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': { 'pie1': '#7cb5ec', 'pie2': '#90ed7d', 'pie3': '#f7a35c', 'pie4': '#e4d354', 'pie5': '#c6cdd5'}}}%%
+%%{init: {"themeVariables": { "pie1": "#7cb5ec", "pie2": "#90ed7d", "pie3": "#f7a35c", "pie4": "#e4d354", "pie5": "#c6cdd5"}}}%%
 pie
     title Year 2019 benchmark time by % of total
     "Day 16" : 4124
@@ -241,6 +240,15 @@ pie
 
 ## 2016
 
+```mermaid
+%%{init: {"themeVariables": { "pie1": "#7cb5ec", "pie2": "#90ed7d", "pie3": "#c6cdd5"}}}%%
+pie
+    title Year 2016 benchmark time by % of total
+    "Day 14" : 434000
+    "Day 5" : 212000
+    "Others" : 16696
+```
+
 | Day | Problem | Solution | Benchmark (μs) |
 | --- | --- | --- | --: |
 | 1 | [No Time for a Taxicab](https://adventofcode.com/2016/day/1) | [Source](src/year2016/day01.rs) | 3 |
@@ -272,7 +280,7 @@ pie
 ## 2015
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': { 'pie1': '#7cb5ec', 'pie2': '#90ed7d', 'pie3': '#c6cdd5'}}}%%
+%%{init: {"themeVariables": { "pie1": "#7cb5ec", "pie2": "#90ed7d", "pie3": "#c6cdd5"}}}%%
 pie
     title Year 2015 benchmark time by % of total
     "Day 4" : 76000
