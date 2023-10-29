@@ -2,6 +2,7 @@ use aoc::util::ansi::*;
 use aoc::util::parse::*;
 use aoc::*;
 use std::env::args;
+use std::iter::empty;
 use std::time::Instant;
 
 fn main() {
@@ -16,8 +17,13 @@ fn main() {
     };
 
     // Filter solutions
-    let solutions: Vec<_> = all_solutions()
-        .into_iter()
+    let solutions: Vec<_> = empty()
+        .chain(year2015())
+        .chain(year2016())
+        .chain(year2019())
+        .chain(year2020())
+        .chain(year2021())
+        .chain(year2022())
         .filter(|solution| year == Some(solution.year) || year.is_none())
         .filter(|solution| day == Some(solution.day) || day.is_none())
         .collect();
@@ -73,9 +79,8 @@ macro_rules! solution {
     };
 }
 
-fn all_solutions() -> Vec<Solution> {
+fn year2015() -> Vec<Solution> {
     vec![
-        // 2015
         solution!(year2015, day01),
         solution!(year2015, day02),
         solution!(year2015, day03),
@@ -101,7 +106,11 @@ fn all_solutions() -> Vec<Solution> {
         solution!(year2015, day23),
         solution!(year2015, day24),
         solution!(year2015, day25),
-        // 2016
+    ]
+}
+
+fn year2016() -> Vec<Solution> {
+    vec![
         solution!(year2016, day01),
         solution!(year2016, day02),
         solution!(year2016, day03),
@@ -127,7 +136,11 @@ fn all_solutions() -> Vec<Solution> {
         solution!(year2016, day23),
         solution!(year2016, day24),
         solution!(year2016, day25),
-        // 2019
+    ]
+}
+
+fn year2019() -> Vec<Solution> {
+    vec![
         solution!(year2019, day01),
         solution!(year2019, day02),
         solution!(year2019, day03),
@@ -153,7 +166,11 @@ fn all_solutions() -> Vec<Solution> {
         solution!(year2019, day23),
         solution!(year2019, day24),
         solution!(year2019, day25),
-        // 2020
+    ]
+}
+
+fn year2020() -> Vec<Solution> {
+    vec![
         solution!(year2020, day01),
         solution!(year2020, day02),
         solution!(year2020, day03),
@@ -179,7 +196,11 @@ fn all_solutions() -> Vec<Solution> {
         solution!(year2020, day23),
         solution!(year2020, day24),
         solution!(year2020, day25),
-        // 2021
+    ]
+}
+
+fn year2021() -> Vec<Solution> {
+    vec![
         solution!(year2021, day01),
         solution!(year2021, day02),
         solution!(year2021, day03),
@@ -205,7 +226,11 @@ fn all_solutions() -> Vec<Solution> {
         solution!(year2021, day23),
         solution!(year2021, day24),
         solution!(year2021, day25),
-        // 2022
+    ]
+}
+
+fn year2022() -> Vec<Solution> {
+    vec![
         solution!(year2022, day01),
         solution!(year2022, day02),
         solution!(year2022, day03),
