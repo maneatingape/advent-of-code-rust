@@ -1,61 +1,53 @@
 use crate::util::parse::*;
-use std::ops::{Add, Mul, Sub};
+use std::ops::{Add, Sub};
 
-const ZERO: Resources = Resources(0);
-const ORE_BOT: Resources = Resources(1 << 24);
-const CLAY_BOT: Resources = Resources(1 << 16);
-const OBSIDIAN_BOT: Resources = Resources(1 << 8);
-const GEODE_BOT: Resources = Resources(1);
+const ZERO: Mineral = Mineral::from(0, 0, 0, 0);
+const ORE_BOT: Mineral = Mineral::from(1, 0, 0, 0);
+const CLAY_BOT: Mineral = Mineral::from(0, 1, 0, 0);
+const OBSIDIAN_BOT: Mineral = Mineral::from(0, 0, 1, 0);
+const GEODE_BOT: Mineral = Mineral::from(0, 0, 0, 1);
 
 #[derive(Clone, Copy)]
-pub struct Resources(u32);
+struct Mineral {
+    ore: u32,
+    clay: u32,
+    obsidian: u32,
+    geode: u32,
+}
 
-impl Add for Resources {
-    type Output = Resources;
+impl Mineral {
+    const fn from(ore: u32, clay: u32, obsidian: u32, geode: u32) -> Self {
+        Mineral { ore, clay, obsidian, geode }
+    }
 
-    fn add(self, rhs: Resources) -> Resources {
-        Resources(self.0 + rhs.0)
+    fn less_than_equal(self, rhs: Self) -> bool {
+        self.ore <= rhs.ore && self.clay <= rhs.clay && self.obsidian <= rhs.obsidian
     }
 }
 
-impl Sub for Resources {
-    type Output = Resources;
+impl Add for Mineral {
+    type Output = Self;
 
-    fn sub(self, rhs: Resources) -> Resources {
-        Resources(self.0 - rhs.0)
+    fn add(self, rhs: Self) -> Self {
+        Mineral {
+            ore: self.ore + rhs.ore,
+            clay: self.clay + rhs.clay,
+            obsidian: self.obsidian + rhs.obsidian,
+            geode: self.geode + rhs.geode,
+        }
     }
 }
 
-impl Mul<u32> for Resources {
-    type Output = Resources;
+impl Sub for Mineral {
+    type Output = Self;
 
-    fn mul(self, rhs: u32) -> Resources {
-        Resources(self.0 * rhs)
-    }
-}
-
-impl Resources {
-    pub fn less_than_equal(self, other: &Self) -> bool {
-        self.ore() <= other.ore()
-            && self.clay() <= other.clay()
-            && self.obsidian() <= other.obsidian()
-            && self.geode() <= other.geode()
-    }
-
-    pub fn ore(self) -> u32 {
-        (self.0 >> 24) & 0xff
-    }
-
-    pub fn clay(self) -> u32 {
-        (self.0 >> 16) & 0xff
-    }
-
-    pub fn obsidian(self) -> u32 {
-        (self.0 >> 8) & 0xff
-    }
-
-    pub fn geode(self) -> u32 {
-        self.0 & 0xff
+    fn sub(self, rhs: Self) -> Self {
+        Mineral {
+            ore: self.ore - rhs.ore,
+            clay: self.clay - rhs.clay,
+            obsidian: self.obsidian - rhs.obsidian,
+            geode: self.geode - rhs.geode,
+        }
     }
 }
 
@@ -64,128 +56,109 @@ pub struct Blueprint {
     max_ore: u32,
     max_clay: u32,
     max_obsidian: u32,
-    ore_bot_cost: Resources,
-    clay_bot_cost: Resources,
-    obsidian_bot_cost: Resources,
-    geode_bot_cost: Resources,
+    ore_cost: Mineral,
+    clay_cost: Mineral,
+    obsidian_cost: Mineral,
+    geode_cost: Mineral,
 }
 
 impl Blueprint {
-    fn parse(chunk: &[u32]) -> Blueprint {
-        let id = chunk[0];
-        let ore1 = chunk[1];
-        let ore2 = chunk[2];
-        let ore3 = chunk[3];
-        let clay = chunk[4];
-        let ore4 = chunk[5];
-        let obsidian = chunk[6];
-
+    fn from(chunk: [u32; 7]) -> Self {
+        let [id, ore1, ore2, ore3, clay, ore4, obsidian] = chunk;
         Blueprint {
             id,
             max_ore: ore1.max(ore2).max(ore3).max(ore4),
             max_clay: clay,
             max_obsidian: obsidian,
-            ore_bot_cost: Resources(ore1 << 24),
-            clay_bot_cost: Resources(ore2 << 24),
-            obsidian_bot_cost: Resources((ore3 << 24) + (clay << 16)),
-            geode_bot_cost: Resources((ore4 << 24) + (obsidian << 8)),
+            ore_cost: Mineral::from(ore1, 0, 0, 0),
+            clay_cost: Mineral::from(ore2, 0, 0, 0),
+            obsidian_cost: Mineral::from(ore3, clay, 0, 0),
+            geode_cost: Mineral::from(ore4, 0, obsidian, 0),
         }
     }
 }
 
 pub fn parse(input: &str) -> Vec<Blueprint> {
-    input.iter_unsigned().collect::<Vec<u32>>().chunks_exact(7).map(Blueprint::parse).collect()
+    input
+        .iter_unsigned()
+        .collect::<Vec<_>>()
+        .chunks_exact(7)
+        .map(|slice| Blueprint::from(slice.try_into().unwrap()))
+        .collect()
 }
 
 pub fn part1(input: &[Blueprint]) -> u32 {
-    input.iter().map(|blueprint| blueprint.id * maximize(blueprint, 24, ORE_BOT, ZERO, 0)).sum()
+    input.iter().map(|blueprint| blueprint.id * maximize(blueprint, 24)).sum()
 }
 
 pub fn part2(input: &[Blueprint]) -> u32 {
-    input.iter().take(3).map(|blueprint| maximize(blueprint, 32, ORE_BOT, ZERO, 0)).product()
+    input.iter().take(3).map(|blueprint| maximize(blueprint, 32)).product()
 }
 
-fn maximize(
-    blueprint: &Blueprint,
-    time: u32,
-    bots: Resources,
-    resources: Resources,
-    geodes: u32,
-) -> u32 {
-    let baseline = resources.geode() + bots.geode() * time;
-    let mut geodes = geodes.max(baseline);
-
-    // Simple pruning
-    let need_geode = time > 1 && {
-        let n = time - 1;
-        let extra = (n * (n + 1)) / 2;
-        baseline + extra > geodes
-    };
-
-    let need_obsidian = need_geode
-        && bots.obsidian() < blueprint.max_obsidian
-        && time > 3
-        && resources.obsidian() < (blueprint.max_obsidian - bots.obsidian()) * (time - 3);
-
-    let need_clay = need_obsidian
-        && bots.clay() < blueprint.max_clay
-        && time > 5
-        && resources.clay() < (blueprint.max_clay - bots.clay()) * (time - 5);
-
-    let need_ore = need_geode
-        && bots.ore() < blueprint.max_ore
-        && time > 3
-        && (resources.ore() < (blueprint.max_ore - bots.ore()) * (time - 3));
-
-    if need_geode && bots.obsidian() > 0 {
-        let result =
-            next(blueprint, time, bots, resources, geodes, GEODE_BOT, blueprint.geode_bot_cost);
-        geodes = geodes.max(result);
-    }
-
-    if need_obsidian && bots.clay() > 0 {
-        let result = next(
-            blueprint,
-            time,
-            bots,
-            resources,
-            geodes,
-            OBSIDIAN_BOT,
-            blueprint.obsidian_bot_cost,
-        );
-        geodes = geodes.max(result);
-    }
-
-    if need_clay {
-        let result =
-            next(blueprint, time, bots, resources, geodes, CLAY_BOT, blueprint.clay_bot_cost);
-        geodes = geodes.max(result);
-    }
-
-    if need_ore {
-        let result =
-            next(blueprint, time, bots, resources, geodes, ORE_BOT, blueprint.ore_bot_cost);
-        geodes = geodes.max(result);
-    }
-
-    geodes
+fn maximize(blueprint: &Blueprint, time: u32) -> u32 {
+    let mut result = 0;
+    dfs(blueprint, &mut result, time, ORE_BOT, ZERO);
+    result
 }
 
-fn next(
+fn dfs(blueprint: &Blueprint, result: &mut u32, time: u32, bots: Mineral, resources: Mineral) {
+    *result = (*result).max(resources.geode + bots.geode * time);
+
+    if heuristic(blueprint, *result, time, bots, resources) {
+        if bots.obsidian > 0 && time > 1 {
+            next(blueprint, result, time, bots, resources, GEODE_BOT, blueprint.geode_cost);
+        }
+        if bots.obsidian < blueprint.max_obsidian && bots.clay > 0 && time > 3 {
+            next(blueprint, result, time, bots, resources, OBSIDIAN_BOT, blueprint.obsidian_cost);
+        }
+        if bots.ore < blueprint.max_ore && time > 3 {
+            next(blueprint, result, time, bots, resources, ORE_BOT, blueprint.ore_cost);
+        }
+        if bots.clay < blueprint.max_clay && time > 5 {
+            next(blueprint, result, time, bots, resources, CLAY_BOT, blueprint.clay_cost);
+        }
+    }
+}
+
+#[inline]
+fn heuristic(
     blueprint: &Blueprint,
+    result: u32,
     time: u32,
-    bots: Resources,
-    resources: Resources,
-    geodes: u32,
-    bot: Resources,
-    cost: Resources,
-) -> u32 {
-    for jump in 0..(time - 1) {
-        let next = resources + bots * jump;
-        if cost.less_than_equal(&next) {
-            return maximize(blueprint, time - jump - 1, bots + bot, next + bots - cost, geodes);
+    mut bots: Mineral,
+    mut resources: Mineral,
+) -> bool {
+    for _ in 0..time {
+        resources.ore = blueprint.max_ore;
+        resources.clay = blueprint.max_clay;
+
+        if blueprint.geode_cost.less_than_equal(resources) {
+            resources = resources + bots - blueprint.geode_cost;
+            bots = bots + GEODE_BOT;
+        } else {
+            resources = resources + bots - blueprint.obsidian_cost;
+            bots = bots + OBSIDIAN_BOT;
         }
     }
 
-    0
+    resources.geode > result
+}
+
+#[inline]
+fn next(
+    blueprint: &Blueprint,
+    result: &mut u32,
+    time: u32,
+    bots: Mineral,
+    mut resources: Mineral,
+    new_bot: Mineral,
+    cost: Mineral,
+) {
+    for jump in 1..time {
+        if cost.less_than_equal(resources) {
+            dfs(blueprint, result, time - jump, bots + new_bot, resources + bots - cost);
+            break;
+        }
+        resources = resources + bots;
+    }
 }

@@ -52,7 +52,7 @@ Complete 2022 to 2019 and 2016 to 2015 entries for the annual [Advent of Code](h
 ## Performance
 
 Benchmarks are measured using the built-in `cargo bench` tool run on an Apple M2 Max.
-All 150 solutions from 2022 to 2019 and also 2016 to 2015 complete sequentially in **1085 milliseconds**.
+All 150 solutions from 2022 to 2019 and also 2016 to 2015 complete sequentially in **1082 milliseconds**.
 Interestingly 93% of the total time is spent on just 6 solutions.
 Performance is reasonable even on older hardware, for example a 2011 MacBook Pro with an
 [Intel i7-2720QM](https://ark.intel.com/content/www/us/en/ark/products/50067/intel-core-i72720qm-processor-6m-cache-up-to-3-30-ghz.html)
@@ -65,10 +65,10 @@ pie
     "Year 2016" : 664
     "Year 2020" : 286
     "Year 2015" : 85
-    "Years 2019, 2021 and 2022" : 51
+    "Years 2019, 2021 and 2022" : 48
 ```
 
-* [2022](#2022) (19 ms)
+* [2022](#2022) (16 ms)
 * [2021](#2021) (11 ms)
 * [2020](#2020) (286 ms)
 * [2019](#2019) (21 ms)
@@ -78,15 +78,14 @@ pie
 ## 2022
 
 ```mermaid
-%%{init: {"themeVariables": { "pie1": "#7cb5ec", "pie2": "#90ed7d", "pie3": "#f7a35c", "pie4": "#e4d354", "pie5": "#e4c4fb", "pie6": "#c6cdd5"}}}%%
+%%{init: {"themeVariables": { "pie1": "#7cb5ec", "pie2": "#90ed7d", "pie3": "#f7a35c", "pie4": "#e4d354", "pie5": "#c6cdd5"}}}%%
 pie
     title Year 2022 benchmark time by % of total
     "Day 20" : 7449
-    "Day 19" : 3416
     "Day 11" : 2386
     "Day 16" : 2331
     "Day 23" : 2017
-    "Others" : 1004
+    "Others" : 1421
 ```
 
 | Day | Problem | Solution | Benchmark (μs) |
@@ -109,7 +108,7 @@ pie
 | 16 | [Proboscidea Volcanium](https://adventofcode.com/2022/day/16) | [Source](src/year2022/day16.rs) | 2331 |
 | 17 | [Pyroclastic Flow](https://adventofcode.com/2022/day/17) | [Source](src/year2022/day17.rs) | 68 |
 | 18 | [Boiling Boulders](https://adventofcode.com/2022/day/18) | [Source](src/year2022/day18.rs) | 129 |
-| 19 | [Not Enough Minerals](https://adventofcode.com/2022/day/19) | [Source](src/year2022/day19.rs) | 3416 |
+| 19 | [Not Enough Minerals](https://adventofcode.com/2022/day/19) | [Source](src/year2022/day19.rs) | 407 |
 | 20 | [Grove Positioning System](https://adventofcode.com/2022/day/20) | [Source](src/year2022/day20.rs) | 7449 |
 | 21 | [Monkey Math](https://adventofcode.com/2022/day/21) | [Source](src/year2022/day21.rs) | 61 |
 | 22 | [Monkey Map](https://adventofcode.com/2022/day/22) | [Source](src/year2022/day22.rs) | 132 |
