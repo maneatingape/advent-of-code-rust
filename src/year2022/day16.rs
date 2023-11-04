@@ -15,10 +15,9 @@ struct State {
     from: usize,
     time: u32,
     pressure: u32,
-    unopened: u32,
 }
 
-pub struct Valve<'a> {
+struct Valve<'a> {
     name: &'a str,
     flow: u32,
     edges: Vec<&'a str>,
@@ -37,12 +36,7 @@ impl Valve<'_> {
     }
 
     fn cmp(&self, other: &Valve<'_>) -> Ordering {
-        let first = other.flow.cmp(&self.flow);
-        if first == Ordering::Equal {
-            self.name.cmp(other.name)
-        } else {
-            first
-        }
+        other.flow.cmp(&self.flow).then(self.name.cmp(other.name))
     }
 }
 
@@ -96,36 +90,47 @@ pub fn parse(input: &str) -> Input {
 
 pub fn part1(input: &Input) -> u32 {
     let mut score = 0;
-    let mut queue = VecDeque::with_capacity(input.todo);
-    queue.push_back(State {
-        todo: input.todo,
-        from: input.size - 1,
-        time: 30,
-        pressure: 0,
-        unopened: input.flow.iter().sum(),
-    });
+    let mut queue = Vec::new();
+    queue.push(State { todo: input.todo, from: input.size - 1, time: 30, pressure: 0 });
 
-    while let Some(State { todo, from, time, pressure, unopened }) = queue.pop_front() {
+    while let Some(State { todo, from, time, pressure }) = queue.pop() {
         score = score.max(pressure);
         let mut valves = todo;
 
-        while valves != 0 {
+        while valves > 0 {
             let to = valves.trailing_zeros() as usize;
             let mask = 1 << to;
             valves ^= mask;
+
             let needed = input.distance[from * input.size + to];
             if needed < time {
                 let remaining = time - needed;
-                if pressure + remaining * unopened > score {
-                    let flow = input.flow[to];
+                let flow = input.flow[to];
+
+                let heuristic = {
+                    let mut pressure = pressure + remaining * flow;
+                    let mut valves = todo ^ mask;
+                    let mut remaining = remaining;
+
+                    while valves > 0 && remaining > 3 {
+                        remaining -= 3;
+                        let to = valves.trailing_zeros() as usize;
+                        let flow = input.flow[to];
+                        pressure += remaining * flow;
+                        valves ^= 1 << to;
+                    }
+
+                    pressure
+                };
+
+                if heuristic > score {
                     let next = State {
                         todo: todo ^ mask,
                         from: to,
                         time: remaining,
                         pressure: pressure + remaining * flow,
-                        unopened: unopened - flow,
                     };
-                    queue.push_back(next);
+                    queue.push(next);
                 }
             }
         }
@@ -137,35 +142,33 @@ pub fn part1(input: &Input) -> u32 {
 pub fn part2(input: &Input) -> u32 {
     let mut score = vec![0; input.todo + 1];
     let mut queue = VecDeque::with_capacity(input.todo);
-    queue.push_back(State {
-        todo: input.todo,
-        from: input.size - 1,
-        time: 26,
-        pressure: 0,
-        unopened: 0,
-    });
+    queue.push_back(State { todo: input.todo, from: input.size - 1, time: 26, pressure: 0 });
 
-    while let Some(State { todo, from, time, pressure, .. }) = queue.pop_front() {
+    let stride = score.len();
+    let mut cache = vec![0; stride * (input.size - 1)];
+
+    while let Some(State { todo, from, time, pressure }) = queue.pop_front() {
         let done = todo ^ input.todo;
         score[done] = score[done].max(pressure);
-        let mut valves = todo;
 
-        while valves != 0 {
+        let mut valves = todo;
+        while valves > 0 {
             let to = valves.trailing_zeros() as usize;
             let mask = 1 << to;
             valves ^= mask;
+
             let needed = input.distance[from * input.size + to];
             if needed < time {
+                let next = todo ^ mask;
                 let remaining = time - needed;
                 let flow = input.flow[to];
-                let next = State {
-                    todo: todo ^ mask,
-                    from: to,
-                    time: remaining,
-                    pressure: pressure + remaining * flow,
-                    unopened: 0,
-                };
-                queue.push_back(next);
+                let pressure = pressure + remaining * flow;
+
+                let index = stride * to + next;
+                if cache[index] == 0 || cache[index] < pressure {
+                    cache[index] = pressure;
+                    queue.push_back(State { todo: next, from: to, time: remaining, pressure });
+                }
             }
         }
     }
@@ -184,7 +187,7 @@ pub fn part2(input: &Input) -> u32 {
 
 fn subsets(todo: usize, score: &mut [u32], visited: &mut [bool]) -> u32 {
     let mut valves = todo;
-    let mut max = score[todo];
+    let mut max = 0;
 
     while valves != 0 {
         let mask = 1 << valves.trailing_zeros();

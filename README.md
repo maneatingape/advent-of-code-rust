@@ -65,10 +65,10 @@ pie
     "Year 2016" : 663
     "Year 2020" : 286
     "Year 2015" : 87
-    "Years 2019, 2021 and 2022" : 49
+    "Years 2019, 2021 and 2022" : 47
 ```
 
-* [2022](#2022) (16 ms)
+* [2022](#2022) (14 ms)
 * [2021](#2021) (11 ms)
 * [2020](#2020) (286 ms)
 * [2019](#2019) (22 ms)
@@ -78,14 +78,13 @@ pie
 ## 2022
 
 ```mermaid
-%%{init: {"themeVariables": { "pie1": "#7cb5ec", "pie2": "#90ed7d", "pie3": "#f7a35c", "pie4": "#e4d354", "pie5": "#c6cdd5"}}}%%
+%%{init: {"themeVariables": { "pie1": "#7cb5ec", "pie2": "#90ed7d", "pie3": "#f7a35c", "pie4": "#c6cdd5"}}}%%
 pie
     title Year 2022 benchmark time by % of total
     "Day 20" : 7449
     "Day 11" : 2386
-    "Day 16" : 2331
     "Day 23" : 2017
-    "Others" : 1421
+    "Others" : 2029
 ```
 
 | Day | Problem | Solution | Benchmark (μs) |
@@ -105,7 +104,7 @@ pie
 | 13 | [Distress Signal](https://adventofcode.com/2022/day/13) | [Source](src/year2022/day13.rs) | 16 |
 | 14 | [Regolith Reservoir](https://adventofcode.com/2022/day/14) | [Source](src/year2022/day14.rs) | 205 |
 | 15 | [Beacon Exclusion Zone](https://adventofcode.com/2022/day/15) | [Source](src/year2022/day15.rs) | 2 |
-| 16 | [Proboscidea Volcanium](https://adventofcode.com/2022/day/16) | [Source](src/year2022/day16.rs) | 2331 |
+| 16 | [Proboscidea Volcanium](https://adventofcode.com/2022/day/16) | [Source](src/year2022/day16.rs) | 608 |
 | 17 | [Pyroclastic Flow](https://adventofcode.com/2022/day/17) | [Source](src/year2022/day17.rs) | 68 |
 | 18 | [Boiling Boulders](https://adventofcode.com/2022/day/18) | [Source](src/year2022/day18.rs) | 129 |
 | 19 | [Not Enough Minerals](https://adventofcode.com/2022/day/19) | [Source](src/year2022/day19.rs) | 407 |
