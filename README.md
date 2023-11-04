@@ -52,28 +52,28 @@ Complete 2022 to 2019 and 2016 to 2015 entries for the annual [Advent of Code](h
 ## Performance
 
 Benchmarks are measured using the built-in `cargo bench` tool run on an Apple M2 Max.
-All 150 solutions from 2022 to 2019 and also 2016 to 2015 complete sequentially in **1082 milliseconds**.
+All 150 solutions from 2022 to 2019 and also 2016 to 2015 complete sequentially in **1.1 seconds**.
 Interestingly 93% of the total time is spent on just 6 solutions.
 Performance is reasonable even on older hardware, for example a 2011 MacBook Pro with an
 [Intel i7-2720QM](https://ark.intel.com/content/www/us/en/ark/products/50067/intel-core-i72720qm-processor-6m-cache-up-to-3-30-ghz.html)
-processor takes 83 milliseconds to run the 50 solutions from 2022 to 2021.
+processor takes 4.4 seconds to run the same 150 solutions.
 
 ```mermaid
 %%{init: {"themeVariables": { "pie1": "#7cb5ec", "pie2": "#90ed7d", "pie3": "#f7a35c", "pie4": "#e4d354", "pie5": "#e4c4fb", "pie6": "#c6cdd5"}}}%%
 pie
     title Each year benchmark time by % of total
-    "Year 2016" : 664
+    "Year 2016" : 663
     "Year 2020" : 286
-    "Year 2015" : 85
-    "Years 2019, 2021 and 2022" : 48
+    "Year 2015" : 87
+    "Years 2019, 2021 and 2022" : 49
 ```
 
 * [2022](#2022) (16 ms)
 * [2021](#2021) (11 ms)
 * [2020](#2020) (286 ms)
-* [2019](#2019) (21 ms)
+* [2019](#2019) (22 ms)
 * [2016](#2016) (663 ms)
-* [2015](#2015) (85 ms)
+* [2015](#2015) (87 ms)
 
 ## 2022
 
