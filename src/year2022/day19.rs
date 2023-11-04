@@ -1,6 +1,49 @@
+//! # Not Enough Minerals
+//!
+//! The solution is [branch and bound](https://en.wikipedia.org/wiki/Branch_and_bound) using
+//! a [depth first search](https://en.wikipedia.org/wiki/Depth-first_search) to enumerate every
+//! possible combination combined with heuristics to prune those combinations in order to achieve
+//! a reasonable running time.
+//!
+//! The most import heuristic is:
+//! * Assume ore and clay are infinite.
+//! * Check if we can do better than the highest score so far in the remaining time, building
+//!   only geode or obsidian bots.
+//!
+//! As these simplified rules will always score higher than the real rules, we can immediately
+//! prune any branch that can't possibly exceed the current high score.
+//!
+//! The second helpful heuristic is:
+//! * Don't build more bots for a particular mineral than the maximum possible consumption in
+//!   a single turn.
+//!
+//! As we can only build one bot per turn, we will never need to generate more resources than
+//! that bot can use. For example, if ore robots need 2 ore, clay robots 3 ore, obsidian robots
+//! 4 ore and geode robots 5 ore, then the most possible ore robots that we need to build is 5.
+//! Any more would go to waste. The same applies for clay and obsidian.
+//!
+//! The third helpful heuristic is:
+//! * Don't build any robot during the last minute
+//! * Don't build ore or obsidian robots during the last 3 minutes.
+//! * Don't build clay robots during the last 5 minutes.
+//!
+//! Building any robot during the last minute means that it will be ready *after* the time runs
+//! out so it will contribute nothing. The other two rules are corollaries of this rule.
+//!
+//! For example say we build an obsidian robot with 3 minutes left. It will be ready and collect
+//! a resource with two minutes left, which can be spent on a geode robot with 1 minute left,
+//! which is too late.
+//!
+//! Since we only need clay for obsidian robots it doesn't make sense to build clay robots less
+//! than two minutes before the cutoff for obsidian robots.
+//!
+//! The final important optimization is that we don't increment minute by minute. Instead once
+//! we decide to buld a robot of a particular type, we "fast forward" in time until there are
+//! enough resources to build that robot. This cuts down on a lot of duplicate intermediate states.
 use crate::util::parse::*;
 use std::ops::{Add, Sub};
 
+/// Each robot generates 1 mineral of a particular type.
 const ZERO: Mineral = Mineral::from(0, 0, 0, 0);
 const ORE_BOT: Mineral = Mineral::from(1, 0, 0, 0);
 const CLAY_BOT: Mineral = Mineral::from(0, 1, 0, 0);
@@ -20,11 +63,13 @@ impl Mineral {
         Mineral { ore, clay, obsidian, geode }
     }
 
+    /// This is used to compare robot costs so we don't need to check geodes.
     fn less_than_equal(self, rhs: Self) -> bool {
         self.ore <= rhs.ore && self.clay <= rhs.clay && self.obsidian <= rhs.obsidian
     }
 }
 
+/// Implement operators so that we can use `+` and `-` notation to add and subtract minerals.
 impl Add for Mineral {
     type Output = Self;
 
@@ -101,9 +146,12 @@ fn maximize(blueprint: &Blueprint, time: u32) -> u32 {
     result
 }
 
+/// Depth first search over every possible combination pruning branches using heuristics.
 fn dfs(blueprint: &Blueprint, result: &mut u32, time: u32, bots: Mineral, resources: Mineral) {
+    // Extrapolate total geodes from the current state in the remaining time.
     *result = (*result).max(resources.geode + bots.geode * time);
 
+    // Check if this state can improve on the existing high score.
     if heuristic(blueprint, *result, time, bots, resources) {
         if bots.obsidian > 0 && time > 1 {
             next(blueprint, result, time, bots, resources, GEODE_BOT, blueprint.geode_cost);
@@ -120,6 +168,11 @@ fn dfs(blueprint: &Blueprint, result: &mut u32, time: u32, bots: Mineral, resour
     }
 }
 
+/// Simplify the blueprints so that we only need to build either geode or obsidian robots,
+/// then check that the estimated maximum possible score is greater than the current high score.
+///
+/// Since ore and clay are infinite this will always score higher, so we can immediately
+/// prune any branch that can't possibly beat the high score.
 #[inline]
 fn heuristic(
     blueprint: &Blueprint,
@@ -129,9 +182,11 @@ fn heuristic(
     mut resources: Mineral,
 ) -> bool {
     for _ in 0..time {
+        // Assume ore and clay are infinite.
         resources.ore = blueprint.max_ore;
         resources.clay = blueprint.max_clay;
 
+        // Only attempt to build geode or obsidian robots.
         if blueprint.geode_cost.less_than_equal(resources) {
             resources = resources + bots - blueprint.geode_cost;
             bots = bots + GEODE_BOT;
@@ -144,6 +199,8 @@ fn heuristic(
     resources.geode > result
 }
 
+/// "Fast forward" in time until we can build a robot of a particular type. This could possibly
+/// by the next minute if we already have enough resources.
 #[inline]
 fn next(
     blueprint: &Blueprint,
