@@ -1,7 +1,8 @@
+use crate::util::iter::*;
 use crate::util::parse::*;
-use std::collections::VecDeque;
 use std::ops::{Index, IndexMut};
 
+#[derive(Clone, Copy)]
 struct Node {
     size: u16,
     left: u16,
@@ -33,46 +34,46 @@ impl IndexMut<u16> for Tree {
 
 impl Tree {
     fn from(input: &[i64]) -> Tree {
-        let len = input.len();
-        let mut nodes = Vec::with_capacity(len * 2);
-        let mut todo = VecDeque::with_capacity(len);
-        let mut next = VecDeque::with_capacity(len);
+        let mut size = input.len();
+        let mut start = 0;
+        let mut end = size;
 
-        for i in 0..len {
-            nodes.push(Node { size: 1, left: u16::MAX, right: u16::MAX, up: u16::MAX });
-            todo.push_back(i as u16);
+        let mut remaining = None;
+        let mut nodes = Vec::with_capacity(size * 2);
+
+        let empty = u16::MAX;
+        let leaf = Node { size: 1, left: empty, right: empty, up: empty };
+        nodes.resize(size, leaf);
+
+        while size > 0 {
+            let mut push = |left: usize, right: usize| {
+                let index = nodes.len() as u16;
+                nodes[left].up = index;
+                nodes[right].up = index;
+
+                let size = nodes[left].size + nodes[right].size;
+                nodes.push(Node { size, up: empty, left: left as u16, right: right as u16 });
+            };
+
+            for [left, right] in (start..end).chunk::<2>() {
+                push(left, right);
+            }
+
+            if size % 2 == 1 {
+                if let Some(right) = remaining {
+                    remaining = None;
+                    push(end - 1, right);
+                } else {
+                    remaining = Some(end - 1);
+                }
+            }
+
+            start = end;
+            end = nodes.len();
+            size = end - start;
         }
 
-        let root = Self::next_layer(&mut nodes, &mut todo, &mut next);
-        Tree { root, size: (len - 1) as i64, nodes }
-    }
-
-    fn next_layer(
-        nodes: &mut Vec<Node>,
-        todo: &mut VecDeque<u16>,
-        next: &mut VecDeque<u16>,
-    ) -> u16 {
-        let root = todo.len() == 2;
-
-        while todo.len() > 1 {
-            let left = todo.pop_front().unwrap();
-            let right = todo.pop_front().unwrap();
-            let size = nodes[left as usize].size + nodes[right as usize].size;
-
-            let index = nodes.len() as u16;
-            nodes[left as usize].up = index;
-            nodes[right as usize].up = index;
-
-            nodes.push(Node { size, up: u16::MAX, left, right });
-            next.push_back(index);
-        }
-
-        if root {
-            (nodes.len() - 1) as u16
-        } else {
-            next.extend(todo.drain(..));
-            Self::next_layer(nodes, next, todo)
-        }
+        Tree { root: (end - 1) as u16, size: (input.len() - 1) as i64, nodes }
     }
 
     fn position(&self, start: usize) -> u16 {
