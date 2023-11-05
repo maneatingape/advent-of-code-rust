@@ -1,5 +1,6 @@
 use crate::util::parse::*;
 use std::collections::VecDeque;
+use std::ops::{Index, IndexMut};
 
 struct Node {
     size: u16,
@@ -12,6 +13,22 @@ struct Tree {
     root: u16,
     size: i64,
     nodes: Vec<Node>,
+}
+
+impl Index<u16> for Tree {
+    type Output = Node;
+
+    #[inline]
+    fn index(&self, index: u16) -> &Self::Output {
+        &self.nodes[index as usize]
+    }
+}
+
+impl IndexMut<u16> for Tree {
+    #[inline]
+    fn index_mut(&mut self, index: u16) -> &mut Self::Output {
+        &mut self.nodes[index as usize]
+    }
 }
 
 impl Tree {
@@ -63,10 +80,10 @@ impl Tree {
         let mut offset = 0;
 
         while cur != self.root {
-            let next = self.nodes[cur as usize].up;
-            let Node { left, right, .. } = self.nodes[next as usize];
+            let next = self[cur].up;
+            let Node { left, right, .. } = self[next];
             if right == cur {
-                offset += self.nodes[left as usize].size;
+                offset += self[left].size;
             };
             cur = next;
         }
@@ -79,13 +96,13 @@ impl Tree {
         let mut offset = start;
 
         loop {
-            let Node { size, left, right, .. } = self.nodes[cur as usize];
+            let Node { size, left, right, .. } = self[cur];
 
             if size == 1 {
                 break cur as usize;
             }
 
-            let size = self.nodes[left as usize].size;
+            let size = self[left].size;
             if offset < size {
                 cur = left;
             } else {
@@ -96,40 +113,38 @@ impl Tree {
     }
 
     fn mix(&mut self, start: usize, value: i64) {
-        let mut cur = start as u16;
+        let start = start as u16;
+        let mut cur = start;
         let mut offset = 0;
 
         while cur != self.root {
-            let next = self.nodes[cur as usize].up;
-            let Node { left, right, .. } = self.nodes[next as usize];
+            let next = self[cur].up;
+            let Node { left, right, .. } = self[next];
 
             if right == cur {
-                offset += self.nodes[left as usize].size;
+                offset += self[left].size;
             };
-            self.nodes[next as usize].size -= 1;
+            self[next].size -= 1;
             cur = next;
         }
 
-        let parent = self.nodes[start].up;
+        let parent = self[start].up;
 
         if parent == self.root {
-            if self.nodes[self.root as usize].left == start as u16 {
-                self.root = self.nodes[self.root as usize].right;
+            if self[self.root].left == start {
+                self.root = self[self.root].right;
             } else {
-                self.root = self.nodes[self.root as usize].left;
+                self.root = self[self.root].left;
             }
         } else {
-            let grand_parent = self.nodes[parent as usize].up;
-            let next_parent = if self.nodes[parent as usize].left == start as u16 {
-                self.nodes[parent as usize].right
+            let grand_parent = self[parent].up;
+            let next_parent =
+                if self[parent].left == start { self[parent].right } else { self[parent].left };
+            self[next_parent].up = grand_parent;
+            if self[grand_parent].left == parent {
+                self[grand_parent].left = next_parent;
             } else {
-                self.nodes[parent as usize].left
-            };
-            self.nodes[next_parent as usize].up = grand_parent;
-            if self.nodes[grand_parent as usize].left == parent {
-                self.nodes[grand_parent as usize].left = next_parent;
-            } else {
-                self.nodes[grand_parent as usize].right = next_parent;
+                self[grand_parent].right = next_parent;
             }
         }
 
@@ -137,25 +152,25 @@ impl Tree {
         offset = (offset as i64 + value).rem_euclid(self.size) as u16;
 
         loop {
-            let Node { size, left, right, up } = self.nodes[cur as usize];
+            let Node { size, left, right, up } = self[cur];
 
             if size == 1 {
-                self.nodes[parent as usize] = Node { size: 2, left: start as u16, right: cur, up };
+                self[parent] = Node { size: 2, left: start, right: cur, up };
 
-                self.nodes[cur as usize].up = parent;
-                self.nodes[start].up = parent;
+                self[cur].up = parent;
+                self[start].up = parent;
 
-                if self.nodes[up as usize].left == cur {
-                    self.nodes[up as usize].left = parent;
+                if self[up].left == cur {
+                    self[up].left = parent;
                 } else {
-                    self.nodes[up as usize].right = parent;
+                    self[up].right = parent;
                 }
 
                 break;
             }
 
-            self.nodes[cur as usize].size += 1;
-            let size = self.nodes[left as usize].size;
+            self[cur].size += 1;
+            let size = self[left].size;
             if offset < size {
                 cur = left;
             } else {
