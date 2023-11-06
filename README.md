@@ -65,10 +65,10 @@ pie
     "Year 2016" : 663
     "Year 2020" : 286
     "Year 2015" : 87
-    "Years 2019, 2021 and 2022" : 47
+    "Years 2019, 2021 and 2022" : 45
 ```
 
-* [2022](#2022) (14 ms)
+* [2022](#2022) (12 ms)
 * [2021](#2021) (11 ms)
 * [2020](#2020) (286 ms)
 * [2019](#2019) (22 ms)
@@ -81,7 +81,7 @@ pie
 %%{init: {"themeVariables": { "pie1": "#7cb5ec", "pie2": "#90ed7d", "pie3": "#f7a35c", "pie4": "#c6cdd5"}}}%%
 pie
     title Year 2022 benchmark time by % of total
-    "Day 20" : 7449
+    "Day 20" : 5067
     "Day 11" : 2386
     "Day 23" : 2017
     "Others" : 2029
@@ -108,7 +108,7 @@ pie
 | 17 | [Pyroclastic Flow](https://adventofcode.com/2022/day/17) | [Source](src/year2022/day17.rs) | 68 |
 | 18 | [Boiling Boulders](https://adventofcode.com/2022/day/18) | [Source](src/year2022/day18.rs) | 129 |
 | 19 | [Not Enough Minerals](https://adventofcode.com/2022/day/19) | [Source](src/year2022/day19.rs) | 407 |
-| 20 | [Grove Positioning System](https://adventofcode.com/2022/day/20) | [Source](src/year2022/day20.rs) | 7449 |
+| 20 | [Grove Positioning System](https://adventofcode.com/2022/day/20) | [Source](src/year2022/day20.rs) | 5067 |
 | 21 | [Monkey Math](https://adventofcode.com/2022/day/21) | [Source](src/year2022/day21.rs) | 61 |
 | 22 | [Monkey Map](https://adventofcode.com/2022/day/22) | [Source](src/year2022/day22.rs) | 132 |
 | 23 | [Unstable Diffusion](https://adventofcode.com/2022/day/23) | [Source](src/year2022/day23.rs) | 2017 |
