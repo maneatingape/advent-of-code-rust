@@ -208,14 +208,19 @@ fn parse_grid(input: &str) -> Grid {
 
 fn parse_moves(input: &str) -> Vec<Move> {
     let mut moves = Vec::new();
+    let mut numbers = input.iter_unsigned();
+    let mut letters = input.bytes().filter(u8::is_ascii_uppercase);
 
-    for token in input.replace('L', " L ").replace('R', " R ").trim().split(' ') {
-        let next = match token {
-            "L" => Move::Left,
-            "R" => Move::Right,
-            n => Move::Forward(n.unsigned()),
+    loop {
+        let Some(n) = numbers.next() else {
+            break;
         };
-        moves.push(next);
+        moves.push(Move::Forward(n));
+
+        let Some(d) = letters.next() else {
+            break;
+        };
+        moves.push(if d == b'L' { Move::Left } else { Move::Right });
     }
 
     moves
