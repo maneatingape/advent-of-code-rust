@@ -3,6 +3,7 @@ use crate::util::math::*;
 use crate::util::parse::*;
 use crate::util::point::*;
 use std::collections::VecDeque;
+use std::ops::Neg;
 
 #[derive(Clone, Copy, PartialEq, Eq)]
 enum Tile {
@@ -14,7 +15,7 @@ enum Tile {
 enum Move {
     Left,
     Right,
-    Forward(usize),
+    Forward(u32),
 }
 
 pub struct Grid {
@@ -44,17 +45,11 @@ struct Vector {
     z: i32,
 }
 
-impl Vector {
-    fn inverse(&self) -> Vector {
-        Vector { x: -self.x, y: -self.y, z: -self.z }
-    }
+impl Neg for Vector {
+    type Output = Self;
 
-    fn cross(&self, b: Vector) -> Vector {
-        Vector {
-            x: self.y * b.z - self.z * b.y,
-            y: self.z * b.x - self.x * b.z,
-            z: self.x * b.y - self.y * b.x,
-        }
+    fn neg(self) -> Self::Output {
+        Vector { x: -self.x, y: -self.y, z: -self.z }
     }
 }
 
@@ -116,14 +111,10 @@ pub fn part2(input: &Input) -> i32 {
         let Face { corner, i, j, k } = next;
 
         let neighbors = [
-            // Left
-            Face { corner: corner + Point::new(-block, 0), i: j.cross(i), j, k: j.cross(k) },
-            // Right
-            Face { corner: corner + Point::new(block, 0), i: i.cross(j), j, k: k.cross(j) },
-            // Up
-            Face { corner: corner + Point::new(0, -block), i, j: j.cross(i), k: k.cross(i) },
-            // Down
-            Face { corner: corner + Point::new(0, block), i, j: i.cross(j), k: i.cross(k) },
+            Face { corner: corner + Point::new(-block, 0), i: -k, j, k: i }, // Left
+            Face { corner: corner + Point::new(block, 0), i: k, j, k: -i },  // Right
+            Face { corner: corner + Point::new(0, -block), i, j: -k, k: j }, // Up
+            Face { corner: corner + Point::new(0, block), i, j: k, k: -j },  // Down
         ];
 
         for next in neighbors {
@@ -140,20 +131,20 @@ pub fn part2(input: &Input) -> i32 {
         let corner = position - offset;
         let Face { i, j, k, .. } = corners[&corner];
         let next_k = match direction {
-            LEFT => j.cross(k),
-            RIGHT => k.cross(j),
-            UP => k.cross(i),
-            DOWN => i.cross(k),
+            LEFT => i,
+            RIGHT => -i,
+            UP => j,
+            DOWN => -j,
             _ => unreachable!(),
         };
         let Face { corner: next_corner, i: next_i, j: next_j, .. } = faces[&next_k];
         let next_direction = if k == next_i {
             RIGHT
-        } else if k == next_i.inverse() {
+        } else if k == -next_i {
             LEFT
         } else if k == next_j {
             DOWN
-        } else if k == next_j.inverse() {
+        } else if k == -next_j {
             UP
         } else {
             unreachable!()
