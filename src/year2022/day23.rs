@@ -1,8 +1,15 @@
+//! # Unstable Diffusion
+//!
+//! We represent elves as bits in a integer then use bitwise operations to efficiently figure
+//! out the movement for multiple elves at once.
 use self::Direction::*;
 use std::ops::{BitAnd, BitAndAssign, BitOr, Not};
 
+/// The initial grid is 70 x 70. Elves stop moving when no other elf is adjacent so the grid
+/// will expand at most 70 in any direction, giving 70 + 70 + 70 = 210 total.
 const HEIGHT: usize = 210;
 
+/// Duct tape two `u128`s together.
 #[derive(Clone, Copy, Default)]
 pub struct U256 {
     left: u128,
@@ -26,6 +33,7 @@ impl U256 {
         self.left != 0 || self.right != 0
     }
 
+    /// Used to find the bounding rectangle for part one.
     fn min_set(&self) -> Option<u32> {
         if self.left != 0 {
             Some(self.left.leading_zeros())
@@ -36,6 +44,7 @@ impl U256 {
         }
     }
 
+    /// Used to find the bounding rectangle for part one.
     fn max_set(&self) -> Option<u32> {
         if self.right != 0 {
             Some(255 - self.right.trailing_zeros())
@@ -55,6 +64,7 @@ impl U256 {
     }
 }
 
+/// Syntactic sugar to provide the regular `&`, `|` and `!` bitwise operator notation.
 impl BitAnd for U256 {
     type Output = U256;
 
@@ -102,7 +112,9 @@ pub struct Input {
     east: [U256; HEIGHT],
 }
 
+/// Converts the ASCII grid into a bit per elf.
 pub fn parse(input: &str) -> Input {
+    // Enough buffer so that elves won't overflow the edges of the grid.
     let offset = 70;
     let raw: Vec<_> = input.lines().map(str::as_bytes).collect();
     let default = [U256::default(); HEIGHT];
@@ -127,6 +139,7 @@ pub fn part1(input: &Input) -> u32 {
         step(&mut input, &mut order);
     }
 
+    // Find the bounding rectangle.
     let grid = input.grid;
     let elves: u32 = grid.iter().map(U256::count_ones).sum();
     let min_x = grid.iter().filter_map(U256::min_set).min().unwrap();
@@ -153,27 +166,34 @@ pub fn part2(input: &Input) -> u32 {
 
 fn step(input: &mut Input, order: &mut [Direction]) -> bool {
     let Input { grid, north, south, west, east } = input;
+    // Optimization to avoid processing empty rows.
     let start = grid.iter().position(U256::non_zero).unwrap() - 1;
     let end = grid.iter().rposition(U256::non_zero).unwrap() + 2;
 
     let mut moved = false;
 
     let mut prev;
+    // Find horizontal neighbors in each row. To make movement calculations easier
+    // we invert so that a bit is 1 is movement is *possible*.
     let mut cur = !(grid[0].right_shift() | grid[0] | grid[0].left_shift());
     let mut next = !(grid[1].right_shift() | grid[1] | grid[1].left_shift());
 
     for i in start..end {
+        // Calculating neighbors is relatively expensive so re-use results between rows.
         prev = cur;
         cur = next;
         next = !(grid[i + 1].right_shift() | grid[i + 1] | grid[i + 1].left_shift());
 
         let mut up = prev;
         let mut down = next;
-        let horizontal = !(grid[i - 1] | grid[i] | grid[i + 1]);
-        let mut left = horizontal.right_shift();
-        let mut right = horizontal.left_shift();
+        // Find neighours in vertical columns.
+        let vertical = !(grid[i - 1] | grid[i] | grid[i + 1]);
+        let mut left = vertical.right_shift();
+        let mut right = vertical.left_shift();
+        // Elves need at least 1 neighbor to propose moving.
         let mut remaining = grid[i] & !(up & down & left & right);
 
+        // Consider each direction one at a time, removing any elves who propose it.
         for direction in &*order {
             match direction {
                 North => {
@@ -195,12 +215,16 @@ fn step(input: &mut Input, order: &mut [Direction]) -> bool {
             }
         }
 
+        // Copy final proposals to an array for each direction.
         north[i - 1] = up;
         south[i + 1] = down;
         west[i] = left.left_shift();
         east[i] = right.right_shift();
     }
 
+    // Elves that propose moving to the same spot cancel each other out and no-one moves.
+    // Due to the movement rules we only need to check horizontal and vertical movement into
+    // the same spot (horizontal and vertical movement can never collide with each other).
     for i in start..end {
         let up = north[i];
         let down = south[i];
@@ -213,13 +237,16 @@ fn step(input: &mut Input, order: &mut [Direction]) -> bool {
     }
 
     for i in start..end {
+        // Stationary elves.
         let same =
             grid[i] & !(north[i - 1] | south[i + 1] | west[i].right_shift() | east[i].left_shift());
+        // Moving elves.
         let change = north[i] | south[i] | west[i] | east[i];
         grid[i] = same | change;
         moved |= change.non_zero();
     }
 
+    // Rotate the order of movement proposals for the next turn.
     order.rotate_left(1);
     moved
 }
