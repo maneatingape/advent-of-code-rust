@@ -243,6 +243,7 @@ pie
 | --- | --- | --- | --: |
 | 1 | [Inverse Captcha](https://adventofcode.com/2017/day/1) | [Source](src/year2017/day01.rs) | 1 |
 | 2 | [Corruption Checksum](https://adventofcode.com/2017/day/2) | [Source](src/year2017/day02.rs) | 3 |
+| 3 | [Spiral Memory](https://adventofcode.com/2017/day/3) | [Source](src/year2017/day03.rs) | 2 |
 
 ## 2016
 
