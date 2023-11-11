@@ -218,6 +218,11 @@ pub mod year2016 {
     pub mod day25;
 }
 
+/// # A technical support callout from the Elves escalates rapidly.
+pub mod year2017 {
+    pub mod day01;
+}
+
 /// # Rescue Santa from deep space with a solar system adventure.
 pub mod year2019 {
     pub mod day01;
