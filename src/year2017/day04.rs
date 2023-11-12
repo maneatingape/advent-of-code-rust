@@ -20,50 +20,33 @@ pub fn parse(input: &str) -> Input<'_> {
     input.lines().collect()
 }
 
-pub fn part1(input: &Input<'_>) -> u32 {
-    let mut result = 0;
+pub fn part1(input: &Input<'_>) -> usize {
     let mut seen = FastSet::new();
-
-    for line in input {
-        result += 1;
-
-        for token in line.split_ascii_whitespace() {
-            // Insert returns `false` if the value is already in the set.
-            if !seen.insert(token.as_bytes()) {
-                result -= 1;
-                break;
-            }
-        }
-
-        seen.clear();
-    }
-
-    result
+    input
+        .iter()
+        .filter(|line| {
+            seen.clear();
+            line.split_ascii_whitespace().all(|token| seen.insert(token.as_bytes()))
+        })
+        .count()
 }
 
-pub fn part2(input: &Input<'_>) -> u32 {
-    let mut result = 0;
-    let mut seen = FastSet::new();
-
-    for line in input {
-        result += 1;
-
-        for token in line.split_ascii_whitespace() {
-            // Calculate the frequency of each letter, as anagrams will have the same values.
-            let mut freq = [0_u8; 26];
-
-            for b in token.bytes() {
-                freq[(b - b'a') as usize] += 1;
-            }
-
-            if !seen.insert(freq) {
-                result -= 1;
-                break;
-            }
+pub fn part2(input: &Input<'_>) -> usize {
+    // Calculate the frequency of each letter as anagrams will have the same values.
+    fn convert(token: &str) -> [u8; 26] {
+        let mut freq = [0; 26];
+        for b in token.bytes() {
+            freq[(b - b'a') as usize] += 1;
         }
-
-        seen.clear();
+        freq
     }
 
-    result
+    let mut seen = FastSet::new();
+    input
+        .iter()
+        .filter(|line| {
+            seen.clear();
+            line.split_ascii_whitespace().all(|token| seen.insert(convert(token)))
+        })
+        .count()
 }
