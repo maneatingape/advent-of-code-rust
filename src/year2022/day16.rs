@@ -19,33 +19,32 @@
 //! achieve a reasonable running time.
 //!
 //! The heuristic assumes that we can visit all remaining valves in descending order of flow,
-//! taking only 3 minutes to travel and open each valve (pretending that the valves are separated
-//! by only a single intermediate corridor). As this will always be better than the actual
-//! maximum possible we can immediately prune any branch that would still be less than the
-//! current high score.
+//! taking only the minimum possible time to reach each valve. As this will always be better
+//! than the actual maximum possible we can immediately prune any branch that would still be less
+//! than the current high score.
 //!
 //! ## Part Two
 //!
-//! We take a different approach, treating both "you" and the elephant independently.
+//! Part two uses an ingenious approach from [@korreman](https://github.com/korreman/aoc2022).
 //!
-//! First we calculate the maximum value for any possible combination of valves reachable in
-//! 26 minutes by a single entity. Of the total possible 32768 valve combinations in my input
-//! around 3000 or 10% were reachable in the time available.
+//! First calculate the maximum value for any possible combination of valves reachable in
+//! 26 minutes by a single entity. Then calculate a second score from the remaining unopened
+//! valves.
+//!
+//! The neat part is using this second score as the heuristic threshold for a search over all
+//! possible valve combinations. This works as the sum of the first two searches provides a
+//! minimum baseline. If a branch can't do better then it can be pruned.
 //!
 //! Then we check every possible pair formed by those values, considering only the pairs
 //! where the sets of valves are [disjoint](https://en.wikipedia.org/wiki/Disjoint_sets),
 //! which is when you and the elephant have visited different sets of valves.
-//!
-//! The maximum value is our answer. Brute force would take `O(n²)` or ~9 x 10⁶ comparisons but
-//! we can use dynamic programming to check in only `2ⁱ` where `i` is the number of non-zero
-//! valves.
 use crate::util::hash::*;
 use crate::util::parse::*;
 use std::cmp::Ordering;
-use std::collections::VecDeque;
 
 /// Simplified graph of valves. Valves are stored in descending order of flow so the valve at
 /// index 0 has the highest flow, valve at index 1 the second highest and so on.
+/// This descending order is used by the heuristic to prune branches.
 ///
 /// * `size` Number of non-zero valves plus 1 for `AA`
 /// * `todo` Bitmask with a `1` for each initial unopened non-zero valve. For example if there
@@ -54,9 +53,11 @@ use std::collections::VecDeque;
 /// * `distance` Adjacency matrix of distances between each pair of valves.
 pub struct Input {
     size: usize,
-    todo: usize,
+    aa: usize,
+    all_valves: usize,
     flow: Vec<u32>,
     distance: Vec<u32>,
+    closest: Vec<u32>,
 }
 
 /// State of a single exploration path through the valves.
@@ -151,155 +152,163 @@ pub fn parse(input: &str) -> Input {
 
     // Add 1 minute to each distance to include the time needed to open a valve.
     distance.iter_mut().for_each(|d| *d += 1);
-    // Binary mask of all initial unopened valves.
-    let todo = (1 << (size - 1)) - 1;
+    // Index of AA is one less than size
+    let aa = size - 1;
+    // Binary mask of all initial unopened valves not including AA.
+    let all_valves = (1 << aa) - 1;
     // Extract flow information.
     let flow: Vec<_> = valves.iter().take(size).map(|v| v.flow).collect();
+    // Closest neighbor to each valve
+    let closest: Vec<_> = distance
+        .chunks_exact(size)
+        .map(|chunk| *chunk.iter().filter(|&&d| d > 1).min().unwrap())
+        .collect();
+
     // Compact representation of tunnels and valves.
-    Input { size, todo, flow, distance }
+    Input { size, aa, all_valves, flow, distance, closest }
 }
 
+/// Explore the tunnels, finding the highest possible score for a single entity.
 pub fn part1(input: &Input) -> u32 {
     let mut score = 0;
-
-    // Interestingly a regular vec is faster than both a traditional BFS using a VecDeque or a
-    // recursive DFS.
-    let mut queue = Vec::new();
-    // Out starting location `AA` has the highest index.
-    queue.push(State { todo: input.todo, from: input.size - 1, time: 30, pressure: 0 });
-
-    while let Some(State { todo, from, time, pressure }) = queue.pop() {
-        // Try to increase the high score.
+    // Return the current high score for the heuristic.
+    let mut high_score = |_, pressure: u32| {
         score = score.max(pressure);
-        let mut valves = todo;
+        score
+    };
 
-        while valves > 0 {
-            // Stores the set of unopened valves in a single integer as a bit mask with a 1
-            // for each unopened valve. This code iterates over each valve by finding the lowest
-            // 1 bit then removing it from the set.
-            let to = valves.trailing_zeros() as usize;
-            let mask = 1 << to;
-            valves ^= mask;
-
-            let needed = input.distance[from * input.size + to];
-            if needed < time {
-                let remaining = time - needed;
-                let flow = input.flow[to];
-
-                // Pretend that we could visit each remaining unopened valve in descending order
-                // of flow with only a tunnel of 1 length between them. As this is always better
-                // than the actual graph if we can't beat the high score then we can prune
-                // this branch right away.
-                let heuristic = {
-                    let mut pressure = pressure + remaining * flow;
-                    let mut valves = todo ^ mask;
-                    let mut remaining = remaining;
-
-                    while valves > 0 && remaining > 3 {
-                        remaining -= 3;
-                        let to = valves.trailing_zeros() as usize;
-                        let flow = input.flow[to];
-                        pressure += remaining * flow;
-                        valves ^= 1 << to;
-                    }
-
-                    pressure
-                };
-
-                // Push the next state. We calculate the total pressure released by a
-                // valve up front.
-                if heuristic > score {
-                    let next = State {
-                        todo: todo ^ mask,
-                        from: to,
-                        time: remaining,
-                        pressure: pressure + remaining * flow,
-                    };
-                    queue.push(next);
-                }
-            }
-        }
-    }
+    let start = State { todo: input.all_valves, from: input.aa, time: 30, pressure: 0 };
+    explore(input, &start, &mut high_score);
 
     score
 }
 
+/// Return the maximum possible score from two entities exploring the tunnels simultaneously.
 pub fn part2(input: &Input) -> u32 {
-    // Instead of a single score, store the high score for each possible `2ⁱ` combinations of valves.
-    let mut score = vec![0; input.todo + 1];
+    // Step 1
+    // Find both the highest possible score and the remaining unopened valves from you
+    // exploring the tunnels.
+    let mut you = 0;
+    let mut remaining = 0;
+    // Keep track of the unopened valves associated with the high score.
+    let mut high_score = |todo: usize, pressure: u32| {
+        if pressure > you {
+            you = pressure;
+            remaining = todo;
+        }
+        you
+    };
 
-    // Tradtional BFS is fastest.
-    let mut queue = VecDeque::with_capacity(input.todo);
-    queue.push_back(State { todo: input.todo, from: input.size - 1, time: 26, pressure: 0 });
+    let first = State { todo: input.all_valves, from: input.aa, time: 26, pressure: 0 };
+    explore(input, &first, &mut high_score);
 
-    // Cache seen states before. If we're in the same location with the same valves opened
-    // but a lower score then we can prune the state.
-    let stride = score.len();
-    let mut cache = vec![0; stride * (input.size - 1)];
+    // Step 2
+    // Find the highest possible score when only allowing the unopened valves from the
+    // previous run. This will set a minimum baseline score for the heuristic.
+    let mut elephant = 0;
+    let mut high_score = |_, pressure: u32| {
+        elephant = elephant.max(pressure);
+        elephant
+    };
 
-    while let Some(State { todo, from, time, pressure }) = queue.pop_front() {
-        let done = todo ^ input.todo;
+    let second = State { todo: remaining, from: input.aa, time: 26, pressure: 0 };
+    explore(input, &second, &mut high_score);
+
+    // Step 3
+    // Explore a third time allowing only scores that are higher than the previous minimum.
+    // Instead of a single score, store the high score for each possible `2ⁱ` combinations
+    // of valves. The index of the score is the bitmask of the *opened* valves.
+    let mut score = vec![0; input.all_valves + 1];
+    let mut high_score = |todo: usize, pressure: u32| {
+        let done = input.all_valves ^ todo;
         score[done] = score[done].max(pressure);
+        // Always return the elephant value from step 2 for the heuristic.
+        elephant
+    };
 
-        let mut valves = todo;
-        while valves > 0 {
-            // Same bitwise set approach as part one.
-            let to = valves.trailing_zeros() as usize;
-            let mask = 1 << to;
-            valves ^= mask;
+    let third = State { todo: input.all_valves, from: input.aa, time: 26, pressure: 0 };
+    explore(input, &third, &mut high_score);
 
-            let needed = input.distance[from * input.size + to];
-            if needed < time {
-                let next = todo ^ mask;
-                let remaining = time - needed;
-                let flow = input.flow[to];
-                let pressure = pressure + remaining * flow;
+    // Combine the score using the disjoint sets approach. As no valve can be opened twice
+    // only consider scores where there is no overlap by using a bitwise AND.
+    let mut result = you + elephant;
 
-                // No heuristic as in part one as we need to check every possible path.
-                // We can eliminate worse duplicate states though.
-                let index = stride * to + next;
-                if cache[index] == 0 || cache[index] < pressure {
-                    cache[index] = pressure;
-                    queue.push_back(State { todo: next, from: to, time: remaining, pressure });
-                }
+    // Find valid non-zero results then sort in order to check combinations faster.
+    let mut candidates: Vec<_> = score.into_iter().enumerate().filter(|(_, s)| *s > 0).collect();
+    candidates.sort_unstable_by_key(|t| t.1);
+
+    for i in (1..candidates.len()).rev() {
+        let (mask1, you) = candidates[i];
+
+        // Since results are sorted, all subsequent scores are lower than this one.
+        // If the maximum possible sum from remaining scores is lower than the current result
+        // then we're done.
+        if you * 2 <= result {
+            break;
+        }
+
+        for j in (0..i).rev() {
+            let (mask2, elephant) = candidates[j];
+
+            // Find the best result where the two sets of valves are disjoint.
+            if mask1 & mask2 == 0 {
+                result = result.max(you + elephant);
+                break;
             }
         }
-    }
-
-    // Only around 10% of the possible 32768 combinations are valid. Dynamically fill in the
-    // maximum possible values for the remaining combination so that we can compare disjoint sets.
-    let mut result = 0;
-    let mut visited: Vec<_> = score.iter().map(|&s| s > 0).collect();
-    subsets(input.todo, &mut score, &mut visited);
-
-    // Treat the bitwise representation of the index as the valves visited by "you".
-    for (i, you) in score.iter().enumerate() {
-        let elephant = score[input.todo ^ i];
-        result = result.max(you + elephant);
     }
 
     result
 }
 
-/// Dynamically finds the maximum score for any combination of valves.
-///
-/// For example, say there are 4 valves `abcd`, but it's only possible to visit 3 in the time
-/// available. This calculates the value of `abcd` as the maximum of `bcd`, `acd`, `abd` and `abc`.
-fn subsets(todo: usize, score: &mut [u32], visited: &mut [bool]) -> u32 {
+fn explore(input: &Input, state: &State, high_score: &mut impl FnMut(usize, u32) -> u32) {
+    let State { todo, from, time, pressure } = *state;
+    let score = high_score(todo, pressure);
     let mut valves = todo;
-    let mut max = 0;
 
-    while valves != 0 {
-        // Visit subsets by removing one bit at a time.
-        let mask = 1 << valves.trailing_zeros();
-        let next = todo ^ mask;
-        let result = if visited[next] { score[next] } else { subsets(next, score, visited) };
+    while valves > 0 {
+        // Stores the set of unopened valves in a single integer as a bit mask with a 1
+        // for each unopened valve. This code iterates over each valve by finding the lowest
+        // 1 bit then removing it from the set.
+        let to = valves.trailing_zeros() as usize;
+        let mask = 1 << to;
         valves ^= mask;
-        max = max.max(result);
-    }
 
-    // Memoize computed values.
-    score[todo] = max;
-    visited[todo] = true;
-    max
+        // Check if there's enough time to reach the valve.
+        let needed = input.distance[from * input.size + to];
+        if needed >= time {
+            continue;
+        }
+
+        // Calculate the total pressure released by a valve up front.
+        let todo = todo ^ mask;
+        let time = time - needed;
+        let pressure = pressure + time * input.flow[to];
+
+        // Pretend that we could visit each remaining unopened valve in descending order
+        // of flow taking only the minimum possible time to reach each valve. As this is always
+        // better than the actual graph if we can't beat the high score then we can prune
+        // this branch right away.
+        let heuristic = {
+            let mut valves = todo;
+            let mut time = time;
+            let mut pressure = pressure;
+
+            // Assume that all valves have a distance of 3 or more.
+            while valves > 0 && time > 3 {
+                let to = valves.trailing_zeros() as usize;
+                valves ^= 1 << to;
+                time -= input.closest[to];
+                pressure += time * input.flow[to];
+            }
+
+            pressure
+        };
+
+        // Only explore further if it's possible to beat the high score.
+        if heuristic > score {
+            let next = State { todo, from: to, time, pressure };
+            explore(input, &next, high_score);
+        }
+    }
 }
