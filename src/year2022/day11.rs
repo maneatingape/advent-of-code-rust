@@ -37,10 +37,14 @@
 //!   8 % 5 = 3
 //! ```
 //!
+//! Each item can be treated individually. This allows the processing to be parallelized over
+//! many threads, speeding things up in part two.
+//!
 //! [`iter_unsigned`]: ParseOps::iter_unsigned
 use crate::util::parse::*;
+use std::sync::Mutex;
+use std::thread;
 
-#[derive(Clone)]
 pub struct Monkey {
     items: Vec<u64>,
     operation: Operation,
@@ -49,11 +53,18 @@ pub struct Monkey {
     no: usize,
 }
 
-#[derive(Copy, Clone)]
 pub enum Operation {
     Square,
     Multiply(u64),
     Add(u64),
+}
+
+type Pair = (usize, u64);
+type Business = [u64; 8];
+
+struct Exclusive {
+    pairs: Vec<Pair>,
+    business: Business,
 }
 
 /// Extract each Monkey's info from the flavor text. With the exception of the lines starting
@@ -77,40 +88,105 @@ pub fn parse(input: &str) -> Vec<Monkey> {
     input.lines().collect::<Vec<&str>>().chunks(7).map(helper).collect()
 }
 
-/// Play 20 rounds dividing the worry level by 3 each inspection.
-pub fn part1(input: &[Monkey]) -> usize {
-    play(input, 20, |x| x / 3)
+pub fn part1(input: &[Monkey]) -> u64 {
+    solve(input, sequential)
 }
 
-/// Play 10,000 rounds adjusting the worry level modulo the product of all the monkey's test values.
-pub fn part2(input: &[Monkey]) -> usize {
-    let product: u64 = input.iter().map(|m| m.test).product();
-    play(input, 10000, |x| x % product)
+pub fn part2(input: &[Monkey]) -> u64 {
+    solve(input, parallel)
 }
 
-/// Play an arbitrary number of rounds. The logic to adjust the worry level is passed via a closure
-/// so that we can re-use the bulk of the same logic between part 1 and 2.
-fn play(input: &[Monkey], rounds: u32, adjust: impl Fn(u64) -> u64) -> usize {
-    let mut monkeys = input.to_vec();
-    let mut business = vec![0; monkeys.len()];
+/// Convenience wrapper to reuse common logic between part one and two.
+fn solve(monkeys: &[Monkey], play: impl Fn(&[Monkey], Vec<Pair>) -> Business) -> u64 {
+    let mut pairs = Vec::new();
 
-    for _ in 0..rounds {
-        for i in 0..monkeys.len() {
-            business[i] += monkeys[i].items.len();
-
-            while let Some(item) = monkeys[i].items.pop() {
-                let worry = match monkeys[i].operation {
-                    Operation::Square => item * item,
-                    Operation::Multiply(y) => item * y,
-                    Operation::Add(y) => item + y,
-                };
-                let next = adjust(worry);
-                let to = if next % monkeys[i].test == 0 { monkeys[i].yes } else { monkeys[i].no };
-                monkeys[to].items.push(next);
-            }
+    for (from, monkey) in monkeys.iter().enumerate() {
+        for &item in &monkey.items {
+            pairs.push((from, item));
         }
     }
 
+    let mut business = play(monkeys, pairs);
     business.sort_unstable();
     business.iter().rev().take(2).product()
+}
+
+/// Play 20 rounds dividing the worry level by 3 each inspection.
+fn sequential(monkeys: &[Monkey], pairs: Vec<Pair>) -> Business {
+    let mut business = [0; 8];
+
+    for pair in pairs {
+        let extra = play(monkeys, 20, |x| x / 3, pair);
+        business.iter_mut().enumerate().for_each(|(i, b)| *b += extra[i]);
+    }
+
+    business
+}
+
+/// Play 10,000 rounds adjusting the worry level modulo the product of all the monkey's test values.
+fn parallel(monkeys: &[Monkey], pairs: Vec<Pair>) -> Business {
+    let business = [0; 8];
+    let exclusive = Exclusive { pairs, business };
+    let mutex = Mutex::new(exclusive);
+
+    // Use as many cores as possible to parallelize the calculation.
+    thread::scope(|scope| {
+        for _ in 0..thread::available_parallelism().unwrap().get() {
+            scope.spawn(|| worker(monkeys, &mutex));
+        }
+    });
+
+    let exclusive = mutex.lock().unwrap();
+    exclusive.business
+}
+
+/// Multiple worker functions are executed in parallel, one per thread.
+fn worker(monkeys: &[Monkey], mutex: &Mutex<Exclusive>) {
+    let product: u64 = monkeys.iter().map(|m| m.test).product();
+
+    loop {
+        let pair = {
+            // Take an item from the queue until empty, using the mutex to allow access
+            // to a single thread at a time.
+            let mut exclusive = mutex.lock().unwrap();
+            let Some(pair) = exclusive.pairs.pop() else {
+                break;
+            };
+            pair
+        };
+
+        let extra = play(monkeys, 10000, |x| x % product, pair);
+
+        let mut exclusive = mutex.lock().unwrap();
+        exclusive.business.iter_mut().enumerate().for_each(|(i, b)| *b += extra[i]);
+    }
+}
+
+/// Play an arbitrary number of rounds for a single item.
+///
+/// The logic to adjust the worry level is passed via a closure
+/// so that we can re-use the bulk of the same logic between part 1 and 2.
+fn play(monkeys: &[Monkey], max_rounds: u32, adjust: impl Fn(u64) -> u64, pair: Pair) -> Business {
+    let (mut from, mut item) = pair;
+    let mut rounds = 0;
+    let mut business = [0; 8];
+
+    while rounds < max_rounds {
+        let worry = match monkeys[from].operation {
+            Operation::Square => item * item,
+            Operation::Multiply(y) => item * y,
+            Operation::Add(y) => item + y,
+        };
+        item = adjust(worry);
+
+        let to = if item % monkeys[from].test == 0 { monkeys[from].yes } else { monkeys[from].no };
+
+        // Only increase the round when the item is passes to a previous monkey
+        // which will have to be processed in the next turn.
+        rounds += (to < from) as u32;
+        business[from] += 1;
+        from = to;
+    }
+
+    business
 }
