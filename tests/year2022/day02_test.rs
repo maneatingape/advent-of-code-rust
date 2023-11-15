@@ -3,7 +3,8 @@ use aoc::year2022::day02::*;
 const EXAMPLE: &str = "\
 A Y
 B X
-C Z";
+C Z
+";
 
 #[test]
 fn part1_test() {
