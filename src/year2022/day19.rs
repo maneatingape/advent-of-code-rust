@@ -6,7 +6,8 @@
 //! a reasonable running time.
 //!
 //! The most import heuristic is:
-//! * Assume ore and clay are infinite.
+//! * Assume ore is infinite.
+//! * Always build a clay robot.
 //! * Check if we can do better than the highest score so far in the remaining time, building
 //!   only geode or obsidian bots.
 //!
@@ -168,11 +169,12 @@ fn dfs(blueprint: &Blueprint, result: &mut u32, time: u32, bots: Mineral, resour
     }
 }
 
-/// Simplify the blueprints so that we only need to build either geode or obsidian robots,
+/// Simplify the blueprints so that we only attempt to build either geode or obsidian robots,
 /// then check that the estimated maximum possible score is greater than the current high score.
+/// Additionally we always build a clay robot each turn.
 ///
-/// Since ore and clay are infinite this will always score higher, so we can immediately
-/// prune any branch that can't possibly beat the high score.
+/// Since this will always score higher, so we can immediately prune any branch that can't
+/// possibly beat the high score.
 #[inline]
 fn heuristic(
     blueprint: &Blueprint,
@@ -182,18 +184,22 @@ fn heuristic(
     mut resources: Mineral,
 ) -> bool {
     for _ in 0..time {
-        // Assume ore and clay are infinite.
+        // Assume ore is infinite.
         resources.ore = blueprint.max_ore;
-        resources.clay = blueprint.max_clay;
 
         // Only attempt to build geode or obsidian robots.
         if blueprint.geode_cost.less_than_equal(resources) {
             resources = resources + bots - blueprint.geode_cost;
             bots = bots + GEODE_BOT;
-        } else {
+        } else if blueprint.obsidian_cost.less_than_equal(resources) {
             resources = resources + bots - blueprint.obsidian_cost;
             bots = bots + OBSIDIAN_BOT;
+        } else {
+            resources = resources + bots;
         }
+
+        // Always build a clay bot.
+        bots = bots + CLAY_BOT;
     }
 
     resources.geode > result
