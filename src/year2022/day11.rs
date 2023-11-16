@@ -145,14 +145,10 @@ fn worker(monkeys: &[Monkey], mutex: &Mutex<Exclusive>) {
     let product: u64 = monkeys.iter().map(|m| m.test).product();
 
     loop {
-        let pair = {
-            // Take an item from the queue until empty, using the mutex to allow access
-            // to a single thread at a time.
-            let mut exclusive = mutex.lock().unwrap();
-            let Some(pair) = exclusive.pairs.pop() else {
-                break;
-            };
-            pair
+        // Take an item from the queue until empty, using the mutex to allow access
+        // to a single thread at a time.
+        let Some(pair) = mutex.lock().unwrap().pairs.pop() else {
+            break;
         };
 
         let extra = play(monkeys, 10000, |x| x % product, pair);
