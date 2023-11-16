@@ -27,6 +27,8 @@
 //! The root node is stored at index 0. For a node at index `i` its left child is at index
 //! `2i + 1`, right child at index `2i + 2` and parent at index `i / 2`. As leaf nodes are
 //! always greater than or equal to zero, `-1` is used as a special sentinel value for non-leaf nodes.
+use std::sync::Mutex;
+use std::thread;
 
 type Snailfish = [i32; 63];
 
@@ -71,17 +73,44 @@ pub fn part1(input: &[Snailfish]) -> i32 {
 /// Find the largest magnitude of any two snailfish numbers, remembering that snailfish addition
 /// is *not* commutative.
 pub fn part2(input: &[Snailfish]) -> i32 {
-    let mut result = 0;
+    let mut pairs = Vec::new();
 
     for (i, a) in input.iter().enumerate() {
         for (j, b) in input.iter().enumerate() {
             if i != j {
-                result = result.max(magnitude(&mut add(a, b)));
+                pairs.push((a, b));
             }
         }
     }
 
+    // Break the work into roughly equally size batches.
+    let threads = thread::available_parallelism().unwrap().get();
+    let size = pairs.len().div_ceil(threads);
+    let batches: Vec<_> = pairs.chunks(size).collect();
+
+    // Use as many cores as possible to parallelize the calculation.
+    let mutex = Mutex::new(0);
+
+    thread::scope(|scope| {
+        for batch in batches {
+            scope.spawn(|| worker(batch, &mutex));
+        }
+    });
+
+    let result = *mutex.lock().unwrap();
     result
+}
+
+/// Pair addition is independent so we can parallelize across multiple threads.
+fn worker(batch: &[(&Snailfish, &Snailfish)], mutex: &Mutex<i32>) {
+    let mut partial = 0;
+
+    for (a, b) in batch {
+        partial = partial.max(magnitude(&mut add(a, b)));
+    }
+
+    let mut result = mutex.lock().unwrap();
+    *result = result.max(partial);
 }
 
 /// Add two snailfish numbers.
