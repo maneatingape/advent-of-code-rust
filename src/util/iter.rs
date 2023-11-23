@@ -1,7 +1,7 @@
 //! Add a `chunk` method to [`Iterator`] that duplicates the functionality of the unstable
 //! [`array_chunks`] method.
 //!
-//! Using Rust's const generics, concrete implementations are provided for sizes 2 to 6 to handle
+//! Using Rust's const generics, concrete implementations are provided for sizes 2 to 8 to handle
 //! the most common situations. Once [`array_chunks`] is stablized then this module can be removed.
 //!
 //! [`array_chunks`]: std::iter::Iterator::array_chunks
@@ -81,5 +81,38 @@ impl<I: Iterator> Iterator for Chunk<I, 6> {
         let e = self.iter.next()?;
         let f = self.iter.next()?;
         Some([a, b, c, d, e, f])
+    }
+}
+
+impl<I: Iterator> Iterator for Chunk<I, 7> {
+    type Item = [I::Item; 7];
+
+    #[inline]
+    fn next(&mut self) -> Option<Self::Item> {
+        let a = self.iter.next()?;
+        let b = self.iter.next()?;
+        let c = self.iter.next()?;
+        let d = self.iter.next()?;
+        let e = self.iter.next()?;
+        let f = self.iter.next()?;
+        let g = self.iter.next()?;
+        Some([a, b, c, d, e, f, g])
+    }
+}
+
+impl<I: Iterator> Iterator for Chunk<I, 8> {
+    type Item = [I::Item; 8];
+
+    #[inline]
+    fn next(&mut self) -> Option<Self::Item> {
+        let a = self.iter.next()?;
+        let b = self.iter.next()?;
+        let c = self.iter.next()?;
+        let d = self.iter.next()?;
+        let e = self.iter.next()?;
+        let f = self.iter.next()?;
+        let g = self.iter.next()?;
+        let h = self.iter.next()?;
+        Some([a, b, c, d, e, f, g, h])
     }
 }
