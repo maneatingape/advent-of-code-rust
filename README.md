@@ -249,7 +249,7 @@ pie
 | 7 | [Recursive Circus](https://adventofcode.com/2017/day/7) | [Source](src/year2017/day07.rs) | 85 |
 | 8 | [I Heard You Like Registers](https://adventofcode.com/2017/day/8) | [Source](src/year2017/day08.rs) | 46 |
 | 9 | [Stream Processing](https://adventofcode.com/2017/day/9) | [Source](src/year2017/day09.rs) | 13 |
-| 10 | [Knot Hash](https://adventofcode.com/2017/day/10) | [Source](src/year2017/day10.rs) | 112 |
+| 10 | [Knot Hash](https://adventofcode.com/2017/day/10) | [Source](src/year2017/day10.rs) | 61 |
 | 11 | [Hex Ed](https://adventofcode.com/2017/day/11) | [Source](src/year2017/day11.rs) | 20 |
 | 12 | [Digital Plumber](https://adventofcode.com/2017/day/12) | [Source](src/year2017/day12.rs) | 59 |
 | 13 | [Packet Scanners](https://adventofcode.com/2017/day/13) | [Source](src/year2017/day13.rs) | 2 |

@@ -16,7 +16,7 @@ pub fn parse(input: &str) -> &str {
 pub fn part1(input: &str) -> u32 {
     let lengths: Vec<_> = input.iter_unsigned().collect();
     let knot = hash(&lengths, 1);
-    knot.iter().take(2).product()
+    knot.iter().take(2).map(|&b| b as u32).product()
 }
 
 pub fn part2(input: &str) -> String {
@@ -34,8 +34,8 @@ pub fn part2(input: &str) -> String {
     result
 }
 
-fn hash(lengths: &[usize], rounds: usize) -> Vec<u32> {
-    let mut knot: Vec<_> = (0..256).collect();
+fn hash(lengths: &[usize], rounds: usize) -> Vec<u8> {
+    let mut knot: Vec<_> = (0..=255).collect();
     let mut position = 0;
     let mut skip = 0;
 
