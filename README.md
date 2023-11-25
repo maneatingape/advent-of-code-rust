@@ -253,6 +253,7 @@ pie
 | 11 | [Hex Ed](https://adventofcode.com/2017/day/11) | [Source](src/year2017/day11.rs) | 20 |
 | 12 | [Digital Plumber](https://adventofcode.com/2017/day/12) | [Source](src/year2017/day12.rs) | 59 |
 | 13 | [Packet Scanners](https://adventofcode.com/2017/day/13) | [Source](src/year2017/day13.rs) | 2 |
+| 14 | [Disk Defragmentation](https://adventofcode.com/2017/day/14) | [Source](src/year2017/day14.rs) | 422 |
 
 ## 2016
 
