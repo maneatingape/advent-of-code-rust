@@ -250,6 +250,7 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 | 12 | [Digital Plumber](https://adventofcode.com/2017/day/12) | [Source](src/year2017/day12.rs) | 59 |
 | 13 | [Packet Scanners](https://adventofcode.com/2017/day/13) | [Source](src/year2017/day13.rs) | 2 |
 | 14 | [Disk Defragmentation](https://adventofcode.com/2017/day/14) | [Source](src/year2017/day14.rs) | 422 |
+| 15 | [Dueling Generators](https://adventofcode.com/2017/day/15) | [Source](src/year2017/day15.rs) | 425000 |
 
 ## 2016
 
