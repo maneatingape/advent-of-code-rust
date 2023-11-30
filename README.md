@@ -68,6 +68,7 @@ pie
     "Years 2019, 2021 and 2022" : 42
 ```
 
+* [2023](#2023) (in progress)
 * [2022](#2022) (10 ms)
 * [2021](#2021) (10 ms)
 * [2020](#2020) (286 ms)
@@ -75,6 +76,12 @@ pie
 * [2017](#2017) (in progress)
 * [2016](#2016) (663 ms)
 * [2015](#2015) (87 ms)
+
+## 2023
+
+| Day | Problem | Solution | Benchmark (μs) |
+| --- | --- | --- | --: |
+| 1 | [Trebuchet?!](https://adventofcode.com/2023/day/1) | [Source](src/year2023/day01.rs) | 38 |
 
 ## 2022
 
