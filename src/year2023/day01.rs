@@ -1,27 +1,12 @@
+//! # Trebuchet?!
+//!
+//! The input can contain overlapping digits such as "twone", so we only remove a letter at a time
+//! until the starting or ending digits are found.
 use crate::util::parse::*;
 
-const DIGITS: [(&str, u32); 20] = [
-    ("0", 0),
-    ("1", 1),
-    ("2", 2),
-    ("3", 3),
-    ("4", 4),
-    ("5", 5),
-    ("6", 6),
-    ("7", 7),
-    ("8", 8),
-    ("9", 9),
-    ("zero", 0),
-    ("one", 1),
-    ("two", 2),
-    ("three", 3),
-    ("four", 4),
-    ("five", 5),
-    ("six", 6),
-    ("seven", 7),
-    ("eight", 8),
-    ("nine", 9),
-];
+/// Use the index of each digit as its implicit value.
+const DIGITS: [&[u8]; 9] =
+    [b"one", b"two", b"three", b"four", b"five", b"six", b"seven", b"eight", b"nine"];
 
 pub fn parse(input: &str) -> Vec<&str> {
     input.lines().collect()
@@ -32,37 +17,43 @@ pub fn part1(input: &[&str]) -> u32 {
         .iter()
         .map(|line| {
             let first = line.bytes().find(u8::is_ascii_digit).unwrap().to_decimal();
-            let last = line.bytes().rev().find(u8::is_ascii_digit).unwrap().to_decimal();
+            let last = line.bytes().rfind(u8::is_ascii_digit).unwrap().to_decimal();
             (10 * first + last) as u32
         })
         .sum()
 }
 
-pub fn part2(input: &[&str]) -> u32 {
+pub fn part2(input: &[&str]) -> usize {
     input
         .iter()
         .map(|line| {
-            let mut line = *line;
+            let mut line = line.as_bytes();
 
             let first = 'outer: loop {
-                for &(digit, value) in &DIGITS {
+                if line[0].is_ascii_digit() {
+                    break line[0].to_decimal() as usize;
+                }
+                for (value, digit) in DIGITS.iter().enumerate() {
                     if line.starts_with(digit) {
-                        break 'outer value;
+                        break 'outer value + 1;
                     }
                 }
                 line = &line[1..];
             };
 
-            let second = 'outer: loop {
-                for &(digit, value) in &DIGITS {
+            let last = 'outer: loop {
+                if line[line.len() - 1].is_ascii_digit() {
+                    break line[line.len() - 1].to_decimal() as usize;
+                }
+                for (value, digit) in DIGITS.iter().enumerate() {
                     if line.ends_with(digit) {
-                        break 'outer value;
+                        break 'outer value + 1;
                     }
                 }
                 line = &line[..line.len() - 1];
             };
 
-            10 * first + second
+            10 * first + last
         })
         .sum()
 }

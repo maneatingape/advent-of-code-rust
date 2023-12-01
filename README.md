@@ -81,7 +81,7 @@ pie
 
 | Day | Problem | Solution | Benchmark (μs) |
 | --- | --- | --- | --: |
-| 1 | [Trebuchet?!](https://adventofcode.com/2023/day/1) | [Source](src/year2023/day01.rs) | 38 |
+| 1 | [Trebuchet?!](https://adventofcode.com/2023/day/1) | [Source](src/year2023/day01.rs) | 35 |
 
 ## 2022
 
