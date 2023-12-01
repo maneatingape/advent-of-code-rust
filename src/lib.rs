@@ -217,4 +217,5 @@ pub mod year2022 {
 /// # Restore global snow production
 pub mod year2023 {
     pub mod day01;
+    pub mod day02;
 }
