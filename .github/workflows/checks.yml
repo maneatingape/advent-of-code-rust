@@ -11,8 +11,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    - run: rustup install 1.74 --profile default
-    - run: rustup default 1.74
     - run: cargo fmt --check
     - run: cargo clippy --tests --all-features -- --deny warnings
     - run: cargo test
