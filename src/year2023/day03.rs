@@ -1,43 +1,54 @@
+//! # Gear Ratios
 use crate::util::grid::*;
-use crate::util::hash::*;
 use crate::util::parse::*;
 use crate::util::point::*;
 
 pub struct Input {
     grid: Grid<u8>,
     seen: Grid<usize>,
-    numbers: Vec<u32>,
+    parts: Vec<u32>,
 }
 
 pub fn parse(input: &str) -> Input {
     let grid = Grid::parse(input);
-    let width = grid.width as usize;
-
+    // In order to tell if we've already seen a number before, store its index at the location
+    // of every digit, using zero to indicate no value. For example:
+    // `467..114..` => `1110022200`
     let mut seen: Grid<usize> = grid.default_copy();
-    let mut numbers = vec![0];
-    let mut current = 0;
+    // Stores each unique part number. The first value is a dummy placeholder.
+    let mut parts = vec![0];
+    let mut number = 0;
 
-    for (i, b) in grid.bytes.iter().enumerate() {
-        if current > 0 && (!b.is_ascii_digit() || i % width == 0) {
-            numbers.push(current);
-            current = 0;
+    for y in 0..grid.height {
+        for x in 0..grid.width {
+            let p = Point::new(x, y);
+            let b = grid[p];
+
+            if b.is_ascii_digit() {
+                // Parse contiguous groups of digits.
+                seen[p] = parts.len();
+                number = 10 * number + (b.to_decimal() as u32);
+            } else if number > 0 {
+                // If not a digit then finish the current number.
+                parts.push(number);
+                number = 0;
+            }
         }
-        if b.is_ascii_digit() {
-            seen.bytes[i] = numbers.len();
-            current = 10 * current + (b.to_decimal() as u32);
+        // Actual corner case if the last number is in the bottom-right corner.
+        if number > 0 {
+            parts.push(number);
+            number = 0;
         }
     }
 
-    if current > 0 {
-        numbers.push(current);
-    }
-
-    Input { grid, seen, numbers }
+    Input { grid, seen, parts }
 }
 
+/// Sum all part numbers adjacent to a least one symbol.
 pub fn part1(input: &Input) -> u32 {
-    let Input { grid, seen, numbers } = input;
-    let mut adjacent = FastSet::new();
+    let Input { grid, seen, parts } = input;
+    let mut parts = parts.clone();
+    let mut result = 0;
 
     for y in 0..grid.height {
         for x in 0..grid.width {
@@ -46,40 +57,49 @@ pub fn part1(input: &Input) -> u32 {
 
             if !b.is_ascii_digit() && b != b'.' {
                 for next in DIAGONAL.iter().copied().map(|d| p + d) {
-                    if seen[next] != 0 {
-                        adjacent.insert(seen[next]);
+                    let index = seen[next];
+                    if index != 0 {
+                        result += parts[index];
+                        // Only count each number once when its adjacent to multiple symbols.
+                        parts[index] = 0;
                     }
                 }
             }
         }
     }
 
-    adjacent.iter().map(|&i| numbers[i]).sum()
+    result
 }
 
+/// Sum all gears adjacent to exactly two part numbers.
 pub fn part2(input: &Input) -> u32 {
-    let Input { grid, seen, numbers } = input;
-    let mut adjacent = FastSet::new();
+    let Input { grid, seen, parts } = input;
     let mut result = 0;
 
     for y in 0..grid.height {
         for x in 0..grid.width {
             let p = Point::new(x, y);
-            let b = grid[p];
 
-            if b == b'*' {
+            if grid[p] == b'*' {
+                let mut previous = 0;
+                let mut distinct = 0;
+                let mut subtotal = 1;
+
+                // Rely on the left to right and top to bottom order of DIAGONAL
+                // to detect distinct numbers.
                 for next in DIAGONAL.iter().copied().map(|d| p + d) {
-                    if seen[next] != 0 {
-                        adjacent.insert(seen[next]);
+                    let index = seen[next];
+                    if index != 0 && index != previous {
+                        previous = index;
+                        distinct += 1;
+                        subtotal *= parts[index];
                     }
                 }
-            }
 
-            if adjacent.len() == 2 {
-                result += adjacent.iter().map(|&i| numbers[i]).product::<u32>();
+                if distinct == 2 {
+                    result += subtotal;
+                }
             }
-
-            adjacent.clear();
         }
     }
 

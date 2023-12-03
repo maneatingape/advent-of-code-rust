@@ -83,7 +83,7 @@ pie
 | --- | --- | --- | --: |
 | 1 | [Trebuchet?!](https://adventofcode.com/2023/day/1) | [Source](src/year2023/day01.rs) | 35 |
 | 2 | [Cube Conundrum](https://adventofcode.com/2023/day/2) | [Source](src/year2023/day02.rs) | 10 |
-| 3 | [Gear Ratios](https://adventofcode.com/2023/day/3) | [Source](src/year2023/day03.rs) | 70 |
+| 3 | [Gear Ratios](https://adventofcode.com/2023/day/3) | [Source](src/year2023/day03.rs) | 55 |
 
 ## 2022
 
