@@ -34,6 +34,16 @@ pub const DOWN: Point = Point::new(0, 1);
 pub const LEFT: Point = Point::new(-1, 0);
 pub const RIGHT: Point = Point::new(1, 0);
 pub const ORTHOGONAL: [Point; 4] = [UP, DOWN, LEFT, RIGHT];
+pub const DIAGONAL: [Point; 8] = [
+    UP,
+    DOWN,
+    LEFT,
+    RIGHT,
+    Point::new(-1, -1),
+    Point::new(1, -1),
+    Point::new(-1, 1),
+    Point::new(1, 1),
+];
 
 #[derive(Copy, Clone, Debug, Eq, PartialEq)]
 pub struct Point {
