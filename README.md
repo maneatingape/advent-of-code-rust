@@ -85,6 +85,7 @@ pie
 | 2 | [Cube Conundrum](https://adventofcode.com/2023/day/2) | [Source](src/year2023/day02.rs) | 10 |
 | 3 | [Gear Ratios](https://adventofcode.com/2023/day/3) | [Source](src/year2023/day03.rs) | 55 |
 | 4 | [Scratchcards](https://adventofcode.com/2023/day/4) | [Source](src/year2023/day04.rs) | 18 |
+| 5 | [If You Give A Seed A Fertilizer](https://adventofcode.com/2023/day/5) | [Source](src/year2023/day05.rs) | 15 |
 
 ## 2022
 
