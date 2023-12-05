@@ -58,33 +58,19 @@ pub fn part2(input: &Input) -> u64 {
             // Split ranges that overlap into 1, 2 or 3 new ranges.
             // Assumes that seed ranges will only overlap with a single range in each stage.
             for &[dest, s2, e2] in stage {
-                if s2 <= s1 && e1 <= e2 {
-                    // Seed range is completely contained.
-                    //      ssss
-                    //    mmmmmmmm
-                    next.push([s1 - s2 + dest, e1 - s2 + dest]);
-                    continue 'outer;
-                } else if s1 < s2 && s2 < e1 && e1 <= e2 {
-                    // Upper half of seed range overlaps.
-                    //      ssss
-                    //        mmmm
-                    next.push([s1, s2]);
-                    next.push([dest, e1 - s2 + dest]);
-                    continue 'outer;
-                } else if s2 <= s1 && s1 < e2 && e2 < e1 {
-                    // Lower half of seed range overlaps.
-                    //      ssss
-                    //    mmmm
-                    next.push([s1 - s2 + dest, e2 - s2 + dest]);
-                    next.push([e2, e1]);
-                    continue 'outer;
-                } else if s1 < s2 && e2 < e1 {
-                    // Seed range contains other range.
-                    //   sssssssss
-                    //      mm
-                    next.push([s1, s2]);
-                    next.push([dest, e2 - s2 + dest]);
-                    next.push([e2, e1]);
+                // x1 and x2 are the possible overlap.
+                let x1 = s1.max(s2);
+                let x2 = e1.min(e2);
+
+                if x1 < x2 {
+                    if s1 < x1 {
+                        next.push([s1, x1]);
+                    }
+                    if x2 < e1 {
+                        next.push([x2, e1]);
+                    }
+                    // Move overlap to new destination.
+                    next.push([x1 - s2 + dest, x2 - s2 + dest]);
                     continue 'outer;
                 }
             }
