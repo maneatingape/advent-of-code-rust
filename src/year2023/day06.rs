@@ -38,21 +38,21 @@ fn merge(line: &str) -> String {
 }
 
 fn race(first: &str, second: &str) -> u128 {
-    let times: Vec<u128> = first.iter_unsigned().collect();
-    let distances: Vec<u128> = second.iter_unsigned().collect();
+    let times = first.iter_unsigned::<u128>();
+    let distances = second.iter_unsigned::<u128>();
     let mut result = 1;
 
-    for (&time, &distance) in times.iter().zip(distances.iter()) {
+    for (time, distance) in times.zip(distances) {
         // Use the quadratic formula to find the start and end positions.
         let root = isqrt(time * time - 4 * distance);
         let mut start = (time - root).div_ceil(2);
         let mut end = (time + root) / 2;
 
         // As we're using integer math we may need to adjust 1 step.
-        while start * (time - start) > distance {
+        if start * (time - start) > distance {
             start -= 1;
         }
-        while end * (time - end) > distance {
+        if end * (time - end) > distance {
             end += 1;
         }
 
@@ -62,21 +62,18 @@ fn race(first: &str, second: &str) -> u128 {
     result
 }
 
-/// Binary search to find the
-/// [integer square root](https://en.wikipedia.org/wiki/Integer_square_root).
+/// [Integer square root](https://en.wikipedia.org/wiki/Integer_square_root).
 fn isqrt(n: u128) -> u128 {
-    let mut start = 0;
-    let mut end = n;
+    let mut bit = 1 << (n.ilog2() / 2);
+    let mut root = bit;
 
-    while start < end {
-        let middle = (start + end) / 2;
-
-        if middle * middle > n {
-            end = middle;
-        } else {
-            start = middle + 1;
+    while bit > 1 {
+        bit >>= 1;
+        let next = root | bit;
+        if next * next <= n {
+            root = next;
         }
     }
 
-    start
+    root
 }
