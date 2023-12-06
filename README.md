@@ -87,6 +87,7 @@ pie
 | 4 | [Scratchcards](https://adventofcode.com/2023/day/4) | [Source](src/year2023/day04.rs) | 18 |
 | 5 | [If You Give A Seed A Fertilizer](https://adventofcode.com/2023/day/5) | [Source](src/year2023/day05.rs) | 13 |
 | 6 | [Wait For It](https://adventofcode.com/2023/day/6) | [Source](src/year2023/day06.rs) | 1 |
+| 7 | [Camel Cards](https://adventofcode.com/2023/day/7) | [Source](src/year2023/day07.rs) | 97 |
 
 ## 2022
 
