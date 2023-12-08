@@ -89,6 +89,7 @@ pie
 | 6 | [Wait For It](https://adventofcode.com/2023/day/6) | [Source](src/year2023/day06.rs) | 1 |
 | 7 | [Camel Cards](https://adventofcode.com/2023/day/7) | [Source](src/year2023/day07.rs) | 97 |
 | 8 | [Haunted Wasteland](https://adventofcode.com/2023/day/8) | [Source](src/year2023/day08.rs) | 34 |
+| 9 | [Mirage Maintenance](https://adventofcode.com/2023/day/9) | [Source](src/year2023/day09.rs) | 31 |
 
 ## 2022
 
