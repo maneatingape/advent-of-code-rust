@@ -10,9 +10,9 @@ ZZZ = (ZZZ, ZZZ)";
 const SECOND_EXAMPLE: &str = "\
 LR
 
-AAA = (11B, XXX)
-11B = (XXX, ZZZ)
-ZZZ = (11B, XXX)
+11A = (11B, XXX)
+11B = (XXX, 11Z)
+11Z = (11B, XXX)
 22A = (22B, XXX)
 22B = (22C, 22C)
 22C = (22Z, 22Z)
