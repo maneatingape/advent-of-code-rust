@@ -1,121 +1,71 @@
+//! # Pipe Maze
+//!
+//! This solution uses the [Shoelace formula](https://en.wikipedia.org/wiki/Shoelace_formula)
+//! and [Pick's theorem](https://en.wikipedia.org/wiki/Pick%27s_theorem).
+//!
+//! Starting at `S` we trace out the path followed by the pipes. Each corner piece
+//! (`7`, `F`, `J`, `L` and finally `S`) is considered a vertex and added to the running total
+//! for the area using the Shoelace formula. Additionally we keep track of the perimeter length.
+//!
+//! As the path is a loop the answer for part one is half the perimeter length.
+//!
+//! The answer for part two is the number of interior points. Rearranging Pick's theorem:
+//!
+//! `A = i + b / 2 - 1 => i = A - b / 2 + 1`
 use crate::util::grid::*;
 use crate::util::point::*;
-use std::collections::VecDeque;
 
-type Input = (usize, usize);
+type Input = (i32, i32);
 
 pub fn parse(input: &str) -> Input {
     let grid = Grid::parse(input);
+    let determinant = |a: Point, b: Point| a.x * b.y - a.y * b.x;
 
-    let (mut position, mut direction) = find_start(&grid);
-    let mut inner = direction.clockwise();
-
-    let mut todo = VecDeque::new();
-    let mut seen: Grid<bool> = grid.default_copy();
+    // Find the starting position and direction.
+    let mut corner = grid.find(b'S').unwrap();
+    let mut direction = if matches!(grid[corner + UP], b'|' | b'7' | b'F') { UP } else { DOWN };
+    let mut position = corner + direction;
+    // Incrementally add up both perimeter and area.
     let mut steps = 1;
+    let mut area = 0;
 
     loop {
-        let candidate = position + inner;
-        if seen.contains(candidate) && !seen[candidate] {
-            todo.push_back(candidate);
+        // Follow straight paths.
+        while grid[position] == b'-' || grid[position] == b'|' {
+            position += direction;
+            steps += 1;
         }
 
-        seen[position] = true;
-
-        (direction, inner) = match grid[position] {
-            b'-' | b'|' => (direction, inner),
-            b'L' => {
-                if direction == DOWN {
-                    (RIGHT, inner.counter_clockwise())
-                } else {
-                    (UP, inner.clockwise())
-                }
+        // Change direction at corner pieces.
+        direction = match grid[position] {
+            b'7' if direction == UP => LEFT,
+            b'F' if direction == UP => RIGHT,
+            b'J' if direction == DOWN => LEFT,
+            b'L' if direction == DOWN => RIGHT,
+            b'J' | b'L' => UP,
+            b'7' | b'F' => DOWN,
+            _ => {
+                // We've looped all the way back to the start.
+                area += determinant(corner, position);
+                break;
             }
-            b'J' => {
-                if direction == DOWN {
-                    (LEFT, inner.clockwise())
-                } else {
-                    (UP, inner.counter_clockwise())
-                }
-            }
-            b'7' => {
-                if direction == UP {
-                    (LEFT, inner.counter_clockwise())
-                } else {
-                    (DOWN, inner.clockwise())
-                }
-            }
-            b'F' => {
-                if direction == UP {
-                    (RIGHT, inner.clockwise())
-                } else {
-                    (DOWN, inner.counter_clockwise())
-                }
-            }
-            _ => break,
         };
 
-        // Cover outer corners
-        let candidate = position + inner;
-        if seen.contains(candidate) && !seen[candidate] {
-            todo.push_back(candidate);
-        }
-
+        area += determinant(corner, position);
+        corner = position;
         position += direction;
         steps += 1;
     }
 
-    let mut outer = false;
-    let mut area = 0;
-
-    while let Some(next) = todo.pop_front() {
-        if seen[next] {
-            continue;
-        }
-
-        seen[next] = true;
-        area += 1;
-
-        for o in ORTHOGONAL {
-            let canidate = next + o;
-            if !seen.contains(canidate) {
-                outer = true;
-                continue;
-            }
-            if !seen[canidate] {
-                todo.push_back(canidate);
-            }
-        }
-    }
-
     let part_one = steps / 2;
-    let part_two = if outer { grid.bytes.len() - steps - area } else { area };
+    let part_two = area.abs() / 2 - steps / 2 + 1;
     (part_one, part_two)
 }
 
-pub fn part1(input: &Input) -> usize {
+pub fn part1(input: &Input) -> i32 {
     input.0
 }
 
-pub fn part2(input: &Input) -> usize {
+pub fn part2(input: &Input) -> i32 {
     input.1
-}
-
-fn find_start(grid: &Grid<u8>) -> (Point, Point) {
-    let start = grid.find(b'S').unwrap();
-
-    if matches!(grid[start + UP], b'|' | b'7' | b'F') {
-        return (start + UP, UP);
-    }
-    if matches!(grid[start + DOWN], b'|' | b'L' | b'J') {
-        return (start + DOWN, DOWN);
-    }
-    if matches!(grid[start + LEFT], b'-' | b'L' | b'F') {
-        return (start + LEFT, LEFT);
-    }
-    if matches!(grid[start + RIGHT], b'-' | b'7' | b'J') {
-        return (start + RIGHT, RIGHT);
-    }
-
-    unreachable!()
 }
