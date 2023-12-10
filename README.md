@@ -91,6 +91,7 @@ pie
 | 8 | [Haunted Wasteland](https://adventofcode.com/2023/day/8) | [Source](src/year2023/day08.rs) | 34 |
 | 9 | [Mirage Maintenance](https://adventofcode.com/2023/day/9) | [Source](src/year2023/day09.rs) | 19 |
 | 10 | [Pipe Maze](https://adventofcode.com/2023/day/10) | [Source](src/year2023/day10.rs) | 60 |
+| 11 | [Cosmic Expansion](https://adventofcode.com/2023/day/11) | [Source](src/year2023/day11.rs) | 50 |
 
 ## 2022
 
