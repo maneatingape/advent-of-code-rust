@@ -44,24 +44,17 @@ type Input = (i64, i64);
 pub fn parse(input: &str) -> Input {
     // Determine how many numbers are on each row. Assume each row has the same amount.
     let (prefix, _) = input.split_once('\n').unwrap();
-    let row = prefix.iter_signed::<i64>().count();
+    let row = prefix.iter_signed::<i64>().count() as i64;
 
     // Calculate [Pascal's Triangle](https://en.wikipedia.org/wiki/Pascal%27s_triangle)
-    // for the required row.
+    // for the required row, flipping the sign on each second coefficient.
+    let mut coefficient = 1;
     let mut triangle = vec![1];
 
     for i in 0..row {
-        let mut next = Vec::with_capacity(i + 2);
-
-        next.push(1);
-        next.extend(triangle.windows(2).map(|w| w[0] + w[1]));
-        next.push(1);
-
-        triangle = next;
+        coefficient = (coefficient * (i - row)) / (i + 1);
+        triangle.push(coefficient);
     }
-
-    // Flip sign of each even numbered column.
-    triangle.iter_mut().step_by(2).for_each(|c| *c = -*c);
 
     // Use adjusted binomial coefficients to calculate answers for each row.
     let mut part_one = 0;
@@ -78,10 +71,9 @@ pub fn parse(input: &str) -> Input {
 }
 
 pub fn part1(input: &Input) -> i64 {
-    // Positive if row size is even, negative is row size is odd. Take absolute value.
     input.0.abs()
 }
 
 pub fn part2(input: &Input) -> i64 {
-    input.1
+    input.1.abs()
 }
