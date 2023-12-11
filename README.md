@@ -92,6 +92,7 @@ pie
 | 9 | [Mirage Maintenance](https://adventofcode.com/2023/day/9) | [Source](src/year2023/day09.rs) | 19 |
 | 10 | [Pipe Maze](https://adventofcode.com/2023/day/10) | [Source](src/year2023/day10.rs) | 60 |
 | 11 | [Cosmic Expansion](https://adventofcode.com/2023/day/11) | [Source](src/year2023/day11.rs) | 12 |
+| 12 | [Hot Springs](https://adventofcode.com/2023/day/12) | [Source](src/year2023/day12.rs) | 4200 |
 
 ## 2022
 
