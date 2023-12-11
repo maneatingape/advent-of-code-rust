@@ -1,92 +1,70 @@
 //! # Cosmic Expansion
 //!
-//! Parses each galaxy into a two dimensional [`Point`].
-//! Then calculates a [prefix sum](https://en.wikipedia.org/wiki/Prefix_sum) of the number of
-//! horizontal and vertical gaps to left or above each coordinate. Using the sample data:
+//! We simplify the problem by treating each axis independently. Consider 4 galaxies on the same
+//! axis at arbitrary non-decreasing values `a b c d`. The pairwise distances are:
 //!
-//! ```none
-//!     Horizontal: [0, 0, 0, 1, 1, 1, 1, 2, 2, 2]
-//!     Vertical:   [0, 0, 1, 1, 1, 2, 2, 2, 3, 3]
-//! ```
+//! * `b - a`
+//! * `c - b + c - a` => `2c - (a + b)`
+//! * `d - c + d - b + d - a` => `3d - (a + b + c)`
 //!
-//! Then to stretch each each point we add the number of gaps. For example:
+//! We can see that each pairwise distance can be expressed as the current coordinate multiplied by
+//! the previous number of galaxies minus the [prefix sum](https://en.wikipedia.org/wiki/Prefix_sum)
+//! of the coordinates of the previous galaxies.
 //!
-//! * Original galaxy `(6, 4)`
-//! * `vertical[6] = 2`
-//! * `horizontal[4] = 1`
-//! * Stretched `(8, 5)`
+//! In the special case that two or more galaxies are at the same coordinate, for example `c == d`:
 //!
-//! For part two we scale the gaps by a factor.
-use crate::util::grid::*;
-use crate::util::point::*;
-
+//! * `c - b + c - a` => `2c - (a + b)`
+//! * `d - c + d - b + d - a` => `3d - (a + b + c)` => `2c - (a + b)`
+//! * Total: `2 * [2c - (a + b)]`
+//!
+//! This implies that we only need the *count* of the number of galaxies at each coordinate and
+//! can multiply the total value by that count. This also find gaps with no galaxies to
+//! calculate the expanded coordinates.
 pub struct Input {
-    points: Vec<Point>,
-    horizontal: Vec<i32>,
-    vertical: Vec<i32>,
+    xs: [usize; 140],
+    ys: [usize; 140],
 }
 
 pub fn parse(input: &str) -> Input {
-    let grid: Grid<u8> = Grid::parse(input);
-    let size = grid.width as usize;
+    let mut xs = [0; 140];
+    let mut ys = [0; 140];
 
-    // Build points keeping track of empty rows and columns.
-    let mut points = Vec::new();
-    let mut rows = vec![true; size];
-    let mut columns = vec![true; size];
-
-    for y in 0..grid.height {
-        for x in 0..grid.width {
-            let point = Point::new(x, y);
-            if grid[point] == b'#' {
-                points.push(point);
-                rows[y as usize] = false;
-                columns[x as usize] = false;
+    for (y, row) in input.lines().enumerate() {
+        for (x, b) in row.bytes().enumerate() {
+            if b == b'#' {
+                xs[x] += 1;
+                ys[y] += 1;
             }
         }
     }
 
-    // Calculate prefix sum of horizontal and vertical gaps.
-    let mut h = 0;
-    let mut v = 0;
-    let mut horizontal = vec![0; size];
-    let mut vertical = vec![0; size];
-
-    for i in 0..size {
-        h += rows[i] as i32;
-        v += columns[i] as i32;
-        horizontal[i] = h;
-        vertical[i] = v;
-    }
-
-    Input { points, horizontal, vertical }
+    Input { xs, ys }
 }
 
-pub fn part1(input: &Input) -> u64 {
-    stretch(input, 1)
+pub fn part1(input: &Input) -> usize {
+    axis(&input.xs, 1) + axis(&input.ys, 1)
 }
 
-pub fn part2(input: &Input) -> u64 {
-    stretch(input, 999999)
+pub fn part2(input: &Input) -> usize {
+    axis(&input.xs, 999999) + axis(&input.ys, 999999)
 }
 
-fn stretch(input: &Input, factor: i32) -> u64 {
+fn axis(counts: &[usize], factor: usize) -> usize {
+    let mut gaps = 0;
     let mut result = 0;
-    let points: Vec<_> = input
-        .points
-        .iter()
-        .map(|p| {
-            // Stretch the distance between points based on how many
-            // empty row or columns are to the left or above.
-            let x = p.x + factor * input.vertical[p.x as usize];
-            let y = p.y + factor * input.horizontal[p.y as usize];
-            Point::new(x, y)
-        })
-        .collect();
+    let mut prefix_sum = 0;
+    let mut prefix_items = 0;
 
-    // Sum the Manhattan distance between all pairs of points.
-    for (i, p1) in points.iter().enumerate().skip(1) {
-        result += points.iter().take(i).map(|&p2| p1.manhattan(p2) as u64).sum::<u64>();
+    for (i, &count) in counts.iter().enumerate() {
+        if count > 0 {
+            let expanded = i + factor * gaps;
+            let extra = prefix_items * expanded - prefix_sum;
+            result += count * extra;
+            prefix_sum += count * expanded;
+            prefix_items += count;
+        } else {
+            gaps += 1;
+        }
     }
 
     result
