@@ -226,4 +226,5 @@ mod year2023 {
     mod day10_test;
     mod day11_test;
     mod day12_test;
+    mod day13_test;
 }
