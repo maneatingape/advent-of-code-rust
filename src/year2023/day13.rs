@@ -1,3 +1,22 @@
+//! # Point of Incidence
+//!
+//! We store each row of a grid as a binary number. For example `#.##..##.` becomes `101100110`.
+//! Then to count smudges we bitwise XOR the respective rows together and count one bits
+//! using the [`count_ones`] function.
+//!
+//! For example:
+//! ```none
+//!     ..##..###     001100111 ^ 000100111 = 00100000 => 1
+//!    v#####.##.v => 111110110 ^ 111110110 = 00000000 => 0
+//!    ^#####.##.^
+//!     ...#..###
+//! ````
+//!
+//! To handle columns we transpose the grid then convert into integers the same way. For part one
+//! we look for a reflection axis with 0 smudges and for part two 1 smudge, allowing the same
+//! code to be reused.
+//!
+//! [`count_ones`]: u32::count_ones
 use crate::util::grid::*;
 use crate::util::point::*;
 
@@ -65,6 +84,7 @@ fn reflect_axis(axis: &[u32], target: u32) -> Option<usize> {
     for i in 1..size {
         let mut smudges = 0;
 
+        // Only consider rows/columns within the boundary of the grid.
         for j in 0..i.min(size - i) {
             smudges += (axis[i - j - 1] ^ axis[i + j]).count_ones();
         }
