@@ -92,7 +92,7 @@ pie
 | 9 | [Mirage Maintenance](https://adventofcode.com/2023/day/9) | [Source](src/year2023/day09.rs) | 19 |
 | 10 | [Pipe Maze](https://adventofcode.com/2023/day/10) | [Source](src/year2023/day10.rs) | 60 |
 | 11 | [Cosmic Expansion](https://adventofcode.com/2023/day/11) | [Source](src/year2023/day11.rs) | 12 |
-| 12 | [Hot Springs](https://adventofcode.com/2023/day/12) | [Source](src/year2023/day12.rs) | 4200 |
+| 12 | [Hot Springs](https://adventofcode.com/2023/day/12) | [Source](src/year2023/day12.rs) | 1150 |
 | 13 | [Point of Incidence](https://adventofcode.com/2023/day/13) | [Source](src/year2023/day13.rs) | 64 |
 | 14 | [Parabolic Reflector Dish](https://adventofcode.com/2023/day/14) | [Source](src/year2023/day14.rs) | 5635 |
 | 15 | [Lens Library](https://adventofcode.com/2023/day/15) | [Source](src/year2023/day15.rs) | 83 |
