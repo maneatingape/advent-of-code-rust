@@ -1,3 +1,6 @@
+//! # Lens Library
+//!
+//! Calculates part one and two at the same time as a speed optimization.
 use crate::util::parse::*;
 
 type Input = (usize, usize);
@@ -21,6 +24,7 @@ pub fn parse(input: &str) -> Input {
             let hash = hash(label);
             let slot = &mut boxes[hash];
 
+            // If the label exists then remove it.
             if let Some(i) = slot.iter().position(|item| item.label == label) {
                 slot.remove(i);
             }
@@ -30,6 +34,7 @@ pub fn parse(input: &str) -> Input {
             let slot = &mut boxes[hash];
             let lens = step[size - 1].to_decimal() as usize;
 
+            // Replace or append new lens.
             if let Some(i) = slot.iter().position(|item| item.label == label) {
                 slot[i].lens = lens;
             } else {
@@ -55,6 +60,7 @@ pub fn part2(input: &Input) -> usize {
     input.1
 }
 
+/// Custom hash function.
 #[inline]
 fn hash(slice: &[u8]) -> usize {
     slice.iter().fold(0, |acc, &b| ((acc + b as usize) * 17) & 0xff)

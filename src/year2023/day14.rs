@@ -1,3 +1,8 @@
+//! # Parabolic Reflector Dish
+//!
+//! To solve part two we look for a cycle where the dish returns to a previously seen state.
+//! By storing each dish and a index in a `HashMap` we can calculate the offset and length of the
+//! cycle then use that to find to state at the billionth step.
 use crate::util::grid::*;
 use crate::util::hash::*;
 use crate::util::point::*;
@@ -30,7 +35,7 @@ pub fn part2(input: &Grid<u8>) -> i32 {
         }
     };
 
-    let offset = 1000000000 - start;
+    let offset = 1_000_000_000 - start;
     let cycle_width = end - start;
     let remainder = offset % cycle_width;
     let target = start + remainder;
