@@ -8,11 +8,22 @@
 //!
 //! Some beams can enter a closed loop so we keep track of previously seen `(position, direction)`
 //! pairs and stop if we've seen a pair before.
+//!
+//! For part two each path is independent so we can use multiple threads in parallel to speed
+//! up the search.
 use crate::util::grid::*;
 use crate::util::point::*;
 use std::collections::VecDeque;
+use std::sync::atomic::{AtomicUsize, Ordering};
+use std::sync::Mutex;
+use std::thread;
 
-type Pair = (Point, Point);
+type Pair = (Point, u32);
+
+const UP: u32 = 0;
+const DOWN: u32 = 1;
+const LEFT: u32 = 2;
+const RIGHT: u32 = 3;
 
 pub struct Input {
     grid: Grid<u8>,
@@ -22,6 +33,17 @@ pub struct Input {
     right: Grid<i32>,
 }
 
+/// Atomics can be safely shared between threads.
+struct Shared {
+    tiles: AtomicUsize,
+}
+
+/// Regular data structures need to be protected by a mutex.
+struct Exclusive {
+    todo: Vec<Pair>,
+}
+
+/// Build four precomputed grids of the next coordinate in each direction for every point.
 pub fn parse(input: &str) -> Input {
     let grid = Grid::parse(input);
 
@@ -90,106 +112,115 @@ pub fn part1(input: &Input) -> usize {
 }
 
 pub fn part2(input: &Input) -> usize {
+    // Build list of edge tiles and directions to process.
     let Input { grid, .. } = input;
-    let mut result = 0;
+    let mut todo = Vec::new();
 
     for x in 0..grid.width {
-        result = result.max(count(input, (Point::new(x, 0), DOWN)));
-        result = result.max(count(input, (Point::new(x, grid.height - 1), UP)));
+        todo.push((Point::new(x, 0), DOWN));
+        todo.push((Point::new(x, grid.height - 1), UP));
     }
 
     for y in 0..grid.height {
-        result = result.max(count(input, (Point::new(0, y), RIGHT)));
-        result = result.max(count(input, (Point::new(grid.width - 1, y), LEFT)));
+        todo.push((Point::new(0, y), RIGHT));
+        todo.push((Point::new(grid.width - 1, y), LEFT));
     }
 
-    result
+    // Setup thread safe wrappers
+    let shared = Shared { tiles: AtomicUsize::new(0) };
+    let exclusive = Exclusive { todo };
+    let mutex = Mutex::new(exclusive);
+
+    // Use as many cores as possible to parallelize the search.
+    thread::scope(|scope| {
+        for _ in 0..thread::available_parallelism().unwrap().get() {
+            scope.spawn(|| worker(input, &shared, &mutex));
+        }
+    });
+
+    shared.tiles.load(Ordering::Relaxed)
 }
 
-#[allow(clippy::too_many_lines)]
+/// Process starting locations from a shared queue.
+fn worker(input: &Input, shared: &Shared, mutex: &Mutex<Exclusive>) {
+    loop {
+        let start = {
+            let mut exclusive = mutex.lock().unwrap();
+            let Some(start) = exclusive.todo.pop() else {
+                break;
+            };
+            start
+        };
+        shared.tiles.fetch_max(count(input, start), Ordering::Relaxed);
+    }
+}
+
+/// Count the number of energized tiles from a single starting location.
 fn count(input: &Input, start: Pair) -> usize {
     let Input { grid, up, down, left, right } = input;
 
-    let mut todo = VecDeque::with_capacity(10_000);
+    let mut todo = VecDeque::with_capacity(1_000);
+    let mut seen: Grid<u8> = grid.default_copy();
     let mut energized: Grid<bool> = grid.default_copy();
-    let mut seen_up: Grid<bool> = grid.default_copy();
-    let mut seen_down: Grid<bool> = grid.default_copy();
-    let mut seen_left: Grid<bool> = grid.default_copy();
-    let mut seen_right: Grid<bool> = grid.default_copy();
 
     todo.push_back(start);
 
     while let Some((position, direction)) = todo.pop_front() {
-        let mut next = |direction: Point| match direction {
-            UP => {
-                if seen_up[position] {
-                    return;
-                }
-                seen_up[position] = true;
-
-                let x = position.x;
-                let last = up[position];
-
-                for y in last + 1..position.y + 1 {
-                    energized[Point::new(x, y)] = true;
-                }
-
-                if last >= 0 {
-                    todo.push_back((Point::new(x, last), UP));
-                }
+        let mut next = |direction: u32| {
+            // Beams can loop, so check if we've already been here.
+            let mask = 1 << direction;
+            if seen[position] & mask != 0 {
+                return;
             }
-            DOWN => {
-                if seen_down[position] {
-                    return;
-                }
-                seen_down[position] = true;
+            seen[position] |= mask;
 
-                let x = position.x;
-                let last = down[position];
+            match direction {
+                UP => {
+                    let x = position.x;
+                    let last = up[position];
 
-                for y in position.y..last {
-                    energized[Point::new(x, y)] = true;
+                    for y in last..position.y {
+                        energized[Point::new(x, y + 1)] = true;
+                    }
+                    if last >= 0 {
+                        todo.push_back((Point::new(x, last), UP));
+                    }
                 }
+                DOWN => {
+                    let x = position.x;
+                    let last = down[position];
 
-                if last < grid.height {
-                    todo.push_back((Point::new(x, last), DOWN));
+                    for y in position.y..last {
+                        energized[Point::new(x, y)] = true;
+                    }
+                    if last < grid.height {
+                        todo.push_back((Point::new(x, last), DOWN));
+                    }
                 }
+                LEFT => {
+                    let y = position.y;
+                    let last = left[position];
+
+                    for x in last..position.x {
+                        energized[Point::new(x + 1, y)] = true;
+                    }
+                    if last >= 0 {
+                        todo.push_back((Point::new(last, y), LEFT));
+                    }
+                }
+                RIGHT => {
+                    let y = position.y;
+                    let last = right[position];
+
+                    for x in position.x..last {
+                        energized[Point::new(x, y)] = true;
+                    }
+                    if last < grid.width {
+                        todo.push_back((Point::new(last, y), RIGHT));
+                    }
+                }
+                _ => unreachable!(),
             }
-            LEFT => {
-                if seen_left[position] {
-                    return;
-                }
-                seen_left[position] = true;
-
-                let y = position.y;
-                let last = left[position];
-
-                for x in last + 1..position.x + 1 {
-                    energized[Point::new(x, y)] = true;
-                }
-
-                if last >= 0 {
-                    todo.push_back((Point::new(last, y), LEFT));
-                }
-            }
-            RIGHT => {
-                if seen_right[position] {
-                    return;
-                }
-                seen_right[position] = true;
-
-                let y = position.y;
-                let last = right[position];
-
-                for x in position.x..last {
-                    energized[Point::new(x, y)] = true;
-                }
-
-                if last < grid.width {
-                    todo.push_back((Point::new(last, y), RIGHT));
-                }
-            }
-            _ => unreachable!(),
         };
 
         match grid[position] {
