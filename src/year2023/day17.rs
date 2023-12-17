@@ -1,5 +1,4 @@
 use crate::util::grid::*;
-use crate::util::heap::*;
 use crate::util::parse::*;
 use crate::util::point::*;
 
@@ -8,67 +7,75 @@ const DOWN: usize = 1;
 const LEFT: usize = 2;
 const RIGHT: usize = 3;
 
-pub fn parse(input: &str) -> Grid<u8> {
-    Grid::parse(input)
+pub fn parse(input: &str) -> Grid<i32> {
+    let Grid { width, height, bytes } = Grid::parse(input);
+    let bytes = bytes.iter().map(|b| b.to_decimal() as i32).collect();
+    Grid { width, height, bytes }
 }
 
-pub fn part1(grid: &Grid<u8>) -> u32 {
-    dijkstra(grid, 0, 3)
+pub fn part1(grid: &Grid<i32>) -> i32 {
+    astar(grid, 0, 3)
 }
 
-pub fn part2(grid: &Grid<u8>) -> u32 {
-    dijkstra(grid, 3, 10)
+pub fn part2(grid: &Grid<i32>) -> i32 {
+    astar(grid, 3, 10)
 }
 
-fn dijkstra(grid: &Grid<u8>, lower: u32, upper: u32) -> u32 {
-    let end = Point::new(grid.width - 1, grid.height - 1);
-    let mut todo = MinHeap::with_capacity(100_000);
-    let mut seen: [Grid<u32>; 4] =
-        [grid.default_copy(), grid.default_copy(), grid.default_copy(), grid.default_copy()];
+fn astar(grid: &Grid<i32>, lower: i32, upper: i32) -> i32 {
+    let size = grid.width - 1;
+    let end = Point::new(size, size);
 
-    for start in [(ORIGIN, RIGHT), (ORIGIN, DOWN)] {
-        todo.push(0, start);
-    }
+    let mut index = 0;
+    let mut todo = vec![Vec::new(); 256];
+    let mut seen: Grid<[i32; 4]> = grid.default_copy();
 
-    while let Some((cost, (position, direction))) = todo.pop() {
-        let mut push = |direction: usize| {
-            let step = ORTHOGONAL[direction];
-            let mut next = position;
-            let mut next_cost = cost;
+    todo[0].push((ORIGIN, RIGHT));
+    todo[0].push((ORIGIN, DOWN));
 
-            for i in 0..upper {
-                next += step;
-                if !grid.contains(next) {
-                    return;
+    loop {
+        while let Some((position, direction)) = todo[index % 256].pop() {
+            let cost = seen[position][direction];
+
+            let mut push = |direction: usize| {
+                let step = ORTHOGONAL[direction];
+                let mut next = position;
+                let mut next_cost = cost;
+
+                for _ in 0..lower {
+                    next += step;
+                    if !grid.contains(next) {
+                        return;
+                    }
+                    next_cost += grid[next];
                 }
-                next_cost += grid[next].to_decimal() as u32;
+                for _ in lower..upper {
+                    next += step;
+                    if !grid.contains(next) {
+                        return;
+                    }
+                    next_cost += grid[next];
 
-                if i >= lower {
-                    let state = (next, direction);
-                    if seen[direction][next] == 0 || next_cost < seen[direction][next] {
-                        todo.push(next_cost, state);
-                        seen[direction][next] = next_cost;
+                    if seen[next][direction] == 0 || next_cost < seen[next][direction] {
+                        let heuristic = (next_cost + next.manhattan(end)) as usize;
+                        todo[heuristic % 256].push((next, direction));
+                        seen[next][direction] = next_cost;
                     }
                 }
+            };
+
+            if position == end {
+                return cost;
             }
-        };
 
-        if position == end {
-            return cost;
-        }
-
-        match direction {
-            UP | DOWN => {
+            if direction < 2 {
                 push(LEFT);
                 push(RIGHT);
-            }
-            LEFT | RIGHT => {
+            } else {
                 push(UP);
                 push(DOWN);
             }
-            _ => unreachable!(),
         }
-    }
 
-    unreachable!()
+        index += 1;
+    }
 }
