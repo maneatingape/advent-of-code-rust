@@ -41,7 +41,7 @@ pub fn parse(input: &str) -> Vec<u32> {
         }
     });
 
-    let mut found = mutex.lock().unwrap().found.clone();
+    let mut found = mutex.into_inner().unwrap().found;
     found.sort_unstable();
     found.iter().map(|&(_, n)| n).collect()
 }

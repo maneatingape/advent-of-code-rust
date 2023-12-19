@@ -136,8 +136,7 @@ fn parallel(monkeys: &[Monkey], pairs: Vec<Pair>) -> Business {
         }
     });
 
-    let exclusive = mutex.lock().unwrap();
-    exclusive.business
+    mutex.into_inner().unwrap().business
 }
 
 /// Multiple worker functions are executed in parallel, one per thread.

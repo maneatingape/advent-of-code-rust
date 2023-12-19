@@ -97,8 +97,7 @@ pub fn part2(input: &[Snailfish]) -> i32 {
         }
     });
 
-    let result = *mutex.lock().unwrap();
-    result
+    mutex.into_inner().unwrap()
 }
 
 /// Pair addition is independent so we can parallelize across multiple threads.

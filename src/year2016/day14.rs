@@ -77,7 +77,7 @@ fn generate_pad(md5: impl Fn(i32) -> (u32, u32, u32, u32) + Copy + Sync) -> i32 
         }
     });
 
-    let exclusive = mutex.lock().unwrap();
+    let exclusive = mutex.into_inner().unwrap();
     *exclusive.found.iter().nth(63).unwrap()
 }
 
