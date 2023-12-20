@@ -6,27 +6,37 @@ macro_rules! benchmark {
         mod $day {
             use aoc::$year::$day::*;
             use std::fs;
+            use std::path::PathBuf;
+            use std::sync::OnceLock;
             use test::Bencher;
 
-            const DATA: &str = concat!["input/", stringify!($year), "/", stringify!($day), ".txt"];
+            fn load_once() -> &'static str {
+                static DATA: OnceLock<String> = OnceLock::new();
+                DATA.get_or_init(|| {
+                    let year = stringify!($year);
+                    let day = &format!("{}.txt", stringify!($day));
+                    let path: PathBuf = ["input", year, day].iter().collect();
+                    fs::read_to_string(path).unwrap()
+                })
+            }
 
             #[bench]
             fn parse_bench(b: &mut Bencher) {
-                let raw = fs::read_to_string(DATA).unwrap();
-                b.iter(|| parse(&raw));
+                let data = load_once();
+                b.iter(|| parse(&data));
             }
 
             #[bench]
             fn part1_bench(b: &mut Bencher) {
-                let raw = fs::read_to_string(DATA).unwrap();
-                let input = parse(&raw);
+                let data = load_once();
+                let input = parse(&data);
                 b.iter(|| part1(&input));
             }
 
             #[bench]
             fn part2_bench(b: &mut Bencher) {
-                let raw = fs::read_to_string(DATA).unwrap();
-                let input = parse(&raw);
+                let data = load_once();
+                let input = parse(&data);
                 b.iter(|| part2(&input));
             }
         }

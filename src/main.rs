@@ -4,6 +4,7 @@ use aoc::*;
 use std::env::args;
 use std::fs;
 use std::iter::empty;
+use std::path::PathBuf;
 use std::time::Instant;
 
 fn main() {
@@ -37,7 +38,7 @@ fn main() {
 
     for Solution { year, day, wrapper } in solutions {
         let time = Instant::now();
-        let (answer1, answer2) = (wrapper)();
+        let (answer1, answer2) = wrapper();
         let duration = time.elapsed().as_micros();
 
         println!("{BOLD}{YELLOW}{year} Day {day:02}{RESET}");
@@ -66,10 +67,12 @@ macro_rules! solution {
             wrapper: || {
                 use $year::$day::*;
 
-                let path = concat!["input/", stringify!($year), "/", stringify!($day), ".txt"];
-                let raw = fs::read_to_string(path).unwrap();
+                let year = stringify!($year);
+                let day = &format!("{}.txt", stringify!($day));
+                let path: PathBuf = ["input", year, day].iter().collect();
+                let data = fs::read_to_string(path).unwrap();
 
-                let input = parse(&raw);
+                let input = parse(&data);
                 let part1 = part1(&input).to_string();
                 let part2 = part2(&input).to_string();
 
