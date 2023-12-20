@@ -2,6 +2,7 @@ use aoc::util::ansi::*;
 use aoc::util::parse::*;
 use aoc::*;
 use std::env::args;
+use std::fs;
 use std::iter::empty;
 use std::time::Instant;
 
@@ -34,9 +35,9 @@ fn main() {
     let total_size = solutions.len();
     let total_time = Instant::now();
 
-    for Solution { year, day, input, wrapper } in solutions {
+    for Solution { year, day, wrapper } in solutions {
         let time = Instant::now();
-        let (answer1, answer2) = (wrapper)(input);
+        let (answer1, answer2) = (wrapper)();
         let duration = time.elapsed().as_micros();
 
         println!("{BOLD}{YELLOW}{year} Day {day:02}{RESET}");
@@ -54,8 +55,7 @@ fn main() {
 struct Solution {
     year: u32,
     day: u32,
-    input: &'static str,
-    wrapper: fn(&str) -> (String, String),
+    wrapper: fn() -> (String, String),
 }
 
 macro_rules! solution {
@@ -63,18 +63,16 @@ macro_rules! solution {
         Solution {
             year: (&stringify!($year)).unsigned(),
             day: (&stringify!($day)).unsigned(),
-            input: include_str!(concat![
-                "../input/",
-                stringify!($year),
-                "/",
-                stringify!($day),
-                ".txt"
-            ]),
-            wrapper: |raw: &str| {
+            wrapper: || {
                 use $year::$day::*;
-                let input = parse(raw);
+
+                let path = concat!["input/", stringify!($year), "/", stringify!($day), ".txt"];
+                let raw = fs::read_to_string(path).unwrap();
+
+                let input = parse(&raw);
                 let part1 = part1(&input).to_string();
                 let part2 = part2(&input).to_string();
+
                 (part1, part2)
             },
         }

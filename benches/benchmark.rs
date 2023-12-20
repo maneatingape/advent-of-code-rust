@@ -5,30 +5,28 @@ macro_rules! benchmark {
     ($year:tt, $day:tt) => {
         mod $day {
             use aoc::$year::$day::*;
+            use std::fs;
             use test::Bencher;
 
-            const INPUT: &str = include_str!(concat![
-                "../input/",
-                stringify!($year),
-                "/",
-                stringify!($day),
-                ".txt"
-            ]);
+            const DATA: &str = concat!["input/", stringify!($year), "/", stringify!($day), ".txt"];
 
             #[bench]
             fn parse_bench(b: &mut Bencher) {
-                b.iter(|| parse(INPUT));
+                let raw = fs::read_to_string(DATA).unwrap();
+                b.iter(|| parse(&raw));
             }
 
             #[bench]
             fn part1_bench(b: &mut Bencher) {
-                let input = parse(INPUT);
+                let raw = fs::read_to_string(DATA).unwrap();
+                let input = parse(&raw);
                 b.iter(|| part1(&input));
             }
 
             #[bench]
             fn part2_bench(b: &mut Bencher) {
-                let input = parse(INPUT);
+                let raw = fs::read_to_string(DATA).unwrap();
+                let input = parse(&raw);
                 b.iter(|| part2(&input));
             }
         }
