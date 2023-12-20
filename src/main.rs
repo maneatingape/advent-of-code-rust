@@ -33,13 +33,17 @@ fn main() {
         .collect();
 
     // Pretty print output and timing for each solution
-    let total_size = solutions.len();
-    let total_time = Instant::now();
+    let mut elapsed = 0;
 
-    for Solution { year, day, wrapper } in solutions {
+    for Solution { year, day, wrapper } in &solutions {
+        let path: PathBuf =
+            ["input", &format!("year{year}"), &format!("day{day:02}.txt")].iter().collect();
+        let data = fs::read_to_string(path).unwrap();
+
         let time = Instant::now();
-        let (answer1, answer2) = wrapper();
+        let (answer1, answer2) = wrapper(&data);
         let duration = time.elapsed().as_micros();
+        elapsed += duration;
 
         println!("{BOLD}{YELLOW}{year} Day {day:02}{RESET}");
         println!("    Part 1: {answer1}");
@@ -48,15 +52,14 @@ fn main() {
     }
 
     // Print totals
-    let elapsed = total_time.elapsed().as_millis();
-    println!("{BOLD}{RED}Solutions: {total_size}{RESET}");
-    println!("{BOLD}{GREEN}Elapsed: {elapsed} ms{RESET}");
+    println!("{BOLD}{RED}Solutions: {}{RESET}", solutions.len());
+    println!("{BOLD}{GREEN}Elapsed: {} ms{RESET}", elapsed / 1000);
 }
 
 struct Solution {
     year: u32,
     day: u32,
-    wrapper: fn() -> (String, String),
+    wrapper: fn(&str) -> (String, String),
 }
 
 macro_rules! solution {
@@ -64,13 +67,8 @@ macro_rules! solution {
         Solution {
             year: (&stringify!($year)).unsigned(),
             day: (&stringify!($day)).unsigned(),
-            wrapper: || {
+            wrapper: |data: &str| {
                 use $year::$day::*;
-
-                let year = stringify!($year);
-                let day = &format!("{}.txt", stringify!($day));
-                let path: PathBuf = ["input", year, day].iter().collect();
-                let data = fs::read_to_string(path).unwrap();
 
                 let input = parse(&data);
                 let part1 = part1(&input).to_string();
