@@ -101,6 +101,7 @@ pie
 | 18 | [Lavaduct Lagoon](https://adventofcode.com/2023/day/18) | [Source](src/year2023/day18.rs) | 19 |
 | 19 | [Aplenty](https://adventofcode.com/2023/day/19) | [Source](src/year2023/day19.rs) | 100 |
 | 20 | [Pulse Propagation](https://adventofcode.com/2023/day/20) | [Source](src/year2023/day20.rs) | 6 |
+| 21 | [Step Counter](https://adventofcode.com/2023/day/21) | [Source](src/year2023/day21.rs) | 184 |
 
 ## 2022
 
