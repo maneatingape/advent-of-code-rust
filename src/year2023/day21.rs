@@ -2,61 +2,78 @@ use crate::util::grid::*;
 use crate::util::point::*;
 use std::collections::VecDeque;
 
-type Input = [u64; 4];
+const CENTER: Point = Point::new(65, 65);
+const CORNERS: [Point; 4] =
+    [Point::new(0, 0), Point::new(130, 0), Point::new(0, 130), Point::new(130, 130)];
+
+type Input = (u64, u64);
 
 pub fn parse(input: &str) -> Input {
-    let raw: Vec<_> = input.lines().map(str::as_bytes).collect();
-    let mut bytes = Vec::with_capacity(655 * 655);
+    let grid = Grid::parse(input);
 
-    for row in 0..655 {
-        for _ in 0..5 {
-            bytes.extend_from_slice(raw[row % 131]);
-        }
+    let (even_inner, even_outer, odd_inner, odd_outer) = bfs(&grid, &[CENTER], 130);
+    let part_one = even_inner;
+    let even_full = even_inner + even_outer;
+    let odd_full = odd_inner + odd_outer;
+    let remove_corners = odd_outer;
+
+    let (even_inner, ..) = bfs(&grid, &CORNERS, 64);
+    let add_corners = even_inner;
+
+    let n = 202300;
+    let first = n * n * even_full;
+    let second = (n + 1) * (n + 1) * odd_full;
+    let third = n * add_corners;
+    let fourth = (n + 1) * remove_corners;
+    let part_two = first + second + third - fourth;
+
+    (part_one, part_two)
+}
+
+pub fn part1(input: &Input) -> u64 {
+    input.0
+}
+
+pub fn part2(input: &Input) -> u64 {
+    input.1
+}
+
+fn bfs(grid: &Grid<u8>, starts: &[Point], limit: u32) -> (u64, u64, u64, u64) {
+    let mut grid = grid.clone();
+    let mut todo = VecDeque::new();
+
+    let mut even_inner = 0;
+    let mut even_outer = 0;
+    let mut odd_inner = 0;
+    let mut odd_outer = 0;
+
+    for &start in starts {
+        grid[start] = b'#';
+        todo.push_back((start, 0));
     }
 
-    let start = Point::new(327, 327);
-
-    let mut grid = Grid { width: 655, height: 655, bytes };
-    grid[start] = b'#';
-
-    let mut total = vec![0; 328];
-    total[0] = 1;
-
-    let mut todo = VecDeque::new();
-    todo.push_back((start, 0));
-
     while let Some((position, cost)) = todo.pop_front() {
-        for o in ORTHOGONAL {
-            let next = position + o;
+        if cost % 2 == 1 {
+            if position.manhattan(CENTER) <= 65 {
+                odd_inner += 1;
+            } else {
+                odd_outer += 1;
+            }
+        } else if cost <= 64 {
+            even_inner += 1;
+        } else {
+            even_outer += 1;
+        }
 
-            if grid[next] != b'#' {
-                grid[next] = b'#';
-
-                let cost = cost + 1;
-                total[cost] += 1;
-
-                if cost < 327 {
-                    todo.push_back((next, cost));
+        if cost < limit {
+            for next in ORTHOGONAL.map(|o| position + o) {
+                if grid.contains(next) && grid[next] != b'#' {
+                    grid[next] = b'#';
+                    todo.push_back((next, cost + 1));
                 }
             }
         }
     }
 
-    let sum = |limit: usize| total.iter().take(limit + 1).skip(limit % 2).step_by(2).sum();
-    [65, 196, 327, 64].map(sum)
-}
-
-pub fn part1(input: &Input) -> u64 {
-    input[3]
-}
-
-pub fn part2(f: &Input) -> u64 {
-    // f(x) = ax² + bx + c = plots reachable in 65 + 131 * x steps
-    let a = (f[0] + f[2] - 2 * f[1]) / 2;
-    let b = (4 * f[1] - 3 * f[0] - f[2]) / 2;
-    let c = f[0];
-
-    // n = number of whole grid widths = (26501365 - 65) / 131
-    let n = 202300;
-    a * n * n + b * n + c
+    (even_inner, even_outer, odd_inner, odd_outer)
 }
