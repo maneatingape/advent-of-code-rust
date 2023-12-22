@@ -2,71 +2,61 @@ use crate::util::grid::*;
 use crate::util::point::*;
 use std::collections::VecDeque;
 
-pub struct Input {
-    part_one: u64,
-    even_full: u64,
-    even_corner: u64,
-    odd_full: u64,
-    odd_corner: u64,
-}
+type Input = [u64; 4];
 
 pub fn parse(input: &str) -> Input {
-    let grid = Grid::parse(input);
-    let start = Point::new(65, 65);
+    let raw: Vec<_> = input.lines().map(str::as_bytes).collect();
+    let mut bytes = Vec::with_capacity(655 * 655);
+
+    for row in 0..655 {
+        for _ in 0..5 {
+            bytes.extend_from_slice(raw[row % 131]);
+        }
+    }
+
+    let start = Point::new(327, 327);
+
+    let mut grid = Grid { width: 655, height: 655, bytes };
+    grid[start] = b'#';
+
+    let mut total = vec![0; 328];
+    total[0] = 1;
 
     let mut todo = VecDeque::new();
     todo.push_back((start, 0));
 
-    let mut seen: Grid<bool> = grid.default_copy();
-    seen[start] = true;
-
-    let mut part_one = 0;
-    let mut even_full = 0;
-    let mut even_corner = 0;
-    let mut odd_full = 0;
-    let mut odd_corner = 0;
-
     while let Some((position, cost)) = todo.pop_front() {
-        if cost % 2 == 0 {
-            if cost < 65 {
-                part_one += 1;
-            }
-            even_full += 1;
-            if cost > 65 {
-                even_corner += 1;
-            }
-        } else {
-            odd_full += 1;
-            if cost > 65 {
-                odd_corner += 1;
-            }
-        }
-
         for o in ORTHOGONAL {
             let next = position + o;
 
-            if grid.contains(next) && grid[next] != b'#' && !seen[next] {
-                todo.push_back((next, cost + 1));
-                seen[next] = true;
+            if grid[next] != b'#' {
+                grid[next] = b'#';
+
+                let cost = cost + 1;
+                total[cost] += 1;
+
+                if cost < 327 {
+                    todo.push_back((next, cost));
+                }
             }
         }
     }
 
-    Input { part_one, even_full, even_corner, odd_full, odd_corner }
+    let sum = |limit: usize| total.iter().take(limit + 1).skip(limit % 2).step_by(2).sum();
+    [65, 196, 327, 64].map(sum)
 }
 
 pub fn part1(input: &Input) -> u64 {
-    input.part_one
+    input[3]
 }
 
-pub fn part2(input: &Input) -> u64 {
-    let Input { even_full, even_corner, odd_full, odd_corner, .. } = input;
+pub fn part2(f: &Input) -> u64 {
+    // f(x) = ax² + bx + c = plots reachable in 65 + 131 * x steps
+    let a = (f[0] + f[2] - 2 * f[1]) / 2;
+    let b = (4 * f[1] - 3 * f[0] - f[2]) / 2;
+    let c = f[0];
+
+    // n = number of whole grid widths = (26501365 - 65) / 131
     let n = 202300;
-
-    let first = (n + 1) * (n + 1) * odd_full;
-    let second = n * n * even_full;
-    let third = n * even_corner;
-    let fourth = (n + 1) * odd_corner;
-
-    first + second + third - fourth - n
+    a * n * n + b * n + c
 }
