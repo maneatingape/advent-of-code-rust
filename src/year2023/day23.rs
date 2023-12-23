@@ -3,154 +3,136 @@ use crate::util::hash::*;
 use crate::util::point::*;
 use std::collections::VecDeque;
 
-pub fn parse(input: &str) -> Grid<u8> {
-    Grid::parse(input)
+pub struct Input {
+    directed: [u64; 36],
+    undirected: [u64; 36],
+    weight: [[u32; 36]; 36],
 }
 
-pub fn part1(grid: &Grid<u8>) -> i32 {
-    let start = Point::new(1, 0);
-    let end = Point::new(grid.width - 2, grid.height - 1);
+pub fn parse(input: &str) -> Input {
+    let mut grid = Grid::parse(input);
+    let width = grid.width;
+    let height = grid.height;
 
-    let mut seen = FastSet::new();
-    let mut todo = VecDeque::new();
-    let mut result = 0;
+    // Modify edge of grid to remove the need for boundary checks.
+    grid[Point::new(1, 0)] = b'#';
+    grid[Point::new(width - 2, height - 1)] = b'#';
 
-    seen.insert(start);
-    todo.push_back((0, start, seen));
+    // Move start and end away from edge.
+    let start = Point::new(1, 1);
+    let end = Point::new(width - 2, height - 2);
 
-    while let Some((cost, pos, seen)) = todo.pop_front() {
-        if pos == end {
-            result = result.max(cost);
-            continue;
-        }
-        if !grid.contains(pos) {
-            continue;
-        }
+    // Points of interest are start, end and junctions.
+    grid[start] = b'P';
+    grid[end] = b'P';
 
-        let b = grid[pos];
+    let mut poi = FastMap::new();
+    poi.insert(start, 0);
+    poi.insert(end, 1);
 
-        if b == b'.' || b == b'v' {
-            let next = pos + DOWN;
-            let mut copy = seen.clone();
+    for y in 1..height - 1 {
+        for x in 1..width - 1 {
+            let position = Point::new(x, y);
 
-            if copy.insert(next) {
-                todo.push_back((cost + 1, next, copy));
-            }
-        }
-
-        if b == b'.' || b == b'^' {
-            let next = pos + UP;
-            let mut copy = seen.clone();
-
-            if copy.insert(next) {
-                todo.push_back((cost + 1, next, copy));
-            }
-        }
-
-        if b == b'.' || b == b'>' {
-            let next = pos + RIGHT;
-            let mut copy = seen.clone();
-
-            if copy.insert(next) {
-                todo.push_back((cost + 1, next, copy));
-            }
-        }
-
-        if b == b'.' || b == b'<' {
-            let next = pos + LEFT;
-            let mut copy = seen.clone();
-
-            if copy.insert(next) {
-                todo.push_back((cost + 1, next, copy));
+            if grid[position] != b'#' {
+                let neighbors =
+                    ORTHOGONAL.iter().map(|&o| position + o).filter(|&n| grid[n] != b'#').count();
+                if neighbors > 2 {
+                    grid[position] = b'P';
+                    poi.insert(position, poi.len());
+                }
             }
         }
     }
 
-    result
-}
+    // BFS to find distances between POIs.
+    let mut todo = VecDeque::new();
+    let mut directed = [0; 36];
+    let mut undirected = [0; 36];
+    let mut weight = [[0; 36]; 36];
 
-pub fn part2(grid: &Grid<u8>) -> i32 {
-    let start = Point::new(1, 0);
-    let end = Point::new(grid.width - 2, grid.height - 1);
+    for (&start, &from) in &poi {
+        todo.push_back((start, 0, true));
+        grid[start] = b'#';
 
-    let mut poi = FastSet::new();
-    poi.insert(start);
-    poi.insert(end);
+        while let Some((position, cost, forward)) = todo.pop_front() {
+            for direction in ORTHOGONAL {
+                let next = position + direction;
 
-    for y in 0..grid.height {
-        for x in 0..grid.width {
-            let p = Point::new(x, y);
-            if grid[p] != b'#' {
-                let mut neighbors = 0;
+                match grid[next] {
+                    b'#' => (),
+                    b'P' => {
+                        let to = poi[&next];
 
-                for o in ORTHOGONAL {
-                    let next = p + o;
-                    if grid.contains(next) && grid[next] != b'#' {
-                        neighbors += 1;
+                        if forward {
+                            directed[from] |= 1 << to;
+                        } else {
+                            directed[to] |= 1 << from;
+                        }
+
+                        undirected[from] |= 1 << to;
+                        undirected[to] |= 1 << from;
+
+                        weight[from][to] = cost + 1;
+                        weight[to][from] = cost + 1;
+                    }
+                    b'.' => {
+                        todo.push_back((next, cost + 1, forward));
+                        grid[next] = b'#';
+                    }
+                    _ => {
+                        let same = direction == Point::from(grid[next]);
+                        todo.push_back((next, cost + 1, forward && same));
+                        grid[next] = b'#';
                     }
                 }
-
-                if neighbors > 2 {
-                    poi.insert(p);
-                }
             }
         }
     }
 
-    let mut edges = FastMap::new();
-
-    for &start in &poi {
-        edges.insert(start, bfs(grid, &poi, start));
-    }
-
-    let mut result = 0;
-
-    let mut seen = FastSet::new();
-    seen.insert(start);
-
-    let mut todo = VecDeque::new();
-    todo.push_back((start, seen, 0));
-
-    while let Some((pos, seen, cost)) = todo.pop_front() {
-        if pos == end {
-            result = result.max(cost);
-            continue;
-        }
-
-        for &(next, extra) in &edges[&pos] {
-            if !seen.contains(&next) {
-                let mut copy = seen.clone();
-                copy.insert(next);
-
-                todo.push_back((next, copy, cost + extra));
-            }
-        }
-    }
-
-    result
+    Input { directed, undirected, weight }
 }
 
-fn bfs(grid: &Grid<u8>, poi: &FastSet<Point>, start: Point) -> Vec<(Point, i32)> {
+pub fn part1(input: &Input) -> u32 {
+    let mut cost = [0; 36];
+
     let mut todo = VecDeque::new();
-    let mut seen = FastSet::new();
-    let mut result = Vec::new();
+    todo.push_back(0);
 
-    todo.push_back((start, 0));
-    seen.insert(start);
+    while let Some(from) = todo.pop_front() {
+        let mut nodes = input.directed[from];
 
-    while let Some((pos, cost)) = todo.pop_front() {
-        if pos != start && poi.contains(&pos) {
-            result.push((pos, cost));
-            continue;
+        while nodes > 0 {
+            let to = nodes.trailing_zeros() as usize;
+            let mask = 1 << to;
+            nodes ^= mask;
+
+            cost[to] = cost[to].max(cost[from] + input.weight[from][to]);
+            todo.push_back(to);
         }
+    }
 
-        for o in ORTHOGONAL {
-            let next = pos + o;
+    2 + cost[1]
+}
 
-            if grid.contains(next) && grid[next] != b'#' && seen.insert(next) {
-                todo.push_back((next, cost + 1));
-            }
-        }
+pub fn part2(input: &Input) -> u32 {
+    2 + dfs(input, 0, 1, 0)
+}
+
+fn dfs(input: &Input, from: usize, seen: u64, cost: u32) -> u32 {
+    if from == 1 {
+        return cost;
+    }
+
+    let mut nodes = input.undirected[from] & !seen;
+    let mut result = 0;
+
+    while nodes > 0 {
+        let to = nodes.trailing_zeros() as usize;
+        let mask = 1 << to;
+        nodes ^= mask;
+
+        result = result.max(dfs(input, to, seen | mask, cost + input.weight[from][to]));
     }
 
     result
