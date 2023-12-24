@@ -104,7 +104,7 @@ pie
 | 21 | [Step Counter](https://adventofcode.com/2023/day/21) | [Source](src/year2023/day21.rs) | 184 |
 | 22 | [Sand Slabs](https://adventofcode.com/2023/day/22) | [Source](src/year2023/day22.rs) | 486 |
 | 23 | [A Long Walk](https://adventofcode.com/2023/day/23) | [Source](src/year2023/day23.rs) | - |
-| 24 | [Never Tell Me The Odds](https://adventofcode.com/2023/day/24) | [Source](src/year2023/day24.rs) | - |
+| 24 | [Never Tell Me The Odds](https://adventofcode.com/2023/day/24) | [Source](src/year2023/day24.rs) | 116 |
 | 25 | [Snowverload](https://adventofcode.com/2023/day/25) | [Source](src/year2023/day25.rs) | - |
 
 ## 2022
