@@ -155,7 +155,7 @@ pub fn part2(input: &[[i64; 6]]) -> i128 {
             for row in &mut matrix[pivot..] {
                 let mut factor = 0;
 
-                for &next in row.iter() {
+                for &next in &row[pivot..] {
                     if next != 0 {
                         if factor == 0 {
                             factor = next.abs();
@@ -165,7 +165,7 @@ pub fn part2(input: &[[i64; 6]]) -> i128 {
                     }
                 }
 
-                row.iter_mut().for_each(|c| *c /= factor);
+                row[pivot..].iter_mut().for_each(|c| *c /= factor);
             }
 
             let column = matrix.map(|row| row[pivot]);
@@ -188,7 +188,7 @@ pub fn part2(input: &[[i64; 6]]) -> i128 {
                 if row != index && column[row] != 0 {
                     let factor = column[row] / min;
 
-                    for col in 0..7 {
+                    for col in pivot..7 {
                         matrix[row][col] -= factor * matrix[index][col];
                     }
                 }
