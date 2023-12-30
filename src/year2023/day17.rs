@@ -55,7 +55,7 @@ fn astar<const L: usize, const U: usize>(grid: &Grid<u32>) -> u32 {
     let heat = &grid.bytes;
 
     let mut index = 0;
-    let mut todo = vec![Vec::with_capacity(100); 100];
+    let mut todo = (0..100).map(|_| Vec::with_capacity(1000)).collect::<Vec<_>>();
     let mut cost = vec![[0_u32; 2]; heat.len()];
 
     // Start from the top left corner checking both vertical and horizontal directions.
