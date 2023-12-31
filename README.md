@@ -21,6 +21,12 @@ Complete 2022 to 2019 and 2016 to 2015 entries for the annual [Advent of Code](h
 <details>
 <summary>Show details</summary><p/>
 
+**Input**
+
+Place input files in `input/yearYYYY/dayDD.txt` including leading zeroes. For example:
+* `input/year2015/day23.txt`
+* `input/year2023/day02.txt`
+
 **Run**
 * Everything `cargo run`
 * Specific year `cargo run year2022`
