@@ -2,7 +2,7 @@ use aoc::util::ansi::*;
 use aoc::util::parse::*;
 use aoc::*;
 use std::env::args;
-use std::fs;
+use std::fs::read_to_string;
 use std::iter::empty;
 use std::path::PathBuf;
 use std::time::Instant;
@@ -38,7 +38,10 @@ fn main() {
     for Solution { year, day, wrapper } in &solutions {
         let path: PathBuf =
             ["input", &format!("year{year}"), &format!("day{day:02}.txt")].iter().collect();
-        let data = fs::read_to_string(path).unwrap();
+        let Ok(data) = read_to_string(&path) else {
+            eprintln!("Place input file in {path:?}");
+            continue;
+        };
 
         let time = Instant::now();
         let (answer1, answer2) = wrapper(&data);
