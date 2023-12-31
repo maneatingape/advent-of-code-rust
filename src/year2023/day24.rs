@@ -36,52 +36,74 @@
 //!
 //! ## Part Two
 //!
-//! The position and velocity of the rock is found by solving 6 linear simultaneous equations in
-//! 6 unknowns using [Gaussian elimination](https://en.wikipedia.org/wiki/Gaussian_elimination).
+//! First we choose 3 arbitrary hailstones. Then we subtract the position and velocity of the
+//! the first to make the other two relative.
 //!
-//! We start with the same parametric approach in time:
+//! The two hailstones will intercept a line leaving the origin. We can determine this line
+//! by intersection the two planes that the hailstone's velocity lie in. These planes are
+//! defined by a normal vector orthogonal to the plane.
 //!
-//! * `p` and `pₕ` are the positions of the rock and an arbitrary hailstone.
-//! * `v` and `vₕ` are the velocities.
-//! * `p + tv = pₕ + tvₕ` => `p - pₕ = t(v - vₕ)`
+//! This normal vector is the [cross product](https://en.wikipedia.org/wiki/Cross_product) of
+//! any two vector that lie in the plane, in this case the velocity and also the vector from the
+//! origin to the starting location of the hailstone.
 //!
-//! The key insight is that the two vectors `p - pₕ` and `v - vₕ` differ only by a constant so their
-//! [vector cross product](https://en.wikipedia.org/wiki/Cross_product) must be zero. Using a
-//! similar notation as part one where `c` and `f` are the z position and velocity of the hailstone
-//! and `q`, `r` and `s` the velocity of the rock, this implies:
+//! The direction but not necessarily the magnitude of the velocity is then given by the cross
+//! product of the two normals.
 //!
-//! 1. `(y - b) * (f - s) - (z - c) * (e - r) = 0`
-//! 2. `(z - c) * (d - a) - (x - a) * (f - s) = 0`
-//! 3. `(x - a) * (e - r) - (y - b) * (d - q) = 0`
-//!
-//! Multiplying out equation 1 gives:
-//!
-//! 4. `fy - sy - bf + bs - ez + rz + ce - cr = 0`
-//!
-//! This equation has two non-linear terms `sy` and `rz` so we can't solve just yet.
-//! If we take a second and third hailstones we can derive the equivalent equations:
-//!
-//! 5. `ly - sy - hl + hs - kz + rz + ik - ir = 0`
-//! 6. `ry - sy - nr + ns - qz + rz + ok - or = 0`
-//!
-//! Subtracting 4 from both 5 and 6 removes the non-linear terms and leaves:
-//!
-//! 7. `(l - f)y + bf - hl + (h - b)s + (e - k)z + ik - ce + (c - i)r = 0`
-//! 8. `(r - f)y + bf - nr + (n - b)s + (e - q)z + oq - ce + (c - o)r = 0`
-//!
-//! Reordering gives:
-//!
-//! 9. `0x + (l - f)y + (e - k)z + 0q + (c - i)r + (h - b)s = ce - bf + hl - ik`
-//! 10. `0x + (r - f)y + (e - q)z + 0q + (c - o)r + (n - b)s = ce - bf + nr - oq`
-//!
-//! We can do the same for equations 2 and 3 to end up with 6 linear equations that can
-//! be solved using Gaussian elimination.
+//! Given the rock direction we can calculate the times that the two hailstones are intercepted
+//! then use this to determine the original position of the rock, as long as the two times
+//! are different.
 use crate::util::iter::*;
 use crate::util::math::*;
 use crate::util::parse::*;
 use std::ops::RangeInclusive;
 
 const RANGE: RangeInclusive<i64> = 200_000_000_000_000..=400_000_000_000_000;
+
+#[derive(Clone, Copy)]
+struct Vector {
+    x: i128,
+    y: i128,
+    z: i128,
+}
+
+/// 3D vector implementation.
+impl Vector {
+    fn add(self, other: Self) -> Self {
+        let x = self.x + other.x;
+        let y = self.y + other.y;
+        let z = self.z + other.z;
+        Vector { x, y, z }
+    }
+
+    fn sub(self, other: Self) -> Self {
+        let x = self.x - other.x;
+        let y = self.y - other.y;
+        let z = self.z - other.z;
+        Vector { x, y, z }
+    }
+
+    fn cross(self, other: Self) -> Self {
+        let x = self.y * other.z - self.z * other.y;
+        let y = self.z * other.x - self.x * other.z;
+        let z = self.x * other.y - self.y * other.x;
+        Vector { x, y, z }
+    }
+
+    // Changes the magnitude (but not direction) of the vector.
+    // Prevents numeric overflow.
+    fn gcd(self) -> Self {
+        let gcd = self.x.gcd(self.y).gcd(self.z);
+        let x = self.x / gcd;
+        let y = self.y / gcd;
+        let z = self.z / gcd;
+        Vector { x, y, z }
+    }
+
+    fn sum(self) -> i128 {
+        self.x + self.y + self.z
+    }
+}
 
 pub fn parse(input: &str) -> Vec<[i64; 6]> {
     input.iter_signed().chunk::<6>().collect()
@@ -90,25 +112,22 @@ pub fn parse(input: &str) -> Vec<[i64; 6]> {
 pub fn part1(input: &[[i64; 6]]) -> u32 {
     let mut result = 0;
 
-    for first in 1..input.len() {
-        for second in 0..first {
-            let [a, b, _, d, e, _] = input[first];
-            let [g, h, _, j, k, _] = input[second];
-
+    for (index, &[a, b, _, c, d, _]) in input[1..].iter().enumerate() {
+        for &[e, f, _, g, h, _] in &input[..index + 1] {
             // If the determinant is zero there is no solution possible
             // which implies the trajectories are parallel.
-            let determinant = e * j - d * k;
+            let determinant = d * g - c * h;
             if determinant == 0 {
                 continue;
             }
 
             // Invert the 2x2 matrix then multiply by the respective columns to find the times.
-            let t = (j * (h - b) - k * (g - a)) / determinant;
-            let u = (d * (h - b) - e * (g - a)) / determinant;
+            let t = (g * (f - b) - h * (e - a)) / determinant;
+            let u = (c * (f - b) - d * (e - a)) / determinant;
 
             // We can pick either the first or second hailstone to find the intersection position.
-            let x = a + t * d;
-            let y = b + t * e;
+            let x = a + t * c;
+            let y = b + t * d;
 
             // Both times must be in the future and the position within the specified area.
             if t >= 0 && u >= 0 && RANGE.contains(&x) && RANGE.contains(&y) {
@@ -122,93 +141,45 @@ pub fn part1(input: &[[i64; 6]]) -> u32 {
 
 pub fn part2(input: &[[i64; 6]]) -> i128 {
     // Calculations need the range of `i128`.
-    let widen = |i: usize| input[i].map(|n| n as i128);
-    let [a, b, c, d, e, f] = widen(0);
-    let [g, h, i, j, k, l] = widen(1);
-    let [m, n, o, p, q, r] = widen(2);
+    let widen = |i: usize| {
+        let [px, py, pz, vx, vy, vz] = input[i].map(|n| n as i128);
+        let p = Vector { x: px, y: py, z: pz };
+        let v = Vector { x: vx, y: vy, z: vz };
+        (p, v)
+    };
 
-    // Coefficients for the 6 simulataneous linear equations.
-    // Columns are px, py, pz, vx, vy, vz of the rock equal to a constant.
-    let mut matrix = [
-        [0, l - f, e - k, 0, c - i, h - b, e * c - b * f + h * l - k * i],
-        [0, r - f, e - q, 0, c - o, n - b, e * c - b * f + n * r - q * o],
-        [f - l, 0, j - d, i - c, 0, a - g, a * f - d * c + j * i - g * l],
-        [f - r, 0, p - d, o - c, 0, a - m, a * f - d * c + p * o - m * r],
-        [k - e, d - j, 0, b - h, g - a, 0, d * b - a * e + g * k - j * h],
-        [q - e, d - p, 0, b - n, m - a, 0, d * b - a * e + m * q - p * n],
-    ];
+    // Take 3 arbitrary hailstones.
+    let (p0, v0) = widen(0);
+    let (p1, v1) = widen(1);
+    let (p2, v2) = widen(2);
 
-    // Use Gaussian elimination to solve for the 6 unknowns.
-    // Forward elimination, processing columns from left to right.
-    // This will leave a matrix in row echelon form.
-    for pivot in 0..6 {
-        // Make leading coefficient of each row positive to make subsequent calculations easier.
-        for row in &mut matrix[pivot..] {
-            if row[pivot] < 0 {
-                // Flip signs of each coefficient.
-                row.iter_mut().for_each(|n| *n = -*n);
-            }
-        }
+    // Subtract the positions and velocities to make them relative.
+    // The first hailstone is stationary at the origin.
+    let p3 = p1.sub(p0);
+    let p4 = p2.sub(p0);
+    let v3 = v1.sub(v0);
+    let v4 = v2.sub(v0);
 
-        loop {
-            // Reduce by GCD each time otherwise coefficients will overflow even a `i128`.
-            for row in &mut matrix[pivot..] {
-                let mut factor = 0;
+    // Find the normal to the plane that the second and third hailstones velocity lies in.
+    // This is the cross product of their respective position and velocity.
+    // The cross product `s` of these two vectors is the same direction but not necessarily the
+    // same magnitude of the desired velocity of the rock.
+    // Only the direction is relevant (not the magnitude) so we can normalize the vector by the
+    // GCD of its components in order to prevent numeric overflow.
+    let q = v3.cross(p3).gcd();
+    let r = v4.cross(p4).gcd();
+    let s = q.cross(r).gcd();
 
-                for &next in &row[pivot..] {
-                    if next != 0 {
-                        if factor == 0 {
-                            factor = next.abs();
-                        } else {
-                            factor = factor.gcd(next.abs());
-                        }
-                    }
-                }
+    // Find the times when the second and third hailstone intercept this vector.
+    // If the times are different then we can extrapolate the original position of the rock.
+    let t = (p3.y * s.x - p3.x * s.y) / (v3.x * s.y - v3.y * s.x);
+    let u = (p4.y * s.x - p4.x * s.y) / (v4.x * s.y - v4.y * s.x);
+    assert!(t != u);
 
-                row[pivot..].iter_mut().for_each(|c| *c /= factor);
-            }
-
-            let column = matrix.map(|row| row[pivot]);
-
-            // If only one non-zero coefficient remaining in the column then we're done.
-            if column[pivot..].iter().filter(|&&c| c > 0).count() == 1 {
-                // Move this row into the pivot location
-                let index = column.iter().rposition(|&c| c > 0).unwrap();
-                matrix.swap(pivot, index);
-                break;
-            }
-
-            // Find the row with the lowest non-zero leading coefficient.
-            let min = *column[pivot..].iter().filter(|&&c| c > 0).min().unwrap();
-            let index = column.iter().rposition(|&c| c == min).unwrap();
-
-            // Subtract as many multiples of this minimum row from each other row as possible
-            // to shrink the coefficients of our column towards zero.
-            for row in pivot..6 {
-                if row != index && column[row] != 0 {
-                    let factor = column[row] / min;
-
-                    for col in pivot..7 {
-                        matrix[row][col] -= factor * matrix[index][col];
-                    }
-                }
-            }
-        }
-    }
-
-    // Back substitution, processing columns from right to left.
-    // This will leave the matrix in reduced row echelon form.
-    // The solved unknowns are then in the 7th column.
-    for pivot in (0..6).rev() {
-        // We're explicitly told that the results are integers so integer division is safe
-        // and will not mangle result.
-        matrix[pivot][6] /= matrix[pivot][pivot];
-
-        for row in 0..pivot {
-            matrix[row][6] -= matrix[pivot][6] * matrix[row][pivot];
-        }
-    }
-
-    // x + y + z
-    matrix[0][6] + matrix[1][6] + matrix[2][6]
+    // Calculate the original position of the rock, remembering to add the first hailstone's
+    // position to convert back to absolute coordinates.
+    let a = p0.add(p3).sum();
+    let b = p0.add(p4).sum();
+    let c = v3.sub(v4).sum();
+    (u * a - t * b + u * t * c) / (u - t)
 }
