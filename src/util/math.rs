@@ -20,11 +20,14 @@ pub trait IntegerMathOps<T: Integer<T>> {
     fn gcd(self, b: T) -> T;
     fn lcm(self, b: T) -> T;
     fn mod_pow(self, e: T, m: T) -> T;
-    fn mod_inv(self, m: T) -> T;
 }
 
 pub trait UnsignedMathOps<T: Unsigned<T>> {
     fn sqrt(self) -> T;
+}
+
+pub trait SignedMathOps<T: Signed<T>> {
+    fn mod_inv(self, m: T) -> T;
 }
 
 impl<T: Integer<T>> IntegerMathOps<T> for T {
@@ -59,7 +62,27 @@ impl<T: Integer<T>> IntegerMathOps<T> for T {
 
         c
     }
+}
 
+impl<T: Unsigned<T>> UnsignedMathOps<T> for T {
+    // Integer square root. Once [`isqrt`] is stablized then this function can be removed.
+    fn sqrt(self) -> T {
+        let mut bit = T::ONE << (self.ilog2() >> T::ONE);
+        let mut root = bit;
+
+        while bit > T::ONE {
+            bit = bit >> T::ONE;
+            let next = root | bit;
+            if next * next <= self {
+                root = next;
+            }
+        }
+
+        root
+    }
+}
+
+impl<T: Signed<T>> SignedMathOps<T> for T {
     // Modular multiplicative inverse
     fn mod_inv(self, m: T) -> T {
         let mut t = T::ZERO;
@@ -77,23 +100,5 @@ impl<T: Integer<T>> IntegerMathOps<T> for T {
             t = t + m;
         }
         t
-    }
-}
-
-impl<T: Unsigned<T>> UnsignedMathOps<T> for T {
-    // Once [`isqrt`] is stablized then this function can be removed.
-    fn sqrt(self) -> T {
-        let mut bit = T::ONE << (self.ilog2() >> T::ONE);
-        let mut root = bit;
-
-        while bit > T::ONE {
-            bit = bit >> T::ONE;
-            let next = root | bit;
-            if next * next <= self {
-                root = next;
-            }
-        }
-
-        root
     }
 }
