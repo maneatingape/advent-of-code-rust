@@ -19,6 +19,7 @@
 //! [quadratic formula](https://en.wikipedia.org/wiki/Quadratic_formula).
 //!
 //! * `(t ± √(t² - 4d)) / 2`
+use crate::util::math::*;
 use crate::util::parse::*;
 
 pub fn parse(input: &str) -> Vec<&str> {
@@ -44,7 +45,7 @@ fn race(first: &str, second: &str) -> u128 {
 
     for (time, distance) in times.zip(distances) {
         // Use the quadratic formula to find the start and end positions.
-        let root = isqrt(time * time - 4 * distance);
+        let root = (time * time - 4 * distance).sqrt();
         let mut start = (time - root).div_ceil(2);
         let mut end = (time + root) / 2;
 
@@ -60,20 +61,4 @@ fn race(first: &str, second: &str) -> u128 {
     }
 
     result
-}
-
-/// [Integer square root](https://en.wikipedia.org/wiki/Integer_square_root).
-fn isqrt(n: u128) -> u128 {
-    let mut bit = 1 << (n.ilog2() / 2);
-    let mut root = bit;
-
-    while bit > 1 {
-        bit >>= 1;
-        let next = root | bit;
-        if next * next <= n {
-            root = next;
-        }
-    }
-
-    root
 }

@@ -9,19 +9,25 @@
 //! * [Modular exponentation](https://en.wikipedia.org/wiki/Modular_exponentiation).
 //!   Calculates bᵉ mod m efficiently using
 //!   [exponentiation by squaring](https://en.wikipedia.org/wiki/Exponentiation_by_squaring).
-
+//!
 //! * [Modular multiplicative inverse](https://en.wikipedia.org/wiki/Modular_multiplicative_inverse)
 //!   calculated using the [extended Euclidean algorithm](https://en.wikipedia.org/wiki/Extended_Euclidean_algorithm).
+//!
+//! * [Integer square root](https://en.wikipedia.org/wiki/Integer_square_root).
 use crate::util::integer::*;
 
-pub trait MathOps<T: Integer<T>> {
+pub trait IntegerMathOps<T: Integer<T>> {
     fn gcd(self, b: T) -> T;
     fn lcm(self, b: T) -> T;
     fn mod_pow(self, e: T, m: T) -> T;
     fn mod_inv(self, m: T) -> T;
 }
 
-impl<T: Integer<T>> MathOps<T> for T {
+pub trait UnsignedMathOps<T: Unsigned<T>> {
+    fn sqrt(self) -> T;
+}
+
+impl<T: Integer<T>> IntegerMathOps<T> for T {
     /// Greatest common divisor
     fn gcd(self, mut b: T) -> T {
         let mut a = self;
@@ -71,5 +77,23 @@ impl<T: Integer<T>> MathOps<T> for T {
             t = t + m;
         }
         t
+    }
+}
+
+impl<T: Unsigned<T>> UnsignedMathOps<T> for T {
+    // Once [`isqrt`] is stablized then this function can be removed.
+    fn sqrt(self) -> T {
+        let mut bit = T::ONE << (self.ilog2() >> T::ONE);
+        let mut root = bit;
+
+        while bit > T::ONE {
+            bit = bit >> T::ONE;
+            let next = root | bit;
+            if next * next <= self {
+                root = next;
+            }
+        }
+
+        root
     }
 }
