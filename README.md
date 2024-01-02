@@ -5,7 +5,7 @@
 [docs-badge]: https://img.shields.io/github/actions/workflow/status/maneatingape/advent-of-code-rust/docs.yml?color=blue&label=docs
 [docs-link]: https://maneatingape.github.io/advent-of-code-rust/aoc/
 
-Complete 2022 to 2019 and 2016 to 2015 entries for the annual [Advent of Code](https://adventofcode.com/) challenge, written in performant Rust.
+Complete 2023 to 2019 and 2016 to 2015 entries for the annual [Advent of Code](https://adventofcode.com/) challenge, written in performant Rust.
 
 ## Features
 
@@ -29,21 +29,21 @@ Place input files in `input/yearYYYY/dayDD.txt` including leading zeroes. For ex
 
 **Run**
 * Everything `cargo run`
-* Specific year `cargo run year2022`
-* Specific day `cargo run year2022::day01`
+* Specific year `cargo run year2023`
+* Specific day `cargo run year2023::day01`
 * Release profile (faster) `cargo run --release`
 * Optimized for current CPU architecture (fastest) `RUSTFLAGS="-C target-cpu=native" cargo run --release`
 
 **Test**
 * Everything `cargo test`
-* Specific year `cargo test year2022`
-* Specific day `cargo test year2022::day01`
+* Specific year `cargo test year2023`
+* Specific day `cargo test year2023::day01`
 * Show STDOUT for debugging `cargo test -- --nocapture`
 
 **Benchmark**
 * Everything `cargo bench`
-* Specific year `cargo bench year2022`
-* Specific day `cargo bench year2022::day01`
+* Specific year `cargo bench year2023`
+* Specific day `cargo bench year2023::day01`
 
 **Document**
 * Build docs including private items `cargo doc --document-private-items`
@@ -57,12 +57,13 @@ Place input files in `input/yearYYYY/dayDD.txt` including leading zeroes. For ex
 
 ## Performance
 
-Benchmarks are measured using the built-in `cargo bench` tool run on an Apple M2 Max.
-All 150 solutions from 2022 to 2019 and also 2016 to 2015 complete sequentially in **1.1 seconds**.
-Interestingly 93% of the total time is spent on just 6 solutions.
+Benchmarks are measured using the built-in `cargo bench` tool run on an
+[Apple M2 Max](https://en.wikipedia.org/wiki/Apple_M2).
+All 175 solutions from 2023 to 2019 and also 2016 to 2015 complete sequentially in **1.1 seconds**.
+Interestingly 90% of the total time is spent on just 5 solutions.
 Performance is reasonable even on older hardware, for example a 2011 MacBook Pro with an
 [Intel i7-2720QM](https://ark.intel.com/content/www/us/en/ark/products/50067/intel-core-i72720qm-processor-6m-cache-up-to-3-30-ghz.html)
-processor takes 4.4 seconds to run the same 150 solutions.
+processor takes 4.1 seconds to run the same 175 solutions.
 
 ```mermaid
 %%{init: {"themeVariables": { "pie1": "#7cb5ec", "pie2": "#90ed7d", "pie3": "#f7a35c", "pie4": "#e4d354", "pie5": "#e4c4fb", "pie6": "#c6cdd5"}}}%%
@@ -71,10 +72,10 @@ pie
     "Year 2016" : 663
     "Year 2020" : 286
     "Year 2015" : 87
-    "Years 2019, 2021 and 2022" : 42
+    "Years 2019, 2021, 2022 and 2023" : 52
 ```
 
-* [2023](#2023) (in progress)
+* [2023](#2023) (10 ms)
 * [2022](#2022) (10 ms)
 * [2021](#2021) (10 ms)
 * [2020](#2020) (286 ms)
@@ -84,6 +85,17 @@ pie
 * [2015](#2015) (87 ms)
 
 ## 2023
+
+```mermaid
+%%{init: {"themeVariables": { "pie1": "#7cb5ec", "pie2": "#90ed7d", "pie3": "#f7a35c", "pie4": "#e4d354", "pie5": "#c6cdd5"}}}%%
+pie
+    title Year 2023 benchmark time by % of total
+    "Day 23" : 3181
+    "Day 17" : 2463
+    "Day 12" : 1150
+    "Day 16" : 831
+    "Others" : 2206
+```
 
 | Day | Problem | Solution | Benchmark (μs) |
 | --- | --- | --- | --: |
