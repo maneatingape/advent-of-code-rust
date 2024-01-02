@@ -2,8 +2,13 @@ use crate::util::grid::*;
 use crate::util::hash::*;
 use crate::util::point::*;
 use std::collections::VecDeque;
+use std::sync::atomic::{AtomicU32, Ordering};
+use std::thread;
 
 pub struct Input {
+    start: usize,
+    end: usize,
+    extra: u32,
     directed: [u64; 36],
     undirected: [u64; 36],
     weight: [[u32; 36]; 36],
@@ -47,8 +52,8 @@ pub fn parse(input: &str) -> Input {
 
     // BFS to find distances between POIs.
     let mut todo = VecDeque::new();
-    let mut directed = [0; 36];
-    let mut undirected = [0; 36];
+    let mut directed: [u64; 36] = [0; 36];
+    let mut undirected: [u64; 36] = [0; 36];
     let mut weight = [[0; 36]; 36];
 
     for (&start, &from) in &poi {
@@ -90,14 +95,34 @@ pub fn parse(input: &str) -> Input {
         }
     }
 
-    Input { directed, undirected, weight }
+    // Compress
+    let start = undirected[0].trailing_zeros() as usize;
+    let end = undirected[1].trailing_zeros() as usize;
+    let extra = 2 + weight[0][start] + weight[1][end];
+
+    // Heuristic
+    let mut mask = 0;
+
+    for (i, edges) in undirected.iter().enumerate() {
+        if edges.count_ones() < 4 {
+            mask |= 1 << i;
+        }
+    }
+
+    for (i, edges) in undirected.iter_mut().enumerate() {
+        if edges.count_ones() < 4 {
+            *edges = (*edges & !mask) | directed[i];
+        }
+    }
+
+    Input { start, end, extra, directed, undirected, weight }
 }
 
 pub fn part1(input: &Input) -> u32 {
     let mut cost = [0; 36];
 
     let mut todo = VecDeque::new();
-    todo.push_back(0);
+    todo.push_back(input.start);
 
     while let Some(from) = todo.pop_front() {
         let mut nodes = input.directed[from];
@@ -112,16 +137,57 @@ pub fn part1(input: &Input) -> u32 {
         }
     }
 
-    2 + cost[1]
+    cost[input.end] + input.extra
 }
 
 pub fn part2(input: &Input) -> u32 {
-    2 + dfs(input, 0, 1, 0)
+    let shared = AtomicU32::new(0);
+    let threads = thread::available_parallelism().unwrap().get();
+
+    // Seed each worker thread with a starting state
+    let mut seeds = VecDeque::new();
+    seeds.push_back((input.start, 1 << input.start, 0));
+
+    while seeds.len() < threads {
+        let Some((from, seen, cost)) = seeds.pop_front() else {
+            break;
+        };
+
+        if from == input.end {
+            shared.fetch_max(cost, Ordering::Relaxed);
+            continue;
+        }
+
+        let mut nodes = input.undirected[from] & !seen;
+
+        while nodes > 0 {
+            let to = nodes.trailing_zeros() as usize;
+            let mask = 1 << to;
+            nodes ^= mask;
+
+            seeds.push_back((to, seen | mask, cost + input.weight[from][to]));
+        }
+    }
+
+    // Use as many cores as possible to parallelize the remaining search.
+    thread::scope(|scope| {
+        for start in &seeds {
+            scope.spawn(|| worker(input, &shared, start));
+        }
+    });
+
+    shared.load(Ordering::Relaxed) + input.extra
 }
 
-fn dfs(input: &Input, from: usize, seen: u64, cost: u32) -> u32 {
-    if from == 1 {
-        return cost;
+fn worker(input: &Input, shared: &AtomicU32, start: &(usize, u64, u32)) {
+    let (from, seen, cost) = *start;
+    let result = dfs(input, from, seen);
+    shared.fetch_max(result + cost, Ordering::Relaxed);
+}
+
+fn dfs(input: &Input, from: usize, seen: u64) -> u32 {
+    if from == input.end {
+        return 0;
     }
 
     let mut nodes = input.undirected[from] & !seen;
@@ -132,7 +198,7 @@ fn dfs(input: &Input, from: usize, seen: u64, cost: u32) -> u32 {
         let mask = 1 << to;
         nodes ^= mask;
 
-        result = result.max(dfs(input, to, seen | mask, cost + input.weight[from][to]));
+        result = result.max(input.weight[from][to] + dfs(input, to, seen | mask));
     }
 
     result
