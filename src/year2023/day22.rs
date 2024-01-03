@@ -1,100 +1,87 @@
-#![allow(clippy::needless_range_loop)]
-
 use crate::util::iter::*;
 use crate::util::parse::*;
-use std::collections::VecDeque;
 
-pub struct Input {
-    up: Vec<Vec<usize>>,
-    down: Vec<Vec<usize>>,
-}
+type Input = (usize, usize);
 
 pub fn parse(input: &str) -> Input {
     let mut bricks: Vec<_> = input.iter_unsigned::<usize>().chunk::<6>().collect();
-    let mut heights = [[0; 10]; 10];
-    let mut indices = [[usize::MAX; 10]; 10];
-    let mut up = vec![Vec::new(); bricks.len()];
-    let mut down = vec![Vec::new(); bricks.len()];
+    let mut heights = [0; 100];
+    let mut indices = [usize::MAX; 100];
+
+    let mut safe = vec![true; bricks.len()];
+    let mut dominator: Vec<(usize, usize)> = Vec::with_capacity(bricks.len());
 
     // Sort ascending by lowest z coordinate.
     bricks.sort_unstable_by_key(|b| b[2]);
 
     for (i, &[x1, y1, z1, x2, y2, z2]) in bricks.iter().enumerate() {
+        let start = 10 * y1 + x1;
+        let end = 10 * y2 + x2;
+        let step = if y2 > y1 { 10 } else { 1 };
         let height = z2 - z1 + 1;
+
         let mut top = 0;
         let mut previous = usize::MAX;
+        let mut underneath = 0;
+        let mut parent = 0;
+        let mut depth = 0;
 
-        for x in x1..=x2 {
-            for y in y1..=y2 {
-                top = top.max(heights[x][y]);
-            }
+        for j in (start..=end).step_by(step) {
+            top = top.max(heights[j]);
         }
 
-        for x in x1..=x2 {
-            for y in y1..=y2 {
-                if heights[x][y] == top {
-                    let index = indices[x][y];
-                    if index != previous {
-                        up[index].push(i);
-                        down[i].push(index);
-                        previous = index;
+        for j in (start..=end).step_by(step) {
+            if heights[j] == top {
+                let index = indices[j];
+                if index != previous {
+                    previous = index;
+                    underneath += 1;
+
+                    if underneath == 1 {
+                        (parent, depth) = dominator[previous];
+                    } else {
+                        // Find common ancestor
+                        let (mut a, mut b) = (parent, depth);
+                        let (mut x, mut y) = dominator[previous];
+
+                        while b > y {
+                            (a, b) = dominator[a];
+                        }
+                        while y > b {
+                            (x, y) = dominator[x];
+                        }
+                        while a != x {
+                            (a, b) = dominator[a];
+                            (x, _) = dominator[x];
+                        }
+
+                        (parent, depth) = (a, b);
                     }
                 }
-
-                heights[x][y] = top + height;
-                indices[x][y] = i;
             }
+
+            heights[j] = top + height;
+            indices[j] = i;
         }
+
+        if underneath == 1 {
+            safe[previous] = false;
+            parent = previous;
+            depth = dominator[previous].1 + 1;
+        }
+
+        dominator.push((parent, depth));
     }
 
-    Input { up, down }
+    let part_one = safe.iter().filter(|&&b| b).count();
+    let part_two = dominator.iter().map(|(_, d)| d).sum();
+    (part_one, part_two)
 }
 
 pub fn part1(input: &Input) -> usize {
-    let Input { down, .. } = input;
-    let mut safe = vec![true; down.len()];
-
-    for underneath in down {
-        if underneath.len() == 1 {
-            safe[underneath[0]] = false;
-        }
-    }
-
-    safe.iter().filter(|&&b| b).count()
+    input.0
 }
 
 pub fn part2(input: &Input) -> usize {
-    let Input { up, down } = input;
-    let mut safe = vec![true; down.len()];
-
-    for underneath in down {
-        if underneath.len() == 1 {
-            safe[underneath[0]] = false;
-        }
-    }
-
-    let mut result = 0;
-    let mut todo = VecDeque::new();
-    let mut removed = vec![usize::MAX; down.len()];
-
-    for (start, &safe) in safe.iter().enumerate() {
-        if safe {
-            continue;
-        }
-
-        todo.push_back(start);
-        removed[start] = start;
-
-        while let Some(current) = todo.pop_front() {
-            for &next in &up[current] {
-                if removed[next] != start && down[next].iter().all(|&i| removed[i] == start) {
-                    result += 1;
-                    removed[next] = start;
-                    todo.push_back(next);
-                }
-            }
-        }
-    }
-
-    result
+    input.1
 }
