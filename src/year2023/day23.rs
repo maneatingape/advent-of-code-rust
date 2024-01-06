@@ -2,16 +2,19 @@ use crate::util::grid::*;
 use crate::util::hash::*;
 use crate::util::point::*;
 use std::collections::VecDeque;
-use std::sync::atomic::{AtomicU32, Ordering};
-use std::thread;
 
 pub struct Input {
-    start: usize,
-    end: usize,
     extra: u32,
-    directed: [u64; 36],
-    undirected: [u64; 36],
-    weight: [[u32; 36]; 36],
+    horizontal: [[u32; 6]; 6],
+    vertical: [[u32; 6]; 6],
+}
+
+struct State {
+    letter: u8,
+    skipped: bool,
+    grid: [[u8; 6]; 7],
+    convert: [u8; 32],
+    result: u32,
 }
 
 pub fn parse(input: &str) -> Input {
@@ -31,9 +34,9 @@ pub fn parse(input: &str) -> Input {
     grid[start] = b'P';
     grid[end] = b'P';
 
-    let mut poi = FastMap::new();
-    poi.insert(start, 0);
-    poi.insert(end, 1);
+    let mut poi = Vec::new();
+    poi.push(start);
+    poi.push(end);
 
     for y in 1..height - 1 {
         for x in 1..width - 1 {
@@ -44,7 +47,7 @@ pub fn parse(input: &str) -> Input {
                     ORTHOGONAL.iter().map(|&o| position + o).filter(|&n| grid[n] != b'#').count();
                 if neighbors > 2 {
                     grid[position] = b'P';
-                    poi.insert(position, poi.len());
+                    poi.push(position);
                 }
             }
         }
@@ -52,154 +55,237 @@ pub fn parse(input: &str) -> Input {
 
     // BFS to find distances between POIs.
     let mut todo = VecDeque::new();
-    let mut directed: [u64; 36] = [0; 36];
-    let mut undirected: [u64; 36] = [0; 36];
-    let mut weight = [[0; 36]; 36];
+    let mut edges = FastMap::new();
+    let mut weight = FastMap::new();
 
-    for (&start, &from) in &poi {
-        todo.push_back((start, 0, true));
-        grid[start] = b'#';
+    for from in poi {
+        todo.push_back((from, 0));
+        grid[from] = b'#';
+        weight.insert((from, from), 0);
 
-        while let Some((position, cost, forward)) = todo.pop_front() {
+        while let Some((position, cost)) = todo.pop_front() {
             for direction in ORTHOGONAL {
-                let next = position + direction;
+                let to = position + direction;
 
-                match grid[next] {
+                match grid[to] {
                     b'#' => (),
                     b'P' => {
-                        let to = poi[&next];
-
-                        if forward {
-                            directed[from] |= 1 << to;
-                        } else {
-                            directed[to] |= 1 << from;
-                        }
-
-                        undirected[from] |= 1 << to;
-                        undirected[to] |= 1 << from;
-
-                        weight[from][to] = cost + 1;
-                        weight[to][from] = cost + 1;
-                    }
-                    b'.' => {
-                        todo.push_back((next, cost + 1, forward));
-                        grid[next] = b'#';
+                        edges.entry(from).or_insert(FastSet::new()).insert(to);
+                        edges.entry(to).or_insert(FastSet::new()).insert(from);
+                        weight.insert((from, to), cost + 1);
+                        weight.insert((to, from), cost + 1);
                     }
                     _ => {
-                        let same = direction == Point::from(grid[next]);
-                        todo.push_back((next, cost + 1, forward && same));
-                        grid[next] = b'#';
+                        todo.push_back((to, cost + 1));
+                        grid[to] = b'#';
                     }
                 }
             }
         }
     }
 
-    // Compress
-    let start = undirected[0].trailing_zeros() as usize;
-    let end = undirected[1].trailing_zeros() as usize;
-    let extra = 2 + weight[0][start] + weight[1][end];
-
-    // Heuristic
-    let mut mask = 0;
-
-    for (i, edges) in undirected.iter().enumerate() {
-        if edges.count_ones() < 4 {
-            mask |= 1 << i;
-        }
-    }
-
-    for (i, edges) in undirected.iter_mut().enumerate() {
-        if edges.count_ones() < 4 {
-            *edges = (*edges & !mask) | directed[i];
-        }
-    }
-
-    Input { start, end, extra, directed, undirected, weight }
+    // Convert reduced graph to a 6x6 square grid.
+    graph_to_grid(start, end, &edges, &weight)
 }
 
+/// The graph is directed so the only allowed steps are down or to the right. The maximum value
+/// for any cell is the maximum of either the cell to the left or above.
 pub fn part1(input: &Input) -> u32 {
-    let mut cost = [0; 36];
+    let mut total = [[0; 6]; 6];
 
-    let mut todo = VecDeque::new();
-    todo.push_back(input.start);
-
-    while let Some(from) = todo.pop_front() {
-        let mut nodes = input.directed[from];
-
-        while nodes > 0 {
-            let to = nodes.trailing_zeros() as usize;
-            let mask = 1 << to;
-            nodes ^= mask;
-
-            cost[to] = cost[to].max(cost[from] + input.weight[from][to]);
-            todo.push_back(to);
+    for y in 0..6 {
+        for x in 0..6 {
+            let left = if x == 0 { 0 } else { total[y][x - 1] + input.horizontal[y][x - 1] };
+            let above = if y == 0 { 0 } else { total[y - 1][x] + input.vertical[y - 1][x] };
+            total[y][x] = left.max(above);
         }
     }
 
-    cost[input.end] + input.extra
+    input.extra + total[5][5]
 }
 
+/// Graph is undirected so we can also move up or to the right.
 pub fn part2(input: &Input) -> u32 {
-    let shared = AtomicU32::new(0);
-    let threads = thread::available_parallelism().unwrap().get();
+    let mut state =
+        State { letter: 2, skipped: false, grid: [[0; 6]; 7], convert: [0; 32], result: 0 };
 
-    // Seed each worker thread with a starting state
-    let mut seeds = VecDeque::new();
-    seeds.push_back((input.start, 1 << input.start, 0));
+    state.grid[0][0] = 1;
 
-    while seeds.len() < threads {
-        let Some((from, seen, cost)) = seeds.pop_front() else {
-            break;
-        };
-
-        if from == input.end {
-            shared.fetch_max(cost, Ordering::Relaxed);
-            continue;
-        }
-
-        let mut nodes = input.undirected[from] & !seen;
-
-        while nodes > 0 {
-            let to = nodes.trailing_zeros() as usize;
-            let mask = 1 << to;
-            nodes ^= mask;
-
-            seeds.push_back((to, seen | mask, cost + input.weight[from][to]));
-        }
+    for i in 0..32 {
+        state.convert[i] = i as u8;
     }
 
-    // Use as many cores as possible to parallelize the remaining search.
-    thread::scope(|scope| {
-        for start in &seeds {
-            scope.spawn(|| worker(input, &shared, start));
-        }
-    });
-
-    shared.load(Ordering::Relaxed) + input.extra
+    dfs(input, &mut state, 0, 0, 0);
+    input.extra + state.result
 }
 
-fn worker(input: &Input, shared: &AtomicU32, start: &(usize, u64, u32)) {
-    let (from, seen, cost) = *start;
-    let result = dfs(input, from, seen);
-    shared.fetch_max(result + cost, Ordering::Relaxed);
+#[allow(clippy::needless_range_loop)]
+fn graph_to_grid(
+    start: Point,
+    end: Point,
+    edges: &FastMap<Point, FastSet<Point>>,
+    weight: &FastMap<(Point, Point), u32>,
+) -> Input {
+    let mut extra = 2;
+    extra += edges[&start].iter().map(|&e| weight[&(start, e)]).sum::<u32>();
+    extra += edges[&end].iter().map(|&e| weight[&(e, end)]).sum::<u32>();
+
+    let mut places = [[ORIGIN; 6]; 6];
+    let mut horizontal = [[0; 6]; 6];
+    let mut vertical = [[0; 6]; 6];
+
+    let mut point = *edges[&start].iter().next().unwrap();
+    let mut seen = FastSet::new();
+    let mut next_perimeter = |point: Point| {
+        seen.insert(point);
+        *edges[&point]
+            .iter()
+            .find(|&next| edges[next].len() == 3 && !seen.contains(next))
+            .unwrap_or(&ORIGIN)
+    };
+
+    for y in 0..5 {
+        places[y][0] = point;
+        point = next_perimeter(point);
+    }
+
+    for x in 1..6 {
+        places[5][x] = point;
+        point = next_perimeter(point);
+    }
+
+    for y in (1..5).rev() {
+        places[y][5] = point;
+        point = next_perimeter(point);
+    }
+
+    for x in (1..5).rev() {
+        places[0][x] = point;
+        point = next_perimeter(point);
+    }
+
+    for y in 1..5 {
+        for x in 1..5 {
+            let above = places[y - 1][x];
+            let left = places[y][x - 1];
+            let (&point, _) = edges
+                .iter()
+                .find(|(k, v)| !seen.contains(k) && v.contains(&above) && v.contains(&left))
+                .unwrap();
+
+            places[y][x] = point;
+            seen.insert(point);
+        }
+    }
+
+    places[0][5] = places[0][4];
+    places[5][0] = places[5][1];
+
+    for y in 0..6 {
+        for x in 0..5 {
+            let key = (places[y][x], places[y][x + 1]);
+            horizontal[y][x] = *weight.get(&key).unwrap_or(&0);
+        }
+    }
+
+    for y in 0..5 {
+        for x in 0..6 {
+            let key = (places[y][x], places[y + 1][x]);
+            vertical[y][x] = *weight.get(&key).unwrap_or(&0);
+        }
+    }
+
+    Input { extra, horizontal, vertical }
 }
 
-fn dfs(input: &Input, from: usize, seen: u64) -> u32 {
-    if from == input.end {
-        return 0;
+/// Modified depth first search that only allows paths that skip one node.
+///
+/// For a 6x6 grid there are 1262816 total possible rook walks
+/// (given by [OEIS A007764](https://oeis.org/A007764)).
+///
+/// However since we want the longest path it only makes sense to consider the paths that visit the
+/// most possible nodes. There are only 10180 of these paths making it much faster.
+fn dfs(input: &Input, state: &mut State, mut row: usize, mut col: usize, mut steps: u32) {
+    // Wrap around at end of each row.
+    if col == 6 {
+        // We've reached the bottom right corner.
+        if row == 5 {
+            state.result = state.result.max(steps);
+            return;
+        }
+        row += 1;
+        col = 0;
     }
 
-    let mut nodes = input.undirected[from] & !seen;
-    let mut result = 0;
+    if state.grid[row][col] == 0 {
+        // Skip only 1 node in each path.
+        if !(state.skipped || (row == 5 && col == 5)) {
+            state.skipped = true;
+            state.grid[row + 1][col] = 0;
+            dfs(input, state, row, col + 1, steps);
+            state.skipped = false;
+        }
 
-    while nodes > 0 {
-        let to = nodes.trailing_zeros() as usize;
-        let mask = 1 << to;
-        nodes ^= mask;
+        // Create new paths (except on the final row).
+        if row < 5 {
+            let id = state.letter;
+            steps += input.vertical[row][col];
 
-        result = result.max(input.weight[from][to] + dfs(input, to, seen | mask));
+            for end in (col + 1)..6 {
+                state.grid[row + 1][end - 1] = 0;
+                steps += input.horizontal[row][end - 1];
+
+                if state.grid[row][end] == 0 {
+                    state.grid[row + 1][col] = id;
+                    state.grid[row + 1][end] = id;
+                    let extra = input.vertical[row][end];
+                    state.letter += 1;
+                    dfs(input, state, row, end + 1, steps + extra);
+                    state.letter -= 1;
+                } else {
+                    state.grid[row + 1][col] = state.convert[state.grid[row][end] as usize];
+                    state.grid[row + 1][end] = 0;
+                    dfs(input, state, row, end + 1, steps);
+                    break;
+                }
+            }
+        }
+    } else {
+        let index = state.grid[row][col] as usize;
+        let id = state.convert[index];
+
+        // Straight down
+        if row < 5 || col == 5 {
+            state.grid[row + 1][col] = id;
+            let extra = input.vertical[row][col];
+            dfs(input, state, row, col + 1, steps + extra);
+        }
+
+        for end in (col + 1)..6 {
+            state.grid[row + 1][end - 1] = 0;
+            steps += input.horizontal[row][end - 1];
+
+            if state.grid[row][end] == 0 {
+                // Move down only if not final row (except final corner).
+                if row < 5 || end == 5 {
+                    state.grid[row + 1][end] = id;
+                    let extra = input.vertical[row][end];
+                    dfs(input, state, row, end + 1, steps + extra);
+                }
+            } else {
+                // Join two path together as long as they are different.
+                // (prevent disjoint loops)
+                let other = state.convert[state.grid[row][end] as usize];
+
+                if id != other {
+                    state.grid[row + 1][end] = 0;
+                    state.convert[index] = other;
+                    dfs(input, state, row, end + 1, steps);
+                    state.convert[index] = id;
+                }
+
+                break;
+            }
+        }
     }
-
-    result
 }
