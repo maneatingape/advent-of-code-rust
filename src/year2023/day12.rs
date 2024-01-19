@@ -119,10 +119,12 @@
 //! This is equivalent to the prefix sum approach described above but a little clearer to
 //! understand however slower to calculate.
 use crate::util::parse::*;
+use std::sync::atomic::{AtomicU64, Ordering};
+use std::thread;
 
-type Input<'a> = Vec<(&'a [u8], Vec<usize>)>;
+type Spring<'a> = (&'a [u8], Vec<usize>);
 
-pub fn parse(input: &str) -> Input<'_> {
+pub fn parse(input: &str) -> Vec<Spring<'_>> {
     input
         .lines()
         .map(|line| {
@@ -134,15 +136,29 @@ pub fn parse(input: &str) -> Input<'_> {
         .collect()
 }
 
-pub fn part1(input: &Input<'_>) -> u64 {
+pub fn part1(input: &[Spring<'_>]) -> u64 {
     solve(input, 1)
 }
 
-pub fn part2(input: &Input<'_>) -> u64 {
-    solve(input, 5)
+pub fn part2(input: &[Spring<'_>]) -> u64 {
+    // Break the work into roughly equally size batches.
+    let threads = thread::available_parallelism().unwrap().get();
+    let size = input.len().div_ceil(threads);
+    let batches: Vec<_> = input.chunks(size).collect();
+
+    // Use as many cores as possible to parallelize the calculation.
+    let shared = AtomicU64::new(0);
+
+    thread::scope(|scope| {
+        for batch in batches {
+            scope.spawn(|| shared.fetch_add(solve(batch, 5), Ordering::Relaxed));
+        }
+    });
+
+    shared.load(Ordering::Relaxed)
 }
 
-pub fn solve(input: &Input<'_>, repeat: usize) -> u64 {
+pub fn solve(input: &[Spring<'_>], repeat: usize) -> u64 {
     let mut result = 0;
     let mut pattern = Vec::new();
     let mut springs = Vec::new();
