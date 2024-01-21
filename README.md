@@ -72,10 +72,10 @@ pie
     "Year 2016" : 663
     "Year 2020" : 286
     "Year 2015" : 87
-    "Years 2019, 2021, 2022 and 2023" : 52
+    "Years 2019, 2021, 2022 and 2023" : 49
 ```
 
-* [2023](#2023) (10 ms)
+* [2023](#2023) (7 ms)
 * [2022](#2022) (10 ms)
 * [2021](#2021) (10 ms)
 * [2020](#2020) (286 ms)
@@ -87,14 +87,15 @@ pie
 ## 2023
 
 ```mermaid
-%%{init: {"themeVariables": { "pie1": "#7cb5ec", "pie2": "#90ed7d", "pie3": "#f7a35c", "pie4": "#e4d354", "pie5": "#c6cdd5"}}}%%
+%%{init: {"themeVariables": { "pie1": "#7cb5ec", "pie2": "#90ed7d", "pie3": "#f7a35c", "pie4": "#e4d354", "pie5": "#e4c4fb", "pie6": "#c6cdd5"}}}%%
 pie
     title Year 2023 benchmark time by % of total
-    "Day 23" : 3181
     "Day 17" : 2463
-    "Day 12" : 1150
     "Day 16" : 831
-    "Others" : 2206
+    "Day 14" : 661
+    "Day 23" : 632
+    "Day 12" : 514
+    "Others" : 1106
 ```
 
 | Day | Problem | Solution | Benchmark (μs) |
