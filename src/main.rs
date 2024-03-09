@@ -5,6 +5,7 @@ use std::env::args;
 use std::fs::read_to_string;
 use std::iter::empty;
 use std::path::PathBuf;
+use std::time::Duration;
 use std::time::Instant;
 
 fn main() {
@@ -33,7 +34,7 @@ fn main() {
         .collect();
 
     // Pretty print output and timing for each solution
-    let mut elapsed = 0;
+    let mut elapsed = Duration::ZERO;
 
     for Solution { year, day, wrapper } in &solutions {
         let path: PathBuf =
@@ -46,7 +47,7 @@ fn main() {
         let time = Instant::now();
         let (answer1, answer2) = wrapper(&data);
         let duration = time.elapsed().as_micros();
-        elapsed += duration;
+        elapsed += time.elapsed();
 
         println!("{BOLD}{YELLOW}{year} Day {day:02}{RESET}");
         println!("    Part 1: {answer1}");
@@ -56,7 +57,7 @@ fn main() {
 
     // Print totals
     println!("{BOLD}{RED}Solutions: {}{RESET}", solutions.len());
-    println!("{BOLD}{GREEN}Elapsed: {} ms{RESET}", elapsed / 1000);
+    println!("{BOLD}{GREEN}Elapsed: {} ms{RESET}", elapsed.as_millis());
 }
 
 struct Solution {
