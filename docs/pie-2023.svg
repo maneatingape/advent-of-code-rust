@@ -1,0 +1,60 @@
+<!--
+%%{init: {"themeVariables": { "pie1": "#7cb5ec", "pie2": "#c6cdd5", "pie3": "#90ed7d", "pie4": "#f7a35c", "pie5": "#e4d354", "pie6": "#e4c4fb"}}}%%
+pie
+    title Year 2023 benchmark time by % of total
+    "Day 17" : 2463
+    "Others" : 1106
+    "Day 16" : 831
+    "Day 14" : 661
+    "Day 23" : 632
+    "Day 12" : 514
+-->
+<svg viewBox="0 0 1350 450" preserveAspectRatio="xMidYMin" xmlns="http://www.w3.org/2000/svg">
+	<style>
+		text {font-family:sans-serif;font-size:17px;}
+		.pieOuterCircle {stroke:black;stroke-width:2px;fill:none;}
+		.pieCircle {stroke:black;stroke-width:2px;opacity:0.7;}
+		.slice {text-anchor:middle;}
+		.pieTitleText {text-anchor:middle;font-size:25px;}
+	</style>
+	<g transform="translate(675,225)">
+		<circle class="pieOuterCircle" cx="0" cy="0" r="186"/>
+		<path class="pieCircle" d="M0,-185A185,185,0,0,1,111.718,147.459L0,0Z" fill="#7cb5ec"/>
+		<path class="pieCircle" d="M111.718,147.459A185,185,0,0,1,-83.984,164.838L0,0Z" fill="#c6cdd5"/>
+		<path class="pieCircle" d="M-83.984,164.838A185,185,0,0,1,-178.859,47.271L0,0Z" fill="#90ed7d"/>
+		<path class="pieCircle" d="M-178.859,47.271A185,185,0,0,1,-169.613,-73.867L0,0Z" fill="#f7a35c"/>
+		<path class="pieCircle" d="M-169.613,-73.867A185,185,0,0,1,-91.972,-160.518L0,0Z" fill="#e4d354"/>
+		<path class="pieCircle" d="M-91.972,-160.518A185,185,0,0,1,0,-185L0,0Z" fill="#e4c4fb"/>
+		<text class="slice" transform="translate(131.52278901287383,-44.19636263625181)">40%</text>
+		<text class="slice" transform="translate(12.27357706349704,138.20608454791852)">18%</text>
+		<text class="slice" transform="translate(-107.97690025794786,87.13524838252991)">13%</text>
+		<text class="slice" transform="translate(-138.3476516322423,-10.55887247028409)">11%</text>
+		<text class="slice" transform="translate(-103.33659542978528,-92.5910932270533)">10%</text>
+		<text class="slice" transform="translate(-35.69063480663672,-134.08109891815212)">8%</text>
+		<text class="pieTitleText" x="0" y="-200">Year 2023 benchmark time by % of total</text>
+		<g transform="translate(216,-66)">
+			<rect height="18" style="fill: rgb(124, 181, 236); stroke: rgb(124, 181, 236);" width="18"/>
+			<text x="22" y="14">Day 17</text>
+		</g>
+		<g transform="translate(216,-44)">
+			<rect height="18" style="fill: rgb(198, 205, 213); stroke: rgb(198, 205, 213);" width="18"/>
+			<text x="22" y="14">Others</text>
+		</g>
+		<g transform="translate(216,-22)">
+			<rect height="18" style="fill: rgb(144, 237, 125); stroke: rgb(144, 237, 125);" width="18"/>
+			<text x="22" y="14">Day 16</text>
+		</g>
+		<g transform="translate(216,0)">
+			<rect height="18" style="fill: rgb(247, 163, 92); stroke: rgb(247, 163, 92);" width="18"/>
+			<text x="22" y="14">Day 14</text>
+		</g>
+		<g transform="translate(216,22)">
+			<rect height="18" style="fill: rgb(228, 211, 84); stroke: rgb(228, 211, 84);" width="18"/>
+			<text x="22" y="14">Day 23</text>
+		</g>
+		<g transform="translate(216,44)">
+			<rect height="18" style="fill: rgb(228, 196, 251); stroke: rgb(228, 196, 251);" width="18"/>
+			<text x="22" y="14">Day 12</text>
+		</g>
+	</g>
+</svg>

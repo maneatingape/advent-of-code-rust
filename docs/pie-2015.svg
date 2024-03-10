@@ -1,0 +1,39 @@
+<!--
+%%{init: {"themeVariables": { "pie1": "#7cb5ec", "pie2": "#90ed7d", "pie3": "#c6cdd5"}}}%%
+pie
+    title Year 2015 benchmark time by % of total
+    "Day 4" : 76000
+    "Day 6" : 5780
+    "Others" : 3037
+-->
+<svg viewBox="0 0 1350 450" preserveAspectRatio="xMidYMin" xmlns="http://www.w3.org/2000/svg">
+	<style>
+		text {font-family:sans-serif;font-size:17px;}
+		.pieOuterCircle {stroke:black;stroke-width:2px;fill:none;}
+		.pieCircle {stroke:black;stroke-width:2px;opacity:0.7;}
+		.slice {text-anchor:middle;}
+		.pieTitleText {text-anchor:middle;font-size:25px;}
+	</style>
+	<g transform="translate(675,225)">
+		<circle class="pieOuterCircle" cx="0" cy="0" r="186"/>
+		<path class="pieCircle" d="M0,-185A185,185,0,1,1,-112.424,-146.921L0,0Z" fill="#7cb5ec"/>
+		<path class="pieCircle" d="M-112.424,-146.921A185,185,0,0,1,-41.271,-180.338L0,0Z" fill="#90ed7d"/>
+		<path class="pieCircle" d="M-41.271,-180.338A185,185,0,0,1,0,-185L0,0Z" fill="#c6cdd5"/>
+		<text class="slice" transform="translate(44.51161162654596,131.41643325858277)">90%</text>
+		<text class="slice" transform="translate(-58.982090136569106,-125.58931301317655)">7%</text>
+		<text class="slice" transform="translate(-15.575013957455205,-137.87306277959112)">4%</text>
+		<text class="pieTitleText" x="0" y="-200">Year 2015 benchmark time by % of total</text>
+		<g transform="translate(216,-33)">
+			<rect height="18" style="fill: rgb(124, 181, 236); stroke: rgb(124, 181, 236);" width="18"/>
+			<text x="22" y="14">Day 4</text>
+		</g>
+		<g transform="translate(216,-11)">
+			<rect height="18" style="fill: rgb(144, 237, 125); stroke: rgb(144, 237, 125);" width="18"/>
+			<text x="22" y="14">Day 6</text>
+		</g>
+		<g transform="translate(216,11)">
+			<rect height="18" style="fill: rgb(198, 205, 213); stroke: rgb(198, 205, 213);" width="18"/>
+			<text x="22" y="14">Others</text>
+		</g>
+	</g>
+</svg>

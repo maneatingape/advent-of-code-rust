@@ -1,11 +1,7 @@
 # Advent of Code [![checks-badge]][checks-link] [![docs-badge]][docs-link]
 
-[checks-badge]: https://img.shields.io/github/actions/workflow/status/maneatingape/advent-of-code-rust/checks.yml?label=checks
-[checks-link]: https://github.com/maneatingape/advent-of-code-rust/actions/workflows/checks.yml
-[docs-badge]: https://img.shields.io/github/actions/workflow/status/maneatingape/advent-of-code-rust/docs.yml?color=blue&label=docs
-[docs-link]: https://maneatingape.github.io/advent-of-code-rust/aoc/
-
-Complete 2023 to 2019 and 2016 to 2015 entries for the annual [Advent of Code](https://adventofcode.com/) challenge, written in performant Rust.
+Complete 2023 to 2019 and 2016 to 2015 entries for the annual [Advent of Code] challenge,
+written in performant Rust.
 
 ## Features
 
@@ -57,23 +53,13 @@ Place input files in `input/yearYYYY/dayDD.txt` including leading zeroes. For ex
 
 ## Performance
 
-Benchmarks are measured using the built-in `cargo bench` tool run on an
-[Apple M2 Max](https://en.wikipedia.org/wiki/Apple_M2).
+Benchmarks are measured using the built-in `cargo bench` tool run on an [Apple M2 Max][apple-link].
 All 175 solutions from 2023 to 2019 and also 2016 to 2015 complete sequentially in **1.1 seconds**.
 Interestingly 90% of the total time is spent on just 5 solutions.
 Performance is reasonable even on older hardware, for example a 2011 MacBook Pro with an
-[Intel i7-2720QM](https://ark.intel.com/content/www/us/en/ark/products/50067/intel-core-i72720qm-processor-6m-cache-up-to-3-30-ghz.html)
-processor takes 4.1 seconds to run the same 175 solutions.
+[Intel i7-2720QM][intel-link] processor takes 4.1 seconds to run the same 175 solutions.
 
-```mermaid
-%%{init: {"themeVariables": { "pie1": "#7cb5ec", "pie2": "#90ed7d", "pie3": "#f7a35c", "pie4": "#e4d354", "pie5": "#e4c4fb", "pie6": "#c6cdd5"}}}%%
-pie
-    title Each year benchmark time by % of total
-    "Year 2016" : 663
-    "Year 2020" : 286
-    "Year 2015" : 87
-    "Years 2019, 2021, 2022 and 2023" : 49
-```
+![pie-all]
 
 * [2023](#2023) (7 ms)
 * [2022](#2022) (10 ms)
@@ -86,17 +72,7 @@ pie
 
 ## 2023
 
-```mermaid
-%%{init: {"themeVariables": { "pie1": "#7cb5ec", "pie2": "#90ed7d", "pie3": "#f7a35c", "pie4": "#e4d354", "pie5": "#e4c4fb", "pie6": "#c6cdd5"}}}%%
-pie
-    title Year 2023 benchmark time by % of total
-    "Day 17" : 2463
-    "Day 16" : 831
-    "Day 14" : 661
-    "Day 23" : 632
-    "Day 12" : 514
-    "Others" : 1106
-```
+![pie-2023]
 
 | Day | Problem | Solution | Benchmark (μs) |
 | --- | --- | --- | --: |
@@ -128,15 +104,7 @@ pie
 
 ## 2022
 
-```mermaid
-%%{init: {"themeVariables": { "pie1": "#7cb5ec", "pie2": "#90ed7d", "pie3": "#f7a35c", "pie4": "#c6cdd5"}}}%%
-pie
-    title Year 2022 benchmark time by % of total
-    "Day 20" : 5067
-    "Day 23" : 2017
-    "Day 11" : 1172
-    "Others" : 1145
-```
+![pie-2022]
 
 | Day | Problem | Solution | Benchmark (μs) |
 | --- | --- | --- | --: |
@@ -168,15 +136,7 @@ pie
 
 ## 2021
 
-```mermaid
-%%{init: {"themeVariables": { "pie1": "#7cb5ec", "pie2": "#90ed7d", "pie3": "#f7a35c", "pie4": "#c6cdd5"}}}%%
-pie
-    title Year 2021 benchmark time by % of total
-    "Day 15" : 2567
-    "Day 20" : 2075
-    "Day 23" : 1717
-    "Others" : 2832
-```
+![pie-2021]
 
 | Day | Problem | Solution | Benchmark (μs) |
 | --- | --- | --- | --: |
@@ -208,14 +168,7 @@ pie
 
 ## 2020
 
-```mermaid
-%%{init: {"themeVariables": { "pie1": "#7cb5ec", "pie2": "#90ed7d", "pie3": "#c6cdd5"}}}%%
-pie
-    title Year 2020 benchmark time by % of total
-    "Day 15" : 160000
-    "Day 23" : 110000
-    "Others" : 16671
-```
+![pie-2020]
 
 | Day | Problem | Solution | Benchmark (μs) |
 | --- | --- | --- | --: |
@@ -247,16 +200,7 @@ pie
 
 ## 2019
 
-```mermaid
-%%{init: {"themeVariables": { "pie1": "#7cb5ec", "pie2": "#90ed7d", "pie3": "#f7a35c", "pie4": "#e4d354", "pie5": "#c6cdd5"}}}%%
-pie
-    title Year 2019 benchmark time by % of total
-    "Day 16" : 4124
-    "Day 13" : 3492
-    "Day 25" : 2721
-    "Day 21" : 2265
-    "Others" : 10445
-```
+![pie-2019]
 
 | Day | Problem | Solution | Benchmark (μs) |
 | --- | --- | --- | --: |
@@ -307,14 +251,7 @@ pie
 
 ## 2016
 
-```mermaid
-%%{init: {"themeVariables": { "pie1": "#7cb5ec", "pie2": "#90ed7d", "pie3": "#c6cdd5"}}}%%
-pie
-    title Year 2016 benchmark time by % of total
-    "Day 14" : 434000
-    "Day 5" : 212000
-    "Others" : 16696
-```
+![pie-2016]
 
 | Day | Problem | Solution | Benchmark (μs) |
 | --- | --- | --- | --: |
@@ -346,14 +283,7 @@ pie
 
 ## 2015
 
-```mermaid
-%%{init: {"themeVariables": { "pie1": "#7cb5ec", "pie2": "#90ed7d", "pie3": "#c6cdd5"}}}%%
-pie
-    title Year 2015 benchmark time by % of total
-    "Day 4" : 76000
-    "Day 6" : 5780
-    "Others" : 3037
-```
+![pie-2015]
 
 | Day | Problem | Solution | Benchmark (μs) |
 | --- | --- | --- | --: |
@@ -382,3 +312,19 @@ pie
 | 23 | [Opening the Turing Lock](https://adventofcode.com/2015/day/23) | [Source](src/year2015/day23.rs) | 6 |
 | 24 | [It Hangs in the Balance](https://adventofcode.com/2015/day/24) | [Source](src/year2015/day24.rs) | 360 |
 | 25 | [Let It Snow](https://adventofcode.com/2015/day/25) | [Source](src/year2015/day25.rs) | 1 |
+
+[checks-badge]: https://img.shields.io/github/actions/workflow/status/maneatingape/advent-of-code-rust/checks.yml?label=checks
+[checks-link]: https://github.com/maneatingape/advent-of-code-rust/actions/workflows/checks.yml
+[docs-badge]: https://img.shields.io/github/actions/workflow/status/maneatingape/advent-of-code-rust/docs.yml?color=blue&label=docs
+[docs-link]: https://maneatingape.github.io/advent-of-code-rust/aoc/
+[Advent of Code]: https://adventofcode.com
+[apple-link]: https://en.wikipedia.org/wiki/Apple_M2
+[intel-link]: https://ark.intel.com/content/www/us/en/ark/products/50067/intel-core-i72720qm-processor-6m-cache-up-to-3-30-ghz.html
+[pie-all]: docs/pie-all.svg
+[pie-2023]: docs/pie-2023.svg
+[pie-2022]: docs/pie-2022.svg
+[pie-2021]: docs/pie-2021.svg
+[pie-2020]: docs/pie-2020.svg
+[pie-2019]: docs/pie-2019.svg
+[pie-2016]: docs/pie-2016.svg
+[pie-2015]: docs/pie-2015.svg

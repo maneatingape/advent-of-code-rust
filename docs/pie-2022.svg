@@ -1,0 +1,46 @@
+<!--
+%%{init: {"themeVariables": { "pie1": "#7cb5ec", "pie2": "#90ed7d", "pie3": "#f7a35c", "pie4": "#c6cdd5"}}}%%
+pie
+    title Year 2022 benchmark time by % of total
+    "Day 20" : 5067
+    "Day 23" : 2017
+    "Day 11" : 1172
+    "Others" : 1145
+-->
+<svg viewBox="0 0 1350 450" preserveAspectRatio="xMidYMin" xmlns="http://www.w3.org/2000/svg">
+	<style>
+		text {font-family:sans-serif;font-size:17px;}
+		.pieOuterCircle {stroke:black;stroke-width:2px;fill:none;}
+		.pieCircle {stroke:black;stroke-width:2px;opacity:0.7;}
+		.slice {text-anchor:middle;}
+		.pieTitleText {text-anchor:middle;font-size:25px;}
+	</style>
+	<g transform="translate(675,225)">
+		<circle class="pieOuterCircle" cx="0" cy="0" r="186"/>
+		<path class="pieCircle" d="M0,-185A185,185,0,1,1,-44.864,179.478L0,0Z" fill="#7cb5ec"/>
+		<path class="pieCircle" d="M-44.864,179.478A185,185,0,0,1,-184.954,-4.111L0,0Z" fill="#90ed7d"/>
+		<path class="pieCircle" d="M-184.954,-4.111A185,185,0,0,1,-128.155,-133.422L0,0Z" fill="#f7a35c"/>
+		<path class="pieCircle" d="M-128.155,-133.422A185,185,0,0,1,0,-185L0,0Z" fill="#c6cdd5"/>
+		<text class="slice" transform="translate(137.71065519963932,16.95104552781485)">54%</text>
+		<text class="slice" transform="translate(-110.30436574826355,84.1695277215769)">21%</text>
+		<text class="slice" transform="translate(-127.03510429830331,-55.80004279495851)">12%</text>
+		<text class="slice" transform="translate(-51.80417765802655,-128.7163147280702)">12%</text>
+		<text class="pieTitleText" x="0" y="-200">Year 2022 benchmark time by % of total</text>
+		<g transform="translate(216,-44)">
+			<rect height="18" style="fill: rgb(124, 181, 236); stroke: rgb(124, 181, 236);" width="18"/>
+			<text x="22" y="14">Day 20</text>
+		</g>
+		<g transform="translate(216,-22)">
+			<rect height="18" style="fill: rgb(144, 237, 125); stroke: rgb(144, 237, 125);" width="18"/>
+			<text x="22" y="14">Day 23</text>
+		</g>
+		<g transform="translate(216,0)">
+			<rect height="18" style="fill: rgb(247, 163, 92); stroke: rgb(247, 163, 92);" width="18"/>
+			<text x="22" y="14">Day 11</text>
+		</g>
+		<g transform="translate(216,22)">
+			<rect height="18" style="fill: rgb(198, 205, 213); stroke: rgb(198, 205, 213);" width="18"/>
+			<text x="22" y="14">Others</text>
+		</g>
+	</g>
+</svg>
