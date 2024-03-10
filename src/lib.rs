@@ -1,7 +1,9 @@
 //! # Advent of Code solutions in Rust, tuned for speed.
-//! [![github]](https://github.com/maneatingape/advent-of-code-rust)
 //!
-//! [github]: https://img.shields.io/badge/github-blue?style=for-the-badge&logo=github&labelColor=grey
+//! [![badge]][link]
+//!
+//! [badge]: https://img.shields.io/badge/github-blue?style=for-the-badge&logo=github&labelColor=grey
+//! [link]: https://github.com/maneatingape/advent-of-code-rust
 
 //! <!-- Configure rustdoc -->
 #![doc(html_logo_url = "https://maneatingape.github.io/advent-of-code-rust/logo.png")]
