@@ -170,7 +170,7 @@ fn explore(
 
     for line in output.lines() {
         if line.starts_with("== Pressure-Sensitive Floor ==") {
-            *path = stack.clone();
+            path.clone_from(stack);
             return;
         } else if let Some(suffix) = line.strip_prefix("- ") {
             if opposite(suffix) == "none" {

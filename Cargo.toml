@@ -13,6 +13,7 @@ private_intra_doc_links = "allow"
 [lints.rust]
 absolute_paths_not_starting_with_crate = "warn"
 box_pointers = "warn"
+dead_code = "warn"
 elided_lifetimes_in_paths = "warn"
 explicit_outlives_requirements = "warn"
 ffi_unwind_calls = "warn"
@@ -37,7 +38,6 @@ unused_import_braces = "warn"
 unused_lifetimes = "warn"
 unused_macro_rules = "warn"
 unused_qualifications = "warn"
-unused_tuple_struct_fields = "warn"
 variant_size_differences = "warn"
 
 [lints.clippy]
