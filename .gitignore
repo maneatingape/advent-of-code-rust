@@ -6,4 +6,4 @@ Cargo.lock
 .DS_Store
 
 # Don't commit input files
-input/
+input
