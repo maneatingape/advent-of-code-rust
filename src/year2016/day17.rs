@@ -28,8 +28,8 @@ pub fn parse(input: &str) -> State {
     state
 }
 
-pub fn part1(input: &State) -> String {
-    input.min.to_string()
+pub fn part1(input: &State) -> &str {
+    &input.min
 }
 
 pub fn part2(input: &State) -> usize {

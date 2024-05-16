@@ -22,7 +22,7 @@ struct Exclusive {
 
 /// Parallelize the hashing as each row is independent.
 pub fn parse(input: &str) -> Vec<u8> {
-    let shared = Shared { prefix: input.trim().to_string(), counter: AtomicUsize::new(0) };
+    let shared = Shared { prefix: input.trim().to_owned(), counter: AtomicUsize::new(0) };
     let exclusive = Exclusive { grid: vec![0; 0x4000] };
     let mutex = Mutex::new(exclusive);
 

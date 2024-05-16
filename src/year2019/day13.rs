@@ -106,7 +106,7 @@ fn draw(tiles: &[i64], score: i64, blocks: i64) {
 
     for y in 0..20 {
         for x in 0..44 {
-            let _ = match tiles[44 * y + x] {
+            let _unused = match tiles[44 * y + x] {
                 0 => write!(s, " "),
                 1 if y == 0 => write!(s, "{GREEN}_{RESET}"),
                 1 => write!(s, "{GREEN}|{RESET}"),

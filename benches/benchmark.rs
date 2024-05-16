@@ -1,3 +1,4 @@
+#![allow(unstable_features)]
 #![feature(test)]
 extern crate test;
 

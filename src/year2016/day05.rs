@@ -22,7 +22,7 @@ struct Exclusive {
 
 pub fn parse(input: &str) -> Vec<u32> {
     let shared = Shared {
-        prefix: input.trim().to_string(),
+        prefix: input.trim().to_owned(),
         done: AtomicBool::new(false),
         counter: AtomicU32::new(1000),
     };

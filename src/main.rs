@@ -39,20 +39,22 @@ fn main() {
     for Solution { year, day, wrapper } in &solutions {
         let path: PathBuf =
             ["input", &format!("year{year}"), &format!("day{day:02}.txt")].iter().collect();
-        let Ok(data) = read_to_string(&path) else {
-            eprintln!("Place input file in {path:?}");
-            continue;
-        };
 
-        let time = Instant::now();
-        let (answer1, answer2) = wrapper(&data);
-        let duration = time.elapsed().as_micros();
-        elapsed += time.elapsed();
+        if let Ok(data) = read_to_string(&path) {
+            let time = Instant::now();
+            let (answer1, answer2) = wrapper(&data);
+            let duration = time.elapsed().as_micros();
+            elapsed += time.elapsed();
 
-        println!("{BOLD}{YELLOW}{year} Day {day:02}{RESET}");
-        println!("    Part 1: {answer1}");
-        println!("    Part 2: {answer2}");
-        println!("    Duration: {duration} μs");
+            println!("{BOLD}{YELLOW}{year} Day {day:02}{RESET}");
+            println!("    Part 1: {answer1}");
+            println!("    Part 2: {answer2}");
+            println!("    Duration: {duration} μs");
+        } else {
+            eprintln!("{BOLD}{RED}{year} Day {day:02}{RESET}");
+            eprintln!("    Missing input!");
+            eprintln!("    Place input file in {BOLD}{WHITE}{}{RESET}", path.display());
+        }
     }
 
     // Print totals
