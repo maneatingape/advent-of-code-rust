@@ -9,7 +9,8 @@ use std::sync::Mutex;
 use std::thread;
 
 /// Atomics can be safely shared between threads.
-struct Shared {
+struct Shared<'a> {
+    input: &'a str,
     done: AtomicBool,
     counter: AtomicI32,
 }
@@ -27,32 +28,164 @@ pub fn parse(input: &str) -> &str {
 
 /// Hash each key once.
 pub fn part1(input: &str) -> i32 {
-    let md5 = |n| {
-        let (mut buffer, size) = format_string(input, n);
-        hash(&mut buffer, size)
-    };
-    generate_pad(md5)
+    generate_pad(input, false)
 }
 
 /// Hash each key an additional 2016 times.
 pub fn part2(input: &str) -> i32 {
-    let md5 = |n| {
-        let (mut buffer, size) = format_string(input, n);
-        let mut result = hash(&mut buffer, size);
-
-        for _ in 0..2016 {
-            buffer[0..8].copy_from_slice(&to_ascii(result.0));
-            buffer[8..16].copy_from_slice(&to_ascii(result.1));
-            buffer[16..24].copy_from_slice(&to_ascii(result.2));
-            buffer[24..32].copy_from_slice(&to_ascii(result.3));
-            result = hash(&mut buffer, 32);
-        }
-
-        result
-    };
-    generate_pad(md5)
+    generate_pad(input, true)
 }
 
+/// Find the first 64 keys that sastify the rules.
+fn generate_pad(input: &str, part_two: bool) -> i32 {
+    let shared = Shared { input, done: AtomicBool::new(false), counter: AtomicI32::new(0) };
+    let exclusive =
+        Exclusive { threes: BTreeMap::new(), fives: BTreeMap::new(), found: BTreeSet::new() };
+    let mutex = Mutex::new(exclusive);
+
+    // Use as many cores as possible to parallelize the search.
+    thread::scope(|scope| {
+        for _ in 0..thread::available_parallelism().unwrap().get() {
+            scope.spawn(|| worker(&shared, &mutex, part_two));
+        }
+    });
+
+    let exclusive = mutex.into_inner().unwrap();
+    *exclusive.found.iter().nth(63).unwrap()
+}
+
+#[cfg(not(feature = "simd"))]
+fn worker(shared: &Shared<'_>, mutex: &Mutex<Exclusive>, part_two: bool) {
+    while !shared.done.load(Ordering::Relaxed) {
+        // Get the next key to check.
+        let n = shared.counter.fetch_add(1, Ordering::Relaxed);
+
+        // Calculate the hash.
+        let (mut buffer, size) = format_string(shared.input, n);
+        let mut result = hash(&mut buffer, size);
+
+        if part_two {
+            for _ in 0..2016 {
+                buffer[0..8].copy_from_slice(&to_ascii(result.0));
+                buffer[8..16].copy_from_slice(&to_ascii(result.1));
+                buffer[16..24].copy_from_slice(&to_ascii(result.2));
+                buffer[24..32].copy_from_slice(&to_ascii(result.3));
+                result = hash(&mut buffer, 32);
+            }
+        }
+
+        check(shared, mutex, n, result);
+    }
+}
+
+/// Use SIMD to compute hashes in parallel in blocks of 32.
+#[cfg(feature = "simd")]
+#[allow(clippy::needless_range_loop)]
+fn worker(shared: &Shared<'_>, mutex: &Mutex<Exclusive>, part_two: bool) {
+    let mut result = ([0; 32], [0; 32], [0; 32], [0; 32]);
+    let mut buffers = [[0; 64]; 32];
+
+    while !shared.done.load(Ordering::Relaxed) {
+        // Get the next key to check.
+        let start = shared.counter.fetch_add(32, Ordering::Relaxed);
+
+        // Calculate the hash.
+        for i in 0..32 {
+            let (mut buffer, size) = format_string(shared.input, start + i as i32);
+            let (a, b, c, d) = hash(&mut buffer, size);
+
+            result.0[i] = a;
+            result.1[i] = b;
+            result.2[i] = c;
+            result.3[i] = d;
+        }
+
+        if part_two {
+            for _ in 0..2016 {
+                for i in 0..32 {
+                    buffers[i][0..8].copy_from_slice(&to_ascii(result.0[i]));
+                    buffers[i][8..16].copy_from_slice(&to_ascii(result.1[i]));
+                    buffers[i][16..24].copy_from_slice(&to_ascii(result.2[i]));
+                    buffers[i][24..32].copy_from_slice(&to_ascii(result.3[i]));
+                }
+                result = simd::hash::<32>(&mut buffers, 32);
+            }
+        }
+
+        for i in 0..32 {
+            let hash = (result.0[i], result.1[i], result.2[i], result.3[i]);
+            check(shared, mutex, start + i as i32, hash);
+        }
+    }
+}
+
+/// Check for sequences of 3 or 5 consecutive matching digits.
+fn check(shared: &Shared<'_>, mutex: &Mutex<Exclusive>, n: i32, hash: (u32, u32, u32, u32)) {
+    let (a, b, c, d) = hash;
+
+    let mut prev = u32::MAX;
+    let mut same = 1;
+    let mut three = 0;
+    let mut five = 0;
+
+    for mut word in [d, c, b, a] {
+        for _ in 0..8 {
+            let next = word & 0xf;
+
+            if next == prev {
+                same += 1;
+            } else {
+                same = 1;
+            }
+
+            if same == 3 {
+                three = 1 << next;
+            }
+            if same == 5 {
+                five |= 1 << next;
+            }
+
+            word >>= 4;
+            prev = next;
+        }
+    }
+
+    if three != 0 || five != 0 {
+        let mut exclusive = mutex.lock().unwrap();
+        let mut candidates = Vec::new();
+
+        // Compare against all 5 digit sequences.
+        if three != 0 {
+            exclusive.threes.insert(n, three);
+
+            for (_, mask) in exclusive.fives.range(n + 1..n + 1001) {
+                if three & mask != 0 {
+                    candidates.push(n);
+                }
+            }
+        }
+
+        // Compare against all 3 digit sequences.
+        if five != 0 {
+            exclusive.fives.insert(n, five);
+
+            for (&index, &mask) in exclusive.threes.range(n - 1000..n) {
+                if five & mask != 0 {
+                    candidates.push(index);
+                }
+            }
+        }
+
+        // Add any matching keys found, finishing once we have at least 64 keys.
+        exclusive.found.extend(candidates);
+
+        if exclusive.found.len() >= 64 {
+            shared.done.store(true, Ordering::Relaxed);
+        }
+    }
+}
+
+/// Write the salt and integer index as ASCII characters.
 fn format_string(prefix: &str, n: i32) -> ([u8; 64], usize) {
     let string = format!("{prefix}{n}");
     let size = string.len();
@@ -61,99 +194,6 @@ fn format_string(prefix: &str, n: i32) -> ([u8; 64], usize) {
     buffer[0..size].copy_from_slice(string.as_bytes());
 
     (buffer, size)
-}
-
-/// Find the first 64 keys that sastify the rules.
-fn generate_pad(md5: impl Fn(i32) -> (u32, u32, u32, u32) + Copy + Sync) -> i32 {
-    let shared = Shared { done: AtomicBool::new(false), counter: AtomicI32::new(0) };
-    let exclusive =
-        Exclusive { threes: BTreeMap::new(), fives: BTreeMap::new(), found: BTreeSet::new() };
-    let mutex = Mutex::new(exclusive);
-
-    // Use as many cores as possible to parallelize the search.
-    thread::scope(|scope| {
-        for _ in 0..thread::available_parallelism().unwrap().get() {
-            scope.spawn(|| check_keys(&shared, &mutex, md5));
-        }
-    });
-
-    let exclusive = mutex.into_inner().unwrap();
-    *exclusive.found.iter().nth(63).unwrap()
-}
-
-fn check_keys(
-    shared: &Shared,
-    mutex: &Mutex<Exclusive>,
-    md5: impl Fn(i32) -> (u32, u32, u32, u32),
-) {
-    while !shared.done.load(Ordering::Relaxed) {
-        // Get the next key to check.
-        let n = shared.counter.fetch_add(1, Ordering::Relaxed);
-        // Calculate the hash.
-        let (a, b, c, d) = md5(n);
-
-        // Check for sequences of 3 or 5 consecutive matching digits.
-        let mut prev = u32::MAX;
-        let mut same = 1;
-        let mut three = 0;
-        let mut five = 0;
-
-        for mut word in [d, c, b, a] {
-            for _ in 0..8 {
-                let next = word & 0xf;
-
-                if next == prev {
-                    same += 1;
-                } else {
-                    same = 1;
-                }
-
-                if same == 3 {
-                    three = 1 << next;
-                }
-                if same == 5 {
-                    five |= 1 << next;
-                }
-
-                word >>= 4;
-                prev = next;
-            }
-        }
-
-        if three != 0 || five != 0 {
-            let mut exclusive = mutex.lock().unwrap();
-            let mut candidates = Vec::new();
-
-            // Compare against all 5 digit sequences.
-            if three != 0 {
-                exclusive.threes.insert(n, three);
-
-                for (&index, &mask) in exclusive.fives.range(n + 1..n + 1000) {
-                    if three & mask != 0 {
-                        candidates.push(index);
-                    }
-                }
-            }
-
-            // Compare against all 3 digit sequences.
-            if five != 0 {
-                exclusive.fives.insert(n, five);
-
-                for (&index, &mask) in exclusive.threes.range(n - 1000..n - 1) {
-                    if five & mask != 0 {
-                        candidates.push(index);
-                    }
-                }
-            }
-
-            // Add any matching keys found, finishing once we have at least 64 keys.
-            exclusive.found.extend(candidates);
-
-            if exclusive.found.len() >= 64 {
-                shared.done.store(true, Ordering::Relaxed);
-            }
-        }
-    }
 }
 
 /// Quickly convert a `u32` to an array of 8 ASCII values.

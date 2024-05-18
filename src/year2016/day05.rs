@@ -37,7 +37,10 @@ pub fn parse(input: &str) -> Vec<u32> {
     // Use as many cores as possible to parallelize the remaining search.
     thread::scope(|scope| {
         for _ in 0..thread::available_parallelism().unwrap().get() {
+            #[cfg(not(feature = "simd"))]
             scope.spawn(|| worker(&shared, &mutex));
+            #[cfg(feature = "simd")]
+            scope.spawn(|| simd::worker(&shared, &mutex));
         }
     });
 
@@ -93,6 +96,7 @@ fn check_hash(buffer: &mut [u8], size: usize, n: u32, shared: &Shared, mutex: &M
     }
 }
 
+#[cfg(not(feature = "simd"))]
 fn worker(shared: &Shared, mutex: &Mutex<Exclusive>) {
     while !shared.done.load(Ordering::Relaxed) {
         let offset = shared.counter.fetch_add(1000, Ordering::Relaxed);
@@ -105,6 +109,62 @@ fn worker(shared: &Shared, mutex: &Mutex<Exclusive>) {
             buffer[size - 1] = b'0' + (n % 10) as u8;
 
             check_hash(&mut buffer, size, offset + n, shared, mutex);
+        }
+    }
+}
+
+#[cfg(feature = "simd")]
+mod simd {
+    use super::*;
+    use crate::util::md5::simd::hash;
+    use std::simd::{LaneCount, SupportedLaneCount};
+
+    #[allow(clippy::needless_range_loop)]
+    fn check_hash_simd<const N: usize>(
+        buffers: &mut [[u8; 64]],
+        size: usize,
+        start: u32,
+        offset: u32,
+        shared: &Shared,
+        mutex: &Mutex<Exclusive>,
+    ) where
+        LaneCount<N>: SupportedLaneCount,
+    {
+        // Format macro is very slow, so update digits directly
+        for i in 0..N {
+            let n = offset + i as u32;
+            buffers[i][size - 3] = b'0' + (n / 100) as u8;
+            buffers[i][size - 2] = b'0' + ((n / 10) % 10) as u8;
+            buffers[i][size - 1] = b'0' + (n % 10) as u8;
+        }
+
+        let (result, ..) = hash::<N>(buffers, size);
+
+        for i in 0..N {
+            if result[i] & 0xfffff000 == 0 {
+                let mut exclusive = mutex.lock().unwrap();
+
+                exclusive.found.push((start + offset + i as u32, result[i]));
+                exclusive.mask |= 1 << (result[i] >> 8);
+
+                if exclusive.mask & 0xff == 0xff {
+                    shared.done.store(true, Ordering::Relaxed);
+                }
+            }
+        }
+    }
+
+    pub(super) fn worker(shared: &Shared, mutex: &Mutex<Exclusive>) {
+        while !shared.done.load(Ordering::Relaxed) {
+            let start = shared.counter.fetch_add(1000, Ordering::Relaxed);
+            let (prefix, size) = format_string(&shared.prefix, start);
+            let mut buffers = [prefix; 32];
+
+            for offset in (0..992).step_by(32) {
+                check_hash_simd::<32>(&mut buffers, size, start, offset, shared, mutex);
+            }
+
+            check_hash_simd::<8>(&mut buffers, size, start, 992, shared, mutex);
         }
     }
 }
