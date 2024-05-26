@@ -24,20 +24,20 @@ macro_rules! benchmark {
             #[bench]
             fn parse_bench(b: &mut Bencher) {
                 let data = load_once();
-                b.iter(|| parse(&data));
+                b.iter(|| parse(data));
             }
 
             #[bench]
             fn part1_bench(b: &mut Bencher) {
                 let data = load_once();
-                let input = parse(&data);
+                let input = parse(data);
                 b.iter(|| part1(&input));
             }
 
             #[bench]
             fn part2_bench(b: &mut Bencher) {
                 let data = load_once();
-                let input = parse(&data);
+                let input = parse(data);
                 b.iter(|| part2(&input));
             }
         }
