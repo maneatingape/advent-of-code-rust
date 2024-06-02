@@ -253,6 +253,7 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 | 15 | [Dueling Generators](https://adventofcode.com/2017/day/15) | [Source](src/year2017/day15.rs) | 425000 |
 | 16 | [Permutation Promenade](https://adventofcode.com/2017/day/16) | [Source](src/year2017/day16.rs) | 66 |
 | 17 | [Spinlock](https://adventofcode.com/2017/day/17) | [Source](src/year2017/day17.rs) | 84 |
+| 18 | [Duet](https://adventofcode.com/2017/day/18) | [Source](src/year2017/day18.rs) | 7 |
 
 ## 2016
 
