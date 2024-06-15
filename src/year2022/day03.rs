@@ -20,7 +20,7 @@
 //!
 //! Notes:
 //! * We could get away with a `u64` for the set, but by using an `u128` we can shift directly by the
-//! raw ASCII codes and not bother computing offsets until the very end.
+//!   raw ASCII codes and not bother computing offsets until the very end.
 //!
 //! [`trailing_zeroes`]: u128
 use crate::util::iter::*;
