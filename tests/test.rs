@@ -104,6 +104,7 @@ mod year2017 {
     mod day17_test;
     mod day18_test;
     mod day19_test;
+    mod day23_test;
 }
 
 mod year2019 {

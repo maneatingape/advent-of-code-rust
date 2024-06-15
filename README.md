@@ -255,6 +255,7 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 | 17 | [Spinlock](https://adventofcode.com/2017/day/17) | [Source](src/year2017/day17.rs) | 84 |
 | 18 | [Duet](https://adventofcode.com/2017/day/18) | [Source](src/year2017/day18.rs) | 7 |
 | 19 | [A Series of Tubes](https://adventofcode.com/2017/day/19) | [Source](src/year2017/day19.rs) | 20 |
+| 23 | [Coprocessor Conflagration](https://adventofcode.com/2017/day/23) | [Source](src/year2017/day23.rs) | 55 |
 
 ## 2016
 
