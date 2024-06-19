@@ -2,7 +2,7 @@
 name = "aoc"
 version = "2023.12.25"
 edition = "2021"
-rust-version = "1.78"
+rust-version = "1.79"
 
 [features]
 frivolity = []
@@ -119,6 +119,7 @@ inline_always = "warn"
 inline_asm_x86_att_syntax = "warn"
 inline_asm_x86_intel_syntax = "warn"
 integer_division = "allow"
+integer_division_remainder_used = "allow"
 into_iter_without_iter = "warn"
 invalid_upcast_comparisons = "warn"
 items_after_statements = "warn"
