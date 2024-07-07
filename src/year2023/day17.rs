@@ -5,8 +5,8 @@
 //! is a great introduction to this algorithm.
 //!
 //! The heuristic is the [Manhattan distance](https://en.wikipedia.org/wiki/Taxicab_geometry)
-//! to the bottom right corner. This will never overestimate the actual distance which is an
-//! essential characteristic in the heuristic.
+//! to the bottom right corner. Unfortunately, it costs more than it helps, since we essentially
+//! need to explore the entire map anyways, so it's better not to use it.
 //!
 //! A crucial insight speeds things up. We only needs to store `(position, direction)` pairs in
 //! the map of previously seen costs and do not also need to store the number of steps.
@@ -69,10 +69,6 @@ fn astar<const L: usize, const U: usize>(grid: &Grid<u32>) -> u32 {
             let index = width * y + x;
             let steps = cost[index][direction];
 
-            // The heuristic is used as an index into the bucket priority queue.
-            let heuristic =
-                |x: usize, y: usize, cost: u32| (cost as usize + width - x + height - y) % 100;
-
             // Check if we've reached the end.
             if x == width - 1 && y == height - 1 {
                 return steps;
@@ -102,7 +98,7 @@ fn astar<const L: usize, const U: usize>(grid: &Grid<u32>) -> u32 {
                         steps += heat[index];
 
                         if i >= L && (cost[index][1] == 0 || steps < cost[index][1]) {
-                            todo[heuristic(x - i, y, steps)].push((x - i, y, 1));
+                            todo[(steps as usize) % 100].push((x - i, y, 1));
                             cost[index][1] = steps;
                         }
                     }
@@ -122,7 +118,7 @@ fn astar<const L: usize, const U: usize>(grid: &Grid<u32>) -> u32 {
                         steps += heat[index];
 
                         if i >= L && (cost[index][1] == 0 || steps < cost[index][1]) {
-                            todo[heuristic(x + i, y, steps)].push((x + i, y, 1));
+                            todo[(steps as usize) % 100].push((x + i, y, 1));
                             cost[index][1] = steps;
                         }
                     }
@@ -144,7 +140,7 @@ fn astar<const L: usize, const U: usize>(grid: &Grid<u32>) -> u32 {
                         steps += heat[index];
 
                         if i >= L && (cost[index][0] == 0 || steps < cost[index][0]) {
-                            todo[heuristic(x, y - i, steps)].push((x, y - i, 0));
+                            todo[(steps as usize) % 100].push((x, y - i, 0));
                             cost[index][0] = steps;
                         }
                     }
@@ -164,7 +160,7 @@ fn astar<const L: usize, const U: usize>(grid: &Grid<u32>) -> u32 {
                         steps += heat[index];
 
                         if i >= L && (cost[index][0] == 0 || steps < cost[index][0]) {
-                            todo[heuristic(x, y + i, steps)].push((x, y + i, 0));
+                            todo[(steps as usize) % 100].push((x, y + i, 0));
                             cost[index][0] = steps;
                         }
                     }
