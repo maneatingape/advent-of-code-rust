@@ -1,6 +1,6 @@
 # Advent of Code [![checks-badge]][checks-link] [![docs-badge]][docs-link]
 
-Complete 2023 to 2019 and 2016 to 2015 entries for the annual [Advent of Code] challenge,
+Complete 2023 to 2019 and 2017 to 2015 entries for the annual [Advent of Code] challenge,
 written in performant Rust.
 
 ## Features
@@ -54,10 +54,10 @@ Place input files in `input/yearYYYY/dayDD.txt` including leading zeroes. For ex
 ## Performance
 
 Benchmarks are measured using the built-in `cargo bench` tool run on an [Apple M2 Max][apple-link].
-All 175 solutions from 2023 to 2019 and also 2016 to 2015 complete sequentially in **1.1 seconds**.
-Interestingly 90% of the total time is spent on just 5 solutions.
+All 200 solutions from 2023 to 2019 and also 2017 to 2015 complete sequentially in **1.6 seconds**.
+Interestingly 93% of the total time is spent on just 8 solutions.
 Performance is reasonable even on older hardware, for example a 2011 MacBook Pro with an
-[Intel i7-2720QM][intel-link] processor takes 4.1 seconds to run the same 175 solutions.
+[Intel i7-2720QM][intel-link] processor takes 4.8 seconds to run the same 200 solutions.
 
 ![pie-all]
 
@@ -68,7 +68,7 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 | [2021](#2021) | 10 |
 | [2020](#2020) | 286 |
 | [2019](#2019) | 22 |
-| [2017](#2017) | in progress |
+| [2017](#2017) | 515 |
 | [2016](#2016) | 663 |
 | [2015](#2015) | 87 |
 
@@ -234,6 +234,8 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 
 ## 2017
 
+![pie-2017]
+
 | Day | Problem | Solution | Benchmark (μs) |
 | --- | --- | --- | --: |
 | 1 | [Inverse Captcha](https://adventofcode.com/2017/day/1) | [Source](src/year2017/day01.rs) | 1 |
@@ -339,5 +341,6 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 [pie-2021]: docs/pie-2021.svg
 [pie-2020]: docs/pie-2020.svg
 [pie-2019]: docs/pie-2019.svg
+[pie-2017]: docs/pie-2017.svg
 [pie-2016]: docs/pie-2016.svg
 [pie-2015]: docs/pie-2015.svg

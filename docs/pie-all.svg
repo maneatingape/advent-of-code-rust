@@ -3,6 +3,7 @@
 pie
 	title Each year benchmark time by % of total
 	"Year 2016" : 663
+    "Year 2017" : 515
 	"Year 2020" : 286
 	"Year 2015" : 87
 	"Years 2019, 2021, 2022 and 2023" : 49
@@ -17,29 +18,35 @@ pie
 	</style>
 	<g transform="translate(675,225)">
 		<circle class="pieOuterCircle" cx="0" cy="0" r="186"/>
-		<path class="pieCircle" d="M0,-185A185,185,0,1,1,-118.87,141.756L0,0Z" fill="#7cb5ec"/>
-		<path class="pieCircle" d="M-118.87,141.756A185,185,0,0,1,-131.099,-130.53L0,0Z" fill="#90ed7d"/>
-		<path class="pieCircle" d="M-131.099,-130.53A185,185,0,0,1,-51.793,-177.602L0,0Z" fill="#f7a35c"/>
-		<path class="pieCircle" d="M-51.793,-177.602A185,185,0,0,1,0,-185L0,0Z" fill="#e4d354"/>
-		<text class="slice" transform="translate(130.38998309822242,47.43432098855506)">61%</text>
-		<text class="slice" transform="translate(-138.6102879826074,6.2249952111339635)">26%</text>
-		<text class="slice" transform="translate(-70.81959729524179,-119.31532650476963)">8%</text>
-		<text class="slice" transform="translate(-19.61964782716757,-137.35585869972172)">5%</text>
+		<path class="pieCircle" d="M0,-185A185,185,0,0,1,94.797,158.866L0,0Z" fill="#7cb5ec"/>
+		<path class="pieCircle" d="M94.797,158.866A185,185,0,0,1,-184.31,15.963L0,0Z" fill="#90ed7d"/>
+		<path class="pieCircle" d="M-184.31,15.963A185,185,0,0,1,-94.173,-159.237L0,0Z" fill="#f7a35c"/>
+		<path class="pieCircle" d="M-94.173,-159.237A185,185,0,0,1,-35.379,-181.586L0,0Z" fill="#e4d354"/>
+		<path class="pieCircle" d="M-35.379,-181.586A185,185,0,0,1,0,-185L0,0Z" fill="#e4c4fb"/>
+		<text class="slice" style="text-anchor: middle;" transform="translate(133.76019562324717,-36.875094126397116)">41%</text>
+		<text class="slice" style="text-anchor: middle;" transform="translate(-63.233801609189136,123.50323410360438)">32%</text>
+		<text class="slice" style="text-anchor: middle;" transform="translate(-123.37883683245116,-63.47617759342)">18%</text>
+		<text class="slice" style="text-anchor: middle;" transform="translate(-49.29938755265763,-129.6963102286756)">5%</text>
+		<text class="slice" style="text-anchor: middle;" transform="translate(-13.328729040046083,-138.10831793261778)">3%</text>
 		<text class="pieTitleText" x="0" y="-200">Each year benchmark time by % of total</text>
-		<g transform="translate(216,-44)">
+		<g transform="translate(216,-55)">
 			<rect height="18" style="fill: rgb(124, 181, 236); stroke: rgb(124, 181, 236);" width="18"/>
 			<text x="22" y="14">Year 2016</text>
 		</g>
-		<g transform="translate(216,-22)">
+		<g transform="translate(216,-33)">
 			<rect height="18" style="fill: rgb(144, 237, 125); stroke: rgb(144, 237, 125);" width="18"/>
+			<text x="22" y="14">Year 2017</text>
+		</g>
+		<g transform="translate(216,-11)">
+			<rect height="18" style="fill: rgb(247, 163, 92); stroke: rgb(247, 163, 92);" width="18"/>
 			<text x="22" y="14">Year 2020</text>
 		</g>
-		<g transform="translate(216,0)">
-			<rect height="18" style="fill: rgb(247, 163, 92); stroke: rgb(247, 163, 92);" width="18"/>
+		<g transform="translate(216,11)">
+			<rect height="18" style="fill: rgb(228, 211, 84); stroke: rgb(228, 211, 84);" width="18"/>
 			<text x="22" y="14">Year 2015</text>
 		</g>
-		<g transform="translate(216,22)">
-			<rect height="18" style="fill: rgb(228, 211, 84); stroke: rgb(228, 211, 84);" width="18"/>
+		<g transform="translate(216,33)">
+			<rect height="18" style="fill: rgb(228, 196, 251); stroke: rgb(228, 196, 251);" width="18"/>
 			<text x="22" y="14">Years 2019, 2021, 2022 and 2023</text>
 		</g>
 	</g>
