@@ -110,6 +110,11 @@ pub mod year2017 {
     pub mod day25;
 }
 
+/// # Travel through time to restore the seasonal timeline.
+pub mod year2018 {
+    pub mod day01;
+}
+
 /// # Rescue Santa from deep space with a solar system adventure.
 pub mod year2019 {
     pub mod day01;

@@ -24,6 +24,7 @@ fn main() {
         .chain(year2015())
         .chain(year2016())
         .chain(year2017())
+        .chain(year2018())
         .chain(year2019())
         .chain(year2020())
         .chain(year2021())
@@ -174,6 +175,10 @@ fn year2017() -> Vec<Solution> {
         solution!(year2017, day24),
         solution!(year2017, day25),
     ]
+}
+
+fn year2018() -> Vec<Solution> {
+    vec![solution!(year2018, day01)]
 }
 
 fn year2019() -> Vec<Solution> {

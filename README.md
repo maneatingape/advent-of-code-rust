@@ -68,6 +68,7 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 | [2021](#2021) | 10 |
 | [2020](#2020) | 286 |
 | [2019](#2019) | 22 |
+| [2018](#2018) | in progress |
 | [2017](#2017) | 515 |
 | [2016](#2016) | 663 |
 | [2015](#2015) | 87 |
@@ -231,6 +232,12 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 | 23 | [Category Six](https://adventofcode.com/2019/day/23) | [Source](src/year2019/day23.rs) | 871 |
 | 24 | [Planet of Discord](https://adventofcode.com/2019/day/24) | [Source](src/year2019/day24.rs) | 139 |
 | 25 | [Cryostasis](https://adventofcode.com/2019/day/25) | [Source](src/year2019/day25.rs) | 2721 |
+
+## 2018
+
+| Day | Problem | Solution | Benchmark (μs) |
+| --- | --- | --- | --: |
+| 1 | [Chronal Calibration](https://adventofcode.com/2018/day/1) | [Source](src/year2018/day01.rs) | 15 |
 
 ## 2017
 
