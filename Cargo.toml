@@ -12,7 +12,6 @@ private_intra_doc_links = "allow"
 
 [lints.rust]
 absolute_paths_not_starting_with_crate = "warn"
-box_pointers = "warn"
 elided_lifetimes_in_paths = "warn"
 explicit_outlives_requirements = "warn"
 ffi_unwind_calls = "warn"
