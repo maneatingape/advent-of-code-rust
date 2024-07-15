@@ -238,6 +238,7 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 | Day | Problem | Solution | Benchmark (μs) |
 | --- | --- | --- | --: |
 | 1 | [Chronal Calibration](https://adventofcode.com/2018/day/1) | [Source](src/year2018/day01.rs) | 15 |
+| 2 | [Inventory Management System](https://adventofcode.com/2018/day/2) | [Source](src/year2018/day02.rs) | 77 |
 
 ## 2017
 
