@@ -242,6 +242,7 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 | 3 | [No Matter How You Slice It](https://adventofcode.com/2018/day/3) | [Source](src/year2018/day03.rs) | 56 |
 | 4 | [Repose Record](https://adventofcode.com/2018/day/4) | [Source](src/year2018/day04.rs) | 46 |
 | 5 | [Alchemical Reduction](https://adventofcode.com/2018/day/5) | [Source](src/year2018/day05.rs) | 353 |
+| 6 | [Chronal Coordinates](https://adventofcode.com/2018/day/6) | [Source](src/year2018/day06.rs) | 38 |
 
 ## 2017
 
