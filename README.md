@@ -243,6 +243,7 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 | 4 | [Repose Record](https://adventofcode.com/2018/day/4) | [Source](src/year2018/day04.rs) | 46 |
 | 5 | [Alchemical Reduction](https://adventofcode.com/2018/day/5) | [Source](src/year2018/day05.rs) | 353 |
 | 6 | [Chronal Coordinates](https://adventofcode.com/2018/day/6) | [Source](src/year2018/day06.rs) | 38 |
+| 7 | [The Sum of Its Parts](https://adventofcode.com/2018/day/7) | [Source](src/year2018/day07.rs) | 8 |
 
 ## 2017
 
