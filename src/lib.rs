@@ -122,6 +122,7 @@ pub mod year2018 {
     pub mod day08;
     pub mod day09;
     pub mod day10;
+    pub mod day11;
 }
 
 /// # Rescue Santa from deep space with a solar system adventure.
