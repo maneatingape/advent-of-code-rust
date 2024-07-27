@@ -248,6 +248,7 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 | 9 | [Marble Mania](https://adventofcode.com/2018/day/9) | [Source](src/year2018/day09.rs) | 980 |
 | 10 | [The Stars Align](https://adventofcode.com/2018/day/10) | [Source](src/year2018/day10.rs) | 12 |
 | 11 | [Chronal Charge](https://adventofcode.com/2018/day/11) | [Source](src/year2018/day11.rs) | 1552 |
+| 12 | [Subterranean Sustainability](https://adventofcode.com/2018/day/12) | [Source](src/year2018/day12.rs) | 75 |
 
 ## 2017
 
