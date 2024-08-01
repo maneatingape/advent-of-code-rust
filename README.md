@@ -245,7 +245,7 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 | 6 | [Chronal Coordinates](https://adventofcode.com/2018/day/6) | [Source](src/year2018/day06.rs) | 38 |
 | 7 | [The Sum of Its Parts](https://adventofcode.com/2018/day/7) | [Source](src/year2018/day07.rs) | 8 |
 | 8 | [Memory Maneuver](https://adventofcode.com/2018/day/8) | [Source](src/year2018/day08.rs) | 29 |
-| 9 | [Marble Mania](https://adventofcode.com/2018/day/9) | [Source](src/year2018/day09.rs) | 980 |
+| 9 | [Marble Mania](https://adventofcode.com/2018/day/9) | [Source](src/year2018/day09.rs) | 902 |
 | 10 | [The Stars Align](https://adventofcode.com/2018/day/10) | [Source](src/year2018/day10.rs) | 12 |
 | 11 | [Chronal Charge](https://adventofcode.com/2018/day/11) | [Source](src/year2018/day11.rs) | 1552 |
 | 12 | [Subterranean Sustainability](https://adventofcode.com/2018/day/12) | [Source](src/year2018/day12.rs) | 75 |

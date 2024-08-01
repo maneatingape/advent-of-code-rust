@@ -97,7 +97,7 @@ fn game(players: usize, last: usize) -> u64 {
     // The number of marbles needed for scoring.
     let needed = 2 + 16 * blocks;
     // Each block adds 37 marbles, so allow a little extra capacity to prevent reallocation.
-    let mut circle: Vec<u32> = Vec::with_capacity(needed + 37);
+    let mut circle: Vec<u32> = vec![0; needed + 37];
     // The score for each block is deterministic so the number of players only affects how scores
     // are distributed. Type is `u64` to prevent overflow during part two.
     let mut scores = vec![0; players];
@@ -107,9 +107,11 @@ fn game(players: usize, last: usize) -> u64 {
     let mut head = 23;
     // Keep track of previous marbles to re-add to the start of the circle and for scoring.
     let mut tail = 0;
+    // Keep track of how many marbles have been placed.
+    let mut placed = 22;
     // Add pre-generated marbles for first block.
     let start = [2, 20, 10, 21, 5, 22, 11, 1, 12, 6, 13, 3, 14, 7, 15, 0, 16, 8, 17, 4, 18, 19];
-    circle.extend_from_slice(&start);
+    circle[0..22].copy_from_slice(&start);
 
     for _ in 0..blocks {
         // Score the previous block.
@@ -118,7 +120,7 @@ fn game(players: usize, last: usize) -> u64 {
         pickup = circle[tail + 18];
 
         // Generate the next block only until we have enough marbles to finish the game.
-        if circle.len() <= needed {
+        if placed <= needed {
             // Extending a vector from a slice is faster than adding elements one at a time.
             let slice = &[
                 circle[tail],
@@ -160,7 +162,7 @@ fn game(players: usize, last: usize) -> u64 {
                 // circle[tail + 18] 19th marble is picked up and removed.
                 head + 19,
             ];
-            circle.extend_from_slice(slice);
+            circle[placed..placed + 37].copy_from_slice(slice);
 
             // Overwrite the tail for the 20th, 21st and 22nd marbles.
             let slice = &[
@@ -172,6 +174,9 @@ fn game(players: usize, last: usize) -> u64 {
                 head + 22,
             ];
             circle[tail + 16..tail + 22].copy_from_slice(slice);
+
+            // Keep track of how many marbles have been placed.
+            placed += 37;
         }
 
         // Marbles increase by 23 per block but the tail only by 16 as we reset by 7 marbles
