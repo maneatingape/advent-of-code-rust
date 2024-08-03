@@ -127,7 +127,7 @@ pub mod year2018 {
     pub mod day13;
 }
 
-/// # Rescue Santa from deep space with a solar system adventure.
+/// # Rescue Santa from deep space with a solar system voyage.
 pub mod year2019 {
     pub mod day01;
     pub mod day02;
@@ -244,7 +244,7 @@ pub mod year2022 {
     pub mod day25;
 }
 
-/// # Restore global snow production
+/// # Restore global snow production.
 pub mod year2023 {
     pub mod day01;
     pub mod day02;
