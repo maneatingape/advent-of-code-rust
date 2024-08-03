@@ -100,9 +100,9 @@ impl From<u8> for Point {
 
 impl Hash for Point {
     #[inline]
-    fn hash<H: Hasher>(&self, hasher: &mut H) {
-        hasher.write_u32(self.x as u32);
-        hasher.write_u32(self.y as u32);
+    fn hash<H: Hasher>(&self, state: &mut H) {
+        state.write_u32(self.x as u32);
+        state.write_u32(self.y as u32);
     }
 }
 

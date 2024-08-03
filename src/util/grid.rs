@@ -73,14 +73,14 @@ impl<T> Index<Point> for Grid<T> {
     type Output = T;
 
     #[inline]
-    fn index(&self, point: Point) -> &Self::Output {
-        &self.bytes[(self.width * point.y + point.x) as usize]
+    fn index(&self, index: Point) -> &Self::Output {
+        &self.bytes[(self.width * index.y + index.x) as usize]
     }
 }
 
 impl<T> IndexMut<Point> for Grid<T> {
     #[inline]
-    fn index_mut(&mut self, point: Point) -> &mut Self::Output {
-        &mut self.bytes[(self.width * point.y + point.x) as usize]
+    fn index_mut(&mut self, index: Point) -> &mut Self::Output {
+        &mut self.bytes[(self.width * index.y + index.x) as usize]
     }
 }
