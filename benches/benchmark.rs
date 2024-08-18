@@ -6,38 +6,33 @@ macro_rules! benchmark {
     ($year:tt, $day:tt) => {
         mod $day {
             use aoc::$year::$day::*;
-            use std::fs;
-            use std::path::PathBuf;
-            use std::sync::OnceLock;
+            use std::fs::read_to_string;
+            use std::path::Path;
+            use std::sync::LazyLock;
             use test::Bencher;
 
-            fn load_once() -> &'static str {
-                static DATA: OnceLock<String> = OnceLock::new();
-                DATA.get_or_init(|| {
-                    let year = stringify!($year);
-                    let day = &format!("{}.txt", stringify!($day));
-                    let path: PathBuf = ["input", year, day].iter().collect();
-                    fs::read_to_string(path).unwrap()
-                })
-            }
+            static DATA: LazyLock<String> = LazyLock::new(|| {
+                let year = stringify!($year);
+                let day = stringify!($day);
+                let path = Path::new("input").join(year).join(day).with_extension("txt");
+                read_to_string(path).unwrap()
+            });
 
             #[bench]
             fn parse_bench(b: &mut Bencher) {
-                let data = load_once();
+                let data = &DATA;
                 b.iter(|| parse(data));
             }
 
             #[bench]
             fn part1_bench(b: &mut Bencher) {
-                let data = load_once();
-                let input = parse(data);
+                let input = parse(&DATA);
                 b.iter(|| part1(&input));
             }
 
             #[bench]
             fn part2_bench(b: &mut Bencher) {
-                let data = load_once();
-                let input = parse(data);
+                let input = parse(&DATA);
                 b.iter(|| part2(&input));
             }
         }
