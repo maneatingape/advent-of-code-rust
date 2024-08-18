@@ -4,9 +4,8 @@ use aoc::*;
 use std::env::args;
 use std::fs::read_to_string;
 use std::iter::empty;
-use std::path::PathBuf;
-use std::time::Duration;
-use std::time::Instant;
+use std::path::{Path, PathBuf};
+use std::time::{Duration, Instant};
 
 fn main() {
     // Parse command line options
@@ -20,7 +19,7 @@ fn main() {
     };
 
     // Filter solutions
-    let solutions: Vec<_> = empty()
+    let solutions = empty()
         .chain(year2015())
         .chain(year2016())
         .chain(year2017())
@@ -30,27 +29,26 @@ fn main() {
         .chain(year2021())
         .chain(year2022())
         .chain(year2023())
-        .filter(|solution| year == Some(solution.year) || year.is_none())
-        .filter(|solution| day == Some(solution.day) || day.is_none())
-        .collect();
+        .filter(|solution| year.is_none() || year == Some(solution.year))
+        .filter(|solution| day.is_none() || day == Some(solution.day));
 
     // Pretty print output and timing for each solution
-    let mut elapsed = Duration::ZERO;
+    let mut solved = 0;
+    let mut duration = Duration::ZERO;
 
-    for Solution { year, day, wrapper } in &solutions {
-        let path: PathBuf =
-            ["input", &format!("year{year}"), &format!("day{day:02}.txt")].iter().collect();
-
+    for Solution { year, day, path, wrapper } in solutions {
         if let Ok(data) = read_to_string(&path) {
-            let time = Instant::now();
-            let (answer1, answer2) = wrapper(&data);
-            let duration = time.elapsed().as_micros();
-            elapsed += time.elapsed();
+            let instant = Instant::now();
+            let (part1, part2) = wrapper(data);
+            let elapsed = instant.elapsed();
+
+            solved += 1;
+            duration += elapsed;
 
             println!("{BOLD}{YELLOW}{year} Day {day:02}{RESET}");
-            println!("    Part 1: {answer1}");
-            println!("    Part 2: {answer2}");
-            println!("    Duration: {duration} μs");
+            println!("    Part 1: {part1}");
+            println!("    Part 2: {part2}");
+            println!("    Elapsed: {} μs", elapsed.as_micros());
         } else {
             eprintln!("{BOLD}{RED}{year} Day {day:02}{RESET}");
             eprintln!("    Missing input!");
@@ -59,32 +57,35 @@ fn main() {
     }
 
     // Print totals
-    println!("{BOLD}{RED}Solutions: {}{RESET}", solutions.len());
-    println!("{BOLD}{GREEN}Elapsed: {} ms{RESET}", elapsed.as_millis());
+    println!("{BOLD}{RED}Solved: {solved}{RESET}");
+    println!("{BOLD}{GREEN}Duration: {} ms{RESET}", duration.as_millis());
 }
 
 struct Solution {
     year: u32,
     day: u32,
-    wrapper: fn(&str) -> (String, String),
+    path: PathBuf,
+    wrapper: fn(String) -> (String, String),
 }
 
 macro_rules! solution {
-    ($year:tt, $day:tt) => {
-        Solution {
-            year: (&stringify!($year)).unsigned(),
-            day: (&stringify!($day)).unsigned(),
-            wrapper: |data: &str| {
-                use $year::$day::*;
+    ($year:tt, $day:tt) => {{
+        let year = stringify!($year);
+        let day = stringify!($day);
+        let path = Path::new("input").join(year).join(day).with_extension("txt");
 
-                let input = parse(&data);
-                let part1 = part1(&input).to_string();
-                let part2 = part2(&input).to_string();
+        let wrapper = |data: String| {
+            use $year::$day::*;
 
-                (part1, part2)
-            },
-        }
-    };
+            let input = parse(&data);
+            let part1 = part1(&input);
+            let part2 = part2(&input);
+
+            (part1.to_string(), part2.to_string())
+        };
+
+        Solution { year: year.unsigned(), day: day.unsigned(), path, wrapper }
+    }};
 }
 
 fn year2015() -> Vec<Solution> {
