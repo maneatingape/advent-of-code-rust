@@ -254,6 +254,7 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 | 15 | [Beverage Bandits](https://adventofcode.com/2018/day/15) | [Source](src/year2018/day15.rs) | 584 |
 | 16 | [Chronal Classification](https://adventofcode.com/2018/day/16) | [Source](src/year2018/day16.rs) | 36 |
 | 17 | [Reservoir Research ](https://adventofcode.com/2018/day/17) | [Source](src/year2018/day17.rs) | 145 |
+| 18 | [Settlers of The North Pole](https://adventofcode.com/2018/day/18) | [Source](src/year2018/day18.rs) | 387 |
 
 ## 2017
 
