@@ -258,6 +258,7 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 | 19 | [Go With The Flow](https://adventofcode.com/2018/day/19) | [Source](src/year2018/day19.rs) | 1 |
 | 20 | [A Regular Map](https://adventofcode.com/2018/day/20) | [Source](src/year2018/day20.rs) | 41 |
 | 21 | [Chronal Conversion](https://adventofcode.com/2018/day/21) | [Source](src/year2018/day21.rs) | 65 |
+| 22 | [Mode Maze](https://adventofcode.com/2018/day/22) | [Source](src/year2018/day22.rs) | 3410 |
 
 ## 2017
 
