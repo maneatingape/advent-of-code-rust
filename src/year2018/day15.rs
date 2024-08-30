@@ -181,7 +181,7 @@ fn fight(input: &Input, elf_attack_power: i32, part_two: bool) -> Option<i32> {
     let mut units = Vec::new();
     let mut elves = input.elves.len();
     let mut goblins = input.goblins.len();
-    let mut grid = Grid { width: 32, height: 32, bytes: vec![None; 1024] };
+    let mut grid = Grid::new(32, 32, None);
 
     // Initialize each unit.
     for &position in &input.elves {

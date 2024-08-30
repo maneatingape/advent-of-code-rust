@@ -46,14 +46,6 @@ impl Grid<u8> {
 }
 
 impl<T: Copy + PartialEq> Grid<T> {
-    pub fn default_copy<U: Default + Copy>(&self) -> Grid<U> {
-        Grid {
-            width: self.width,
-            height: self.height,
-            bytes: vec![U::default(); (self.width * self.height) as usize],
-        }
-    }
-
     pub fn find(&self, needle: T) -> Option<Point> {
         let to_point = |index| {
             let x = (index as i32) % self.width;
@@ -61,6 +53,22 @@ impl<T: Copy + PartialEq> Grid<T> {
             Point::new(x, y)
         };
         self.bytes.iter().position(|&h| h == needle).map(to_point)
+    }
+}
+
+impl<T: Copy> Grid<T> {
+    pub fn new(width: i32, height: i32, value: T) -> Grid<T> {
+        Grid { width, height, bytes: vec![value; (width * height) as usize] }
+    }
+}
+
+impl<T> Grid<T> {
+    pub fn default_copy<U: Default + Copy>(&self) -> Grid<U> {
+        Grid {
+            width: self.width,
+            height: self.height,
+            bytes: vec![U::default(); (self.width * self.height) as usize],
+        }
     }
 
     #[inline]

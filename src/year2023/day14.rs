@@ -88,11 +88,7 @@ pub struct Input {
 pub fn parse(input: &str) -> Input {
     // Expand the grid by 2 in each direction to handle edges the same way as fixed points.
     let inner = Grid::parse(input);
-    let mut grid = Grid {
-        width: inner.width + 2,
-        height: inner.height + 2,
-        bytes: vec![b'#'; ((inner.width + 2) * (inner.height + 2)) as usize],
-    };
+    let mut grid = Grid::new(inner.width + 2, inner.height + 2, b'#');
 
     // Copy inner grid.
     for y in 0..inner.width {
@@ -103,13 +99,11 @@ pub fn parse(input: &str) -> Input {
         }
     }
 
-    let copy = || Grid { width: grid.width, height: grid.height, bytes: vec![0; grid.bytes.len()] };
-
     let mut rounded = Vec::new();
-    let mut north = copy();
-    let mut west = copy();
-    let mut south = copy();
-    let mut east = copy();
+    let mut north = grid.default_copy();
+    let mut west = grid.default_copy();
+    let mut south = grid.default_copy();
+    let mut east = grid.default_copy();
     let mut roll_north = Vec::new();
     let mut roll_west = Vec::new();
     let mut roll_south = Vec::new();
