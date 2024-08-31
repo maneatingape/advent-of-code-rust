@@ -261,6 +261,7 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 | 22 | [Mode Maze](https://adventofcode.com/2018/day/22) | [Source](src/year2018/day22.rs) | 3410 |
 | 23 | [Experimental Emergency Teleportation](https://adventofcode.com/2018/day/23) | [Source](src/year2018/day23.rs) | 515 |
 | 24 | [Immune System Simulator 20XX](https://adventofcode.com/2018/day/24) | [Source](src/year2018/day24.rs) | 2054 |
+| 25 | [Four-Dimensional Adventure](https://adventofcode.com/2018/day/25) | [Source](src/year2018/day25.rs) | 338 |
 
 ## 2017
 
