@@ -1,6 +1,8 @@
 //! Implementation of the full Intcode computer specification.
 use std::collections::VecDeque;
 
+const EXTRA: usize = 2_000;
+
 pub enum State {
     Input,
     Output(i64),
@@ -15,8 +17,12 @@ pub struct Computer {
 }
 
 impl Computer {
-    pub fn new(code: &[i64]) -> Computer {
-        Computer { pc: 0, base: 0, code: code.to_vec(), input: VecDeque::new() }
+    pub fn new(input: &[i64]) -> Computer {
+        let mut code = Vec::with_capacity(input.len() + EXTRA);
+        code.extend_from_slice(input);
+        code.resize(input.len() + EXTRA, 0);
+
+        Computer { pc: 0, base: 0, code, input: VecDeque::new() }
     }
 
     pub fn input(&mut self, value: i64) {
@@ -119,10 +125,6 @@ impl Computer {
             2 => (self.base + self.code[self.pc + offset]) as usize,
             _ => unreachable!(),
         };
-
-        if index >= self.code.len() {
-            self.code.resize(index + 1, 0);
-        }
 
         index
     }
