@@ -1,7 +1,7 @@
 <!--
 %%{init: {"themeVariables": { "pie1": "#7cb5ec", "pie2": "#90ed7d", "pie3": "#f7a35c", "pie4": "#c6cdd5"}}}%%
 pie
-    title Year 2021 benchmark time by % of total
+    title Year 2017 benchmark time by % of total
     "Day 15" : 425000
     "Day 5" : 48000
     "Day 22" : 36000
@@ -25,7 +25,7 @@ pie
 		<text class="slice" style="text-anchor: middle;" transform="translate(-99.2509618238553,-96.95776955478925)">9%</text>
 		<text class="slice" style="text-anchor: middle;" transform="translate(-38.86526830067291,-133.195545796084)">7%</text>
 		<text class="slice" style="text-anchor: middle;" transform="translate(3,-138.67901934034617)">1%</text>
-		<text class="pieTitleText" x="0" y="-200">Year 2021 benchmark time by % of total</text>
+		<text class="pieTitleText" x="0" y="-200">Year 2017 benchmark time by % of total</text>
 		<g transform="translate(216,-44)">
 			<rect height="18" style="fill: rgb(124, 181, 236); stroke: rgb(124, 181, 236);" width="18"/>
 			<text x="22" y="14">Day 15</text>
