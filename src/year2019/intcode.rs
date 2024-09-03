@@ -11,49 +11,49 @@ pub enum State {
 
 pub struct Computer {
     pc: usize,
-    base: i64,
-    code: Vec<i64>,
-    input: VecDeque<i64>,
+    base: usize,
+    code: Vec<usize>,
+    input: VecDeque<usize>,
 }
 
 impl Computer {
     pub fn new(input: &[i64]) -> Computer {
         let mut code = Vec::with_capacity(input.len() + EXTRA);
-        code.extend_from_slice(input);
+        code.extend(input.iter().map(|&i| i as usize));
         code.resize(input.len() + EXTRA, 0);
 
         Computer { pc: 0, base: 0, code, input: VecDeque::new() }
     }
 
     pub fn input(&mut self, value: i64) {
-        self.input.push_back(value);
+        self.input.push_back(value as usize);
     }
 
     pub fn input_ascii(&mut self, ascii: &str) {
-        self.input.extend(ascii.bytes().map(|b| b as i64));
+        self.input.extend(ascii.bytes().map(|b| b as usize));
     }
 
     /// Runs until either the program needs input, outputs a value or encounters the halt opcode.
     /// In the first two cases, the computer can be resumed by calling `run` again.
     pub fn run(&mut self) -> State {
         loop {
-            let code = self.code[self.pc];
+            let op = self.code[self.pc];
 
-            match code % 100 {
+            match op % 100 {
                 // Add
                 1 => {
-                    let first = self.address(code / 100, 1);
-                    let second = self.address(code / 1000, 2);
-                    let third = self.address(code / 10000, 3);
-                    self.code[third] = self.code[first] + self.code[second];
+                    let first = self.address(op / 100, 1);
+                    let second = self.address(op / 1000, 2);
+                    let third = self.address(op / 10000, 3);
+                    self.code[third] = self.code[first].wrapping_add(self.code[second]);
                     self.pc += 4;
                 }
                 // Multiply
                 2 => {
-                    let first = self.address(code / 100, 1);
-                    let second = self.address(code / 1000, 2);
-                    let third = self.address(code / 10000, 3);
-                    self.code[third] = self.code[first] * self.code[second];
+                    let first = self.address(op / 100, 1);
+                    let second = self.address(op / 1000, 2);
+                    let third = self.address(op / 10000, 3);
+                    self.code[third] = self.code[first].wrapping_mul(self.code[second]);
                     self.pc += 4;
                 }
                 // Read input channel
@@ -61,53 +61,53 @@ impl Computer {
                     let Some(value) = self.input.pop_front() else {
                         break State::Input;
                     };
-                    let first = self.address(code / 100, 1);
+                    let first = self.address(op / 100, 1);
                     self.code[first] = value;
                     self.pc += 2;
                 }
                 // Write output channel
                 4 => {
-                    let first = self.address(code / 100, 1);
+                    let first = self.address(op / 100, 1);
                     let value = self.code[first];
                     self.pc += 2;
-                    break State::Output(value);
+                    break State::Output(value as i64);
                 }
                 // Jump if true
                 5 => {
-                    let first = self.address(code / 100, 1);
-                    let second = self.address(code / 1000, 2);
+                    let first = self.address(op / 100, 1);
+                    let second = self.address(op / 1000, 2);
                     let value = self.code[first] == 0;
-                    self.pc = if value { self.pc + 3 } else { self.code[second] as usize };
+                    self.pc = if value { self.pc + 3 } else { self.code[second] };
                 }
                 // Jump if false
                 6 => {
-                    let first = self.address(code / 100, 1);
-                    let second = self.address(code / 1000, 2);
+                    let first = self.address(op / 100, 1);
+                    let second = self.address(op / 1000, 2);
                     let value = self.code[first] == 0;
-                    self.pc = if value { self.code[second] as usize } else { self.pc + 3 };
+                    self.pc = if value { self.code[second] } else { self.pc + 3 };
                 }
                 // Less than
                 7 => {
-                    let first = self.address(code / 100, 1);
-                    let second = self.address(code / 1000, 2);
-                    let third = self.address(code / 10000, 3);
-                    let value = self.code[first] < self.code[second];
-                    self.code[third] = value as i64;
+                    let first = self.address(op / 100, 1);
+                    let second = self.address(op / 1000, 2);
+                    let third = self.address(op / 10000, 3);
+                    let value = (self.code[first] as i64) < (self.code[second] as i64);
+                    self.code[third] = value as usize;
                     self.pc += 4;
                 }
                 // Equals
                 8 => {
-                    let first = self.address(code / 100, 1);
-                    let second = self.address(code / 1000, 2);
-                    let third = self.address(code / 10000, 3);
+                    let first = self.address(op / 100, 1);
+                    let second = self.address(op / 1000, 2);
+                    let third = self.address(op / 10000, 3);
                     let value = self.code[first] == self.code[second];
-                    self.code[third] = value as i64;
+                    self.code[third] = value as usize;
                     self.pc += 4;
                 }
                 // Adjust relative base
                 9 => {
-                    let first = self.address(code / 100, 1);
-                    self.base += self.code[first];
+                    let first = self.address(op / 100, 1);
+                    self.base = self.base.wrapping_add(self.code[first]);
                     self.pc += 2;
                 }
                 _ => break State::Halted,
@@ -116,16 +116,13 @@ impl Computer {
     }
 
     /// Calculates an address using one of the three possible address modes.
-    /// If the address exceeds the size of the `code` vector then it is extended with 0 values.
     #[inline]
-    fn address(&mut self, mode: i64, offset: usize) -> usize {
-        let index = match mode % 10 {
-            0 => self.code[self.pc + offset] as usize,
+    fn address(&mut self, mode: usize, offset: usize) -> usize {
+        match mode % 10 {
+            0 => self.code[self.pc + offset],
             1 => self.pc + offset,
-            2 => (self.base + self.code[self.pc + offset]) as usize,
+            2 => self.base.wrapping_add(self.code[self.pc + offset]),
             _ => unreachable!(),
-        };
-
-        index
+        }
     }
 }
