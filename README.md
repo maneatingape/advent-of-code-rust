@@ -9,7 +9,7 @@ Complete 2023 to 2015 entries for the annual [Advent of Code] challenge, written
 * Consistently formatted with `rustfmt` and linted by `clippy`.
 * Thoroughly commented with `rustdoc` generated [documentation online][docs-link].
 * Test coverage with continuous integration provided by [GitHub Actions][checks-link].
-* Self contained depending only on the stable `std` Rust library. No use of `unsafe` features.
+* Self contained depending only on the `std` Rust library. No use of `unsafe` features.
 
 ## Quickstart
 

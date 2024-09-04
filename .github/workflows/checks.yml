@@ -12,5 +12,5 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - run: cargo fmt --check
-    - run: cargo clippy --tests --all-features -- --deny warnings
+    - run: cargo clippy --tests --features frivolity -- --deny warnings
     - run: cargo test

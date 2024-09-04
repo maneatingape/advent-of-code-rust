@@ -6,6 +6,7 @@ rust-version = "1.80"
 
 [features]
 frivolity = []
+simd = []
 
 [lints.rustdoc]
 private_intra_doc_links = "allow"
