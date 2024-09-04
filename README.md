@@ -53,10 +53,10 @@ Place input files in `input/yearYYYY/dayDD.txt` including leading zeroes. For ex
 ## Performance
 
 Benchmarks are measured using the built-in `cargo bench` tool run on an [Apple M2 Max][apple-link].
-All 225 solutions from 2023 to to 2015 complete sequentially in **1.7 seconds**.
-Interestingly 93% of the total time is spent on just 9 solutions.
+All 225 solutions from 2023 to to 2015 complete sequentially in **625 milliseconds**.
+Interestingly 84% of the total time is spent on just 9 solutions.
 Performance is reasonable even on older hardware, for example a 2011 MacBook Pro with an
-[Intel i7-2720QM][intel-link] processor takes 4.9 seconds to run the same 225 solutions.
+[Intel i7-2720QM][intel-link] processor takes 3.5 seconds to run the same 225 solutions.
 
 ![pie-all]
 
@@ -66,11 +66,11 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 | [2022](#2022) | 10 |
 | [2021](#2021) | 10 |
 | [2020](#2020) | 286 |
-| [2019](#2019) | 22 |
+| [2019](#2019) | 19 |
 | [2018](#2018) | 36 |
-| [2017](#2017) | 515 |
-| [2016](#2016) | 663 |
-| [2015](#2015) | 87 |
+| [2017](#2017) | 102 |
+| [2016](#2016) | 133 |
+| [2015](#2015) | 22 |
 
 ## 2023
 
@@ -212,25 +212,25 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 | 4 | [Secure Container](https://adventofcode.com/2019/day/4) | [Source](src/year2019/day04.rs) | 7 |
 | 5 | [Sunny with a Chance of Asteroids](https://adventofcode.com/2019/day/5) | [Source](src/year2019/day05.rs) | 3 |
 | 6 | [Universal Orbit Map](https://adventofcode.com/2019/day/6) | [Source](src/year2019/day06.rs) | 28 |
-| 7 | [Amplification Circuit](https://adventofcode.com/2019/day/7) | [Source](src/year2019/day07.rs) | 275 |
+| 7 | [Amplification Circuit](https://adventofcode.com/2019/day/7) | [Source](src/year2019/day07.rs) | 487 |
 | 8 | [Space Image Format](https://adventofcode.com/2019/day/8) | [Source](src/year2019/day08.rs) | 5 |
-| 9 | [Sensor Boost](https://adventofcode.com/2019/day/9) | [Source](src/year2019/day09.rs) | 1356 |
+| 9 | [Sensor Boost](https://adventofcode.com/2019/day/9) | [Source](src/year2019/day09.rs) | 1021 |
 | 10 | [Monitoring Station](https://adventofcode.com/2019/day/10) | [Source](src/year2019/day10.rs) | 1001 |
-| 11 | [Space Police](https://adventofcode.com/2019/day/11) | [Source](src/year2019/day11.rs) | 470 |
+| 11 | [Space Police](https://adventofcode.com/2019/day/11) | [Source](src/year2019/day11.rs) | 342 |
 | 12 | [The N-Body Problem](https://adventofcode.com/2019/day/12) | [Source](src/year2019/day12.rs) | 1024 |
-| 13 | [Care Package](https://adventofcode.com/2019/day/13) | [Source](src/year2019/day13.rs) | 3492 |
+| 13 | [Care Package](https://adventofcode.com/2019/day/13) | [Source](src/year2019/day13.rs) | 2513 |
 | 14 | [Space Stoichiometry](https://adventofcode.com/2019/day/14) | [Source](src/year2019/day14.rs) | 17 |
-| 15 | [Oxygen System](https://adventofcode.com/2019/day/15) | [Source](src/year2019/day15.rs) | 442 |
+| 15 | [Oxygen System](https://adventofcode.com/2019/day/15) | [Source](src/year2019/day15.rs) | 361 |
 | 16 | [Flawed Frequency Transmission](https://adventofcode.com/2019/day/16) | [Source](src/year2019/day16.rs) | 4124 |
-| 17 | [Set and Forget](https://adventofcode.com/2019/day/17) | [Source](src/year2019/day17.rs) | 425 |
+| 17 | [Set and Forget](https://adventofcode.com/2019/day/17) | [Source](src/year2019/day17.rs) | 341 |
 | 18 | [Many-Worlds Interpretation](https://adventofcode.com/2019/day/18) | [Source](src/year2019/day18.rs) | 1077 |
-| 19 | [Tractor Beam](https://adventofcode.com/2019/day/19) | [Source](src/year2019/day19.rs) | 817 |
+| 19 | [Tractor Beam](https://adventofcode.com/2019/day/19) | [Source](src/year2019/day19.rs) | 674 |
 | 20 | [Donut Maze](https://adventofcode.com/2019/day/20) | [Source](src/year2019/day20.rs) | 191 |
-| 21 | [Springdroid Adventure](https://adventofcode.com/2019/day/21) | [Source](src/year2019/day21.rs) | 2265 |
+| 21 | [Springdroid Adventure](https://adventofcode.com/2019/day/21) | [Source](src/year2019/day21.rs) | 1794 |
 | 22 | [Slam Shuffle](https://adventofcode.com/2019/day/22) | [Source](src/year2019/day22.rs) | 11 |
-| 23 | [Category Six](https://adventofcode.com/2019/day/23) | [Source](src/year2019/day23.rs) | 871 |
+| 23 | [Category Six](https://adventofcode.com/2019/day/23) | [Source](src/year2019/day23.rs) | 659 |
 | 24 | [Planet of Discord](https://adventofcode.com/2019/day/24) | [Source](src/year2019/day24.rs) | 139 |
-| 25 | [Cryostasis](https://adventofcode.com/2019/day/25) | [Source](src/year2019/day25.rs) | 2721 |
+| 25 | [Cryostasis](https://adventofcode.com/2019/day/25) | [Source](src/year2019/day25.rs) | 2099 |
 
 ## 2018
 
@@ -274,7 +274,7 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 | 2 | [Corruption Checksum](https://adventofcode.com/2017/day/2) | [Source](src/year2017/day02.rs) | 3 |
 | 3 | [Spiral Memory](https://adventofcode.com/2017/day/3) | [Source](src/year2017/day03.rs) | 2 |
 | 4 | [High-Entropy Passphrases](https://adventofcode.com/2017/day/4) | [Source](src/year2017/day04.rs) | 94 |
-| 5 | [A Maze of Twisty Trampolines, All Alike](https://adventofcode.com/2017/day/5) | [Source](src/year2017/day05.rs) | 48000 |
+| 5 | [A Maze of Twisty Trampolines, All Alike](https://adventofcode.com/2017/day/5) | [Source](src/year2017/day05.rs) | 36000 |
 | 6 | [Memory Reallocation](https://adventofcode.com/2017/day/6) | [Source](src/year2017/day06.rs) | 81 |
 | 7 | [Recursive Circus](https://adventofcode.com/2017/day/7) | [Source](src/year2017/day07.rs) | 85 |
 | 8 | [I Heard You Like Registers](https://adventofcode.com/2017/day/8) | [Source](src/year2017/day08.rs) | 46 |

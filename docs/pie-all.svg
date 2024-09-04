@@ -2,11 +2,11 @@
 %%{init: {"themeVariables": { "pie1": "#7cb5ec", "pie2": "#90ed7d", "pie3": "#f7a35c", "pie4": "#e4d354", "pie5": "#e4c4fb", "pie6": "#c6cdd5"}}}%%
 pie
 	title Each year benchmark time by % of total
-	"Year 2016" : 663
-    "Year 2017" : 515
 	"Year 2020" : 286
-	"Year 2015" : 87
-	"Years 2018-2019 and 2021-2023" : 85
+	"Year 2016" : 133
+    "Year 2017" : 102
+    "Year 2018" : 36
+	"Years 2015, 2019, 2021, 2022, 2023" : 68
 -->
 <svg viewBox="0 0 1350 450" preserveAspectRatio="xMidYMin" xmlns="http://www.w3.org/2000/svg">
 	<style>
@@ -18,36 +18,36 @@ pie
 	</style>
 	<g transform="translate(675,225)">
 		<circle class="pieOuterCircle" cx="0" cy="0" r="186"/>
-		<path class="pieCircle" d="M0,-185A185,185,0,0,1,103.738,153.177L0,0Z" fill="#7cb5ec"/>
-		<path class="pieCircle" d="M103.738,153.177A185,185,0,0,1,-181.734,34.61L0,0Z" fill="#90ed7d"/>
-		<path class="pieCircle" d="M-181.734,34.61A185,185,0,0,1,-113.511,-146.083L0,0Z" fill="#f7a35c"/>
-		<path class="pieCircle" d="M-113.511,-146.083A185,185,0,0,1,-59.326,-175.23L0,0Z" fill="#e4d354"/>
-		<path class="pieCircle" d="M-59.326,-175.23A185,185,0,0,1,0,-185L0,0Z" fill="#e4c4fb"/>
-		<text class="slice" style="text-anchor: middle;" transform="translate(132.64914220221172,-40.69112400779079)">41%</text>
-		<text class="slice" style="text-anchor: middle;" transform="translate(-53.220381018180575,128.13724495352506)">31%</text>
-		<text class="slice" style="text-anchor: middle;" transform="translate(-129.80603976857205,-49.00973923211482)">17%</text>
-		<text class="slice" style="text-anchor: middle;" transform="translate(-65.72916523193419,-122.19345047060867)">5%</text>
-		<text class="slice" style="text-anchor: middle;" transform="translate(-22.54697818164175,-136.90579343065278)">5%</text>
+		<path class="pieCircle" d="M0,-185A185,185,0,0,1,48.704,178.474L0,0Z" fill="#7cb5ec"/>
+		<path class="pieCircle" d="M48.704,178.474A185,185,0,0,1,-162.34,88.717L0,0Z" fill="#90ed7d"/>
+		<path class="pieCircle" d="M-162.34,88.717A185,185,0,0,1,-160.059,-92.768L0,0Z" fill="#f7a35c"/>
+		<path class="pieCircle" d="M-160.059,-92.768A185,185,0,0,1,-65.502,-173.016L0,0Z" fill="#e4d354"/>
+		<path class="pieCircle" d="M-65.502,-173.016A185,185,0,0,1,0,-185L0,0Z" fill="#e4c4fb"/>
+		<text class="slice" style="text-anchor: middle;" transform="translate(137.52088586647665,-18.42738317014939)">46%</text>
+		<text class="slice" style="text-anchor: middle;" transform="translate(-54.30309627366181,127.68216882201452)">21%</text>
+		<text class="slice" style="text-anchor: middle;" transform="translate(-138.7390448832795,-1.743538033815172)">16%</text>
+		<text class="slice" style="text-anchor: middle;" transform="translate(-89.77901466776039,-105.7888984028384)">11%</text>
+		<text class="slice" style="text-anchor: middle;" transform="translate(-24.9708079720006,-136.48450919142977)">6%</text>
 		<text class="pieTitleText" x="0" y="-200">Each year benchmark time by % of total</text>
 		<g transform="translate(216,-55)">
 			<rect height="18" style="fill: rgb(124, 181, 236); stroke: rgb(124, 181, 236);" width="18"/>
-			<text x="22" y="14">Year 2016</text>
+			<text x="22" y="14">Year 2020</text>
 		</g>
 		<g transform="translate(216,-33)">
 			<rect height="18" style="fill: rgb(144, 237, 125); stroke: rgb(144, 237, 125);" width="18"/>
-			<text x="22" y="14">Year 2017</text>
+			<text x="22" y="14">Year 2016</text>
 		</g>
 		<g transform="translate(216,-11)">
 			<rect height="18" style="fill: rgb(247, 163, 92); stroke: rgb(247, 163, 92);" width="18"/>
-			<text x="22" y="14">Year 2020</text>
+			<text x="22" y="14">Year 2017</text>
 		</g>
 		<g transform="translate(216,11)">
 			<rect height="18" style="fill: rgb(228, 211, 84); stroke: rgb(228, 211, 84);" width="18"/>
-			<text x="22" y="14">Year 2015</text>
+			<text x="22" y="14">Years 2015, 2019, 2021, 2022, 2023</text>
 		</g>
 		<g transform="translate(216,33)">
 			<rect height="18" style="fill: rgb(228, 196, 251); stroke: rgb(228, 196, 251);" width="18"/>
-			<text x="22" y="14">Years 2018-2019 and 2021-2023</text>
+			<text x="22" y="14">Year 2018</text>
 		</g>
 	</g>
 </svg>

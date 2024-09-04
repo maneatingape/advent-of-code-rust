@@ -2,7 +2,7 @@
 %%{init: {"themeVariables": { "pie1": "#7cb5ec", "pie2": "#90ed7d", "pie3": "#c6cdd5"}}}%%
 pie
     title Year 2015 benchmark time by % of total
-    "Day 4" : 76000
+    "Day 4" : 13000
     "Day 6" : 5780
     "Others" : 3037
 -->
@@ -16,12 +16,12 @@ pie
 	</style>
 	<g transform="translate(675,225)">
 		<circle class="pieOuterCircle" cx="0" cy="0" r="186"/>
-		<path class="pieCircle" d="M0,-185A185,185,0,1,1,-112.424,-146.921L0,0Z" fill="#7cb5ec"/>
-		<path class="pieCircle" d="M-112.424,-146.921A185,185,0,0,1,-41.271,-180.338L0,0Z" fill="#90ed7d"/>
-		<path class="pieCircle" d="M-41.271,-180.338A185,185,0,0,1,0,-185L0,0Z" fill="#c6cdd5"/>
-		<text class="slice" transform="translate(44.51161162654596,131.41643325858277)">90%</text>
-		<text class="slice" transform="translate(-58.982090136569106,-125.58931301317655)">7%</text>
-		<text class="slice" transform="translate(-15.575013957455205,-137.87306277959112)">4%</text>
+		<path class="pieCircle" d="M0,-185A185,185,0,1,1,-104.816,152.442L0,0Z" fill="#7cb5ec"/>
+		<path class="pieCircle" d="M-104.816,152.442A185,185,0,0,1,-141.953,-118.635L0,0Z" fill="#90ed7d"/>
+		<path class="pieCircle" d="M-141.953,-118.635A185,185,0,0,1,0,-185L0,0Z" fill="#c6cdd5"/>
+		<text class="slice" style="text-anchor: middle;" transform="translate(132.50484456818606,41.15857949396277)">60%</text>
+		<text class="slice" style="text-anchor: middle;" transform="translate(-137.46600073565628,18.832449170103825)">26%</text>
+		<text class="slice" style="text-anchor: middle;" transform="translate(-58.76249419184524,-125.6922104839968)">14%</text>
 		<text class="pieTitleText" x="0" y="-200">Year 2015 benchmark time by % of total</text>
 		<g transform="translate(216,-33)">
 			<rect height="18" style="fill: rgb(124, 181, 236); stroke: rgb(124, 181, 236);" width="18"/>
