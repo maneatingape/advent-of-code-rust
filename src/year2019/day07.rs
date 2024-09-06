@@ -7,6 +7,7 @@
 use super::intcode::*;
 use crate::util::parse::*;
 use crate::util::slice::*;
+use std::array::from_fn;
 
 pub fn parse(input: &str) -> Vec<i64> {
     input.iter_signed::<i64>().collect()
@@ -14,13 +15,14 @@ pub fn parse(input: &str) -> Vec<i64> {
 
 pub fn part1(input: &[i64]) -> i64 {
     let mut result = 0;
+    let mut computer = Computer::new(input);
 
     let sequence = |slice: &[i64]| {
         let mut signal = 0;
 
         // Send exactly 2 inputs and receive exactly 1 output per amplifier.
         for &phase in slice {
-            let mut computer = Computer::new(input);
+            computer.reset();
             computer.input(phase);
             computer.input(signal);
 
@@ -39,9 +41,11 @@ pub fn part1(input: &[i64]) -> i64 {
 
 pub fn part2(input: &[i64]) -> i64 {
     let mut result = 0;
+    let mut computers: [Computer; 5] = from_fn(|_| Computer::new(input));
 
     let feedback = |slice: &[i64]| {
-        let mut computers: Vec<_> = (0..5).map(|_| Computer::new(input)).collect();
+        // Reset state.
+        computers.iter_mut().for_each(Computer::reset);
 
         // Send each initial phase setting exactly once.
         for (computer, &phase) in computers.iter_mut().zip(slice.iter()) {

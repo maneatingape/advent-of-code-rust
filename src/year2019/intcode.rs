@@ -33,6 +33,13 @@ impl Computer {
         self.input.extend(ascii.bytes().map(|b| b as usize));
     }
 
+    /// Resets state *except* for memory which may have been modified.
+    pub fn reset(&mut self) {
+        self.pc = 0;
+        self.base = 0;
+        self.input.clear();
+    }
+
     /// Runs until either the program needs input, outputs a value or encounters the halt opcode.
     /// In the first two cases, the computer can be resumed by calling `run` again.
     pub fn run(&mut self) -> State {
