@@ -148,6 +148,11 @@ pub fn part2(input: &[u8]) -> usize {
     let upper = size * 10_000;
     assert!(lower <= start && start < upper);
 
+    compute(&digits, size, start, upper)
+}
+
+#[cfg(not(feature = "simd"))]
+fn compute(digits: &[usize], size: usize, start: usize, upper: usize) -> usize {
     let mut coefficients = [0; 8];
     let mut result = [0; 8];
 
@@ -161,6 +166,30 @@ pub fn part2(input: &[u8]) -> usize {
 
     result.iter_mut().for_each(|r| *r %= 10);
     result.fold_decimal()
+}
+
+#[cfg(feature = "simd")]
+fn compute(digits: &[usize], size: usize, start: usize, upper: usize) -> usize {
+    use std::simd::Mask;
+    use std::simd::Simd;
+
+    let mask: Mask<i32, 8> = Mask::from_bitmask(1);
+    let tens: Simd<u32, 8> = Simd::splat(10);
+
+    let mut coefficients: Simd<u32, 8> = Simd::splat(0);
+    let mut result: Simd<u32, 8> = Simd::splat(0);
+
+    for (k, index) in (start..upper).enumerate() {
+        coefficients = mask.select(
+            Simd::splat(binomial_mod_10(k + 99, k) as u32),
+            coefficients.rotate_elements_right::<1>(),
+        );
+
+        let next = Simd::splat(digits[index % size] as u32);
+        result += next * coefficients;
+    }
+
+    (result % tens).to_array().fold_decimal() as usize
 }
 
 /// Computes C(n, k) % 2

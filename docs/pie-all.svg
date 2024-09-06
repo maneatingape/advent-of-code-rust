@@ -6,7 +6,7 @@ pie
 	"Year 2016" : 133
     "Year 2017" : 102
     "Year 2018" : 36
-	"Years 2015, 2019, 2021, 2022, 2023" : 68
+	"Years 2015, 2019, 2021, 2022, 2023" : 65
 -->
 <svg viewBox="0 0 1350 450" preserveAspectRatio="xMidYMin" xmlns="http://www.w3.org/2000/svg">
 	<style>
@@ -18,16 +18,16 @@ pie
 	</style>
 	<g transform="translate(675,225)">
 		<circle class="pieOuterCircle" cx="0" cy="0" r="186"/>
-		<path class="pieCircle" d="M0,-185A185,185,0,0,1,48.704,178.474L0,0Z" fill="#7cb5ec"/>
-		<path class="pieCircle" d="M48.704,178.474A185,185,0,0,1,-162.34,88.717L0,0Z" fill="#90ed7d"/>
-		<path class="pieCircle" d="M-162.34,88.717A185,185,0,0,1,-160.059,-92.768L0,0Z" fill="#f7a35c"/>
-		<path class="pieCircle" d="M-160.059,-92.768A185,185,0,0,1,-65.502,-173.016L0,0Z" fill="#e4d354"/>
-		<path class="pieCircle" d="M-65.502,-173.016A185,185,0,0,1,0,-185L0,0Z" fill="#e4c4fb"/>
-		<text class="slice" style="text-anchor: middle;" transform="translate(137.52088586647665,-18.42738317014939)">46%</text>
-		<text class="slice" style="text-anchor: middle;" transform="translate(-54.30309627366181,127.68216882201452)">21%</text>
-		<text class="slice" style="text-anchor: middle;" transform="translate(-138.7390448832795,-1.743538033815172)">16%</text>
-		<text class="slice" style="text-anchor: middle;" transform="translate(-89.77901466776039,-105.7888984028384)">11%</text>
-		<text class="slice" style="text-anchor: middle;" transform="translate(-24.9708079720006,-136.48450919142977)">6%</text>
+		<path class="pieCircle" d="M0,-185A185,185,0,0,1,46.225,179.132L0,0Z" fill="#7cb5ec"/>
+		<path class="pieCircle" d="M46.225,179.132A185,185,0,0,1,-164.109,85.4L0,0Z" fill="#90ed7d"/>
+		<path class="pieCircle" d="M-164.109,85.4A185,185,0,0,1,-157.665,-96.782L0,0Z" fill="#f7a35c"/>
+		<path class="pieCircle" d="M-157.665,-96.782A185,185,0,0,1,-65.803,-172.901L0,0Z" fill="#e4d354"/>
+		<path class="pieCircle" d="M-65.803,-172.901A185,185,0,0,1,0,-185L0,0Z" fill="#e4c4fb"/>
+		<text class="slice" style="text-anchor: middle;" transform="translate(137.6453495395421,-17.473415525800178)">46%</text>
+		<text class="slice" style="text-anchor: middle;" transform="translate(-56.47738671190331,126.73542239718984)">21%</text>
+		<text class="slice" style="text-anchor: middle;" transform="translate(-138.66328927605264,-4.904559832007835)">16%</text>
+		<text class="slice" style="text-anchor: middle;" transform="translate(-88.52894547661712,-106.83720472194203)">10%</text>
+		<text class="slice" style="text-anchor: middle;" transform="translate(-25.08991896841827,-136.46266326786315)">6%</text>
 		<text class="pieTitleText" x="0" y="-200">Each year benchmark time by % of total</text>
 		<g transform="translate(216,-55)">
 			<rect height="18" style="fill: rgb(124, 181, 236); stroke: rgb(124, 181, 236);" width="18"/>

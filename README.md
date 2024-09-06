@@ -53,7 +53,7 @@ Place input files in `input/yearYYYY/dayDD.txt` including leading zeroes. For ex
 ## Performance
 
 Benchmarks are measured using the built-in `cargo bench` tool run on an [Apple M2 Max][apple-link].
-All 225 solutions from 2023 to to 2015 complete sequentially in **625 milliseconds**.
+All 225 solutions from 2023 to 2015 complete sequentially in **622 milliseconds**.
 Interestingly 84% of the total time is spent on just 9 solutions.
 Performance is reasonable even on older hardware, for example a 2011 MacBook Pro with an
 [Intel i7-2720QM][intel-link] processor takes 3.5 seconds to run the same 225 solutions.
@@ -66,7 +66,7 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 | [2022](#2022) | 10 |
 | [2021](#2021) | 10 |
 | [2020](#2020) | 286 |
-| [2019](#2019) | 19 |
+| [2019](#2019) | 16 |
 | [2018](#2018) | 36 |
 | [2017](#2017) | 102 |
 | [2016](#2016) | 133 |
@@ -221,7 +221,7 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 | 13 | [Care Package](https://adventofcode.com/2019/day/13) | [Source](src/year2019/day13.rs) | 2513 |
 | 14 | [Space Stoichiometry](https://adventofcode.com/2019/day/14) | [Source](src/year2019/day14.rs) | 17 |
 | 15 | [Oxygen System](https://adventofcode.com/2019/day/15) | [Source](src/year2019/day15.rs) | 361 |
-| 16 | [Flawed Frequency Transmission](https://adventofcode.com/2019/day/16) | [Source](src/year2019/day16.rs) | 4124 |
+| 16 | [Flawed Frequency Transmission](https://adventofcode.com/2019/day/16) | [Source](src/year2019/day16.rs) | 1960 |
 | 17 | [Set and Forget](https://adventofcode.com/2019/day/17) | [Source](src/year2019/day17.rs) | 341 |
 | 18 | [Many-Worlds Interpretation](https://adventofcode.com/2019/day/18) | [Source](src/year2019/day18.rs) | 1077 |
 | 19 | [Tractor Beam](https://adventofcode.com/2019/day/19) | [Source](src/year2019/day19.rs) | 674 |
