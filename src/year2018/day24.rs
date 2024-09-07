@@ -9,9 +9,9 @@
 //! [`Day 15`]: crate::year2018::day15
 use crate::util::hash::*;
 use crate::util::parse::*;
+use crate::util::thread::*;
 use std::sync::atomic::{AtomicBool, AtomicI32, Ordering};
 use std::sync::mpsc::{channel, Sender};
-use std::thread;
 
 pub struct Input {
     immune: Vec<Group>,
@@ -99,11 +99,7 @@ pub fn part2(input: &Input) -> i32 {
     let shared = Shared { done: AtomicBool::new(false), boost: AtomicI32::new(1), tx };
 
     // Use as many cores as possible to parallelize the search.
-    thread::scope(|scope| {
-        for _ in 0..thread::available_parallelism().unwrap().get() {
-            scope.spawn(|| worker(input, &shared));
-        }
-    });
+    spawn(|| worker(input, &shared));
 
     // Hang up the channel.
     drop(shared.tx);

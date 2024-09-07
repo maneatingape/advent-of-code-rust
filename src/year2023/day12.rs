@@ -119,8 +119,8 @@
 //! This is equivalent to the prefix sum approach described above but a little clearer to
 //! understand however slower to calculate.
 use crate::util::parse::*;
+use crate::util::thread::*;
 use std::sync::atomic::{AtomicU64, Ordering};
-use std::thread;
 
 type Spring<'a> = (&'a [u8], Vec<usize>);
 
@@ -141,20 +141,10 @@ pub fn part1(input: &[Spring<'_>]) -> u64 {
 }
 
 pub fn part2(input: &[Spring<'_>]) -> u64 {
-    // Break the work into roughly equally size batches.
-    let threads = thread::available_parallelism().unwrap().get();
-    let size = input.len().div_ceil(threads);
-    let batches: Vec<_> = input.chunks(size).collect();
-
-    // Use as many cores as possible to parallelize the calculation.
+    // Use as many cores as possible to parallelize the calculation,
+    // breaking the work into roughly equally size batches.
     let shared = AtomicU64::new(0);
-
-    thread::scope(|scope| {
-        for batch in batches {
-            scope.spawn(|| shared.fetch_add(solve(batch, 5), Ordering::Relaxed));
-        }
-    });
-
+    spawn_batches(input.to_vec(), |batch| shared.fetch_add(solve(&batch, 5), Ordering::Relaxed));
     shared.load(Ordering::Relaxed)
 }
 

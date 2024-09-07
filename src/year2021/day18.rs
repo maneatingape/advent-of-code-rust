@@ -27,8 +27,8 @@
 //! The root node is stored at index 0. For a node at index `i` its left child is at index
 //! `2i + 1`, right child at index `2i + 2` and parent at index `i / 2`. As leaf nodes are
 //! always greater than or equal to zero, `-1` is used as a special sentinel value for non-leaf nodes.
+use crate::util::thread::*;
 use std::sync::Mutex;
-use std::thread;
 
 type Snailfish = [i32; 63];
 
@@ -83,20 +83,10 @@ pub fn part2(input: &[Snailfish]) -> i32 {
         }
     }
 
-    // Break the work into roughly equally size batches.
-    let threads = thread::available_parallelism().unwrap().get();
-    let size = pairs.len().div_ceil(threads);
-    let batches: Vec<_> = pairs.chunks(size).collect();
-
-    // Use as many cores as possible to parallelize the calculation.
+    // Use as many cores as possible to parallelize the calculation,
+    // breaking the work into roughly equally size batches.
     let mutex = Mutex::new(0);
-
-    thread::scope(|scope| {
-        for batch in batches {
-            scope.spawn(|| worker(batch, &mutex));
-        }
-    });
-
+    spawn_batches(pairs, |batch| worker(&batch, &mutex));
     mutex.into_inner().unwrap()
 }
 

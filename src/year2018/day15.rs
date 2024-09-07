@@ -78,9 +78,9 @@
 //! Choosing the first intersection in reading order the Elf correctly moves left.
 use crate::util::grid::*;
 use crate::util::point::*;
+use crate::util::thread::*;
 use std::sync::atomic::{AtomicBool, AtomicI32, Ordering};
 use std::sync::mpsc::{channel, Sender};
-use std::thread;
 
 const READING_ORDER: [Point; 4] = [UP, LEFT, RIGHT, DOWN];
 
@@ -149,11 +149,7 @@ pub fn part2(input: &Input) -> i32 {
     let shared = Shared { done: AtomicBool::new(false), elf_attack_power: AtomicI32::new(4), tx };
 
     // Use as many cores as possible to parallelize the search.
-    thread::scope(|scope| {
-        for _ in 0..thread::available_parallelism().unwrap().get() {
-            scope.spawn(|| worker(input, &shared));
-        }
-    });
+    spawn(|| worker(input, &shared));
 
     // Hang up the channel.
     drop(shared.tx);

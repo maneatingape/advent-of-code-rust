@@ -5,9 +5,9 @@
 //!
 //! [`Day 10`]: crate::year2017::day10
 //! [`Day 12`]: crate::year2017::day12
+use crate::util::thread::*;
 use std::sync::atomic::{AtomicUsize, Ordering};
 use std::sync::Mutex;
-use std::thread;
 
 /// Atomics can be safely shared between threads.
 pub struct Shared {
@@ -27,11 +27,7 @@ pub fn parse(input: &str) -> Vec<u8> {
     let mutex = Mutex::new(exclusive);
 
     // Use as many cores as possible to parallelize the hashing.
-    thread::scope(|scope| {
-        for _ in 0..thread::available_parallelism().unwrap().get() {
-            scope.spawn(|| worker(&shared, &mutex));
-        }
-    });
+    spawn(|| worker(&shared, &mutex));
 
     mutex.into_inner().unwrap().grid
 }

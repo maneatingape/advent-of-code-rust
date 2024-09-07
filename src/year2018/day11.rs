@@ -6,8 +6,8 @@
 //! This makes the total complexity `O(n³)`, however the calculation for each size is independent
 //! so we can parallelize over multiple threads.
 use crate::util::parse::*;
+use crate::util::thread::*;
 use std::sync::Mutex;
-use std::thread;
 
 pub struct Result {
     x: usize,
@@ -38,36 +38,15 @@ pub fn parse(input: &str) -> Vec<Result> {
     }
 
     // Use as many cores as possible to parallelize the search.
-    let threads = thread::available_parallelism().unwrap().get();
+    // Smaller sizes take more time so keep batches roughly the same effort so that some
+    // threads are not finishing too soon and waiting idle, while others are still busy.
+    // For example if there are 4 cores, then they will be assigned sizes:
+    // * 1, 5, 9, ..
+    // * 2, 6, 10, ..
+    // * 3, 7, 11, ..
+    // * 4, 8, 12, ..
     let mutex = Mutex::new(Vec::new());
-
-    thread::scope(|scope| {
-        for i in 0..threads {
-            // Shadow references in local variables so that they can be moved into closure.
-            let sat = &sat;
-            let mutex = &mutex;
-
-            // Smaller sizes take more time so keep batches roughly the same effort so that some
-            // threads are not finishing too soon and waiting idle, while others are still busy.
-            // For example if there are 4 cores, then they will be assigned sizes:
-            // * 1, 5, 9, ..
-            // * 2, 6, 10, ..
-            // * 3, 7, 11, ..
-            // * 4, 8, 12, ..
-            scope.spawn(move || {
-                let batch: Vec<_> = (1 + i..301)
-                    .step_by(threads)
-                    .map(|size| {
-                        let (power, x, y) = square(sat, size);
-                        Result { x, y, size, power }
-                    })
-                    .collect();
-
-                mutex.lock().unwrap().extend(batch);
-            });
-        }
-    });
-
+    spawn_batches((1..301).collect(), |batch| worker(batch, &sat, &mutex));
     mutex.into_inner().unwrap()
 }
 
@@ -79,6 +58,18 @@ pub fn part1(input: &[Result]) -> String {
 pub fn part2(input: &[Result]) -> String {
     let Result { x, y, size, .. } = input.iter().max_by_key(|r| r.power).unwrap();
     format!("{x},{y},{size}")
+}
+
+fn worker(batch: Vec<usize>, sat: &[i32], mutex: &Mutex<Vec<Result>>) {
+    let result: Vec<_> = batch
+        .into_iter()
+        .map(|size| {
+            let (power, x, y) = square(sat, size);
+            Result { x, y, size, power }
+        })
+        .collect();
+
+    mutex.lock().unwrap().extend(result);
 }
 
 /// Find the (x,y) coordinates and max power for a square of the specified size.

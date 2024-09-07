@@ -5,9 +5,9 @@
 //!
 //! [`Year 2015 Day 4`]: crate::year2015::day04
 use crate::util::md5::*;
+use crate::util::thread::*;
 use std::sync::atomic::{AtomicBool, AtomicU32, Ordering};
 use std::sync::Mutex;
-use std::thread;
 
 struct Shared {
     prefix: String,
@@ -35,13 +35,11 @@ pub fn parse(input: &str) -> Vec<u32> {
     }
 
     // Use as many cores as possible to parallelize the remaining search.
-    thread::scope(|scope| {
-        for _ in 0..thread::available_parallelism().unwrap().get() {
-            #[cfg(not(feature = "simd"))]
-            scope.spawn(|| worker(&shared, &mutex));
-            #[cfg(feature = "simd")]
-            scope.spawn(|| simd::worker(&shared, &mutex));
-        }
+    spawn(|| {
+        #[cfg(not(feature = "simd"))]
+        worker(&shared, &mutex);
+        #[cfg(feature = "simd")]
+        simd::worker(&shared, &mutex);
     });
 
     let mut found = mutex.into_inner().unwrap().found;

@@ -42,8 +42,8 @@
 //!
 //! [`iter_unsigned`]: ParseOps::iter_unsigned
 use crate::util::parse::*;
+use crate::util::thread::*;
 use std::sync::Mutex;
-use std::thread;
 
 pub struct Monkey {
     items: Vec<u64>,
@@ -130,11 +130,7 @@ fn parallel(monkeys: &[Monkey], pairs: Vec<Pair>) -> Business {
     let mutex = Mutex::new(exclusive);
 
     // Use as many cores as possible to parallelize the calculation.
-    thread::scope(|scope| {
-        for _ in 0..thread::available_parallelism().unwrap().get() {
-            scope.spawn(|| worker(monkeys, &mutex));
-        }
-    });
+    spawn(|| worker(monkeys, &mutex));
 
     mutex.into_inner().unwrap().business
 }

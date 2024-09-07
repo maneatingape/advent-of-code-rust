@@ -13,10 +13,10 @@
 //! up the search.
 use crate::util::grid::*;
 use crate::util::point::*;
+use crate::util::thread::*;
 use std::collections::VecDeque;
 use std::sync::atomic::{AtomicUsize, Ordering};
 use std::sync::Mutex;
-use std::thread;
 
 type Pair = (Point, u32);
 
@@ -132,11 +132,7 @@ pub fn part2(input: &Input) -> usize {
     let mutex = Mutex::new(exclusive);
 
     // Use as many cores as possible to parallelize the search.
-    thread::scope(|scope| {
-        for _ in 0..thread::available_parallelism().unwrap().get() {
-            scope.spawn(|| worker(input, &shared, &mutex));
-        }
-    });
+    spawn(|| worker(input, &shared, &mutex));
 
     shared.tiles.load(Ordering::Relaxed)
 }

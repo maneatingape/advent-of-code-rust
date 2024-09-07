@@ -18,8 +18,8 @@
 //! [`MD5`]: crate::util::md5
 //! [`format!`]: std::format
 use crate::util::md5::*;
+use crate::util::thread::*;
 use std::sync::atomic::{AtomicBool, AtomicU32, Ordering};
-use std::thread;
 
 pub struct Shared {
     prefix: String,
@@ -45,13 +45,11 @@ pub fn parse(input: &str) -> Shared {
     }
 
     // Use as many cores as possible to parallelize the remaining search.
-    thread::scope(|scope| {
-        for _ in 0..thread::available_parallelism().unwrap().get() {
-            #[cfg(not(feature = "simd"))]
-            scope.spawn(|| worker(&shared));
-            #[cfg(feature = "simd")]
-            scope.spawn(|| simd::worker(&shared));
-        }
+    spawn(|| {
+        #[cfg(not(feature = "simd"))]
+        worker(&shared);
+        #[cfg(feature = "simd")]
+        simd::worker(&shared);
     });
 
     shared

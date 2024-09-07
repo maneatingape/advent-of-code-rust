@@ -3,10 +3,10 @@
 //! Brute force slog through all possible keys, parallelized as much as possible. An optimization
 //! for part two is a quick method to convert `u32` to 8 ASCII digits.
 use crate::util::md5::*;
+use crate::util::thread::*;
 use std::collections::{BTreeMap, BTreeSet};
 use std::sync::atomic::{AtomicBool, AtomicI32, Ordering};
 use std::sync::Mutex;
-use std::thread;
 
 /// Atomics can be safely shared between threads.
 struct Shared<'a> {
@@ -44,11 +44,7 @@ fn generate_pad(input: &str, part_two: bool) -> i32 {
     let mutex = Mutex::new(exclusive);
 
     // Use as many cores as possible to parallelize the search.
-    thread::scope(|scope| {
-        for _ in 0..thread::available_parallelism().unwrap().get() {
-            scope.spawn(|| worker(&shared, &mutex, part_two));
-        }
-    });
+    spawn(|| worker(&shared, &mutex, part_two));
 
     let exclusive = mutex.into_inner().unwrap();
     *exclusive.found.iter().nth(63).unwrap()

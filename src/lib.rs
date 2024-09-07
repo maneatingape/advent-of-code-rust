@@ -23,6 +23,7 @@ pub mod util {
     pub mod parse;
     pub mod point;
     pub mod slice;
+    pub mod thread;
 }
 
 /// # Help Santa by solving puzzles to fix the weather machine's snow function.
