@@ -38,6 +38,7 @@
 //! Then we check every possible pair formed by those values, considering only the pairs
 //! where the sets of valves are [disjoint](https://en.wikipedia.org/wiki/Disjoint_sets),
 //! which is when you and the elephant have visited different sets of valves.
+use crate::util::bitset::*;
 use crate::util::hash::*;
 use crate::util::parse::*;
 use std::cmp::Ordering;
@@ -264,16 +265,11 @@ pub fn part2(input: &Input) -> u32 {
 fn explore(input: &Input, state: &State, high_score: &mut impl FnMut(usize, u32) -> u32) {
     let State { todo, from, time, pressure } = *state;
     let score = high_score(todo, pressure);
-    let mut valves = todo;
 
-    while valves > 0 {
-        // Stores the set of unopened valves in a single integer as a bit mask with a 1
-        // for each unopened valve. This code iterates over each valve by finding the lowest
-        // 1 bit then removing it from the set.
-        let to = valves.trailing_zeros() as usize;
-        let mask = 1 << to;
-        valves ^= mask;
-
+    // Stores the set of unopened valves in a single integer as a bit mask with a 1
+    // for each unopened valve. This code iterates over each valve by finding the lowest
+    // 1 bit then removing it from the set.
+    for to in todo.biterator() {
         // Check if there's enough time to reach the valve.
         let needed = input.distance[from * input.size + to];
         if needed >= time {
@@ -281,7 +277,7 @@ fn explore(input: &Input, state: &State, high_score: &mut impl FnMut(usize, u32)
         }
 
         // Calculate the total pressure released by a valve up front.
-        let todo = todo ^ mask;
+        let todo = todo ^ (1 << to);
         let time = time - needed;
         let pressure = pressure + time * input.flow[to];
 

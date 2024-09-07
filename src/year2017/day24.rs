@@ -13,6 +13,7 @@
 //!
 //! If we can place such a component then there's no need to consider further components which
 //! reduces the total number of combination to consider.
+use crate::util::bitset::*;
 use crate::util::iter::*;
 use crate::util::parse::*;
 
@@ -107,16 +108,12 @@ pub fn part2(input: &[usize]) -> usize {
 
 fn build(state: &mut State, current: usize, used: usize, strength: usize, length: usize) {
     // Bitset of all unused components that have a matching port.
-    let mut remaining = state.possible[current] & !used;
+    let remaining = state.possible[current] & !used;
 
-    while remaining > 0 {
-        // Extract the index of each component from the bitset.
-        let index = remaining.trailing_zeros() as usize;
-        let mask = 1 << index;
-        remaining ^= mask;
-
+    // Extract the index of each component from the bitset.
+    for index in remaining.biterator() {
         let next = current ^ state.both[index];
-        let used = used | mask;
+        let used = used | (1 << index);
         let strength = strength + state.weight[index];
         let length = length + state.length[index];
 

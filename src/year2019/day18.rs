@@ -50,6 +50,7 @@
 #![allow(clippy::needless_range_loop)]
 #![allow(clippy::unnecessary_lazy_evaluations)]
 
+use crate::util::bitset::*;
 use crate::util::grid::*;
 use crate::util::hash::*;
 use crate::util::heap::*;
@@ -196,27 +197,17 @@ fn explore(width: i32, bytes: &[u8]) -> u32 {
             return total;
         }
 
-        let mut robots = position;
-
-        while robots != 0 {
-            // The set of robots is stored as bits in a `u32` shifted by the index of the location.
-            let from = robots.trailing_zeros() as usize;
-            let from_mask = 1 << from;
-            robots ^= from_mask;
-
-            let mut keys = remaining;
-
-            while keys != 0 {
-                // The set of keys still needed is also stored as bits in a `u32` similar as robots.
-                let to = keys.trailing_zeros() as usize;
-                let to_mask = 1 << to;
-                keys ^= to_mask;
-
+        // The set of robots is stored as bits in a `u32` shifted by the index of the location.
+        for from in position.biterator() {
+            // The set of keys still needed is also stored as bits in a `u32` similar as robots.
+            for to in remaining.biterator() {
                 let Door { distance, needed } = maze[from][to];
 
                 // u32::MAX indicates that two nodes are not connected. Only possible in part two.
                 if distance != u32::MAX && remaining & needed == 0 {
                     let next_total = total + distance;
+                    let from_mask = 1 << from;
+                    let to_mask = 1 << to;
                     let next_state = State {
                         position: position ^ from_mask ^ to_mask,
                         remaining: remaining ^ to_mask,

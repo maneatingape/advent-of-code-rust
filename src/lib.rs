@@ -13,6 +13,7 @@
 /// # Utility modules to handle common recurring Advent of Code patterns.
 pub mod util {
     pub mod ansi;
+    pub mod bitset;
     pub mod grid;
     pub mod hash;
     pub mod heap;

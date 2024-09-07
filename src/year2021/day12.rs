@@ -12,6 +12,7 @@
 //!   cave connections as an [adjacency matrix](https://en.wikipedia.org/wiki/Adjacency_matrix)
 //!   and the list of visited caves compressed into a single `u32` is the low level strategy to
 //!   quickly and efficiently store the small cardinality set of caves.
+use crate::util::bitset::*;
 use crate::util::hash::*;
 use crate::util::iter::*;
 
@@ -139,19 +140,17 @@ fn paths(input: &Input, state: &State, cache: &mut [u32]) -> u32 {
 
     let mut caves = input.edges[from];
     let mut total = 0;
-    let mut mask = 1 << END;
+    let end = 1 << END;
 
-    if caves & mask != 0 {
-        caves ^= mask;
+    if caves & end != 0 {
+        caves ^= end;
         total += 1;
     }
 
-    while caves != 0 {
-        let to = caves.trailing_zeros() as usize;
-        mask = 1 << to;
-        caves ^= mask;
-
+    for to in caves.biterator() {
+        let mask = 1 << to;
         let once = input.small & mask == 0 || visited & mask == 0;
+
         if once || twice {
             let next = State { from: to, visited: visited | mask, twice: once && twice };
             total += paths(input, &next, cache);

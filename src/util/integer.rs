@@ -1,6 +1,6 @@
 //! Combines common [operators](https://doc.rust-lang.org/book/appendix-02-operators.html)
 //! and constants `0`, `1` and `10` to enable generic methods on integer types.
-use std::ops::{Add, BitAnd, BitOr, Div, Mul, Neg, Rem, Shl, Shr, Sub};
+use std::ops::*;
 
 pub trait Integer<T>:
     Copy
@@ -10,6 +10,7 @@ pub trait Integer<T>:
     + Add<Output = T>
     + BitAnd<Output = T>
     + BitOr<Output = T>
+    + BitXor<Output = T>
     + Div<Output = T>
     + Mul<Output = T>
     + Rem<Output = T>
@@ -22,6 +23,7 @@ pub trait Integer<T>:
     const TEN: T;
 
     fn ilog2(self) -> T;
+    fn trailing_zeros(self) -> T;
 }
 
 pub trait Unsigned<T>: Integer<T> {}
@@ -38,7 +40,13 @@ macro_rules! integer {
             #[inline]
             #[allow(trivial_numeric_casts)]
             fn ilog2(self) -> $t {
-                self.ilog2() as $t
+                <$t>::ilog2(self) as $t
+            }
+
+            #[inline]
+            #[allow(trivial_numeric_casts)]
+            fn trailing_zeros(self) -> $t {
+                <$t>::trailing_zeros(self) as $t
             }
         }
     )*)
