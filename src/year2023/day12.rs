@@ -144,7 +144,10 @@ pub fn part2(input: &[Spring<'_>]) -> u64 {
     // Use as many cores as possible to parallelize the calculation,
     // breaking the work into roughly equally size batches.
     let shared = AtomicU64::new(0);
-    spawn_batches(input.to_vec(), |batch| shared.fetch_add(solve(&batch, 5), Ordering::Relaxed));
+    spawn_batches(input.to_vec(), |batch| {
+        let partial = solve(&batch, 5);
+        shared.fetch_add(partial, Ordering::Relaxed);
+    });
     shared.load(Ordering::Relaxed)
 }
 

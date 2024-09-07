@@ -13,6 +13,7 @@ struct Shared {
     prefix: String,
     done: AtomicBool,
     counter: AtomicU32,
+    mutex: Mutex<Exclusive>,
 }
 
 struct Exclusive {
@@ -25,24 +26,24 @@ pub fn parse(input: &str) -> Vec<u32> {
         prefix: input.trim().to_owned(),
         done: AtomicBool::new(false),
         counter: AtomicU32::new(1000),
+        mutex: Mutex::new(Exclusive { found: vec![], mask: 0 }),
     };
-    let mutex = Mutex::new(Exclusive { found: vec![], mask: 0 });
 
     // Handle the first 999 numbers specially as the number of digits varies.
     for n in 1..1000 {
         let (mut buffer, size) = format_string(&shared.prefix, n);
-        check_hash(&mut buffer, size, n, &shared, &mutex);
+        check_hash(&mut buffer, size, n, &shared);
     }
 
     // Use as many cores as possible to parallelize the remaining search.
     spawn(|| {
         #[cfg(not(feature = "simd"))]
-        worker(&shared, &mutex);
+        worker(&shared);
         #[cfg(feature = "simd")]
-        simd::worker(&shared, &mutex);
+        simd::worker(&shared);
     });
 
-    let mut found = mutex.into_inner().unwrap().found;
+    let mut found = shared.mutex.into_inner().unwrap().found;
     found.sort_unstable();
     found.iter().map(|&(_, n)| n).collect()
 }
@@ -79,11 +80,11 @@ fn format_string(prefix: &str, n: u32) -> ([u8; 64], usize) {
     (buffer, size)
 }
 
-fn check_hash(buffer: &mut [u8], size: usize, n: u32, shared: &Shared, mutex: &Mutex<Exclusive>) {
+fn check_hash(buffer: &mut [u8], size: usize, n: u32, shared: &Shared) {
     let (result, ..) = hash(buffer, size);
 
     if result & 0xfffff000 == 0 {
-        let mut exclusive = mutex.lock().unwrap();
+        let mut exclusive = shared.mutex.lock().unwrap();
 
         exclusive.found.push((n, result));
         exclusive.mask |= 1 << (result >> 8);
@@ -95,7 +96,7 @@ fn check_hash(buffer: &mut [u8], size: usize, n: u32, shared: &Shared, mutex: &M
 }
 
 #[cfg(not(feature = "simd"))]
-fn worker(shared: &Shared, mutex: &Mutex<Exclusive>) {
+fn worker(shared: &Shared) {
     while !shared.done.load(Ordering::Relaxed) {
         let offset = shared.counter.fetch_add(1000, Ordering::Relaxed);
         let (mut buffer, size) = format_string(&shared.prefix, offset);
@@ -106,7 +107,7 @@ fn worker(shared: &Shared, mutex: &Mutex<Exclusive>) {
             buffer[size - 2] = b'0' + ((n / 10) % 10) as u8;
             buffer[size - 1] = b'0' + (n % 10) as u8;
 
-            check_hash(&mut buffer, size, offset + n, shared, mutex);
+            check_hash(&mut buffer, size, offset + n, shared);
         }
     }
 }
@@ -124,7 +125,6 @@ mod simd {
         start: u32,
         offset: u32,
         shared: &Shared,
-        mutex: &Mutex<Exclusive>,
     ) where
         LaneCount<N>: SupportedLaneCount,
     {
@@ -140,7 +140,7 @@ mod simd {
 
         for i in 0..N {
             if result[i] & 0xfffff000 == 0 {
-                let mut exclusive = mutex.lock().unwrap();
+                let mut exclusive = shared.mutex.lock().unwrap();
 
                 exclusive.found.push((start + offset + i as u32, result[i]));
                 exclusive.mask |= 1 << (result[i] >> 8);
@@ -152,17 +152,17 @@ mod simd {
         }
     }
 
-    pub(super) fn worker(shared: &Shared, mutex: &Mutex<Exclusive>) {
+    pub(super) fn worker(shared: &Shared) {
         while !shared.done.load(Ordering::Relaxed) {
             let start = shared.counter.fetch_add(1000, Ordering::Relaxed);
             let (prefix, size) = format_string(&shared.prefix, start);
             let mut buffers = [prefix; 32];
 
             for offset in (0..992).step_by(32) {
-                check_hash_simd::<32>(&mut buffers, size, start, offset, shared, mutex);
+                check_hash_simd::<32>(&mut buffers, size, start, offset, shared);
             }
 
-            check_hash_simd::<8>(&mut buffers, size, start, 992, shared, mutex);
+            check_hash_simd::<8>(&mut buffers, size, start, 992, shared);
         }
     }
 }

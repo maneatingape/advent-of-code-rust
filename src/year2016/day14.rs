@@ -11,8 +11,10 @@ use std::sync::Mutex;
 /// Atomics can be safely shared between threads.
 struct Shared<'a> {
     input: &'a str,
+    part_two: bool,
     done: AtomicBool,
     counter: AtomicI32,
+    mutex: Mutex<Exclusive>,
 }
 
 /// Regular data structures need to be protected by a mutex.
@@ -38,20 +40,25 @@ pub fn part2(input: &str) -> i32 {
 
 /// Find the first 64 keys that sastify the rules.
 fn generate_pad(input: &str, part_two: bool) -> i32 {
-    let shared = Shared { input, done: AtomicBool::new(false), counter: AtomicI32::new(0) };
     let exclusive =
         Exclusive { threes: BTreeMap::new(), fives: BTreeMap::new(), found: BTreeSet::new() };
-    let mutex = Mutex::new(exclusive);
+    let shared = Shared {
+        input,
+        part_two,
+        done: AtomicBool::new(false),
+        counter: AtomicI32::new(0),
+        mutex: Mutex::new(exclusive),
+    };
 
     // Use as many cores as possible to parallelize the search.
-    spawn(|| worker(&shared, &mutex, part_two));
+    spawn(|| worker(&shared));
 
-    let exclusive = mutex.into_inner().unwrap();
+    let exclusive = shared.mutex.into_inner().unwrap();
     *exclusive.found.iter().nth(63).unwrap()
 }
 
 #[cfg(not(feature = "simd"))]
-fn worker(shared: &Shared<'_>, mutex: &Mutex<Exclusive>, part_two: bool) {
+fn worker(shared: &Shared<'_>) {
     while !shared.done.load(Ordering::Relaxed) {
         // Get the next key to check.
         let n = shared.counter.fetch_add(1, Ordering::Relaxed);
@@ -60,7 +67,7 @@ fn worker(shared: &Shared<'_>, mutex: &Mutex<Exclusive>, part_two: bool) {
         let (mut buffer, size) = format_string(shared.input, n);
         let mut result = hash(&mut buffer, size);
 
-        if part_two {
+        if shared.part_two {
             for _ in 0..2016 {
                 buffer[0..8].copy_from_slice(&to_ascii(result.0));
                 buffer[8..16].copy_from_slice(&to_ascii(result.1));
@@ -70,14 +77,14 @@ fn worker(shared: &Shared<'_>, mutex: &Mutex<Exclusive>, part_two: bool) {
             }
         }
 
-        check(shared, mutex, n, result);
+        check(shared, n, result);
     }
 }
 
 /// Use SIMD to compute hashes in parallel in blocks of 32.
 #[cfg(feature = "simd")]
 #[allow(clippy::needless_range_loop)]
-fn worker(shared: &Shared<'_>, mutex: &Mutex<Exclusive>, part_two: bool) {
+fn worker(shared: &Shared<'_>) {
     let mut result = ([0; 32], [0; 32], [0; 32], [0; 32]);
     let mut buffers = [[0; 64]; 32];
 
@@ -96,7 +103,7 @@ fn worker(shared: &Shared<'_>, mutex: &Mutex<Exclusive>, part_two: bool) {
             result.3[i] = d;
         }
 
-        if part_two {
+        if shared.part_two {
             for _ in 0..2016 {
                 for i in 0..32 {
                     buffers[i][0..8].copy_from_slice(&to_ascii(result.0[i]));
@@ -110,13 +117,13 @@ fn worker(shared: &Shared<'_>, mutex: &Mutex<Exclusive>, part_two: bool) {
 
         for i in 0..32 {
             let hash = (result.0[i], result.1[i], result.2[i], result.3[i]);
-            check(shared, mutex, start + i as i32, hash);
+            check(shared, start + i as i32, hash);
         }
     }
 }
 
 /// Check for sequences of 3 or 5 consecutive matching digits.
-fn check(shared: &Shared<'_>, mutex: &Mutex<Exclusive>, n: i32, hash: (u32, u32, u32, u32)) {
+fn check(shared: &Shared<'_>, n: i32, hash: (u32, u32, u32, u32)) {
     let (a, b, c, d) = hash;
 
     let mut prev = u32::MAX;
@@ -147,7 +154,7 @@ fn check(shared: &Shared<'_>, mutex: &Mutex<Exclusive>, n: i32, hash: (u32, u32,
     }
 
     if three != 0 || five != 0 {
-        let mut exclusive = mutex.lock().unwrap();
+        let mut exclusive = shared.mutex.lock().unwrap();
         let mut candidates = Vec::new();
 
         // Compare against all 5 digit sequences.

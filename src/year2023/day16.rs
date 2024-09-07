@@ -34,13 +34,10 @@ pub struct Input {
 }
 
 /// Atomics can be safely shared between threads.
-struct Shared {
+struct Shared<'a> {
+    input: &'a Input,
     tiles: AtomicUsize,
-}
-
-/// Regular data structures need to be protected by a mutex.
-struct Exclusive {
-    todo: Vec<Pair>,
+    mutex: Mutex<Vec<Pair>>,
 }
 
 /// Build four precomputed grids of the next coordinate in each direction for every point.
@@ -127,27 +124,25 @@ pub fn part2(input: &Input) -> usize {
     }
 
     // Setup thread safe wrappers
-    let shared = Shared { tiles: AtomicUsize::new(0) };
-    let exclusive = Exclusive { todo };
-    let mutex = Mutex::new(exclusive);
+    let shared = Shared { input, tiles: AtomicUsize::new(0), mutex: Mutex::new(todo) };
 
     // Use as many cores as possible to parallelize the search.
-    spawn(|| worker(input, &shared, &mutex));
+    spawn(|| worker(&shared));
 
     shared.tiles.load(Ordering::Relaxed)
 }
 
 /// Process starting locations from a shared queue.
-fn worker(input: &Input, shared: &Shared, mutex: &Mutex<Exclusive>) {
+fn worker(shared: &Shared<'_>) {
     loop {
         let start = {
-            let mut exclusive = mutex.lock().unwrap();
-            let Some(start) = exclusive.todo.pop() else {
+            let mut exclusive = shared.mutex.lock().unwrap();
+            let Some(start) = exclusive.pop() else {
                 break;
             };
             start
         };
-        shared.tiles.fetch_max(count(input, start), Ordering::Relaxed);
+        shared.tiles.fetch_max(count(shared.input, start), Ordering::Relaxed);
     }
 }
 

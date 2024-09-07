@@ -62,6 +62,11 @@ pub enum Operation {
 type Pair = (usize, u64);
 type Business = [u64; 8];
 
+struct Shared<'a> {
+    monkeys: &'a [Monkey],
+    mutex: Mutex<Exclusive>,
+}
+
 struct Exclusive {
     pairs: Vec<Pair>,
     business: Business,
@@ -125,30 +130,28 @@ fn sequential(monkeys: &[Monkey], pairs: Vec<Pair>) -> Business {
 
 /// Play 10,000 rounds adjusting the worry level modulo the product of all the monkey's test values.
 fn parallel(monkeys: &[Monkey], pairs: Vec<Pair>) -> Business {
-    let business = [0; 8];
-    let exclusive = Exclusive { pairs, business };
-    let mutex = Mutex::new(exclusive);
+    let shared = Shared { monkeys, mutex: Mutex::new(Exclusive { pairs, business: [0; 8] }) };
 
     // Use as many cores as possible to parallelize the calculation.
-    spawn(|| worker(monkeys, &mutex));
+    spawn(|| worker(&shared));
 
-    mutex.into_inner().unwrap().business
+    shared.mutex.into_inner().unwrap().business
 }
 
 /// Multiple worker functions are executed in parallel, one per thread.
-fn worker(monkeys: &[Monkey], mutex: &Mutex<Exclusive>) {
-    let product: u64 = monkeys.iter().map(|m| m.test).product();
+fn worker(shared: &Shared<'_>) {
+    let product: u64 = shared.monkeys.iter().map(|m| m.test).product();
 
     loop {
         // Take an item from the queue until empty, using the mutex to allow access
         // to a single thread at a time.
-        let Some(pair) = mutex.lock().unwrap().pairs.pop() else {
+        let Some(pair) = shared.mutex.lock().unwrap().pairs.pop() else {
             break;
         };
 
-        let extra = play(monkeys, 10000, |x| x % product, pair);
+        let extra = play(shared.monkeys, 10000, |x| x % product, pair);
 
-        let mut exclusive = mutex.lock().unwrap();
+        let mut exclusive = shared.mutex.lock().unwrap();
         exclusive.business.iter_mut().enumerate().for_each(|(i, b)| *b += extra[i]);
     }
 }

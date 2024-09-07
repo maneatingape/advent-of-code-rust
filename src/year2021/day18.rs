@@ -28,7 +28,7 @@
 //! `2i + 1`, right child at index `2i + 2` and parent at index `i / 2`. As leaf nodes are
 //! always greater than or equal to zero, `-1` is used as a special sentinel value for non-leaf nodes.
 use crate::util::thread::*;
-use std::sync::Mutex;
+use std::sync::atomic::{AtomicI32, Ordering};
 
 type Snailfish = [i32; 63];
 
@@ -85,21 +85,20 @@ pub fn part2(input: &[Snailfish]) -> i32 {
 
     // Use as many cores as possible to parallelize the calculation,
     // breaking the work into roughly equally size batches.
-    let mutex = Mutex::new(0);
-    spawn_batches(pairs, |batch| worker(&batch, &mutex));
-    mutex.into_inner().unwrap()
+    let shared = AtomicI32::new(0);
+    spawn_batches(pairs, |batch| worker(&shared, &batch));
+    shared.load(Ordering::Relaxed)
 }
 
 /// Pair addition is independent so we can parallelize across multiple threads.
-fn worker(batch: &[(&Snailfish, &Snailfish)], mutex: &Mutex<i32>) {
+fn worker(shared: &AtomicI32, batch: &[(&Snailfish, &Snailfish)]) {
     let mut partial = 0;
 
     for (a, b) in batch {
         partial = partial.max(magnitude(&mut add(a, b)));
     }
 
-    let mut result = mutex.lock().unwrap();
-    *result = result.max(partial);
+    shared.fetch_max(partial, Ordering::Relaxed);
 }
 
 /// Add two snailfish numbers.

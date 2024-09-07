@@ -16,6 +16,11 @@ pub struct Result {
     power: i32,
 }
 
+struct Shared {
+    sat: Vec<i32>,
+    mutex: Mutex<Vec<Result>>,
+}
+
 pub fn parse(input: &str) -> Vec<Result> {
     let grid_serial_number: i32 = input.signed();
 
@@ -45,9 +50,9 @@ pub fn parse(input: &str) -> Vec<Result> {
     // * 2, 6, 10, ..
     // * 3, 7, 11, ..
     // * 4, 8, 12, ..
-    let mutex = Mutex::new(Vec::new());
-    spawn_batches((1..301).collect(), |batch| worker(batch, &sat, &mutex));
-    mutex.into_inner().unwrap()
+    let shared = Shared { sat, mutex: Mutex::new(Vec::new()) };
+    spawn_batches((1..301).collect(), |batch| worker(&shared, batch));
+    shared.mutex.into_inner().unwrap()
 }
 
 pub fn part1(input: &[Result]) -> String {
@@ -60,16 +65,16 @@ pub fn part2(input: &[Result]) -> String {
     format!("{x},{y},{size}")
 }
 
-fn worker(batch: Vec<usize>, sat: &[i32], mutex: &Mutex<Vec<Result>>) {
+fn worker(shared: &Shared, batch: Vec<usize>) {
     let result: Vec<_> = batch
         .into_iter()
         .map(|size| {
-            let (power, x, y) = square(sat, size);
+            let (power, x, y) = square(&shared.sat, size);
             Result { x, y, size, power }
         })
         .collect();
 
-    mutex.lock().unwrap().extend(result);
+    shared.mutex.lock().unwrap().extend(result);
 }
 
 /// Find the (x,y) coordinates and max power for a square of the specified size.

@@ -13,6 +13,7 @@ use std::sync::Mutex;
 pub struct Shared {
     prefix: String,
     counter: AtomicUsize,
+    mutex: Mutex<Exclusive>,
 }
 
 /// Regular data structures need to be protected by a mutex.
@@ -22,14 +23,16 @@ struct Exclusive {
 
 /// Parallelize the hashing as each row is independent.
 pub fn parse(input: &str) -> Vec<u8> {
-    let shared = Shared { prefix: input.trim().to_owned(), counter: AtomicUsize::new(0) };
-    let exclusive = Exclusive { grid: vec![0; 0x4000] };
-    let mutex = Mutex::new(exclusive);
+    let shared = Shared {
+        prefix: input.trim().to_owned(),
+        counter: AtomicUsize::new(0),
+        mutex: Mutex::new(Exclusive { grid: vec![0; 0x4000] }),
+    };
 
     // Use as many cores as possible to parallelize the hashing.
-    spawn(|| worker(&shared, &mutex));
+    spawn(|| worker(&shared));
 
-    mutex.into_inner().unwrap().grid
+    shared.mutex.into_inner().unwrap().grid
 }
 
 pub fn part1(input: &[u8]) -> u32 {
@@ -53,7 +56,7 @@ pub fn part2(input: &[u8]) -> u32 {
 
 /// Each worker thread chooses the next available index then computes the hash and patches the
 /// final vec with the result.
-fn worker(shared: &Shared, mutex: &Mutex<Exclusive>) {
+fn worker(shared: &Shared) {
     loop {
         let index = shared.counter.fetch_add(1, Ordering::Relaxed);
         if index >= 128 {
@@ -64,7 +67,7 @@ fn worker(shared: &Shared, mutex: &Mutex<Exclusive>) {
         let start = index * 128;
         let end = start + 128;
 
-        let mut exclusive = mutex.lock().unwrap();
+        let mut exclusive = shared.mutex.lock().unwrap();
         exclusive.grid[start..end].copy_from_slice(&row);
     }
 }
