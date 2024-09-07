@@ -5,7 +5,7 @@ pie
     "Day 5" : 36000
     "Day 22" : 36000
     "Day 15" : 26000
-    "Others" : 5236
+    "Others" : 5387
 -->
 <svg viewBox="0 0 1350 450" preserveAspectRatio="xMidYMin" xmlns="http://www.w3.org/2000/svg">
 	<style>
@@ -17,14 +17,14 @@ pie
 	</style>
 	<g transform="translate(675,225)">
 		<circle class="pieOuterCircle" cx="0" cy="0" r="186"/>
-		<path class="pieCircle" d="M0,-185A185,185,0,0,1,150.541,107.529L0,0Z" fill="#7cb5ec"/>
-		<path class="pieCircle" d="M150.541,107.529A185,185,0,0,1,-175,60L0,0Z" fill="#90ed7d"/>
-		<path class="pieCircle" d="M-175,60A185,185,0,0,1,-57.962,-175.685L0,0Z" fill="#f7a35c"/>
-		<path class="pieCircle" d="M-57.962,-175.685A185,185,0,0,1,0,-185L0,0Z" fill="#c6cdd5"/>
-		<text class="slice" style="text-anchor: middle;" transform="translate(123.37196907841528,-63.489524692775476)">35%</text>
-		<text class="slice" style="text-anchor: middle;" transform="translate(-20.044770317095264,137.29446340961786)">35%</text>
-		<text class="slice" style="text-anchor: middle;" transform="translate(-124.27114414970384,-61.710981451630865)">25%</text>
-		<text class="slice" style="text-anchor: middle;" transform="translate(-22.014665770132076,-136.99239756654154)">5%</text>
+		<path class="pieCircle" d="M0,-185A185,185,0,0,1,150.884,107.047L0,0Z" fill="#7cb5ec"/>
+		<path class="pieCircle" d="M150.884,107.047A185,185,0,0,1,-174.612,61.119L0,0Z" fill="#90ed7d"/>
+		<path class="pieCircle" d="M-174.612,61.119A185,185,0,0,1,-59.49,-175.174L0,0Z" fill="#f7a35c"/>
+		<path class="pieCircle" d="M-59.49,-175.174A185,185,0,0,1,0,-185L0,0Z" fill="#c6cdd5"/>
+		<text class="slice" style="text-anchor: middle;" transform="translate(123.27022509526007,-63.68684404933184)">35%</text>
+		<text class="slice" style="text-anchor: middle;" transform="translate(-19.385509928176543,137.38909893009915)">35%</text>
+		<text class="slice" style="text-anchor: middle;" transform="translate(-124.73386631798299,-60.77026487820792)">25%</text>
+		<text class="slice" style="text-anchor: middle;" transform="translate(-22.611149862440893,-136.89520956519348)">5%</text>
 		<text class="pieTitleText" x="0" y="-200">Year 2017 benchmark time by % of total</text>
 		<g transform="translate(216,-44)">
 			<rect height="18" style="fill: rgb(124, 181, 236); stroke: rgb(124, 181, 236);" width="18"/>

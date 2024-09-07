@@ -2,9 +2,9 @@
 %%{init: {"themeVariables": { "pie1": "#7cb5ec", "pie2": "#90ed7d", "pie3": "#c6cdd5"}}}%%
 pie
     title Year 2015 benchmark time by % of total
-    "Day 4" : 13000
-    "Day 6" : 5780
-    "Others" : 3037
+    "Day 4" : 14000
+    "Day 6" : 6572
+    "Others" : 3124
 -->
 <svg viewBox="0 0 1350 450" preserveAspectRatio="xMidYMin" xmlns="http://www.w3.org/2000/svg">
 	<style>
@@ -16,12 +16,12 @@ pie
 	</style>
 	<g transform="translate(675,225)">
 		<circle class="pieOuterCircle" cx="0" cy="0" r="186"/>
-		<path class="pieCircle" d="M0,-185A185,185,0,1,1,-104.816,152.442L0,0Z" fill="#7cb5ec"/>
-		<path class="pieCircle" d="M-104.816,152.442A185,185,0,0,1,-141.953,-118.635L0,0Z" fill="#90ed7d"/>
-		<path class="pieCircle" d="M-141.953,-118.635A185,185,0,0,1,0,-185L0,0Z" fill="#c6cdd5"/>
-		<text class="slice" style="text-anchor: middle;" transform="translate(132.50484456818606,41.15857949396277)">60%</text>
-		<text class="slice" style="text-anchor: middle;" transform="translate(-137.46600073565628,18.832449170103825)">26%</text>
-		<text class="slice" style="text-anchor: middle;" transform="translate(-58.76249419184524,-125.6922104839968)">14%</text>
+		<path class="pieCircle" d="M0,-185A185,185,0,1,1,-99.928,155.69L0,0Z" fill="#7cb5ec"/>
+		<path class="pieCircle" d="M-99.928,155.69A185,185,0,0,1,-136.312,-125.077L0,0Z" fill="#90ed7d"/>
+		<path class="pieCircle" d="M-136.312,-125.077A185,185,0,0,1,0,-185L0,0Z" fill="#c6cdd5"/>
+		<text class="slice" style="text-anchor: middle;" transform="translate(133.1409519363647,39.051881100385195)">59%</text>
+		<text class="slice" style="text-anchor: middle;" transform="translate(-137.5995067078533,17.83082313734948)">28%</text>
+		<text class="slice" style="text-anchor: middle;" transform="translate(-55.838070931476764,-127.01839368631367)">13%</text>
 		<text class="pieTitleText" x="0" y="-200">Year 2015 benchmark time by % of total</text>
 		<g transform="translate(216,-33)">
 			<rect height="18" style="fill: rgb(124, 181, 236); stroke: rgb(124, 181, 236);" width="18"/>

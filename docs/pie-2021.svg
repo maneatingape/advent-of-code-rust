@@ -2,10 +2,10 @@
 %%{init: {"themeVariables": { "pie1": "#c6cdd5", "pie2": "#7cb5ec", "pie3": "#90ed7d", "pie4": "#f7a35c"}}}%%
 pie
     title Year 2021 benchmark time by % of total
-    "Others" : 2832
-    "Day 15" : 2567
-    "Day 20" : 2075
-    "Day 23" : 1717
+    "Others" : 2796
+    "Day 15" : 2403
+    "Day 20" : 2066
+    "Day 23" : 1714
 -->
 <svg viewBox="0 0 1350 450" preserveAspectRatio="xMidYMin" xmlns="http://www.w3.org/2000/svg">
 	<style>
@@ -17,14 +17,14 @@ pie
 	</style>
 	<g transform="translate(675,225)">
 		<circle class="pieOuterCircle" cx="0" cy="0" r="186"/>
-		<path class="pieCircle" d="M0,-185A185,185,0,0,1,172.798,66.075L0,0Z" fill="#c6cdd5"/>
-		<path class="pieCircle" d="M172.798,66.075A185,185,0,0,1,-96.585,157.785L0,0Z" fill="#7cb5ec"/>
-		<path class="pieCircle" d="M-96.585,157.785A185,185,0,0,1,-170.611,-71.533L0,0Z" fill="#90ed7d"/>
-		<path class="pieCircle" d="M-170.611,-71.533A185,185,0,0,1,0,-185L0,0Z" fill="#f7a35c"/>
-		<text class="slice" transform="translate(114.29666967705369,-78.66278536089652)">31%</text>
-		<text class="slice" transform="translate(44.7166598990376,131.34680364391744)">28%</text>
-		<text class="slice" transform="translate(-132.040920984186,42.623440565584964)">23%</text>
-		<text class="slice" transform="translate(-76.836265954274,-115.53246614784987)">19%</text>
+		<path class="pieCircle" d="M0,-185A185,185,0,0,1,171.406,69.606L0,0Z" fill="#c6cdd5"/>
+		<path class="pieCircle" d="M171.406,69.606A185,185,0,0,1,-88.122,162.664L0,0Z" fill="#7cb5ec"/>
+		<path class="pieCircle" d="M-88.122,162.664A185,185,0,0,1,-172.387,-67.14L0,0Z" fill="#90ed7d"/>
+		<path class="pieCircle" d="M-172.387,-67.14A185,185,0,0,1,0,-185L0,0Z" fill="#f7a35c"/>
+		<text class="slice" style="text-anchor: middle;" transform="translate(115.09768955775434,-77.48602685947193)">31%</text>
+		<text class="slice" style="text-anchor: middle;" transform="translate(46.83130231868328,130.6077778049075)">27%</text>
+		<text class="slice" style="text-anchor: middle;" transform="translate(-130.2685195344226,47.76688516440814)">23%</text>
+		<text class="slice" style="text-anchor: middle;" transform="translate(-78.30957468981957,-114.53895848967535)">19%</text>
 		<text class="pieTitleText" x="0" y="-200">Year 2021 benchmark time by % of total</text>
 		<g transform="translate(216,-44)">
 			<rect height="18" style="fill: rgb(198, 205, 213); stroke: rgb(198, 205, 213);" width="18"/>

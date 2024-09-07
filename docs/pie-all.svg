@@ -2,10 +2,10 @@
 %%{init: {"themeVariables": { "pie1": "#7cb5ec", "pie2": "#90ed7d", "pie3": "#f7a35c", "pie4": "#e4d354", "pie5": "#e4c4fb", "pie6": "#c6cdd5"}}}%%
 pie
 	title Each year benchmark time by % of total
-	"Year 2020" : 286
-	"Year 2016" : 133
+	"Year 2020" : 272
+	"Year 2016" : 120
     "Year 2017" : 102
-    "Year 2018" : 36
+    "Year 2018" : 35
 	"Years 2015, 2019, 2021, 2022, 2023" : 65
 -->
 <svg viewBox="0 0 1350 450" preserveAspectRatio="xMidYMin" xmlns="http://www.w3.org/2000/svg">
@@ -18,16 +18,16 @@ pie
 	</style>
 	<g transform="translate(675,225)">
 		<circle class="pieOuterCircle" cx="0" cy="0" r="186"/>
-		<path class="pieCircle" d="M0,-185A185,185,0,0,1,46.225,179.132L0,0Z" fill="#7cb5ec"/>
-		<path class="pieCircle" d="M46.225,179.132A185,185,0,0,1,-164.109,85.4L0,0Z" fill="#90ed7d"/>
-		<path class="pieCircle" d="M-164.109,85.4A185,185,0,0,1,-157.665,-96.782L0,0Z" fill="#f7a35c"/>
-		<path class="pieCircle" d="M-157.665,-96.782A185,185,0,0,1,-65.803,-172.901L0,0Z" fill="#e4d354"/>
-		<path class="pieCircle" d="M-65.803,-172.901A185,185,0,0,1,0,-185L0,0Z" fill="#e4c4fb"/>
-		<text class="slice" style="text-anchor: middle;" transform="translate(137.6453495395421,-17.473415525800178)">46%</text>
-		<text class="slice" style="text-anchor: middle;" transform="translate(-56.47738671190331,126.73542239718984)">21%</text>
-		<text class="slice" style="text-anchor: middle;" transform="translate(-138.66328927605264,-4.904559832007835)">16%</text>
-		<text class="slice" style="text-anchor: middle;" transform="translate(-88.52894547661712,-106.83720472194203)">10%</text>
-		<text class="slice" style="text-anchor: middle;" transform="translate(-25.08991896841827,-136.46266326786315)">6%</text>
+		<path class="pieCircle" d="M0,-185A185,185,0,0,1,48.354,178.569L0,0Z" fill="#7cb5ec"/>
+		<path class="pieCircle" d="M48.354,178.569A185,185,0,0,1,-156.159,99.194L0,0Z" fill="#90ed7d"/>
+		<path class="pieCircle" d="M-156.159,99.194A185,185,0,0,1,-161.184,-90.8L0,0Z" fill="#f7a35c"/>
+		<path class="pieCircle" d="M-161.184,-90.8A185,185,0,0,1,-66.937,-172.466L0,0Z" fill="#e4d354"/>
+		<path class="pieCircle" d="M-66.937,-172.466A185,185,0,0,1,0,-185L0,0Z" fill="#e4c4fb"/>
+		<text class="slice" style="text-anchor: middle;" transform="translate(137.53890821276758,-18.292381683091275)">46%</text>
+		<text class="slice" style="text-anchor: middle;" transform="translate(-50.20277472318857,129.3493096622196)">20%</text>
+		<text class="slice" style="text-anchor: middle;" transform="translate(-138.7014885169856,3.6687304578717295)">17%</text>
+		<text class="slice" style="text-anchor: middle;" transform="translate(-90.86192683490827,-104.86025344165337)">11%</text>
+		<text class="slice" style="text-anchor: middle;" transform="translate(-25.537675935439314,-136.37957914518026)">6%</text>
 		<text class="pieTitleText" x="0" y="-200">Each year benchmark time by % of total</text>
 		<g transform="translate(216,-55)">
 			<rect height="18" style="fill: rgb(124, 181, 236); stroke: rgb(124, 181, 236);" width="18"/>
