@@ -107,7 +107,7 @@ mod simd {
     use crate::util::md5::simd::hash;
     use std::simd::{LaneCount, SupportedLaneCount};
 
-    #[allow(clippy::needless_range_loop)]
+    #[expect(clippy::needless_range_loop)]
     fn check_hash_simd<const N: usize>(
         buffers: &mut [[u8; 64]],
         size: usize,

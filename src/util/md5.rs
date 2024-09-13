@@ -155,7 +155,7 @@ pub mod simd {
     use std::simd::{LaneCount, Simd, SupportedLaneCount};
 
     #[inline]
-    #[allow(clippy::too_many_lines)]
+    #[expect(clippy::too_many_lines)]
     pub fn hash<const N: usize>(
         buffers: &mut [[u8; 64]],
         size: usize,

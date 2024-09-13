@@ -83,7 +83,7 @@ fn worker(shared: &Shared<'_>) {
 
 /// Use SIMD to compute hashes in parallel in blocks of 32.
 #[cfg(feature = "simd")]
-#[allow(clippy::needless_range_loop)]
+#[expect(clippy::needless_range_loop)]
 fn worker(shared: &Shared<'_>) {
     let mut result = ([0; 32], [0; 32], [0; 32], [0; 32]);
     let mut buffers = [[0; 64]; 32];

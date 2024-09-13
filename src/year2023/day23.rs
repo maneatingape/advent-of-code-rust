@@ -119,7 +119,7 @@ pub fn part2(input: &Input) -> u32 {
     input.extra + state.result
 }
 
-#[allow(clippy::needless_range_loop)]
+#[expect(clippy::needless_range_loop)]
 fn graph_to_grid(
     start: Point,
     end: Point,
