@@ -53,7 +53,7 @@ Place input files in `input/yearYYYY/dayDD.txt` including leading zeroes. For ex
 ## Performance
 
 Benchmarks are measured using the built-in `cargo bench` tool run on an [Apple M2 Max][apple-link].
-All 225 solutions from 2023 to 2015 complete sequentially in **594 milliseconds**.
+All 225 solutions from 2023 to 2015 complete sequentially in **581 milliseconds**.
 Interestingly 84% of the total time is spent on just 9 solutions.
 Performance is reasonable even on older hardware, for example a 2011 MacBook Pro with an
 [Intel i7-2720QM][intel-link] processor takes 3.5 seconds to run the same 225 solutions.
@@ -68,7 +68,7 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 | [2020](#2020) | 272 |
 | [2019](#2019) | 16 |
 | [2018](#2018) | 35 |
-| [2017](#2017) | 102 |
+| [2017](#2017) | 89 |
 | [2016](#2016) | 120 |
 | [2015](#2015) | 24 |
 
@@ -274,7 +274,7 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 | 2 | [Corruption Checksum](https://adventofcode.com/2017/day/2) | [Source](src/year2017/day02.rs) | 2 |
 | 3 | [Spiral Memory](https://adventofcode.com/2017/day/3) | [Source](src/year2017/day03.rs) | 2 |
 | 4 | [High-Entropy Passphrases](https://adventofcode.com/2017/day/4) | [Source](src/year2017/day04.rs) | 98 |
-| 5 | [A Maze of Twisty Trampolines, All Alike](https://adventofcode.com/2017/day/5) | [Source](src/year2017/day05.rs) | 36000 |
+| 5 | [A Maze of Twisty Trampolines, All Alike](https://adventofcode.com/2017/day/5) | [Source](src/year2017/day05.rs) | 22000 |
 | 6 | [Memory Reallocation](https://adventofcode.com/2017/day/6) | [Source](src/year2017/day06.rs) | 81 |
 | 7 | [Recursive Circus](https://adventofcode.com/2017/day/7) | [Source](src/year2017/day07.rs) | 93 |
 | 8 | [I Heard You Like Registers](https://adventofcode.com/2017/day/8) | [Source](src/year2017/day08.rs) | 47 |

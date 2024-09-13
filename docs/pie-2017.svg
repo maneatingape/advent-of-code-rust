@@ -2,9 +2,9 @@
 %%{init: {"themeVariables": { "pie1": "#7cb5ec", "pie2": "#90ed7d", "pie3": "#f7a35c", "pie4": "#c6cdd5"}}}%%
 pie
     title Year 2017 benchmark time by % of total
-    "Day 5" : 36000
     "Day 22" : 36000
     "Day 15" : 26000
+    "Day 5" : 22000
     "Others" : 5387
 -->
 <svg viewBox="0 0 1350 450" preserveAspectRatio="xMidYMin" xmlns="http://www.w3.org/2000/svg">
@@ -17,30 +17,31 @@ pie
 	</style>
 	<g transform="translate(675,225)">
 		<circle class="pieOuterCircle" cx="0" cy="0" r="186"/>
-		<path class="pieCircle" d="M0,-185A185,185,0,0,1,150.884,107.047L0,0Z" fill="#7cb5ec"/>
-		<path class="pieCircle" d="M150.884,107.047A185,185,0,0,1,-174.612,61.119L0,0Z" fill="#90ed7d"/>
-		<path class="pieCircle" d="M-174.612,61.119A185,185,0,0,1,-59.49,-175.174L0,0Z" fill="#f7a35c"/>
-		<path class="pieCircle" d="M-59.49,-175.174A185,185,0,0,1,0,-185L0,0Z" fill="#c6cdd5"/>
-		<text class="slice" style="text-anchor: middle;" transform="translate(123.27022509526007,-63.68684404933184)">35%</text>
-		<text class="slice" style="text-anchor: middle;" transform="translate(-19.385509928176543,137.38909893009915)">35%</text>
-		<text class="slice" style="text-anchor: middle;" transform="translate(-124.73386631798299,-60.77026487820792)">25%</text>
-		<text class="slice" style="text-anchor: middle;" transform="translate(-22.611149862440893,-136.89520956519348)">5%</text>
+		<path class="pieCircle" d="M0,-185A185,185,0,0,1,106.145,151.52L0,0Z" fill="#7cb5ec"/>
+		<path class="pieCircle" d="M106.145,151.52A185,185,0,0,1,-173.51,64.181L0,0Z" fill="#90ed7d"/>
+		<path class="pieCircle" d="M-173.51,64.181A185,185,0,0,1,-68.39,-171.895L0,0Z" fill="#f7a35c"/>
+		<path class="pieCircle" d="M-68.39,-171.895A185,185,0,0,1,0,-185L0,0Z" fill="#c6cdd5"/>
+		<text class="slice" style="text-anchor: middle;" transform="translate(132.3236843880879,-41.737334006398854)">40%</text>
+		<text class="slice" style="text-anchor: middle;" transform="translate(-41.36279061783987,132.44123999836583)">29%</text>
+		<text class="slice" style="text-anchor: middle;" transform="translate(-126.75198587075634,-56.440203559338684)">25%</text>
+		<text class="slice" style="text-anchor: middle;" transform="translate(-26.113057520486457,-136.27057909516552)">6%</text>
 		<text class="pieTitleText" x="0" y="-200">Year 2017 benchmark time by % of total</text>
 		<g transform="translate(216,-44)">
 			<rect height="18" style="fill: rgb(124, 181, 236); stroke: rgb(124, 181, 236);" width="18"/>
-			<text x="22" y="14">Day 5</text>
+			<text x="22" y="14">Day 22</text>
 		</g>
 		<g transform="translate(216,-22)">
 			<rect height="18" style="fill: rgb(144, 237, 125); stroke: rgb(144, 237, 125);" width="18"/>
-			<text x="22" y="14">Day 22</text>
+			<text x="22" y="14">Day 15</text>
 		</g>
 		<g transform="translate(216,0)">
 			<rect height="18" style="fill: rgb(247, 163, 92); stroke: rgb(247, 163, 92);" width="18"/>
-			<text x="22" y="14">Day 15</text>
+			<text x="22" y="14">Day 5</text>
 		</g>
 		<g transform="translate(216,22)">
 			<rect height="18" style="fill: rgb(198, 205, 213); stroke: rgb(198, 205, 213);" width="18"/>
 			<text x="22" y="14">Others</text>
 		</g>
+	</g>
 	</g>
 </svg>
