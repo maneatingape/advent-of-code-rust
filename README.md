@@ -53,7 +53,7 @@ Place input files in `input/yearYYYY/dayDD.txt` including leading zeroes. For ex
 ## Performance
 
 Benchmarks are measured using the built-in `cargo bench` tool run on an [Apple M2 Max][apple-link].
-All 225 solutions from 2023 to 2015 complete sequentially in **581 milliseconds**.
+All 225 solutions from 2023 to 2015 complete sequentially in **580 milliseconds**.
 Interestingly 84% of the total time is spent on just 9 solutions.
 Performance is reasonable even on older hardware, for example a 2011 MacBook Pro with an
 [Intel i7-2720QM][intel-link] processor takes 3.5 seconds to run the same 225 solutions.
@@ -62,7 +62,7 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 
 | Year | Benchmark (ms) |
 | --- | --: |
-| [2023](#2023) | 7 |
+| [2023](#2023) | 6 |
 | [2022](#2022) | 9 |
 | [2021](#2021) | 9 |
 | [2020](#2020) | 272 |
@@ -94,7 +94,7 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 | 14 | [Parabolic Reflector Dish](https://adventofcode.com/2023/day/14) | [Source](src/year2023/day14.rs) | 632 |
 | 15 | [Lens Library](https://adventofcode.com/2023/day/15) | [Source](src/year2023/day15.rs) | 84 |
 | 16 | [The Floor Will Be Lava](https://adventofcode.com/2023/day/16) | [Source](src/year2023/day16.rs) | 826 |
-| 17 | [Clumsy Crucible](https://adventofcode.com/2023/day/17) | [Source](src/year2023/day17.rs) | 2568 |
+| 17 | [Clumsy Crucible](https://adventofcode.com/2023/day/17) | [Source](src/year2023/day17.rs) | 2270 |
 | 18 | [Lavaduct Lagoon](https://adventofcode.com/2023/day/18) | [Source](src/year2023/day18.rs) | 17 |
 | 19 | [Aplenty](https://adventofcode.com/2023/day/19) | [Source](src/year2023/day19.rs) | 100 |
 | 20 | [Pulse Propagation](https://adventofcode.com/2023/day/20) | [Source](src/year2023/day20.rs) | 6 |

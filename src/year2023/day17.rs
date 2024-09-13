@@ -30,51 +30,53 @@ use crate::util::grid::*;
 use crate::util::parse::*;
 
 /// Parse the input into a 2D grid of `u8` then convert to `u32` for convenience.
-pub fn parse(input: &str) -> Grid<u32> {
+pub fn parse(input: &str) -> Grid<i32> {
     let Grid { width, height, bytes } = Grid::parse(input);
-    let bytes = bytes.iter().map(|b| b.to_decimal() as u32).collect();
+    let bytes = bytes.iter().map(|b| b.to_decimal() as i32).collect();
     Grid { width, height, bytes }
 }
 
 /// Search with a maximum of 3 steps in any direction.
-pub fn part1(grid: &Grid<u32>) -> u32 {
+pub fn part1(grid: &Grid<i32>) -> i32 {
     astar::<1, 3>(grid)
 }
 
 /// Search with a minimum of 4 and maximum of 10 steps in any direction. Using const generics
 /// to specify the limits allows the compiler to optimize and unroll loops, speeding things
 /// up by about 25%, versus specifying the loop limits as regular parameters.
-pub fn part2(grid: &Grid<u32>) -> u32 {
+pub fn part2(grid: &Grid<i32>) -> i32 {
     astar::<4, 10>(grid)
 }
 
 /// Optimized A* search.
-fn astar<const L: usize, const U: usize>(grid: &Grid<u32>) -> u32 {
-    let width = grid.width as usize;
-    let height = grid.height as usize;
+fn astar<const L: i32, const U: i32>(grid: &Grid<i32>) -> i32 {
+    let size = grid.width;
+    let stride = size as usize;
     let heat = &grid.bytes;
 
     let mut index = 0;
     let mut todo = (0..100).map(|_| Vec::with_capacity(1000)).collect::<Vec<_>>();
-    let mut cost = vec![[0_u32; 2]; heat.len()];
+    let mut cost = vec![[i32::MAX; 2]; heat.len()];
 
     // Start from the top left corner checking both vertical and horizontal directions.
     todo[0].push((0, 0, 0));
     todo[0].push((0, 0, 1));
 
+    cost[0][0] = 0;
+    cost[0][1] = 0;
+
     loop {
         // All items in the same bucket have the same priority.
         while let Some((x, y, direction)) = todo[index % 100].pop() {
             // Retrieve cost for our current location and direction.
-            let index = width * y + x;
+            let index = (size * y + x) as usize;
             let steps = cost[index][direction];
 
             // The heuristic is used as an index into the bucket priority queue.
-            let heuristic =
-                |x: usize, y: usize, cost: u32| (cost as usize + width - x + height - y) % 100;
+            let heuristic = |x: i32, y: i32, cost: i32| ((cost + 2 * size - x - y) % 100) as usize;
 
             // Check if we've reached the end.
-            if x == width - 1 && y == height - 1 {
+            if x == size - 1 && y == size - 1 {
                 return steps;
             }
 
@@ -83,90 +85,83 @@ fn astar<const L: usize, const U: usize>(grid: &Grid<u32>) -> u32 {
             if direction == 0 {
                 // We just moved vertically so now check both left and right directions.
 
-                // Left
-                {
-                    let mut index = index;
-                    let mut steps = steps;
+                // Each direction loop is the same:
+                // * Check to see if we gone out of bounds
+                // * Increase the cost by the "heat" of the square we've just moved into.
+                // * Check if we've already been to this location with a lower cost.
+                // * Add new state to priority queue.
 
-                    // Each direction loop is the same:
-                    // * Check to see if we gone out of bounds
-                    // * Increase the cost by the "heat" of the square we've just moved into.
-                    // * Check if we've already been to this location with a lower cost.
-                    // * Add new state to priority queue.
-                    for i in 1..=U {
-                        if i > x {
-                            break;
-                        }
+                // Right
+                let mut next = index;
+                let mut extra = steps;
 
-                        index -= 1;
-                        steps += heat[index];
+                for i in 1..=U {
+                    if x + i >= size {
+                        break;
+                    }
 
-                        if i >= L && (cost[index][1] == 0 || steps < cost[index][1]) {
-                            todo[heuristic(x - i, y, steps)].push((x - i, y, 1));
-                            cost[index][1] = steps;
-                        }
+                    next += 1;
+                    extra += heat[next];
+
+                    if i >= L && extra < cost[next][1] {
+                        todo[heuristic(x + i, y, extra)].push((x + i, y, 1));
+                        cost[next][1] = extra;
                     }
                 }
 
-                // Right
-                {
-                    let mut index = index;
-                    let mut steps = steps;
+                // Left
+                let mut next = index;
+                let mut extra = steps;
 
-                    for i in 1..=U {
-                        if x + i >= width {
-                            break;
-                        }
+                for i in 1..=U {
+                    if i > x {
+                        break;
+                    }
 
-                        index += 1;
-                        steps += heat[index];
+                    next -= 1;
+                    extra += heat[next];
 
-                        if i >= L && (cost[index][1] == 0 || steps < cost[index][1]) {
-                            todo[heuristic(x + i, y, steps)].push((x + i, y, 1));
-                            cost[index][1] = steps;
-                        }
+                    if i >= L && extra < cost[next][1] {
+                        todo[heuristic(x - i, y, extra)].push((x - i, y, 1));
+                        cost[next][1] = extra;
                     }
                 }
             } else {
                 // We just moved horizontally so now check both up and down directions.
 
-                // Up
-                {
-                    let mut index = index;
-                    let mut steps = steps;
+                // Down
+                let mut next = index;
+                let mut extra = steps;
 
-                    for i in 1..=U {
-                        if i > y {
-                            break;
-                        }
+                for i in 1..=U {
+                    if y + i >= size {
+                        break;
+                    }
 
-                        index -= width;
-                        steps += heat[index];
+                    next += stride;
+                    extra += heat[next];
 
-                        if i >= L && (cost[index][0] == 0 || steps < cost[index][0]) {
-                            todo[heuristic(x, y - i, steps)].push((x, y - i, 0));
-                            cost[index][0] = steps;
-                        }
+                    if i >= L && extra < cost[next][0] {
+                        todo[heuristic(x, y + i, extra)].push((x, y + i, 0));
+                        cost[next][0] = extra;
                     }
                 }
 
-                // Down
-                {
-                    let mut index = index;
-                    let mut steps = steps;
+                // Up
+                let mut next = index;
+                let mut extra = steps;
 
-                    for i in 1..=U {
-                        if y + i >= height {
-                            break;
-                        }
+                for i in 1..=U {
+                    if i > y {
+                        break;
+                    }
 
-                        index += width;
-                        steps += heat[index];
+                    next -= stride;
+                    extra += heat[next];
 
-                        if i >= L && (cost[index][0] == 0 || steps < cost[index][0]) {
-                            todo[heuristic(x, y + i, steps)].push((x, y + i, 0));
-                            cost[index][0] = steps;
-                        }
+                    if i >= L && extra < cost[next][0] {
+                        todo[heuristic(x, y - i, extra)].push((x, y - i, 0));
+                        cost[next][0] = extra;
                     }
                 }
             }
