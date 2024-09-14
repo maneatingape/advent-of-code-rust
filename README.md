@@ -53,7 +53,7 @@ Place input files in `input/yearYYYY/dayDD.txt` including leading zeroes. For ex
 ## Performance
 
 Benchmarks are measured using the built-in `cargo bench` tool run on an [Apple M2 Max][apple-link].
-All 225 solutions from 2023 to 2015 complete sequentially in **580 milliseconds**.
+All 225 solutions from 2023 to 2015 complete sequentially in **579 milliseconds**.
 Interestingly 84% of the total time is spent on just 9 solutions.
 Performance is reasonable even on older hardware, for example a 2011 MacBook Pro with an
 [Intel i7-2720QM][intel-link] processor takes 3.5 seconds to run the same 225 solutions.
@@ -63,7 +63,7 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 | Year | Benchmark (ms) |
 | --- | --: |
 | [2023](#2023) | 6 |
-| [2022](#2022) | 9 |
+| [2022](#2022) | 8 |
 | [2021](#2021) | 9 |
 | [2020](#2020) | 272 |
 | [2019](#2019) | 16 |
@@ -129,7 +129,7 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 | 17 | [Pyroclastic Flow](https://adventofcode.com/2022/day/17) | [Source](src/year2022/day17.rs) | 71 |
 | 18 | [Boiling Boulders](https://adventofcode.com/2022/day/18) | [Source](src/year2022/day18.rs) | 121 |
 | 19 | [Not Enough Minerals](https://adventofcode.com/2022/day/19) | [Source](src/year2022/day19.rs) | 74 |
-| 20 | [Grove Positioning System](https://adventofcode.com/2022/day/20) | [Source](src/year2022/day20.rs) | 5088 |
+| 20 | [Grove Positioning System](https://adventofcode.com/2022/day/20) | [Source](src/year2022/day20.rs) | 3785 |
 | 21 | [Monkey Math](https://adventofcode.com/2022/day/21) | [Source](src/year2022/day21.rs) | 64 |
 | 22 | [Monkey Map](https://adventofcode.com/2022/day/22) | [Source](src/year2022/day22.rs) | 61 |
 | 23 | [Unstable Diffusion](https://adventofcode.com/2022/day/23) | [Source](src/year2022/day23.rs) | 1521 |

@@ -2,7 +2,7 @@
 %%{init: {"themeVariables": { "pie1": "#7cb5ec", "pie2": "#90ed7d", "pie3": "#f7a35c", "pie4": "#c6cdd5"}}}%%
 pie
     title Year 2022 benchmark time by % of total
-    "Day 20" : 5088
+    "Day 20" : 3785
     "Day 23" : 1521
     "Day 11" : 1173
     "Others" : 1023
@@ -17,14 +17,14 @@ pie
 	</style>
 	<g transform="translate(675,225)">
 		<circle class="pieOuterCircle" cx="0" cy="0" r="186"/>
-		<path class="pieCircle" d="M0,-185A185,185,0,1,1,-86.93,163.304L0,0Z" fill="#7cb5ec"/>
-		<path class="pieCircle" d="M-86.93,163.304A185,185,0,0,1,-184.999,-0.693L0,0Z" fill="#90ed7d"/>
-		<path class="pieCircle" d="M-184.999,-0.693A185,185,0,0,1,-123.372,-137.857L0,0Z" fill="#f7a35c"/>
-		<path class="pieCircle" d="M-123.372,-137.857A185,185,0,0,1,0,-185L0,0Z" fill="#c6cdd5"/>
-		<text class="slice" style="text-anchor: middle;" transform="translate(134.6205439016916,33.598685385186165)">58%</text>
-		<text class="slice" style="text-anchor: middle;" transform="translate(-119.08255640430802,71.2103030481882)">17%</text>
-		<text class="slice" style="text-anchor: middle;" transform="translate(-126.56241528225802,-56.864026747331735)">13%</text>
-		<text class="slice" style="text-anchor: middle;" transform="translate(-49.52707207832234,-129.60953526399462)">12%</text>
+		<path class="pieCircle" d="M0,-185A185,185,0,1,1,-5.267,184.925L0,0Z" fill="#7cb5ec"/>
+		<path class="pieCircle" d="M-5.267,184.925A185,185,0,0,1,-178.375,49.065L0,0Z" fill="#90ed7d"/>
+		<path class="pieCircle" d="M-178.375,49.065A185,185,0,0,1,-139.814,-121.149L0,0Z" fill="#f7a35c"/>
+		<path class="pieCircle" d="M-139.814,-121.149A185,185,0,0,1,0,-185L0,0Z" fill="#c6cdd5"/>
+		<text class="slice" style="text-anchor: middle;" transform="translate(138.73593631536585,1.9754682226630806)">50%</text>
+		<text class="slice" style="text-anchor: middle;" transform="translate(-85.6629485311308,109.14862229525775)">20%</text>
+		<text class="slice" style="text-anchor: middle;" transform="translate(-135.3209416794942,-30.65624313210809)">16%</text>
+		<text class="slice" style="text-anchor: middle;" transform="translate(-57.63883305401162,-126.21143935543948)">14%</text>
 		<text class="pieTitleText" x="0" y="-200">Year 2022 benchmark time by % of total</text>
 		<g transform="translate(216,-44)">
 			<rect height="18" style="fill: rgb(124, 181, 236); stroke: rgb(124, 181, 236);" width="18"/>
