@@ -73,7 +73,13 @@ fn astar<const L: i32, const U: i32>(grid: &Grid<i32>) -> i32 {
             let steps = cost[index][direction];
 
             // The heuristic is used as an index into the bucket priority queue.
-            let heuristic = |x: i32, y: i32, cost: i32| ((cost + 2 * size - x - y) % 100) as usize;
+            // Prefer heading towards the bottom right corner, except if we're in the top left
+            // quadrant where all directions are considered equally. This prevents a pathological
+            // dual frontier on some inputs that takes twice the time.
+            let heuristic = |x: i32, y: i32, cost: i32| {
+                let priority = (2 * size - x - y).min(size + size / 2);
+                ((cost + priority) % 100) as usize
+            };
 
             // Check if we've reached the end.
             if x == size - 1 && y == size - 1 {
