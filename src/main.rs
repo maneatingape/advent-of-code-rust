@@ -29,8 +29,8 @@ fn main() {
         .chain(year2021())
         .chain(year2022())
         .chain(year2023())
-        .filter(|solution| year.is_none() || year == Some(solution.year))
-        .filter(|solution| day.is_none() || day == Some(solution.day));
+        .filter(|solution| year.is_none_or(|y: u32| y == solution.year))
+        .filter(|solution| day.is_none_or(|d: u32| d == solution.day));
 
     // Pretty print output and timing for each solution
     let mut solved = 0;
