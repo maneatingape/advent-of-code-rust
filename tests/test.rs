@@ -12,7 +12,7 @@
 //     456
 // }
 
-// use aoc::year2023::day00::*;
+// use aoc::year2024::day00::*;
 //
 // const EXAMPLE: &str = "";
 //
@@ -278,4 +278,8 @@ mod year2023 {
     mod day23_test;
     mod day24_test;
     mod day25_test;
+}
+
+mod year2024 {
+    mod day01_test;
 }

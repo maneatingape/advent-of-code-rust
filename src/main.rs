@@ -29,6 +29,7 @@ fn main() {
         .chain(year2021())
         .chain(year2022())
         .chain(year2023())
+        .chain(year2024())
         .filter(|solution| year.is_none_or(|y: u32| y == solution.year))
         .filter(|solution| day.is_none_or(|d: u32| d == solution.day));
 
@@ -356,4 +357,8 @@ fn year2023() -> Vec<Solution> {
         solution!(year2023, day24),
         solution!(year2023, day25),
     ]
+}
+
+fn year2024() -> Vec<Solution> {
+    vec![solution!(year2024, day01)]
 }

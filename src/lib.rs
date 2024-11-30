@@ -288,3 +288,8 @@ pub mod year2023 {
     pub mod day24;
     pub mod day25;
 }
+
+/// # Locate the Chief Historian in time for the big Christmas sleigh launch.
+pub mod year2024 {
+    pub mod day01;
+}

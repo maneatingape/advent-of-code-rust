@@ -290,3 +290,7 @@ mod year2023 {
     benchmark!(year2023, day24);
     benchmark!(year2023, day25);
 }
+
+mod year2024 {
+    benchmark!(year2024, day01);
+}

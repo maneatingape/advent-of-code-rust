@@ -1,6 +1,6 @@
 # Advent of Code [![checks-badge]][checks-link] [![docs-badge]][docs-link]
 
-Complete 2023 to 2015 entries written in Rust for the annual [Advent of Code] challenge,
+In progress 2024 and complete 2023 to 2015 entries written in Rust for the annual [Advent of Code] challenge,
 solving 450 stars in less than 1 second.
 
 ## Features
@@ -62,6 +62,7 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 
 | Year | Benchmark (ms) |
 | --- | --: |
+| [2024](#2024) | (in progress) |
 | [2023](#2023) | 6 |
 | [2022](#2022) | 8 |
 | [2021](#2021) | 9 |
@@ -71,6 +72,12 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 | [2017](#2017) | 89 |
 | [2016](#2016) | 120 |
 | [2015](#2015) | 24 |
+
+## 2024
+
+| Day | Problem | Solution | Benchmark (μs) |
+| --- | --- | --- | --: |
+| 1 | [Historian Hysteria](https://adventofcode.com/2024/day/1) | [Source](src/year2024/day01.rs) | 21 |
 
 ## 2023
 
