@@ -81,6 +81,7 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 | 2 | [Red-Nosed Reports](https://adventofcode.com/2024/day/2) | [Source](src/year2024/day02.rs) | 43 |
 | 3 | [Mull It Over](https://adventofcode.com/2024/day/3) | [Source](src/year2024/day03.rs) | 8 |
 | 4 | [Ceres Search](https://adventofcode.com/2024/day/4) | [Source](src/year2024/day04.rs) | 77 |
+| 5 | [Print Queue](https://adventofcode.com/2024/day/5) | [Source](src/year2024/day05.rs) | 18 |
 
 ## 2023
 
