@@ -86,7 +86,7 @@ pub fn parse(input: &str) -> Input {
 
 pub fn part1(input: &Input) -> String {
     let mut carts = input.carts.clone();
-    let mut occupied = input.grid.default_copy();
+    let mut occupied = input.grid.same_size_with(false);
 
     loop {
         // Turn order is important.
@@ -109,7 +109,7 @@ pub fn part1(input: &Input) -> String {
 
 pub fn part2(input: &Input) -> String {
     let mut carts = input.carts.clone();
-    let mut occupied = input.grid.default_copy();
+    let mut occupied = input.grid.same_size_with(false);
 
     while carts.len() > 1 {
         // Turn order is important.

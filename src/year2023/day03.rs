@@ -14,7 +14,7 @@ pub fn parse(input: &str) -> Input {
     // In order to tell if we've already seen a number before, store its index at the location
     // of every digit, using zero to indicate no value. For example:
     // `467..114..` => `1110022200`
-    let mut seen: Grid<usize> = grid.default_copy();
+    let mut seen: Grid<usize> = grid.same_size_with(0);
     // Stores each unique part number. The first value is a dummy placeholder.
     let mut parts = vec![0];
     let mut number = 0;

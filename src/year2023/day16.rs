@@ -44,10 +44,10 @@ struct Shared<'a> {
 pub fn parse(input: &str) -> Input {
     let grid = Grid::parse(input);
 
-    let mut up: Grid<i32> = grid.default_copy();
-    let mut down: Grid<i32> = grid.default_copy();
-    let mut left: Grid<i32> = grid.default_copy();
-    let mut right: Grid<i32> = grid.default_copy();
+    let mut up: Grid<i32> = grid.same_size_with(0);
+    let mut down: Grid<i32> = grid.same_size_with(0);
+    let mut left: Grid<i32> = grid.same_size_with(0);
+    let mut right: Grid<i32> = grid.same_size_with(0);
 
     for x in 0..grid.width {
         let mut last = -1;
@@ -151,8 +151,8 @@ fn count(input: &Input, start: Pair) -> usize {
     let Input { grid, up, down, left, right } = input;
 
     let mut todo = VecDeque::with_capacity(1_000);
-    let mut seen: Grid<u8> = grid.default_copy();
-    let mut energized: Grid<bool> = grid.default_copy();
+    let mut seen: Grid<u8> = grid.same_size_with(0);
+    let mut energized: Grid<bool> = grid.same_size_with(false);
 
     todo.push_back(start);
 

@@ -100,10 +100,10 @@ pub fn parse(input: &str) -> Input {
     }
 
     let mut rounded = Vec::new();
-    let mut north = grid.default_copy();
-    let mut west = grid.default_copy();
-    let mut south = grid.default_copy();
-    let mut east = grid.default_copy();
+    let mut north = grid.same_size_with(0);
+    let mut west = grid.same_size_with(0);
+    let mut south = grid.same_size_with(0);
+    let mut east = grid.same_size_with(0);
     let mut roll_north = Vec::new();
     let mut roll_west = Vec::new();
     let mut roll_south = Vec::new();

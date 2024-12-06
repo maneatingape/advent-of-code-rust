@@ -46,7 +46,7 @@ pub fn part2(input: &Input) -> u32 {
 fn bfs(input: &Input, end: u8) -> u32 {
     let (grid, start) = input;
     let mut todo = VecDeque::from([(*start, 0)]);
-    let mut visited = grid.default_copy::<bool>();
+    let mut visited = grid.same_size_with(false);
 
     while let Some((point, cost)) = todo.pop_front() {
         if grid[point] == end {

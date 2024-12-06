@@ -161,10 +161,10 @@ struct Shortcut {
 
 impl Shortcut {
     fn from(grid: &Grid<u8>) -> Self {
-        let mut up = copy(grid);
-        let mut down = copy(grid);
-        let mut left = copy(grid);
-        let mut right = copy(grid);
+        let mut up = grid.same_size_with(ORIGIN);
+        let mut down = grid.same_size_with(ORIGIN);
+        let mut left = grid.same_size_with(ORIGIN);
+        let mut right = grid.same_size_with(ORIGIN);
 
         for x in 0..grid.width {
             let mut last = Point::new(x, -1);
@@ -215,13 +215,5 @@ impl Shortcut {
         }
 
         Shortcut { up, down, left, right }
-    }
-}
-
-fn copy(grid: &Grid<u8>) -> Grid<Point> {
-    Grid {
-        width: grid.width,
-        height: grid.height,
-        bytes: vec![ORIGIN; (grid.width * grid.height) as usize],
     }
 }
