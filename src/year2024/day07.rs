@@ -81,10 +81,17 @@ pub fn part2(input: &Input) -> u64 {
 }
 
 fn valid(terms: &[u64], test_value: u64, index: usize, concat: bool) -> bool {
-    (test_value == 0)
-        || (concat
-            && test_value % next_power_of_ten(terms[index]) == terms[index]
-            && valid(terms, test_value / next_power_of_ten(terms[index]), index - 1, concat))
+    if test_value == 0 {
+        return index == 0;
+    }
+
+    if index == 0 {
+        return false;
+    }
+
+    (concat
+        && test_value % next_power_of_ten(terms[index]) == terms[index]
+        && valid(terms, test_value / next_power_of_ten(terms[index]), index - 1, concat))
         || (test_value % terms[index] == 0
             && valid(terms, test_value / terms[index], index - 1, concat))
         || (test_value >= terms[index]
