@@ -31,13 +31,9 @@
 //! ```none
 //!     Test Value: 2
 //!     Equation: 2
-//!     Addition is possible
-//!     Multiplication is possible
-//!     Concatenation is possible
 //! ```
 //!
-//! Following the addition or concatentation branches results in a test value of 0 which means
-//! that all terms have been applied successfully and the equation is valid.
+//! The test value is equal to the last term which means that the equation is valid.
 //!
 //! Inverse concenation can be implemented without time consuming conversion to or from
 //! strings by dividing the left term by the next power of ten greater than the right term.
@@ -81,29 +77,26 @@ pub fn part2(input: &Input) -> u64 {
 }
 
 fn valid(terms: &[u64], test_value: u64, index: usize, concat: bool) -> bool {
-    if test_value == 0 {
-        return index == 0;
+    if index == 1 {
+        test_value == terms[1]
+    } else {
+        (concat
+            && test_value % next_power_of_ten(terms[index]) == terms[index]
+            && valid(terms, test_value / next_power_of_ten(terms[index]), index - 1, concat))
+            || (test_value % terms[index] == 0
+                && valid(terms, test_value / terms[index], index - 1, concat))
+            || (test_value >= terms[index]
+                && valid(terms, test_value - terms[index], index - 1, concat))
     }
-
-    if index == 0 {
-        return false;
-    }
-
-    (concat
-        && test_value % next_power_of_ten(terms[index]) == terms[index]
-        && valid(terms, test_value / next_power_of_ten(terms[index]), index - 1, concat))
-        || (test_value % terms[index] == 0
-            && valid(terms, test_value / terms[index], index - 1, concat))
-        || (test_value >= terms[index]
-            && valid(terms, test_value - terms[index], index - 1, concat))
 }
 
+#[inline]
 fn next_power_of_ten(n: u64) -> u64 {
-    let mut power = 10;
-
-    while power <= n {
-        power *= 10;
+    if n < 10 {
+        10
+    } else if n < 100 {
+        100
+    } else {
+        1000
     }
-
-    power
 }

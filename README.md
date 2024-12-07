@@ -78,7 +78,7 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 | 4 | [Ceres Search](https://adventofcode.com/2024/day/4) | [Source](src/year2024/day04.rs) | 77 |
 | 5 | [Print Queue](https://adventofcode.com/2024/day/5) | [Source](src/year2024/day05.rs) | 18 |
 | 6 | [Guard Gallivant](https://adventofcode.com/2024/day/6) | [Source](src/year2024/day06.rs) | 386 |
-| 7 | [Bridge Repair](https://adventofcode.com/2024/day/7) | [Source](src/year2024/day07.rs) | 220 |
+| 7 | [Bridge Repair](https://adventofcode.com/2024/day/7) | [Source](src/year2024/day07.rs) | 136 |
 
 ## 2023
 
