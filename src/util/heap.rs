@@ -59,4 +59,9 @@ impl<K: Ord, V> MinHeap<K, V> {
     pub fn pop(&mut self) -> Option<(K, V)> {
         self.heap.pop().map(|w| (w.key, w.value))
     }
+
+    #[inline]
+    pub fn peek(&self) -> Option<(&K, &V)> {
+        self.heap.peek().map(|w| (&w.key, &w.value))
+    }
 }
