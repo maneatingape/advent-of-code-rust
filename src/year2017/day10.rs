@@ -7,7 +7,7 @@
 //! [`rotate_left`]: slice::rotate_left
 //! [`reverse`]: slice::reverse
 use crate::util::parse::*;
-use std::fmt::Write;
+use std::fmt::Write as _;
 
 pub fn parse(input: &str) -> &str {
     input

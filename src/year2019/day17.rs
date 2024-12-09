@@ -18,7 +18,7 @@ use super::intcode::*;
 use crate::util::hash::*;
 use crate::util::parse::*;
 use crate::util::point::*;
-use std::fmt::Write;
+use std::fmt::Write as _;
 use std::ops::ControlFlow;
 
 pub struct Input {

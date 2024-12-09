@@ -92,7 +92,7 @@ pub fn part2(input: &[i64]) -> i64 {
 #[cfg(feature = "frivolity")]
 fn draw(tiles: &[i64], score: i64, blocks: i64) {
     use crate::util::ansi::*;
-    use std::fmt::Write;
+    use std::fmt::Write as _;
     use std::thread::sleep;
     use std::time::Duration;
 

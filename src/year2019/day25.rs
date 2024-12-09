@@ -19,7 +19,7 @@
 use super::intcode::*;
 use crate::util::hash::*;
 use crate::util::parse::*;
-use std::fmt::Write;
+use std::fmt::Write as _;
 
 pub fn parse(input: &str) -> Vec<i64> {
     input.iter_signed().collect()

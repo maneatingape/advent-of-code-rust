@@ -6,7 +6,7 @@
 //! resistant but slower hashing algorithm. [`FxHasher`] is much faster (between 2x to 5x from my testing).
 use std::collections::{HashMap, HashSet};
 use std::hash::{BuildHasher, Hash, Hasher};
-use std::ops::BitXor;
+use std::ops::BitXor as _;
 
 /// Type alias for [`HashSet`] using [`FxHasher`].
 pub type FastSet<T> = HashSet<T, BuildFxHasher>;
