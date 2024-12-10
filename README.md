@@ -80,7 +80,7 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 | 6 | [Guard Gallivant](https://adventofcode.com/2024/day/6) | [Source](src/year2024/day06.rs) | 386 |
 | 7 | [Bridge Repair](https://adventofcode.com/2024/day/7) | [Source](src/year2024/day07.rs) | 136 |
 | 8 | [Resonant Collinearity](https://adventofcode.com/2024/day/8) | [Source](src/year2024/day08.rs) | 8 |
-| 9 | [Disk Fragmenter](https://adventofcode.com/2024/day/9) | [Source](src/year2024/day09.rs) | 163 |
+| 9 | [Disk Fragmenter](https://adventofcode.com/2024/day/9) | [Source](src/year2024/day09.rs) | 106 |
 | 10 | [Hoof It](https://adventofcode.com/2024/day/10) | [Source](src/year2024/day10.rs) | 38 |
 
 ## 2023

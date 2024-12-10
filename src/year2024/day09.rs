@@ -9,17 +9,17 @@
 //!
 //! We build 10 [min heaps](https://en.wikipedia.org/wiki/Heap_(data_structure)) in an array to
 //! store the free space offsets. The index of the array implicitly stores the size of the
-//! free block.
+//! free block. The heaps are implemented as a simple reversed `vec`. Usually items are added
+//! directly to the top of the heap, so this is faster than a real heap.
 //!
 //! When moving a file to a free block, the corresponding heap is popped and then any leftover
 //! space is pushed back to the heap at a smaller index. The heap at index zero is not used
 //! but makes the indexing easier.
-use crate::util::heap::*;
 
 /// [Triangular numbers](https://en.wikipedia.org/wiki/Triangular_number) offset by two.
 /// Files can be a max size of 9 so we only need the first 10 values, including zero to make
 /// indexing easier.
-const EXTRA: [usize; 10] = [0, 0, 1, 3, 6, 10, 15, 21, 28, 36];
+const TRIANGLE: [usize; 10] = [0, 0, 1, 3, 6, 10, 15, 21, 28, 36];
 
 /// Remove any trailing newlines and convert to `usize`.
 pub fn parse(input: &str) -> Vec<usize> {
@@ -63,19 +63,26 @@ pub fn part1(disk: &[usize]) -> usize {
     checksum
 }
 
+#[allow(clippy::needless_range_loop)]
 pub fn part2(disk: &[usize]) -> usize {
     let mut block = 0;
     let mut checksum = 0;
-    let mut free: Vec<_> = (0..10).map(|_| MinHeap::with_capacity(1_000)).collect();
+    let mut free: Vec<_> = (0..10).map(|_| Vec::with_capacity(1_100)).collect();
 
     // Build a min-heap (leftmost free block first) where the size of each block is
     // implicit in the index of the array.
     for (index, &size) in disk.iter().enumerate() {
         if index % 2 == 1 && size > 0 {
-            free[size].push(block, ());
+            free[size].push(block);
         }
 
         block += size;
+    }
+
+    // Add sentinel value and reverse vecs so that smallest blocks are last.
+    for i in 0..10 {
+        free[i].push(block);
+        free[i].reverse();
     }
 
     for (index, &size) in disk.iter().enumerate().rev() {
@@ -90,13 +97,13 @@ pub fn part2(disk: &[usize]) -> usize {
         let mut next_block = block;
         let mut next_index = usize::MAX;
 
-        #[allow(clippy::needless_range_loop)]
         for i in size..free.len() {
-            if let Some((&first, ())) = free[i].peek() {
-                if first < next_block {
-                    next_block = first;
-                    next_index = i;
-                }
+            let top = free[i].len() - 1;
+            let first = free[i][top];
+
+            if first < next_block {
+                next_block = first;
+                next_index = i;
             }
         }
 
@@ -104,24 +111,36 @@ pub fn part2(disk: &[usize]) -> usize {
         // As an optimization if all blocks of the biggest size are after our position then
         // we can ignore them.
         if !free.is_empty() {
-            let last = free.len() - 1;
-            if let Some((&first, ())) = free[last].peek() {
-                if first > block {
-                    free.pop();
-                }
+            let biggest = free.len() - 1;
+            let top = free[biggest].len() - 1;
+
+            if free[biggest][top] > block {
+                free.pop();
             }
         }
 
         // Update the checksum with the file's location (possibly unchanged).
         let id = index / 2;
-        let extra = next_block * size + EXTRA[size];
+        let extra = next_block * size + TRIANGLE[size];
         checksum += id * extra;
 
         // If we used a free block, remove then add back any leftover space.
         if next_index != usize::MAX {
             free[next_index].pop();
-            if size < next_index {
-                free[next_index - size].push(next_block + size, ());
+
+            // Insert the new smaller block into the correct location.
+            // Most frequently this is directly at the end of the vector so even though this
+            // is technically `O(n)`, in practice it's faster than a real heap.
+            let to = next_index - size;
+            if to > 0 {
+                let mut i = free[to].len();
+                let value = next_block + size;
+
+                while free[to][i - 1] < value {
+                    i -= 1;
+                }
+
+                free[to].insert(i, value);
             }
         }
     }
@@ -133,6 +152,6 @@ pub fn part2(disk: &[usize]) -> usize {
 #[inline]
 fn update(checksum: usize, block: usize, index: usize, size: usize) -> (usize, usize) {
     let id = index / 2;
-    let extra = block * size + EXTRA[size];
+    let extra = block * size + TRIANGLE[size];
     (checksum + id * extra, block + size)
 }
