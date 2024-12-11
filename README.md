@@ -82,6 +82,7 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 | 8 | [Resonant Collinearity](https://adventofcode.com/2024/day/8) | [Source](src/year2024/day08.rs) | 8 |
 | 9 | [Disk Fragmenter](https://adventofcode.com/2024/day/9) | [Source](src/year2024/day09.rs) | 106 |
 | 10 | [Hoof It](https://adventofcode.com/2024/day/10) | [Source](src/year2024/day10.rs) | 38 |
+| 11 | [Plutonian Pebbles](https://adventofcode.com/2024/day/11) | [Source](src/year2024/day11.rs) | 2378 |
 
 ## 2023
 
