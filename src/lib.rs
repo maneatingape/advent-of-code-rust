@@ -10,297 +10,62 @@
 // Configure rustdoc.
 #![doc(html_logo_url = "https://maneatingape.github.io/advent-of-code-rust/logo.png")]
 
-/// # Utility modules to handle common recurring Advent of Code patterns.
-pub mod util {
-    pub mod ansi;
-    pub mod bitset;
-    pub mod grid;
-    pub mod hash;
-    pub mod heap;
-    pub mod integer;
-    pub mod iter;
-    pub mod math;
-    pub mod md5;
-    pub mod parse;
-    pub mod point;
-    pub mod slice;
-    pub mod thread;
+macro_rules! library {
+    ($year:tt $description:literal $($day:tt),*) => {
+        #[doc = concat!("# ", $description)]
+        pub mod $year {$(pub mod $day;)*}
+    }
 }
 
-/// # Help Santa by solving puzzles to fix the weather machine's snow function.
-pub mod year2015 {
-    pub mod day01;
-    pub mod day02;
-    pub mod day03;
-    pub mod day04;
-    pub mod day05;
-    pub mod day06;
-    pub mod day07;
-    pub mod day08;
-    pub mod day09;
-    pub mod day10;
-    pub mod day11;
-    pub mod day12;
-    pub mod day13;
-    pub mod day14;
-    pub mod day15;
-    pub mod day16;
-    pub mod day17;
-    pub mod day18;
-    pub mod day19;
-    pub mod day20;
-    pub mod day21;
-    pub mod day22;
-    pub mod day23;
-    pub mod day24;
-    pub mod day25;
-}
+library!(util "Utility modules to handle common recurring Advent of Code patterns."
+    ansi, bitset, grid, hash, heap, integer, iter, math, md5, parse, point, slice, thread
+);
 
-/// # Defeat the Easter Bunny to save Christmas.
-pub mod year2016 {
-    pub mod day01;
-    pub mod day02;
-    pub mod day03;
-    pub mod day04;
-    pub mod day05;
-    pub mod day06;
-    pub mod day07;
-    pub mod day08;
-    pub mod day09;
-    pub mod day10;
-    pub mod day11;
-    pub mod day12;
-    pub mod day13;
-    pub mod day14;
-    pub mod day15;
-    pub mod day16;
-    pub mod day17;
-    pub mod day18;
-    pub mod day19;
-    pub mod day20;
-    pub mod day21;
-    pub mod day22;
-    pub mod day23;
-    pub mod day24;
-    pub mod day25;
-}
+library!(year2015 "Help Santa by solving puzzles to fix the weather machine's snow function."
+    day01, day02, day03, day04, day05, day06, day07, day08, day09, day10, day11, day12, day13,
+    day14, day15, day16, day17, day18, day19, day20, day21, day22, day23, day24, day25
+);
 
-/// # A technical support callout from the Elves escalates rapidly.
-pub mod year2017 {
-    pub mod day01;
-    pub mod day02;
-    pub mod day03;
-    pub mod day04;
-    pub mod day05;
-    pub mod day06;
-    pub mod day07;
-    pub mod day08;
-    pub mod day09;
-    pub mod day10;
-    pub mod day11;
-    pub mod day12;
-    pub mod day13;
-    pub mod day14;
-    pub mod day15;
-    pub mod day16;
-    pub mod day17;
-    pub mod day18;
-    pub mod day19;
-    pub mod day20;
-    pub mod day21;
-    pub mod day22;
-    pub mod day23;
-    pub mod day24;
-    pub mod day25;
-}
+library!(year2016 "Defeat the Easter Bunny to save Christmas."
+    day01, day02, day03, day04, day05, day06, day07, day08, day09, day10, day11, day12, day13,
+    day14, day15, day16, day17, day18, day19, day20, day21, day22, day23, day24, day25
+);
 
-/// # Travel through time to restore the festive timeline.
-pub mod year2018 {
-    pub mod day01;
-    pub mod day02;
-    pub mod day03;
-    pub mod day04;
-    pub mod day05;
-    pub mod day06;
-    pub mod day07;
-    pub mod day08;
-    pub mod day09;
-    pub mod day10;
-    pub mod day11;
-    pub mod day12;
-    pub mod day13;
-    pub mod day14;
-    pub mod day15;
-    pub mod day16;
-    pub mod day17;
-    pub mod day18;
-    pub mod day19;
-    pub mod day20;
-    pub mod day21;
-    pub mod day22;
-    pub mod day23;
-    pub mod day24;
-    pub mod day25;
-}
+library!(year2017 "A technical support callout from the Elves escalates rapidly."
+    day01, day02, day03, day04, day05, day06, day07, day08, day09, day10, day11, day12, day13,
+    day14, day15, day16, day17, day18, day19, day20, day21, day22, day23, day24, day25
+);
 
-/// # Rescue Santa from deep space with a solar system voyage.
-pub mod year2019 {
-    pub mod day01;
-    pub mod day02;
-    pub mod day03;
-    pub mod day04;
-    pub mod day05;
-    pub mod day06;
-    pub mod day07;
-    pub mod day08;
-    pub mod day09;
-    pub mod day10;
-    pub mod day11;
-    pub mod day12;
-    pub mod day13;
-    pub mod day14;
-    pub mod day15;
-    pub mod day16;
-    pub mod day17;
-    pub mod day18;
-    pub mod day19;
-    pub mod day20;
-    pub mod day21;
-    pub mod day22;
-    pub mod day23;
-    pub mod day24;
-    pub mod day25;
-    pub mod intcode;
-}
+library!(year2018 "Travel through time to restore the festive timeline."
+    day01, day02, day03, day04, day05, day06, day07, day08, day09, day10, day11, day12, day13,
+    day14, day15, day16, day17, day18, day19, day20, day21, day22, day23, day24, day25
+);
 
-/// # What could go wrong trying to enjoy a well deserved vacation?
-pub mod year2020 {
-    pub mod day01;
-    pub mod day02;
-    pub mod day03;
-    pub mod day04;
-    pub mod day05;
-    pub mod day06;
-    pub mod day07;
-    pub mod day08;
-    pub mod day09;
-    pub mod day10;
-    pub mod day11;
-    pub mod day12;
-    pub mod day13;
-    pub mod day14;
-    pub mod day15;
-    pub mod day16;
-    pub mod day17;
-    pub mod day18;
-    pub mod day19;
-    pub mod day20;
-    pub mod day21;
-    pub mod day22;
-    pub mod day23;
-    pub mod day24;
-    pub mod day25;
-}
+library!(year2019 "Rescue Santa from deep space with a solar system voyage."
+    day01, day02, day03, day04, day05, day06, day07, day08, day09, day10, day11, day12, day13,
+    day14, day15, day16, day17, day18, day19, day20, day21, day22, day23, day24, day25, intcode
+);
 
-/// # Retrieve the keys to Santa's sleigh with an underwater submarine adventure.
-pub mod year2021 {
-    pub mod day01;
-    pub mod day02;
-    pub mod day03;
-    pub mod day04;
-    pub mod day05;
-    pub mod day06;
-    pub mod day07;
-    pub mod day08;
-    pub mod day09;
-    pub mod day10;
-    pub mod day11;
-    pub mod day12;
-    pub mod day13;
-    pub mod day14;
-    pub mod day15;
-    pub mod day16;
-    pub mod day17;
-    pub mod day18;
-    pub mod day19;
-    pub mod day20;
-    pub mod day21;
-    pub mod day22;
-    pub mod day23;
-    pub mod day24;
-    pub mod day25;
-}
+library!(year2020 "What could go wrong trying to enjoy a well deserved vacation?"
+    day01, day02, day03, day04, day05, day06, day07, day08, day09, day10, day11, day12, day13,
+    day14, day15, day16, day17, day18, day19, day20, day21, day22, day23, day24, day25
+);
 
-/// # Assist the Elves on their annual jungle expedition.
-pub mod year2022 {
-    pub mod day01;
-    pub mod day02;
-    pub mod day03;
-    pub mod day04;
-    pub mod day05;
-    pub mod day06;
-    pub mod day07;
-    pub mod day08;
-    pub mod day09;
-    pub mod day10;
-    pub mod day11;
-    pub mod day12;
-    pub mod day13;
-    pub mod day14;
-    pub mod day15;
-    pub mod day16;
-    pub mod day17;
-    pub mod day18;
-    pub mod day19;
-    pub mod day20;
-    pub mod day21;
-    pub mod day22;
-    pub mod day23;
-    pub mod day24;
-    pub mod day25;
-}
+library!(year2021 "Retrieve the keys to Santa's sleigh with an underwater submarine adventure."
+    day01, day02, day03, day04, day05, day06, day07, day08, day09, day10, day11, day12, day13,
+    day14, day15, day16, day17, day18, day19, day20, day21, day22, day23, day24, day25
+);
 
-/// # Restore global snow production.
-pub mod year2023 {
-    pub mod day01;
-    pub mod day02;
-    pub mod day03;
-    pub mod day04;
-    pub mod day05;
-    pub mod day06;
-    pub mod day07;
-    pub mod day08;
-    pub mod day09;
-    pub mod day10;
-    pub mod day11;
-    pub mod day12;
-    pub mod day13;
-    pub mod day14;
-    pub mod day15;
-    pub mod day16;
-    pub mod day17;
-    pub mod day18;
-    pub mod day19;
-    pub mod day20;
-    pub mod day21;
-    pub mod day22;
-    pub mod day23;
-    pub mod day24;
-    pub mod day25;
-}
+library!(year2022 "Assist the Elves on their annual jungle expedition."
+    day01, day02, day03, day04, day05, day06, day07, day08, day09, day10, day11, day12, day13,
+    day14, day15, day16, day17, day18, day19, day20, day21, day22, day23, day24, day25
+);
 
-/// # Locate the Chief Historian in time for the big Christmas sleigh launch.
-pub mod year2024 {
-    pub mod day01;
-    pub mod day02;
-    pub mod day03;
-    pub mod day04;
-    pub mod day05;
-    pub mod day06;
-    pub mod day07;
-    pub mod day08;
-    pub mod day09;
-    pub mod day10;
-    pub mod day11;
-    pub mod day12;
-}
+library!(year2023 "Restore global snow production."
+    day01, day02, day03, day04, day05, day06, day07, day08, day09, day10, day11, day12, day13,
+    day14, day15, day16, day17, day18, day19, day20, day21, day22, day23, day24, day25
+);
+
+library!(year2024 "Locate the Chief Historian in time for the big Christmas sleigh launch."
+    day01, day02, day03, day04, day05, day06, day07, day08, day09, day10, day11, day12
+);

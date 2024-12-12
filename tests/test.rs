@@ -28,269 +28,57 @@
 //     assert_eq!(part2(&input), 456);
 // }
 
-mod year2015 {
-    mod day01_test;
-    mod day02_test;
-    mod day03_test;
-    mod day04_test;
-    mod day05_test;
-    mod day06_test;
-    mod day07_test;
-    mod day08_test;
-    mod day09_test;
-    mod day10_test;
-    mod day11_test;
-    mod day12_test;
-    mod day13_test;
-    mod day14_test;
-    mod day15_test;
-    mod day16_test;
-    mod day17_test;
-    mod day18_test;
-    mod day19_test;
-    mod day20_test;
-    mod day21_test;
-    mod day22_test;
-    mod day23_test;
-    mod day24_test;
-    mod day25_test;
+macro_rules! test {
+    ($year:tt $($day:tt),*) => {
+        pub mod $year {$(pub mod $day;)*}
+    }
 }
 
-mod year2016 {
-    mod day01_test;
-    mod day02_test;
-    mod day03_test;
-    mod day04_test;
-    mod day05_test;
-    mod day06_test;
-    mod day07_test;
-    mod day08_test;
-    mod day09_test;
-    mod day10_test;
-    mod day11_test;
-    mod day12_test;
-    mod day13_test;
-    mod day14_test;
-    mod day15_test;
-    mod day16_test;
-    mod day17_test;
-    mod day18_test;
-    mod day19_test;
-    mod day20_test;
-    mod day21_test;
-    mod day22_test;
-    mod day23_test;
-    mod day24_test;
-    mod day25_test;
-}
+test!(year2015
+    day01, day02, day03, day04, day05, day06, day07, day08, day09, day10, day11, day12, day13,
+    day14, day15, day16, day17, day18, day19, day20, day21, day22, day23, day24, day25
+);
 
-mod year2017 {
-    mod day01_test;
-    mod day02_test;
-    mod day03_test;
-    mod day04_test;
-    mod day05_test;
-    mod day06_test;
-    mod day07_test;
-    mod day08_test;
-    mod day09_test;
-    mod day10_test;
-    mod day11_test;
-    mod day12_test;
-    mod day13_test;
-    mod day14_test;
-    mod day15_test;
-    mod day16_test;
-    mod day17_test;
-    mod day18_test;
-    mod day19_test;
-    mod day20_test;
-    mod day21_test;
-    mod day22_test;
-    mod day23_test;
-    mod day24_test;
-    mod day25_test;
-}
+test!(year2016
+    day01, day02, day03, day04, day05, day06, day07, day08, day09, day10, day11, day12, day13,
+    day14, day15, day16, day17, day18, day19, day20, day21, day22, day23, day24, day25
+);
 
-mod year2018 {
-    mod day01_test;
-    mod day02_test;
-    mod day03_test;
-    mod day04_test;
-    mod day05_test;
-    mod day06_test;
-    mod day07_test;
-    mod day08_test;
-    mod day09_test;
-    mod day10_test;
-    mod day11_test;
-    mod day12_test;
-    mod day13_test;
-    mod day14_test;
-    mod day15_test;
-    mod day16_test;
-    mod day17_test;
-    mod day18_test;
-    mod day19_test;
-    mod day20_test;
-    mod day21_test;
-    mod day22_test;
-    mod day23_test;
-    mod day24_test;
-    mod day25_test;
-}
+test!(year2017
+    day01, day02, day03, day04, day05, day06, day07, day08, day09, day10, day11, day12, day13,
+    day14, day15, day16, day17, day18, day19, day20, day21, day22, day23, day24, day25
+);
 
-mod year2019 {
-    mod day01_test;
-    mod day02_test;
-    mod day03_test;
-    mod day04_test;
-    mod day05_test;
-    mod day06_test;
-    mod day07_test;
-    mod day08_test;
-    mod day09_test;
-    mod day10_test;
-    mod day11_test;
-    mod day12_test;
-    mod day13_test;
-    mod day14_test;
-    mod day15_test;
-    mod day16_test;
-    mod day17_test;
-    mod day18_test;
-    mod day19_test;
-    mod day20_test;
-    mod day21_test;
-    mod day22_test;
-    mod day23_test;
-    mod day24_test;
-    mod day25_test;
-}
+test!(year2018
+    day01, day02, day03, day04, day05, day06, day07, day08, day09, day10, day11, day12, day13,
+    day14, day15, day16, day17, day18, day19, day20, day21, day22, day23, day24, day25
+);
 
-mod year2020 {
-    mod day01_test;
-    mod day02_test;
-    mod day03_test;
-    mod day04_test;
-    mod day05_test;
-    mod day06_test;
-    mod day07_test;
-    mod day08_test;
-    mod day09_test;
-    mod day10_test;
-    mod day11_test;
-    mod day12_test;
-    mod day13_test;
-    mod day14_test;
-    mod day15_test;
-    mod day16_test;
-    mod day17_test;
-    mod day18_test;
-    mod day19_test;
-    mod day20_test;
-    mod day21_test;
-    mod day22_test;
-    mod day23_test;
-    mod day24_test;
-    mod day25_test;
-}
+test!(year2019
+    day01, day02, day03, day04, day05, day06, day07, day08, day09, day10, day11, day12, day13,
+    day14, day15, day16, day17, day18, day19, day20, day21, day22, day23, day24, day25
+);
 
-mod year2021 {
-    mod day01_test;
-    mod day02_test;
-    mod day03_test;
-    mod day04_test;
-    mod day05_test;
-    mod day06_test;
-    mod day07_test;
-    mod day08_test;
-    mod day09_test;
-    mod day10_test;
-    mod day11_test;
-    mod day12_test;
-    mod day13_test;
-    mod day14_test;
-    mod day15_test;
-    mod day16_test;
-    mod day17_test;
-    mod day18_test;
-    mod day19_test;
-    mod day20_test;
-    mod day21_test;
-    mod day22_test;
-    mod day23_test;
-    mod day24_test;
-    mod day25_test;
-}
+test!(year2020
+    day01, day02, day03, day04, day05, day06, day07, day08, day09, day10, day11, day12, day13,
+    day14, day15, day16, day17, day18, day19, day20, day21, day22, day23, day24, day25
+);
 
-mod year2022 {
-    mod day01_test;
-    mod day02_test;
-    mod day03_test;
-    mod day04_test;
-    mod day05_test;
-    mod day06_test;
-    mod day07_test;
-    mod day08_test;
-    mod day09_test;
-    mod day10_test;
-    mod day11_test;
-    mod day12_test;
-    mod day13_test;
-    mod day14_test;
-    mod day15_test;
-    mod day16_test;
-    mod day17_test;
-    mod day18_test;
-    mod day19_test;
-    mod day20_test;
-    mod day21_test;
-    mod day22_test;
-    mod day23_test;
-    mod day24_test;
-    mod day25_test;
-}
+test!(year2021
+    day01, day02, day03, day04, day05, day06, day07, day08, day09, day10, day11, day12, day13,
+    day14, day15, day16, day17, day18, day19, day20, day21, day22, day23, day24, day25
+);
 
-mod year2023 {
-    mod day01_test;
-    mod day02_test;
-    mod day03_test;
-    mod day04_test;
-    mod day05_test;
-    mod day06_test;
-    mod day07_test;
-    mod day08_test;
-    mod day09_test;
-    mod day10_test;
-    mod day11_test;
-    mod day12_test;
-    mod day13_test;
-    mod day14_test;
-    mod day15_test;
-    mod day16_test;
-    mod day17_test;
-    mod day18_test;
-    mod day19_test;
-    mod day20_test;
-    mod day21_test;
-    mod day22_test;
-    mod day23_test;
-    mod day24_test;
-    mod day25_test;
-}
+test!(year2022
+    day01, day02, day03, day04, day05, day06, day07, day08, day09, day10, day11, day12, day13,
+    day14, day15, day16, day17, day18, day19, day20, day21, day22, day23, day24, day25
+);
 
-mod year2024 {
-    mod day01_test;
-    mod day02_test;
-    mod day03_test;
-    mod day04_test;
-    mod day05_test;
-    mod day06_test;
-    mod day07_test;
-    mod day08_test;
-    mod day09_test;
-    mod day10_test;
-    mod day11_test;
-    mod day12_test;
-}
+test!(year2023
+    day01, day02, day03, day04, day05, day06, day07, day08, day09, day10, day11, day12, day13,
+    day14, day15, day16, day17, day18, day19, day20, day21, day22, day23, day24, day25
+);
+
+test!(year2024
+    day01, day02, day03, day04, day05, day06, day07, day08, day09, day10, day11, day12
+);
