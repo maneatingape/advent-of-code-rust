@@ -118,7 +118,7 @@ impl Technique {
 
     fn inverse(&self) -> Technique {
         let m = self.m;
-        let a = self.a.mod_inv(m);
+        let a = self.a.mod_inv(m).unwrap();
         let c = m - (a * self.c) % m;
         Technique { a, c, m }
     }
@@ -126,7 +126,7 @@ impl Technique {
     fn power(&self, e: i128) -> Technique {
         let m = self.m;
         let a = self.a.mod_pow(e, m);
-        let c = (((a - 1) * (self.a - 1).mod_inv(m) % m) * self.c) % m;
+        let c = (((a - 1) * (self.a - 1).mod_inv(m).unwrap() % m) * self.c) % m;
         Technique { a, c, m }
     }
 

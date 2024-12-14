@@ -27,7 +27,7 @@ pub trait UnsignedMathOps<T: Unsigned<T>> {
 }
 
 pub trait SignedMathOps<T: Signed<T>> {
-    fn mod_inv(self, m: T) -> T;
+    fn mod_inv(self, m: T) -> Option<T>;
 }
 
 impl<T: Integer<T>> IntegerMathOps<T> for T {
@@ -84,7 +84,7 @@ impl<T: Unsigned<T>> UnsignedMathOps<T> for T {
 
 impl<T: Signed<T>> SignedMathOps<T> for T {
     // Modular multiplicative inverse
-    fn mod_inv(self, m: T) -> T {
+    fn mod_inv(self, m: T) -> Option<T> {
         let mut t = T::ZERO;
         let mut newt = T::ONE;
         let mut r = m;
@@ -96,9 +96,13 @@ impl<T: Signed<T>> SignedMathOps<T> for T {
             (r, newr) = (newr, r - quotient * newr);
         }
 
+        if r > T::ONE {
+            return None;
+        }
         if t < T::ZERO {
             t = t + m;
         }
-        t
+
+        Some(t)
     }
 }
