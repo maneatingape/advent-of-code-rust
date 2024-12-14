@@ -4,16 +4,27 @@
 //! The image appears in part two when the positions of all robots are unique.
 //!
 //! The x coordinates repeat every 101 seconds and the y coordinates repeat every 103 seconds.
-//! Calculating each axis independently then looking it up is twice as fast
-//! as calculating as needed.
+//! First we check for times when the robot x coordinates could form the left and right columns
+//! of the tree's bounding box. This gives a time `t` mod 101.
+//!
+//! Then we check the y coordinates looking for the top and bottom rows of the bounding box,
+//! giving a time `u` mod 103.
+//!
+//! Using the [Chinese Remainder Theorem](https://en.wikipedia.org/wiki/Chinese_remainder_theorem)
+//! we combine the two times into a single time mod 10403 that is the answer.
 use crate::util::iter::*;
-use crate::util::math::*;
 use crate::util::parse::*;
 
-type Robot = [i32; 4];
+type Robot = [usize; 4];
 
 pub fn parse(input: &str) -> Vec<Robot> {
-    input.iter_signed().chunk::<4>().collect()
+    input
+        .iter_signed::<i32>()
+        .chunk::<4>()
+        .map(|[x, y, dx, dy]| {
+            [x as usize, y as usize, dx.rem_euclid(101) as usize, dy.rem_euclid(103) as usize]
+        })
+        .collect()
 }
 
 pub fn part1(input: &[Robot]) -> i32 {
@@ -23,8 +34,8 @@ pub fn part1(input: &[Robot]) -> i32 {
     let mut q4 = 0;
 
     for [x, y, dx, dy] in input {
-        let x = (x + 100 * dx).rem_euclid(101);
-        let y = (y + 100 * dy).rem_euclid(103);
+        let x = (x + 100 * dx) % 101;
+        let y = (y + 100 * dy) % 103;
 
         if x < 50 {
             if y < 51 {
@@ -47,52 +58,61 @@ pub fn part1(input: &[Robot]) -> i32 {
     q1 * q2 * q3 * q4
 }
 
-pub fn part2(input: &[Robot]) -> usize {
-    let robots: Vec<_> = input
-        .iter()
-        .map(|&[x, y, h, v]| [x, y, h.rem_euclid(101), v.rem_euclid(103)])
-        .collect();
+pub fn part2(robots: &[Robot]) -> usize {
+    // Search for times mod 101 when the tree could possibly exist using x coordinates only.
+    // and times mod 103 when the tree could possibly exist using y coordinates only.
+    let mut rows = Vec::new();
+    let mut columns = Vec::new();
 
-    let coefficient1 = 103 * 103.mod_inv(101).unwrap();
-    let coefficient2 = 101 * 101.mod_inv(103).unwrap();
-    let horizontal: Vec<_> = (0..101).map(|n| n.mod_inv(101)).collect();
-    let vertical: Vec<_> = (0..103).map(|n| n.mod_inv(103)).collect();
+    for time in 0..103 {
+        let mut xs = [0; 101];
+        let mut ys = [0; 103];
 
-    let mut unique = vec![true; 10403];
+        for [x, y, dx, dy] in robots {
+            let x = (x + time * dx) % 101;
+            xs[x] += 1;
+            let y = (y + time * dy) % 103;
+            ys[y] += 1;
+        }
 
-    for (i, &[x1, y1, h1, v1]) in robots.iter().enumerate().skip(1) {
-        for &[x2, y2, h2, v2] in robots.iter().take(i) {
-            if x1 == x2 && h1 == h2 {
-                if let Some(b) = vertical[to_index(v2 - v1, 103)] {
-                    let u = to_index((y1 - y2) * b, 103);
-
-                    for n in (0..10403).step_by(103) {
-                        unique[n + u] = false;
-                    }
-                }
-            } else if y1 == y2 && v1 == v2 {
-                if let Some(a) = horizontal[to_index(h2 - h1, 101)] {
-                    let t = to_index((x1 - x2) * a, 101);
-
-                    for n in (0..10403).step_by(101) {
-                        unique[n + t] = false;
-                    }
-                }
-            } else if let Some(a) = horizontal[to_index(h2 - h1, 101)] {
-                if let Some(b) = vertical[to_index(v2 - v1, 103)] {
-                    let t = (x1 - x2) * a;
-                    let u = (y1 - y2) * b;
-                    let crt = to_index(t * coefficient1 + u * coefficient2, 10403);
-                    unique[crt] = false;
-                }
-            }
+        // Tree bounding box is 31x33.
+        if time < 101 && xs.iter().filter(|&&c| c >= 33).count() >= 2 {
+            columns.push(time);
+        }
+        if ys.iter().filter(|&&c| c >= 31).count() >= 2 {
+            rows.push(time);
         }
     }
 
-    unique.iter().position(|&u| u).unwrap()
-}
+    // If there's only one combination then return answer.
+    if rows.len() == 1 && columns.len() == 1 {
+        let t = columns[0];
+        let u = rows[0];
+        // Combine indices using the Chinese Remainder Theorem to get index mod 10403.
+        return (5253 * t + 5151 * u) % 10403;
+    }
 
-#[inline]
-fn to_index(a: i32, m: i32) -> usize {
-    a.rem_euclid(m) as usize
+    // Backup check looking for time when all robot positions are unique.
+    let mut floor = vec![0; 10403];
+
+    for &t in &columns {
+        'outer: for &u in &rows {
+            let time = (5253 * t + 5151 * u) % 10403;
+
+            for &[x, y, dx, dy] in robots {
+                let x = (x + time * dx) % 101;
+                let y = (y + time * dy) % 103;
+
+                let index = 101 * y + x;
+                if floor[index] == time {
+                    continue 'outer;
+                }
+                floor[index] = time;
+            }
+
+            return time;
+        }
+    }
+
+    unreachable!()
 }
