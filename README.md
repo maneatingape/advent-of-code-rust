@@ -85,7 +85,7 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 | 11 | [Plutonian Pebbles](https://adventofcode.com/2024/day/11) | [Source](src/year2024/day11.rs) | 248 |
 | 12 | [Garden Groups](https://adventofcode.com/2024/day/12) | [Source](src/year2024/day12.rs) | 289 |
 | 13 | [Claw Contraption](https://adventofcode.com/2024/day/13) | [Source](src/year2024/day13.rs) | 14 |
-| 14 | [Restroom Redoubt](https://adventofcode.com/2024/day/14) | [Source](src/year2024/day14.rs) | 723 |
+| 14 | [Restroom Redoubt](https://adventofcode.com/2024/day/14) | [Source](src/year2024/day14.rs) | 456 |
 
 ## 2023
 
