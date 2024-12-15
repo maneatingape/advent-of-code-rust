@@ -8,15 +8,19 @@
 //!
 //! Part two re-uses the part one logic for horizontal moves. Vertical moves use a
 //! [breadth first search](https://en.wikipedia.org/wiki/Breadth-first_search) to identify the
-//! cascading boxes that need to be moved. Marking boxes as `seen` during the search prevents both
-//! unintended exponential growth or pushing the bottom most row twice in this example:
+//! cascading boxes that need to be moved. Boxes are added strictly left to right to make checking
+//! for previously added boxes easier. To prevent adding a box twice we check that the
+//! item at `index - 2` is different. For example:
 //!
 //! ```none
-//!     @
-//!     []
-//!    [][]
-//!     []
+//!     @          Indices:
+//!     []         23
+//!    [][]       4567
+//!     []         89
 //! ```
+//!
+//! When processing 6 we try to add 8, however 8 and 9 have already been added when processing 4
+//! so we skip.
 //!
 //! If any next space is a wall then we cancel the entire move and return right away. Otherwise
 //! all boxes are moved in the *reverse* order that they were found by the search.
@@ -35,8 +39,10 @@ pub fn parse(input: &str) -> Input<'_> {
 pub fn part1(input: &Input<'_>) -> i32 {
     let (grid, moves) = input;
 
+    // We don't need to move the robot symbol so mark as empty space once located.
     let mut grid = grid.clone();
     let mut position = grid.find(b'@').unwrap();
+    grid[position] = b'.';
 
     // Treat moves as a single string ignoring any newline characters.
     for b in moves.bytes() {
@@ -57,18 +63,17 @@ pub fn part2(input: &Input<'_>) -> i32 {
 
     let mut grid = stretch(grid);
     let mut position = grid.find(b'@').unwrap();
+    grid[position] = b'.';
 
     // Reuse to minimize allocations.
-    let mut todo = Vec::new();
-    let mut seen = grid.same_size_with(usize::MAX);
+    let mut todo = Vec::with_capacity(50);
 
-    // Use index as a unique id for each move.
-    for (id, b) in moves.bytes().enumerate() {
+    for b in moves.bytes() {
         match b {
             b'<' => narrow(&mut grid, &mut position, LEFT),
             b'>' => narrow(&mut grid, &mut position, RIGHT),
-            b'^' => wide(&mut grid, &mut position, UP, &mut todo, &mut seen, id),
-            b'v' => wide(&mut grid, &mut position, DOWN, &mut todo, &mut seen, id),
+            b'^' => wide(&mut grid, &mut position, UP, &mut todo),
+            b'v' => wide(&mut grid, &mut position, DOWN, &mut todo),
             _ => (),
         }
     }
@@ -78,7 +83,7 @@ pub fn part2(input: &Input<'_>) -> i32 {
 
 fn narrow(grid: &mut Grid<u8>, start: &mut Point, direction: Point) {
     let mut position = *start + direction;
-    let mut size = 2;
+    let mut size = 1;
 
     // Search for the next wall or open space.
     while grid[position] != b'.' && grid[position] != b'#' {
@@ -89,7 +94,7 @@ fn narrow(grid: &mut Grid<u8>, start: &mut Point, direction: Point) {
     // Move items one space in direction.
     if grid[position] == b'.' {
         let mut previous = b'.';
-        let mut position = *start;
+        let mut position = *start + direction;
 
         for _ in 0..size {
             swap(&mut previous, &mut grid[position]);
@@ -101,58 +106,41 @@ fn narrow(grid: &mut Grid<u8>, start: &mut Point, direction: Point) {
     }
 }
 
-fn wide(
-    grid: &mut Grid<u8>,
-    start: &mut Point,
-    direction: Point,
-    todo: &mut Vec<Point>,
-    seen: &mut Grid<usize>,
-    id: usize,
-) {
+fn wide(grid: &mut Grid<u8>, start: &mut Point, direction: Point, todo: &mut Vec<Point>) {
     // Short circuit if path in front of robot is empty.
-    let position = *start;
-    let next = position + direction;
-
-    if grid[next] == b'.' {
-        grid[position] = b'.';
-        grid[next] = b'@';
+    if grid[*start + direction] == b'.' {
         *start += direction;
         return;
     }
 
     // Clear any items from previous push.
     todo.clear();
+    // Add dummy item to prevent index of out bounds when checking for previously added boxes.
+    todo.push(ORIGIN);
     todo.push(*start);
-    let mut index = 0;
+    let mut index = 1;
 
     while index < todo.len() {
         let next = todo[index] + direction;
         index += 1;
 
-        let other = match grid[next] {
+        // Add boxes strictly left to right.
+        let (first, second) = match grid[next] {
+            b'[' => (next, next + RIGHT),
+            b']' => (next + LEFT, next),
             b'#' => return, // Return early if there's a wall in the way.
-            b'[' => RIGHT,
-            b']' => LEFT,
-            _ => continue, // Open space doesn't add any more items to move.
+            _ => continue,  // Open space doesn't add any more items to move.
         };
 
-        // Enqueue the first half of box directly above us.
-        let first = next;
-        if seen[first] != id {
-            seen[first] = id;
+        // Check if this box has already been added by the previous box in this row.
+        if first != todo[todo.len() - 2] {
             todo.push(first);
-        }
-
-        // Enqueue the other half of the box directly above us.
-        let second = next + other;
-        if seen[second] != id {
-            seen[second] = id;
             todo.push(second);
         }
     }
 
-    // Move boxes in reverse order.
-    for &point in todo.iter().rev() {
+    // Move boxes in reverse order, skipping the dummy item and robot.
+    for &point in todo[2..].iter().rev() {
         grid[point + direction] = grid[point];
         grid[point] = b'.';
     }
