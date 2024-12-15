@@ -43,7 +43,7 @@ fn main() {
             let (part1, part2) = wrapper(data);
             let elapsed = instant.elapsed();
 
-            solved += 1;
+            solved += 2;
             duration += elapsed;
 
             println!("{BOLD}{YELLOW}{year} Day {day:02}{RESET}");
@@ -57,9 +57,11 @@ fn main() {
         }
     }
 
-    // Print totals
-    println!("{BOLD}{RED}Solved: {solved}{RESET}");
-    println!("{BOLD}{GREEN}Duration: {} ms{RESET}", duration.as_millis());
+    // Optionally print totals
+    if args().any(|a| a == "--totals") {
+        println!("{BOLD}{YELLOW}⭐ {solved}{RESET}");
+        println!("{BOLD}{WHITE}🕓 {} ms{RESET}", duration.as_millis());
+    }
 }
 
 struct Solution {
