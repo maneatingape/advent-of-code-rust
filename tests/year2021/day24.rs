@@ -1,1 +1,9 @@
-// No tests possible for Year 2021 Day 24
+#[test]
+fn part1_test() {
+    // No test
+}
+
+#[test]
+fn part2_test() {
+    // No test
+}
