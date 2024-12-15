@@ -14,6 +14,7 @@
 //! we combine the two times into a single time mod 10403 that is the answer.
 use crate::util::iter::*;
 use crate::util::parse::*;
+use std::cmp::Ordering::*;
 
 type Robot = [usize; 4];
 
@@ -28,34 +29,22 @@ pub fn parse(input: &str) -> Vec<Robot> {
 }
 
 pub fn part1(input: &[Robot]) -> i32 {
-    let mut q1 = 0;
-    let mut q2 = 0;
-    let mut q3 = 0;
-    let mut q4 = 0;
+    let mut quadrants = [0; 4];
 
     for [x, y, dx, dy] in input {
         let x = (x + 100 * dx) % 101;
         let y = (y + 100 * dy) % 103;
 
-        if x < 50 {
-            if y < 51 {
-                q1 += 1;
-            }
-            if y > 51 {
-                q2 += 1;
-            }
-        }
-        if x > 50 {
-            if y < 51 {
-                q3 += 1;
-            }
-            if y > 51 {
-                q4 += 1;
-            }
+        match (x.cmp(&50), y.cmp(&51)) {
+            (Less, Less) => quadrants[0] += 1,
+            (Less, Greater) => quadrants[1] += 1,
+            (Greater, Less) => quadrants[2] += 1,
+            (Greater, Greater) => quadrants[3] += 1,
+            _ => (),
         }
     }
 
-    q1 * q2 * q3 * q4
+    quadrants.iter().product()
 }
 
 pub fn part2(robots: &[Robot]) -> usize {
