@@ -44,6 +44,17 @@ impl Grid<u8> {
         raw.iter().for_each(|slice| bytes.extend_from_slice(slice));
         Grid { width, height, bytes }
     }
+
+    pub fn print(&self) {
+        for y in 0..self.height {
+            for x in 0..self.width {
+                let point = Point::new(x, y);
+                print!("{}", self[point] as char);
+            }
+            println!();
+        }
+        println!();
+    }
 }
 
 impl<T: Copy + PartialEq> Grid<T> {
