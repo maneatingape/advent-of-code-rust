@@ -130,7 +130,7 @@ fn wide(
         index += 1;
 
         let other = match grid[next] {
-            b'#' => return,  // Return early if there's a wall in the way.
+            b'#' => return, // Return early if there's a wall in the way.
             b'[' => RIGHT,
             b']' => LEFT,
             _ => continue, // Open space doesn't add any more items to move.

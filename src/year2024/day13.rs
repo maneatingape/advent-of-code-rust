@@ -15,8 +15,8 @@
 //! ```
 //!
 //! To solve we invert the 2 x 2 matrix then premultiply the right column.
-use crate::util::parse::*;
 use crate::util::iter::*;
+use crate::util::parse::*;
 
 type Claw = [i64; 6];
 
