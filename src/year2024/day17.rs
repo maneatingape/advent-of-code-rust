@@ -16,19 +16,20 @@
 //!     }
 //! ```
 //!
-//! So we know that the final value of `a` must be zero. Starting with this knowledge we work
+//! This means that the final value of `a` must be zero. Starting with this knowledge we work
 //! backwards digit by digit. The right shift wipes out the lowest 3 bits of `a` so there could
-//! be 8 possible previous values. We check each possible value, keeping only those that result
-//! in the correct program digit.
+//! be 8 possible previous values. We check each possible value recursively, exploring only
+//! those that result in the correct program digit.
 //!
-//! Then for each item of the new list we check of the 8 combinations against the next digit
+//! For each new item we check each of the 8 possible combinations against the next digit
 //! in reverse, and so on until we have all possible valid starting values of `a`.
 //!
-//! Although it may seem that the list could grow exponentially to 8¹⁶ potential values to check,
-//! in practice filtering by correct digit keeps the list less than ~10 items during each iteration.
+//! Although it may seem that checking could grow exponentially to 8¹⁶ potential values,
+//! in practice filtering by correct digit keeps the total less than 50.
 //!
 //! [`Intcode`]: crate::year2019::intcode
 use crate::util::parse::*;
+use std::ops::ControlFlow;
 
 pub fn parse(input: &str) -> Vec<u64> {
     input.iter_unsigned().collect()
@@ -51,28 +52,25 @@ pub fn part1(input: &[u64]) -> String {
 
 pub fn part2(input: &[u64]) -> u64 {
     // Start with known final value of `a`.
-    let mut todo = vec![0];
+    helper(input, input.len() - 1, 0).break_value().unwrap()
+}
 
-    for &valid in input.iter().skip(3).rev() {
-        let mut next = Vec::new();
-
-        // Try all 8 combination of lower 3 bits for each possible valid value.
-        for i in todo {
-            for j in 0..8 {
-                let a = (i << 3) | j;
-                let mut computer = Computer::new(input, a);
-
-                if computer.run().is_some_and(|out| out == valid) {
-                    next.push(a);
-                }
-            }
-        }
-
-        todo = next;
+fn helper(program: &[u64], index: usize, a: u64) -> ControlFlow<u64> {
+    if index == 2 {
+        return ControlFlow::Break(a);
     }
 
-    // Lowest possible initial value.
-    todo[0]
+    // Try all 8 combination of lower 3 bits.
+    for i in 0..8 {
+        let next_a = (a << 3) | i;
+        let out = Computer::new(program, next_a).run().unwrap();
+
+        if out == program[index] {
+            helper(program, index - 1, next_a)?;
+        }
+    }
+
+    ControlFlow::Continue(())
 }
 
 struct Computer<'a> {

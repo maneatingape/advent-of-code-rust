@@ -88,7 +88,7 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 | 14 | [Restroom Redoubt](https://adventofcode.com/2024/day/14) | [Source](src/year2024/day14.rs) | 74 |
 | 15 | [Warehouse Woes](https://adventofcode.com/2024/day/15) | [Source](src/year2024/day15.rs) | 303 |
 | 16 | [Reindeer Maze](https://adventofcode.com/2024/day/16) | [Source](src/year2024/day16.rs) | 390 |
-| 17 | [Chronospatial Computer](https://adventofcode.com/2024/day/17) | [Source](src/year2024/day17.rs) | 6 |
+| 17 | [Chronospatial Computer](https://adventofcode.com/2024/day/17) | [Source](src/year2024/day17.rs) | 2 |
 
 ## 2023
 
