@@ -8,14 +8,6 @@
 //! Part two is a a BFS *backwards* from the end to the finish, tracing the cost exactly
 //! to find all possible paths. This reuses the cost information from the Dijkstra without
 //! requiring any extra state keeping for the paths.
-//!
-//! To speed things up even further we use a trick. Classic Dijkstra uses a generic priority queue
-//! that can be implemented in Rust using a [`BinaryHeap`]. However the total cost follows a
-//! strictly increasing order in a constrained range of values, so we can use a much faster
-//! [bucket queue](https://en.wikipedia.org/wiki/Bucket_queue). The maximum possible increase is
-//! 1000 so we need 1001 buckets.
-//!
-//! [`BinaryHeap`]: std::collections::BinaryHeap
 use crate::util::grid::*;
 use crate::util::point::*;
 use std::collections::VecDeque;
@@ -30,25 +22,26 @@ pub fn parse(input: &str) -> Input {
     let start = grid.find(b'S').unwrap();
     let end = grid.find(b'E').unwrap();
 
-    // Forwards Dijkstra
-    let mut buckets = vec![Vec::new(); 1001];
+    // Forwards Dijkstra. Since turns are so much more expensive than moving forward, we can
+    // treat this as a glorified BFS using two priority queues. This is much faster than using
+    // an actual min heap.
+    let mut todo_first = VecDeque::new();
+    let mut todo_second = VecDeque::new();
     // State is `(position, direction)`.
     let mut seen = grid.same_size_with([u32::MAX; 4]);
-    let mut cost = 0;
     let mut lowest = u32::MAX;
 
-    buckets[0].push((start, 0));
+    todo_first.push_back((start, 0, 0));
     seen[start][0] = 0;
 
-    while lowest == u32::MAX {
-        let index = (cost % 1001) as usize;
-
-        while let Some((position, direction)) = buckets[index].pop() {
-            // Once we find the end node then stop. All paths of the same cost must be in
-            // this bucket, so have already been accounted for.
+    while !todo_first.is_empty() {
+        while let Some((position, direction, cost)) = todo_first.pop_front() {
+            if cost >= lowest {
+                continue;
+            }
             if position == end {
                 lowest = cost;
-                break;
+                continue;
             }
 
             // -1.rem_euclid(4) = 3
@@ -60,17 +53,20 @@ pub fn parse(input: &str) -> Input {
                 (position, right, cost + 1000),
             ];
 
-            for (next_position, next_direction, next_cost) in next {
+            for tuple @ (next_position, next_direction, next_cost) in next {
                 if grid[next_position] != b'#' && next_cost < seen[next_position][next_direction] {
                     // Find the next bucket.
-                    let index = (next_cost % 1001) as usize;
-                    buckets[index].push((next_position, next_direction));
+                    if next_direction == direction {
+                        todo_first.push_back(tuple);
+                    } else {
+                        todo_second.push_back(tuple);
+                    }
                     seen[next_position][next_direction] = next_cost;
                 }
             }
         }
 
-        cost += 1;
+        (todo_first, todo_second) = (todo_second, todo_first);
     }
 
     // Backwards BFS
