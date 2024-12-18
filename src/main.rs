@@ -19,7 +19,7 @@ fn main() {
     };
 
     // Filter solutions
-    let solutions = empty()
+    let solutions: Vec<_> = empty()
         .chain(year2015())
         .chain(year2016())
         .chain(year2017())
@@ -31,25 +31,21 @@ fn main() {
         .chain(year2023())
         .chain(year2024())
         .filter(|solution| year.is_none_or(|y: u32| y == solution.year))
-        .filter(|solution| day.is_none_or(|d: u32| d == solution.day));
+        .filter(|solution| day.is_none_or(|d: u32| d == solution.day))
+        .collect();
 
-    // Pretty print output and timing for each solution
-    let mut solved = 0;
+    // Pretty print output for each solution.
     let mut duration = Duration::ZERO;
 
-    for Solution { year, day, path, wrapper } in solutions {
-        if let Ok(data) = read_to_string(&path) {
+    for Solution { year, day, path, wrapper } in &solutions {
+        if let Ok(data) = read_to_string(path) {
             let instant = Instant::now();
             let (part1, part2) = wrapper(data);
-            let elapsed = instant.elapsed();
-
-            solved += 2;
-            duration += elapsed;
+            duration += instant.elapsed();
 
             println!("{BOLD}{YELLOW}{year} Day {day:02}{RESET}");
             println!("    Part 1: {part1}");
             println!("    Part 2: {part2}");
-            println!("    Elapsed: {} μs", elapsed.as_micros());
         } else {
             eprintln!("{BOLD}{RED}{year} Day {day:02}{RESET}");
             eprintln!("    Missing input!");
@@ -57,9 +53,9 @@ fn main() {
         }
     }
 
-    // Optionally print totals
+    // Optionally print totals.
     if args().any(|a| a == "--totals") {
-        println!("{BOLD}{YELLOW}⭐ {solved}{RESET}");
+        println!("{BOLD}{YELLOW}⭐ {}{RESET}", 2 * solutions.len());
         println!("{BOLD}{WHITE}🕓 {} ms{RESET}", duration.as_millis());
     }
 }
