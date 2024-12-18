@@ -14,66 +14,95 @@
 //! ```
 //!
 //! Now we can [BFS](https://en.wikipedia.org/wiki/Breadth-first_search) from any arbitrary
-//! start time. Squares are blocked only if the grid time is less than or equal to the start time.
+//! start time. Squares are safe if the grid time is greater than the start time.
 //!
-//! A [binary search](https://en.wikipedia.org/wiki/Binary_search) is much faster than a
-//! linear search with complexity `O(log₂n)` vs `O(n)`. For example `log₂(3450) = 12`.
+//! Part two uses an incremental flood fill, getting a little further each time and removing
+//! blocking bytes in descending order of time until we reach the exit.
+//!
+//! * Start with `t = i32::MAX`
+//! * Start flood fill from top-left origin.
+//! * If we encounter a blocking byte with a time less than `t`
+//!   then push `(time, position)` onto a max heap keyed by time.
+//! * If we exhaust the flood fill `VecDeque` then pop the heap's top item.
+//!   This is the oldest byte that we encountered blocking the way.
+//!   Set `t` to the byte's time and push position to the dequeue.
+//! * Restart flood fill from new position until we reach the exit.
 use crate::util::grid::*;
+use crate::util::heap::*;
 use crate::util::iter::*;
 use crate::util::parse::*;
 use crate::util::point::*;
 use std::collections::VecDeque;
 
-pub fn parse(input: &str) -> Grid<u16> {
-    let mut grid = Grid::new(71, 71, u16::MAX);
+pub fn parse(input: &str) -> Grid<i32> {
+    let mut grid = Grid::new(71, 71, i32::MAX);
 
     for (i, [x, y]) in input.iter_signed::<i32>().chunk::<2>().enumerate() {
-        grid[Point::new(x, y)] = i as u16;
+        grid[Point::new(x, y)] = i as i32;
     }
 
     grid
 }
 
-pub fn part1(grid: &Grid<u16>) -> u32 {
-    bfs(grid, 1024).unwrap()
-}
-
-pub fn part2(grid: &Grid<u16>) -> String {
-    let mut lower = 0;
-    let mut upper = 5041;
-
-    while lower < upper {
-        let middle = (lower + upper) / 2;
-        if bfs(grid, middle).is_some() {
-            lower = middle + 1;
-        } else {
-            upper = middle;
-        }
-    }
-
-    let index = grid.bytes.iter().position(|&time| time == lower).unwrap() as i32;
-    format!("{},{}", index % grid.width, index / grid.width)
-}
-
-fn bfs(grid: &Grid<u16>, time: u16) -> Option<u32> {
+/// BFS from start to exit using a fixed time of 1024.
+pub fn part1(grid: &Grid<i32>) -> u32 {
+    let mut grid = grid.clone();
     let mut todo = VecDeque::new();
-    let mut seen = grid.clone();
 
+    grid[ORIGIN] = 0;
     todo.push_back((ORIGIN, 0));
-    seen[ORIGIN] = 0;
 
     while let Some((position, cost)) = todo.pop_front() {
         if position == Point::new(70, 70) {
-            return Some(cost);
+            return cost;
         }
 
         for next in ORTHOGONAL.map(|o| position + o) {
-            if seen.contains(next) && time < seen[next] {
+            if grid.contains(next) && grid[next] > 1024 {
+                grid[next] = 0;
                 todo.push_back((next, cost + 1));
-                seen[next] = 0;
             }
         }
     }
 
-    None
+    unreachable!()
+}
+
+/// Incremental flood fill that removes one blocking byte at a time in descending order.
+pub fn part2(grid: &Grid<i32>) -> String {
+    let mut time = i32::MAX;
+    let mut heap = MinHeap::new();
+
+    let mut grid = grid.clone();
+    let mut todo = VecDeque::new();
+
+    grid[ORIGIN] = 0;
+    todo.push_back(ORIGIN);
+
+    loop {
+        // Incremental flood fill that makes as much progress as possible.
+        while let Some(position) = todo.pop_front() {
+            if position == Point::new(70, 70) {
+                let index = grid.bytes.iter().position(|&b| b == time).unwrap() as i32;
+                return format!("{},{}", index % grid.width, index / grid.width);
+            }
+
+            for next in ORTHOGONAL.map(|o| position + o) {
+                if grid.contains(next) {
+                    if time < grid[next] {
+                        grid[next] = 0;
+                        todo.push_back(next);
+                    } else {
+                        // Use negative value to convert min-heap to max-heap.
+                        heap.push(-grid[next], next);
+                    }
+                }
+            }
+        }
+
+        // Remove the latest blocking byte then try to make a little more progress in flood fill.
+        let (first, saved) = heap.pop().unwrap();
+        time = -first;
+        todo.push_back(saved);
+    }
 }
