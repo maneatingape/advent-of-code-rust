@@ -13,7 +13,7 @@
 //!
 //! Additionally we store the Trie in a flat `vec`. This is simpler and faster than creating
 //! objects on the heap using [`Box`].
-type Input = (u64, u64);
+type Input = (usize, usize);
 
 pub fn parse(input: &str) -> Input {
     let (prefix, suffix) = input.split_once("\n\n").unwrap();
@@ -37,7 +37,7 @@ pub fn parse(input: &str) -> Input {
             }
         }
 
-        trie[i].towel = true;
+        trie[i].set_towel();
     }
 
     let mut part_one = 0;
@@ -70,44 +70,51 @@ pub fn parse(input: &str) -> Input {
                     }
 
                     // Add the number of possible ways this prefix can be reached.
-                    if trie[i].towel {
-                        ways[end + 1] += ways[start];
-                    }
+                    ways[end + 1] += trie[i].towels() * ways[start];
                 }
             }
         }
 
         // Last element is the total possible combinations.
         let total = ways[size];
-        part_one += (total > 0) as u64;
+        part_one += (total > 0) as usize;
         part_two += total;
     }
 
     (part_one, part_two)
 }
 
-pub fn part1(input: &Input) -> u64 {
+pub fn part1(input: &Input) -> usize {
     input.0
 }
 
-pub fn part2(input: &Input) -> u64 {
+pub fn part2(input: &Input) -> usize {
     input.1
 }
 
 /// Hashes the five possible color values white (w), blue (u), black (b), red (r), or green (g)
-/// to 6, 4, 0, 1 and 5 respectively. This compresses the range to fit into an array of 7 elements.
+/// to 0, 2, 4, 5 and 1 respectively. This compresses the range to fit into an array of 6 elements.
 fn perfect_hash(b: u8) -> usize {
-    (b as usize + (b as usize >> 4)) % 8
+    let n = b as usize;
+    (n ^ (n >> 4)) % 8
 }
 
 /// Simple Node object that uses indices to link to other nodes.
 struct Node {
-    towel: bool,
-    next: [usize; 7],
+    next: [usize; 6],
 }
 
 impl Node {
     fn new() -> Self {
-        Node { towel: false, next: [0; 7] }
+        Node { next: [0; 6] }
+    }
+
+    // Index 3 is not used by the hash, so we cheekily repurpose for the number of towels.
+    fn set_towel(&mut self) {
+        self.next[3] = 1;
+    }
+
+    fn towels(&self) -> usize {
+        self.next[3]
     }
 }
