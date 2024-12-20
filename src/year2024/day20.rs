@@ -2,42 +2,47 @@
 use crate::util::grid::*;
 use crate::util::point::*;
 use crate::util::thread::*;
-use std::collections::VecDeque;
 use std::sync::atomic::{AtomicU32, Ordering};
 
-pub struct Input {
-    grid: Grid<u8>,
-    forward: Grid<i32>,
-    reverse: Grid<i32>,
-    full: i32,
-}
-
-pub fn parse(input: &str) -> Input {
+pub fn parse(input: &str) -> Grid<i32> {
     let grid = Grid::parse(input);
     let start = grid.find(b'S').unwrap();
     let end = grid.find(b'E').unwrap();
 
-    let forward = bfs(&grid, start);
-    let reverse = bfs(&grid, end);
-    let full = forward[end];
+    let mut position = start;
+    let mut direction = ORTHOGONAL.into_iter().find(|&o| grid[position + o] != b'#').unwrap();
 
-    Input { grid, forward, reverse, full }
+    let mut time = Grid::new(grid.width + 19, grid.height + 19, i32::MAX);
+    let mut elapsed = 0;
+
+    while position != end {
+        time[position] = elapsed;
+        elapsed += 1;
+
+        direction = [direction, direction.clockwise(), direction.counter_clockwise()]
+            .into_iter()
+            .find(|&d| grid[position + d] != b'#')
+            .unwrap();
+        position += direction;
+    }
+
+    time[end] = elapsed;
+    time
 }
 
-pub fn part1(input: &Input) -> u32 {
-    let Input { grid, forward, reverse, full } = input;
+pub fn part1(time: &Grid<i32>) -> u32 {
     let mut total = 0;
 
-    for y in 1..grid.height - 1 {
-        for x in 1..grid.width - 1 {
+    for y in 1..time.height - 20 {
+        for x in 1..time.width - 20 {
             let first = Point::new(x, y);
 
-            if grid[first] != b'#' {
-                for second in ORTHOGONAL.map(|o| first + o * 2) {
-                    if grid.contains(second) && grid[second] != b'#' {
-                        let cost = forward[first] + reverse[second] + 2;
+            if time[first] < i32::MAX {
+                for second in [Point::new(2, 0), Point::new(0, 2)].map(|o| first + o) {
+                    if time[second] < i32::MAX {
+                        let saved = time[first].abs_diff(time[second]) - 2;
 
-                        if *full - cost >= 100 {
+                        if saved >= 100 {
                             total += 1;
                         }
                     }
@@ -49,26 +54,24 @@ pub fn part1(input: &Input) -> u32 {
     total
 }
 
-pub fn part2(input: &Input) -> u32 {
-    let Input { grid, .. } = input;
+pub fn part2(time: &Grid<i32>) -> u32 {
     let mut items = Vec::with_capacity(10_000);
 
-    for y in 1..grid.height - 1 {
-        for x in 1..grid.width - 1 {
+    for y in 1..time.height - 20 {
+        for x in 1..time.width - 20 {
             let point = Point::new(x, y);
-            if grid[point] != b'#' {
+            if time[point] < i32::MAX {
                 items.push(point);
             }
         }
     }
 
     let total = AtomicU32::new(0);
-    spawn_batches(items, |batch| worker(input, &total, batch));
+    spawn_batches(items, |batch| worker(time, &total, batch));
     total.into_inner()
 }
 
-fn worker(input: &Input, total: &AtomicU32, batch: Vec<Point>) {
-    let Input { grid, forward, reverse, full } = input;
+fn worker(time: &Grid<i32>, total: &AtomicU32, batch: Vec<Point>) {
     let mut cheats = 0;
 
     for first in batch {
@@ -76,11 +79,11 @@ fn worker(input: &Input, total: &AtomicU32, batch: Vec<Point>) {
             for x in (y.abs() - 20)..(21 - y.abs()) {
                 let second = first + Point::new(x, y);
 
-                if grid.contains(second) && grid[second] != b'#' {
+                if time.contains(second) && time[second] < i32::MAX {
                     let manhattan = x.abs() + y.abs();
-                    let cost = forward[first] + reverse[second] + manhattan;
+                    let saved = time[second] - time[first] - manhattan;
 
-                    if *full - cost >= 100 {
+                    if saved >= 100 {
                         cheats += 1;
                     }
                 }
@@ -89,25 +92,4 @@ fn worker(input: &Input, total: &AtomicU32, batch: Vec<Point>) {
     }
 
     total.fetch_add(cheats, Ordering::Relaxed);
-}
-
-fn bfs(grid: &Grid<u8>, start: Point) -> Grid<i32> {
-    let mut todo = VecDeque::new();
-    let mut seen = grid.same_size_with(i32::MAX);
-
-    todo.push_back((start, 0));
-    seen[start] = 0;
-
-    while let Some((position, cost)) = todo.pop_front() {
-        let cost = cost + 1;
-
-        for next in ORTHOGONAL.map(|o| position + o) {
-            if grid[next] != b'#' && cost < seen[next] {
-                todo.push_back((next, cost));
-                seen[next] = cost;
-            }
-        }
-    }
-
-    seen
 }
