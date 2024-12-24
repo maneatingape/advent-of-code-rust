@@ -1,41 +1,44 @@
 //! # Crossed Wires
 use crate::util::hash::*;
+use crate::util::iter::*;
 use crate::util::parse::*;
 
-pub fn parse(input: &str) -> &str {
-    input
+type Input<'a> = (&'a str, Vec<[&'a str; 5]>);
+
+pub fn parse(input: &str) -> Input<'_> {
+    let (prefix, suffix) = input.split_once("\n\n").unwrap();
+    let gates = suffix.split_ascii_whitespace().chunk::<5>().collect();
+    (prefix, gates)
 }
 
-pub fn part1(input: &str) -> u64 {
-    let (prefix, suffix) = input.split_once("\n\n").unwrap();
+pub fn part1(input: &Input<'_>) -> u64 {
+    let (prefix, gates) = input;
 
     let mut names = FastMap::new();
     let mut cache = FastMap::new();
     let mut ops = FastMap::new();
 
     for line in prefix.lines() {
-        let (key, value) = line.split_once(": ").unwrap();
+        let prefix = &line[..3];
+        let suffix = &line[5..];
 
         let size = names.len();
-        let index = *names.entry(key).or_insert(size);
+        let index = *names.entry(prefix).or_insert(size);
 
-        cache.insert(index, value.unsigned::<u64>());
+        cache.insert(index, suffix.unsigned());
     }
 
-    for line in suffix.lines() {
-        let tokens: Vec<_> = line.split(' ').collect();
-        let op = tokens[1];
+    for &[left, kind, right, _, to] in gates {
+        let size = names.len();
+        let left = *names.entry(left).or_insert(size);
 
         let size = names.len();
-        let left = *names.entry(tokens[0]).or_insert(size);
+        let right = *names.entry(right).or_insert(size);
 
         let size = names.len();
-        let right = *names.entry(tokens[2]).or_insert(size);
+        let to = *names.entry(to).or_insert(size);
 
-        let size = names.len();
-        let to = *names.entry(tokens[4]).or_insert(size);
-
-        ops.insert(to, (left, op, right));
+        ops.insert(to, (left, kind, right));
     }
 
     let mut result = 0;
@@ -50,105 +53,54 @@ pub fn part1(input: &str) -> u64 {
     result
 }
 
-pub fn part2(_input: &str) -> String {
-    // let (_, suffix) = input.split_once("\n\n").unwrap();
-    // let mut wires = FastMap::new();
+pub fn part2(input: &Input<'_>) -> String {
+    let (_, gates) = input;
 
-    // println!("digraph G {{");
+    let mut lookup = FastSet::new();
+    let mut swapped = FastSet::new();
 
-    // for i in 0..46 {
-    //     if i < 45 {
-    //         let key = format!("x{i:02}");
-    //         println!("  {} [pos=\"{},{}!\"]", key, i * 2, 5);
-    //         let value = key.clone();
-    //         wires.insert(key, vec![value]);
+    for &[left, kind, right, _, _] in gates {
+        lookup.insert((left, kind));
+        lookup.insert((right, kind));
+    }
 
-    //         let key = format!("y{i:02}");
-    //         println!("  {} [pos=\"{},{}!\"]", key, i * 2 + 1, 5);
-    //         let value = key.clone();
-    //         wires.insert(key, vec![value]);
-    //     }
+    for &[left, kind, right, _, to] in gates {
+        if kind == "AND" {
+            // Check that all AND gates point to an OR, except for first AND.
+            if left != "x00" && right != "x00" && !lookup.contains(&(to, "OR")) {
+                swapped.insert(to);
+            }
+        }
 
-    //     let key = format!("z{i:02}");
-    //     println!("  {} [pos=\"{},{}!\"]", key, i * 2, 0);
-    // }
+        if kind == "OR" {
+            // Check that only XOR gates point to output, except for last carry which is OR.
+            if to.starts_with('z') && to != "z45" {
+                swapped.insert(to);
+            }
+            // OR can never point to OR.
+            if lookup.contains(&(to, "OR")) {
+                swapped.insert(to);
+            }
+        }
 
-    // println!();
+        if kind == "XOR" {
+            if left.starts_with('x') || right.starts_with('x') {
+                // Check that first level XOR points to second level XOR, except for first XOR.
+                if left != "x00" && right != "x00" && !lookup.contains(&(to, "XOR")) {
+                    swapped.insert(to);
+                }
+            } else {
+                // Second level XOR must point to output.
+                if !to.starts_with('z') {
+                    swapped.insert(to);
+                }
+            }
+        }
+    }
 
-    // for (name, line) in suffix.lines().enumerate() {
-    //     let tokens: Vec<_> = line.split(' ').collect();
-    //     let [_, _, _, _, to] = tokens[..] else { unreachable!() };
-    //     wires.entry(String::from(to)).or_insert_with(Vec::new).push(format!("{name}"));
-    // }
-
-    // let mut second = FastMap::new();
-
-    // for (name, line) in suffix.lines().enumerate() {
-    //     let tokens: Vec<_> = line.split(' ').collect();
-    //     let [left, op, right, _, to] = tokens[..] else { unreachable!() };
-
-    //     let shape = match op {
-    //         "AND" => "square",
-    //         "OR" => "hexagon",
-    //         "XOR" => "triangle",
-    //         _ => unreachable!(),
-    //     };
-
-    //     if left.starts_with('x') || right.starts_with('x') {
-    //         let i: usize = left.unsigned();
-    //         if op == "AND" {
-    //             println!("{} [pos=\"{},{}!\"]", name, i * 2 + 1, 4);
-    //             second.insert(to, i);
-    //         }
-    //         if op == "XOR" {
-    //             println!("{} [pos=\"{},{}!\"]", name, i * 2, 4);
-    //             second.insert(to, i);
-    //         }
-    //     }
-    //     if to.starts_with('z') {
-    //         let i: usize = to.unsigned();
-    //         println!("{} [pos=\"{},{}!\"]", name, i * 2, 1);
-    //     }
-
-    //     println!("  {name} [shape={shape}]");
-    //     for edge in &wires[&String::from(left)] {
-    //         println!("  {edge} -> {name} [label=\"{left}\"]");
-    //     }
-    //     for edge in &wires[&String::from(right)] {
-    //         println!("  {edge} -> {name} [label=\"{right}\"]");
-    //     }
-    // }
-
-    // for (name, line) in suffix.lines().enumerate() {
-    //     let tokens: Vec<_> = line.split(' ').collect();
-    //     let [left, op, right, _, _] = tokens[..] else { unreachable!() };
-
-    //     if op == "AND" {
-    //         if let Some(i) = second.get(left) {
-    //             println!("{} [pos=\"{},{}!\"]", name, i * 2 + 1, 3);
-    //         }
-    //         if let Some(i) = second.get(right) {
-    //             println!("{} [pos=\"{},{}!\"]", name, i * 2 + 1, 3);
-    //         }
-    //     }
-    //     if op == "OR" {
-    //         if let Some(i) = second.get(left) {
-    //             println!("{} [pos=\"{},{}!\"]", name, i * 2 + 1, 2);
-    //         }
-    //         if let Some(i) = second.get(right) {
-    //             println!("{} [pos=\"{},{}!\"]", name, i * 2 + 1, 2);
-    //         }
-    //     }
-    // }
-
-    // for i in 0..46 {
-    //     let key = format!("z{i:02}");
-    //     for edge in &wires[&key] {
-    //         println!("  {edge} -> {key}");
-    //     }
-    // }
-
-    String::from("n/a")
+    let mut result: Vec<_> = swapped.into_iter().collect();
+    result.sort_unstable();
+    result.join(",")
 }
 
 fn helper(
