@@ -1,7 +1,7 @@
 # Advent of Code [![checks-badge]][checks-link] [![docs-badge]][docs-link]
 
-In progress 2024 and complete 2023 to 2015 entries written in Rust for the annual [Advent of Code] challenge,
-solving 450 stars in less than 1 second.
+Complete 2024 to 2015 entries written in Rust for the annual [Advent of Code] challenge,
+solving 500 stars in less than 1 second.
 
 ## Features
 
@@ -53,7 +53,7 @@ Place input files in `input/yearYYYY/dayDD.txt` including leading zeroes. For ex
 ## Performance
 
 Benchmarks are measured using the built-in `cargo bench` tool run on an [Apple M2 Max][apple-link].
-All 225 solutions from 2023 to 2015 complete sequentially in **579 milliseconds**.
+All 250 solutions from 2024 to 2015 complete sequentially in **585 milliseconds**.
 Interestingly 84% of the total time is spent on just 9 solutions.
 Performance is reasonable even on older hardware, for example a 2011 MacBook Pro with an
 [Intel i7-2720QM][intel-link] processor takes 3.5 seconds to run the same 225 solutions.
@@ -66,9 +66,11 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 | [2016](#2016) | 120 | | [2021](#2021) | 9 |
 | [2017](#2017) | 89 | | [2022](#2022) | 8 |
 | [2018](#2018) | 35 | | [2023](#2023) | 6 |
-| [2019](#2019) | 16 | | [2024](#2024) | (in progress) |
+| [2019](#2019) | 16 | | [2024](#2024) | 6 |
 
 ## 2024
+
+![pie-2024]
 
 | Day | Problem | Solution | Benchmark (μs) |
 | --- | --- | --- | --: |
@@ -394,6 +396,7 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 [apple-link]: https://en.wikipedia.org/wiki/Apple_M2
 [intel-link]: https://ark.intel.com/content/www/us/en/ark/products/50067/intel-core-i72720qm-processor-6m-cache-up-to-3-30-ghz.html
 [pie-all]: docs/pie-all.svg
+[pie-2024]: docs/pie-2024.svg
 [pie-2023]: docs/pie-2023.svg
 [pie-2022]: docs/pie-2022.svg
 [pie-2021]: docs/pie-2021.svg
