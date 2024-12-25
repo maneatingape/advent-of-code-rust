@@ -1,5 +1,5 @@
 <!--
-%%{init: {"themeVariables": { "pie1": "#7cb5ec", "pie2": "#90ed7d", "pie3": "#f7a35c", "pie4": "#e4d354", "pie5": "#e4c4fb", "pie6": "#c6cdd5"}}}%%
+%%{init: {"themeVariables": { "pie1": "#7cb5ec", "pie2": "#90ed7d", "pie3": "#f7a35c", "pie4": "#e4d354", "pie5": "#e4c4fb", "pie6": "#c6cdd5", "pie7": "#91e8e1"}}}%%
 pie
 	title Each year benchmark time by % of total
 	"Year 2020" : 272
@@ -26,7 +26,7 @@ pie
 		<path class="pieCircle" d="M-166.277,-81.099A185,185,0,0,1,-124.893,-136.48L0,0Z" fill="#e4d354"/>
 		<path class="pieCircle" d="M-124.893,-136.48A185,185,0,0,1,-77.057,-168.188L0,0Z" fill="#e4c4fb"/>
 		<path class="pieCircle" d="M-77.057,-168.188A185,185,0,0,1,-31.636,-182.275L0,0Z" fill="#c6cdd5"/>
-		<path class="pieCircle" d="M-31.636,-182.275A185,185,0,0,1,0,-185L0,0Z" fill="hsl(300, 100%, 76.2745098039%)"/>
+		<path class="pieCircle" d="M-31.636,-182.275A185,185,0,0,1,0,-185L0,0Z" fill="#91e8e1"/>
 		<text class="slice" style="text-anchor: middle;" transform="translate(137.91003719209237,-15.244151064447514)">46%</text>
 		<text class="slice" style="text-anchor: middle;" transform="translate(-57.114594392468106,126.44953779031322)">21%</text>
 		<text class="slice" style="text-anchor: middle;" transform="translate(-138.70948695362677,3.3527196515135045)">15%</text>
@@ -60,7 +60,7 @@ pie
 			<text x="22" y="14">Year 2015</text>
 		</g>
 		<g transform="translate(216,55)">
-			<rect height="18" style="fill: rgb(255, 134, 255); stroke: rgb(255, 134, 255);" width="18"/>
+			<rect height="18" style="fill: rgb(145, 232, 225); stroke: rgb(145, 232, 225);" width="18"/>
 			<text x="22" y="14">Year 2019</text>
 		</g>
 	</g>

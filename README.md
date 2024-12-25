@@ -97,8 +97,8 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 | 21 | [Keypad Conundrum](https://adventofcode.com/2024/day/21) | [Source](src/year2024/day21.rs) | 111 |
 | 22 | [Monkey Market](https://adventofcode.com/2024/day/22) | [Source](src/year2024/day22.rs) | 1350 |
 | 23 | [LAN Party](https://adventofcode.com/2024/day/23) | [Source](src/year2024/day23.rs) | 43 |
-| 24 | [Crossed Wires](https://adventofcode.com/2024/day/24) | [Source](src/year2024/day24.rs) | 36 |
-| 25 | [Code Chronicle](https://adventofcode.com/2024/day/25) | [Source](src/year2024/day25.rs) | 12 |
+| 24 | [Crossed Wires](https://adventofcode.com/2024/day/24) | [Source](src/year2024/day24.rs) | 23 |
+| 25 | [Code Chronicle](https://adventofcode.com/2024/day/25) | [Source](src/year2024/day25.rs) | 11 |
 
 ## 2023
 
