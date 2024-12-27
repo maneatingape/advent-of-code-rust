@@ -16,7 +16,7 @@
 //! [`count_ones`]: u32::count_ones
 
 pub fn parse(input: &str) -> Vec<u32> {
-    input.lines().map(|line| line.bytes().fold(0, |acc, b| acc | 1 << (b - b'a'))).collect()
+    input.lines().map(|line| line.bytes().fold(0, |acc, b| acc | (1 << (b - b'a')))).collect()
 }
 
 pub fn part1(input: &[u32]) -> u32 {

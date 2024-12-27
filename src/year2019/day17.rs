@@ -126,7 +126,9 @@ pub fn part2(input: &Input) -> i64 {
 /// This string will be too long to use directly in the robot's movement functions, so we'll
 /// need to compress it first.
 fn build_path(input: &Input) -> String {
-    let Input { scaffold, mut position, mut direction, .. } = input;
+    let scaffold = &input.scaffold;
+    let mut position = input.position;
+    let mut direction = input.direction;
     let mut path = String::new();
 
     loop {

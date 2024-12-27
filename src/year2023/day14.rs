@@ -223,7 +223,7 @@ pub fn part2(input: &Input) -> i32 {
     let remainder = offset % cycle_width;
     let target = start + remainder;
 
-    let (state, _) = seen.iter().find(|(_, &i)| i == target).unwrap();
+    let (state, _) = seen.iter().find(|&(_, &i)| i == target).unwrap();
     let mut result = 0;
 
     for (&a, &b) in input.roll_east.iter().zip(state.iter()) {

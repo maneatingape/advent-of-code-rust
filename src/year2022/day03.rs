@@ -49,7 +49,7 @@ pub fn part2(input: &[&str]) -> u32 {
 /// Build a set from a slice of ASCII characters, using the `fold` function to repeatedly OR
 /// bit offsets into an accumulator.
 fn mask(s: &str) -> u128 {
-    s.bytes().fold(0, |acc, b| acc | 1 << b)
+    s.bytes().fold(0, |acc, b| acc | (1 << b))
 }
 
 /// Find the lowest set bit (there should only be one) then convert to priority using the

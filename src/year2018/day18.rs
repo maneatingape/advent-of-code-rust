@@ -97,7 +97,7 @@ pub fn part2(input: &Key) -> u32 {
             let remainder = offset % cycle_width;
             let target = previous + remainder;
 
-            let (result, _) = seen.iter().find(|(_, &i)| i == target).unwrap();
+            let (result, _) = seen.iter().find(|&(_, &i)| i == target).unwrap();
             return resource_value(&result.area);
         }
     }

@@ -151,7 +151,7 @@ fn common(f: u32, a: u32, b: u32, m: u32, s: u32, k: u32) -> u32 {
 #[cfg(feature = "simd")]
 pub mod simd {
     use std::array;
-    use std::simd::num::SimdUint;
+    use std::simd::num::SimdUint as _;
     use std::simd::{LaneCount, Simd, SupportedLaneCount};
 
     #[inline]

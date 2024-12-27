@@ -41,8 +41,8 @@ pub fn parse(input: &str) -> Input {
     let mut horizontal = Vec::with_capacity(width * height);
     for time in 0..width {
         for i in 0..height {
-            let left = left[i] << time | left[i] >> (width - time);
-            let right = right[i] >> time | right[i] << (width - time);
+            let left = (left[i] << time) | (left[i] >> (width - time));
+            let right = (right[i] >> time) | (right[i] << (width - time));
             horizontal.push(left & right);
         }
     }
@@ -89,7 +89,7 @@ fn expedition(input: &Input, start: usize, forward: bool) -> usize {
             next = state[i + 1];
             // The Elves frontier can spread out 1 in each orthogonal direction unless there
             // is a blizzard present.
-            state[i] = (cur | cur >> 1 | cur << 1 | prev | next)
+            state[i] = (cur | (cur >> 1) | (cur << 1) | prev | next)
                 & horizontal[height * (time % width) + i]
                 & vertical[height * (time % height) + i];
         }
@@ -106,7 +106,7 @@ fn expedition(input: &Input, start: usize, forward: bool) -> usize {
             // End position.
             state[height - 1] |= 1;
             // If we've reached the start then stop.
-            if state[0] & 1 << (width - 1) != 0 {
+            if state[0] & (1 << (width - 1)) != 0 {
                 break time + 1;
             }
         }

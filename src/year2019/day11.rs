@@ -18,7 +18,7 @@ pub fn part2(input: &[i64]) -> String {
     let hull = paint(input, 1);
 
     // Filter only white panels
-    let panels: Vec<_> = hull.iter().filter(|(_, &v)| v == 1).map(|(&k, _)| k).collect();
+    let panels: Vec<_> = hull.iter().filter(|&(_, &v)| v == 1).map(|(&k, _)| k).collect();
 
     // Get maximum extents
     let mut x1 = i32::MAX;
