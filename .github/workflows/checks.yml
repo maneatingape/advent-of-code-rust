@@ -7,10 +7,25 @@ on:
     branches: main
 
 jobs:
-  build:
+  lint:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
+    - run: rustup install nightly --profile default
+    - run: rustup default nightly
     - run: cargo fmt --check -- **/*.rs
-    - run: cargo clippy --tests --features frivolity -- --deny warnings
+    - run: cargo clippy --all-targets --all-features -- --deny warnings
+
+  test-stable:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - run: rustup default 1.83
     - run: cargo test
+
+  test-nightly:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - run: rustup default nightly
+    - run: cargo test --features simd
