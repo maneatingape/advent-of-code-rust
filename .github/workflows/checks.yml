@@ -11,6 +11,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-    - run: cargo fmt --check
+    - run: cargo fmt --check -- **/*.rs
     - run: cargo clippy --tests --features frivolity -- --deny warnings
     - run: cargo test
