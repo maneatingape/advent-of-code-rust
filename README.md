@@ -90,7 +90,7 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 | 18 | [RAM Run](https://adventofcode.com/2024/day/18) | [Source](src/year2024/day18.rs) | 42 |
 | 19 | [Linen Layout](https://adventofcode.com/2024/day/19) | [Source](src/year2024/day19.rs) | 118 |
 | 20 | [Race Condition](https://adventofcode.com/2024/day/20) | [Source](src/year2024/day20.rs) | 1354 |
-| 21 | [Keypad Conundrum](https://adventofcode.com/2024/day/21) | [Source](src/year2024/day21.rs) | 111 |
+| 21 | [Keypad Conundrum](https://adventofcode.com/2024/day/21) | [Source](src/year2024/day21.rs) | 19 |
 | 22 | [Monkey Market](https://adventofcode.com/2024/day/22) | [Source](src/year2024/day22.rs) | 1350 |
 | 23 | [LAN Party](https://adventofcode.com/2024/day/23) | [Source](src/year2024/day23.rs) | 43 |
 | 24 | [Crossed Wires](https://adventofcode.com/2024/day/24) | [Source](src/year2024/day24.rs) | 23 |
