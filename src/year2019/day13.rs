@@ -16,7 +16,7 @@ pub fn parse(input: &str) -> Vec<i64> {
 
 pub fn part1(input: &[i64]) -> usize {
     let mut computer = Computer::new(input);
-    let mut tiles = [0; 44 * 20];
+    let mut tiles = [0; 44 * 22];
 
     loop {
         let State::Output(x) = computer.run() else {
@@ -39,7 +39,7 @@ pub fn part2(input: &[i64]) -> i64 {
     modified[0] = 2;
 
     let mut computer = Computer::new(&modified);
-    let mut tiles = [0; 44 * 20];
+    let mut tiles = [0; 44 * 22];
     let mut score = 0;
     let mut blocks = score;
     let mut ball: i64 = 0;
@@ -97,14 +97,15 @@ fn draw(tiles: &[i64], score: i64, blocks: i64) {
     use std::time::Duration;
 
     // Wait until the initial screen is complete
-    if tiles[879] != 1 {
+    let paddle = tiles.iter().rposition(|&t| t == 3).unwrap_or(tiles.len());
+    if tiles[paddle..].iter().filter(|&&t| t == 1).count() < 3 {
         return;
     }
 
     let s = &mut String::new();
     let _ = writeln!(s, "{WHITE}{BOLD}Blocks: {blocks}\tScore: {score} {RESET}");
 
-    for y in 0..20 {
+    for y in 0..22 {
         for x in 0..44 {
             let _unused = match tiles[44 * y + x] {
                 0 => write!(s, " "),
