@@ -16,22 +16,24 @@ pub fn parse(input: &str) -> Vec<i64> {
 
 pub fn part1(input: &[i64]) -> usize {
     let mut computer = Computer::new(input);
-    let mut tiles = [0; 44 * 22];
+    let mut blocks = 0;
 
     loop {
-        let State::Output(x) = computer.run() else {
+        let State::Output(_) = computer.run() else {
             break;
         };
-        let State::Output(y) = computer.run() else {
+        let State::Output(_) = computer.run() else {
             break;
         };
         let State::Output(t) = computer.run() else {
             break;
         };
-        tiles[(44 * y + x) as usize] = t;
+        if t == 2 {
+            blocks += 1;
+        }
     }
 
-    tiles.iter().filter(|&&t| t == 2).count()
+    blocks
 }
 
 pub fn part2(input: &[i64]) -> i64 {
@@ -39,7 +41,8 @@ pub fn part2(input: &[i64]) -> i64 {
     modified[0] = 2;
 
     let mut computer = Computer::new(&modified);
-    let mut tiles = [0; 44 * 22];
+    let mut tiles = Vec::with_capacity(1_000);
+    let mut stride = 0;
     let mut score = 0;
     let mut blocks = score;
     let mut ball: i64 = 0;
@@ -69,7 +72,13 @@ pub fn part2(input: &[i64]) -> i64 {
                 break score;
             }
         } else {
-            let index = (44 * y + x) as usize;
+            if x >= stride {
+                stride = x + 1;
+            }
+            let index = (stride * y + x) as usize;
+            if index >= tiles.len() {
+                tiles.resize(index + 1, 0);
+            }
 
             match t {
                 0 if tiles[index] == 2 => blocks -= 1,
@@ -85,12 +94,12 @@ pub fn part2(input: &[i64]) -> i64 {
         // Non essential but hilarious. Enable feature then run program in a command line
         // conosle to observe an animated game of breakout.
         #[cfg(feature = "frivolity")]
-        draw(&tiles, score, blocks);
+        draw(&tiles, stride, score, blocks);
     }
 }
 
 #[cfg(feature = "frivolity")]
-fn draw(tiles: &[i64], score: i64, blocks: i64) {
+fn draw(tiles: &[i64], stride: i64, score: i64, blocks: i64) {
     use crate::util::ansi::*;
     use std::fmt::Write as _;
     use std::thread::sleep;
@@ -104,10 +113,12 @@ fn draw(tiles: &[i64], score: i64, blocks: i64) {
 
     let s = &mut String::new();
     let _ = writeln!(s, "{WHITE}{BOLD}Blocks: {blocks}\tScore: {score} {RESET}");
+    let mut y = 0;
 
-    for y in 0..22 {
-        for x in 0..44 {
-            let _unused = match tiles[44 * y + x] {
+    while stride * y < tiles.len() as i64 {
+        for x in 0..stride {
+            let index = (stride * y + x) as usize;
+            let _unused = match tiles[index] {
                 0 => write!(s, " "),
                 1 if y == 0 => write!(s, "{GREEN}_{RESET}"),
                 1 => write!(s, "{GREEN}|{RESET}"),
@@ -118,6 +129,7 @@ fn draw(tiles: &[i64], score: i64, blocks: i64) {
             };
         }
         s.push('\n');
+        y += 1;
     }
 
     println!("{HOME}{CLEAR}{s}");
