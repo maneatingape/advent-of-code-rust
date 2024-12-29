@@ -63,7 +63,6 @@ pub fn part1(disk: &[usize]) -> usize {
     checksum
 }
 
-#[allow(clippy::needless_range_loop)]
 pub fn part2(disk: &[usize]) -> usize {
     let mut block = 0;
     let mut checksum = 0;
@@ -80,9 +79,9 @@ pub fn part2(disk: &[usize]) -> usize {
     }
 
     // Add sentinel value and reverse vecs so that smallest blocks are last.
-    for i in 0..10 {
-        free[i].push(block);
-        free[i].reverse();
+    for heap in &mut free {
+        heap.push(block);
+        heap.reverse();
     }
 
     for (index, &size) in disk.iter().enumerate().rev() {
@@ -97,9 +96,9 @@ pub fn part2(disk: &[usize]) -> usize {
         let mut next_block = block;
         let mut next_index = usize::MAX;
 
-        for i in size..free.len() {
-            let top = free[i].len() - 1;
-            let first = free[i][top];
+        for (i, heap) in free.iter().enumerate().skip(size) {
+            let top = heap.len() - 1;
+            let first = heap[top];
 
             if first < next_block {
                 next_block = first;

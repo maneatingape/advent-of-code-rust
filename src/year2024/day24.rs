@@ -126,36 +126,37 @@ pub fn part2(input: &Input<'_>) -> String {
     }
 
     for &[left, kind, right, _, to] in gates {
-        if kind == "AND" {
-            // Check that all AND gates point to an OR, except for first AND.
-            if left != "x00" && right != "x00" && !output.contains(&(to, "OR")) {
-                swapped.insert(to);
-            }
-        }
-
-        if kind == "OR" {
-            // Check that only XOR gates point to output, except for last carry which is OR.
-            if to.starts_with('z') && to != "z45" {
-                swapped.insert(to);
-            }
-            // OR can never point to OR.
-            if output.contains(&(to, "OR")) {
-                swapped.insert(to);
-            }
-        }
-
-        if kind == "XOR" {
-            if left.starts_with('x') || right.starts_with('x') {
-                // Check that first level XOR points to second level XOR, except for first XOR.
-                if left != "x00" && right != "x00" && !output.contains(&(to, "XOR")) {
-                    swapped.insert(to);
-                }
-            } else {
-                // Second level XOR must point to output.
-                if !to.starts_with('z') {
+        match kind {
+            "AND" => {
+                // Check that all AND gates point to an OR, except for first AND.
+                if left != "x00" && right != "x00" && !output.contains(&(to, "OR")) {
                     swapped.insert(to);
                 }
             }
+            "OR" => {
+                // Check that only XOR gates point to output, except for last carry which is OR.
+                if to.starts_with('z') && to != "z45" {
+                    swapped.insert(to);
+                }
+                // OR can never point to OR.
+                if output.contains(&(to, "OR")) {
+                    swapped.insert(to);
+                }
+            }
+            "XOR" => {
+                if left.starts_with('x') || right.starts_with('x') {
+                    // Check that first level XOR points to second level XOR, except for first XOR.
+                    if left != "x00" && right != "x00" && !output.contains(&(to, "XOR")) {
+                        swapped.insert(to);
+                    }
+                } else {
+                    // Second level XOR must point to output.
+                    if !to.starts_with('z') {
+                        swapped.insert(to);
+                    }
+                }
+            }
+            _ => unreachable!(),
         }
     }
 

@@ -76,6 +76,7 @@ fn worker(mutex: &Mutex<Exclusive>, batch: &[usize]) {
             let index = 6859 * a + 361 * b + 19 * c + d;
 
             // Only sell the first time we see a sequence.
+            // By storing the id in the array we don't need to zero every iteration which is faster.
             if seen[index] != id {
                 part_two[index] += price as u16;
                 seen[index] = id;
