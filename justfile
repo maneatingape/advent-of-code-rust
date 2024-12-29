@@ -1,5 +1,5 @@
 lint:
-    cargo fmt -- **/*.rs
+    cargo fmt -- `find . -name "*.rs"`
     cargo clippy --all-targets --all-features
 
 docs:
