@@ -83,18 +83,17 @@ pub fn part2(input: &[Snailfish]) -> i32 {
         }
     }
 
-    // Use as many cores as possible to parallelize the calculation,
-    // breaking the work into roughly equally size batches.
+    // Use as many cores as possible to parallelize the calculation.
     let shared = AtomicI32::new(0);
-    spawn_batches(pairs, |batch| worker(&shared, &batch));
+    spawn_parallel_iterator(&pairs, |iter| worker(&shared, iter));
     shared.load(Ordering::Relaxed)
 }
 
 /// Pair addition is independent so we can parallelize across multiple threads.
-fn worker(shared: &AtomicI32, batch: &[(&Snailfish, &Snailfish)]) {
+fn worker(shared: &AtomicI32, iter: ParIter<'_, (&Snailfish, &Snailfish)>) {
     let mut partial = 0;
 
-    for (a, b) in batch {
+    for (a, b) in iter {
         partial = partial.max(magnitude(&mut add(a, b)));
     }
 

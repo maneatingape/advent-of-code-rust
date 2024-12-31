@@ -29,10 +29,11 @@ struct Exclusive {
 }
 
 pub fn parse(input: &str) -> Input {
-    let numbers = input.iter_unsigned().collect();
+    let numbers: Vec<_> = input.iter_unsigned().collect();
     let mutex = Mutex::new(Exclusive { part_one: 0, part_two: vec![0; 130321] });
 
-    spawn_batches(numbers, |batch| worker(&mutex, &batch));
+    // Use as many cores as possible to parallelize the remaining search.
+    spawn_parallel_iterator(&numbers, |iter| worker(&mutex, iter));
 
     let Exclusive { part_one, part_two } = mutex.into_inner().unwrap();
     (part_one, *part_two.iter().max().unwrap())
@@ -46,12 +47,12 @@ pub fn part2(input: &Input) -> u16 {
     input.1
 }
 
-fn worker(mutex: &Mutex<Exclusive>, batch: &[usize]) {
+fn worker(mutex: &Mutex<Exclusive>, iter: ParIter<'_, usize>) {
     let mut part_one = 0;
     let mut part_two = vec![0; 130321];
     let mut seen = vec![u16::MAX; 130321];
 
-    for (id, number) in batch.iter().enumerate() {
+    for (id, number) in iter.enumerate() {
         let id = id as u16;
 
         let zeroth = *number;

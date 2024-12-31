@@ -78,14 +78,13 @@ pub fn part2(grid: &Grid<u8>) -> usize {
     let shortcut = Shortcut::from(&grid);
     let total = AtomicUsize::new(0);
 
-    spawn_batches(path, |batch| worker(&shortcut, &total, &batch));
+    spawn_parallel_iterator(&path, |iter| worker(&shortcut, &total, iter));
     total.into_inner()
 }
 
-fn worker(shortcut: &Shortcut, total: &AtomicUsize, batch: &[(Point, Point)]) {
+fn worker(shortcut: &Shortcut, total: &AtomicUsize, iter: ParIter<'_, (Point, Point)>) {
     let mut seen = FastSet::new();
-    let result = batch
-        .iter()
+    let result = iter
         .filter(|(position, direction)| {
             seen.clear();
             is_cycle(shortcut, &mut seen, *position, *direction)

@@ -2,9 +2,9 @@
 %%{init: {"themeVariables": { "pie1": "#c6cdd5", "pie2": "#7cb5ec", "pie3": "#90ed7d"}}}%%
 pie
     title Year 2024 benchmark time by % of total
-    "Others" : 2724
-    "Day 20" : 1354
-    "Day 22" : 1350
+    "Others" : 2366
+    "Day 22" : 1216
+    "Day 20" : 1031
 -->
 <svg viewBox="0 0 1350 450" preserveAspectRatio="xMidYMin" xmlns="http://www.w3.org/2000/svg">
 	<style>
@@ -16,12 +16,12 @@ pie
 	</style>
 	<g transform="translate(675,225)">
 		<circle class="pieOuterCircle" cx="0" cy="0" r="186"/>
-		<path class="pieCircle" d="M0,-185A185,185,0,1,1,-2.141,184.988L0,0Z" fill="#c6cdd5"/>
-		<path class="pieCircle" d="M-2.141,184.988A185,185,0,0,1,-184.994,-1.499L0,0Z" fill="#7cb5ec"/>
-		<path class="pieCircle" d="M-184.994,-1.499A185,185,0,0,1,0,-185L0,0Z" fill="#90ed7d"/>
-		<text class="slice" style="text-anchor: middle;" transform="translate(138.74767607637392,0.8030463284372437)">50%</text>
-		<text class="slice" style="text-anchor: middle;" transform="translate(-99.07163385859252,97.14099991552993)">25%</text>
-		<text class="slice" style="text-anchor: middle;" transform="translate(-97.71277190513464,-98.50774947492778)">25%</text>
+		<path class="pieCircle" d="M0,-185A185,185,0,1,1,-14.976,184.393L0,0Z" fill="#c6cdd5"/>
+		<path class="pieCircle" d="M-14.976,184.393A185,185,0,0,1,-182.441,-30.663L0,0Z" fill="#7cb5ec"/>
+		<path class="pieCircle" d="M-182.441,-30.663A185,185,0,0,1,0,-185L0,0Z" fill="#90ed7d"/>
+		<text class="slice" style="text-anchor: middle;" transform="translate(138.63610351067555,5.620792059598803)">51%</text>
+		<text class="slice" style="text-anchor: middle;" transform="translate(-109.47338733801311,85.2475217513175)">26%</text>
+		<text class="slice" style="text-anchor: middle;" transform="translate(-89.61233438436842,-105.93012803817496)">22%</text>
 		<text class="pieTitleText" x="0" y="-200">Year 2024 benchmark time by % of total</text>
 		<g transform="translate(216,-33)">
 			<rect height="18" style="fill: rgb(198, 205, 213); stroke: rgb(198, 205, 213);" width="18"/>
@@ -29,11 +29,11 @@ pie
 		</g>
 		<g transform="translate(216,-11)">
 			<rect height="18" style="fill: rgb(124, 181, 236); stroke: rgb(124, 181, 236);" width="18"/>
-			<text x="22" y="14">Day 20</text>
+			<text x="22" y="14">Day 22</text>
 		</g>
 		<g transform="translate(216,11)">
 			<rect height="18" style="fill: rgb(144, 237, 125); stroke: rgb(144, 237, 125);" width="18"/>
-			<text x="22" y="14">Day 22</text>
+			<text x="22" y="14">Day 20</text>
 		</g>
 	</g>
 </svg>

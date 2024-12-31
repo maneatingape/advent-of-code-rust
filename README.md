@@ -53,7 +53,7 @@ Place input files in `input/yearYYYY/dayDD.txt` including leading zeroes. For ex
 ## Performance
 
 Benchmarks are measured using the built-in `cargo bench` tool run on an [Apple M2 Max][apple-link].
-All 250 solutions from 2024 to 2015 complete sequentially in **585 milliseconds**.
+All 250 solutions from 2024 to 2015 complete sequentially in **584 milliseconds**.
 Interestingly 84% of the total time is spent on just 9 solutions.
 Performance is reasonable even on older hardware, for example a 2011 MacBook Pro with an
 [Intel i7-2720QM][intel-link] processor takes 3.5 seconds to run the same 225 solutions.
@@ -62,7 +62,7 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 
 | Year | 2015 | 2016 | 2017 | 2018 | 2019 | 2020 | 2021 | 2022 | 2023 | 2024 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Benchmark (ms) | 24 | 120 | 89 | 35 | 16 | 272 | 9 | 8 | 6 | 6 |
+| Benchmark (ms) | 24 | 120 | 89 | 35 | 16 | 272 | 9 | 8 | 6 | 5 |
 
 ## 2024
 
@@ -75,7 +75,7 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 | 3 | [Mull It Over](https://adventofcode.com/2024/day/3) | [Source](src/year2024/day03.rs) | 8 |
 | 4 | [Ceres Search](https://adventofcode.com/2024/day/4) | [Source](src/year2024/day04.rs) | 77 |
 | 5 | [Print Queue](https://adventofcode.com/2024/day/5) | [Source](src/year2024/day05.rs) | 18 |
-| 6 | [Guard Gallivant](https://adventofcode.com/2024/day/6) | [Source](src/year2024/day06.rs) | 386 |
+| 6 | [Guard Gallivant](https://adventofcode.com/2024/day/6) | [Source](src/year2024/day06.rs) | 331 |
 | 7 | [Bridge Repair](https://adventofcode.com/2024/day/7) | [Source](src/year2024/day07.rs) | 136 |
 | 8 | [Resonant Collinearity](https://adventofcode.com/2024/day/8) | [Source](src/year2024/day08.rs) | 8 |
 | 9 | [Disk Fragmenter](https://adventofcode.com/2024/day/9) | [Source](src/year2024/day09.rs) | 106 |
@@ -89,9 +89,9 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 | 17 | [Chronospatial Computer](https://adventofcode.com/2024/day/17) | [Source](src/year2024/day17.rs) | 2 |
 | 18 | [RAM Run](https://adventofcode.com/2024/day/18) | [Source](src/year2024/day18.rs) | 42 |
 | 19 | [Linen Layout](https://adventofcode.com/2024/day/19) | [Source](src/year2024/day19.rs) | 118 |
-| 20 | [Race Condition](https://adventofcode.com/2024/day/20) | [Source](src/year2024/day20.rs) | 1354 |
+| 20 | [Race Condition](https://adventofcode.com/2024/day/20) | [Source](src/year2024/day20.rs) | 1038 |
 | 21 | [Keypad Conundrum](https://adventofcode.com/2024/day/21) | [Source](src/year2024/day21.rs) | 19 |
-| 22 | [Monkey Market](https://adventofcode.com/2024/day/22) | [Source](src/year2024/day22.rs) | 1350 |
+| 22 | [Monkey Market](https://adventofcode.com/2024/day/22) | [Source](src/year2024/day22.rs) | 1216 |
 | 23 | [LAN Party](https://adventofcode.com/2024/day/23) | [Source](src/year2024/day23.rs) | 43 |
 | 24 | [Crossed Wires](https://adventofcode.com/2024/day/24) | [Source](src/year2024/day24.rs) | 23 |
 | 25 | [Code Chronicle](https://adventofcode.com/2024/day/25) | [Source](src/year2024/day25.rs) | 8 |
@@ -113,7 +113,7 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 | 9 | [Mirage Maintenance](https://adventofcode.com/2023/day/9) | [Source](src/year2023/day09.rs) | 18 |
 | 10 | [Pipe Maze](https://adventofcode.com/2023/day/10) | [Source](src/year2023/day10.rs) | 41 |
 | 11 | [Cosmic Expansion](https://adventofcode.com/2023/day/11) | [Source](src/year2023/day11.rs) | 12 |
-| 12 | [Hot Springs](https://adventofcode.com/2023/day/12) | [Source](src/year2023/day12.rs) | 440 |
+| 12 | [Hot Springs](https://adventofcode.com/2023/day/12) | [Source](src/year2023/day12.rs) | 387 |
 | 13 | [Point of Incidence](https://adventofcode.com/2023/day/13) | [Source](src/year2023/day13.rs) | 66 |
 | 14 | [Parabolic Reflector Dish](https://adventofcode.com/2023/day/14) | [Source](src/year2023/day14.rs) | 632 |
 | 15 | [Lens Library](https://adventofcode.com/2023/day/15) | [Source](src/year2023/day15.rs) | 84 |
@@ -183,7 +183,7 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 | 15 | [Chiton](https://adventofcode.com/2021/day/15) | [Source](src/year2021/day15.rs) | 2403 |
 | 16 | [Packet Decoder](https://adventofcode.com/2021/day/16) | [Source](src/year2021/day16.rs) | 6 |
 | 17 | [Trick Shot](https://adventofcode.com/2021/day/17) | [Source](src/year2021/day17.rs) | 7 |
-| 18 | [Snailfish](https://adventofcode.com/2021/day/18) | [Source](src/year2021/day18.rs) | 501 |
+| 18 | [Snailfish](https://adventofcode.com/2021/day/18) | [Source](src/year2021/day18.rs) | 404 |
 | 19 | [Beacon Scanner](https://adventofcode.com/2021/day/19) | [Source](src/year2021/day19.rs) | 615 |
 | 20 | [Trench Map](https://adventofcode.com/2021/day/20) | [Source](src/year2021/day20.rs) | 2066 |
 | 21 | [Dirac Dice](https://adventofcode.com/2021/day/21) | [Source](src/year2021/day21.rs) | 278 |
@@ -272,7 +272,7 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 | 8 | [Memory Maneuver](https://adventofcode.com/2018/day/8) | [Source](src/year2018/day08.rs) | 24 |
 | 9 | [Marble Mania](https://adventofcode.com/2018/day/9) | [Source](src/year2018/day09.rs) | 909 |
 | 10 | [The Stars Align](https://adventofcode.com/2018/day/10) | [Source](src/year2018/day10.rs) | 11 |
-| 11 | [Chronal Charge](https://adventofcode.com/2018/day/11) | [Source](src/year2018/day11.rs) | 1404 |
+| 11 | [Chronal Charge](https://adventofcode.com/2018/day/11) | [Source](src/year2018/day11.rs) | 1156 |
 | 12 | [Subterranean Sustainability](https://adventofcode.com/2018/day/12) | [Source](src/year2018/day12.rs) | 77 |
 | 13 | [Mine Cart Madness](https://adventofcode.com/2018/day/13) | [Source](src/year2018/day13.rs) | 382 |
 | 14 | [Chocolate Charts](https://adventofcode.com/2018/day/14) | [Source](src/year2018/day14.rs) | 24000 |

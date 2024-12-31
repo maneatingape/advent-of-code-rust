@@ -137,21 +137,23 @@ pub fn parse(input: &str) -> Vec<Spring<'_>> {
 }
 
 pub fn part1(input: &[Spring<'_>]) -> u64 {
-    solve(input, 1)
+    solve(input.iter(), 1)
 }
 
 pub fn part2(input: &[Spring<'_>]) -> u64 {
-    // Use as many cores as possible to parallelize the calculation,
-    // breaking the work into roughly equally size batches.
+    // Use as many cores as possible to parallelize the calculation.
     let shared = AtomicU64::new(0);
-    spawn_batches(input.to_vec(), |batch| {
-        let partial = solve(&batch, 5);
+    spawn_parallel_iterator(input, |iter| {
+        let partial = solve(iter, 5);
         shared.fetch_add(partial, Ordering::Relaxed);
     });
     shared.load(Ordering::Relaxed)
 }
 
-pub fn solve(input: &[Spring<'_>], repeat: usize) -> u64 {
+pub fn solve<'a, I>(iter: I, repeat: usize) -> u64
+where
+    I: Iterator<Item = &'a Spring<'a>>,
+{
     let mut result = 0;
     let mut pattern = Vec::new();
     let mut springs = Vec::new();
@@ -159,7 +161,7 @@ pub fn solve(input: &[Spring<'_>], repeat: usize) -> u64 {
     let mut broken = vec![0; 200];
     let mut table = vec![0; 200 * 50];
 
-    for (first, second) in input {
+    for (first, second) in iter {
         // Create input sequence reusing the buffers to minimize memory allocations.
         pattern.clear();
         springs.clear();

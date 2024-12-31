@@ -43,15 +43,10 @@ pub fn parse(input: &str) -> Vec<Result> {
     }
 
     // Use as many cores as possible to parallelize the search.
-    // Smaller sizes take more time so keep batches roughly the same effort so that some
-    // threads are not finishing too soon and waiting idle, while others are still busy.
-    // For example if there are 4 cores, then they will be assigned sizes:
-    // * 1, 5, 9, ..
-    // * 2, 6, 10, ..
-    // * 3, 7, 11, ..
-    // * 4, 8, 12, ..
+    // Smaller sizes take more time so use work stealing to keep all cores busy.
+    let items: Vec<_> = (1..301).collect();
     let shared = Shared { sat, mutex: Mutex::new(Vec::new()) };
-    spawn_batches((1..301).collect(), |batch| worker(&shared, batch));
+    spawn_parallel_iterator(&items, |iter| worker(&shared, iter));
     shared.mutex.into_inner().unwrap()
 }
 
@@ -65,10 +60,9 @@ pub fn part2(input: &[Result]) -> String {
     format!("{x},{y},{size}")
 }
 
-fn worker(shared: &Shared, batch: Vec<usize>) {
-    let result: Vec<_> = batch
-        .into_iter()
-        .map(|size| {
+fn worker(shared: &Shared, iter: ParIter<'_, usize>) {
+    let result: Vec<_> = iter
+        .map(|&size| {
             let (power, x, y) = square(&shared.sat, size);
             Result { x, y, size, power }
         })

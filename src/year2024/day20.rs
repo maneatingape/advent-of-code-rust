@@ -98,16 +98,17 @@ pub fn part2(time: &Grid<i32>) -> u32 {
         }
     }
 
+    // Use as many cores as possible to parallelize the remaining search.
     let total = AtomicU32::new(0);
-    spawn_batches(items, |batch| worker(time, &total, batch));
+    spawn_parallel_iterator(&items, |iter| worker(time, &total, iter));
     total.into_inner()
 }
 
-fn worker(time: &Grid<i32>, total: &AtomicU32, batch: Vec<Point>) {
+fn worker(time: &Grid<i32>, total: &AtomicU32, iter: ParIter<'_, Point>) {
     let mut cheats = 0;
 
     // (p1, p2) is the reciprocal of (p2, p1) so we only need to check each pair once.
-    for point in batch {
+    for &point in iter {
         for x in 2..21 {
             cheats += check(time, point, Point::new(x, 0));
         }
