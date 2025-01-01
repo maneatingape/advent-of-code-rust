@@ -1,12 +1,12 @@
 <!--
-%%{init: {"themeVariables": { "pie1": "#7cb5ec", "pie2": "#90ed7d", "pie3": "#f7a35c", "pie4": "#e4d354", "pie5": "#e4c4fb", "pie6": "#c6cdd5", "pie7": "#91e8e1"}}}%%
+%%{init: {"themeVariables": { "pie1": "#7cb5ec", "pie2": "#90ed7d", "pie3": "#f7a35c", "pie4": "#e4d354", "pie5": "#c6cdd5", "pie6": "#e4c4fb", "pie7": "#91e8e1"}}}%%
 pie
 	title Each year benchmark time by % of total
-	"Year 2020" : 272
-	"Year 2016" : 120
-    "Year 2017" : 89
+	"Year 2020" : 270
+	"Year 2016" : 119
+    "Year 2017" : 88
     "Year 2018" : 35
-	"Years 2021 - 2024": 29
+	"Years 2021 - 2024": 28
 	"Year 2015" : 24
 	"Year 2019" : 16
 -->
@@ -20,20 +20,20 @@ pie
 	</style>
 	<g transform="translate(675,225)">
 		<circle class="pieOuterCircle" cx="0" cy="0" r="186"/>
-		<path class="pieCircle" d="M0,-185A185,185,0,0,1,40.405,180.534L0,0Z" fill="#7cb5ec"/>
-		<path class="pieCircle" d="M40.405,180.534A185,185,0,0,1,-162.165,89.037L0,0Z" fill="#90ed7d"/>
-		<path class="pieCircle" d="M-162.165,89.037A185,185,0,0,1,-166.277,-81.099L0,0Z" fill="#f7a35c"/>
-		<path class="pieCircle" d="M-166.277,-81.099A185,185,0,0,1,-124.893,-136.48L0,0Z" fill="#e4d354"/>
-		<path class="pieCircle" d="M-124.893,-136.48A185,185,0,0,1,-77.057,-168.188L0,0Z" fill="#e4c4fb"/>
-		<path class="pieCircle" d="M-77.057,-168.188A185,185,0,0,1,-31.636,-182.275L0,0Z" fill="#c6cdd5"/>
-		<path class="pieCircle" d="M-31.636,-182.275A185,185,0,0,1,0,-185L0,0Z" fill="#91e8e1"/>
-		<text class="slice" style="text-anchor: middle;" transform="translate(137.91003719209237,-15.244151064447514)">46%</text>
-		<text class="slice" style="text-anchor: middle;" transform="translate(-57.114594392468106,126.44953779031322)">21%</text>
-		<text class="slice" style="text-anchor: middle;" transform="translate(-138.70948695362677,3.3527196515135045)">15%</text>
-		<text class="slice" style="text-anchor: middle;" transform="translate(-111.14609622273859,-83.0548481092208)">6%</text>
-		<text class="slice" style="text-anchor: middle;" transform="translate(-76.65890771635956,-115.650224244204)">5%</text>
-		<text class="slice" style="text-anchor: middle;" transform="translate(-41.10066585263728,-132.5228197951955)">4%</text>
-		<text class="slice" style="text-anchor: middle;" transform="translate(-11.9072769827623,-138.23812518569463)">3%</text>
+		<path class="pieCircle" d="M0,-185A185,185,0,0,1,39.77,180.675L0,0Z" fill="#7cb5ec"/>
+		<path class="pieCircle" d="M39.77,180.675A185,185,0,0,1,-162.501,88.421L0,0Z" fill="#90ed7d"/>
+		<path class="pieCircle" d="M-162.501,88.421A185,185,0,0,1,-166.179,-81.299L0,0Z" fill="#f7a35c"/>
+		<path class="pieCircle" d="M-166.179,-81.299A185,185,0,0,1,-124.285,-137.034L0,0Z" fill="#e4d354"/>
+		<path class="pieCircle" d="M-124.285,-137.034A185,185,0,0,1,-77.679,-167.901L0,0Z" fill="#c6cdd5"/>
+		<path class="pieCircle" d="M-77.679,-167.901A185,185,0,0,1,-31.906,-182.228L0,0Z" fill="#e4c4fb"/>
+		<path class="pieCircle" d="M-31.906,-182.228A185,185,0,0,1,0,-185L0,0Z" fill="#91e8e1"/>
+		<text class="slice" style="text-anchor: middle;" transform="translate(137.9366415551674,-15.001513806321896)">47%</text>
+		<text class="slice" style="text-anchor: middle;" transform="translate(-57.57667796041671,126.23980614308017)">21%</text>
+		<text class="slice" style="text-anchor: middle;" transform="translate(-138.71743510006468,3.0059439880585623)">15%</text>
+		<text class="slice" style="text-anchor: middle;" transform="translate(-110.91110582114943,-83.36839392437517)">6%</text>
+		<text class="slice" style="text-anchor: middle;" transform="translate(-76.61607005247976,-115.67860783097935)">5%</text>
+		<text class="slice" style="text-anchor: middle;" transform="translate(-41.44409693130745,-132.41581978581107)">4%</text>
+		<text class="slice" style="text-anchor: middle;" transform="translate(-12.009669905696734,-138.22926726549701)">3%</text>
 		<text class="pieTitleText" x="0" y="-200">Each year benchmark time by % of total</text>
 		<g transform="translate(216,-77)">
 			<rect height="18" style="fill: rgb(124, 181, 236); stroke: rgb(124, 181, 236);" width="18"/>
@@ -52,11 +52,11 @@ pie
 			<text x="22" y="14">Year 2018</text>
 		</g>
 		<g transform="translate(216,11)">
-			<rect height="18" style="fill: rgb(228, 196, 251); stroke: rgb(228, 196, 251);" width="18"/>
+			<rect height="18" style="fill: rgb(198, 205, 213); stroke: rgb(198, 205, 213);" width="18"/>
 			<text x="22" y="14">Years 2021 - 2024</text>
 		</g>
 		<g transform="translate(216,33)">
-			<rect height="18" style="fill: rgb(198, 205, 213); stroke: rgb(198, 205, 213);" width="18"/>
+			<rect height="18" style="fill: rgb(228, 196, 251); stroke: rgb(228, 196, 251);" width="18"/>
 			<text x="22" y="14">Year 2015</text>
 		</g>
 		<g transform="translate(216,55)">
