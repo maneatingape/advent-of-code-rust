@@ -13,11 +13,7 @@
 pub fn parse(input: &str) -> Vec<usize> {
     // Convert 'A'.."Z" and '0'..'9' to a number between 0 and 36.
     let digit = |b: u8| {
-        if b.is_ascii_digit() {
-            (b - b'0') as usize
-        } else {
-            (10 + b - b'A') as usize
-        }
+        if b.is_ascii_digit() { (b - b'0') as usize } else { (10 + b - b'A') as usize }
     };
 
     // Hash each 3 character object name.

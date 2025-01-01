@@ -114,9 +114,5 @@ fn divisor_sum(mut n: u32) -> u32 {
     // If `n` is one then the greatest prime factor was repeated so has already been included in
     // the sum and we can just return it directly. Otherwise `n` is the unique greatest prime
     // factor and must be added to the sum.
-    if n == 1 {
-        sum
-    } else {
-        sum * (1 + n)
-    }
+    if n == 1 { sum } else { sum * (1 + n) }
 }

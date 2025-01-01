@@ -11,7 +11,7 @@ use crate::util::hash::*;
 use crate::util::parse::*;
 use crate::util::thread::*;
 use std::sync::atomic::{AtomicBool, AtomicI32, Ordering};
-use std::sync::mpsc::{channel, Sender};
+use std::sync::mpsc::{Sender, channel};
 
 pub struct Input {
     immune: Vec<Group>,

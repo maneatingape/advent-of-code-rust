@@ -23,11 +23,9 @@ type Input = [Axis; 3];
 /// Group each axis together
 pub fn parse(input: &str) -> Input {
     let n: Vec<_> = input.iter_signed().collect();
-    [
-        [n[0], n[3], n[6], n[9], 0, 0, 0, 0],
-        [n[1], n[4], n[7], n[10], 0, 0, 0, 0],
-        [n[2], n[5], n[8], n[11], 0, 0, 0, 0],
-    ]
+    [[n[0], n[3], n[6], n[9], 0, 0, 0, 0], [n[1], n[4], n[7], n[10], 0, 0, 0, 0], [
+        n[2], n[5], n[8], n[11], 0, 0, 0, 0,
+    ]]
 }
 
 pub fn part1(input: &Input) -> i32 {

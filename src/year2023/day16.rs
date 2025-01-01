@@ -15,8 +15,8 @@ use crate::util::grid::*;
 use crate::util::point::*;
 use crate::util::thread::*;
 use std::collections::VecDeque;
-use std::sync::atomic::{AtomicUsize, Ordering};
 use std::sync::Mutex;
+use std::sync::atomic::{AtomicUsize, Ordering};
 
 type Pair = (Point, u32);
 

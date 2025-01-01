@@ -80,7 +80,7 @@ use crate::util::grid::*;
 use crate::util::point::*;
 use crate::util::thread::*;
 use std::sync::atomic::{AtomicBool, AtomicI32, Ordering};
-use std::sync::mpsc::{channel, Sender};
+use std::sync::mpsc::{Sender, channel};
 
 const READING_ORDER: [Point; 4] = [UP, LEFT, RIGHT, DOWN];
 

@@ -151,11 +151,7 @@ pub fn part1(input: &Input) -> usize {
         }
     }
 
-    if deck1.non_empty() {
-        deck1.score
-    } else {
-        deck2.score
-    }
+    if deck1.non_empty() { deck1.score } else { deck2.score }
 }
 
 pub fn part2(input: &Input) -> usize {
@@ -210,9 +206,5 @@ fn combat(deck1: &mut Deck, deck2: &mut Deck, cache: &mut Cache, depth: usize) -
         }
     }
 
-    if deck1.non_empty() {
-        Winner::Player1
-    } else {
-        Winner::Player2
-    }
+    if deck1.non_empty() { Winner::Player1 } else { Winner::Player2 }
 }

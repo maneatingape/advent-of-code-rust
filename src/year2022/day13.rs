@@ -41,11 +41,7 @@ pub fn part1(input: &[&str]) -> usize {
         .enumerate()
         .map(|(i, chunk)| {
             let ordered = compare(chunk[0], chunk[1]);
-            if ordered {
-                i + 1
-            } else {
-                0
-            }
+            if ordered { i + 1 } else { 0 }
         })
         .sum()
 }

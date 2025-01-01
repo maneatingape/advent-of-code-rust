@@ -42,11 +42,7 @@ impl BitStream<'_> {
     fn hex_to_binary(&mut self) -> u64 {
         let hex_digit = self.iter.next().unwrap();
 
-        if hex_digit.is_ascii_digit() {
-            (hex_digit - 48) as u64
-        } else {
-            (hex_digit - 55) as u64
-        }
+        if hex_digit.is_ascii_digit() { (hex_digit - 48) as u64 } else { (hex_digit - 55) as u64 }
     }
 }
 

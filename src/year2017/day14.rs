@@ -6,8 +6,8 @@
 //! [`Day 10`]: crate::year2017::day10
 //! [`Day 12`]: crate::year2017::day12
 use crate::util::thread::*;
-use std::sync::atomic::{AtomicUsize, Ordering};
 use std::sync::Mutex;
+use std::sync::atomic::{AtomicUsize, Ordering};
 
 /// Atomics can be safely shared between threads.
 pub struct Shared {

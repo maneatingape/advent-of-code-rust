@@ -38,11 +38,7 @@ pub fn part1(input: &[u8]) -> usize {
         }
     }
 
-    if positive && !negative {
-        count + 1
-    } else {
-        count
-    }
+    if positive && !negative { count + 1 } else { count }
 }
 
 pub fn part2(input: &[u8]) -> usize {
@@ -84,9 +80,5 @@ pub fn part2(input: &[u8]) -> usize {
         }
     }
 
-    if positive {
-        count + 1
-    } else {
-        count
-    }
+    if positive { count + 1 } else { count }
 }

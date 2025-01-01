@@ -6,8 +6,8 @@
 //! [`Year 2015 Day 4`]: crate::year2015::day04
 use crate::util::md5::*;
 use crate::util::thread::*;
-use std::sync::atomic::{AtomicBool, AtomicU32, Ordering};
 use std::sync::Mutex;
+use std::sync::atomic::{AtomicBool, AtomicU32, Ordering};
 
 struct Shared {
     prefix: String,

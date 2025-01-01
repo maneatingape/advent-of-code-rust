@@ -77,9 +77,5 @@ fn check(report: &[i32]) -> (u32, u32) {
 fn delta(a: i32, b: i32) -> i32 {
     let diff = b - a;
 
-    if diff.abs() <= 3 {
-        diff.signum()
-    } else {
-        0
-    }
+    if diff.abs() <= 3 { diff.signum() } else { 0 }
 }

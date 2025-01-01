@@ -37,11 +37,7 @@ fn median(input: &[i32]) -> i32 {
     let half = input.len() / 2;
     let odd = crabs.len() % 2 == 1;
 
-    if odd {
-        crabs[half]
-    } else {
-        (crabs[half - 1] + crabs[half]) / 2
-    }
+    if odd { crabs[half] } else { (crabs[half - 1] + crabs[half]) / 2 }
 }
 
 fn mean(input: &[i32]) -> i32 {

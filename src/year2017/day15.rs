@@ -11,7 +11,7 @@ use crate::util::iter::*;
 use crate::util::math::*;
 use crate::util::parse::*;
 use std::sync::atomic::{AtomicBool, AtomicUsize, Ordering};
-use std::sync::mpsc::{channel, Receiver, Sender};
+use std::sync::mpsc::{Receiver, Sender, channel};
 use std::thread;
 
 const PART_ONE: usize = 40_000_000;

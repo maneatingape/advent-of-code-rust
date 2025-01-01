@@ -100,19 +100,11 @@ pub fn part2(input: &Input) -> String {
 /// Fold point at `x` coordinate, doing nothing if the point is to the left of the fold line.
 #[inline]
 fn fold_horizontal(x: i32, p: Point) -> Point {
-    if p.x < x {
-        p
-    } else {
-        Point::new(2 * x - p.x, p.y)
-    }
+    if p.x < x { p } else { Point::new(2 * x - p.x, p.y) }
 }
 
 /// Fold point at `y` coordinate, doing nothing if the point is above the fold line.
 #[inline]
 fn fold_vertical(y: i32, p: Point) -> Point {
-    if p.y < y {
-        p
-    } else {
-        Point::new(p.x, 2 * y - p.y)
-    }
+    if p.y < y { p } else { Point::new(p.x, 2 * y - p.y) }
 }

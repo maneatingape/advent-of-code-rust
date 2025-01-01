@@ -26,11 +26,7 @@ pub fn parse(input: &str) -> Vec<i64> {
 }
 
 pub fn part1(input: &[i64]) -> String {
-    if cfg!(feature = "frivolity") {
-        play_manually(input)
-    } else {
-        play_automatically(input)
-    }
+    if cfg!(feature = "frivolity") { play_manually(input) } else { play_automatically(input) }
 }
 
 pub fn part2(_input: &[i64]) -> &'static str {

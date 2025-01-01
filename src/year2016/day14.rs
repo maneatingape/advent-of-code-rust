@@ -5,8 +5,8 @@
 use crate::util::md5::*;
 use crate::util::thread::*;
 use std::collections::{BTreeMap, BTreeSet};
-use std::sync::atomic::{AtomicBool, AtomicI32, Ordering};
 use std::sync::Mutex;
+use std::sync::atomic::{AtomicBool, AtomicI32, Ordering};
 
 /// Atomics can be safely shared between threads.
 struct Shared<'a> {

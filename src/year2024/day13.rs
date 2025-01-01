@@ -56,9 +56,5 @@ fn play(&[ax, ay, bx, by, mut px, mut py]: &Claw, part_two: bool) -> i64 {
     a /= det;
     b /= det;
 
-    if part_two || (a <= 100 && b <= 100) {
-        3 * a + b
-    } else {
-        0
-    }
+    if part_two || (a <= 100 && b <= 100) { 3 * a + b } else { 0 }
 }

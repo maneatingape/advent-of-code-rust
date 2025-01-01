@@ -12,7 +12,7 @@
 //! * Vector processing of recipes using techniques similar to SIMD.
 use crate::util::parse::*;
 use std::sync::atomic::{AtomicBool, Ordering};
-use std::sync::mpsc::{channel, Receiver, Sender};
+use std::sync::mpsc::{Receiver, Sender, channel};
 use std::thread;
 
 type Input = (String, usize);
