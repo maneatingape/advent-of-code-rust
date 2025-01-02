@@ -41,7 +41,7 @@ fn count(input: &str, rows: u32) -> u32 {
         // Count the traps in each row.
         total += row.count_ones();
         // Only consider the left and right values for the next row.
-        row = (row << 1) ^ (row >> 1) & mask;
+        row = ((row << 1) ^ (row >> 1)) & mask;
     }
 
     // We want the number of safe tiles so convert from the number of traps.

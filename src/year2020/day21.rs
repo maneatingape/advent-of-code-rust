@@ -45,6 +45,7 @@
 //! [`Day 16`]: crate::year2020::day16
 //! [`count_ones`]: u32::count_ones
 use crate::util::hash::*;
+use std::collections::BTreeMap;
 
 pub struct Input<'a> {
     ingredients: FastMap<&'a str, Ingredient>,
@@ -102,34 +103,32 @@ pub fn part1(input: &Input<'_>) -> u32 {
 }
 
 pub fn part2(input: &Input<'_>) -> String {
-    let mut ingredients = input.ingredients.clone();
-    ingredients.retain(|_, v| v.candidates != 0);
-
     let inverse_allergens: FastMap<_, _> =
         input.allergens.iter().map(|(k, v)| (1 << v, k)).collect();
-
-    // There must be at least one ingredient with only one allergen.
-    let mut todo: Vec<_> = ingredients
+    let mut todo: Vec<_> = input
+        .ingredients
         .iter()
-        .filter(|(_, v)| v.candidates.count_ones() == 1)
-        .map(|(k, v)| (*k, v.candidates))
+        .filter_map(|(&k, &v)| (v.candidates != 0).then_some((k, v.candidates)))
         .collect();
-    let mut done = Vec::new();
+    let mut done = BTreeMap::new();
 
     // Eliminate known allergens from other ingredients.
-    while let Some(pair @ (next, allergen)) = todo.pop() {
-        ingredients.remove(next);
-        done.push(pair);
+    while done.len() < todo.len() {
+        let mut mask = 0;
 
-        for (name, ingredient) in &mut ingredients {
-            ingredient.candidates &= !allergen;
-            if ingredient.candidates.count_ones() == 1 {
-                todo.push((name, ingredient.candidates));
+        // There must be at least one ingredient with only one allergen.
+        for (name, candidates) in &todo {
+            if candidates.count_ones() == 1 {
+                let allergen = inverse_allergens[candidates];
+                done.insert(*allergen, *name);
+
+                mask |= candidates;
             }
         }
+
+        todo.iter_mut().for_each(|(_, candidates)| *candidates &= !mask);
     }
 
     // Sort by alphabetical order of the allergens.
-    done.sort_by_cached_key(|(_, v)| inverse_allergens[v]);
-    done.iter().map(|(k, _)| *k).collect::<Vec<_>>().join(",")
+    done.into_values().collect::<Vec<_>>().join(",")
 }
