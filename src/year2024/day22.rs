@@ -17,29 +17,34 @@
 //!   by 5 bits and storing in an array of 2²⁰ = 1048675 elements. Multiplication on modern
 //!   processors is cheap (and several instructions can issue at once) but random memory access
 //!   is expensive.
+//!
+//! A SIMD variant processes 8 hashes at a time, taking about 60% of the time of the scalar version.
+//! The bottleneck is that disjoint indices must be written in sequence reducing the amount of work
+//! that can be parallelized.
 use crate::util::parse::*;
 use crate::util::thread::*;
 use std::sync::Mutex;
 
-type Input = (usize, u16);
+type Input = (u64, u16);
 
 struct Exclusive {
-    part_one: usize,
+    part_one: u64,
     part_two: Vec<u16>,
 }
 
 pub fn parse(input: &str) -> Input {
-    let numbers: Vec<_> = input.iter_unsigned().collect();
     let mutex = Mutex::new(Exclusive { part_one: 0, part_two: vec![0; 130321] });
 
-    // Use as many cores as possible to parallelize the remaining search.
-    spawn_parallel_iterator(&numbers, |iter| worker(&mutex, iter));
+    #[cfg(not(feature = "simd"))]
+    scalar::parallel(input, &mutex);
+    #[cfg(feature = "simd")]
+    simd::parallel(input, &mutex);
 
     let Exclusive { part_one, part_two } = mutex.into_inner().unwrap();
     (part_one, *part_two.iter().max().unwrap())
 }
 
-pub fn part1(input: &Input) -> usize {
+pub fn part1(input: &Input) -> u64 {
     input.0
 }
 
@@ -47,63 +52,173 @@ pub fn part2(input: &Input) -> u16 {
     input.1
 }
 
-fn worker(mutex: &Mutex<Exclusive>, iter: ParIter<'_, usize>) {
-    let mut part_one = 0;
-    let mut part_two = vec![0; 130321];
-    let mut seen = vec![u16::MAX; 130321];
+#[cfg(not(feature = "simd"))]
+mod scalar {
+    use super::*;
 
-    for (id, number) in iter.enumerate() {
-        let id = id as u16;
-
-        let zeroth = *number;
-        let first = hash(zeroth);
-        let second = hash(first);
-        let third = hash(second);
-
-        let mut a;
-        let mut b = to_index(zeroth, first);
-        let mut c = to_index(first, second);
-        let mut d = to_index(second, third);
-
-        let mut number = third;
-        let mut previous = third % 10;
-
-        for _ in 3..2000 {
-            number = hash(number);
-            let price = number % 10;
-
-            // Compute index into the array.
-            (a, b, c, d) = (b, c, d, 9 + price - previous);
-            let index = 6859 * a + 361 * b + 19 * c + d;
-
-            // Only sell the first time we see a sequence.
-            // By storing the id in the array we don't need to zero every iteration which is faster.
-            if seen[index] != id {
-                part_two[index] += price as u16;
-                seen[index] = id;
-            }
-
-            previous = price;
-        }
-
-        part_one += number;
+    // Use as many cores as possible to parallelize the remaining search.
+    pub(super) fn parallel(input: &str, mutex: &Mutex<Exclusive>) {
+        let numbers: Vec<_> = input.iter_unsigned().collect();
+        spawn_parallel_iterator(&numbers, |iter| worker(mutex, iter));
     }
 
-    // Merge into global results.
-    let mut exclusive = mutex.lock().unwrap();
-    exclusive.part_one += part_one;
-    exclusive.part_two.iter_mut().zip(part_two).for_each(|(a, b)| *a += b);
+    fn worker(mutex: &Mutex<Exclusive>, iter: ParIter<'_, u32>) {
+        let mut part_one = 0;
+        let mut part_two = vec![0; 130321];
+        let mut seen = vec![u16::MAX; 130321];
+
+        for (id, number) in iter.enumerate() {
+            let id = id as u16;
+
+            let zeroth = *number;
+            let first = hash(zeroth);
+            let second = hash(first);
+            let third = hash(second);
+
+            let mut a;
+            let mut b = to_index(zeroth, first);
+            let mut c = to_index(first, second);
+            let mut d = to_index(second, third);
+
+            let mut number = third;
+            let mut previous = third % 10;
+
+            for _ in 3..2000 {
+                number = hash(number);
+                let price = number % 10;
+
+                // Compute index into the array.
+                (a, b, c, d) = (b, c, d, to_index(previous, price));
+                let index = (6859 * a + 361 * b + 19 * c + d) as usize;
+                previous = price;
+
+                // Only sell the first time we see a sequence.
+                // By storing the id in the array we don't need to zero every iteration which is faster.
+                if seen[index] != id {
+                    part_two[index] += price as u16;
+                    seen[index] = id;
+                }
+            }
+
+            part_one += number as u64;
+        }
+
+        // Merge into global results.
+        let mut exclusive = mutex.lock().unwrap();
+        exclusive.part_one += part_one;
+        exclusive.part_two.iter_mut().zip(part_two).for_each(|(a, b)| *a += b);
+    }
+
+    /// Compute next secret number using a
+    /// [Xorshift LFSR](https://en.wikipedia.org/wiki/Linear-feedback_shift_register#Xorshift_LFSRs).
+    fn hash(mut n: u32) -> u32 {
+        n = (n ^ (n << 6)) & 0xffffff;
+        n = (n ^ (n >> 5)) & 0xffffff;
+        (n ^ (n << 11)) & 0xffffff
+    }
+
+    /// Convert -9..9 to 0..18.
+    fn to_index(previous: u32, current: u32) -> u32 {
+        9 + current % 10 - previous % 10
+    }
 }
 
-/// Compute next secret number using a
-/// [Xorshift LFSR](https://en.wikipedia.org/wiki/Linear-feedback_shift_register#Xorshift_LFSRs).
-fn hash(mut n: usize) -> usize {
-    n = (n ^ (n << 6)) & 0xffffff;
-    n = (n ^ (n >> 5)) & 0xffffff;
-    (n ^ (n << 11)) & 0xffffff
-}
+#[cfg(feature = "simd")]
+mod simd {
+    use super::*;
+    use std::simd::Simd;
+    use std::simd::num::SimdUint as _;
 
-/// Convert -9..9 to 0..18.
-fn to_index(previous: usize, current: usize) -> usize {
-    9 + current % 10 - previous % 10
+    type Vector = Simd<u32, 8>;
+
+    pub(super) fn parallel(input: &str, mutex: &Mutex<Exclusive>) {
+        let mut numbers: Vec<_> = input.iter_unsigned().collect();
+
+        // Add zero elements so that size is a multiple of 8.
+        // Zero always hashes to zero and does not contribute to score.
+        numbers.resize(numbers.len().next_multiple_of(8), 0);
+        let chunks: Vec<_> = numbers.chunks_exact(8).collect();
+
+        spawn_parallel_iterator(&chunks, |iter| worker(mutex, iter));
+    }
+
+    /// Similar to scalar version but using SIMD vectors instead.
+    /// 8 lanes is the sweet spot for performance as the bottleneck is the scalar loop writing
+    /// to disjoint indices after each step.
+    fn worker(mutex: &Mutex<Exclusive>, iter: ParIter<'_, &[u32]>) {
+        let ten = Simd::splat(10);
+        let x = Simd::splat(6859);
+        let y = Simd::splat(361);
+        let z = Simd::splat(19);
+
+        let mut part_one = 0;
+        let mut part_two = vec![0; 130321];
+
+        for slice in iter {
+            // Each lane uses a different bit to track if a sequence has been seen before.
+            let mut seen = vec![u8::MAX; 130321];
+
+            let zeroth = Simd::from_slice(slice);
+            let first = hash(zeroth);
+            let second = hash(first);
+            let third = hash(second);
+
+            let mut a;
+            let mut b = to_index(zeroth, first);
+            let mut c = to_index(first, second);
+            let mut d = to_index(second, third);
+
+            let mut number = third;
+            let mut previous = third % ten;
+
+            for _ in 3..2000 {
+                number = hash(number);
+                let prices = number % ten;
+
+                // Compute index into the array.
+                (a, b, c, d) = (b, c, d, to_index(previous, prices));
+                let indices = x * a + y * b + z * c + d;
+                previous = prices;
+
+                // Only sell the first time we see a sequence.
+                let indices = indices.to_array();
+                let prices = prices.to_array();
+
+                for i in 0..8 {
+                    let index = indices[i] as usize;
+
+                    // Avoid branching to improve speed, instead multiply by either 0 or 1,
+                    // depending if sequence has been seen before or not.
+                    let bit = (seen[index] >> i) & 1;
+                    seen[index] &= !(1 << i);
+
+                    part_two[index] += prices[i] as u16 * bit as u16;
+                }
+            }
+
+            part_one += number.reduce_sum() as u64;
+        }
+
+        // Merge into global results.
+        let mut exclusive = mutex.lock().unwrap();
+        exclusive.part_one += part_one;
+        exclusive.part_two.iter_mut().zip(part_two).for_each(|(a, b)| *a += b);
+    }
+
+    /// SIMD vector arguments are passed in memory so inline functions to avoid slow transfers
+    /// to and from memory.
+    #[inline]
+    fn hash(mut n: Vector) -> Vector {
+        let mask = Simd::splat(0xffffff);
+        n = (n ^ (n << 6)) & mask;
+        n = (n ^ (n >> 5)) & mask;
+        (n ^ (n << 11)) & mask
+    }
+
+    #[inline]
+    fn to_index(previous: Vector, current: Vector) -> Vector {
+        let nine = Simd::splat(9);
+        let ten = Simd::splat(10);
+        nine + (current % ten) - (previous % ten)
+    }
 }
