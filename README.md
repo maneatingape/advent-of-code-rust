@@ -56,7 +56,7 @@ Benchmarks are measured using the built-in `cargo bench` tool run on an [Apple M
 All 250 solutions from 2024 to 2015 complete sequentially in **580 milliseconds**.
 Interestingly 84% of the total time is spent on just 9 solutions.
 Performance is reasonable even on older hardware, for example a 2011 MacBook Pro with an
-[Intel i7-2720QM][intel-link] processor takes 3.5 seconds to run the same 225 solutions.
+[Intel i7-2720QM][intel-link] processor takes 3.5 seconds to run the same 250 solutions.
 
 ![pie-all]
 
