@@ -12,7 +12,7 @@ use crate::util::grid::*;
 use crate::util::point::*;
 use std::collections::VecDeque;
 
-type Input = (u32, usize);
+type Input = (i32, usize);
 
 /// Clockwise order starting with facing right.
 const DIRECTIONS: [Point; 4] = [RIGHT, DOWN, LEFT, UP];
@@ -28,8 +28,8 @@ pub fn parse(input: &str) -> Input {
     let mut todo_first = VecDeque::new();
     let mut todo_second = VecDeque::new();
     // State is `(position, direction)`.
-    let mut seen = grid.same_size_with([u32::MAX; 4]);
-    let mut lowest = u32::MAX;
+    let mut seen = grid.same_size_with([i32::MAX; 4]);
+    let mut lowest = i32::MAX;
 
     todo_first.push_back((start, 0, 0));
     seen[start][0] = 0;
@@ -99,8 +99,8 @@ pub fn parse(input: &str) -> Input {
             // Trace our cost step by step so it will exactly match possible paths.
             if next_cost == seen[next_position][next_direction] {
                 todo.push_back((next_position, next_direction, next_cost));
-                // Set cost back to `u32::MAX` to prevent redundant path explorations.
-                seen[next_position][next_direction] = u32::MAX;
+                // Set cost back to `i32::MAX` to prevent redundant path explorations.
+                seen[next_position][next_direction] = i32::MAX;
             }
         }
     }
@@ -108,7 +108,7 @@ pub fn parse(input: &str) -> Input {
     (lowest, path.bytes.iter().filter(|&&b| b).count())
 }
 
-pub fn part1(input: &Input) -> u32 {
+pub fn part1(input: &Input) -> i32 {
     input.0
 }
 
