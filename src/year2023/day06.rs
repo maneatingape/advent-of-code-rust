@@ -19,7 +19,6 @@
 //! [quadratic formula](https://en.wikipedia.org/wiki/Quadratic_formula).
 //!
 //! * `(t ± √(t² - 4d)) / 2`
-use crate::util::math::*;
 use crate::util::parse::*;
 
 pub fn parse(input: &str) -> Vec<&str> {
@@ -45,7 +44,7 @@ fn race(first: &str, second: &str) -> u128 {
 
     for (time, distance) in times.zip(distances) {
         // Use the quadratic formula to find the start and end positions.
-        let root = (time * time - 4 * distance).sqrt();
+        let root = (time * time - 4 * distance).isqrt();
         let mut start = (time - root).div_ceil(2);
         let mut end = (time + root) / 2;
 

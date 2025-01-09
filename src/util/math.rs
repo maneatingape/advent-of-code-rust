@@ -22,10 +22,6 @@ pub trait IntegerMathOps<T: Integer<T>> {
     fn mod_pow(self, e: T, m: T) -> T;
 }
 
-pub trait UnsignedMathOps<T: Unsigned<T>> {
-    fn sqrt(self) -> T;
-}
-
 pub trait SignedMathOps<T: Signed<T>> {
     fn mod_inv(self, m: T) -> Option<T>;
 }
@@ -61,24 +57,6 @@ impl<T: Integer<T>> IntegerMathOps<T> for T {
         }
 
         c
-    }
-}
-
-impl<T: Unsigned<T>> UnsignedMathOps<T> for T {
-    // Integer square root. Once [`isqrt`] is stablized then this function can be removed.
-    fn sqrt(self) -> T {
-        let mut bit = T::ONE << (self.ilog2() >> T::ONE);
-        let mut root = bit;
-
-        while bit > T::ONE {
-            bit = bit >> T::ONE;
-            let next = root | bit;
-            if next * next <= self {
-                root = next;
-            }
-        }
-
-        root
     }
 }
 

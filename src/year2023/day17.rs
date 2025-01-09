@@ -28,6 +28,7 @@
 //! [`BinaryHeap`]: std::collections::BinaryHeap
 use crate::util::grid::*;
 use crate::util::parse::*;
+use std::iter::repeat_with;
 
 /// Parse the input into a 2D grid of `u8` then convert to `u32` for convenience.
 pub fn parse(input: &str) -> Grid<i32> {
@@ -55,7 +56,7 @@ fn astar<const L: i32, const U: i32>(grid: &Grid<i32>) -> i32 {
     let heat = &grid.bytes;
 
     let mut index = 0;
-    let mut todo = (0..100).map(|_| Vec::with_capacity(1000)).collect::<Vec<_>>();
+    let mut todo = repeat_with(|| Vec::with_capacity(1000)).take(100).collect::<Vec<_>>();
     let mut cost = vec![[i32::MAX; 2]; heat.len()];
 
     // Start from the top left corner checking both vertical and horizontal directions.

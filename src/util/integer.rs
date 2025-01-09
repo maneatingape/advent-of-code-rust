@@ -22,7 +22,6 @@ pub trait Integer<T>:
     const ONE: T;
     const TEN: T;
 
-    fn ilog2(self) -> T;
     fn trailing_zeros(self) -> T;
 }
 
@@ -36,12 +35,6 @@ macro_rules! integer {
             const ZERO: $t = 0;
             const ONE: $t = 1;
             const TEN: $t = 10;
-
-            #[inline]
-            #[allow(trivial_numeric_casts)]
-            fn ilog2(self) -> $t {
-                <$t>::ilog2(self) as $t
-            }
 
             #[inline]
             #[allow(trivial_numeric_casts)]

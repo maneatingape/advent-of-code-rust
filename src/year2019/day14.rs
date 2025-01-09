@@ -6,6 +6,7 @@ use crate::util::hash::*;
 use crate::util::iter::*;
 use crate::util::parse::*;
 use std::cmp::Ordering;
+use std::iter::repeat_with;
 
 struct Ingredient {
     amount: u64,
@@ -23,15 +24,15 @@ pub struct Reaction {
 pub fn parse(input: &str) -> Vec<Reaction> {
     let lines: Vec<_> = input.lines().collect();
 
-    let mut reactions: Vec<_> = (0..lines.len() + 1)
-        .map(|_| {
-            Reaction {
-                amount: 0,
-                chemical: 1, // Default to ORE, other chemicals will overwrite.
-                ingredients: Vec::new(),
-            }
-        })
-        .collect();
+    let mut reactions: Vec<_> = repeat_with(|| {
+        Reaction {
+            amount: 0,
+            chemical: 1, // Default to ORE, other chemicals will overwrite.
+            ingredients: Vec::new(),
+        }
+    })
+    .take(lines.len() + 1)
+    .collect();
 
     // Assign FUEL and ORE known indices as we'll need to look them up later.
     let mut indices = FastMap::new();

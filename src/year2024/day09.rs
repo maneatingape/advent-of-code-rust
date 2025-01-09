@@ -15,6 +15,7 @@
 //! When moving a file to a free block, the corresponding heap is popped and then any leftover
 //! space is pushed back to the heap at a smaller index. The heap at index zero is not used
 //! but makes the indexing easier.
+use std::iter::repeat_with;
 
 /// [Triangular numbers](https://en.wikipedia.org/wiki/Triangular_number) offset by two.
 /// Files can be a max size of 9 so we only need the first 10 values, including zero to make
@@ -66,7 +67,7 @@ pub fn part1(disk: &[usize]) -> usize {
 pub fn part2(disk: &[usize]) -> usize {
     let mut block = 0;
     let mut checksum = 0;
-    let mut free: Vec<_> = (0..10).map(|_| Vec::with_capacity(1_100)).collect();
+    let mut free: Vec<_> = repeat_with(|| Vec::with_capacity(1_100)).take(10).collect();
 
     // Build a min-heap (leftmost free block first) where the size of each block is
     // implicit in the index of the array.

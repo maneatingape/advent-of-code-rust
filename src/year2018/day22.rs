@@ -27,6 +27,7 @@ use crate::util::grid::*;
 use crate::util::iter::*;
 use crate::util::parse::*;
 use crate::util::point::*;
+use std::iter::repeat_with;
 
 /// The index of each tool is that tool that *cannot* be used in that region, for example
 /// Rocky => 0 => Neither, Wet => 1 => Torch and Narrow => 2 => Climbing Gear.
@@ -72,7 +73,7 @@ pub fn part2(input: &Input) -> i32 {
 
     // Initialise bucket queue with pre-allocated capacity to reduce reallocations needed.
     let mut base = 0;
-    let mut todo = (0..BUCKETS).map(|_| Vec::with_capacity(1000)).collect::<Vec<_>>();
+    let mut todo = repeat_with(|| Vec::with_capacity(1000)).take(BUCKETS).collect::<Vec<_>>();
 
     // Add extra width and height so the search does not exceed the bounds of the grid.
     let mut cave = scan_cave(input, width + 10, height + 140);

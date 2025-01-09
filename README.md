@@ -283,7 +283,7 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 | 19 | [Go With The Flow](https://adventofcode.com/2018/day/19) | [Source](src/year2018/day19.rs) | 1 |
 | 20 | [A Regular Map](https://adventofcode.com/2018/day/20) | [Source](src/year2018/day20.rs) | 36 |
 | 21 | [Chronal Conversion](https://adventofcode.com/2018/day/21) | [Source](src/year2018/day21.rs) | 66 |
-| 22 | [Mode Maze](https://adventofcode.com/2018/day/22) | [Source](src/year2018/day22.rs) | 3396 |
+| 22 | [Mode Maze](https://adventofcode.com/2018/day/22) | [Source](src/year2018/day22.rs) | 3197 |
 | 23 | [Experimental Emergency Teleportation](https://adventofcode.com/2018/day/23) | [Source](src/year2018/day23.rs) | 506 |
 | 24 | [Immune System Simulator 20XX](https://adventofcode.com/2018/day/24) | [Source](src/year2018/day24.rs) | 2056 |
 | 25 | [Four-Dimensional Adventure](https://adventofcode.com/2018/day/25) | [Source](src/year2018/day25.rs) | 323 |
@@ -316,7 +316,7 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 | 20 | [Particle Swarm](https://adventofcode.com/2017/day/20) | [Source](src/year2017/day20.rs) | 245 |
 | 21 | [Fractal Art](https://adventofcode.com/2017/day/21) | [Source](src/year2017/day21.rs) | 5 |
 | 22 | [Sporifica Virus](https://adventofcode.com/2017/day/22) | [Source](src/year2017/day22.rs) | 36000 |
-| 23 | [Coprocessor Conflagration](https://adventofcode.com/2017/day/23) | [Source](src/year2017/day23.rs) | 55 |
+| 23 | [Coprocessor Conflagration](https://adventofcode.com/2017/day/23) | [Source](src/year2017/day23.rs) | 54 |
 | 24 | [Electromagnetic Moat](https://adventofcode.com/2017/day/24) | [Source](src/year2017/day24.rs) | 275 |
 | 25 | [The Halting Problem](https://adventofcode.com/2017/day/25) | [Source](src/year2017/day25.rs) | 3698 |
 

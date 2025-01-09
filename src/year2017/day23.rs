@@ -49,8 +49,6 @@
 //! this directly would take at least 10⁵.10⁵.10³ = 10¹³ = 10,000,000,000,000 steps.
 //!
 //! [`Day 18`]: crate::year2017::day18
-
-use crate::util::math::*;
 use crate::util::parse::*;
 
 /// We only need the vrey first number from the input.
@@ -71,7 +69,7 @@ pub fn part2(input: &u32) -> usize {
 /// Simple [prime number check](https://en.wikipedia.org/wiki/Primality_test)
 /// of all factors from 2 to √n inclusive.
 fn composite(n: u32) -> Option<u32> {
-    for f in 2..=n.sqrt() {
+    for f in 2..=n.isqrt() {
         if n % f == 0 {
             return Some(n);
         }
