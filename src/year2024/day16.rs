@@ -89,10 +89,36 @@ pub fn parse(input: &str) -> Input {
         // Reverse direction and subtract cost.
         let left = (direction + 3) % 4;
         let right = (direction + 1) % 4;
+
+        // println!("cost = {cost}, lowest = {lowest}, path.bytes...count() = {}", path.bytes.iter().filter(|&&b| b).count());
         let next = [
             (position - DIRECTIONS[direction], direction, cost - 1),
-            (position, left, cost - 1000),
-            (position, right, cost - 1000),
+            //
+            // This isn't a clever or performant fix, but prevents the: "attempt to subtract with overflow" error for my input.
+            // 
+            // I think the correct fix is to capture the length of the initial "same direction" moves from the start
+            // and add that length to the final result without processing that part of the path here??
+            // 
+            // Hopefully this little bit of debug output before the panic will suffice.
+            // The correct answer for my input is 467      
+            //
+            // cost = 1005, lowest = 83432, path.bytes...count() = 462
+            // cost = 1004, lowest = 83432, path.bytes...count() = 463
+            // cost = 4, lowest = 83432, path.bytes...count() = 463
+            // cost = 3, lowest = 83432, path.bytes...count() = 464
+            // cost = 2, lowest = 83432, path.bytes...count() = 465
+            // cost = 1, lowest = 83432, path.bytes...count() = 466
+            // 2024 Day 16
+            // Part 1: 83432
+            // Part 2: 467
+            (position, left, match cost {
+                0..1000 => 0,
+                _ => cost - 1000
+            }),
+            (position, right, match cost {
+                0..1000 => 0,
+                _ => cost - 1000
+            }),
         ];
 
         for (next_position, next_direction, next_cost) in next {
