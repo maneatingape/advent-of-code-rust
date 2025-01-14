@@ -109,9 +109,9 @@ fn decrypt(input: &[i64], key: i64, rounds: usize) -> i64 {
     let indices: Vec<_> = mixed.into_iter().flatten().flatten().collect();
     let zeroth = indices.iter().position(|&i| numbers[i] == 0).unwrap();
 
-    [1000, 2000, 3000]
+    key * [1000, 2000, 3000]
         .iter()
         .map(|offset| (zeroth + offset) % indices.len())
-        .map(|index| input[indices[index]] * key)
-        .sum()
+        .map(|index| input[indices[index]])
+        .sum::<i64>()
 }
