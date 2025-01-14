@@ -119,7 +119,7 @@ pub fn parse(input: &str) -> Maze {
 
                 if visited[next_index] != start {
                     match tiles[next_index] {
-                        Tile::Wall => continue,
+                        Tile::Wall => (),
                         Tile::Open => {
                             todo.push_back((next_index, next_steps));
                         }
