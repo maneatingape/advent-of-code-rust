@@ -39,7 +39,7 @@ fn parse_block(block: &str) -> Passport<'_> {
 
 fn validate_field(&[key, value]: &[&str; 2]) -> bool {
     match key {
-        "byr" => validate_range(value, 1920..=2022),
+        "byr" => validate_range(value, 1920..=2002),
         "iyr" => validate_range(value, 2010..=2020),
         "eyr" => validate_range(value, 2020..=2030),
         "hgt" => validate_height(value),
