@@ -23,7 +23,7 @@ pub fn parse(input: &str) -> Vec<Room<'_>> {
         let size = line.len();
         let name = &line[..size - 11];
         let sector_id = (&line[size - 10..size - 7]).unsigned();
-        let checksum = line[size - 6..size - 1].as_bytes();
+        let checksum = &line.as_bytes()[size - 6..size - 1];
 
         // Count the frequency of each digit, the frequency of each frequency `fof` and the
         // highest total frequency.

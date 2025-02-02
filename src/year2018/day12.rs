@@ -6,7 +6,7 @@
 //! The trick for part two is that the plants will eventually stabilize into a repeating pattern
 //! that expands by the same amount each generation. Once 2 deltas between 3 subsequent
 //! generations are the same we extrapolate 50 billion generations into the future.
-use std::iter::repeat;
+use std::iter::repeat_n;
 
 pub struct Input {
     rules: Vec<usize>,
@@ -73,7 +73,7 @@ fn step(rules: &[usize], tunnel: &Tunnel) -> Tunnel {
     let mut plants = Vec::with_capacity(1_000);
 
     // Add four extra empty pots to the end to make checking the last pattern easier.
-    for plant in tunnel.plants.iter().chain(repeat(&0).take(4)) {
+    for plant in tunnel.plants.iter().copied().chain(repeat_n(0, 4)) {
         index = ((index << 1) | plant) & 0b11111;
 
         sum += position * rules[index] as i64;

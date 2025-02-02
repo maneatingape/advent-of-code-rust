@@ -64,7 +64,7 @@ pub struct Input {
 /// State of a single exploration path through the valves.
 ///
 /// * `todo` Binary mask of unopened valves. For example if there are 3 unopened valves left this
-///    could look like `11100`.
+///   could look like `11100`.
 /// * `from` Index of current valve.
 /// * `time` The *remaining* time left.
 /// * `pressure` Total pressure released from all opened valves including future extrapolated flow.

@@ -56,7 +56,7 @@
 //! * `B` and `F` are both supported only by `A` so their depth is 1.
 //! * `C` will fall if either `A` or `B` is removed so its depth is 2.
 //! * `D` will only fall when `A` is removed. Removing `F` would leave it supported by `B` and `C`
-//!    or vice-versa. The common ancestor of the path to the root is `A` so its depth is 1.
+//!   or vice-versa. The common ancestor of the path to the root is `A` so its depth is 1.
 //! * `E`'s common ancestor is the floor so its depth is 0.
 //!
 //! In total `0 (A) + 0 (G) + 1 (B) + 1 (F) + 2 (C) + 1 (D) + 0 (E) = 5` bricks will fall.
