@@ -79,16 +79,15 @@ pub fn part1(input: &[Reaction]) -> u64 {
 /// Find the maximum amount of fuel possible from 1 trillion ore with an efficient binary search.
 pub fn part2(input: &[Reaction]) -> u64 {
     let threshold = 1_000_000_000_000;
-    let mut start = 1;
+    let mut start = 1_u64;
     let mut end = threshold;
 
-    while start < end {
-        let middle = (start + end) / 2;
+    while start != end {
+        let middle = (start + end).div_ceil(2);
 
         match ore(input, middle).cmp(&threshold) {
-            Ordering::Less => start = middle + 1,
-            Ordering::Equal => return middle,
             Ordering::Greater => end = middle - 1,
+            _ => start = middle,
         }
     }
 
