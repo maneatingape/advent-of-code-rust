@@ -191,10 +191,9 @@ pub fn parse(input: &str) -> Vec<Located> {
         let mut next_unknown = Vec::new();
 
         while let Some(scanner) = unknown.pop() {
-            if let Some(found) = check(&known, &scanner) {
-                todo.push(Located::from(scanner, found));
-            } else {
-                next_unknown.push(scanner);
+            match check(&known, &scanner) {
+                Some(found) => todo.push(Located::from(scanner, found)),
+                None => next_unknown.push(scanner),
             }
         }
 

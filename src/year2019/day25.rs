@@ -134,7 +134,7 @@ fn play_automatically(input: &[i64]) -> String {
                 too_light.insert(current);
                 continue;
             }
-        };
+        }
 
         if matches!(movement_noisy(&mut computer, &last, &mut output), State::Halted) {
             // Keep only the password digits from Santa's response.

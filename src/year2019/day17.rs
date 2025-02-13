@@ -100,7 +100,7 @@ pub fn part2(input: &Input) -> i64 {
     let path = build_path(input);
     let mut movement = Movement { routine: String::new(), functions: [None; 3] };
 
-    compress(&path, &mut movement);
+    let _unused = compress(&path, &mut movement);
 
     // Convert trailing comma ',' into a trailing newline '\n'
     let mut rules = String::new();

@@ -18,7 +18,7 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
-      - run: rustup default 1.84
+      - run: rustup default 1.85
       - run: cargo doc
         env:
           RUSTDOCFLAGS: "--document-private-items --default-theme=ayu --deny warnings"
