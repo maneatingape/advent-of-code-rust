@@ -96,7 +96,7 @@ impl Iterator for State<'_> {
             // Check for a horizontal collision (this does not prevent downwards movement).
             if candidate & chunk == 0 {
                 shape = candidate;
-            };
+            }
 
             // The neat part of using bitwise AND to compare is that we can check all four
             // rows in a single operation, including both walls and the existing tower.
