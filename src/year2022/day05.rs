@@ -1,8 +1,4 @@
 //! # Supply Stacks
-//!
-//! There are 2 main challenges to this problem:
-//! * Parsing the input!
-//! * (Rust Specific): The borrow checker prevents mutating a nested `vec` at 2 indices at once.
 use crate::util::iter::*;
 use crate::util::parse::*;
 
@@ -61,26 +57,23 @@ pub fn part2(input: &Input) -> String {
     play(input, false)
 }
 
-/// Rust's borrow checker won't allow us to mutate 2 nested `vec`s simulataneously, so we need
-/// to use an temporary intermediate `vec` to store the moving crates. For efficiency we can re-use
-/// the same vec to prevent unnecessary memory allocations.
-///
+/// `get_disjoint_mut` allows us to acquire two simultaneous mutable references to disjoint indices.
 /// A nice standard library feature is that we can collect an iterator of `char`s into a `String`
 /// for the final answer.
 fn play(input: &Input, reverse: bool) -> String {
     let (initial, moves) = input;
     let mut stack = initial.clone();
-    let mut crates = Vec::new();
 
     for &[amount, from, to] in moves {
-        let start = stack[from].len() - amount;
-        crates.extend(stack[from].drain(start..));
+        let [from, to] = stack.get_disjoint_mut([from, to]).unwrap();
+        let start = from.len() - amount;
+        let iter = from.drain(start..);
+
         if reverse {
-            stack[to].extend(crates.iter().rev());
+            to.extend(iter.rev());
         } else {
-            stack[to].extend(crates.iter());
+            to.extend(iter);
         }
-        crates.clear();
     }
 
     stack.iter().map(|v| v.last().unwrap()).collect()
