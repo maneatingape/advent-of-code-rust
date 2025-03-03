@@ -86,7 +86,6 @@ impl Point {
 
 impl From<u8> for Point {
     #[inline]
-    #[must_use]
     fn from(value: u8) -> Self {
         match value {
             b'^' | b'U' => UP,
@@ -110,7 +109,6 @@ impl Add for Point {
     type Output = Self;
 
     #[inline]
-    #[must_use]
     fn add(self, rhs: Self) -> Self {
         Point::new(self.x + rhs.x, self.y + rhs.y)
     }
@@ -128,7 +126,6 @@ impl Mul<i32> for Point {
     type Output = Self;
 
     #[inline]
-    #[must_use]
     fn mul(self, rhs: i32) -> Self {
         Point::new(self.x * rhs, self.y * rhs)
     }
@@ -138,7 +135,6 @@ impl Sub for Point {
     type Output = Self;
 
     #[inline]
-    #[must_use]
     fn sub(self, rhs: Self) -> Self {
         Point::new(self.x - rhs.x, self.y - rhs.y)
     }
