@@ -35,9 +35,7 @@ fn median(input: &[i32]) -> i32 {
     crabs.sort_unstable();
 
     let half = input.len() / 2;
-    let odd = crabs.len() % 2 == 1;
-
-    if odd { crabs[half] } else { (crabs[half - 1] + crabs[half]) / 2 }
+    if crabs.len().is_multiple_of(2) { crabs[half - 1].midpoint(crabs[half]) } else { crabs[half] }
 }
 
 fn mean(input: &[i32]) -> i32 {

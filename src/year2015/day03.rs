@@ -18,7 +18,7 @@ pub fn part1(input: &[Point]) -> usize {
 }
 
 pub fn part2(input: &[Point]) -> usize {
-    deliver(input, |i| i % 2 == 0)
+    deliver(input, |i| i.is_multiple_of(2))
 }
 
 fn deliver(input: &[Point], predicate: fn(usize) -> bool) -> usize {

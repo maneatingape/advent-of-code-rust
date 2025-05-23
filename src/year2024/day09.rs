@@ -72,7 +72,7 @@ pub fn part2(disk: &[usize]) -> usize {
     // Build a min-heap (leftmost free block first) where the size of each block is
     // implicit in the index of the array.
     for (index, &size) in disk.iter().enumerate() {
-        if index % 2 == 1 && size > 0 {
+        if !index.is_multiple_of(2) && size > 0 {
             free[size].push(block);
         }
 
@@ -89,7 +89,7 @@ pub fn part2(disk: &[usize]) -> usize {
         block -= size;
 
         // Count any previous free blocks to decrement block offset correctly.
-        if index % 2 == 1 {
+        if !index.is_multiple_of(2) {
             continue;
         }
 

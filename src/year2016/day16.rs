@@ -66,7 +66,7 @@ fn checksum(input: &[usize], step_size: usize) -> String {
         .map(|i| count(input, i * step_size))
         .collect::<Vec<_>>()
         .windows(2)
-        .map(|w| if (w[1] - w[0]) % 2 == 0 { '1' } else { '0' })
+        .map(|w| if (w[1] - w[0]).is_multiple_of(2) { '1' } else { '0' })
         .collect()
 }
 

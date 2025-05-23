@@ -61,7 +61,7 @@ fn count(input: &[u64], blinks: usize) -> u64 {
                 (index_of(1), usize::MAX)
             } else {
                 let digits = number.ilog10() + 1;
-                if digits % 2 == 0 {
+                if digits.is_multiple_of(2) {
                     let power = 10_u64.pow(digits / 2);
                     (index_of(number / power), index_of(number % power))
                 } else {

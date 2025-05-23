@@ -23,7 +23,7 @@ pub fn parse(input: &str) -> Input {
         for y in 0..52 {
             let n = (x * x) + (3 * x) + (2 * x * y) + y + (y * y) + favorite;
             let ones = n.count_ones();
-            maze[x][y] = ones % 2 == 0;
+            maze[x][y] = ones.is_multiple_of(2);
         }
     }
 

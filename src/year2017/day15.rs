@@ -82,10 +82,10 @@ fn sender(shared: &Shared, tx: &Sender<Block>) {
             if left == right {
                 ones += 1;
             }
-            if left % 4 == 0 {
+            if left.is_multiple_of(4) {
                 fours.push(left);
             }
-            if right % 8 == 0 {
+            if right.is_multiple_of(8) {
                 eights.push(right);
             }
         }

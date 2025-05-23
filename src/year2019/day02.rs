@@ -58,8 +58,8 @@ fn search(input: &Input, x1: i32, x2: i32, y1: i32, y2: i32) -> Option<i32> {
         return None;
     }
 
-    let x = (x1 + x2) / 2;
-    let y = (y1 + y2) / 2;
+    let x = x1.midpoint(x2);
+    let y = y1.midpoint(y2);
     let [a, b, c] = input;
     let result = a * x + b * y + c;
 

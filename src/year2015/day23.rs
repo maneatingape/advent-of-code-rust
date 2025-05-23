@@ -70,7 +70,7 @@ fn execute(input: &[Op], mut a: u64) -> u64 {
                 pc += 1;
             }
             Op::Jmp(index) => pc = index,
-            Op::Jie(index) => pc = if a % 2 == 0 { index } else { pc + 1 },
+            Op::Jie(index) => pc = if a.is_multiple_of(2) { index } else { pc + 1 },
             Op::Jio(index) => pc = if a == 1 { index } else { pc + 1 },
         }
     }

@@ -46,7 +46,7 @@ fn race(first: &str, second: &str) -> u128 {
         // Use the quadratic formula to find the start and end positions.
         let root = (time * time - 4 * distance).isqrt();
         let mut start = (time - root).div_ceil(2);
-        let mut end = (time + root) / 2;
+        let mut end = time.midpoint(root);
 
         // As we're using integer math we may need to adjust 1 step.
         if start * (time - start) > distance {

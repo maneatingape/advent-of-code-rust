@@ -90,7 +90,7 @@ pub fn part2(input: &[i32]) -> usize {
             // Each time it crosses a block of 16 add to the compact binary representation.
             if jump[index] == 2 && index == fine {
                 fine += 1;
-                if fine % 16 == 0 {
+                if fine.is_multiple_of(16) {
                     let value = (coarse..fine).rev().fold(0, |acc, i| (acc << 1) | (jump[i] & 1));
                     coarse = fine;
                     compact.push(value as u16);
