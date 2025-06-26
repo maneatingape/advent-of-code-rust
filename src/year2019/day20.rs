@@ -166,10 +166,10 @@ pub fn part2(input: &Maze) -> u32 {
 
     while let Some((steps, index, level)) = todo.pop_front() {
         let key = (index, level);
-        if let Some(min) = cache.get(&key) {
-            if *min <= steps {
-                continue;
-            }
+        if let Some(min) = cache.get(&key)
+            && *min <= steps
+        {
+            continue;
         }
         cache.insert(key, steps);
 

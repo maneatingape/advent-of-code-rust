@@ -216,14 +216,14 @@ fn fight(input: &Input, elf_attack_power: i32, part_two: bool) -> Option<i32> {
 
             // If no enemy next to unit then move towards nearest enemy in reading order,
             // breaking equal distance ties in reading order.
-            if nearby.is_none() {
-                if let Some(next) = double_bfs(input.walls, &units, position, kind) {
-                    grid[position] = None;
-                    grid[next] = Some(index);
-                    units[index].position = next;
+            if nearby.is_none()
+                && let Some(next) = double_bfs(input.walls, &units, position, kind)
+            {
+                grid[position] = None;
+                grid[next] = Some(index);
+                units[index].position = next;
 
-                    nearby = attack(&grid, &units, next, kind);
-                }
+                nearby = attack(&grid, &units, next, kind);
             }
 
             // Attack enemy if possible.

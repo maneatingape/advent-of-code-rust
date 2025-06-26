@@ -140,14 +140,14 @@ fn parse_maze(width: i32, bytes: &[u8]) -> Maze {
                 needed |= 1 << door;
             }
 
-            if let Some(to) = is_key(bytes[index]) {
-                if distance > 0 {
-                    // Store the reciprocal edge weight and doors in the adjacency matrix.
-                    maze[from][to] = Door { distance, needed };
-                    maze[to][from] = Door { distance, needed };
-                    // Faster to stop here and use Floyd-Warshall later.
-                    continue;
-                }
+            if let Some(to) = is_key(bytes[index])
+                && distance > 0
+            {
+                // Store the reciprocal edge weight and doors in the adjacency matrix.
+                maze[from][to] = Door { distance, needed };
+                maze[to][from] = Door { distance, needed };
+                // Faster to stop here and use Floyd-Warshall later.
+                continue;
             }
 
             for delta in orthogonal {
