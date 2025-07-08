@@ -72,7 +72,7 @@ fn composite(n: u32) -> Option<u32> {
     if n % 2 == 0 {
         return Some(n);
     };
-    for f in (3..=n.isqrt()).step_by(2) {
+    for f in (3..).step_by(2).take_while(|m| m * m <= n) {
         if n % f == 0 {
             return Some(n);
         }
