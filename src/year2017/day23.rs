@@ -51,7 +51,7 @@
 //! [`Day 18`]: crate::year2017::day18
 use crate::util::parse::*;
 
-/// We only need the vrey first number from the input.
+/// We only need the very first number from the input.
 pub fn parse(input: &str) -> u32 {
     input.unsigned()
 }
@@ -69,7 +69,10 @@ pub fn part2(input: &u32) -> usize {
 /// Simple [prime number check](https://en.wikipedia.org/wiki/Primality_test)
 /// of all factors from 2 to √n inclusive.
 fn composite(n: u32) -> Option<u32> {
-    for f in 2..=n.isqrt() {
+    if n % 2 == 0 {
+        return Some(n);
+    };
+    for f in (3..=n.isqrt()).step_by(2) {
         if n % f == 0 {
             return Some(n);
         }
