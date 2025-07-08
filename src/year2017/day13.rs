@@ -69,7 +69,7 @@ pub fn part1(input: &Input) -> u32 {
 
     for &[depth, range] in input {
         let period = 2 * (range - 1);
-        if depth % period == 0 {
+        if depth.is_multiple_of(period) {
             result += depth * range;
         }
     }
@@ -93,7 +93,7 @@ pub fn part2(input: &Input) -> u32 {
         // Check each multiple of the current `end` against the new scanner.
         for extra in (0..next_lcm).step_by(lcm as usize) {
             for &delay in current.iter() {
-                if (delay + extra + depth) % period != 0 {
+                if !(delay + extra + depth).is_multiple_of(period) {
                     next.push(delay + extra);
                 }
             }

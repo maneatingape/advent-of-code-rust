@@ -173,7 +173,11 @@ fn play(monkeys: &[Monkey], max_rounds: u32, adjust: impl Fn(u64) -> u64, pair: 
         };
         item = adjust(worry);
 
-        let to = if item % monkeys[from].test == 0 { monkeys[from].yes } else { monkeys[from].no };
+        let to = if item.is_multiple_of(monkeys[from].test) {
+            monkeys[from].yes
+        } else {
+            monkeys[from].no
+        };
 
         // Only increase the round when the item is passes to a previous monkey
         // which will have to be processed in the next turn.

@@ -28,7 +28,7 @@ pub fn part2(input: &Input) -> u32 {
         .map(|values| {
             for i in 0..values.len() {
                 for j in i + 1..values.len() {
-                    if values[j] % values[i] == 0 {
+                    if values[j].is_multiple_of(values[i]) {
                         return values[j] / values[i];
                     }
                 }

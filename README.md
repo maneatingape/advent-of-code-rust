@@ -316,7 +316,7 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 | 20 | [Particle Swarm](https://adventofcode.com/2017/day/20) | [Source](src/year2017/day20.rs) | 245 |
 | 21 | [Fractal Art](https://adventofcode.com/2017/day/21) | [Source](src/year2017/day21.rs) | 5 |
 | 22 | [Sporifica Virus](https://adventofcode.com/2017/day/22) | [Source](src/year2017/day22.rs) | 36000 |
-| 23 | [Coprocessor Conflagration](https://adventofcode.com/2017/day/23) | [Source](src/year2017/day23.rs) | 54 |
+| 23 | [Coprocessor Conflagration](https://adventofcode.com/2017/day/23) | [Source](src/year2017/day23.rs) | 19 |
 | 24 | [Electromagnetic Moat](https://adventofcode.com/2017/day/24) | [Source](src/year2017/day24.rs) | 275 |
 | 25 | [The Halting Problem](https://adventofcode.com/2017/day/25) | [Source](src/year2017/day25.rs) | 3698 |
 

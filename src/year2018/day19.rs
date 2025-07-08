@@ -102,7 +102,7 @@ fn divisor_sum(mut n: u32) -> u32 {
         let mut g = sum;
 
         // `n` could have more than one of the same prime factor.
-        while n % f == 0 {
+        while n.is_multiple_of(f) {
             n /= f;
             g *= f;
             sum += g;

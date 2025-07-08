@@ -69,11 +69,11 @@ pub fn part2(input: &u32) -> usize {
 /// Simple [prime number check](https://en.wikipedia.org/wiki/Primality_test)
 /// of all factors from 2 to √n inclusive.
 fn composite(n: u32) -> Option<u32> {
-    if n % 2 == 0 {
+    if n.is_multiple_of(2) {
         return Some(n);
-    };
+    }
     for f in (3..).step_by(2).take_while(|m| m * m <= n) {
-        if n % f == 0 {
+        if n.is_multiple_of(f) {
             return Some(n);
         }
     }

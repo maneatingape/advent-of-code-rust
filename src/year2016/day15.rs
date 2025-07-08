@@ -32,7 +32,7 @@ fn solve(discs: &[Disc]) -> usize {
     let mut step = 1;
 
     for (offset, &[size, position]) in discs.iter().enumerate() {
-        while (time + offset + 1 + position) % size != 0 {
+        while !(time + offset + 1 + position).is_multiple_of(size) {
             time += step;
         }
 
