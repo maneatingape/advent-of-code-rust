@@ -1,5 +1,7 @@
 //! # Inventory Management System
 
+use crate::util::hash::*;
+
 pub fn parse(input: &str) -> Vec<&[u8]> {
     input.lines().map(str::as_bytes).collect()
 }
@@ -43,33 +45,25 @@ pub fn part1(input: &[&[u8]]) -> u32 {
 }
 
 pub fn part2(input: &[&[u8]]) -> String {
-    // Manually compare all IDs, as it is faster than other methods considering there are so few total IDs
-    for i in 0..input.len() {
-        for ii in i + 1..input.len() {
-            let id1 = input[i];
-            let id2 = input[ii];
+    let width = input[0].len();
 
-            let mut diff = false;
-            for (a, b) in id1.iter().zip(id2) {
-                if a != b {
-                    if diff {
-                        diff = false;
-                        break;
-                    }
-                    diff = true;
-                }
-            }
+    let mut seen = FastSet::with_capacity(input.len());
 
-            if diff {
-                // Build the string of characters which are the same between both IDs
-                return id1
-                    .iter()
-                    .zip(id2)
-                    .filter(|&(a, b)| a == b)
-                    .map(|(a, _)| char::from(*a))
-                    .collect();
+    // Use a set to check for duplicates by comparing the prefix and suffix of IDs excluding one
+    // column at a time.
+    for column in 0..width {
+        for &id in input {
+            let prefix = &id[..column];
+            let suffix = &id[column + 1..];
+
+            if !seen.insert([prefix, suffix]) {
+                // Convert to String
+                return prefix.iter().chain(suffix).cloned().map(char::from).collect();
             }
         }
+
+        seen.clear();
     }
+
     unreachable!()
 }
