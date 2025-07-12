@@ -65,7 +65,7 @@ pub fn part2(input: &[&[u8]]) -> String {
                 return id1
                     .iter()
                     .zip(id2)
-                    .filter_map(|(a, b)| if a == b { Some(char::from(*a)) } else { None })
+                    .filter_map(|(a, b)| (a == b).then(|| char::from(*a)))
                     .collect();
             }
         }
