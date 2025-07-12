@@ -1,5 +1,4 @@
 //! # Inventory Management System
-
 use crate::util::hash::*;
 
 pub fn parse(input: &str) -> Vec<&[u8]> {
@@ -46,7 +45,6 @@ pub fn part1(input: &[&[u8]]) -> u32 {
 
 pub fn part2(input: &[&[u8]]) -> String {
     let width = input[0].len();
-
     let mut seen = FastSet::with_capacity(input.len());
 
     // Use a set to check for duplicates by comparing the prefix and suffix of IDs excluding one
@@ -58,7 +56,7 @@ pub fn part2(input: &[&[u8]]) -> String {
 
             if !seen.insert([prefix, suffix]) {
                 // Convert to String
-                return prefix.iter().chain(suffix).cloned().map(char::from).collect();
+                return prefix.iter().chain(suffix).copied().map(char::from).collect();
             }
         }
 
