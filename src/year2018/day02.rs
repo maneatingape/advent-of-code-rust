@@ -1,5 +1,4 @@
 //! # Inventory Management System
-use crate::util::hash::*;
 
 pub fn parse(input: &str) -> Vec<&[u8]> {
     input.lines().map(str::as_bytes).collect()
@@ -44,29 +43,32 @@ pub fn part1(input: &[&[u8]]) -> u32 {
 }
 
 pub fn part2(input: &[&[u8]]) -> String {
-    let width = input[0].len();
+    // Manually compare all IDs, as it is faster than other methods considering there are so few total IDs
+    for i in 0..input.len() {
+        for ii in i + 1..input.len() {
+            let id1 = input[i];
+            let id2 = input[ii];
 
-    let mut seen = FastSet::with_capacity(input.len());
-    let mut buffer = [0; 32];
+            let mut diff = false;
+            for (a, b) in id1.iter().zip(id2) {
+                if a != b {
+                    if diff {
+                        diff = false;
+                        break;
+                    }
+                    diff = true;
+                }
+            }
 
-    // Use a set to check for duplicates after replacing a single character with '*' in each column.
-    for column in 0..width {
-        for &id in input {
-            buffer[0..width].copy_from_slice(id);
-            buffer[column] = b'*';
-
-            if !seen.insert(buffer) {
-                // Convert to String
-                return buffer
+            if diff {
+                // Build the string of characters which are the same between both IDs
+                return id1
                     .iter()
-                    .filter(|&&b| b.is_ascii_lowercase())
-                    .map(|&b| b as char)
+                    .zip(id2)
+                    .filter_map(|(a, b)| if a == b { Some(char::from(*a)) } else { None })
                     .collect();
             }
         }
-
-        seen.clear();
     }
-
     unreachable!()
 }
