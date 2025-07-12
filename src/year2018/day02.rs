@@ -1,4 +1,5 @@
 //! # Inventory Management System
+
 use crate::util::hash::*;
 
 pub fn parse(input: &str) -> Vec<&[u8]> {
@@ -47,21 +48,17 @@ pub fn part2(input: &[&[u8]]) -> String {
     let width = input[0].len();
 
     let mut seen = FastSet::with_capacity(input.len());
-    let mut buffer = [0; 32];
 
-    // Use a set to check for duplicates after replacing a single character with '*' in each column.
+    // Use a set to check for duplicates by comparing the prefix and suffix of IDs excluding one
+    // column at a time.
     for column in 0..width {
         for &id in input {
-            buffer[0..width].copy_from_slice(id);
-            buffer[column] = b'*';
+            let prefix = &id[..column];
+            let suffix = &id[column + 1..];
 
-            if !seen.insert(buffer) {
+            if !seen.insert([prefix, suffix]) {
                 // Convert to String
-                return buffer
-                    .iter()
-                    .filter(|&&b| b.is_ascii_lowercase())
-                    .map(|&b| b as char)
-                    .collect();
+                return prefix.iter().chain(suffix).cloned().map(char::from).collect();
             }
         }
 
