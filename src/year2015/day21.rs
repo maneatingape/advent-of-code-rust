@@ -8,9 +8,9 @@ use std::ops::Add;
 
 #[derive(Clone, Copy)]
 struct Item {
-    cost: i32,
-    damage: i32,
-    armor: i32,
+    cost: u32,
+    damage: u32,
+    armor: u32,
 }
 
 impl Add for Item {
@@ -25,11 +25,11 @@ impl Add for Item {
     }
 }
 
-type Result = (bool, i32);
+type Result = (bool, u32);
 
 pub fn parse(input: &str) -> Vec<Result> {
-    let [boss_health, boss_damage, boss_armor]: [i32; 3] =
-        input.iter_signed().chunk::<3>().next().unwrap();
+    let [boss_health, boss_damage, boss_armor]: [u32; 3] =
+        input.iter_unsigned().chunk::<3>().next().unwrap();
 
     let weapon = [
         Item { cost: 8, damage: 4, armor: 0 },
@@ -74,8 +74,10 @@ pub fn parse(input: &str) -> Vec<Result> {
             for &third in &combinations {
                 let Item { cost, damage, armor } = first + second + third;
 
-                let hero_turns = boss_health / (damage - boss_armor).max(1);
-                let boss_turns = 100 / (boss_damage - armor).max(1);
+                let hero_hit = damage.saturating_sub(boss_armor).max(1);
+                let hero_turns = boss_health.div_ceil(hero_hit);
+                let boss_hit = boss_damage.saturating_sub(armor).max(1);
+                let boss_turns = 100_u32.div_ceil(boss_hit);
                 let win = hero_turns <= boss_turns;
 
                 results.push((win, cost));
@@ -86,10 +88,10 @@ pub fn parse(input: &str) -> Vec<Result> {
     results
 }
 
-pub fn part1(input: &[Result]) -> i32 {
+pub fn part1(input: &[Result]) -> u32 {
     *input.iter().filter_map(|(w, c)| w.then_some(c)).min().unwrap()
 }
 
-pub fn part2(input: &[Result]) -> i32 {
+pub fn part2(input: &[Result]) -> u32 {
     *input.iter().filter_map(|(w, c)| (!w).then_some(c)).max().unwrap()
 }
