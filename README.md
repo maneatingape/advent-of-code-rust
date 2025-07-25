@@ -50,6 +50,11 @@ Place input files in `input/yearYYYY/dayDD.txt` including leading zeroes. For ex
 
 </details>
 
+## Contributing
+
+Improvements to solutions are always appreciated. Please see the
+[detailed instructions](CONTRIBUTING.md) on how to get started.
+
 ## Performance
 
 Benchmarks are measured using the built-in `cargo bench` tool run on an [Apple M2 Max][apple-link].
