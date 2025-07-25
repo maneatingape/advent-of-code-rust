@@ -1,3 +1,5 @@
+Hello world.
+
 # Advent of Code [![checks-badge]][checks-link] [![docs-badge]][docs-link]
 
 Complete 2024 to 2015 entries written in Rust for the annual [Advent of Code] challenge,
