@@ -11,9 +11,9 @@
 use crate::util::iter::*;
 use crate::util::parse::*;
 
-type Gift = [u32; 3];
+type Input = Vec<[u32; 3]>;
 
-pub fn parse(input: &str) -> Vec<Gift> {
+pub fn parse(input: &str) -> Input {
     input
         .iter_unsigned()
         .chunk::<3>()
@@ -25,10 +25,10 @@ pub fn parse(input: &str) -> Vec<Gift> {
         .collect()
 }
 
-pub fn part1(input: &[Gift]) -> u32 {
+pub fn part1(input: &Input) -> u32 {
     input.iter().map(|[l, w, h]| 2 * (l * w + w * h + h * l) + l * w).sum()
 }
 
-pub fn part2(input: &[Gift]) -> u32 {
+pub fn part2(input: &Input) -> u32 {
     input.iter().map(|[l, w, h]| 2 * (l + w) + (l * w * h)).sum()
 }

@@ -24,15 +24,16 @@ pub fn part2(input: &[Point]) -> usize {
 fn deliver(input: &[Point], predicate: fn(usize) -> bool) -> usize {
     let mut santa = ORIGIN;
     let mut robot = ORIGIN;
-    let mut set = FastSet::with_capacity(10_000);
+
+    let mut set = FastSet::with_capacity(input.len());
     set.insert(ORIGIN);
 
-    for (index, point) in input.iter().enumerate() {
+    for (index, &point) in input.iter().enumerate() {
         if predicate(index) {
-            santa += *point;
+            santa += point;
             set.insert(santa);
         } else {
-            robot += *point;
+            robot += point;
             set.insert(robot);
         }
     }

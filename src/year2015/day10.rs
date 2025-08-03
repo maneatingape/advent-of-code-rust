@@ -12,6 +12,9 @@
 //!
 //! Computing the result is simply multiplying the number of each element by its length. There are
 //! 92 elements total so we can use a fixed size array to store the decay chain information.
+//!
+//! It would be possible (but less fun) to precompute all possible 92 answers into a
+//! look up table.
 use crate::util::hash::*;
 
 const ELEMENTS: &str = "\
@@ -113,34 +116,34 @@ type Result = (usize, usize);
 pub fn parse(input: &str) -> Result {
     let elements: Vec<Vec<_>> =
         ELEMENTS.lines().map(|line| line.split_ascii_whitespace().collect()).collect();
-    let mut indices = FastMap::with_capacity(92);
+    let mut indices = FastMap::with_capacity(92 * 2);
 
+    // Map both sequence and element name to indices.
     for (i, tokens) in elements.iter().enumerate() {
+        indices.insert(tokens[0], i);
         indices.insert(tokens[2], i);
     }
 
-    let mut sequence = [""; 92];
-    let mut decays = [[None; 6]; 92];
+    // Build list of decay chains.
+    let sizes: Vec<_> = elements.iter().map(|e| e[0].len()).collect();
+    let decays: Vec<Vec<_>> =
+        elements.iter().map(|e| e[4..].iter().map(|t| indices[t]).collect()).collect();
 
-    for (i, tokens) in elements.iter().enumerate() {
-        sequence[i] = tokens[0];
-        for (j, &token) in tokens.iter().skip(4).enumerate() {
-            decays[i][j] = Some(indices[token]);
-        }
-    }
+    // Each input is a single element.
+    let mut current = [0; 92];
+    current[indices[input.trim()]] = 1;
 
-    let mut current = initial_state(input, &sequence);
     for _ in 0..40 {
         current = step(&current, &decays);
     }
+    let part1 = length(&current, &sizes);
 
-    let result1 = length(&current, &sequence);
     for _ in 0..10 {
         current = step(&current, &decays);
     }
+    let part2 = length(&current, &sizes);
 
-    let result2 = length(&current, &sequence);
-    (result1, result2)
+    (part1, part2)
 }
 
 pub fn part1(input: &Result) -> usize {
@@ -151,24 +154,13 @@ pub fn part2(input: &Result) -> usize {
     input.1
 }
 
-fn initial_state(input: &str, sequence: &[&str]) -> [usize; 92] {
-    let input = input.trim();
-    let start = sequence.iter().position(|&s| s == input).unwrap();
-
-    let mut current = [0; 92];
-    current[start] += 1;
-    current
-}
-
-fn step(current: &[usize; 92], decays: &[[Option<usize>; 6]; 92]) -> [usize; 92] {
+fn step(current: &[usize], decays: &[Vec<usize>]) -> [usize; 92] {
     let mut next = [0; 92];
 
-    for i in 0..92 {
-        let c = current[i];
-        if c > 0 {
-            let mut iter = decays[i].iter();
-            while let Some(Some(index)) = iter.next() {
-                next[*index] += c;
+    for (i, &count) in current.iter().enumerate() {
+        if count > 0 {
+            for &element in &decays[i] {
+                next[element] += count;
             }
         }
     }
@@ -176,6 +168,6 @@ fn step(current: &[usize; 92], decays: &[[Option<usize>; 6]; 92]) -> [usize; 92]
     next
 }
 
-fn length(current: &[usize; 92], sequence: &[&str; 92]) -> usize {
-    current.iter().zip(sequence.iter()).map(|(c, s)| c * s.len()).sum()
+fn length(current: &[usize], sizes: &[usize]) -> usize {
+    current.iter().zip(sizes.iter()).map(|(c, s)| c * s).sum()
 }

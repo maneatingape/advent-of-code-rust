@@ -75,7 +75,7 @@ fn parse_object(input: &[u8], start: usize) -> Result {
     let mut ignore = false;
 
     while input[index] != b'}' {
-        let Result { next: first, .. } = parse_json(input, index + 1);
+        let Result { next: first, .. } = parse_string(input, index + 1);
         let Result { next: second, ignore: red, value } = parse_json(input, first + 1);
         index = second;
         total += value;

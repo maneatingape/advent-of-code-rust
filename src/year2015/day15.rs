@@ -20,14 +20,15 @@ pub fn parse(input: &str) -> Input {
     for a in 0..101 {
         let first: Ingredient = from_fn(|i| a * recipe[0][i]);
 
-        for b in 0..(101 - a) {
+        'outer: for b in 0..(101 - a) {
             let second: Ingredient = from_fn(|i| first[i] + b * recipe[1][i]);
 
             // Check if any ingredient can never be greater than zero.
-            let check: Ingredient =
-                from_fn(|i| second[i] + recipe[2][i].max(recipe[3][i]) * (100 - a - b));
-            if check.iter().any(|&n| n <= 0) {
-                continue;
+            // This makes the entire score zero, so we can skip.
+            for ((x, y), z) in second.iter().zip(recipe[2]).zip(recipe[3]).take(4) {
+                if x + y.max(z) * (100 - a - b) <= 0 {
+                    continue 'outer;
+                }
             }
 
             for c in 0..(101 - a - b) {
@@ -35,7 +36,8 @@ pub fn parse(input: &str) -> Input {
                 let third: Ingredient = from_fn(|i| second[i] + c * recipe[2][i]);
                 let fourth: Ingredient = from_fn(|i| third[i] + d * recipe[3][i]);
 
-                let score = fourth.iter().take(4).map(|&n| n.max(0)).product();
+                let score =
+                    fourth[0].max(0) * fourth[1].max(0) * fourth[2].max(0) * fourth[3].max(0);
                 let calories = fourth[4];
 
                 part_one = part_one.max(score);

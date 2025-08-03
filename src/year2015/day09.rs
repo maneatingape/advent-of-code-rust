@@ -65,9 +65,11 @@ pub fn parse(input: &str) -> Result {
             local_max = local_max.max(distance);
         };
 
+        // First trip.
         trip(0, slice[0]);
+        // Last trip.
         trip(0, slice[slice.len() - 1]);
-
+        // Intermediate trips.
         for i in 1..slice.len() {
             trip(slice[i], slice[i - 1]);
         }

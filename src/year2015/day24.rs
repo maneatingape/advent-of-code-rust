@@ -6,64 +6,54 @@
 //! Sorts the weights in ascending order, then tries combinations of increasing size until a
 //! match in found. This will be the answer since the package count is the smallest and the
 //! quantum entaglement will also be the lowest.
+use crate::util::bitset::*;
 use crate::util::parse::*;
 
-pub fn parse(input: &str) -> Vec<u64> {
+pub fn parse(input: &str) -> Vec<u32> {
     let mut packages: Vec<_> = input.iter_unsigned().collect();
     packages.sort_unstable();
     packages
 }
 
-pub fn part1(input: &[u64]) -> u64 {
-    let sum: u64 = input.iter().sum();
-    let target = sum / 3;
-    (1..input.len()).find_map(|size| combinations(input, target, size)).unwrap()
+pub fn part1(input: &[u32]) -> u64 {
+    combinations(input, 3)
 }
 
-pub fn part2(input: &[u64]) -> u64 {
-    let sum: u64 = input.iter().sum();
-    let target = sum / 4;
-    (1..input.len()).find_map(|size| combinations(input, target, size)).unwrap()
+pub fn part2(input: &[u32]) -> u64 {
+    combinations(input, 4)
 }
 
-/// Check all combinations of `size` items returning `None` if no valid solution is found.
-fn combinations(packages: &[u64], target: u64, size: usize) -> Option<u64> {
-    // Mantain `size` indices, initially set to 0, 1, 2...
-    let mut indices: Vec<_> = (0..size).collect();
-    // Initial weight for first `size` items.
-    let mut weight: u64 = packages.iter().take(size).sum();
+/// Breadth first search over all possible package combinations as we want the fewest possible
+/// packages that sum to the target weight. Uses a bitmask as a set for each package combination.
+fn combinations(input: &[u32], groups: u32) -> u64 {
+    let target = input.iter().sum::<u32>() / groups;
+    let mut current = &mut Vec::with_capacity(100_000);
+    let mut next = &mut Vec::with_capacity(100_000);
+
+    // Start with no packages.
+    current.push((0_u32, 0_u32));
 
     loop {
-        // Check for success
-        if weight == target {
-            let product = indices.iter().map(|&i| packages[i]).product();
-            return Some(product);
-        }
+        for (weight, packages) in current.drain(..) {
+            // Find the next highest power of two.
+            let start = 32 - packages.leading_zeros() as usize;
 
-        // Try to advance the last index. If the last index is at the end, then try to advance
-        // the previous index until we reach the root.
-        let mut depth = size - 1;
-        while indices[depth] == packages.len() - size + depth {
-            if depth == 0 {
-                return None;
+            // Add one package at a time to this combination.
+            for i in start..input.len() {
+                let next_weight = weight + input[i];
+                let next_packages = packages | (1 << i);
+
+                if next_weight == target {
+                    return next_packages.biterator().map(|i| input[i] as u64).product();
+                }
+                if next_weight > target {
+                    break;
+                }
+
+                next.push((next_weight, next_packages));
             }
-            depth -= 1;
         }
 
-        // Update the first index that is not at the end.
-        let from = indices[depth];
-        let to = indices[depth] + 1;
-        indices[depth] = to;
-        weight = weight - packages[from] + packages[to];
-        depth += 1;
-
-        // "Wrap" following indices to 1 more than the previous.
-        while depth < size {
-            let from = indices[depth];
-            let to = indices[depth - 1] + 1;
-            indices[depth] = to;
-            weight = weight - packages[from] + packages[to];
-            depth += 1;
-        }
+        (current, next) = (next, current);
     }
 }

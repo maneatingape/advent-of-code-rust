@@ -42,5 +42,5 @@ pub fn part2(input: &Input<'_>) -> usize {
     let ar = molecule.matches("Ar").count();
     let y = molecule.matches('Y').count();
 
-    elements - ar - rn - 2 * y - 1
+    elements - rn - ar - 2 * y - 1
 }

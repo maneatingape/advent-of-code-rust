@@ -24,32 +24,30 @@ pub fn part1_testable(input: &[Reindeer], time: u32) -> u32 {
 }
 
 pub fn part2_testable(input: &[Reindeer], time: u32) -> u32 {
-    let mut score = vec![0; input.len()];
+    let mut scores = vec![0; input.len()];
     let mut distances = vec![0; input.len()];
 
-    for minute in 1..time {
-        let mut lead = 0;
+    for minute in 1..=time {
+        let mut furthest = 0;
 
         for (index, &reindeer) in input.iter().enumerate() {
             let next = distance(reindeer, minute);
             distances[index] = next;
-            lead = lead.max(next);
+            furthest = furthest.max(next);
         }
 
-        for (index, &distance) in distances.iter().enumerate() {
-            if distance == lead {
-                score[index] += 1;
-            }
+        for (score, &distance) in scores.iter_mut().zip(distances.iter()) {
+            *score += (distance == furthest) as u32;
         }
     }
 
-    *score.iter().max().unwrap()
+    *scores.iter().max().unwrap()
 }
 
 fn distance([speed, fly, rest]: Reindeer, time: u32) -> u32 {
-    let total = fly + rest;
-    let complete = time / total;
-    let partial = (time % total).min(fly);
+    let cycle_time = fly + rest;
+    let complete = time / cycle_time;
+    let partial = (time % cycle_time).min(fly);
 
     speed * (fly * complete + partial)
 }

@@ -25,9 +25,9 @@ impl Add for Item {
     }
 }
 
-type Result = (bool, u32);
+type Input = (u32, u32);
 
-pub fn parse(input: &str) -> Vec<Result> {
+pub fn parse(input: &str) -> Input {
     let [boss_health, boss_damage, boss_armor]: [u32; 3] =
         input.iter_unsigned().chunk::<3>().next().unwrap();
 
@@ -67,7 +67,8 @@ pub fn parse(input: &str) -> Vec<Result> {
         }
     }
 
-    let mut results = Vec::with_capacity(660);
+    let mut part_one = u32::MAX;
+    let mut part_two = u32::MIN;
 
     for first in weapon {
         for second in armor {
@@ -80,18 +81,22 @@ pub fn parse(input: &str) -> Vec<Result> {
                 let boss_turns = 100_u32.div_ceil(boss_hit);
                 let win = hero_turns <= boss_turns;
 
-                results.push((win, cost));
+                if win {
+                    part_one = part_one.min(cost);
+                } else {
+                    part_two = part_two.max(cost);
+                }
             }
         }
     }
 
-    results
+    (part_one, part_two)
 }
 
-pub fn part1(input: &[Result]) -> u32 {
-    *input.iter().filter_map(|(w, c)| w.then_some(c)).min().unwrap()
+pub fn part1(input: &Input) -> u32 {
+    input.0
 }
 
-pub fn part2(input: &[Result]) -> u32 {
-    *input.iter().filter_map(|(w, c)| (!w).then_some(c)).max().unwrap()
+pub fn part2(input: &Input) -> u32 {
+    input.1
 }

@@ -48,17 +48,10 @@ pub fn part2(input: &Input) -> &str {
 /// Sanitize the input to make sure it has no invalid characters. We increment the first invalid
 /// character found, for example `abcixyz` becomes `abcjaaa`.
 fn clean(mut password: Password) -> Password {
-    let mut reset = false;
-
-    for digit in &mut password {
-        if reset {
-            *digit = b'a';
-        } else if matches!(digit, b'i' | b'o' | b'l') {
-            *digit += 1;
-            reset = true;
-        }
+    if let Some(index) = password.iter().position(|&d| matches!(d, b'i' | b'o' | b'l')) {
+        password[index] += 1;
+        password[index + 1..].fill(b'a');
     }
-
     password
 }
 

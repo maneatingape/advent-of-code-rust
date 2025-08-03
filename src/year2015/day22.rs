@@ -24,6 +24,37 @@ struct State {
     recharge_effect: u8,
 }
 
+impl State {
+    /// Applies spell effects to state and returns true if the player has won.
+    #[inline]
+    fn apply_spell_effects(&mut self) -> bool {
+        if self.shield_effect > 0 {
+            self.shield_effect -= 1;
+        }
+        if self.poison_effect > 0 {
+            self.poison_effect -= 1;
+            self.boss_hp -= 3;
+        }
+        if self.recharge_effect > 0 {
+            self.recharge_effect -= 1;
+            self.player_mana += 101;
+        }
+
+        self.boss_hp <= 0
+    }
+
+    /// Applies boss attack and returns true if the wizard survives.
+    #[inline]
+    fn boss_turn(&mut self, mut attack: i16) -> bool {
+        if self.shield_effect > 0 {
+            attack = (attack - 7).max(1);
+        }
+
+        self.player_hp -= attack;
+        self.player_hp > 0 && self.player_mana >= 53
+    }
+}
+
 pub fn parse(input: &str) -> Input {
     input.iter_signed().chunk::<2>().next().unwrap()
 }
@@ -55,7 +86,7 @@ fn play(input: Input, hard_mode: bool) -> i16 {
 
     while let Some((spent, mut state)) = todo.pop() {
         // Check winning condition
-        if apply_spell_effects(&mut state) {
+        if state.apply_spell_effects() {
             return spent;
         }
 
@@ -73,10 +104,10 @@ fn play(input: Input, hard_mode: bool) -> i16 {
             let mut next =
                 State { boss_hp: state.boss_hp - 4, player_mana: state.player_mana - 53, ..state };
 
-            if apply_spell_effects(&mut next) {
+            if next.apply_spell_effects() {
                 return spent + 53;
             }
-            if boss_turn(&mut next, boss_damage) && cache.insert(next) {
+            if next.boss_turn(boss_damage) && cache.insert(next) {
                 todo.push(spent + 53, next);
             }
         }
@@ -90,10 +121,10 @@ fn play(input: Input, hard_mode: bool) -> i16 {
                 ..state
             };
 
-            if apply_spell_effects(&mut next) {
+            if next.apply_spell_effects() {
                 return spent + 73;
             }
-            if boss_turn(&mut next, boss_damage) && cache.insert(next) {
+            if next.boss_turn(boss_damage) && cache.insert(next) {
                 todo.push(spent + 73, next);
             }
         }
@@ -103,10 +134,10 @@ fn play(input: Input, hard_mode: bool) -> i16 {
             let mut next =
                 State { player_mana: state.player_mana - 113, shield_effect: 6, ..state };
 
-            if apply_spell_effects(&mut next) {
+            if next.apply_spell_effects() {
                 return spent + 113;
             }
-            if boss_turn(&mut next, boss_damage) && cache.insert(next) {
+            if next.boss_turn(boss_damage) && cache.insert(next) {
                 todo.push(spent + 113, next);
             }
         }
@@ -116,10 +147,10 @@ fn play(input: Input, hard_mode: bool) -> i16 {
             let mut next =
                 State { player_mana: state.player_mana - 173, poison_effect: 6, ..state };
 
-            if apply_spell_effects(&mut next) {
+            if next.apply_spell_effects() {
                 return spent + 173;
             }
-            if boss_turn(&mut next, boss_damage) && cache.insert(next) {
+            if next.boss_turn(boss_damage) && cache.insert(next) {
                 todo.push(spent + 173, next);
             }
         }
@@ -129,43 +160,14 @@ fn play(input: Input, hard_mode: bool) -> i16 {
             let mut next =
                 State { player_mana: state.player_mana - 229, recharge_effect: 5, ..state };
 
-            if apply_spell_effects(&mut next) {
+            if next.apply_spell_effects() {
                 return spent + 229;
             }
-            if boss_turn(&mut next, boss_damage) && cache.insert(next) {
+            if next.boss_turn(boss_damage) && cache.insert(next) {
                 todo.push(spent + 229, next);
             }
         }
     }
 
     unreachable!()
-}
-
-/// Applies spell effects to state and returns true if the player has won.
-#[inline]
-fn apply_spell_effects(state: &mut State) -> bool {
-    if state.shield_effect > 0 {
-        state.shield_effect -= 1;
-    }
-    if state.poison_effect > 0 {
-        state.poison_effect -= 1;
-        state.boss_hp -= 3;
-    }
-    if state.recharge_effect > 0 {
-        state.recharge_effect -= 1;
-        state.player_mana += 101;
-    }
-
-    state.boss_hp <= 0
-}
-
-/// Applies boss attack and returns true if the wizard survives.
-#[inline]
-fn boss_turn(state: &mut State, mut attack: i16) -> bool {
-    if state.shield_effect > 0 {
-        attack = (attack - 7).max(1);
-    }
-
-    state.player_hp -= attack;
-    state.player_hp > 0 && state.player_mana >= 53
 }

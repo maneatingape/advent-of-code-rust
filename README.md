@@ -370,14 +370,14 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 | 5 | [Doesn't He Have Intern-Elves For This?](https://adventofcode.com/2015/day/5) | [Source](src/year2015/day05.rs) | 38 |
 | 6 | [Probably a Fire Hazard](https://adventofcode.com/2015/day/6) | [Source](src/year2015/day06.rs) | 6572 |
 | 7 | [Some Assembly Required](https://adventofcode.com/2015/day/7) | [Source](src/year2015/day07.rs) | 27 |
-| 8 | [Matchsticks](https://adventofcode.com/2015/day/8) | [Source](src/year2015/day08.rs) | 12 |
+| 8 | [Matchsticks](https://adventofcode.com/2015/day/8) | [Source](src/year2015/day08.rs) | 5 |
 | 9 | [All in a Single Night](https://adventofcode.com/2015/day/9) | [Source](src/year2015/day09.rs) | 34 |
-| 10 | [Elves Look, Elves Say](https://adventofcode.com/2015/day/10) | [Source](src/year2015/day10.rs) | 15 |
+| 10 | [Elves Look, Elves Say](https://adventofcode.com/2015/day/10) | [Source](src/year2015/day10.rs) | 17 |
 | 11 | [Corporate Policy](https://adventofcode.com/2015/day/11) | [Source](src/year2015/day11.rs) | 1 |
-| 12 | [JSAbacusFramework.io](https://adventofcode.com/2015/day/12) | [Source](src/year2015/day12.rs) | 83 |
+| 12 | [JSAbacusFramework.io](https://adventofcode.com/2015/day/12) | [Source](src/year2015/day12.rs) | 71 |
 | 13 | [Knights of the Dinner Table](https://adventofcode.com/2015/day/13) | [Source](src/year2015/day13.rs) | 37 |
-| 14 | [Reindeer Olympics](https://adventofcode.com/2015/day/14) | [Source](src/year2015/day14.rs) | 28 |
-| 15 | [Science for Hungry People](https://adventofcode.com/2015/day/15) | [Source](src/year2015/day15.rs) | 53 |
+| 14 | [Reindeer Olympics](https://adventofcode.com/2015/day/14) | [Source](src/year2015/day14.rs) | 24 |
+| 15 | [Science for Hungry People](https://adventofcode.com/2015/day/15) | [Source](src/year2015/day15.rs) | 43 |
 | 16 | [Aunt Sue](https://adventofcode.com/2015/day/16) | [Source](src/year2015/day16.rs) | 20 |
 | 17 | [No Such Thing as Too Much](https://adventofcode.com/2015/day/17) | [Source](src/year2015/day17.rs) | 45 |
 | 18 | [Like a GIF For Your Yard](https://adventofcode.com/2015/day/18) | [Source](src/year2015/day18.rs) | 154 |
@@ -386,7 +386,7 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 | 21 | [RPG Simulator 20XX](https://adventofcode.com/2015/day/21) | [Source](src/year2015/day21.rs) | 2 |
 | 22 | [Wizard Simulator 20XX](https://adventofcode.com/2015/day/22) | [Source](src/year2015/day22.rs) | 235 |
 | 23 | [Opening the Turing Lock](https://adventofcode.com/2015/day/23) | [Source](src/year2015/day23.rs) | 6 |
-| 24 | [It Hangs in the Balance](https://adventofcode.com/2015/day/24) | [Source](src/year2015/day24.rs) | 380 |
+| 24 | [It Hangs in the Balance](https://adventofcode.com/2015/day/24) | [Source](src/year2015/day24.rs) | 237 |
 | 25 | [Let It Snow](https://adventofcode.com/2015/day/25) | [Source](src/year2015/day25.rs) | 1 |
 
 [checks-badge]: https://img.shields.io/github/actions/workflow/status/maneatingape/advent-of-code-rust/checks.yml?label=checks

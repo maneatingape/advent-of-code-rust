@@ -29,24 +29,30 @@ pub fn parse(input: &str) -> Vec<&[u8]> {
 }
 
 pub fn part1(input: &[&[u8]]) -> usize {
+    // Bitmask for vowels (a, e, i, o, u)
+    const VOWEL_MASK: u32 = 0x0104111;
+    // Bitmask for forbidden pairs
+    const FORBIDDEN_MASK: u32 = 0x101000a;
+
     let nice = |line: &&&[u8]| {
         let mut vowels = 0;
         let mut pairs = 0;
         let mut previous = 0;
 
-        for c in line.iter() {
+        for &c in line.iter() {
             let current = 1 << (c - b'a');
-            if 0x101000a & current & (previous << 1) != 0 {
+
+            if FORBIDDEN_MASK & current & (previous << 1) != 0 {
                 return false;
             }
-            if 0x0104111 & current != 0 {
+            if VOWEL_MASK & current != 0 {
                 vowels += 1;
             }
             if previous == current {
                 pairs += 1;
-            } else {
-                previous = current;
             }
+
+            previous = current;
         }
 
         vowels >= 3 && pairs >= 1
@@ -73,8 +79,10 @@ pub fn part2(input: &[&[u8]]) -> usize {
             let delta = position - pairs[index];
 
             if delta > offset {
+                // This is the first time we've seen the pair for this string.
                 pairs[index] = position;
             } else if delta > 1 {
+                // No overlapping means that the distance must be at least two.
                 two_pair = true;
             }
             if first == third {
