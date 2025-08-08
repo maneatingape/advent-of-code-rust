@@ -28,7 +28,7 @@ pub fn parse(input: &str) -> Vec<Room<'_>> {
         // Count the frequency of each digit, the frequency of each frequency `fof` and the
         // highest total frequency.
         let mut freq = [0; 26];
-        let mut fof = [0; 64];
+        let mut fof = [0; 26];
         let mut highest = 0;
 
         for b in name.bytes() {

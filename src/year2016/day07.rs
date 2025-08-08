@@ -1,84 +1,73 @@
 //! # Internet Protocol Version 7
 //!
-//! It's faster to treat the entire input as one big stream, using line breaks to increment
-//! the count if an address is valid.
-//!
 //! For part two there are at most 26 * 26 = 676 possible ABA or BAB sequences so we can use
 //! a fixed size array to keep track of which ones we've seen for the current address so far.
-pub fn parse(input: &str) -> &[u8] {
-    input.as_bytes()
+pub fn parse(input: &str) -> Vec<&[u8]> {
+    input.lines().map(str::as_bytes).collect()
 }
 
-pub fn part1(input: &[u8]) -> usize {
-    let mut count = 0;
-    let mut inside = false;
-    let mut positive = false;
-    let mut negative = false;
+pub fn part1(input: &[&[u8]]) -> usize {
+    input
+        .iter()
+        .filter(|line| {
+            let mut has_abba = false;
+            let mut inside_brackets = false;
 
-    for w in input.windows(4) {
-        if w[0].is_ascii_lowercase() {
-            if w[0] == w[3] && w[1] == w[2] && w[0] != w[1] {
-                if inside {
-                    negative = true;
+            for w in line.windows(4) {
+                if w[0].is_ascii_lowercase() {
+                    if w[0] == w[3] && w[1] == w[2] && w[0] != w[1] {
+                        if inside_brackets {
+                            return false;
+                        }
+                        has_abba = true;
+                    }
                 } else {
-                    positive = true;
+                    inside_brackets = w[0] == b'[';
                 }
             }
-        } else if w[0] == b'[' {
-            inside = true;
-        } else if w[0] == b']' {
-            inside = false;
-        } else {
-            // Next line
-            if positive && !negative {
-                count += 1;
-            }
-            positive = false;
-            negative = false;
-        }
-    }
 
-    if positive && !negative { count + 1 } else { count }
+            has_abba
+        })
+        .count()
 }
 
-pub fn part2(input: &[u8]) -> usize {
-    let mut count = 0;
-    let mut version = 0;
-    let mut inside = false;
-    let mut positive = false;
+pub fn part2(input: &[&[u8]]) -> usize {
     let mut aba = [usize::MAX; 676];
     let mut bab = [usize::MAX; 676];
 
-    for w in input.windows(3) {
-        if w[1].is_ascii_lowercase() {
-            if w[0] == w[2] && w[0] != w[1] {
-                let first = (w[0] - b'a') as usize;
-                let second = (w[1] - b'a') as usize;
+    input
+        .iter()
+        .enumerate()
+        .filter(|&(version, line)| {
+            let mut inside_brackets = false;
 
-                if inside {
-                    // Reverse the order of letters
-                    let index = 26 * second + first;
-                    bab[index] = version;
-                    positive |= aba[index] == version;
+            for w in line.windows(3) {
+                if w[0].is_ascii_lowercase() {
+                    if w[0] == w[2] && w[0] != w[1] && w[1].is_ascii_lowercase() {
+                        let first = (w[0] - b'a') as usize;
+                        let second = (w[1] - b'a') as usize;
+
+                        if inside_brackets {
+                            // Reverse the order of letters
+                            let index = 26 * second + first;
+                            bab[index] = version;
+                            if aba[index] == version {
+                                return true;
+                            }
+                        } else {
+                            let index = 26 * first + second;
+                            aba[index] = version;
+                            if bab[index] == version {
+                                return true;
+                            }
+                        }
+                    }
                 } else {
-                    let index = 26 * first + second;
-                    aba[index] = version;
-                    positive |= bab[index] == version;
+                    inside_brackets = w[0] == b'[';
                 }
             }
-        } else if w[1] == b'[' {
-            inside = true;
-        } else if w[1] == b']' {
-            inside = false;
-        } else {
-            // Next line
-            if positive {
-                count += 1;
-            }
-            version += 1;
-            positive = false;
-        }
-    }
 
-    if positive { count + 1 } else { count }
+            false
+        })
+        .count()
 }

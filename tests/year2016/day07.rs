@@ -15,11 +15,11 @@ zazbz[bzb]cdb";
 #[test]
 fn part1_test() {
     let input = parse(FIRST_EXAMPLE);
-    assert_eq!(part1(input), 2);
+    assert_eq!(part1(&input), 2);
 }
 
 #[test]
 fn part2_test() {
     let input = parse(SECOND_EXAMPLE);
-    assert_eq!(part2(input), 3);
+    assert_eq!(part2(&input), 3);
 }

@@ -2,31 +2,35 @@
 //!
 //! The cardinality of uppercase letters is only 26 so we can use a fixed size array to
 //! count the frequency of each character efficiently.
-type Input = Vec<[u32; 26]>;
+type Input = (String, String);
 
 pub fn parse(input: &str) -> Input {
     let width = input.lines().next().unwrap().len();
-    let mut freq = vec![[0; 26]; width];
+    let stride = width + 1;
+    let input = input.as_bytes();
 
-    for (i, b) in input.bytes().filter(u8::is_ascii_lowercase).enumerate() {
-        freq[i % width][(b - b'a') as usize] += 1;
-    }
+    let to_index = |b: u8| (b - b'a') as usize;
+    let to_char = |i: usize| ((i as u8) + b'a') as char;
 
-    freq
+    (0..width)
+        .map(|offset| {
+            let mut freq = [0; 26];
+            input.iter().skip(offset).step_by(stride).for_each(|&b| freq[to_index(b)] += 1);
+
+            let (max, _) =
+                freq.iter().enumerate().filter(|(_, f)| **f > 0).max_by_key(|(_, f)| **f).unwrap();
+            let (min, _) =
+                freq.iter().enumerate().filter(|(_, f)| **f > 0).min_by_key(|(_, f)| **f).unwrap();
+
+            (to_char(max), to_char(min))
+        })
+        .unzip()
 }
 
-pub fn part1(input: &Input) -> String {
-    find(input, |freq| {
-        freq.iter().enumerate().filter(|(_, f)| **f > 0).max_by_key(|(_, f)| **f).unwrap()
-    })
+pub fn part1(input: &Input) -> &str {
+    &input.0
 }
 
-pub fn part2(input: &Input) -> String {
-    find(input, |freq| {
-        freq.iter().enumerate().filter(|(_, f)| **f > 0).min_by_key(|(_, f)| **f).unwrap()
-    })
-}
-
-fn find(input: &Input, ec: impl Fn(&[u32; 26]) -> (usize, &u32)) -> String {
-    input.iter().map(ec).map(|(index, _)| ((index as u8) + b'a') as char).collect()
+pub fn part2(input: &Input) -> &str {
+    &input.1
 }

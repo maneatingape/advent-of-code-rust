@@ -15,39 +15,35 @@ pub fn part2(input: &[u8]) -> usize {
     decompress(input, true)
 }
 
-fn decompress(mut slice: &[u8], recurse: bool) -> usize {
+fn decompress(mut slice: &[u8], part_two: bool) -> usize {
     let mut length = 0;
 
-    while !slice.is_empty() {
-        if slice[0] == b'(' {
-            let (next, amount) = number(slice);
-            let (next, repeat) = number(next);
+    // Find the next marker.
+    while let Some(start) = slice.iter().position(|&b| b == b'(') {
+        let (next, amount) = number(&slice[start + 1..]);
+        let (next, repeat) = number(next);
 
-            let start = 1;
-            let end = start + amount;
-            let result = if recurse { decompress(&next[start..end], true) } else { amount };
+        // For part two, recursively decompress data.
+        let result = if part_two { decompress(&next[..amount], true) } else { amount };
 
-            slice = &next[end..];
-            length += result * repeat;
-        } else {
-            slice = &slice[1..];
-            length += 1;
-        }
+        slice = &next[amount..];
+        length += start + result * repeat;
     }
 
-    length
+    // Add remaining plain data that doesn't container any marker.
+    length + slice.len()
 }
 
 fn number(slice: &[u8]) -> (&[u8], usize) {
-    // Parse number digit by digit, skipping over the delimeter at the start but leaving the
-    // delimeter at the end.
-    let mut index = 2;
-    let mut acc = slice[1].to_decimal() as usize;
+    // Parse number digit by digit.
+    let mut index = 0;
+    let mut acc = 0;
 
     while slice[index].is_ascii_digit() {
         acc = 10 * acc + slice[index].to_decimal() as usize;
         index += 1;
     }
 
-    (&slice[index..], acc)
+    // Skip over trailing delimeter.
+    (&slice[index + 1..], acc)
 }

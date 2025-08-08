@@ -13,16 +13,19 @@ pub fn parse(input: &str) -> Vec<u32> {
 }
 
 pub fn part1(input: &[u32]) -> usize {
-    count(input.iter().copied())
+    count(input.iter())
 }
 
 pub fn part2(input: &[u32]) -> usize {
-    let first = count(input.iter().copied().step_by(3));
-    let second = count(input.iter().copied().skip(1).step_by(3));
-    let third = count(input.iter().copied().skip(2).step_by(3));
+    let first = count(input.iter().step_by(3));
+    let second = count(input.iter().skip(1).step_by(3));
+    let third = count(input.iter().skip(2).step_by(3));
     first + second + third
 }
 
-fn count(iter: impl Iterator<Item = u32>) -> usize {
-    iter.chunk::<3>().filter(|&[a, b, c]| a + b > c && a + c > b && b + c > a).count()
+fn count<'a, I>(iter: I) -> usize
+where
+    I: Iterator<Item = &'a u32>,
+{
+    iter.chunk::<3>().filter(|&[&a, &b, &c]| a + b > c && a + c > b && b + c > a).count()
 }
