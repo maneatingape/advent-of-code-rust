@@ -16,24 +16,32 @@ pub fn parse(input: &str) -> Input {
     let mut part_two = 0;
 
     while let Some(first) = iter.next() {
-        match first {
-            b'n' => match iter.next().unwrap_or(0) {
+        if first == b'n' {
+            match iter.next().unwrap_or(0) {
                 b'e' => {
+                    iter.next(); // Consume trailing delimeter.
                     q += 1;
                     r -= 1;
                 }
-                b'w' => q -= 1,
-                _ => r -= 1,
-            },
-            b's' => match iter.next().unwrap_or(0) {
-                b'e' => q += 1,
                 b'w' => {
+                    iter.next(); // Consume trailing delimeter.
+                    q -= 1;
+                }
+                _ => r -= 1,
+            }
+        } else {
+            match iter.next().unwrap_or(0) {
+                b'e' => {
+                    iter.next(); // Consume trailing delimeter.
+                    q += 1;
+                }
+                b'w' => {
+                    iter.next(); // Consume trailing delimeter.
                     q -= 1;
                     r += 1;
                 }
                 _ => r += 1,
-            },
-            _ => (),
+            }
         }
 
         // q + r + s = 0, so we can always determine s given the other two.

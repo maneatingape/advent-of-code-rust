@@ -19,17 +19,17 @@ pub fn parse(input: &str) -> Input {
 }
 
 pub fn part1(input: &Input) -> u32 {
-    input.iter().map(|values| values[values.len() - 1] - values[0]).sum()
+    input.iter().map(|values| values.last().unwrap() - values.first().unwrap()).sum()
 }
 
 pub fn part2(input: &Input) -> u32 {
     input
         .iter()
         .map(|values| {
-            for i in 0..values.len() {
-                for j in i + 1..values.len() {
-                    if values[j].is_multiple_of(values[i]) {
-                        return values[j] / values[i];
+            for (i, &smaller) in values.iter().enumerate() {
+                for &larger in &values[i + 1..] {
+                    if larger.is_multiple_of(smaller) {
+                        return larger / smaller;
                     }
                 }
             }

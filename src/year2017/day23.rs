@@ -58,25 +58,30 @@ pub fn parse(input: &str) -> u32 {
 
 /// The number of `mul` operations is `(n - 2)²`
 pub fn part1(input: &u32) -> u32 {
-    (input - 2) * (input - 2)
+    let n = input - 2;
+    n * n
 }
 
 /// Count the number of composite numbers in a range calculated from the input number.
 pub fn part2(input: &u32) -> usize {
-    (0..=1000).filter_map(|n| composite(100_000 + 100 * input + 17 * n)).count()
+    let start = 100_000 + 100 * input;
+    let end = start + 17001;
+    (start..end).step_by(17).filter(|&n| is_composite(n)).count()
 }
 
 /// Simple [prime number check](https://en.wikipedia.org/wiki/Primality_test)
 /// of all factors from 2 to √n inclusive.
-fn composite(n: u32) -> Option<u32> {
+fn is_composite(n: u32) -> bool {
     if n.is_multiple_of(2) {
-        return Some(n);
+        return true;
     }
-    for f in (3..).step_by(2).take_while(|m| m * m <= n) {
+
+    let root = n.isqrt() + 1;
+    for f in (3..root).step_by(2) {
         if n.is_multiple_of(f) {
-            return Some(n);
+            return true;
         }
     }
 
-    None
+    false
 }

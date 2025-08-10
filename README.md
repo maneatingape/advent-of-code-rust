@@ -302,14 +302,14 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 | 1 | [Inverse Captcha](https://adventofcode.com/2017/day/1) | [Source](src/year2017/day01.rs) | 1 |
 | 2 | [Corruption Checksum](https://adventofcode.com/2017/day/2) | [Source](src/year2017/day02.rs) | 2 |
 | 3 | [Spiral Memory](https://adventofcode.com/2017/day/3) | [Source](src/year2017/day03.rs) | 2 |
-| 4 | [High-Entropy Passphrases](https://adventofcode.com/2017/day/4) | [Source](src/year2017/day04.rs) | 98 |
+| 4 | [High-Entropy Passphrases](https://adventofcode.com/2017/day/4) | [Source](src/year2017/day04.rs) | 86 |
 | 5 | [A Maze of Twisty Trampolines, All Alike](https://adventofcode.com/2017/day/5) | [Source](src/year2017/day05.rs) | 22000 |
 | 6 | [Memory Reallocation](https://adventofcode.com/2017/day/6) | [Source](src/year2017/day06.rs) | 81 |
 | 7 | [Recursive Circus](https://adventofcode.com/2017/day/7) | [Source](src/year2017/day07.rs) | 93 |
 | 8 | [I Heard You Like Registers](https://adventofcode.com/2017/day/8) | [Source](src/year2017/day08.rs) | 47 |
 | 9 | [Stream Processing](https://adventofcode.com/2017/day/9) | [Source](src/year2017/day09.rs) | 23 |
 | 10 | [Knot Hash](https://adventofcode.com/2017/day/10) | [Source](src/year2017/day10.rs) | 66 |
-| 11 | [Hex Ed](https://adventofcode.com/2017/day/11) | [Source](src/year2017/day11.rs) | 18 |
+| 11 | [Hex Ed](https://adventofcode.com/2017/day/11) | [Source](src/year2017/day11.rs) | 15 |
 | 12 | [Digital Plumber](https://adventofcode.com/2017/day/12) | [Source](src/year2017/day12.rs) | 61 |
 | 13 | [Packet Scanners](https://adventofcode.com/2017/day/13) | [Source](src/year2017/day13.rs) | 1 |
 | 14 | [Disk Defragmentation](https://adventofcode.com/2017/day/14) | [Source](src/year2017/day14.rs) | 438 |
@@ -321,7 +321,7 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 | 20 | [Particle Swarm](https://adventofcode.com/2017/day/20) | [Source](src/year2017/day20.rs) | 245 |
 | 21 | [Fractal Art](https://adventofcode.com/2017/day/21) | [Source](src/year2017/day21.rs) | 5 |
 | 22 | [Sporifica Virus](https://adventofcode.com/2017/day/22) | [Source](src/year2017/day22.rs) | 36000 |
-| 23 | [Coprocessor Conflagration](https://adventofcode.com/2017/day/23) | [Source](src/year2017/day23.rs) | 19 |
+| 23 | [Coprocessor Conflagration](https://adventofcode.com/2017/day/23) | [Source](src/year2017/day23.rs) | 16 |
 | 24 | [Electromagnetic Moat](https://adventofcode.com/2017/day/24) | [Source](src/year2017/day24.rs) | 275 |
 | 25 | [The Halting Problem](https://adventofcode.com/2017/day/25) | [Source](src/year2017/day25.rs) | 3698 |
 

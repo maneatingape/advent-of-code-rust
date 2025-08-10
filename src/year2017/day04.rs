@@ -32,9 +32,9 @@ pub fn part1(input: &Input<'_>) -> usize {
 }
 
 pub fn part2(input: &Input<'_>) -> usize {
-    // Calculate the frequency of each letter as anagrams will have the same values.
-    fn convert(token: &str) -> [u8; 26] {
-        let mut freq = [0; 26];
+    // Only 26 elements are needed but 32 is faster to hash.
+    fn convert(token: &str) -> [u8; 32] {
+        let mut freq = [0; 32];
         for b in token.bytes() {
             freq[(b - b'a') as usize] += 1;
         }
