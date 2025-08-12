@@ -6,41 +6,22 @@ pub fn parse(input: &str) -> Vec<&[u8]> {
 }
 
 pub fn part1(input: &[&[u8]]) -> u32 {
-    let mut total_twos = 0;
-    let mut total_threes = 0;
+    let mut twos = 0;
+    let mut threes = 0;
 
     for &id in input {
         // Ids are lowercase ASCII only with cardinality of 26.
-        let mut freq = [0; 26];
-        let mut twos = 0;
-        let mut threes = 0;
+        let mut freq = [0_u8; 26];
 
         for &b in id {
-            let index = (b - b'a') as usize;
-            let current = freq[index];
-
-            match current {
-                0 => (),
-                1 => twos += 1,
-                2 => {
-                    twos -= 1;
-                    threes += 1;
-                }
-                _ => threes -= 1,
-            }
-
-            freq[index] += 1;
+            freq[(b - b'a') as usize] += 1;
         }
 
-        if twos > 0 {
-            total_twos += 1;
-        }
-        if threes > 0 {
-            total_threes += 1;
-        }
+        twos += freq.contains(&2) as u32;
+        threes += freq.contains(&3) as u32;
     }
 
-    total_twos * total_threes
+    twos * threes
 }
 
 pub fn part2(input: &[&[u8]]) -> String {

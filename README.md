@@ -267,8 +267,8 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 
 | Day | Problem | Solution | Benchmark (μs) |
 | --- | --- | --- | --: |
-| 1 | [Chronal Calibration](https://adventofcode.com/2018/day/1) | [Source](src/year2018/day01.rs) | 16 |
-| 2 | [Inventory Management System](https://adventofcode.com/2018/day/2) | [Source](src/year2018/day02.rs) | 49 |
+| 1 | [Chronal Calibration](https://adventofcode.com/2018/day/1) | [Source](src/year2018/day01.rs) | 11 |
+| 2 | [Inventory Management System](https://adventofcode.com/2018/day/2) | [Source](src/year2018/day02.rs) | 59 |
 | 3 | [No Matter How You Slice It](https://adventofcode.com/2018/day/3) | [Source](src/year2018/day03.rs) | 55 |
 | 4 | [Repose Record](https://adventofcode.com/2018/day/4) | [Source](src/year2018/day04.rs) | 46 |
 | 5 | [Alchemical Reduction](https://adventofcode.com/2018/day/5) | [Source](src/year2018/day05.rs) | 390 |
@@ -279,7 +279,7 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 | 10 | [The Stars Align](https://adventofcode.com/2018/day/10) | [Source](src/year2018/day10.rs) | 11 |
 | 11 | [Chronal Charge](https://adventofcode.com/2018/day/11) | [Source](src/year2018/day11.rs) | 1156 |
 | 12 | [Subterranean Sustainability](https://adventofcode.com/2018/day/12) | [Source](src/year2018/day12.rs) | 77 |
-| 13 | [Mine Cart Madness](https://adventofcode.com/2018/day/13) | [Source](src/year2018/day13.rs) | 382 |
+| 13 | [Mine Cart Madness](https://adventofcode.com/2018/day/13) | [Source](src/year2018/day13.rs) | 349 |
 | 14 | [Chocolate Charts](https://adventofcode.com/2018/day/14) | [Source](src/year2018/day14.rs) | 24000 |
 | 15 | [Beverage Bandits](https://adventofcode.com/2018/day/15) | [Source](src/year2018/day15.rs) | 583 |
 | 16 | [Chronal Classification](https://adventofcode.com/2018/day/16) | [Source](src/year2018/day16.rs) | 37 |

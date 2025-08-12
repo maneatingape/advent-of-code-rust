@@ -16,7 +16,7 @@ pub struct Input {
 pub struct Cart {
     position: Point,
     direction: Point,
-    turns: u32,
+    turns: u8,
     active: bool,
 }
 
@@ -29,30 +29,13 @@ impl Cart {
         self.position += self.direction;
 
         match grid[self.position] {
-            b'\\' => {
-                self.direction = match self.direction {
-                    UP => LEFT,
-                    DOWN => RIGHT,
-                    LEFT => UP,
-                    RIGHT => DOWN,
-                    _ => unreachable!(),
-                }
-            }
-            b'/' => {
-                self.direction = match self.direction {
-                    UP => RIGHT,
-                    DOWN => LEFT,
-                    LEFT => DOWN,
-                    RIGHT => UP,
-                    _ => unreachable!(),
-                }
-            }
+            b'\\' => self.direction = Point::new(self.direction.y, self.direction.x),
+            b'/' => self.direction = Point::new(-self.direction.y, -self.direction.x),
             b'+' => {
                 self.direction = match self.turns {
                     0 => self.direction.counter_clockwise(),
                     1 => self.direction,
-                    2 => self.direction.clockwise(),
-                    _ => unreachable!(),
+                    _ => self.direction.clockwise(), // 2 turns
                 };
                 self.turns = (self.turns + 1) % 3;
             }
@@ -66,19 +49,17 @@ pub fn parse(input: &str) -> Input {
     let mut carts = Vec::new();
 
     for (i, b) in grid.bytes.iter().enumerate() {
-        let result = match b {
-            b'^' => Some(UP),
-            b'v' => Some(DOWN),
-            b'<' => Some(LEFT),
-            b'>' => Some(RIGHT),
-            _ => None,
+        let direction = match b {
+            b'^' => UP,
+            b'v' => DOWN,
+            b'<' => LEFT,
+            b'>' => RIGHT,
+            _ => continue,
         };
 
-        if let Some(direction) = result {
-            let x = i as i32 % grid.width;
-            let y = i as i32 / grid.width;
-            carts.push(Cart::new(Point::new(x, y), direction));
-        }
+        let x = i as i32 % grid.width;
+        let y = i as i32 / grid.width;
+        carts.push(Cart::new(Point::new(x, y), direction));
     }
 
     Input { grid, carts }

@@ -60,19 +60,12 @@ pub fn part2(input: &Input) -> i32 {
 }
 
 fn bounding_box(points: &[Point]) -> (i32, i32, i32, i32) {
-    let mut min_x = i32::MAX;
-    let mut max_x = i32::MIN;
-    let mut min_y = i32::MAX;
-    let mut max_y = i32::MIN;
-
-    for p in points {
-        min_x = min_x.min(p.x);
-        max_x = max_x.max(p.x);
-        min_y = min_y.min(p.y);
-        max_y = max_y.max(p.y);
-    }
-
-    (min_x, max_x, min_y, max_y)
+    points.iter().fold(
+        (i32::MAX, i32::MIN, i32::MAX, i32::MIN),
+        |(min_x, max_x, min_y, max_y), p| {
+            (min_x.min(p.x), max_x.max(p.x), min_y.min(p.y), max_y.max(p.y))
+        },
+    )
 }
 
 fn size(points: &[Point]) -> i32 {

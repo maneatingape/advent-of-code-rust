@@ -7,13 +7,18 @@ use crate::util::parse::*;
 
 type Input = (u32, usize);
 
+/// Each square inch of fabric is stored in a single bit.
+/// The fabric is 1000 inches wide requiring sixteen `u64`.
+const WIDTH: usize = 16;
+const HEIGHT: usize = 1000;
+
 pub fn parse(input: &str) -> Input {
     let claims: Vec<_> = input
         .iter_unsigned::<usize>()
         .chunk::<5>()
         .map(|[_, x1, y1, width, height]| {
-            let start = 16 * y1 + (x1 / 64);
-            let end = start + 16 * height;
+            let start = WIDTH * y1 + (x1 / 64);
+            let end = start + WIDTH * height;
 
             // Create bitmask for each claim, for example `#123 @ 3,2: 5x4` becomes `11111000`.
             // Use an intermediate u128 to handle claims up to 65 inches wide.
@@ -25,13 +30,11 @@ pub fn parse(input: &str) -> Input {
         })
         .collect();
 
-    // Each square inch of fabric is stored in a single bit.
-    // The fabric is 1000 inches wide requiring sixteen `u64`.
-    let mut fabric = vec![0; 16 * 1000];
-    let mut overlap = vec![0; 16 * 1000];
+    let mut fabric = vec![0; WIDTH * HEIGHT];
+    let mut overlap = vec![0; WIDTH * HEIGHT];
 
     for &(start, end, lower, upper) in &claims {
-        for index in (start..end).step_by(16) {
+        for index in (start..end).step_by(WIDTH) {
             overlap[index] |= fabric[index] & lower;
             fabric[index] |= lower;
 
@@ -42,15 +45,20 @@ pub fn parse(input: &str) -> Input {
         }
     }
 
-    // Find the first claim that doesn't overlap with any other claim.
-    let position = claims.iter().position(|&(start, end, lower, upper)| {
-        (start..end).step_by(16).all(|index| {
-            (overlap[index] & lower == 0) && (upper == 0 || overlap[index + 1] & upper == 0)
-        })
-    });
-
+    // Count the area of overlapping claims.
     let part_one = overlap.iter().map(|n| n.count_ones()).sum();
-    let part_two = position.unwrap() + 1;
+
+    // Find the first claim that doesn't overlap with any other claim.
+    let part_two = claims
+        .iter()
+        .position(|&(start, end, lower, upper)| {
+            (start..end).step_by(WIDTH).all(|index| {
+                (overlap[index] & lower == 0) && (upper == 0 || overlap[index + 1] & upper == 0)
+            })
+        })
+        .map(|id| id + 1)
+        .unwrap();
+
     (part_one, part_two)
 }
 

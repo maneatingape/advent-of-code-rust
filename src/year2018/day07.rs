@@ -14,7 +14,7 @@ pub struct Step {
 }
 
 pub fn parse(input: &str) -> Input {
-    let mut steps = FastMap::new();
+    let mut steps: Input = FastMap::new();
 
     for line in input.lines().map(str::as_bytes) {
         // Each step is a single uppercase letter.
@@ -22,13 +22,11 @@ pub fn parse(input: &str) -> Input {
         let to = line[36];
 
         // Add all steps that depend on this one to children vec.
-        let step = steps.entry(from).or_insert(Step::default());
-        step.children.push(to);
+        steps.entry(from).or_default().children.push(to);
 
         // Count how many steps must finish before this step is ready.
         // We only need the total count, the exact steps are not necessary.
-        let step = steps.entry(to).or_insert(Step::default());
-        step.remaining += 1;
+        steps.entry(to).or_default().remaining += 1;
     }
 
     steps

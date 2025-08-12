@@ -19,6 +19,9 @@ pub fn part2(input: &Input) -> usize {
 }
 
 fn parse_node(iter: &mut impl Iterator<Item = usize>, stack: &mut Vec<usize>) -> (usize, usize) {
+    // Save stack size
+    let stack_base = stack.len();
+
     // Parse header
     let child_count = iter.next().unwrap();
     let metadata_count = iter.next().unwrap();
@@ -42,12 +45,12 @@ fn parse_node(iter: &mut impl Iterator<Item = usize>, stack: &mut Vec<usize>) ->
         if child_count == 0 {
             score += n;
         } else if n > 0 && n <= child_count {
-            score += stack[stack.len() - child_count + (n - 1)];
+            score += stack[stack_base + (n - 1)];
         }
     }
 
     // Pop child nodes from the stack.
-    stack.truncate(stack.len() - child_count);
+    stack.truncate(stack_base);
 
     (metadata, score)
 }

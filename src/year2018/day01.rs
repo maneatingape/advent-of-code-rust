@@ -53,22 +53,16 @@ pub fn part2(input: &[i32]) -> i32 {
 
     seen.sort_unstable();
 
-    // Compare each adjacent pair of tuples to find candidates, then sort by smallest gap first,
-    // tie breaking with index if needed.
-    let mut pairs = Vec::new();
+    // Compare each adjacent pair of tuples to find candidates, then find the first tuple
+    // sorting by smallest gap first, tie breaking with index if needed.
+    seen.windows(2)
+        .filter_map(|window| {
+            let (remainder0, freq0, index0) = window[0];
+            let (remainder1, freq1, _) = window[1];
 
-    for window in seen.windows(2) {
-        let (remainder0, freq0, index0) = window[0];
-        let (remainder1, freq1, _) = window[1];
-
-        if remainder0 == remainder1 {
-            pairs.push((freq1 - freq0, index0, freq1));
-        }
-    }
-
-    pairs.sort_unstable();
-
-    // Result is the frequency of the first tuple.
-    let (_, _, freq) = pairs[0];
-    freq
+            (remainder0 == remainder1).then_some((freq1 - freq0, index0, freq1))
+        })
+        .min()
+        .map(|(_, _, freq)| freq)
+        .unwrap()
 }
