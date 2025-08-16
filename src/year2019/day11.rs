@@ -2,6 +2,7 @@
 //!
 //! This problem is a variant of [Langton's Ant](https://en.wikipedia.org/wiki/Langton%27s_ant).
 use super::intcode::*;
+use crate::util::grid::*;
 use crate::util::hash::*;
 use crate::util::parse::*;
 use crate::util::point::*;
@@ -21,38 +22,24 @@ pub fn part2(input: &[i64]) -> String {
     let panels: Vec<_> = hull.iter().filter(|&(_, &v)| v == 1).map(|(&k, _)| k).collect();
 
     // Get maximum extents
-    let mut x1 = i32::MAX;
-    let mut x2 = i32::MIN;
-    let mut y1 = i32::MAX;
-    let mut y2 = i32::MIN;
-
-    for &point in &panels {
-        x1 = x1.min(point.x);
-        x2 = x2.max(point.x);
-        y1 = y1.min(point.y);
-        y2 = y2.max(point.y);
-    }
+    let (x1, x2, y1, y2) = panels.iter().fold(
+        (i32::MAX, i32::MIN, i32::MAX, i32::MIN),
+        |(min_x, max_x, min_y, max_y), p| {
+            (min_x.min(p.x), max_x.max(p.x), min_y.min(p.y), max_y.max(p.y))
+        },
+    );
 
     // Convert panels to characters
-    let width = (x2 - x1 + 1) as usize;
-    let height = (y2 - y1 + 1) as usize;
-    let offset = Point::new(x1, y1);
-    let mut image = vec!['.'; width * height];
+    let width = x2 - x1 + 2; // Leave room for newline character.
+    let height = y2 - y1 + 1;
+    let mut image = Grid::new(width, height, b'.');
 
-    for &point in &panels {
-        let adjusted = point - offset;
-        let index = (width * adjusted.y as usize) + (adjusted.x as usize);
-        image[index] = '#';
-    }
+    let offset = Point::new(x1 - 1, y1);
+    panels.iter().for_each(|&point| image[point - offset] = b'#');
 
-    // Convert to multiline string
-    let mut result = image
-        .chunks_exact(width)
-        .map(|row| row.iter().collect())
-        .collect::<Vec<String>>()
-        .join("\n");
-    result.insert(0, '\n');
-    result
+    (0..height).for_each(|y| image[Point::new(0, y)] = b'\n');
+
+    String::from_utf8(image.bytes).unwrap()
 }
 
 fn paint(input: &[i64], initial: i64) -> FastMap<Point, i64> {
@@ -64,12 +51,12 @@ fn paint(input: &[i64], initial: i64) -> FastMap<Point, i64> {
     hull.insert(position, initial);
 
     loop {
-        let panel = hull.get(&position).unwrap_or(&0);
+        let panel = hull.entry(position).or_default();
         computer.input(*panel);
 
         match computer.run() {
             State::Output(color) => {
-                hull.insert(position, color);
+                *panel = color;
             }
             _ => break,
         }

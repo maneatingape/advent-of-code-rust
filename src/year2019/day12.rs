@@ -16,6 +16,7 @@
 //! [`signum`]: i32::signum
 use crate::util::math::*;
 use crate::util::parse::*;
+use std::array::from_fn;
 
 type Axis = [i32; 8];
 type Input = [Axis; 3];
@@ -39,8 +40,8 @@ pub fn part1(input: &Input) -> i32 {
         z = step(z);
     }
 
-    let e: Vec<_> = (0..8).map(|i| x[i].abs() + y[i].abs() + z[i].abs()).collect();
-    e[0] * e[4] + e[1] * e[5] + e[2] * e[6] + e[3] * e[7]
+    let [p0, p1, p2, p3, v0, v1, v2, v3] = from_fn(|i| x[i].abs() + y[i].abs() + z[i].abs());
+    p0 * v0 + p1 * v1 + p2 * v2 + p3 * v3
 }
 
 pub fn part2(input: &Input) -> usize {
@@ -48,7 +49,7 @@ pub fn part2(input: &Input) -> usize {
     let [mut a, mut b, mut c] = [0, 0, 0];
     let mut count = 0;
 
-    while a == 0 || b == 0 || c == 0 {
+    while a * b * c == 0 {
         count += 1;
 
         if a == 0 {
@@ -81,10 +82,17 @@ fn step(axis: Axis) -> Axis {
     // "p" is position and "v" velocity
     let [p0, p1, p2, p3, v0, v1, v2, v3] = axis;
 
-    let n0 = v0 + (p1 - p0).signum() + (p2 - p0).signum() + (p3 - p0).signum();
-    let n1 = v1 + (p0 - p1).signum() + (p2 - p1).signum() + (p3 - p1).signum();
-    let n2 = v2 + (p0 - p2).signum() + (p1 - p2).signum() + (p3 - p2).signum();
-    let n3 = v3 + (p0 - p3).signum() + (p1 - p3).signum() + (p2 - p3).signum();
+    let a = (p1 - p0).signum();
+    let b = (p2 - p0).signum();
+    let c = (p3 - p0).signum();
+    let d = (p2 - p1).signum();
+    let e = (p3 - p1).signum();
+    let f = (p3 - p2).signum();
+
+    let n0 = v0 + a + b + c;
+    let n1 = v1 - a + d + e;
+    let n2 = v2 - b - d + f;
+    let n3 = v3 - c - e - f;
 
     [p0 + n0, p1 + n1, p2 + n2, p3 + n3, n0, n1, n2, n3]
 }

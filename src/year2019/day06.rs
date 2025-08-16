@@ -49,8 +49,8 @@ pub fn parse(input: &str) -> Vec<usize> {
     let mut parent = vec![0; lines.len() + 2];
 
     for line in lines {
-        let left = lookup(&line[..3]);
-        let right = lookup(&line[4..]);
+        let left = lookup(&line[0..3]);
+        let right = lookup(&line[4..7]);
         parent[right] = left;
     }
 
@@ -71,8 +71,8 @@ pub fn part1(input: &[usize]) -> usize {
     }
 
     let cache = &mut vec![None; input.len()];
-    cache[0] = Some(0);
-    cache[1] = Some(0);
+    cache[0] = Some(0); // Special empty value
+    cache[1] = Some(0); // COM
     (0..input.len()).map(|index| orbits(input, cache, index)).sum()
 }
 

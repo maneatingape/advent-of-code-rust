@@ -21,14 +21,23 @@ type Input = (FastSet<Point>, Point);
 pub fn parse(input: &str) -> Input {
     let code: Vec<_> = input.iter_signed().collect();
     let mut computer = Computer::new(&code);
+
+    let mut paths = FastSet::with_capacity(1_000);
+    let mut walls = FastSet::with_capacity(1_000);
+
     let mut first = true;
     let mut direction = UP;
     let mut position = ORIGIN;
     let mut oxygen_system = ORIGIN;
-    let mut visited = FastSet::new();
 
     loop {
         direction = if first { direction.clockwise() } else { direction.counter_clockwise() };
+        let next = position + direction;
+
+        if walls.contains(&next) {
+            first = false;
+            continue;
+        }
 
         match direction {
             UP => computer.input(1),
@@ -39,11 +48,14 @@ pub fn parse(input: &str) -> Input {
         }
 
         match computer.run() {
-            State::Output(0) => first = false,
+            State::Output(0) => {
+                first = false;
+                walls.insert(next);
+            }
             State::Output(result) => {
                 first = true;
-                position += direction;
-                visited.insert(position);
+                position = next;
+                paths.insert(next);
 
                 if result == 2 {
                     oxygen_system = position;
@@ -56,7 +68,7 @@ pub fn parse(input: &str) -> Input {
         }
     }
 
-    (visited, oxygen_system)
+    (paths, oxygen_system)
 }
 
 /// BFS from the starting point until we find the oxygen system.
@@ -64,16 +76,16 @@ pub fn part1(input: &Input) -> i32 {
     let (mut maze, oxygen_system) = input.clone();
     let mut todo = VecDeque::from([(ORIGIN, 0)]);
 
+    maze.remove(&ORIGIN);
+
     while let Some((point, cost)) = todo.pop_front() {
-        maze.remove(&point);
         if point == oxygen_system {
             return cost;
         }
 
-        for movement in ORTHOGONAL {
-            let next_point = point + movement;
-            if maze.contains(&next_point) {
-                todo.push_back((next_point, cost + 1));
+        for next in ORTHOGONAL.map(|o| point + o) {
+            if maze.remove(&next) {
+                todo.push_back((next, cost + 1));
             }
         }
     }
@@ -87,14 +99,14 @@ pub fn part2(input: &Input) -> i32 {
     let mut todo = VecDeque::from([(oxygen_system, 0)]);
     let mut minutes = 0;
 
+    maze.remove(&ORIGIN);
+
     while let Some((point, cost)) = todo.pop_front() {
-        maze.remove(&point);
         minutes = minutes.max(cost);
 
-        for movement in ORTHOGONAL {
-            let next_point = point + movement;
-            if maze.contains(&next_point) {
-                todo.push_back((next_point, cost + 1));
+        for next in ORTHOGONAL.map(|o| point + o) {
+            if maze.remove(&next) {
+                todo.push_back((next, cost + 1));
             }
         }
     }

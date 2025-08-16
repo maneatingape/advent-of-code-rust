@@ -5,7 +5,6 @@
 use crate::util::hash::*;
 use crate::util::iter::*;
 use crate::util::parse::*;
-use std::cmp::Ordering;
 use std::iter::repeat_with;
 
 struct Ingredient {
@@ -85,9 +84,10 @@ pub fn part2(input: &[Reaction]) -> u64 {
     while start != end {
         let middle = (start + end).div_ceil(2);
 
-        match ore(input, middle).cmp(&threshold) {
-            Ordering::Greater => end = middle - 1,
-            _ => start = middle,
+        if ore(input, middle) > threshold {
+            end = middle - 1;
+        } else {
+            start = middle;
         }
     }
 

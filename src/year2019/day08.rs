@@ -1,7 +1,10 @@
 //! # Space Image Format
+const WIDTH: usize = 25;
+const HEIGHT: usize = 6;
+const LAYER_SIZE: usize = WIDTH * HEIGHT;
 
-pub fn parse(input: &str) -> &str {
-    input
+pub fn parse(input: &str) -> &[u8] {
+    input.as_bytes()
 }
 
 /// Each layer is 25 * 6 = 150 bytes and there are 100 layers total.
@@ -10,39 +13,32 @@ pub fn parse(input: &str) -> &str {
 /// so we must handle the last 6 bytes specially.
 ///
 /// [`count_ones`]: u64::count_ones
-pub fn part1(input: &str) -> u32 {
-    let bytes = input.as_bytes();
-    let mut index = 0;
-    let mut ones = 0;
-    let mut twos = 0;
+pub fn part1(input: &[u8]) -> u32 {
     let mut most = 0;
     let mut result = 0;
 
-    for _ in 0..100 {
+    for layer in input.chunks_exact(LAYER_SIZE) {
+        let mut ones = 0;
+        let mut twos = 0;
+
         // First 144 of 150 bytes.
-        for _ in 0..18 {
-            let slice = &bytes[index..(index + 8)];
+        for slice in layer.chunks_exact(8) {
             let n = u64::from_be_bytes(slice.try_into().unwrap());
             ones += (n & 0x0101010101010101).count_ones();
             twos += (n & 0x0202020202020202).count_ones();
-            index += 8;
         }
 
         // Handle remaining 6 bytes.
         // The masks exclude the most significant 2 bytes to prevent double counting.
-        let slice = &bytes[(index - 2)..(index + 6)];
+        let slice = &layer[142..150];
         let n = u64::from_be_bytes(slice.try_into().unwrap());
         ones += (n & 0x0000010101010101).count_ones();
         twos += (n & 0x0000020202020202).count_ones();
-        index += 6;
 
         if ones + twos > most {
             most = ones + twos;
             result = ones * twos;
         }
-
-        ones = 0;
-        twos = 0;
     }
 
     result
@@ -50,24 +46,23 @@ pub fn part1(input: &str) -> u32 {
 
 /// Since a black or white pixel covers those in lower layers, it's faster to check each pixel
 /// stopping as soon as we hit a non-transparent value.
-pub fn part2(input: &str) -> String {
-    let bytes = input.as_bytes();
-    let mut image = ['.'; 150];
+pub fn part2(input: &[u8]) -> String {
+    // Ensure enough capacity including newlines.
+    let mut result = String::with_capacity((WIDTH + 1) * HEIGHT);
 
-    for (i, pixel) in image.iter_mut().enumerate() {
-        let mut j = i;
+    for y in 0..HEIGHT {
+        result.push('\n');
 
-        while bytes[j] == b'2' {
-            j += 150;
-        }
+        for x in 0..WIDTH {
+            let mut i = WIDTH * y + x;
 
-        if bytes[j] == b'1' {
-            *pixel = '#';
+            while input[i] == b'2' {
+                i += LAYER_SIZE;
+            }
+
+            result.push(if input[i] == b'1' { '#' } else { '.' });
         }
     }
 
-    let mut result =
-        image.chunks_exact(25).map(|row| row.iter().collect()).collect::<Vec<String>>().join("\n");
-    result.insert(0, '\n');
     result
 }
