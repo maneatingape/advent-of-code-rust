@@ -2,77 +2,51 @@
 //!
 //! Part 1 uses bit manipulation to build up the binary numbers directly one digit at a time.
 //!
-//! Part 2 clones the input `vec` then uses [`swap_remove`] to efficiently discard numbers that
-//! don't meet the criteria without having to move all subsequent elements.
+//! Part 2 clones the input `vec` then uses [`retain`] to efficiently discard numbers that
+//! don't meet the criteria.
 //!
-//! [`swap_remove`]: Vec::swap_remove
-
-pub struct Input<'a> {
-    width: usize,
-    numbers: Vec<&'a [u8]>,
+//! [`retain`]: Vec::retain
+pub fn parse(input: &str) -> Vec<&[u8]> {
+    input.lines().map(str::as_bytes).collect()
 }
 
-pub fn parse(input: &str) -> Input<'_> {
-    let numbers: Vec<_> = input.lines().map(str::as_bytes).collect();
-    Input { width: numbers[0].len(), numbers }
-}
-
-pub fn part1(input: &Input<'_>) -> u32 {
+pub fn part1(input: &[&[u8]]) -> u32 {
     let mut gamma = 0;
     let mut epsilon = 0;
 
-    for i in 0..input.width {
-        let sum = sum(&input.numbers, i);
-        if sum > input.numbers.len() - sum {
-            gamma = (gamma << 1) | 1;
-            epsilon <<= 1;
-        } else {
-            gamma <<= 1;
-            epsilon = (epsilon << 1) | 1;
-        }
+    for column in 0..input[0].len() {
+        let ones = ones(input, column);
+        let zeros = input.len() - ones;
+
+        gamma = (gamma << 1) | (ones > zeros) as u32;
+        epsilon = (epsilon << 1) | (zeros > ones) as u32;
     }
 
     gamma * epsilon
 }
 
-pub fn part2(input: &Input<'_>) -> u32 {
+pub fn part2(input: &[&[u8]]) -> u32 {
     let gamma = rating(input, |a, b| a >= b);
     let epsilon = rating(input, |a, b| a < b);
     gamma * epsilon
 }
 
-fn sum(numbers: &[&[u8]], i: usize) -> usize {
-    let total: usize = numbers.iter().map(|b| b[i] as usize).sum();
-    total - 48 * numbers.len()
+fn ones(numbers: &[&[u8]], i: usize) -> usize {
+    numbers.iter().filter(|b| b[i] == b'1').count()
 }
 
-fn fold(numbers: &[u8], width: usize) -> u32 {
-    numbers.iter().take(width).fold(0, |acc, &n| (acc << 1) | (n & 1) as u32)
-}
+fn rating(input: &[&[u8]], cmp: fn(usize, usize) -> bool) -> u32 {
+    let mut numbers = input.to_vec();
+    let mut column = 0;
 
-fn rating(input: &Input<'_>, cmp: impl Fn(usize, usize) -> bool) -> u32 {
-    let mut numbers = input.numbers.clone();
+    while numbers.len() > 1 {
+        let ones = ones(&numbers, column);
+        let zeros = numbers.len() - ones;
+        let keep = if cmp(ones, zeros) { b'1' } else { b'0' };
 
-    for i in 0..input.width {
-        let sum = sum(&numbers, i);
-        let keep = if cmp(sum, numbers.len() - sum) { b'1' } else { b'0' };
-        filter(&mut numbers, i, keep);
-        if numbers.len() == 1 {
-            return fold(numbers[0], input.width);
-        }
+        numbers.retain(|n| n[column] == keep);
+        column += 1;
     }
 
-    unreachable!()
-}
-
-fn filter(numbers: &mut Vec<&[u8]>, i: usize, keep: u8) {
-    let mut j = 0;
-
-    while j < numbers.len() {
-        if numbers[j][i] == keep {
-            j += 1;
-        } else {
-            numbers.swap_remove(j);
-        }
-    }
+    numbers[0].iter().fold(0, |acc, &n| (acc << 1) | (n == b'1') as u32)
 }

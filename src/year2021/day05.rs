@@ -13,32 +13,32 @@
 use crate::util::iter::*;
 use crate::util::parse::*;
 
-type Vent = [u32; 4];
+type Input = (usize, usize);
 
-pub fn parse(input: &str) -> [usize; 2] {
+pub fn parse(input: &str) -> Input {
     let all: Vec<_> = input.iter_unsigned().chunk::<4>().collect();
     let (orthogonal, diagonal): (Vec<_>, Vec<_>) =
         all.iter().partition(|[x1, y1, x2, y2]| x1 == x2 || y1 == y2);
 
     let mut grid = vec![0_u8; 1_000_000];
-    let first = vents(&orthogonal, &mut grid);
-    let second = vents(&diagonal, &mut grid);
+    let first = vents(orthogonal, &mut grid);
+    let second = vents(diagonal, &mut grid);
 
-    [first, second]
+    (first, first + second)
 }
 
-pub fn part1(input: &[usize]) -> usize {
-    input[0]
+pub fn part1(input: &Input) -> usize {
+    input.0
 }
 
-pub fn part2(input: &[usize]) -> usize {
-    input[0] + input[1]
+pub fn part2(input: &Input) -> usize {
+    input.1
 }
 
-fn vents(input: &[Vent], grid: &mut [u8]) -> usize {
+fn vents(input: Vec<[usize; 4]>, grid: &mut [u8]) -> usize {
     let mut result = 0;
 
-    for &[x1, y1, x2, y2] in input {
+    for [x1, y1, x2, y2] in input {
         let (x1, y1, x2, y2) = (x1 as i32, y1 as i32, x2 as i32, y2 as i32);
         let count = (y2 - y1).abs().max((x2 - x1).abs());
         let delta = (y2 - y1).signum() * 1000 + (x2 - x1).signum();

@@ -16,34 +16,37 @@ pub enum Sub {
 }
 
 pub fn parse(input: &str) -> Vec<Sub> {
-    let helper = |[a, b]: [&str; 2]| {
-        let amount = b.signed();
-        match a {
-            "up" => Sub::Up(amount),
-            "down" => Sub::Down(amount),
-            "forward" => Sub::Forward(amount),
-            _ => unreachable!(),
-        }
-    };
-    input.split_ascii_whitespace().chunk::<2>().map(helper).collect()
+    input
+        .split_ascii_whitespace()
+        .chunk::<2>()
+        .map(|[first, second]| {
+            let amount = second.signed();
+            match first {
+                "up" => Sub::Up(amount),
+                "down" => Sub::Down(amount),
+                "forward" => Sub::Forward(amount),
+                _ => unreachable!(),
+            }
+        })
+        .collect()
 }
 
 pub fn part1(input: &[Sub]) -> i32 {
-    let helper = |(position, depth), next| match next {
-        Sub::Up(n) => (position, depth - n),
-        Sub::Down(n) => (position, depth + n),
-        Sub::Forward(n) => (position + n, depth),
-    };
-    let (position, depth) = input.iter().copied().fold((0, 0), helper);
+    let (position, depth) =
+        input.iter().copied().fold((0, 0), |(position, depth), next| match next {
+            Sub::Up(n) => (position, depth - n),
+            Sub::Down(n) => (position, depth + n),
+            Sub::Forward(n) => (position + n, depth),
+        });
     position * depth
 }
 
 pub fn part2(input: &[Sub]) -> i32 {
-    let helper = |(position, depth, aim), next| match next {
-        Sub::Up(n) => (position, depth, aim - n),
-        Sub::Down(n) => (position, depth, aim + n),
-        Sub::Forward(n) => (position + n, depth + aim * n, aim),
-    };
-    let (position, depth, _) = input.iter().copied().fold((0, 0, 0), helper);
+    let (position, depth, _) =
+        input.iter().copied().fold((0, 0, 0), |(position, depth, aim), next| match next {
+            Sub::Up(n) => (position, depth, aim - n),
+            Sub::Down(n) => (position, depth, aim + n),
+            Sub::Forward(n) => (position + n, depth + aim * n, aim),
+        });
     position * depth
 }

@@ -10,60 +10,51 @@
 //! these maximum values. This is the turn that the entire board will win.
 //!
 //! Filtering the board numbers by turn and a reverse lookup from turn to number gives the
-//! score for each board. Sort each result by turn and the answers for part 1 and part1 are the
+//! score for each board. Sort each result by turn and the answers for part one and two are the
 //! first and last values respectively.
 use crate::util::parse::*;
 use std::array::from_fn;
 
-pub struct Input {
+const BOARD_SIZE: usize = 25;
+const ROWS_AND_COLS: [(usize, usize); 10] =
+    [(0, 1), (5, 1), (10, 1), (15, 1), (20, 1), (0, 5), (1, 5), (2, 5), (3, 5), (4, 5)];
+
+pub struct Board {
     turn: usize,
     score: usize,
 }
 
-pub fn parse(input: &str) -> Vec<Input> {
-    let mut to_turn = [0; 100];
-    let mut from_turn = [0; 100];
+pub fn parse(input: &str) -> Vec<Board> {
+    let (prefix, suffix) = input.split_once("\n\n").unwrap();
+    let boards: Vec<_> = suffix.iter_unsigned().collect();
 
-    let mut chunks = input.split("\n\n");
+    let mut number_to_turn = [0; 100];
+    let mut turn_to_number = [0; 100];
 
-    for (i, n) in chunks.next().unwrap().iter_unsigned().enumerate() {
-        to_turn[n] = i;
-        from_turn[i] = n;
+    for (i, n) in prefix.iter_unsigned().enumerate() {
+        number_to_turn[n] = i;
+        turn_to_number[i] = n;
     }
 
-    let score = |chunk: &str| {
-        let mut iter = chunk.iter_unsigned();
-        let board: [usize; 25] = from_fn(|_| iter.next().unwrap());
-        let turns: [usize; 25] = from_fn(|i| to_turn[board[i]]);
+    boards
+        .chunks_exact(BOARD_SIZE)
+        .map(|board| {
+            let turns: [usize; BOARD_SIZE] = from_fn(|i| number_to_turn[board[i]]);
+            let max = |&(skip, step)| *turns.iter().skip(skip).step_by(step).take(5).max().unwrap();
 
-        let row_and_cols = [
-            turns[0..5].iter().max().unwrap(),
-            turns[5..10].iter().max().unwrap(),
-            turns[10..15].iter().max().unwrap(),
-            turns[15..20].iter().max().unwrap(),
-            turns[20..25].iter().max().unwrap(),
-            turns.iter().step_by(5).max().unwrap(),
-            turns.iter().skip(1).step_by(5).max().unwrap(),
-            turns.iter().skip(2).step_by(5).max().unwrap(),
-            turns.iter().skip(3).step_by(5).max().unwrap(),
-            turns.iter().skip(4).step_by(5).max().unwrap(),
-        ];
-        let winning_turn = **row_and_cols.iter().min().unwrap();
-        let unmarked: usize = board.iter().filter(|&&n| to_turn[n] > winning_turn).sum();
-        let just_called = from_turn[winning_turn];
+            let winning_turn = ROWS_AND_COLS.iter().map(max).min().unwrap();
+            let unmarked: usize = board.iter().filter(|&&n| number_to_turn[n] > winning_turn).sum();
+            let just_called = turn_to_number[winning_turn];
 
-        Input { turn: winning_turn, score: unmarked * just_called }
-    };
-
-    let mut scores: Vec<_> = chunks.map(score).collect();
-    scores.sort_unstable_by_key(|s| s.turn);
-    scores
+            Board { turn: winning_turn, score: unmarked * just_called }
+        })
+        .collect()
 }
 
-pub fn part1(input: &[Input]) -> usize {
-    input.first().unwrap().score
+pub fn part1(input: &[Board]) -> usize {
+    input.iter().min_by_key(|b| b.turn).unwrap().score
 }
 
-pub fn part2(input: &[Input]) -> usize {
-    input.last().unwrap().score
+pub fn part2(input: &[Board]) -> usize {
+    input.iter().max_by_key(|b| b.turn).unwrap().score
 }

@@ -8,39 +8,41 @@
 //! For part 2 the completion score is the remaining items on the stack, reversed and converted from
 //! corresponding closing delimiters. For example the completion string `])}>` would have a stack
 //! that looks like `<{([`, where the right hand side is the top of the stack.
-pub fn parse(input: &str) -> Vec<&[u8]> {
-    input.lines().map(str::as_bytes).collect()
-}
+type Input = (u64, u64);
 
-pub fn part1(input: &[&[u8]]) -> u64 {
-    let mut stack = Vec::new();
-    let mut score = 0;
-
-    for line in input {
-        score += syntax_score(line, &mut stack);
-        stack.clear();
-    }
-
-    score
-}
-
-pub fn part2(input: &[&[u8]]) -> u64 {
+pub fn parse(input: &str) -> Input {
     let mut stack = Vec::new();
     let mut scores = Vec::new();
+    let mut part_one = 0;
 
-    for line in input {
-        if syntax_score(line, &mut stack) == 0 {
+    for line in input.lines() {
+        let score = syntax_score(line, &mut stack);
+
+        if score == 0 {
             scores.push(autocomplete_score(&stack));
+        } else {
+            part_one += score;
         }
+
         stack.clear();
     }
 
     scores.sort_unstable();
-    scores[scores.len() / 2]
+    let part_two = scores[scores.len() / 2];
+
+    (part_one, part_two)
 }
 
-fn syntax_score(line: &[u8], stack: &mut Vec<u8>) -> u64 {
-    for &b in line {
+pub fn part1(input: &Input) -> u64 {
+    input.0
+}
+
+pub fn part2(input: &Input) -> u64 {
+    input.1
+}
+
+fn syntax_score(line: &str, stack: &mut Vec<u8>) -> u64 {
+    for b in line.bytes() {
         match b {
             b'(' | b'[' | b'{' | b'<' => stack.push(b),
             b')' => {

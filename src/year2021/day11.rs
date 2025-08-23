@@ -36,7 +36,7 @@ pub fn part2(input: &Input) -> usize {
     steps
 }
 
-fn simulate(input: &Input, predicate: impl Fn(usize, usize) -> bool) -> (usize, usize) {
+fn simulate(input: &Input, predicate: fn(usize, usize) -> bool) -> (usize, usize) {
     let mut grid = *input;
     let mut flashed = [true; 144];
     let mut todo = Vec::with_capacity(100);

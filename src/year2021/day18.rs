@@ -27,6 +27,7 @@
 //! The root node is stored at index 0. For a node at index `i` its left child is at index
 //! `2i + 1`, right child at index `2i + 2` and parent at index `i / 2`. As leaf nodes are
 //! always greater than or equal to zero, `-1` is used as a special sentinel value for non-leaf nodes.
+use crate::util::parse::*;
 use crate::util::thread::*;
 use std::sync::atomic::{AtomicI32, Ordering};
 
@@ -55,7 +56,7 @@ pub fn parse(input: &str) -> Vec<Snailfish> {
                 b'[' => i = 2 * i + 1,
                 b',' => i += 1,
                 b']' => i = (i - 1) / 2,
-                b => tree[i] = (b - 48) as i32,
+                b => tree[i] = b.to_decimal() as i32,
             }
         }
 
@@ -86,7 +87,7 @@ pub fn part2(input: &[Snailfish]) -> i32 {
     // Use as many cores as possible to parallelize the calculation.
     let shared = AtomicI32::new(0);
     spawn_parallel_iterator(&pairs, |iter| worker(&shared, iter));
-    shared.load(Ordering::Relaxed)
+    shared.into_inner()
 }
 
 /// Pair addition is independent so we can parallelize across multiple threads.
