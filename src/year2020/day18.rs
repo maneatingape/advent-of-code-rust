@@ -70,7 +70,7 @@ fn next(bytes: &mut Bytes<'_>) -> Option<u8> {
 
 /// Convenience wrapper to return the value of either the next raw digit literal or a
 /// sub-expression nested in parentheses.
-fn value(bytes: &mut Bytes<'_>, helper: impl Fn(&mut Bytes<'_>) -> u64) -> u64 {
+fn value(bytes: &mut Bytes<'_>, helper: fn(&mut Bytes<'_>) -> u64) -> u64 {
     match next(bytes).unwrap() {
         b'(' => helper(bytes),
         b => b.to_decimal() as u64,

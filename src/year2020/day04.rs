@@ -5,36 +5,44 @@
 //! maximize speed we'll instead hand code validation functions for each of the
 //! passport field criteria.
 use crate::util::iter::*;
+use crate::util::parse::*;
 use std::ops::RangeInclusive;
 
-type Passport<'a> = Vec<[&'a str; 2]>;
+type Input = (u32, u32);
 
-pub fn parse(input: &str) -> Vec<Passport<'_>> {
-    input.split("\n\n").map(parse_block).collect()
-}
+pub fn parse(input: &str) -> Input {
+    let mut passport = Vec::new();
+    let mut part_one = 0;
+    let mut part_two = 0;
 
-pub fn part1(input: &[Passport<'_>]) -> usize {
-    input.iter().filter(|passport| passport.len() == 7).count()
-}
+    for block in input.split("\n\n") {
+        parse_block(&mut passport, block);
 
-pub fn part2(input: &[Passport<'_>]) -> usize {
-    input
-        .iter()
-        .filter(|passport| passport.len() == 7)
-        .filter(|passport| passport.iter().all(validate_field))
-        .count()
-}
-
-fn parse_block(block: &str) -> Passport<'_> {
-    let mut fields = Vec::with_capacity(7);
-
-    for pair @ [key, _] in block.split([':', ' ', '\n']).chunk::<2>() {
-        if key != "cid" {
-            fields.push(pair);
+        if passport.len() == 7 {
+            part_one += 1;
+            part_two += passport.iter().all(validate_field) as u32;
         }
+
+        passport.clear();
     }
 
-    fields
+    (part_one, part_two)
+}
+
+pub fn part1(input: &Input) -> u32 {
+    input.0
+}
+
+pub fn part2(input: &Input) -> u32 {
+    input.1
+}
+
+fn parse_block<'a>(passport: &mut Vec<[&'a str; 2]>, block: &'a str) {
+    for pair @ [key, _] in block.split([':', ' ', '\n']).chunk::<2>() {
+        if key != "cid" {
+            passport.push(pair);
+        }
+    }
 }
 
 fn validate_field(&[key, value]: &[&str; 2]) -> bool {
@@ -51,7 +59,7 @@ fn validate_field(&[key, value]: &[&str; 2]) -> bool {
 }
 
 fn validate_range(s: &str, range: RangeInclusive<u32>) -> bool {
-    s.parse().is_ok_and(|n| range.contains(&n))
+    range.contains(&s.unsigned())
 }
 
 fn validate_height(hgt: &str) -> bool {

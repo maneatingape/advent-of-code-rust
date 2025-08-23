@@ -13,16 +13,10 @@ pub struct Input {
 }
 
 pub fn parse(input: &str) -> Input {
-    let mut min = u32::MAX;
-    let mut max = u32::MIN;
-    let mut xor = 0;
-
-    for line in input.lines() {
+    let (min, max, xor) = input.lines().fold((u32::MAX, u32::MIN, 0), |(min, max, xor), line| {
         let id = line.bytes().fold(0, |acc, b| (acc << 1) | (b == b'B' || b == b'R') as u32);
-        min = min.min(id);
-        max = max.max(id);
-        xor ^= id;
-    }
+        (min.min(id), max.max(id), xor ^ id)
+    });
 
     Input { min, max, xor }
 }
