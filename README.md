@@ -116,7 +116,7 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 | 7 | [Camel Cards](https://adventofcode.com/2023/day/7) | [Source](src/year2023/day07.rs) | 71 |
 | 8 | [Haunted Wasteland](https://adventofcode.com/2023/day/8) | [Source](src/year2023/day08.rs) | 34 |
 | 9 | [Mirage Maintenance](https://adventofcode.com/2023/day/9) | [Source](src/year2023/day09.rs) | 18 |
-| 10 | [Pipe Maze](https://adventofcode.com/2023/day/10) | [Source](src/year2023/day10.rs) | 41 |
+| 10 | [Pipe Maze](https://adventofcode.com/2023/day/10) | [Source](src/year2023/day10.rs) | 35 |
 | 11 | [Cosmic Expansion](https://adventofcode.com/2023/day/11) | [Source](src/year2023/day11.rs) | 12 |
 | 12 | [Hot Springs](https://adventofcode.com/2023/day/12) | [Source](src/year2023/day12.rs) | 387 |
 | 13 | [Point of Incidence](https://adventofcode.com/2023/day/13) | [Source](src/year2023/day13.rs) | 66 |

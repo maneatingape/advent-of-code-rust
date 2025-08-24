@@ -147,7 +147,7 @@ pub fn part2(input: &[Spring<'_>]) -> u64 {
         let partial = solve(iter, 5);
         shared.fetch_add(partial, Ordering::Relaxed);
     });
-    shared.load(Ordering::Relaxed)
+    shared.into_inner()
 }
 
 pub fn solve<'a, I>(iter: I, repeat: usize) -> u64

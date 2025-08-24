@@ -4,7 +4,7 @@
 //! according to the rules of each tile.
 //!
 //! To speed things up the next coordinate in each direction is precomputed for every point
-//! so that the empty spaces between mirrros and splitters are filled efficiently.
+//! so that the empty spaces between mirrors and splitters are filled efficiently.
 //!
 //! Some beams can enter a closed loop so we keep track of previously seen `(position, direction)`
 //! pairs and stop if we've seen a pair before.
@@ -129,7 +129,7 @@ pub fn part2(input: &Input) -> usize {
     // Use as many cores as possible to parallelize the search.
     spawn(|| worker(&shared));
 
-    shared.tiles.load(Ordering::Relaxed)
+    shared.tiles.into_inner()
 }
 
 /// Process starting locations from a shared queue.
