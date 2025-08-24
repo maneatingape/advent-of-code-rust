@@ -27,6 +27,7 @@ fn count(input: &[u64], blinks: usize) -> u64 {
     let mut indices = FastMap::with_capacity(5000);
     // Numbers of any new stones generated during the previous blink.
     let mut todo = Vec::new();
+    let mut numbers = Vec::new();
     // Amount of each stone of a particular number.
     let mut current = Vec::new();
 
@@ -44,8 +45,7 @@ fn count(input: &[u64], blinks: usize) -> u64 {
     for _ in 0..blinks {
         // If a stone number has already been seen then return its index,
         // otherwise queue it for processing during the next blink.
-        let numbers = todo;
-        todo = Vec::with_capacity(200);
+        (numbers, todo) = (todo, numbers);
 
         let mut index_of = |number| {
             let size = indices.len();
@@ -56,7 +56,7 @@ fn count(input: &[u64], blinks: usize) -> u64 {
         };
 
         // Apply the transformation logic to stones added in the previous blink.
-        for number in numbers {
+        for number in numbers.drain(..) {
             let (first, second) = if number == 0 {
                 (index_of(1), usize::MAX)
             } else {

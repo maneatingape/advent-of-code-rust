@@ -19,20 +19,14 @@ type Input = (u32, u32);
 /// Minimize allocation to only a single `vec` reused for each report.
 pub fn parse(input: &str) -> Input {
     let mut report = Vec::new();
-    let mut part_one = 0;
-    let mut part_two = 0;
 
-    for line in input.lines() {
+    input.lines().fold((0, 0), |(part_one, part_two), line| {
+        report.clear();
         report.extend(line.iter_signed::<i32>());
 
         let (p1, p2) = check(&report);
-        part_one += p1;
-        part_two += p2;
-
-        report.clear();
-    }
-
-    (part_one, part_two)
+        (part_one + p1, part_two + p2)
+    })
 }
 
 pub fn part1(input: &Input) -> u32 {
@@ -45,7 +39,7 @@ pub fn part2(input: &Input) -> u32 {
 
 fn check(report: &[i32]) -> (u32, u32) {
     let size = report.len();
-    let score: i32 = (1..size).map(|i| delta(report[i - 1], report[i])).sum();
+    let score: i32 = report.windows(2).map(|w| delta(w[0], w[1])).sum();
 
     if score.abs() == (size - 1) as i32 {
         return (1, 1);
@@ -76,6 +70,5 @@ fn check(report: &[i32]) -> (u32, u32) {
 /// Convert each pair of levels to either +1 for increase, -1 for decrease or 0 for invalid range.
 fn delta(a: i32, b: i32) -> i32 {
     let diff = b - a;
-
-    if diff.abs() <= 3 { diff.signum() } else { 0 }
+    (diff.abs() <= 3) as i32 * diff.signum()
 }

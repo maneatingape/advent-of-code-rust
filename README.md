@@ -76,7 +76,7 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 | Day | Problem | Solution | Benchmark (μs) |
 | --- | --- | --- | --: |
 | 1 | [Historian Hysteria](https://adventofcode.com/2024/day/1) | [Source](src/year2024/day01.rs) | 21 |
-| 2 | [Red-Nosed Reports](https://adventofcode.com/2024/day/2) | [Source](src/year2024/day02.rs) | 43 |
+| 2 | [Red-Nosed Reports](https://adventofcode.com/2024/day/2) | [Source](src/year2024/day02.rs) | 40 |
 | 3 | [Mull It Over](https://adventofcode.com/2024/day/3) | [Source](src/year2024/day03.rs) | 8 |
 | 4 | [Ceres Search](https://adventofcode.com/2024/day/4) | [Source](src/year2024/day04.rs) | 77 |
 | 5 | [Print Queue](https://adventofcode.com/2024/day/5) | [Source](src/year2024/day05.rs) | 18 |
@@ -85,7 +85,7 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 | 8 | [Resonant Collinearity](https://adventofcode.com/2024/day/8) | [Source](src/year2024/day08.rs) | 8 |
 | 9 | [Disk Fragmenter](https://adventofcode.com/2024/day/9) | [Source](src/year2024/day09.rs) | 106 |
 | 10 | [Hoof It](https://adventofcode.com/2024/day/10) | [Source](src/year2024/day10.rs) | 38 |
-| 11 | [Plutonian Pebbles](https://adventofcode.com/2024/day/11) | [Source](src/year2024/day11.rs) | 248 |
+| 11 | [Plutonian Pebbles](https://adventofcode.com/2024/day/11) | [Source](src/year2024/day11.rs) | 227 |
 | 12 | [Garden Groups](https://adventofcode.com/2024/day/12) | [Source](src/year2024/day12.rs) | 289 |
 | 13 | [Claw Contraption](https://adventofcode.com/2024/day/13) | [Source](src/year2024/day13.rs) | 14 |
 | 14 | [Restroom Redoubt](https://adventofcode.com/2024/day/14) | [Source](src/year2024/day14.rs) | 74 |
@@ -93,7 +93,7 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 | 16 | [Reindeer Maze](https://adventofcode.com/2024/day/16) | [Source](src/year2024/day16.rs) | 390 |
 | 17 | [Chronospatial Computer](https://adventofcode.com/2024/day/17) | [Source](src/year2024/day17.rs) | 2 |
 | 18 | [RAM Run](https://adventofcode.com/2024/day/18) | [Source](src/year2024/day18.rs) | 42 |
-| 19 | [Linen Layout](https://adventofcode.com/2024/day/19) | [Source](src/year2024/day19.rs) | 118 |
+| 19 | [Linen Layout](https://adventofcode.com/2024/day/19) | [Source](src/year2024/day19.rs) | 110 |
 | 20 | [Race Condition](https://adventofcode.com/2024/day/20) | [Source](src/year2024/day20.rs) | 1038 |
 | 21 | [Keypad Conundrum](https://adventofcode.com/2024/day/21) | [Source](src/year2024/day21.rs) | 19 |
 | 22 | [Monkey Market](https://adventofcode.com/2024/day/22) | [Source](src/year2024/day22.rs) | 727 |

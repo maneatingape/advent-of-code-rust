@@ -40,11 +40,9 @@ pub fn parse(input: &str) -> Input {
         trie[i].set_towel();
     }
 
-    let mut part_one = 0;
-    let mut part_two = 0;
     let mut ways = Vec::with_capacity(100);
 
-    for design in suffix.lines().map(str::as_bytes) {
+    suffix.lines().map(str::as_bytes).fold((0, 0), |(part_one, part_two), design| {
         let size = design.len();
 
         // Reset state.
@@ -77,11 +75,8 @@ pub fn parse(input: &str) -> Input {
 
         // Last element is the total possible combinations.
         let total = ways[size];
-        part_one += (total > 0) as usize;
-        part_two += total;
-    }
-
-    (part_one, part_two)
+        (part_one + (total > 0) as usize, part_two + total)
+    })
 }
 
 pub fn part1(input: &Input) -> usize {

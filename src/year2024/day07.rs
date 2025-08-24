@@ -48,24 +48,20 @@ type Input = (u64, u64);
 
 pub fn parse(input: &str) -> Input {
     let mut equation = Vec::new();
-    let mut part_one = 0;
-    let mut part_two = 0;
 
-    for line in input.lines() {
+    input.lines().fold((0, 0), |(part_one, part_two), line| {
+        equation.clear();
         equation.extend(line.iter_unsigned::<u64>());
 
         // If an equation is valid for part one then it's also valid for part two.
         if valid(&equation, equation[0], equation.len() - 1, false) {
-            part_one += equation[0];
-            part_two += equation[0];
+            (part_one + equation[0], part_two + equation[0])
         } else if valid(&equation, equation[0], equation.len() - 1, true) {
-            part_two += equation[0];
+            (part_one, part_two + equation[0])
+        } else {
+            (part_one, part_two)
         }
-
-        equation.clear();
-    }
-
-    (part_one, part_two)
+    })
 }
 
 pub fn part1(input: &Input) -> u64 {
