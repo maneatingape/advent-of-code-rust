@@ -9,9 +9,9 @@
 use crate::util::iter::*;
 use crate::util::parse::*;
 
-const SIZE: usize = 22;
+const SIZE: usize = 24;
 
-pub fn parse(input: &str) -> Vec<u32> {
+pub fn parse(input: &str) -> Vec<u8> {
     let mut cube = vec![0; SIZE * SIZE * SIZE];
     // Leave a 1 layer boundary around the outside for the part two flood fill
     // and also so that we don't have to use boundary checks when checking neighbors.
@@ -21,49 +21,57 @@ pub fn parse(input: &str) -> Vec<u32> {
     cube
 }
 
-pub fn part1(input: &[u32]) -> u32 {
+pub fn part1(input: &[u8]) -> u32 {
     // The exposed surface area is the 6 faces of the cubes minus any neighbors.
     count(input, |x| 6 - x)
 }
 
-pub fn part2(input: &[u32]) -> u32 {
-    let mut cube = input.to_vec();
+pub fn part2(input: &[u8]) -> u32 {
     // "Paint" the outside of the cube with water drops.
-    flood_fill(&mut cube, 0);
+    // Use 8 as the nearest power of two greater than 6.
+    let mut cube = input.to_vec();
+    cube[0] = 8;
+
+    let mut todo = Vec::new();
+    todo.push(0);
+
+    while let Some(index) = todo.pop() {
+        let mut flood_fill = |next| {
+            if next < input.len() && cube[next] == 0 {
+                cube[next] = 8;
+                todo.push(next);
+            }
+        };
+
+        // We may wrap around but that index will be out of bounds.
+        flood_fill(index.wrapping_sub(1));
+        flood_fill(index + 1);
+        flood_fill(index.wrapping_sub(SIZE));
+        flood_fill(index + SIZE);
+        flood_fill(index.wrapping_sub(SIZE * SIZE));
+        flood_fill(index + SIZE * SIZE);
+    }
+
     // Divide by 8 so that we only count water cubes.
     count(&cube, |x| x >> 3)
 }
 
-fn count(cube: &[u32], adjust: fn(u32) -> u32) -> u32 {
+fn count(cube: &[u8], adjust: fn(u32) -> u32) -> u32 {
     let mut total = 0;
 
     for i in 0..cube.len() {
         if cube[i] == 1 {
             // No need for boundary checks as all cubes are at least 1 away from the edge.
             total += adjust(
-                cube[i - 1]
+                (cube[i - 1]
                     + cube[i + 1]
                     + cube[i - SIZE]
                     + cube[i + SIZE]
                     + cube[i - SIZE * SIZE]
-                    + cube[i + SIZE * SIZE],
+                    + cube[i + SIZE * SIZE]) as u32,
             );
         }
     }
 
     total
-}
-
-fn flood_fill(cube: &mut [u32], i: usize) {
-    if cube.get(i) == Some(&0) {
-        // Use 8 as the nearest power of two greater than 6.
-        cube[i] = 8;
-        // We may wrap around to an opposite edge but that will also be water.
-        flood_fill(cube, i.saturating_sub(1));
-        flood_fill(cube, i + 1);
-        flood_fill(cube, i.saturating_sub(SIZE));
-        flood_fill(cube, i + SIZE);
-        flood_fill(cube, i.saturating_sub(SIZE * SIZE));
-        flood_fill(cube, i + SIZE * SIZE);
-    }
 }

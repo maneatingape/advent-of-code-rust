@@ -7,7 +7,7 @@ use crate::util::parse::*;
 use crate::util::point::*;
 
 type Pair = (Point, i32);
-type Input = ([i32; 4], Vec<Pair>);
+type Input = (i32, i32, i32, i32, Vec<Pair>);
 
 /// Converts input lines into a pair of [`Point`] and integer amount, to indicate direction and
 /// magnitude respectively. Then determines the maximum extent of the head so that we can allocate
@@ -15,24 +15,18 @@ type Input = ([i32; 4], Vec<Pair>);
 pub fn parse(input: &str) -> Input {
     let first = input.bytes().filter(u8::is_ascii_alphabetic).map(Point::from);
     let second = input.iter_signed::<i32>();
-    let pairs = first.zip(second).collect();
+    let pairs: Vec<_> = first.zip(second).collect();
 
     // Determine maximum extents
-    let mut x1 = i32::MAX;
-    let mut y1 = i32::MAX;
-    let mut x2 = i32::MIN;
-    let mut y2 = i32::MIN;
-    let mut point = ORIGIN;
+    let (x1, y1, x2, y2, _) = pairs.iter().fold(
+        (i32::MAX, i32::MAX, i32::MIN, i32::MIN, ORIGIN),
+        |(x1, y1, x2, y2, point), &(step, amount)| {
+            let next = point + step * amount;
+            (x1.min(next.x), y1.min(next.y), x2.max(next.x), y2.max(next.y), next)
+        },
+    );
 
-    for &(step, amount) in &pairs {
-        point += step * amount;
-        x1 = x1.min(point.x);
-        y1 = y1.min(point.y);
-        x2 = x2.max(point.x);
-        y2 = y2.max(point.y);
-    }
-
-    ([x1, y1, x2, y2], pairs)
+    (x1, y1, x2, y2, pairs)
 }
 
 /// Simulate a rope length of 2
@@ -54,7 +48,7 @@ pub fn part2(input: &Input) -> u32 {
 /// Using const generics for the rope length allows the compiler to optimize the loop and speeds
 /// things up by about 40%.
 fn simulate<const N: usize>(input: &Input) -> u32 {
-    let ([x1, y1, x2, y2], pairs) = input;
+    let (x1, y1, x2, y2, pairs) = input;
     let width = x2 - x1 + 1;
     let height = y2 - y1 + 1;
     let start = Point::new(-x1, -y1);
