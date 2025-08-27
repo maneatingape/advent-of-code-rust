@@ -4,6 +4,10 @@ version = "2024.12.25"
 edition = "2024"
 rust-version = "1.89"
 
+# Speed up benchmarking by not recompiling everything when only a single file changes.
+[profile.bench]
+incremental = true
+
 [features]
 frivolity = []
 simd = []
