@@ -2,7 +2,7 @@
 name = "aoc"
 version = "2024.12.25"
 edition = "2024"
-rust-version = "1.89"
+rust-version = "1.90"
 
 # Speed up benchmarking by not recompiling everything when only a single file changes.
 [profile.bench]
@@ -271,7 +271,6 @@ string_add = "warn"
 string_add_assign = "warn"
 string_lit_chars_any = "warn"
 string_slice = "allow"
-string_to_string = "allow"
 struct_excessive_bools = "warn"
 struct_field_names = "warn"
 suspicious_xor_used_as_pow = "warn"

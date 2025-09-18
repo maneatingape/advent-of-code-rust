@@ -71,6 +71,7 @@ pub fn part2(input: &[u32]) -> u32 {
 /// `containers`: Number of containers used so far
 /// `litres`: How many litres of eggnog stored so far
 /// `factor`: The total different number of ways of selecting previous containers
+#[expect(clippy::needless_range_loop)]
 fn combinations(state: &mut State, index: usize, containers: usize, litres: u32, factor: u32) {
     let n = state.freq[index];
     let mut next = litres;
