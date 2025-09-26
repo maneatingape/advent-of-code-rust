@@ -8,15 +8,14 @@ macro_rules! benchmark {
             mod $day {
                 use aoc::$year::$day::*;
                 use std::fs::read_to_string;
-                use std::path::Path;
                 use std::sync::LazyLock;
                 use test::Bencher;
 
                 static DATA: LazyLock<String> = LazyLock::new(|| {
                     let year = stringify!($year);
                     let day = stringify!($day);
-                    let path = Path::new("input").join(year).join(day).with_extension("txt");
-                    read_to_string(path).unwrap()
+                    let path = format!("input/{year}/{day}.txt");
+                    read_to_string(&path).expect(&path)
                 });
 
                 #[bench]
