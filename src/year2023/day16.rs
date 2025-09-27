@@ -58,7 +58,7 @@ impl BitSet {
     }
 
     fn union(&mut self, other: &BitSet) {
-        self.bits.iter_mut().zip(other.bits.iter()).for_each(|(a, b)| *a |= b);
+        self.bits.iter_mut().zip(&other.bits).for_each(|(a, b)| *a |= b);
     }
 
     fn size(&self) -> u32 {
@@ -236,8 +236,8 @@ fn strong_connect(graph: &mut Graph, position: Point) -> usize {
         {
             let other = &graph.nodes[next];
             node.tiles.union(&other.tiles);
-            node.from.extend(other.from.iter());
-            node.to.extend(other.to.iter());
+            node.from.extend(&other.from);
+            node.to.extend(&other.to);
         }
 
         // Mark node as done.

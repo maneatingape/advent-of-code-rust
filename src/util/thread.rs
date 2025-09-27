@@ -87,7 +87,7 @@ impl<'a, T> Iterator for ParIter<'a, T> {
 
                     (size > 0).then_some((other, current, size))
                 })
-                .max_by_key(|t| t.2);
+                .max_by_key(|&(_, _, size)| size);
 
             if let Some((other, current, size)) = available {
                 // Split the work items into two roughly equal piles.

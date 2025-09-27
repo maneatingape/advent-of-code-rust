@@ -45,27 +45,29 @@ pub trait ParseOps {
     fn iter_signed<T: Signed<T>>(&self) -> ParseSigned<'_, T>;
 }
 
-impl ParseOps for &str {
+impl<S: AsRef<str>> ParseOps for S {
     fn unsigned<T: Unsigned<T>>(&self) -> T {
-        match try_unsigned(&mut self.bytes()) {
+        let str = self.as_ref();
+        match try_unsigned(&mut str.bytes()) {
             Some(t) => t,
-            None => panic!("Unable to parse \"{self}\""),
+            None => panic!("Unable to parse \"{str}\""),
         }
     }
 
     fn signed<T: Signed<T>>(&self) -> T {
-        match try_signed(&mut self.bytes()) {
+        let str = self.as_ref();
+        match try_signed(&mut str.bytes()) {
             Some(t) => t,
-            None => panic!("Unable to parse \"{self}\""),
+            None => panic!("Unable to parse \"{str}\""),
         }
     }
 
     fn iter_unsigned<T: Unsigned<T>>(&self) -> ParseUnsigned<'_, T> {
-        ParseUnsigned { bytes: self.bytes(), phantom: PhantomData }
+        ParseUnsigned { bytes: self.as_ref().bytes(), phantom: PhantomData }
     }
 
     fn iter_signed<T: Signed<T>>(&self) -> ParseSigned<'_, T> {
-        ParseSigned { bytes: self.bytes(), phantom: PhantomData }
+        ParseSigned { bytes: self.as_ref().bytes(), phantom: PhantomData }
     }
 }
 
@@ -105,16 +107,15 @@ fn try_unsigned<T: Unsigned<T>>(bytes: &mut Bytes<'_>) -> Option<T> {
         }
     };
 
-    loop {
-        let Some(byte) = bytes.next() else { break Some(n) };
+    for byte in bytes {
         let digit = byte.to_decimal();
-
-        if digit < 10 {
-            n = T::TEN * n + T::from(digit);
-        } else {
-            break Some(n);
+        if digit >= 10 {
+            break;
         }
+        n = T::TEN * n + T::from(digit);
     }
+
+    Some(n)
 }
 
 fn try_signed<T: Signed<T>>(bytes: &mut Bytes<'_>) -> Option<T> {
@@ -130,16 +131,13 @@ fn try_signed<T: Signed<T>>(bytes: &mut Bytes<'_>) -> Option<T> {
         }
     };
 
-    loop {
-        let Some(byte) = bytes.next() else {
-            break Some(if negative { -n } else { n });
-        };
+    for byte in bytes {
         let digit = byte.to_decimal();
-
-        if digit < 10 {
-            n = T::TEN * n + T::from(digit);
-        } else {
-            break Some(if negative { -n } else { n });
+        if digit >= 10 {
+            break;
         }
+        n = T::TEN * n + T::from(digit);
     }
+
+    Some(if negative { -n } else { n })
 }

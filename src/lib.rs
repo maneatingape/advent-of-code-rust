@@ -13,7 +13,9 @@
 macro_rules! library {
     ($year:tt $description:literal $($day:tt),*) => {
         #[doc = concat!("# ", $description)]
-        pub mod $year {$(pub mod $day;)*}
+        pub mod $year {
+            $(pub mod $day;)*
+        }
     }
 }
 

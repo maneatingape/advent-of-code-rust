@@ -22,7 +22,6 @@ pub struct Bitset<T> {
 impl<T> Iterator for Bitset<T>
 where
     T: Integer<T>,
-    T: TryInto<usize>,
 {
     type Item = usize;
 
@@ -34,7 +33,6 @@ where
 
         let tz = self.t.trailing_zeros();
         self.t = self.t ^ (T::ONE << tz);
-
-        tz.try_into().ok()
+        Some(tz as usize)
     }
 }

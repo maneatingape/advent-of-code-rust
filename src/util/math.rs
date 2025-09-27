@@ -53,7 +53,7 @@ impl<T: Integer<T>> IntegerMathOps<T> for T {
                 c = (c * b) % m;
             }
             b = (b * b) % m;
-            e = e >> T::ONE;
+            e = e >> 1;
         }
 
         c

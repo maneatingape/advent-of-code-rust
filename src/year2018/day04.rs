@@ -43,7 +43,7 @@ fn choose(input: &Input, strategy: fn(&(&usize, &[u32; 60])) -> u32) -> usize {
     // Find the guard using a specific strategy.
     let (id, minutes) = input.iter().max_by_key(strategy).unwrap();
     // Find the minute spent asleep the most
-    let (minute, _) = minutes.iter().enumerate().max_by_key(|(_, m)| **m).unwrap();
+    let (minute, _) = minutes.iter().enumerate().max_by_key(|&(_, &m)| m).unwrap();
     // Return result
     id * minute
 }

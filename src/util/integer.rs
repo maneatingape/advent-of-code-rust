@@ -14,15 +14,15 @@ pub trait Integer<T>:
     + Div<Output = T>
     + Mul<Output = T>
     + Rem<Output = T>
-    + Shl<Output = T>
-    + Shr<Output = T>
+    + Shl<u32, Output = T>
+    + Shr<u32, Output = T>
     + Sub<Output = T>
 {
     const ZERO: T;
     const ONE: T;
     const TEN: T;
 
-    fn trailing_zeros(self) -> T;
+    fn trailing_zeros(self) -> u32;
 }
 
 pub trait Unsigned<T>: Integer<T> {}
@@ -37,9 +37,8 @@ macro_rules! integer {
             const TEN: $t = 10;
 
             #[inline]
-            #[allow(trivial_numeric_casts)]
-            fn trailing_zeros(self) -> $t {
-                <$t>::trailing_zeros(self) as $t
+            fn trailing_zeros(self) -> u32 {
+                <$t>::trailing_zeros(self)
             }
         }
     )*)

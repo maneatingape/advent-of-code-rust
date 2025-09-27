@@ -209,8 +209,8 @@ pub fn part1(input: &Input) -> u32 {
 
     for y in 0..6 {
         for x in 0..6 {
-            let left = if x == 0 { 0 } else { total[y][x - 1] + input.horizontal[y][x - 1] };
-            let above = if y == 0 { 0 } else { total[y - 1][x] + input.vertical[y - 1][x] };
+            let left = if x > 0 { total[y][x - 1] + input.horizontal[y][x - 1] } else { 0 };
+            let above = if y > 0 { total[y - 1][x] + input.vertical[y - 1][x] } else { 0 };
             total[y][x] = left.max(above);
         }
     }
@@ -255,15 +255,17 @@ pub fn part2(input: &Input) -> u32 {
         for ((row, gap), steps) in current.drain() {
             for &(next_row, next_gap, horizontal, vertical) in &graph[&row] {
                 // Only 1 gap total is allowed, otherwise we can make a longer path.
-                if !(gap && next_gap) {
-                    // The bit sets represent the horizonal and vertical moves from the
-                    // previous row.
-                    let extra = horizontal.biterator().map(|x| input.horizontal[y][x]).sum::<u32>()
-                        + vertical.biterator().map(|x| input.vertical[y][x]).sum::<u32>();
-
-                    let e = next.entry((next_row, gap || next_gap)).or_insert(0);
-                    *e = (*e).max(steps + extra);
+                if gap && next_gap {
+                    continue;
                 }
+
+                // The bit sets represent the horizontal and vertical moves from the previous row.
+                let extra = horizontal.biterator().map(|x| input.horizontal[y][x]).sum::<u32>()
+                    + vertical.biterator().map(|x| input.vertical[y][x]).sum::<u32>();
+
+                // De-duplicate states so that each row has at most 76 states.
+                let e = next.entry((next_row, gap || next_gap)).or_insert(0);
+                *e = (*e).max(steps + extra);
             }
         }
 
@@ -274,7 +276,7 @@ pub fn part2(input: &Input) -> u32 {
     input.extra + current[&(end, true)]
 }
 
-/// Convert maze to unidrected graph.
+/// Convert maze to undirected graph.
 fn compress(input: &str) -> Graph {
     let mut grid = Grid::parse(input);
     let width = grid.width;
@@ -390,7 +392,7 @@ fn graph_to_grid(graph: &Graph) -> Input {
 
             let (&next, _) = edges
                 .iter()
-                .find(|(k, v)| v.contains(&above) && v.contains(&left) && seen.insert(**k))
+                .find(|&(&k, v)| v.contains(&above) && v.contains(&left) && seen.insert(k))
                 .unwrap();
 
             grid[y][x] = next;

@@ -1,38 +1,39 @@
 use aoc::util::ansi::*;
 use aoc::util::parse::*;
-use aoc::*;
 use std::env::args;
 use std::fs::read_to_string;
-use std::iter::empty;
 use std::time::{Duration, Instant};
 
 fn main() {
     // Parse command line options
-    let args: Vec<_> = args().collect();
-    let args: Vec<_> = args.iter().map(String::as_str).collect();
-    let mut iter = args.iter().flat_map(|arg| arg.iter_unsigned::<u32>());
+    let mut iter = args().flat_map(|arg| arg.iter_unsigned().collect::<Vec<u32>>());
     let (year, day) = (iter.next(), iter.next());
 
+    let solutions = [
+        year2015(),
+        year2016(),
+        year2017(),
+        year2018(),
+        year2019(),
+        year2020(),
+        year2021(),
+        year2022(),
+        year2023(),
+        year2024(),
+    ];
+
     // Filter solutions then pretty print output.
-    let (stars, duration) = empty()
-        .chain(year2015())
-        .chain(year2016())
-        .chain(year2017())
-        .chain(year2018())
-        .chain(year2019())
-        .chain(year2020())
-        .chain(year2021())
-        .chain(year2022())
-        .chain(year2023())
-        .chain(year2024())
-        .filter(|solution| year.is_none_or(|y| y == solution.year))
-        .filter(|solution| day.is_none_or(|d| d == solution.day))
+    let (stars, duration) = solutions
+        .into_iter()
+        .flatten()
+        .filter(|s| year.is_none_or(|y| y == s.year))
+        .filter(|s| day.is_none_or(|d| d == s.day))
         .fold((0, Duration::ZERO), |(stars, duration), Solution { year, day, wrapper }| {
             let path = format!("input/year{year}/day{day:02}.txt");
 
             if let Ok(data) = read_to_string(&path) {
                 let instant = Instant::now();
-                let (part1, part2) = wrapper(data);
+                let (part1, part2) = wrapper(&data);
                 let elapsed = instant.elapsed();
 
                 println!("{BOLD}{YELLOW}{year} Day {day}{RESET}");
@@ -50,8 +51,8 @@ fn main() {
         });
 
     // Optionally print totals.
-    if args.contains(&"--totals") {
-        println!("{BOLD}{YELLOW}⭐ {}{RESET}", stars);
+    if args().any(|arg| arg == "--totals") {
+        println!("{BOLD}{YELLOW}⭐ {stars}{RESET}");
         println!("{BOLD}{WHITE}🕓 {} ms{RESET}", duration.as_millis());
     }
 }
@@ -59,7 +60,7 @@ fn main() {
 struct Solution {
     year: u32,
     day: u32,
-    wrapper: fn(String) -> (String, String),
+    wrapper: fn(&str) -> (String, String),
 }
 
 macro_rules! run {
@@ -68,8 +69,8 @@ macro_rules! run {
             vec![$({
                 let year = stringify!($year).unsigned();
                 let day = stringify!($day).unsigned();
-                let wrapper = |data: String| {
-                    use $year::$day::*;
+                let wrapper = |data: &str| {
+                    use aoc::$year::$day::*;
 
                     let input = parse(&data);
                     let part1 = part1(&input);

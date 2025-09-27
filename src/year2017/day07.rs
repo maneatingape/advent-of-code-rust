@@ -60,7 +60,7 @@ pub fn parse(input: &str) -> Input<'_> {
     }
 
     // The root is the only node without a parent.
-    let part_one = indices.iter().find(|(_, v)| !nodes[**v].has_parent).unwrap().0;
+    let part_one = indices.iter().find(|&(_, &v)| !nodes[v].has_parent).unwrap().0;
     let mut part_two = 0;
 
     while let Some(index) = todo.pop_front() {
