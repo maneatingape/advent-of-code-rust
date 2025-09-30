@@ -1,254 +1,257 @@
 //! # The Floor Will Be Lava
 //!
-//! Brute force solution tracing the path of each beam, changing direction or splitting
-//! according to the rules of each tile.
+//! Each `-` or `|` splitter is a node in a graph connected by the light beams. Although each
+//! splitter emits two beams the graph is not a binary tree. There can be cycles between splitters
+//! and beams can also leave the grid.
 //!
-//! To speed things up the next coordinate in each direction is precomputed for every point
-//! so that the empty spaces between mirrors and splitters are filled efficiently.
+//! To speed things up
+//! [Tarjan's algorithm](https://en.wikipedia.org/wiki/Tarjan%27s_strongly_connected_components_algorithm)
+//! is used to find cycles in the graph, then the energized tiles are cached in reverse topological
+//! order. As some cycles contain about half the total splitters in the grid, this results in a
+//! significant savings.
 //!
-//! Some beams can enter a closed loop so we keep track of previously seen `(position, direction)`
-//! pairs and stop if we've seen a pair before.
-//!
-//! For part two each path is independent so we can use multiple threads in parallel to speed
-//! up the search.
+//! A specialized bit set is used to cache the energized tiles. Each input is 110 x 110 tiles,
+//! needing 12,100 bits or 190 `u64`s to store the grid. Bitwise logic allows merging bitsets
+//! and counting the number of elements very quickly.
 use crate::util::grid::*;
+use crate::util::hash::*;
 use crate::util::point::*;
-use crate::util::thread::*;
-use std::collections::VecDeque;
-use std::sync::Mutex;
-use std::sync::atomic::{AtomicUsize, Ordering};
+use State::*;
 
-type Pair = (Point, u32);
+type Input = (u32, u32);
 
-const UP: u32 = 0;
-const DOWN: u32 = 1;
-const LEFT: u32 = 2;
-const RIGHT: u32 = 3;
-
-pub struct Input {
+struct Graph {
     grid: Grid<u8>,
-    up: Grid<i32>,
-    down: Grid<i32>,
-    left: Grid<i32>,
-    right: Grid<i32>,
+    seen: Grid<[bool; 2]>,
+    state: Grid<State>,
+    stack: Vec<usize>,
+    nodes: Vec<Node>,
 }
 
-/// Atomics can be safely shared between threads.
-struct Shared<'a> {
-    input: &'a Input,
-    tiles: AtomicUsize,
-    mutex: Mutex<Vec<Pair>>,
+struct Node {
+    tiles: BitSet,
+    from: FastSet<Point>,
+    to: FastSet<Point>,
 }
 
-/// Build four precomputed grids of the next coordinate in each direction for every point.
+impl Node {
+    fn new() -> Self {
+        Node { tiles: BitSet::new(), from: FastSet::new(), to: FastSet::new() }
+    }
+}
+
+/// Fixed size bitset large enough to store the entire 110 x 110 grid.
+struct BitSet {
+    bits: [u64; 190],
+}
+
+impl BitSet {
+    fn new() -> Self {
+        BitSet { bits: [0; 190] }
+    }
+
+    fn insert(&mut self, position: Point) {
+        let index = (110 * position.y + position.x) as usize;
+        let base = index / 64;
+        let offset = index % 64;
+        self.bits[base] |= 1 << offset;
+    }
+
+    fn union(&mut self, other: &BitSet) {
+        self.bits.iter_mut().zip(other.bits.iter()).for_each(|(a, b)| *a |= b);
+    }
+
+    fn size(&self) -> u32 {
+        self.bits.iter().map(|&b| b.count_ones()).sum()
+    }
+}
+
+/// Used by Tarjan's algorithm.
+#[derive(Clone, Copy)]
+enum State {
+    Todo,
+    OnStack(usize),
+    Done(usize),
+}
+
+/// Computes both parts together in order to reuse cached results.
 pub fn parse(input: &str) -> Input {
     let grid = Grid::parse(input);
+    let width = grid.width;
+    let height = grid.height;
 
-    let mut up: Grid<i32> = grid.same_size_with(0);
-    let mut down: Grid<i32> = grid.same_size_with(0);
-    let mut left: Grid<i32> = grid.same_size_with(0);
-    let mut right: Grid<i32> = grid.same_size_with(0);
+    let graph = &mut Graph {
+        grid,
+        seen: Grid::new(width, height, [false; 2]),
+        state: Grid::new(width, height, Todo),
+        stack: Vec::new(),
+        nodes: Vec::new(),
+    };
 
-    for x in 0..grid.width {
-        let mut last = -1;
+    let part_one = follow(graph, ORIGIN, RIGHT);
+    let mut part_two = part_one;
 
-        for y in 0..grid.height {
-            let point = Point::new(x, y);
-            up[point] = last;
-
-            if matches!(grid[point], b'/' | b'\\' | b'-') {
-                last = y;
-            }
-        }
+    for x in 0..width {
+        part_two = part_two.max(follow(graph, Point::new(x, 0), DOWN));
+        part_two = part_two.max(follow(graph, Point::new(x, height - 1), UP));
     }
 
-    for x in 0..grid.width {
-        let mut last = grid.height;
-
-        for y in (0..grid.height).rev() {
-            let point = Point::new(x, y);
-            down[point] = last;
-
-            if matches!(grid[point], b'/' | b'\\' | b'-') {
-                last = y;
-            }
-        }
+    for y in 0..height {
+        part_two = part_two.max(follow(graph, Point::new(0, y), RIGHT));
+        part_two = part_two.max(follow(graph, Point::new(width - 1, y), LEFT));
     }
 
-    for y in 0..grid.height {
-        let mut last = -1;
-
-        for x in 0..grid.width {
-            let point = Point::new(x, y);
-            left[point] = last;
-
-            if matches!(grid[point], b'/' | b'\\' | b'|') {
-                last = x;
-            }
-        }
-    }
-
-    for y in 0..grid.height {
-        let mut last = grid.width;
-
-        for x in (0..grid.width).rev() {
-            let point = Point::new(x, y);
-            right[point] = last;
-
-            if matches!(grid[point], b'/' | b'\\' | b'|') {
-                last = x;
-            }
-        }
-    }
-
-    Input { grid, up, down, left, right }
+    (part_one, part_two)
 }
 
-pub fn part1(input: &Input) -> usize {
-    count(input, (ORIGIN, RIGHT))
+pub fn part1(input: &Input) -> u32 {
+    input.0
 }
 
-pub fn part2(input: &Input) -> usize {
-    // Build list of edge tiles and directions to process.
-    let Input { grid, .. } = input;
-    let mut todo = Vec::new();
-
-    for x in 0..grid.width {
-        todo.push((Point::new(x, 0), DOWN));
-        todo.push((Point::new(x, grid.height - 1), UP));
-    }
-
-    for y in 0..grid.height {
-        todo.push((Point::new(0, y), RIGHT));
-        todo.push((Point::new(grid.width - 1, y), LEFT));
-    }
-
-    // Setup thread safe wrappers
-    let shared = Shared { input, tiles: AtomicUsize::new(0), mutex: Mutex::new(todo) };
-
-    // Use as many cores as possible to parallelize the search.
-    spawn(|| worker(&shared));
-
-    shared.tiles.into_inner()
+pub fn part2(input: &Input) -> u32 {
+    input.1
 }
 
-/// Process starting locations from a shared queue.
-fn worker(shared: &Shared<'_>) {
-    loop {
-        let start = {
-            let mut exclusive = shared.mutex.lock().unwrap();
-            let Some(start) = exclusive.pop() else {
+/// Starting from an edge, find either the first node marked by a splitter of any orientation or
+/// exit from another edge of the grid. If the node is not yet computed, then recursively compute
+/// the node and all descendants, caching the result to speed up future checks.
+///
+/// This does not mark paths in the grid to avoid corrupting potential future calculations.
+fn follow(graph: &mut Graph, mut position: Point, mut direction: Point) -> u32 {
+    let mut node = Node::new();
+
+    while graph.grid.contains(position) {
+        match graph.grid[position] {
+            // Retrieve cached value or compute recursively.
+            b'|' | b'-' => {
+                let index = match graph.state[position] {
+                    Todo => strong_connect(graph, position),
+                    Done(index) => index,
+                    OnStack(_) => unreachable!(),
+                };
+                node.tiles.union(&graph.nodes[index].tiles);
                 break;
-            };
-            start
-        };
-        shared.tiles.fetch_max(count(shared.input, start), Ordering::Relaxed);
+            }
+            // Mirrors change direction.
+            b'\\' => direction = Point::new(direction.y, direction.x),
+            b'/' => direction = Point::new(-direction.y, -direction.x),
+            // If we have already travelled on this path then this must be an exit from a splitter
+            // node already computed. The energized tiles can be at most equal so exit early.
+            _ => {
+                let index = (direction == LEFT || direction == RIGHT) as usize;
+                if graph.seen[position][index] {
+                    return 0;
+                }
+            }
+        }
+
+        node.tiles.insert(position);
+        position += direction;
+    }
+
+    node.tiles.size()
+}
+
+/// Traces the path of a beam until we hit the flat side of another splitter or exit the grid.
+fn beam(graph: &mut Graph, node: &mut Node, mut position: Point, mut direction: Point) {
+    while graph.grid.contains(position) {
+        match graph.grid[position] {
+            b'|' => {
+                // If we encounter the pointy edge of a splitter then this additional splitter is
+                // also part of this node. Nodes can contain multiple splitters in the same path.
+                if direction == UP || direction == DOWN {
+                    node.from.insert(position);
+                } else {
+                    node.to.insert(position);
+                    break;
+                }
+            }
+            b'-' => {
+                if direction == LEFT || direction == RIGHT {
+                    node.from.insert(position);
+                } else {
+                    node.to.insert(position);
+                    break;
+                }
+            }
+            // Mirrors change direction.
+            b'\\' => direction = Point::new(direction.y, direction.x),
+            b'/' => direction = Point::new(-direction.y, -direction.x),
+            // If we are travelling horizontally or vertically in the same tile where
+            // we have travelled in the same orientation before, then we're in a loop so break.
+            // Beams can cross perpendicularly without causing a cycle.
+            _ => {
+                let index = (direction == LEFT || direction == RIGHT) as usize;
+                if graph.seen[position][index] {
+                    break;
+                }
+                graph.seen[position][index] = true;
+            }
+        }
+
+        node.tiles.insert(position);
+        position += direction;
     }
 }
 
-/// Count the number of energized tiles from a single starting location.
-fn count(input: &Input, start: Pair) -> usize {
-    let Input { grid, up, down, left, right } = input;
+/// Tarjan's algorithm to find strongly connected components, e.g cycles in a directed graph.
+fn strong_connect(graph: &mut Graph, position: Point) -> usize {
+    // Push current index to stack and insert a dummy node to keep the vector index correct when
+    // processing children.
+    let index = graph.nodes.len();
+    graph.stack.push(index);
+    graph.nodes.push(Node::new());
 
-    let mut todo = VecDeque::with_capacity(1_000);
-    let mut seen: Grid<u8> = grid.same_size_with(0);
-    let mut energized: Grid<bool> = grid.same_size_with(false);
+    // Find all tiles energized by this node, the splitters that are part of it (`from`) and the
+    // possible splitters that are children (`to`).
+    let mut node = Node::new();
 
-    todo.push_back(start);
+    if graph.grid[position] == b'|' {
+        beam(graph, &mut node, position, UP);
+        beam(graph, &mut node, position + DOWN, DOWN);
+    } else {
+        beam(graph, &mut node, position, LEFT);
+        beam(graph, &mut node, position + RIGHT, RIGHT);
+    }
 
-    while let Some((position, direction)) = todo.pop_front() {
-        let mut next = |direction: u32| {
-            // Beams can loop, so check if we've already been here.
-            let mask = 1 << direction;
-            if seen[position] & mask != 0 {
-                return;
-            }
-            seen[position] |= mask;
+    // Mark all splitters belonging to this node as in progress.
+    node.from.iter().for_each(|&p| graph.state[p] = OnStack(index));
 
-            match direction {
-                UP => {
-                    let x = position.x;
-                    let last = up[position];
+    // If any children connect to a previous node then lowlink will become less than current index.
+    let mut lowlink = index;
 
-                    for y in last..position.y {
-                        energized[Point::new(x, y + 1)] = true;
-                    }
-                    if last >= 0 {
-                        todo.push_back((Point::new(x, last), UP));
-                    }
-                }
-                DOWN => {
-                    let x = position.x;
-                    let last = down[position];
-
-                    for y in position.y..last {
-                        energized[Point::new(x, y)] = true;
-                    }
-                    if last < grid.height {
-                        todo.push_back((Point::new(x, last), DOWN));
-                    }
-                }
-                LEFT => {
-                    let y = position.y;
-                    let last = left[position];
-
-                    for x in last..position.x {
-                        energized[Point::new(x + 1, y)] = true;
-                    }
-                    if last >= 0 {
-                        todo.push_back((Point::new(last, y), LEFT));
-                    }
-                }
-                RIGHT => {
-                    let y = position.y;
-                    let last = right[position];
-
-                    for x in position.x..last {
-                        energized[Point::new(x, y)] = true;
-                    }
-                    if last < grid.width {
-                        todo.push_back((Point::new(last, y), RIGHT));
-                    }
-                }
-                _ => unreachable!(),
-            }
-        };
-
-        match grid[position] {
-            b'.' => next(direction),
-            b'/' => match direction {
-                UP => next(RIGHT),
-                DOWN => next(LEFT),
-                LEFT => next(DOWN),
-                RIGHT => next(UP),
-                _ => unreachable!(),
-            },
-            b'\\' => match direction {
-                UP => next(LEFT),
-                DOWN => next(RIGHT),
-                LEFT => next(UP),
-                RIGHT => next(DOWN),
-                _ => unreachable!(),
-            },
-            b'|' => match direction {
-                UP | DOWN => next(direction),
-                LEFT | RIGHT => {
-                    next(UP);
-                    next(DOWN);
-                }
-                _ => unreachable!(),
-            },
-            b'-' => match direction {
-                LEFT | RIGHT => next(direction),
-                UP | DOWN => {
-                    next(LEFT);
-                    next(RIGHT);
-                }
-                _ => unreachable!(),
-            },
-            _ => unreachable!(),
+    for &next in &node.to {
+        match graph.state[next] {
+            Todo => lowlink = lowlink.min(strong_connect(graph, next)),
+            OnStack(other) => lowlink = lowlink.min(other),
+            Done(_) => (),
         }
     }
 
-    energized.bytes.iter().filter(|&&b| b).count()
+    // We are the root of a cycle (possibly an independent component of one).
+    if lowlink == index {
+        // Merge all nodes in the cycle into this one.
+        while let Some(next) = graph.stack.pop()
+            && next != index
+        {
+            let other = &graph.nodes[next];
+            node.tiles.union(&other.tiles);
+            node.from.extend(other.from.iter());
+            node.to.extend(other.to.iter());
+        }
+
+        // Mark node as done.
+        node.from.iter().for_each(|&p| graph.state[p] = Done(index));
+
+        // Merge depduplicated children, removing self-references that point to this node.
+        for &next in node.to.difference(&node.from) {
+            if let Done(other) = graph.state[next] {
+                node.tiles.union(&graph.nodes[other].tiles);
+            }
+        }
+    }
+
+    // Replace dummy node with real thing.
+    graph.nodes[index] = node;
+    lowlink
 }
