@@ -27,11 +27,11 @@ pub fn part2_testable(input: &[Reindeer], time: u32) -> u32 {
     let mut scores = vec![0; input.len()];
     let mut distances = vec![0; input.len()];
 
-    for minute in 1..=time {
+    for minute in 0..time {
         let mut furthest = 0;
 
         for (index, &reindeer) in input.iter().enumerate() {
-            let next = distance(reindeer, minute);
+            let next = distance(reindeer, minute + 1);
             distances[index] = next;
             furthest = furthest.max(next);
         }

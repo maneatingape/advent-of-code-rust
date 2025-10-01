@@ -102,7 +102,7 @@ fn astar<const L: i32, const U: i32>(grid: &Grid<i32>) -> i32 {
                 let mut next = index;
                 let mut extra = steps;
 
-                for i in 1..=U {
+                for i in 1..U + 1 {
                     if x + i >= size {
                         break;
                     }
@@ -120,7 +120,7 @@ fn astar<const L: i32, const U: i32>(grid: &Grid<i32>) -> i32 {
                 let mut next = index;
                 let mut extra = steps;
 
-                for i in 1..=U {
+                for i in 1..U + 1 {
                     if i > x {
                         break;
                     }
@@ -140,7 +140,7 @@ fn astar<const L: i32, const U: i32>(grid: &Grid<i32>) -> i32 {
                 let mut next = index;
                 let mut extra = steps;
 
-                for i in 1..=U {
+                for i in 1..U + 1 {
                     if y + i >= size {
                         break;
                     }
@@ -158,7 +158,7 @@ fn astar<const L: i32, const U: i32>(grid: &Grid<i32>) -> i32 {
                 let mut next = index;
                 let mut extra = steps;
 
-                for i in 1..=U {
+                for i in 1..U + 1 {
                     if i > y {
                         break;
                     }

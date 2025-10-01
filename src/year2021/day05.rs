@@ -44,7 +44,7 @@ fn vents(input: Vec<[usize; 4]>, grid: &mut [u8]) -> usize {
         let delta = (y2 - y1).signum() * 1000 + (x2 - x1).signum();
         let mut index = y1 * 1000 + x1;
 
-        for _ in 0..=count {
+        for _ in 0..count + 1 {
             if grid[index as usize] == 1 {
                 result += 1;
             }

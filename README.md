@@ -123,12 +123,12 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 | 14 | [Parabolic Reflector Dish](https://adventofcode.com/2023/day/14) | [Source](src/year2023/day14.rs) | 632 |
 | 15 | [Lens Library](https://adventofcode.com/2023/day/15) | [Source](src/year2023/day15.rs) | 84 |
 | 16 | [The Floor Will Be Lava](https://adventofcode.com/2023/day/16) | [Source](src/year2023/day16.rs) | 160 |
-| 17 | [Clumsy Crucible](https://adventofcode.com/2023/day/17) | [Source](src/year2023/day17.rs) | 2289 |
+| 17 | [Clumsy Crucible](https://adventofcode.com/2023/day/17) | [Source](src/year2023/day17.rs) | 2379 |
 | 18 | [Lavaduct Lagoon](https://adventofcode.com/2023/day/18) | [Source](src/year2023/day18.rs) | 17 |
 | 19 | [Aplenty](https://adventofcode.com/2023/day/19) | [Source](src/year2023/day19.rs) | 100 |
 | 20 | [Pulse Propagation](https://adventofcode.com/2023/day/20) | [Source](src/year2023/day20.rs) | 6 |
 | 21 | [Step Counter](https://adventofcode.com/2023/day/21) | [Source](src/year2023/day21.rs) | 182 |
-| 22 | [Sand Slabs](https://adventofcode.com/2023/day/22) | [Source](src/year2023/day22.rs) | 54 |
+| 22 | [Sand Slabs](https://adventofcode.com/2023/day/22) | [Source](src/year2023/day22.rs) | 40 |
 | 23 | [A Long Walk](https://adventofcode.com/2023/day/23) | [Source](src/year2023/day23.rs) | 68 |
 | 24 | [Never Tell Me The Odds](https://adventofcode.com/2023/day/24) | [Source](src/year2023/day24.rs) | 95 |
 | 25 | [Snowverload](https://adventofcode.com/2023/day/25) | [Source](src/year2023/day25.rs) | 179 |
@@ -175,7 +175,7 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 | 2 | [Dive!](https://adventofcode.com/2021/day/2) | [Source](src/year2021/day02.rs) | 12 |
 | 3 | [Binary Diagnostic](https://adventofcode.com/2021/day/3) | [Source](src/year2021/day03.rs) | 22 |
 | 4 | [Giant Squid](https://adventofcode.com/2021/day/4) | [Source](src/year2021/day04.rs) | 8 |
-| 5 | [Hydrothermal Venture](https://adventofcode.com/2021/day/5) | [Source](src/year2021/day05.rs) | 181 |
+| 5 | [Hydrothermal Venture](https://adventofcode.com/2021/day/5) | [Source](src/year2021/day05.rs) | 158 |
 | 6 | [Lanternfish](https://adventofcode.com/2021/day/6) | [Source](src/year2021/day06.rs) | 1 |
 | 7 | [The Treachery of Whales](https://adventofcode.com/2021/day/7) | [Source](src/year2021/day07.rs) | 8 |
 | 8 | [Seven Segment Search](https://adventofcode.com/2021/day/8) | [Source](src/year2021/day08.rs) | 14 |

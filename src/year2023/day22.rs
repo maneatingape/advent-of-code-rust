@@ -95,11 +95,11 @@ pub fn parse(input: &str) -> Input {
 
         // Find the highest z coordinate underneath the brick looking downwards along the z axis
         // so only considering x and y coordinates.
-        for j in (start..=end).step_by(step) {
+        for j in (start..end + 1).step_by(step) {
             top = top.max(heights[j]);
         }
 
-        for j in (start..=end).step_by(step) {
+        for j in (start..end + 1).step_by(step) {
             if heights[j] == top {
                 let index = indices[j];
                 if index != previous {
