@@ -214,7 +214,7 @@ fn segments(path: &str) -> impl Iterator<Item = (&str, &str)> {
 
 #[cfg(not(feature = "frivolity"))]
 fn visit(mut computer: Computer) -> i64 {
-    // Disable continous video feed
+    // Disable continuous video feed
     computer.input_ascii("n\n");
 
     let mut result = 0;
@@ -235,7 +235,7 @@ fn visit(mut computer: Computer) -> i64 {
     let mut previous = ' ';
     let mut buffer = String::new();
 
-    // Enable continous video feed
+    // Enable continuous video feed
     computer.input_ascii("y\n");
 
     while let State::Output(next) = computer.run() {

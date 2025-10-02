@@ -34,7 +34,7 @@
 //! ```
 //!
 //! Things start to get interesting at the 19th marble. When we pick the 23rd marble this will
-//! be 7 places counter clockwise, so we can optimize by not adding it at all the the circle.
+//! be 7 places counter clockwise, so we can optimize by not adding it at all to the circle.
 //! Instead we save the value for later.
 //!
 //! ```none

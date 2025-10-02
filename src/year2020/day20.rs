@@ -15,7 +15,7 @@
 //! ## Part One
 //!
 //! First we calculate the frequency of each edge, both forwards and backwards as tiles can be in
-//! any orientation. As there only 2¹⁰ or 1024 possible edge values we can use an array intead of a
+//! any orientation. As there only 2¹⁰ or 1024 possible edge values we can use an array instead of a
 //! hashtable for speed, converting the edges into a binary number to index the array.
 //!
 //! This results in 96 values that occur once and 528 values that occur twice. Then for every tile

@@ -7,7 +7,7 @@
 //! numbers, compared to storing all numbers in a single flat `vec`. Some further optimizations:
 //! * The first and second level indices of a number change only when it moves, so these can be
 //!   stored in a lookup array for fast access.
-//! * The size of each first level `vec` is the the sum of the second level `vec`s contained
+//! * The size of each first level `vec` is the sum of the second level `vec`s contained
 //!   inside. This is stored in the `skip` array to prevent recomputing on each move.
 //!
 //! This implementation is both faster and simpler than the previous version (preserved in the

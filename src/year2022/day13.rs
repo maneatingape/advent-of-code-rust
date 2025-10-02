@@ -3,7 +3,7 @@
 //! One possible approach is to parse the input into a tree, then compare recursively node
 //! by node. We're going to use a much faster and simpler approach by noting an observation about
 //! the input data. If the sequence `10` is replaced by any single character greater than `9` then
-//! we can compare the 2 packets *lexigraphically*. We'll replace all occurences of `10` with `A`
+//! we can compare the 2 packets *lexicographically*. We'll replace all occurrences of `10` with `A`
 //! then compare packets character by character.
 //!
 //! The rules to compare 2 packets become:
@@ -115,7 +115,7 @@ impl Iterator for Packet<'_> {
         self.extra.pop().or_else(|| {
             let (index, slice) = (self.index, self.slice);
 
-            // Replace occurences of "10" with "A"
+            // Replace occurrences of "10" with "A"
             if slice[index] == b'1' && slice[index + 1] == b'0' {
                 self.index += 2;
                 Some(b'A')

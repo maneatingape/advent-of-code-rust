@@ -92,7 +92,7 @@ pub fn part2(input: &[i64]) -> i64 {
         }
 
         // Non essential but hilarious. Enable feature then run program in a command line
-        // conosle to observe an animated game of breakout.
+        // console to observe an animated game of breakout.
         #[cfg(feature = "frivolity")]
         draw(&tiles, stride, score, blocks);
     }

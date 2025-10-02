@@ -16,10 +16,10 @@
 //!   assert_eq!(grid[point], b'2');
 //! ```
 //!
-//! A convenience [`parse`] method creates a `Grid` directly from a 2 dimenionsal set of
-//! ASCII characters, a common occurence in Advent of Code inputs. The [`same_size_with`] function
+//! A convenience [`parse`] method creates a `Grid` directly from a 2 dimensional set of
+//! ASCII characters, a common occurrence in Advent of Code inputs. The [`same_size_with`] function
 //! creates a grid of the same size, that can be used for in BFS algorithms for tracking visited
-//! location or for tracking cost in Djikstra.
+//! location or for tracking cost in Dijkstra.
 //!
 //! [`Point`]: crate::util::point
 //! [`parse`]: Grid::parse

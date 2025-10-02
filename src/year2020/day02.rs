@@ -3,7 +3,7 @@
 //! Parsing the rules upfront allows both part 1 and part 2 to be solved in a straightforward manner.
 //!
 //! There's no need to first convert the input into lines since we know that each rule has 4 parts.
-//! Instead we use the [`split`] method with a slice of delimeters to break the input into
+//! Instead we use the [`split`] method with a slice of delimiters to break the input into
 //! an `Iterator` of tokens, then use our utility [`chunk`] method to group the tokens into an
 //! array of size 4.
 //!

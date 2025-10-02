@@ -22,7 +22,7 @@ pub fn part1(input: &[u32]) -> u32 {
     let mut current = start;
     let mut cups = vec![0; 10];
 
-    // Link the 9 input cups, wrappping around to the start.
+    // Link the 9 input cups, wrapping around to the start.
     for &next in &input[1..] {
         cups[current] = next;
         current = next as usize;

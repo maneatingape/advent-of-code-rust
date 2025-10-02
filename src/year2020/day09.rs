@@ -2,7 +2,7 @@
 //!
 //! Part one is solved with a brute force search over every possible pair in the preamble, using a
 //! sliding window to advance to each number. To allow testing with the sample data that uses a
-//! preamble of 5 but preserve compile time optimization the `decrypt` method is
+//! preamble of 5 but preserve compile-time optimization, the `decrypt` method is
 //! [const generic](https://doc.rust-lang.org/reference/items/generics.html#const-generics)
 //! in the size of the preamble.
 //!

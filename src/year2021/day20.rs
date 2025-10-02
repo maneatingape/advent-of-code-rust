@@ -67,7 +67,7 @@ fn enhance(input: &Input, steps: usize) -> usize {
                 result << shift
             };
 
-            // If the edge pixels are 1 then the inital edge will look like
+            // If the edge pixels are 1 then the initial edge will look like
             // [##a]
             // [##b]
             // [##c]

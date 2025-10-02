@@ -7,7 +7,7 @@
 //! Part two uses exactly the same approach as [`day 17`] and most of the code is identical.
 //!
 //! As the black tiles are very sparse (about 8% for my input) it's faster to switch from
-//! a "pull" model where we check the surroundings neighbors of each tile, to a "push" model
+//! a "pull" model where we check the surrounding neighbors of each tile, to a "push" model
 //! where we update the neighbors of each black tile instead.
 //!
 //! [`day 17`]: crate::year2020::day17

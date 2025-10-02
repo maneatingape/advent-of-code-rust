@@ -1,18 +1,18 @@
 //! # Electromagnetic Moat
 //!
-//! Both parts are calculated at the same time by recurively building all possible bridge
-//! combinations. Two optimizations are used to speed things up ten times
+//! Both parts are calculated at the same time by recursively building all possible bridge
+//! combinations. Two optimizations are used to speed things up ten times.
 //!
 //! First ports that only appear in two components are merged. For example `2/17` and `17/3`
 //! becomes a single component `2/3` with a weight of 39 and a length of 2. This shaves about 30%
 //! off the time needed.
 //!
 //! The second optimization is far more critical and reduces the time needed by 85%. The
-//! observation is that compenets with two ports the same, for example `7/7` are always optimal
+//! observation is that components with two ports the same, for example `7/7` are always optimal
 //! to pick first, as they increase strength and length without changing the port number.
 //!
 //! If we can place such a component then there's no need to consider further components which
-//! reduces the total number of combination to consider.
+//! reduces the total number of combinations to consider.
 use crate::util::bitset::*;
 use crate::util::iter::*;
 use crate::util::parse::*;

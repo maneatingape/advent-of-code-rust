@@ -73,7 +73,7 @@ impl Input {
 /// Each node is assigned a unique index on a first come first served basis.
 /// Then the edges are gathered into a single vec so that each edge also has a unique index.
 ///
-/// As both node and edge indices are contigous this allows us to use a vec to store previously
+/// As both node and edge indices are contiguous this allows us to use a vec to store previously
 /// seen values which is must faster than using a `HashMap`.
 pub fn parse(input: &str) -> Input {
     let mut lookup = vec![usize::MAX; 26 * 26 * 26];
@@ -122,7 +122,7 @@ pub fn part2(_input: &Input) -> &'static str {
 /// Each node's name is exactly 3 lowercase ASCII letters. First we calculate a
 /// [perfect hash](https://en.wikipedia.org/wiki/Perfect_hash_function) by converting to a base 26
 /// number. Then we construct a perfect *minimal* hash by using the first index to lookup a
-/// contigous index into the nodes vec.
+/// contiguous index into the nodes vec.
 fn perfect_minimal_hash(lookup: &mut [usize], nodes: &mut Vec<Vec<usize>>, slice: &[u8]) -> usize {
     // Base 26 index.
     let hash = slice[..3].iter().fold(0, |acc, b| 26 * acc + ((b - b'a') as usize));

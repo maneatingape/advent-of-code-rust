@@ -3,7 +3,7 @@
 //! The transformation rules have any interesting property that the total number of
 //! distinct stone numbers is not very large, about 2000 for part one and 4000 for part two.
 //!
-//! This means that we can store the count of each distinct stone in a small contigous array
+//! This means that we can store the count of each distinct stone in a small contiguous array
 //! that is much faster to process than a recursive memoization approach.
 use crate::util::hash::*;
 use crate::util::parse::*;
@@ -23,7 +23,7 @@ pub fn part2(input: &[u64]) -> u64 {
 fn count(input: &[u64], blinks: usize) -> u64 {
     // Allocate enough room to prevent reallocations.
     let mut stones = Vec::with_capacity(5000);
-    // Maps number on stone to a much smaller contigous range of indices.
+    // Maps number on stone to a much smaller contiguous range of indices.
     let mut indices = FastMap::with_capacity(5000);
     // Numbers of any new stones generated during the previous blink.
     let mut todo = Vec::new();

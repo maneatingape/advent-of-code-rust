@@ -5,7 +5,7 @@
 //! roughly 8% is active and of the hypercube from part two only 3% is active for my input.
 //!
 //! To speed things up our high level strategy will flip from a "pull" model where we check the
-//! surroundings neighbors of each cell, to a "push" model where we update the neighbors of each
+//! surrounding neighbors of each cell, to a "push" model where we update the neighbors of each
 //! active cell instead.
 //!
 //! A `HashSet` is generally a good choice for very sparse infinite grids, however for this
@@ -14,7 +14,7 @@
 use crate::util::grid::*;
 use crate::util::point::*;
 
-/// x and y dimensions are in the plane of the input. Each dimension can expand at most two in each
+/// x and y dimensions are in the plane of the input. Each dimension can expand by at most two in each
 /// axis per round (one positive and one negative). Adding padding at the edges to avoid boundary
 /// checks gives a maximum width of 8 + 2 * (6 + 1) = 22 for the x and y dimensions and
 /// 1 + 2 * (6 + 1) = 15 for the z and w dimensions.
@@ -49,7 +49,7 @@ pub fn part1(input: &Grid<u8>) -> usize {
     boot_process(input, size, base, &[0])
 }
 
-/// Part two form a hypercube.
+/// Part two forms a hypercube.
 pub fn part2(input: &Grid<u8>) -> usize {
     let size = size::X * size::Y * size::Z * size::W;
     let base = stride::X + stride::Y + stride::Z + stride::W;

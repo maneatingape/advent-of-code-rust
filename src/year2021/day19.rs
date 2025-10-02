@@ -7,7 +7,7 @@
 //! * If we find a match of 12 or more overlapping beacons, then merge the beacons into the known
 //!   set.
 //!
-//! This approach will work but is a little slow as the number of potential comparisions is quite
+//! This approach will work but is a little slow as the number of potential comparisons is quite
 //! high. We can speed things up by first creating a "signature" for each beacon similar to how
 //! a hash is computed for an item in a hash map. Ideally this signature should be the same no
 //! matter what the rotation of the beacons, as this will reduce the number of comparisons by a

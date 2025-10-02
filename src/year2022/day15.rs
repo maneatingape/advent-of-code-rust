@@ -27,7 +27,7 @@ pub fn part1(input: &[Input]) -> i32 {
     part1_testable(input, 2_000_000)
 }
 
-/// A beacon cannot be located with the the radius of a sensor unless it is the closest beacon.
+/// A beacon cannot be located within the radius of a sensor unless it is the closest beacon.
 ///
 /// We first convert each scanner's diamond shaped area into a one dimensional range at the
 /// specified row. By sorting the ranges, we can quickly calculate the total number of distinct
@@ -82,7 +82,7 @@ pub fn part2(input: &[Input]) -> u64 {
 }
 
 /// The trick to solving this efficiently is to first *rotate* the corners of the diamond
-/// scanner shape by 45 degrees. This tranforms them into squares that make it much easier
+/// scanner shape by 45 degrees. This transforms them into squares that make it much easier
 /// to find the missing distress beacon.
 ///
 /// Of the entire 4000000 by 4000000 area the missing beacon must be located in the only

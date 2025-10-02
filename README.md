@@ -42,7 +42,7 @@ Place input files in `input/yearYYYY/dayDD.txt` including leading zeroes. For ex
 
 **Document**
 * Build docs including private items `cargo doc --document-private-items`
-* Build doc then open HTML landing page `cargo doc --document-private-items --open`
+* Build docs then open HTML landing page `cargo doc --document-private-items --open`
 
 **Miscellaneous**
 * Code quality lints `cargo clippy`

@@ -32,7 +32,7 @@
 //!
 //! Now for the really neat part. We can recursively find the number of ones in `y` by repeating
 //! the same process by setting the new `length` to `next`. We keep recursing until the length
-//! is less the size of the inital input and we can lookup the final count from the prefix sum.
+//! is less the size of the initial input and we can lookup the final count from the prefix sum.
 use crate::util::parse::*;
 
 /// Build a prefix sum of the number of ones at each length in the pattern

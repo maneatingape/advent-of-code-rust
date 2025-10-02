@@ -81,7 +81,7 @@ pub fn part1(input: &Input<'_>) -> u32 {
     let Input { workflows, parts } = input;
     let mut result = 0;
 
-    // We only care about the numbers and can ignore all delimeters and whitespace.
+    // We only care about the numbers and can ignore all delimiters and whitespace.
     for part in parts.iter_unsigned::<u32>().chunk::<4>() {
         let mut key = "in";
 

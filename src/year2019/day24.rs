@@ -19,7 +19,7 @@
 //! For example the bitmask for position `a` is `100010` and for position `h` is `1000101000100`.
 //!
 //! For each generation we bitwise `AND` each position with its mask, then use the [`count_ones`]
-//! intrinsic to to efficiently find the number of neighbors.
+//! intrinsic to efficiently find the number of neighbors.
 //!
 //! ## Part Two
 //!

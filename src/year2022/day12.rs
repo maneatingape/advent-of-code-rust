@@ -11,7 +11,7 @@
 //!
 //! For Part 2 we could search for all `a` locations and repeatedly start a BFS search from there,
 //! then find the lowest value. However a much faster approach is to search *backwards* from the
-//! end location. Due the the fact that BFS always explores closest nodes first this will find the
+//! end location. Due to the fact that BFS always explores closest nodes first this will find the
 //! closest `a` location in a single search. For part 1 it will have the same result, so we
 //! can re-use the same code.
 //!

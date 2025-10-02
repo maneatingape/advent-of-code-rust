@@ -6,7 +6,7 @@
 //! each combination of bag descriptions to a unique index.
 //!
 //! There are 18 different adjectives, for example shiny, bright, dark. Taking only the first two
-//! letters in enough to discriminate. For example the hash value for "shiny" is:
+//! letters is enough to discriminate. For example the hash value for "shiny" is:
 //!
 //! ```none
 //!     "sh" =>

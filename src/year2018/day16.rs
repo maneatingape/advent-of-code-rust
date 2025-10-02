@@ -74,7 +74,7 @@ pub fn part2(input: &Input) -> usize {
 
     while let Some(index) = masks.iter().position(|m| m.count_ones() == 1) {
         let mask = masks[index];
-        // This opcode has only 1 possible mapping, so remove possbility from other opcodes.
+        // This opcode has only 1 possible mapping, so remove possibility from other opcodes.
         masks.iter_mut().for_each(|m| *m &= !mask);
         // Add mapping.
         convert[index] = mask.trailing_zeros() as usize;

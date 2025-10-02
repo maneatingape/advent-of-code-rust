@@ -59,7 +59,7 @@ pub fn part1(input: &[u32]) -> u32 {
     input.iter().sum()
 }
 
-/// We want the number of combination with the fewest containers, so find first non-zero value.
+/// We want the number of combinations with the fewest containers, so find first non-zero value.
 pub fn part2(input: &[u32]) -> u32 {
     *input.iter().find(|&&n| n > 0).unwrap()
 }
