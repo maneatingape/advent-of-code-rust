@@ -58,8 +58,8 @@ Improvements to solutions are always appreciated. Please see the
 ## Performance
 
 Benchmarks are measured using the built-in `cargo bench` tool run on an [Apple M2 Max][apple-link].
-All 250 solutions from 2024 to 2015 complete sequentially in **571 milliseconds**.
-Interestingly 86% of the total time is spent on just 9 solutions.
+All 250 solutions from 2024 to 2015 complete sequentially in **562 milliseconds**.
+Interestingly 87% of the total time is spent on just 9 solutions.
 Performance is reasonable even on older hardware, for example a 2011 MacBook Pro with an
 [Intel i7-2720QM][intel-link] processor takes 3.5 seconds to run the same 250 solutions.
 
@@ -67,7 +67,7 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 
 | Year | [2015](#2015) | [2016](#2016) | [2017](#2017) | [2018](#2018) | [2019](#2019) | [2020](#2020) | [2021](#2021) | [2022](#2022) | [2023](#2023) | [2024](#2024) |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Benchmark (ms) | 17 | 119 | 88 | 35 | 16 | 270 | 9 | 8 | 5 | 4 |
+| Benchmark (ms) | 17 | 118 | 82 | 35 | 15 | 269 | 9 | 8 | 5 | 4 |
 
 ## 2024
 
