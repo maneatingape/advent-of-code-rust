@@ -46,6 +46,7 @@
 //! sorting a second time in this order.
 //!
 //! [`atan2`]: f64::atan2
+use crate::util::grid::*;
 use crate::util::math::*;
 use crate::util::point::*;
 use std::cmp::Ordering;
@@ -53,42 +54,50 @@ use std::cmp::Ordering;
 type Input = (i32, i32);
 
 pub fn parse(input: &str) -> Input {
-    let raw: Vec<_> = input.lines().map(str::as_bytes).collect();
-    let width = raw[0].len() as i32;
-    let height = raw.len() as i32;
+    let grid = Grid::parse(input);
+    let width = grid.width;
+    let height = grid.height;
 
     // Convert asteroids to `Point` objects.
     let mut points = Vec::new();
 
-    for (y, row) in raw.iter().enumerate() {
-        for (x, &col) in row.iter().enumerate() {
-            if col == b'#' {
-                points.push(Point::new(x as i32, y as i32));
+    for y in 0..height {
+        for x in 0..width {
+            let point = Point::new(x, y);
+            if grid[point] == b'#' {
+                points.push(point);
             }
         }
     }
 
     // Find asteroid with the highest visibility.
+    let mut seen = Grid::new(2 * width, 2 * height, 0);
+    let mut cache = grid.same_size_with(0);
     let mut visible = vec![0; points.len()];
-    let mut seen = vec![0; (4 * width * height) as usize];
     let mut max_visible = 0;
     let mut max_index = 0;
 
     for i in 0..(points.len() - 1) {
         for j in (i + 1)..points.len() {
-            let mut delta = points[j] - points[i];
+            let delta = points[j] - points[i];
+            let key = Point::new(delta.x.abs(), delta.y.abs());
+
+            let gcd = if cache[key] > 0 {
+                cache[key]
+            } else {
+                cache[key] = key.x.gcd(key.y);
+                cache[key]
+            };
 
             // Key insight is that points on the same line are integer multiples of each other.
-            let factor = delta.x.gcd(delta.y).abs();
-            delta.x /= factor;
-            delta.y /= factor;
+            let adjusted = Point::new(delta.x / gcd, delta.y / gcd);
 
             // This works as the points are in order from left to right and top to bottom,
             // so we process points from nearest to furthest.
-            let index = (2 * width) * (height + delta.y) + (width + delta.x);
+            let index = Point::new(width + adjusted.x, height + adjusted.y);
 
-            if seen[index as usize] <= i {
-                seen[index as usize] = i + 1;
+            if seen[index] <= i {
+                seen[index] = i + 1;
                 visible[i] += 1;
                 visible[j] += 1;
             }
