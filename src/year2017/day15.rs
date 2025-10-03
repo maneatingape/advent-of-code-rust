@@ -14,11 +14,12 @@ use std::sync::atomic::{AtomicBool, AtomicUsize, Ordering};
 use std::sync::mpsc::{Receiver, Sender, channel};
 use std::thread;
 
+const MOD: usize = 0x7fffffff;
 const PART_ONE: usize = 40_000_000;
 const PART_TWO: usize = 5_000_000;
 const BLOCK: usize = 50_000;
 
-type Input = (u32, u32);
+type Input = (usize, usize);
 
 /// State shared between all threads.
 pub struct Shared {
@@ -31,7 +32,7 @@ pub struct Shared {
 /// Generated numbers from `start` to `start + BLOCK`.
 struct Block {
     start: usize,
-    ones: u32,
+    ones: usize,
     fours: Vec<u16>,
     eights: Vec<u16>,
 }
@@ -51,11 +52,11 @@ pub fn parse(input: &str) -> Input {
     })
 }
 
-pub fn part1(input: &Input) -> u32 {
+pub fn part1(input: &Input) -> usize {
     input.0
 }
 
-pub fn part2(input: &Input) -> u32 {
+pub fn part2(input: &Input) -> usize {
     input.1
 }
 
@@ -63,18 +64,18 @@ fn sender(shared: &Shared, tx: &Sender<Block>) {
     while !shared.done.load(Ordering::Relaxed) {
         // Start at any point in the sequence using modular exponentiation.
         let start = shared.start.fetch_add(BLOCK, Ordering::Relaxed);
-        let mut first = shared.first * 16807.mod_pow(start, 0x7fffffff);
-        let mut second = shared.second * 48271.mod_pow(start, 0x7fffffff);
+        let mut first = shared.first * 16807.mod_pow(start, MOD);
+        let mut second = shared.second * 48271.mod_pow(start, MOD);
 
-        // Estimate capacity at one quarter or one eight, plus a little extra for variance.
+        // Estimate capacity at one quarter or one eight.
         let mut ones = 0;
-        let mut fours = Vec::with_capacity((BLOCK * 30) / 100);
-        let mut eights = Vec::with_capacity((BLOCK * 15) / 100);
+        let mut fours = Vec::with_capacity(BLOCK / 4);
+        let mut eights = Vec::with_capacity(BLOCK / 8);
 
         // Check part one pairs immediately while queueing part two pairs.
         for _ in 0..BLOCK {
-            first = (first * 16807) % 0x7fffffff;
-            second = (second * 48271) % 0x7fffffff;
+            first = fast_mod(first * 16807);
+            second = fast_mod(second * 48271);
 
             let left = first as u16;
             let right = second as u16;
@@ -94,76 +95,57 @@ fn sender(shared: &Shared, tx: &Sender<Block>) {
     }
 }
 
-fn receiver(shared: &Shared, rx: &Receiver<Block>) -> (u32, u32) {
-    let mut remaining = PART_TWO;
-    let mut part_two = 0;
-
+fn receiver(shared: &Shared, rx: &Receiver<Block>) -> Input {
     let mut required = 0;
     let mut out_of_order = FastMap::new();
-    let mut blocks = Vec::new();
 
-    let mut fours_block = 0;
-    let mut fours_index = 0;
+    let mut fours = Vec::with_capacity(PART_TWO + BLOCK);
+    let mut eights = Vec::with_capacity(PART_TWO + BLOCK);
+    let mut start = 0;
 
-    let mut eights_block = 0;
-    let mut eights_index = 0;
+    let mut part_one = 0;
+    let mut part_two = 0;
 
-    while remaining > 0 {
+    while required < PART_ONE || fours.len() < PART_TWO || eights.len() < PART_TWO {
         // Blocks could be received in any order, as there's no guarantee threads will finish
         // processing at the same time. The `start` field of the block defines the order they
         // must be added to the vec.
-        while fours_block >= blocks.len() || eights_block >= blocks.len() {
-            let block = rx.recv().unwrap();
+        while let Ok(block) = rx.try_recv() {
             out_of_order.insert(block.start, block);
-
-            while let Some(next) = out_of_order.remove(&required) {
-                blocks.push(next);
-                required += BLOCK;
-            }
         }
 
-        // Iterate over the minimum block size or numbers left to check.
-        let fours = &blocks[fours_block].fours;
-        let eights = &blocks[eights_block].eights;
-        let iterations = remaining.min(fours.len() - fours_index).min(eights.len() - eights_index);
-
-        remaining -= iterations;
-
-        for _ in 0..iterations {
-            if fours[fours_index] == eights[eights_index] {
-                part_two += 1;
-            }
-            fours_index += 1;
-            eights_index += 1;
-        }
-
-        // If we've checked all the numbers in a block, advance to the next one.
-        // This may require waiting for a worker thread to create it first.
-        if fours_index == fours.len() {
-            fours_block += 1;
-            fours_index = 0;
-        }
-        if eights_index == eights.len() {
-            eights_block += 1;
-            eights_index = 0;
-        }
-    }
-
-    // Just in case, make sure we have enough blocks for part one.
-    while required < PART_ONE {
-        let block = rx.recv().unwrap();
-        out_of_order.insert(block.start, block);
-
-        while let Some(next) = out_of_order.remove(&required) {
-            blocks.push(next);
+        while let Some(block) = out_of_order.remove(&required) {
             required += BLOCK;
+
+            if required <= PART_ONE {
+                part_one += block.ones;
+            }
+
+            if fours.len() < PART_TWO {
+                fours.extend_from_slice(&block.fours);
+            }
+
+            if eights.len() < PART_TWO {
+                eights.extend_from_slice(&block.eights);
+            }
+
+            let end = PART_TWO.min(fours.len()).min(eights.len());
+            part_two +=
+                fours[start..end].iter().zip(&eights[start..end]).filter(|(a, b)| a == b).count();
+            start = end;
         }
     }
 
-    // Signal worker thread to finish.
+    // Signal worker threads to finish.
     shared.done.store(true, Ordering::Relaxed);
 
-    // Return results.
-    let part_one = blocks.iter().take(PART_ONE / BLOCK).map(|p| p.ones).sum();
     (part_one, part_two)
+}
+
+#[inline]
+fn fast_mod(n: usize) -> usize {
+    let low = n & MOD;
+    let high = n >> 31;
+    let sum = low + high;
+    if sum < MOD { sum } else { sum - MOD }
 }
