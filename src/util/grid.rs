@@ -38,10 +38,11 @@ impl Grid<u8> {
     #[inline]
     pub fn parse(input: &str) -> Self {
         let raw: Vec<_> = input.lines().map(str::as_bytes).collect();
+
         let width = raw[0].len() as i32;
         let height = raw.len() as i32;
-        let mut bytes = Vec::with_capacity((width * height) as usize);
-        raw.iter().for_each(|slice| bytes.extend_from_slice(slice));
+        let bytes = raw.concat();
+
         Grid { width, height, bytes }
     }
 

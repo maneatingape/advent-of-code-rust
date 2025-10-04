@@ -30,7 +30,7 @@ fn decompress(mut slice: &[u8], part_two: bool) -> usize {
         length += start + result * repeat;
     }
 
-    // Add remaining plain data that doesn't container any marker.
+    // Add remaining plain data that doesn't contain any marker.
     length + slice.len()
 }
 

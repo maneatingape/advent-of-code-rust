@@ -7,6 +7,7 @@ macro_rules! benchmark {
         mod $year {$(
             mod $day {
                 use aoc::$year::$day::*;
+                use aoc::util::ansi::*;
                 use std::fs::read_to_string;
                 use std::sync::LazyLock;
                 use test::Bencher;
@@ -15,7 +16,10 @@ macro_rules! benchmark {
                     let year = stringify!($year);
                     let day = stringify!($day);
                     let path = format!("input/{year}/{day}.txt");
-                    read_to_string(&path).expect(&path)
+
+                    read_to_string(&path).unwrap_or_else(|_| {
+                        panic!("Missing input file {BOLD}{WHITE}{path}{RESET}");
+                    })
                 });
 
                 #[bench]

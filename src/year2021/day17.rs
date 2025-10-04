@@ -124,9 +124,8 @@ pub fn part2(input: &Input) -> usize {
         }
     }
 
-    for dy in min_dy..max_dy {
+    for mut dy in min_dy..max_dy {
         let mut y = 0;
-        let mut dy = dy;
         let mut t = 0;
         let mut first = true;
 

@@ -2,6 +2,8 @@
 //!
 //! Solves both parts simultaneously using a custom parser instead of
 //! [regex](https://en.wikipedia.org/wiki/Regular_expression).
+use crate::util::parse::*;
+
 type Input = (u32, u32);
 
 pub fn parse(input: &str) -> Input {
@@ -38,7 +40,7 @@ pub fn parse(input: &str) -> Input {
         let mut first = 0;
 
         while memory[index].is_ascii_digit() {
-            first = 10 * first + (memory[index] - b'0') as u32;
+            first = 10 * first + memory[index].to_decimal() as u32;
             index += 1;
         }
 
@@ -52,7 +54,7 @@ pub fn parse(input: &str) -> Input {
         let mut second = 0;
 
         while memory[index].is_ascii_digit() {
-            second = 10 * second + (memory[index] - b'0') as u32;
+            second = 10 * second + memory[index].to_decimal() as u32;
             index += 1;
         }
 
@@ -65,9 +67,7 @@ pub fn parse(input: &str) -> Input {
         // Multiply
         let product = first * second;
         part_one += product;
-        if enabled {
-            part_two += product;
-        }
+        part_two += if enabled { product } else { 0 };
     }
 
     (part_one, part_two)

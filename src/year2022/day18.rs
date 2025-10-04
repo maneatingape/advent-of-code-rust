@@ -59,8 +59,8 @@ pub fn part2(input: &[u8]) -> u32 {
 fn count(cube: &[u8], adjust: fn(u32) -> u32) -> u32 {
     let mut total = 0;
 
-    for i in 0..cube.len() {
-        if cube[i] == 1 {
+    for (i, &cell) in cube.iter().enumerate() {
+        if cell == 1 {
             // No need for boundary checks as all cubes are at least 1 away from the edge.
             total += adjust(
                 (cube[i - 1]

@@ -20,7 +20,7 @@ impl Computer {
     pub fn new(input: &[i64]) -> Computer {
         let mut code = Vec::with_capacity(input.len() + EXTRA);
         code.extend(input.iter().map(|&i| i as usize));
-        code.resize(input.len() + EXTRA, 0);
+        code.resize(code.len() + EXTRA, 0);
 
         Computer { pc: 0, base: 0, code, input: VecDeque::new() }
     }
@@ -124,11 +124,12 @@ impl Computer {
 
     /// Calculates an address using one of the three possible address modes.
     #[inline]
-    fn address(&mut self, mode: usize, offset: usize) -> usize {
+    fn address(&self, mode: usize, offset: usize) -> usize {
+        let index = self.pc + offset;
         match mode % 10 {
-            0 => self.code[self.pc + offset],
-            1 => self.pc + offset,
-            2 => self.base.wrapping_add(self.code[self.pc + offset]),
+            0 => self.code[index],
+            1 => index,
+            2 => self.base.wrapping_add(self.code[index]),
             _ => unreachable!(),
         }
     }

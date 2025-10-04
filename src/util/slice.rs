@@ -31,11 +31,8 @@ impl<T> SliceOps<T> for &mut [T] {
 
         while i < n {
             if c[i] < i {
-                if i.is_multiple_of(2) {
-                    self.swap(0, i);
-                } else {
-                    self.swap(c[i], i);
-                }
+                let swap_index = if i.is_multiple_of(2) { 0 } else { c[i] };
+                self.swap(swap_index, i);
                 callback(self);
                 c[i] += 1;
                 i = 1;

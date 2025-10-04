@@ -7,7 +7,7 @@
 //! We will use both approaches for speed, the first in part 1 and the second in part 2.
 //!
 //! For part 2 we can determine the final size of the paper by taking the *last* x and y
-//! coordinates from the fold instructions. It's then faster and more convenienent to process
+//! coordinates from the fold instructions. It's then faster and more convenient to process
 //! each point completely and update the final location, than to step through intermediate folds.
 use crate::util::hash::*;
 use crate::util::iter::*;

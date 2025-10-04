@@ -8,51 +8,41 @@ use crate::util::parse::*;
 const DIGITS: [&[u8]; 9] =
     [b"one", b"two", b"three", b"four", b"five", b"six", b"seven", b"eight", b"nine"];
 
-pub fn parse(input: &str) -> Vec<&str> {
-    input.lines().collect()
+pub fn parse(input: &str) -> Vec<&[u8]> {
+    input.lines().map(str::as_bytes).collect()
 }
 
-pub fn part1(input: &[&str]) -> u32 {
+pub fn part1(input: &[&[u8]]) -> u32 {
     input
         .iter()
         .map(|line| {
-            let first = line.bytes().find(u8::is_ascii_digit).unwrap().to_decimal();
-            let last = line.bytes().rfind(u8::is_ascii_digit).unwrap().to_decimal();
+            let first = line.iter().find(|b| b.is_ascii_digit()).unwrap().to_decimal();
+            let last = line.iter().rfind(|b| b.is_ascii_digit()).unwrap().to_decimal();
             (10 * first + last) as u32
         })
         .sum()
 }
 
-pub fn part2(input: &[&str]) -> usize {
+pub fn part2(input: &[&[u8]]) -> usize {
     input
         .iter()
         .map(|line| {
-            let mut line = line.as_bytes();
-
-            let first = 'outer: loop {
-                if line[0].is_ascii_digit() {
-                    break line[0].to_decimal() as usize;
+            let digit = |i: usize| -> Option<usize> {
+                if line[i].is_ascii_digit() {
+                    return Some(line[i].to_decimal() as usize);
                 }
+
                 for (value, digit) in DIGITS.iter().enumerate() {
-                    if line.starts_with(digit) {
-                        break 'outer value + 1;
+                    if line[i..].starts_with(digit) {
+                        return Some(value + 1);
                     }
                 }
-                line = &line[1..];
+
+                None
             };
 
-            let last = 'outer: loop {
-                if line[line.len() - 1].is_ascii_digit() {
-                    break line[line.len() - 1].to_decimal() as usize;
-                }
-                for (value, digit) in DIGITS.iter().enumerate() {
-                    if line.ends_with(digit) {
-                        break 'outer value + 1;
-                    }
-                }
-                line = &line[..line.len() - 1];
-            };
-
+            let first = (0..line.len()).find_map(digit).unwrap();
+            let last = (0..line.len()).rev().find_map(digit).unwrap();
             10 * first + last
         })
         .sum()

@@ -169,5 +169,5 @@ fn step(current: &[usize], decays: &[Vec<usize>]) -> [usize; 92] {
 }
 
 fn length(current: &[usize], sizes: &[usize]) -> usize {
-    current.iter().zip(sizes.iter()).map(|(c, s)| c * s).sum()
+    current.iter().zip(sizes).map(|(c, s)| c * s).sum()
 }

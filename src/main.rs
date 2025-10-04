@@ -66,21 +66,21 @@ struct Solution {
 macro_rules! run {
     ($year:tt $($day:tt),*) => {
         fn $year() -> Vec<Solution> {
-            vec![$({
-                let year = stringify!($year).unsigned();
-                let day = stringify!($day).unsigned();
-                let wrapper = |data: &str| {
-                    use aoc::$year::$day::*;
+            vec![$(
+                Solution {
+                    year: stringify!($year).unsigned(),
+                    day: stringify!($day).unsigned(),
+                    wrapper: |data: &str| {
+                        use aoc::$year::$day::*;
 
-                    let input = parse(&data);
-                    let part1 = part1(&input);
-                    let part2 = part2(&input);
+                        let input = parse(&data);
+                        let part1 = part1(&input).to_string();
+                        let part2 = part2(&input).to_string();
 
-                    (part1.to_string(), part2.to_string())
-                };
-
-                Solution { year, day, wrapper }
-            },)*]
+                        (part1, part2)
+                    }
+                }
+            ,)*]
         }
     }
 }

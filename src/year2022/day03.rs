@@ -34,7 +34,7 @@ pub fn parse(input: &str) -> Vec<&str> {
 pub fn part1(input: &[&str]) -> u32 {
     input
         .iter()
-        .map(|rucksack| {
+        .map(|&rucksack| {
             let (a, b) = rucksack.split_at(rucksack.len() / 2);
             priority(mask(a) & mask(b))
         })

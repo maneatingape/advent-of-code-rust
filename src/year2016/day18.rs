@@ -37,7 +37,7 @@ fn count(input: &str, rows: usize) -> usize {
     // half the input to prevent bits spilling over.
     let mask = (1 << (input.len() / 2)) - 1;
     // Represent each trap as a `1` bit.
-    let traps = |acc: u64, b: u8| (acc << 1) | (b == b'^') as u64;
+    let traps = |acc: u64, b: u8| (acc << 1) | u64::from(b == b'^');
 
     // Split traps into two halves.
     let mut even = input.bytes().step_by(2).fold(0, traps);

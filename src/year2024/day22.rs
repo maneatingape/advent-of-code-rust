@@ -67,10 +67,10 @@ mod scalar {
         let mut part_two = vec![0; 130321];
         let mut seen = vec![u16::MAX; 130321];
 
-        for (id, number) in iter.enumerate() {
+        for (id, &number) in iter.enumerate() {
             let id = id as u16;
 
-            let zeroth = *number;
+            let zeroth = number;
             let first = hash(zeroth);
             let second = hash(first);
             let third = hash(second);

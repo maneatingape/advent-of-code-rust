@@ -93,11 +93,7 @@ fn enhance(input: &Input, steps: usize) -> usize {
         end += 1;
 
         // Calculate the next value for edge pixels beyond the boundary.
-        if default == 0 {
-            default = algorithm[0];
-        } else {
-            default = algorithm[511];
-        }
+        default = if default == 0 { algorithm[0] } else { algorithm[511] };
     }
 
     pixels.iter().filter(|&&p| p == 1).count()

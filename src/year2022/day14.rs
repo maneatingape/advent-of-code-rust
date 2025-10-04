@@ -63,15 +63,15 @@ pub fn parse(input: &str) -> Cave {
 
     for row in points {
         for window in row.windows(4).step_by(2) {
-            if let &[x1, y1, x2, y2] = window {
-                if x1 == x2 {
-                    for y in y1.min(y2)..=y1.max(y2) {
-                        kind[width * y + x1 + height - 500] = Stopped;
-                    }
-                } else {
-                    for x in x1.min(x2)..=x1.max(x2) {
-                        kind[width * y1 + x + height - 500] = Stopped;
-                    }
+            let &[x1, y1, x2, y2] = window else { unreachable!() };
+
+            if x1 == x2 {
+                for y in y1.min(y2)..=y1.max(y2) {
+                    kind[width * y + x1 + height - 500] = Stopped;
+                }
+            } else {
+                for x in x1.min(x2)..=x1.max(x2) {
+                    kind[width * y1 + x + height - 500] = Stopped;
                 }
             }
         }

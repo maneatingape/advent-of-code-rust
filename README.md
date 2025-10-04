@@ -90,7 +90,7 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 | 13 | [Claw Contraption](https://adventofcode.com/2024/day/13) | [Source](src/year2024/day13.rs) | 14 |
 | 14 | [Restroom Redoubt](https://adventofcode.com/2024/day/14) | [Source](src/year2024/day14.rs) | 74 |
 | 15 | [Warehouse Woes](https://adventofcode.com/2024/day/15) | [Source](src/year2024/day15.rs) | 303 |
-| 16 | [Reindeer Maze](https://adventofcode.com/2024/day/16) | [Source](src/year2024/day16.rs) | 390 |
+| 16 | [Reindeer Maze](https://adventofcode.com/2024/day/16) | [Source](src/year2024/day16.rs) | 350 |
 | 17 | [Chronospatial Computer](https://adventofcode.com/2024/day/17) | [Source](src/year2024/day17.rs) | 2 |
 | 18 | [RAM Run](https://adventofcode.com/2024/day/18) | [Source](src/year2024/day18.rs) | 42 |
 | 19 | [Linen Layout](https://adventofcode.com/2024/day/19) | [Source](src/year2024/day19.rs) | 110 |
@@ -124,7 +124,7 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 | 15 | [Lens Library](https://adventofcode.com/2023/day/15) | [Source](src/year2023/day15.rs) | 84 |
 | 16 | [The Floor Will Be Lava](https://adventofcode.com/2023/day/16) | [Source](src/year2023/day16.rs) | 160 |
 | 17 | [Clumsy Crucible](https://adventofcode.com/2023/day/17) | [Source](src/year2023/day17.rs) | 2379 |
-| 18 | [Lavaduct Lagoon](https://adventofcode.com/2023/day/18) | [Source](src/year2023/day18.rs) | 17 |
+| 18 | [Lavaduct Lagoon](https://adventofcode.com/2023/day/18) | [Source](src/year2023/day18.rs) | 11 |
 | 19 | [Aplenty](https://adventofcode.com/2023/day/19) | [Source](src/year2023/day19.rs) | 100 |
 | 20 | [Pulse Propagation](https://adventofcode.com/2023/day/20) | [Source](src/year2023/day20.rs) | 6 |
 | 21 | [Step Counter](https://adventofcode.com/2023/day/21) | [Source](src/year2023/day21.rs) | 182 |
@@ -145,7 +145,7 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 | 4 | [Camp Cleanup](https://adventofcode.com/2022/day/4) | [Source](src/year2022/day04.rs) | 8 |
 | 5 | [Supply Stacks](https://adventofcode.com/2022/day/5) | [Source](src/year2022/day05.rs) | 13 |
 | 6 | [Tuning Trouble](https://adventofcode.com/2022/day/6) | [Source](src/year2022/day06.rs) | 3 |
-| 7 | [No Space Left On Device](https://adventofcode.com/2022/day/7) | [Source](src/year2022/day07.rs) | 14 |
+| 7 | [No Space Left On Device](https://adventofcode.com/2022/day/7) | [Source](src/year2022/day07.rs) | 11 |
 | 8 | [Treetop Tree House](https://adventofcode.com/2022/day/8) | [Source](src/year2022/day08.rs) | 51 |
 | 9 | [Rope Bridge](https://adventofcode.com/2022/day/9) | [Source](src/year2022/day09.rs) | 107 |
 | 10 | [Cathode-Ray Tube](https://adventofcode.com/2022/day/10) | [Source](src/year2022/day10.rs) | 2 |
@@ -209,7 +209,7 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 | 4 | [Passport Processing](https://adventofcode.com/2020/day/4) | [Source](src/year2020/day04.rs) | 38 |
 | 5 | [Binary Boarding](https://adventofcode.com/2020/day/5) | [Source](src/year2020/day05.rs) | 11 |
 | 6 | [Custom Customs](https://adventofcode.com/2020/day/6) | [Source](src/year2020/day06.rs) | 35 |
-| 7 | [Handy Haversacks](https://adventofcode.com/2020/day/7) | [Source](src/year2020/day07.rs) | 69 |
+| 7 | [Handy Haversacks](https://adventofcode.com/2020/day/7) | [Source](src/year2020/day07.rs) | 58 |
 | 8 | [Handheld Halting](https://adventofcode.com/2020/day/8) | [Source](src/year2020/day08.rs) | 8 |
 | 9 | [Encoding Error](https://adventofcode.com/2020/day/9) | [Source](src/year2020/day09.rs) | 9 |
 | 10 | [Adapter Array](https://adventofcode.com/2020/day/10) | [Source](src/year2020/day10.rs) | 1 |
@@ -286,7 +286,7 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 | 17 | [Reservoir Research ](https://adventofcode.com/2018/day/17) | [Source](src/year2018/day17.rs) | 151 |
 | 18 | [Settlers of The North Pole](https://adventofcode.com/2018/day/18) | [Source](src/year2018/day18.rs) | 384 |
 | 19 | [Go With The Flow](https://adventofcode.com/2018/day/19) | [Source](src/year2018/day19.rs) | 1 |
-| 20 | [A Regular Map](https://adventofcode.com/2018/day/20) | [Source](src/year2018/day20.rs) | 36 |
+| 20 | [A Regular Map](https://adventofcode.com/2018/day/20) | [Source](src/year2018/day20.rs) | 24 |
 | 21 | [Chronal Conversion](https://adventofcode.com/2018/day/21) | [Source](src/year2018/day21.rs) | 66 |
 | 22 | [Mode Maze](https://adventofcode.com/2018/day/22) | [Source](src/year2018/day22.rs) | 3197 |
 | 23 | [Experimental Emergency Teleportation](https://adventofcode.com/2018/day/23) | [Source](src/year2018/day23.rs) | 506 |

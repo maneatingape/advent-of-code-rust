@@ -115,9 +115,9 @@ pub fn part2(packet: &Packet) -> u64 {
                     1 => iter.product(),
                     2 => iter.min().unwrap(),
                     3 => iter.max().unwrap(),
-                    5 => (iter.next().unwrap() > iter.next().unwrap()) as u64,
-                    6 => (iter.next().unwrap() < iter.next().unwrap()) as u64,
-                    7 => (iter.next().unwrap() == iter.next().unwrap()) as u64,
+                    5 => u64::from(iter.next().unwrap() > iter.next().unwrap()),
+                    6 => u64::from(iter.next().unwrap() < iter.next().unwrap()),
+                    7 => u64::from(iter.next().unwrap() == iter.next().unwrap()),
                     _ => unreachable!(),
                 }
             }

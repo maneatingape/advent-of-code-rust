@@ -66,7 +66,7 @@ fn signal<'a>(
         return *result;
     }
 
-    let result = if key.chars().next().unwrap().is_ascii_digit() {
+    let result = if key.as_bytes()[0].is_ascii_digit() {
         key.unsigned()
     } else {
         match circuit[key] {

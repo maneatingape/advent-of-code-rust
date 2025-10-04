@@ -104,12 +104,12 @@ pub fn part2_testable(input: &[Input], size: i32) -> u64 {
         right.insert(sensor.x - sensor.y + manhattan + 1);
     }
 
-    let horizontal: Vec<_> = top.intersection(&bottom).collect();
-    let vertical: Vec<_> = left.intersection(&right).collect();
+    let horizontal: Vec<_> = top.intersection(&bottom).copied().collect();
+    let vertical: Vec<_> = left.intersection(&right).copied().collect();
     let range = 0..(size + 1);
 
-    for &&x in &vertical {
-        for &&y in &horizontal {
+    for &x in &vertical {
+        for &y in &horizontal {
             // Rotate intersection point counter clockwise and scale by 1 / √2
             // to return to original coordinates.
             #[expect(clippy::manual_midpoint)]

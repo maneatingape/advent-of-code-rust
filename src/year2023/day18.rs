@@ -51,13 +51,12 @@ pub fn part2(input: &Input) -> i64 {
 
 /// Find the volume of the lava which is the number of interior and boundary points.
 fn lava(moves: &[Move]) -> i64 {
-    let mut previous;
     let mut position = ORIGIN;
     let mut area = 0;
     let mut perimeter = 0;
 
     for &(direction, amount) in moves {
-        previous = position;
+        let previous = position;
         position += direction * amount;
         area += determinant(previous, position);
         perimeter += amount as i64;

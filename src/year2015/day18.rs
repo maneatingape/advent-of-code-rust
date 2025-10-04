@@ -77,7 +77,8 @@ fn game_of_life(input: &Lights, part_two: bool) -> u32 {
         for y in 0..100 {
             for x in 0..7 {
                 // Add left and right neighbors from this block.
-                let mut sum = grid[y][x] + (grid[y][x] >> 4) + (grid[y][x] << 4);
+                let cell = grid[y][x];
+                let mut sum = cell + (cell >> 4) + (cell << 4);
 
                 // Add immediate right or left neighbor from previous or next block.
                 if x > 0 {
@@ -128,7 +129,7 @@ fn game_of_life(input: &Lights, part_two: bool) -> u32 {
         (grid, next) = (next, grid);
     }
 
-    grid.iter().map(|row| row.iter().map(|n| n.count_ones()).sum::<u32>()).sum()
+    grid.iter().flat_map(|row| row.iter()).map(|n| n.count_ones()).sum()
 }
 
 fn default() -> Lights {

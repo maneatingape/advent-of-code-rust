@@ -31,7 +31,7 @@ pub fn parse(input: &str) -> Vec<Robot> {
 pub fn part1(input: &[Robot]) -> i32 {
     let mut quadrants = [0; 4];
 
-    for [x, y, dx, dy] in input {
+    for &[x, y, dx, dy] in input {
         let x = (x + 100 * dx) % 101;
         let y = (y + 100 * dy) % 103;
 

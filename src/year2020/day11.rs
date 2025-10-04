@@ -101,10 +101,10 @@ pub fn simulate(input: &Grid<u8>, part_one: bool, limit: u8) -> u32 {
 
             if current[index] == 0 && total == 0 {
                 next[index] = 1;
-                change |= true;
+                change = true;
             } else if current[index] == 1 && total >= limit {
                 next[index] = 0;
-                change |= true;
+                change = true;
             } else {
                 next[index] = current[index];
             }

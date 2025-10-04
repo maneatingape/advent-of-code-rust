@@ -201,5 +201,5 @@ pub fn part2_testable(input: &u32, minutes: usize) -> u32 {
         (grid, next) = (next, grid);
     }
 
-    grid[start..end].iter().copied().map(u32::count_ones).sum()
+    grid[start..end].iter().map(|&n| n.count_ones()).sum()
 }

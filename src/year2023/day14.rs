@@ -26,7 +26,7 @@
 //!     0 0 0 1 1 2 2 2
 //! ```
 //!
-//! The the number of balls the come to rest against each fixed point is counted, for example:
+//! The number of balls that come to rest against each fixed point is counted, for example:
 //!
 //! ```none
 //!     OO#.#OO

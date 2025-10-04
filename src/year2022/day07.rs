@@ -60,9 +60,9 @@ pub fn parse(input: &str) -> Vec<u32> {
         }
     }
 
-    while !stack.is_empty() {
+    while let Some(prev) = stack.pop() {
         sizes.push(total);
-        total += stack.pop().unwrap();
+        total += prev;
     }
 
     sizes

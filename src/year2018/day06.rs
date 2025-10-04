@@ -261,30 +261,10 @@ pub fn part2_testable(input: &Input, max_distance: i32) -> i32 {
 
 /// Calculate the change in distance moving left or up.
 fn prev(slice: &[i32], n: i32) -> i32 {
-    let mut total = 0;
-
-    for &s in slice {
-        if s >= n {
-            total += 1;
-        } else {
-            total -= 1;
-        }
-    }
-
-    total
+    slice.iter().map(|&s| if s >= n { 1 } else { -1 }).sum()
 }
 
 /// Calculate the change in distance moving down or right.
 fn next(slice: &[i32], n: i32) -> i32 {
-    let mut total = 0;
-
-    for &s in slice {
-        if s <= n {
-            total += 1;
-        } else {
-            total -= 1;
-        }
-    }
-
-    total
+    slice.iter().map(|&s| if s <= n { 1 } else { -1 }).sum()
 }

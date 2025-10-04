@@ -55,7 +55,9 @@ fn sort(input: &[Hand], j: usize) -> usize {
             });
 
             let mut freq = [0; 15];
-            rank.iter().for_each(|&r| freq[r] += 1);
+            for r in rank {
+                freq[r] += 1;
+            }
 
             let jokers = freq[1];
             freq[1] = 0;
@@ -67,7 +69,7 @@ fn sort(input: &[Hand], j: usize) -> usize {
             // into the nibbles of a `usize`.
             let mut key = 0;
 
-            for f in freq.iter().take(5) {
+            for &f in &freq[..5] {
                 key = (key << 4) | f;
             }
             for r in rank {

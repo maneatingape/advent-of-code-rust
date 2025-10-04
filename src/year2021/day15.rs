@@ -45,10 +45,10 @@ pub fn part2(input: &Square) -> usize {
 
     let mut expanded = Square { size: 5 * size, bytes: vec![0; 25 * size * size] };
 
-    for (i, b) in bytes.iter().enumerate() {
+    for (i, &b) in bytes.iter().enumerate() {
         let x1 = i % size;
         let y1 = i / size;
-        let base = *b as usize;
+        let base = b as usize;
 
         for x2 in 0..5 {
             for y2 in 0..5 {

@@ -56,8 +56,8 @@ pub fn part1(input: &Input) -> u32 {
             let b = grid[p];
 
             if !b.is_ascii_digit() && b != b'.' {
-                for next in DIAGONAL.iter().copied().map(|d| p + d) {
-                    let index = seen[next];
+                for d in DIAGONAL {
+                    let index = seen[p + d];
                     if index != 0 {
                         result += parts[index];
                         // Only count each number once when its adjacent to multiple symbols.
@@ -87,8 +87,8 @@ pub fn part2(input: &Input) -> u32 {
 
                 // Rely on the left to right and top to bottom order of DIAGONAL
                 // to detect distinct numbers.
-                for next in DIAGONAL.iter().copied().map(|d| p + d) {
-                    let index = seen[next];
+                for d in DIAGONAL {
+                    let index = seen[p + d];
                     if index != 0 && index != previous {
                         previous = index;
                         distinct += 1;

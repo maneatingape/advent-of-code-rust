@@ -89,21 +89,14 @@ pub fn parse(input: &str) -> Haversack {
 pub fn part1(input: &Haversack) -> usize {
     fn helper(key: usize, haversack: &Haversack, cache: &mut [Option<bool>]) -> bool {
         if let Some(value) = cache[key] {
-            value
-        } else {
-            let mut value = false;
-            let mut iter = haversack.bags[key].iter();
-
-            while let Some(Some(Rule { next, .. })) = iter.next() {
-                if helper(*next, haversack, cache) {
-                    value = true;
-                    break;
-                }
-            }
-
-            cache[key] = Some(value);
-            value
+            return value;
         }
+
+        let value =
+            haversack.bags[key].iter().flatten().any(|rule| helper(rule.next, haversack, cache));
+
+        cache[key] = Some(value);
+        value
     }
 
     let mut cache = vec![None; input.bags.len()];
@@ -114,18 +107,17 @@ pub fn part1(input: &Haversack) -> usize {
 pub fn part2(input: &Haversack) -> u32 {
     fn helper(key: usize, haversack: &Haversack, cache: &mut [Option<u32>]) -> u32 {
         if let Some(value) = cache[key] {
-            value
-        } else {
-            let mut value = 1;
-            let mut iter = haversack.bags[key].iter();
-
-            while let Some(Some(Rule { amount, next })) = iter.next() {
-                value += amount * helper(*next, haversack, cache);
-            }
-
-            cache[key] = Some(value);
-            value
+            return value;
         }
+
+        let value = 1 + haversack.bags[key]
+            .iter()
+            .flatten()
+            .map(|rule| rule.amount * helper(rule.next, haversack, cache))
+            .sum::<u32>();
+
+        cache[key] = Some(value);
+        value
     }
 
     let mut cache = vec![None; input.bags.len()];

@@ -85,9 +85,9 @@ pub fn part2(grid: &Grid<u8>) -> usize {
 fn worker(shortcut: &Shortcut, total: &AtomicUsize, iter: ParIter<'_, (Point, Point)>) {
     let mut seen = FastSet::new();
     let result = iter
-        .filter(|(position, direction)| {
+        .filter(|&&(position, direction)| {
             seen.clear();
-            is_cycle(shortcut, &mut seen, *position, *direction)
+            is_cycle(shortcut, &mut seen, position, direction)
         })
         .count();
 

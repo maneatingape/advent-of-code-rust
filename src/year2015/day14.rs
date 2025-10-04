@@ -36,12 +36,12 @@ pub fn part2_testable(input: &[Reindeer], time: u32) -> u32 {
             furthest = furthest.max(next);
         }
 
-        for (score, &distance) in scores.iter_mut().zip(distances.iter()) {
+        for (score, &distance) in scores.iter_mut().zip(&distances) {
             *score += (distance == furthest) as u32;
         }
     }
 
-    *scores.iter().max().unwrap()
+    scores.into_iter().max().unwrap()
 }
 
 fn distance([speed, fly, rest]: Reindeer, time: u32) -> u32 {

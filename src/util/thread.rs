@@ -5,7 +5,7 @@
 use std::sync::atomic::{AtomicUsize, Ordering::Relaxed};
 use std::thread::*;
 
-// Usually the number of physical cores.
+/// Usually the number of physical cores.
 fn threads() -> usize {
     available_parallelism().unwrap().get()
 }

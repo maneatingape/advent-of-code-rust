@@ -1,6 +1,6 @@
 //! # Handheld Halting
 //!
-//! A brute force implementation that changes every `Jmp` or `Nop` in the input one at at time then
+//! A brute force implementation that changes every `Jmp` or `Nop` in the input one at a time then
 //! tests the result would have `O(n²)` complexity for part two.
 //!
 //! We can solve part two in `O(n)` complexity, executing each instruction at most twice. We start

@@ -45,9 +45,9 @@ pub fn part1(input: &Input) -> u64 {
 
 /// Process ranges.
 pub fn part2(input: &Input) -> u64 {
-    let mut current = &mut Vec::new();
-    let mut next = &mut Vec::new();
-    let next_stage = &mut Vec::new();
+    let mut current = Vec::new();
+    let mut next = Vec::new();
+    let mut next_stage = Vec::new();
 
     // Convert input pairs to ranges.
     for [start, length] in input.seeds.iter().copied().chunk::<2>() {
@@ -56,7 +56,7 @@ pub fn part2(input: &Input) -> u64 {
 
     for stage in &input.stages {
         for &[dest, s2, e2] in stage {
-            while let Some([s1, e1]) = current.pop() {
+            for [s1, e1] in current.drain(..) {
                 // Split ranges that overlap into 1, 2 or 3 new ranges.
                 // x1 and x2 are the possible overlap.
                 let x1 = s1.max(s2);
@@ -83,7 +83,7 @@ pub fn part2(input: &Input) -> u64 {
         }
 
         // Combine elements for the next stage.
-        current.append(next_stage);
+        current.append(&mut next_stage);
     }
 
     current.iter().map(|r| r[0]).min().unwrap()

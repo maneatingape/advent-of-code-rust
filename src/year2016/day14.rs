@@ -38,7 +38,7 @@ pub fn part2(input: &str) -> i32 {
     generate_pad(input, true)
 }
 
-/// Find the first 64 keys that sastify the rules.
+/// Find the first 64 keys that satisfy the rules.
 fn generate_pad(input: &str, part_two: bool) -> i32 {
     let exclusive =
         Exclusive { threes: BTreeMap::new(), fives: BTreeMap::new(), found: BTreeSet::new() };

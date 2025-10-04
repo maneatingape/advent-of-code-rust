@@ -244,7 +244,7 @@ pub fn part2(input: &Input) -> u32 {
         graph.insert(row, neighbors);
     }
 
-    // Step through the each row of the grid, keeping track of the maximum value for each
+    // Step through each row of the grid, keeping track of the maximum value for each
     // row type.
     let mut current = FastMap::new();
     let mut next = FastMap::new();

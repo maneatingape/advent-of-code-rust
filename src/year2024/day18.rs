@@ -70,11 +70,12 @@ pub fn part1(grid: &Grid<i32>) -> u32 {
 
 /// Incremental flood fill that removes one blocking byte at a time in descending order.
 pub fn part2(grid: &Grid<i32>) -> String {
-    let mut time = i32::MAX;
-    let mut heap = MinHeap::new();
+    let exit = Point::new(70, 70);
 
+    let mut time = i32::MAX;
     let mut grid = grid.clone();
     let mut todo = VecDeque::new();
+    let mut heap = MinHeap::new();
 
     grid[ORIGIN] = 0;
     todo.push_back(ORIGIN);
@@ -82,7 +83,7 @@ pub fn part2(grid: &Grid<i32>) -> String {
     loop {
         // Incremental flood fill that makes as much progress as possible.
         while let Some(position) = todo.pop_front() {
-            if position == Point::new(70, 70) {
+            if position == exit {
                 let index = grid.bytes.iter().position(|&b| b == time).unwrap() as i32;
                 return format!("{},{}", index % grid.width, index / grid.width);
             }

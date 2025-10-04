@@ -76,7 +76,7 @@ pub fn parse(input: &str) -> Input {
 
     let mut small = 0;
     for (key, value) in &indices {
-        if key.chars().next().unwrap().is_ascii_lowercase() {
+        if key.as_bytes()[0].is_ascii_lowercase() {
             small |= 1 << value;
         }
     }
@@ -131,11 +131,9 @@ fn paths(input: &Input, state: &State, cache: &mut [u32]) -> u32 {
     // Subtle nuance, by not multiplying "visited" by 2 and also dividing by 2 we ignore the
     // two least significant bits for start and end cave, as these will always be 0 and 1
     // respectively.
-    let index =
-        state.twice as usize + 2 * (state.from) + (input.edges.len() * (visited as usize / 2));
-    let total = cache[index];
-    if total > 0 {
-        return total;
+    let index = twice as usize + 2 * from + (input.edges.len() * (visited as usize / 2));
+    if cache[index] > 0 {
+        return cache[index];
     }
 
     let mut caves = input.edges[from];

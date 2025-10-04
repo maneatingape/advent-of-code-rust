@@ -37,7 +37,7 @@ fn explore(input: &str) -> Input {
 
         match b {
             b'(' => stack.push(index),
-            b'|' => index = stack[stack.len() - 1],
+            b'|' => index = *stack.last().unwrap(),
             b')' => index = stack.pop().unwrap(),
             b'N' => index -= 110,
             b'S' => index += 110,

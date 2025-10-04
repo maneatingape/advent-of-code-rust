@@ -76,5 +76,5 @@ fn play(input: &Input, reverse: bool) -> String {
         }
     }
 
-    stack.iter().map(|v| v.last().unwrap()).collect()
+    stack.iter().filter_map(|v| v.last()).collect()
 }

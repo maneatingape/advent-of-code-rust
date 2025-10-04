@@ -57,15 +57,16 @@ pub fn parse(input: &str) -> Input {
 /// so they're added directly to the total.
 pub fn part1(input: &Input) -> usize {
     let (width, digits) = input;
+    let width = *width;
     let mut visible = vec![false; digits.len()];
 
-    for i in 1..(*width - 1) {
+    for i in 1..(width - 1) {
         let mut left_max = -1;
         let mut right_max = -1;
         let mut top_max = -1;
         let mut bottom_max = -1;
 
-        for j in 0..(*width - 1) {
+        for j in 0..(width - 1) {
             let left = (i * width) + j;
             if digits[left] > left_max {
                 visible[left] = true;
@@ -137,15 +138,16 @@ pub fn part1(input: &Input) -> usize {
 /// ```
 pub fn part2(input: &Input) -> u64 {
     let (width, digits) = input;
+    let width = *width;
     let mut scenic = vec![1; digits.len()];
 
-    for i in 1..(*width - 1) {
+    for i in 1..(width - 1) {
         let mut left_max = ONES;
         let mut right_max = ONES;
         let mut top_max = ONES;
         let mut bottom_max = ONES;
 
-        for j in 1..(*width - 1) {
+        for j in 1..(width - 1) {
             let left = (i * width) + j;
             scenic[left] *= (left_max >> digits[left]) & 0x3f;
             left_max = (left_max & (MASK << digits[left])) + ONES;

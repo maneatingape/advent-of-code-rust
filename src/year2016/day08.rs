@@ -5,6 +5,7 @@
 //! distinct points without overcounting.
 //!
 //! [`Point`]: crate::util::point
+use crate::util::grid::*;
 use crate::util::iter::*;
 use crate::util::parse::*;
 use crate::util::point::*;
@@ -43,18 +44,10 @@ pub fn part1(input: &[Point]) -> usize {
 }
 
 pub fn part2(input: &[Point]) -> String {
-    let width = input.iter().map(|p| p.x).max().unwrap() + 1;
+    let mut grid = Grid::new(50, 6, '.');
 
-    let mut pixels = vec!['.'; width as usize * 6];
-    for point in input {
-        pixels[(width * point.y + point.x) as usize] = '#';
-    }
+    (0..6).for_each(|y| grid[Point::new(0, y)] = '\n');
+    input.iter().for_each(|&p| grid[p + RIGHT] = '#');
 
-    let mut result = pixels
-        .chunks_exact(width as usize)
-        .map(|row| row.iter().collect())
-        .collect::<Vec<String>>()
-        .join("\n");
-    result.insert(0, '\n');
-    result
+    grid.bytes.iter().collect()
 }

@@ -24,8 +24,8 @@ pub fn parse(input: &str) -> Grid<u8> {
 pub fn part1(grid: &Grid<u8>) -> u32 {
     let mut risk_levels = 0;
 
-    for x in 0..grid.width {
-        for y in 0..grid.height {
+    for y in 0..grid.height {
+        for x in 0..grid.width {
             let point = Point::new(x, y);
             let cur = grid[point];
             let low_point = ORTHOGONAL
@@ -47,8 +47,8 @@ pub fn part2(input: &Grid<u8>) -> u32 {
     let mut grid = input.clone();
     let mut basins = Vec::new();
 
-    for x in 0..grid.width {
-        for y in 0..grid.height {
+    for y in 0..grid.height {
+        for x in 0..grid.width {
             let next = Point::new(x, y);
             if grid[next] < b'9' {
                 basins.push(flood_fill(&mut grid, next));

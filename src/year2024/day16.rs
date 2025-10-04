@@ -74,8 +74,8 @@ pub fn parse(input: &str) -> Input {
     let mut path = grid.same_size_with(false);
 
     // Lowest paths can arrive at end node in multiple directions.
-    for direction in 0..4 {
-        if seen[end][direction] == lowest {
+    for (direction, &cost) in seen[end].iter().enumerate() {
+        if cost == lowest {
             todo.push_back((end, direction, lowest));
         }
     }

@@ -6,10 +6,7 @@ pub trait BitOps<T> {
     fn biterator(self) -> Bitset<T>;
 }
 
-impl<T> BitOps<T> for T
-where
-    T: Integer<T>,
-{
+impl<T: Integer<T>> BitOps<T> for T {
     fn biterator(self) -> Bitset<T> {
         Bitset { t: self }
     }
@@ -19,20 +16,17 @@ pub struct Bitset<T> {
     t: T,
 }
 
-impl<T> Iterator for Bitset<T>
-where
-    T: Integer<T>,
-{
+impl<T: Integer<T>> Iterator for Bitset<T> {
     type Item = usize;
 
     #[inline]
     fn next(&mut self) -> Option<Self::Item> {
         if self.t == T::ZERO {
-            return None;
+            None
+        } else {
+            let tz = self.t.trailing_zeros();
+            self.t = self.t ^ (T::ONE << tz);
+            Some(tz as usize)
         }
-
-        let tz = self.t.trailing_zeros();
-        self.t = self.t ^ (T::ONE << tz);
-        Some(tz as usize)
     }
 }

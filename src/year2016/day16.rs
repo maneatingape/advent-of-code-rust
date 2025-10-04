@@ -62,12 +62,8 @@ pub fn part2(input: &[usize]) -> String {
 /// Collect the ones count at each `step_size` then subtract in pairs to calculate the number of
 /// ones in each interval to give the checksum.
 fn checksum(input: &[usize], step_size: usize) -> String {
-    (0..18)
-        .map(|i| count(input, i * step_size))
-        .collect::<Vec<_>>()
-        .windows(2)
-        .map(|w| if (w[1] - w[0]).is_multiple_of(2) { '1' } else { '0' })
-        .collect()
+    let counts: Vec<_> = (0..18).map(|i| count(input, i * step_size)).collect();
+    counts.windows(2).map(|w| if (w[1] - w[0]) % 2 == 0 { '1' } else { '0' }).collect()
 }
 
 /// Counts the number of ones from the start to the index (inclusive).

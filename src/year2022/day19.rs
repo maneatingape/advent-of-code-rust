@@ -39,7 +39,7 @@
 //! than two minutes before the cutoff for obsidian robots.
 //!
 //! The final important optimization is that we don't increment minute by minute. Instead once
-//! we decide to buld a robot of a particular type, we "fast forward" in time until there are
+//! we decide to build a robot of a particular type, we "fast forward" in time until there are
 //! enough resources to build that robot. This cuts down on a lot of duplicate intermediate states.
 use crate::util::parse::*;
 use std::ops::{Add, Sub};

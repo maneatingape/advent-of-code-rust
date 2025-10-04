@@ -73,14 +73,14 @@ fn syntax_score(line: &str, stack: &mut Vec<u8>) -> u64 {
 }
 
 fn autocomplete_score(stack: &[u8]) -> u64 {
-    fn helper(b: u8) -> u64 {
-        match b {
+    stack.iter().rev().fold(0, |acc, &b| {
+        let score = match b {
             b'(' => 1,
             b'[' => 2,
             b'{' => 3,
             b'<' => 4,
             _ => unreachable!(),
-        }
-    }
-    stack.iter().rev().fold(0, |acc, &b| 5 * acc + helper(b))
+        };
+        5 * acc + score
+    })
 }

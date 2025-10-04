@@ -1,4 +1,5 @@
 //! # The Stars Align
+use crate::util::grid::*;
 use crate::util::iter::*;
 use crate::util::parse::*;
 use crate::util::point::*;
@@ -38,16 +39,14 @@ pub fn parse(input: &str) -> Input {
     adjust(&mut points);
 
     // Convert points to human readable string.
-    let mut grid = ['.'; 620];
-    points.iter().for_each(|p| grid[(62 * p.y + p.x) as usize] = '#');
+    let mut grid = Grid::new(63, 10, '.');
 
-    let mut message = grid
-        .chunks_exact(62)
-        .map(|chunk| chunk.iter().collect())
-        .collect::<Vec<String>>()
-        .join("\n");
-    message.insert(0, '\n');
+    (0..10).for_each(|y| grid[Point::new(0, y)] = '\n');
+    points.iter().for_each(|&p| grid[p + RIGHT] = '#');
 
+    let message = grid.bytes.iter().collect();
+
+    // Return answer
     (message, time)
 }
 
@@ -62,7 +61,7 @@ pub fn part2(input: &Input) -> i32 {
 fn bounding_box(points: &[Point]) -> (i32, i32, i32, i32) {
     points.iter().fold(
         (i32::MAX, i32::MIN, i32::MAX, i32::MIN),
-        |(min_x, max_x, min_y, max_y), p| {
+        |(min_x, max_x, min_y, max_y), &p| {
             (min_x.min(p.x), max_x.max(p.x), min_y.min(p.y), max_y.max(p.y))
         },
     )
@@ -80,7 +79,7 @@ fn adjust(points: &mut [Point]) {
 }
 
 fn tick(points: &mut [Point], velocity: &[Point], time: i32) {
-    points.iter_mut().zip(velocity.iter()).for_each(|(p, v)| {
-        *p += *v * time;
-    });
+    for (p, &v) in points.iter_mut().zip(velocity) {
+        *p += v * time;
+    }
 }

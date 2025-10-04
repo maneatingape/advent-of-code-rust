@@ -43,10 +43,11 @@ pub fn part2(input: &[usize]) -> usize {
 fn two_sum(slice: &[usize], target: usize, hash: &mut [usize], round: usize) -> Option<usize> {
     for &i in slice {
         if i < target {
+            let complement = target - i;
             if hash[i] == round {
-                return Some(i * (target - i));
+                return Some(i * complement);
             }
-            hash[target - i] = round;
+            hash[complement] = round;
         }
     }
 

@@ -23,7 +23,7 @@ impl Point {
         Point { x, y, z, w }
     }
 
-    fn mahattan(&self, other: Self) -> i32 {
+    fn manhattan(&self, other: Self) -> i32 {
         (self.x - other.x).abs()
             + (self.y - other.y).abs()
             + (self.z - other.z).abs()
@@ -51,7 +51,7 @@ pub fn part1(input: &[Point]) -> usize {
             // Find all neighbors, adding them to `todo` in order to transitively find all
             // other points in the constellation.
             while i < remaining.len() {
-                if point.mahattan(remaining[i]) <= 3 {
+                if point.manhattan(remaining[i]) <= 3 {
                     todo.push(remaining.swap_remove(i));
                 } else {
                     i += 1;

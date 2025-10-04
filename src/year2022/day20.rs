@@ -75,8 +75,8 @@ fn decrypt(input: &[i64], key: i64, rounds: usize) -> i64 {
 
             // Find the offset of the number by adding the size of all previous `vec`s.
             let position = third
-                + skip[0..first].iter().sum::<usize>()
-                + mixed[first][0..second].iter().map(Vec::len).sum::<usize>();
+                + skip[..first].iter().sum::<usize>()
+                + mixed[first][..second].iter().map(Vec::len).sum::<usize>();
             // Update our position, wrapping around if necessary.
             let mut next = (position + number) % size;
 

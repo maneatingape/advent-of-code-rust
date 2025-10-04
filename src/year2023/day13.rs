@@ -81,7 +81,7 @@ fn reflect(input: &Input, target: u32) -> usize {
 fn reflect_axis(axis: &[u32], target: u32) -> Option<usize> {
     let size = axis.len();
 
-    for i in 1..size {
+    (1..size).find(|&i| {
         let mut smudges = 0;
 
         // Only consider rows/columns within the boundary of the grid.
@@ -89,10 +89,6 @@ fn reflect_axis(axis: &[u32], target: u32) -> Option<usize> {
             smudges += (axis[i - j - 1] ^ axis[i + j]).count_ones();
         }
 
-        if smudges == target {
-            return Some(i);
-        }
-    }
-
-    None
+        smudges == target
+    })
 }

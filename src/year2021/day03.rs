@@ -18,8 +18,8 @@ pub fn part1(input: &[&[u8]]) -> u32 {
         let ones = ones(input, column);
         let zeros = input.len() - ones;
 
-        gamma = (gamma << 1) | (ones > zeros) as u32;
-        epsilon = (epsilon << 1) | (zeros > ones) as u32;
+        gamma = (gamma << 1) | u32::from(ones > zeros);
+        epsilon = (epsilon << 1) | u32::from(zeros > ones);
     }
 
     gamma * epsilon
@@ -48,5 +48,5 @@ fn rating(input: &[&[u8]], cmp: fn(usize, usize) -> bool) -> u32 {
         column += 1;
     }
 
-    numbers[0].iter().fold(0, |acc, &n| (acc << 1) | (n == b'1') as u32)
+    numbers[0].iter().fold(0, |acc, &n| (acc << 1) | u32::from(n == b'1'))
 }
