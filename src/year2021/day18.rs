@@ -29,7 +29,6 @@
 //! always greater than or equal to zero, `-1` is used as a special sentinel value for non-leaf nodes.
 use crate::util::parse::*;
 use crate::util::thread::*;
-use std::sync::atomic::{AtomicI32, Ordering};
 
 type Snailfish = [i32; 63];
 
@@ -85,20 +84,13 @@ pub fn part2(input: &[Snailfish]) -> i32 {
     }
 
     // Use as many cores as possible to parallelize the calculation.
-    let shared = AtomicI32::new(0);
-    spawn_parallel_iterator(&pairs, |iter| worker(&shared, iter));
-    shared.into_inner()
+    let result = spawn_parallel_iterator(&pairs, worker);
+    result.into_iter().max().unwrap()
 }
 
 /// Pair addition is independent so we can parallelize across multiple threads.
-fn worker(shared: &AtomicI32, iter: ParIter<'_, (&Snailfish, &Snailfish)>) {
-    let mut partial = 0;
-
-    for (a, b) in iter {
-        partial = partial.max(magnitude(&mut add(a, b)));
-    }
-
-    shared.fetch_max(partial, Ordering::Relaxed);
+fn worker(iter: ParIter<'_, (&Snailfish, &Snailfish)>) -> i32 {
+    iter.map(|&(a, b)| magnitude(&mut add(a, b))).max().unwrap()
 }
 
 /// Add two snailfish numbers.

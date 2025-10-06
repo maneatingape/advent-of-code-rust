@@ -11,7 +11,6 @@ use crate::util::hash::*;
 use crate::util::parse::*;
 use crate::util::thread::*;
 use std::sync::atomic::{AtomicBool, AtomicI32, Ordering};
-use std::sync::mpsc::{Sender, channel};
 
 pub struct Input {
     immune: Vec<Group>,
@@ -72,7 +71,6 @@ impl Group {
 struct Shared {
     done: AtomicBool,
     boost: AtomicI32,
-    tx: Sender<(i32, i32)>,
 }
 
 pub fn parse<'a>(input: &'a str) -> Input {
@@ -95,19 +93,15 @@ pub fn part1(input: &Input) -> i32 {
 }
 
 pub fn part2(input: &Input) -> i32 {
-    let (tx, rx) = channel();
-    let shared = Shared { done: AtomicBool::new(false), boost: AtomicI32::new(1), tx };
+    let shared = Shared { done: AtomicBool::new(false), boost: AtomicI32::new(1) };
 
     // Use as many cores as possible to parallelize the search.
-    spawn(|| worker(input, &shared));
-
-    // Hang up the channel.
-    drop(shared.tx);
+    let result = spawn(|| worker(input, &shared));
     // Find lowest possible power.
-    rx.iter().min_by_key(|&(boost, _)| boost).map(|(_, units)| units).unwrap()
+    result.into_iter().flatten().min_by_key(|&(boost, _)| boost).map(|(_, units)| units).unwrap()
 }
 
-fn worker(input: &Input, shared: &Shared) {
+fn worker(input: &Input, shared: &Shared) -> Option<(i32, i32)> {
     while !shared.done.load(Ordering::Relaxed) {
         // Get the next attack boost, incrementing it atomically for the next fight.
         let boost = shared.boost.fetch_add(1, Ordering::Relaxed);
@@ -119,9 +113,11 @@ fn worker(input: &Input, shared: &Shared) {
 
         if kind == Kind::Immune {
             shared.done.store(true, Ordering::Relaxed);
-            let _unused = shared.tx.send((boost, units));
+            return Some((boost, units));
         }
     }
+
+    None
 }
 
 fn fight(input: &Input, boost: i32) -> (Kind, i32) {

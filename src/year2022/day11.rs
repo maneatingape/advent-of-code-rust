@@ -43,7 +43,8 @@
 //! [`iter_unsigned`]: ParseOps::iter_unsigned
 use crate::util::parse::*;
 use crate::util::thread::*;
-use std::sync::Mutex;
+
+type Pair = (usize, u64);
 
 pub struct Monkey {
     items: Vec<u64>,
@@ -59,18 +60,7 @@ pub enum Operation {
     Add(u64),
 }
 
-type Pair = (usize, u64);
 type Business = [u64; 8];
-
-struct Shared<'a> {
-    monkeys: &'a [Monkey],
-    mutex: Mutex<Exclusive>,
-}
-
-struct Exclusive {
-    pairs: Vec<Pair>,
-    business: Business,
-}
 
 /// Extract each Monkey's info from the flavor text. With the exception of the lines starting
 /// `Operation` we are only interested in the numbers on each line.
@@ -102,7 +92,7 @@ pub fn part2(input: &[Monkey]) -> u64 {
 }
 
 /// Convenience wrapper to reuse common logic between part one and two.
-fn solve(monkeys: &[Monkey], play: impl Fn(&[Monkey], Vec<Pair>) -> Business) -> u64 {
+fn solve(monkeys: &[Monkey], play: impl Fn(&[Monkey], &[Pair]) -> Business) -> u64 {
     let mut pairs = Vec::new();
 
     for (from, monkey) in monkeys.iter().enumerate() {
@@ -111,16 +101,16 @@ fn solve(monkeys: &[Monkey], play: impl Fn(&[Monkey], Vec<Pair>) -> Business) ->
         }
     }
 
-    let mut business = play(monkeys, pairs);
+    let mut business = play(monkeys, &pairs);
     business.sort_unstable();
     business.iter().rev().take(2).product()
 }
 
 /// Play 20 rounds dividing the worry level by 3 each inspection.
-fn sequential(monkeys: &[Monkey], pairs: Vec<Pair>) -> Business {
+fn sequential(monkeys: &[Monkey], pairs: &[Pair]) -> Business {
     let mut business = [0; 8];
 
-    for pair in pairs {
+    for &pair in pairs {
         let extra = play(monkeys, 20, |x| x / 3, pair);
         business.iter_mut().enumerate().for_each(|(i, b)| *b += extra[i]);
     }
@@ -129,31 +119,21 @@ fn sequential(monkeys: &[Monkey], pairs: Vec<Pair>) -> Business {
 }
 
 /// Play 10,000 rounds adjusting the worry level modulo the product of all the monkey's test values.
-fn parallel(monkeys: &[Monkey], pairs: Vec<Pair>) -> Business {
-    let shared = Shared { monkeys, mutex: Mutex::new(Exclusive { pairs, business: [0; 8] }) };
-
+fn parallel(monkeys: &[Monkey], pairs: &[Pair]) -> Business {
     // Use as many cores as possible to parallelize the calculation.
-    spawn(|| worker(&shared));
+    let result = spawn_parallel_iterator(pairs, |iter| worker(monkeys, iter));
 
-    shared.mutex.into_inner().unwrap().business
+    let mut business = [0; 8];
+    for extra in result.into_iter().flatten() {
+        business.iter_mut().zip(extra).for_each(|(b, e)| *b += e);
+    }
+    business
 }
 
 /// Multiple worker functions are executed in parallel, one per thread.
-fn worker(shared: &Shared<'_>) {
-    let product: u64 = shared.monkeys.iter().map(|m| m.test).product();
-
-    loop {
-        // Take an item from the queue until empty, using the mutex to allow access
-        // to a single thread at a time.
-        let Some(pair) = shared.mutex.lock().unwrap().pairs.pop() else {
-            break;
-        };
-
-        let extra = play(shared.monkeys, 10000, |x| x % product, pair);
-
-        let mut exclusive = shared.mutex.lock().unwrap();
-        exclusive.business.iter_mut().enumerate().for_each(|(i, b)| *b += extra[i]);
-    }
+fn worker(monkeys: &[Monkey], iter: ParIter<'_, Pair>) -> Vec<Business> {
+    let product: u64 = monkeys.iter().map(|m| m.test).product();
+    iter.map(|&pair| play(monkeys, 10000, |x| x % product, pair)).collect()
 }
 
 /// Play an arbitrary number of rounds for a single item.

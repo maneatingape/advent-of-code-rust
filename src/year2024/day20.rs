@@ -34,7 +34,6 @@
 use crate::util::grid::*;
 use crate::util::point::*;
 use crate::util::thread::*;
-use std::sync::atomic::{AtomicU32, Ordering};
 
 /// Create a grid the same size as input with the time taken from start to any location.
 pub fn parse(input: &str) -> Grid<i32> {
@@ -99,12 +98,11 @@ pub fn part2(time: &Grid<i32>) -> u32 {
     }
 
     // Use as many cores as possible to parallelize the remaining search.
-    let total = AtomicU32::new(0);
-    spawn_parallel_iterator(&items, |iter| worker(time, &total, iter));
-    total.into_inner()
+    let result = spawn_parallel_iterator(&items, |iter| worker(time, iter));
+    result.into_iter().sum()
 }
 
-fn worker(time: &Grid<i32>, total: &AtomicU32, iter: ParIter<'_, Point>) {
+fn worker(time: &Grid<i32>, iter: ParIter<'_, Point>) -> u32 {
     let mut cheats = 0;
 
     // (p1, p2) is the reciprocal of (p2, p1) so we only need to check each pair once.
@@ -120,8 +118,7 @@ fn worker(time: &Grid<i32>, total: &AtomicU32, iter: ParIter<'_, Point>) {
         }
     }
 
-    // Update global total.
-    total.fetch_add(cheats, Ordering::Relaxed);
+    cheats
 }
 
 // Check if we save enough time warping to another square.

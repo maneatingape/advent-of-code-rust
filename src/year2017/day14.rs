@@ -6,33 +6,16 @@
 //! [`Day 10`]: crate::year2017::day10
 //! [`Day 12`]: crate::year2017::day12
 use crate::util::thread::*;
-use std::sync::Mutex;
-use std::sync::atomic::{AtomicUsize, Ordering};
-
-/// Atomics can be safely shared between threads.
-pub struct Shared {
-    prefix: String,
-    counter: AtomicUsize,
-    mutex: Mutex<Exclusive>,
-}
-
-/// Regular data structures need to be protected by a mutex.
-struct Exclusive {
-    grid: Vec<u8>,
-}
 
 /// Parallelize the hashing as each row is independent.
 pub fn parse(input: &str) -> Vec<u8> {
-    let shared = Shared {
-        prefix: input.trim().to_owned(),
-        counter: AtomicUsize::new(0),
-        mutex: Mutex::new(Exclusive { grid: vec![0; 0x4000] }),
-    };
+    let prefix = &input.trim();
+    let rows: Vec<_> = (0..128).collect();
+    let result = spawn_parallel_iterator(&rows, |iter| worker(prefix, iter));
 
-    // Use as many cores as possible to parallelize the hashing.
-    spawn(|| worker(&shared));
-
-    shared.mutex.into_inner().unwrap().grid
+    let mut sorted: Vec<_> = result.into_iter().flatten().collect();
+    sorted.sort_unstable_by_key(|&(index, _)| index);
+    sorted.into_iter().flat_map(|(_, row)| row).collect()
 }
 
 pub fn part1(input: &[u8]) -> u32 {
@@ -56,30 +39,18 @@ pub fn part2(input: &[u8]) -> u32 {
 
 /// Each worker thread chooses the next available index then computes the hash and patches the
 /// final vec with the result.
-fn worker(shared: &Shared) {
-    loop {
-        let index = shared.counter.fetch_add(1, Ordering::Relaxed);
-        if index >= 128 {
-            break;
-        }
-
-        let row = fill_row(&shared.prefix, index);
-        let start = index * 128;
-        let end = start + 128;
-
-        let mut exclusive = shared.mutex.lock().unwrap();
-        exclusive.grid[start..end].copy_from_slice(&row);
-    }
+fn worker(prefix: &str, iter: ParIter<'_, usize>) -> Vec<(usize, Vec<u8>)> {
+    iter.map(|&index| (index, fill_row(prefix, index))).collect()
 }
 
 /// Compute the knot hash for a row and expand into an array of bytes.
-fn fill_row(prefix: &str, index: usize) -> [u8; 128] {
+fn fill_row(prefix: &str, index: usize) -> Vec<u8> {
     let s = format!("{prefix}-{index}");
     let mut lengths: Vec<_> = s.bytes().map(|b| b as usize).collect();
     lengths.extend([17, 31, 73, 47, 23]);
 
     let knot = knot_hash(&lengths);
-    let mut result = [0; 128];
+    let mut result = vec![0; 128];
 
     for (i, chunk) in knot.chunks_exact(16).enumerate() {
         let reduced = chunk.iter().fold(0, |acc, n| acc ^ n);

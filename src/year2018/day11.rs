@@ -7,18 +7,12 @@
 //! so we can parallelize over multiple threads.
 use crate::util::parse::*;
 use crate::util::thread::*;
-use std::sync::Mutex;
 
 pub struct Result {
     x: usize,
     y: usize,
     size: usize,
     power: i32,
-}
-
-struct Shared {
-    sat: Vec<i32>,
-    mutex: Mutex<Vec<Result>>,
 }
 
 pub fn parse(input: &str) -> Vec<Result> {
@@ -45,9 +39,8 @@ pub fn parse(input: &str) -> Vec<Result> {
     // Use as many cores as possible to parallelize the search.
     // Smaller sizes take more time so use work stealing to keep all cores busy.
     let items: Vec<_> = (1..301).collect();
-    let shared = Shared { sat, mutex: Mutex::new(Vec::new()) };
-    spawn_parallel_iterator(&items, |iter| worker(&shared, iter));
-    shared.mutex.into_inner().unwrap()
+    let result = spawn_parallel_iterator(&items, |iter| worker(&sat, iter));
+    result.into_iter().flatten().collect()
 }
 
 pub fn part1(input: &[Result]) -> String {
@@ -60,15 +53,12 @@ pub fn part2(input: &[Result]) -> String {
     format!("{x},{y},{size}")
 }
 
-fn worker(shared: &Shared, iter: ParIter<'_, usize>) {
-    let result: Vec<_> = iter
-        .map(|&size| {
-            let (power, x, y) = square(&shared.sat, size);
-            Result { x, y, size, power }
-        })
-        .collect();
-
-    shared.mutex.lock().unwrap().extend(result);
+fn worker(sat: &[i32], iter: ParIter<'_, usize>) -> Vec<Result> {
+    iter.map(|&size| {
+        let (power, x, y) = square(sat, size);
+        Result { x, y, size, power }
+    })
+    .collect()
 }
 
 /// Find the (x,y) coordinates and max power for a square of the specified size.

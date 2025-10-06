@@ -6,20 +6,26 @@ use std::sync::atomic::{AtomicUsize, Ordering::Relaxed};
 use std::thread::*;
 
 /// Usually the number of physical cores.
-fn threads() -> usize {
+pub fn threads() -> usize {
     available_parallelism().unwrap().get()
 }
 
 /// Spawn `n` scoped threads, where `n` is the available parallelism.
-pub fn spawn<F>(f: F)
+pub fn spawn<F, R>(f: F) -> Vec<R>
 where
-    F: Fn() + Copy + Send,
+    F: Fn() -> R + Copy + Send,
+    R: Send,
 {
     scope(|scope| {
+        let mut handles = Vec::new();
+
         for _ in 0..threads() {
-            scope.spawn(f);
+            let handle = scope.spawn(f);
+            handles.push(handle);
         }
-    });
+
+        handles.into_iter().flat_map(ScopedJoinHandle::join).collect()
+    })
 }
 
 /// Spawns `n` scoped threads that each receive a
@@ -28,9 +34,10 @@ where
 /// than other to process, used by popular libraries such as [rayon](https://github.com/rayon-rs/rayon).
 /// Processing at different rates also happens on many modern CPUs with
 /// [heterogeneous performance and efficiency cores](https://en.wikipedia.org/wiki/ARM_big.LITTLE).
-pub fn spawn_parallel_iterator<F, T>(items: &[T], f: F)
+pub fn spawn_parallel_iterator<F, R, T>(items: &[T], f: F) -> Vec<R>
 where
-    F: Fn(ParIter<'_, T>) + Copy + Send,
+    F: Fn(ParIter<'_, T>) -> R + Copy + Send,
+    R: Send,
     T: Sync,
 {
     let threads = threads();
@@ -47,10 +54,15 @@ where
     let workers = workers.as_slice();
 
     scope(|scope| {
+        let mut handles = Vec::new();
+
         for id in 0..threads {
-            scope.spawn(move || f(ParIter { id, items, workers }));
+            let handle = scope.spawn(move || f(ParIter { id, items, workers }));
+            handles.push(handle);
         }
-    });
+
+        handles.into_iter().flat_map(ScopedJoinHandle::join).collect()
+    })
 }
 
 pub struct ParIter<'a, T> {

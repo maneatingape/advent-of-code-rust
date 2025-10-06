@@ -23,25 +23,26 @@
 //! that can be parallelized.
 use crate::util::parse::*;
 use crate::util::thread::*;
-use std::sync::Mutex;
 
 type Input = (u64, u16);
-
-struct Exclusive {
-    part_one: u64,
-    part_two: Vec<u16>,
-}
+type Result = (u64, Vec<u16>);
 
 pub fn parse(input: &str) -> Input {
-    let mutex = Mutex::new(Exclusive { part_one: 0, part_two: vec![0; 130321] });
-
     #[cfg(not(feature = "simd"))]
-    scalar::parallel(input, &mutex);
+    let result = scalar::parallel(input);
     #[cfg(feature = "simd")]
-    simd::parallel(input, &mutex);
+    let result = simd::parallel(input);
 
-    let Exclusive { part_one, part_two } = mutex.into_inner().unwrap();
-    (part_one, *part_two.iter().max().unwrap())
+    // Merge results from different threads.
+    let mut part_one = 0;
+    let mut part_two = vec![0; 130321];
+
+    for (first, second) in result {
+        part_one += first;
+        part_two.iter_mut().zip(second).for_each(|(a, b)| *a += b);
+    }
+
+    (part_one, part_two.into_iter().max().unwrap())
 }
 
 pub fn part1(input: &Input) -> u64 {
@@ -57,12 +58,12 @@ mod scalar {
     use super::*;
 
     // Use as many cores as possible to parallelize the remaining search.
-    pub(super) fn parallel(input: &str, mutex: &Mutex<Exclusive>) {
+    pub(super) fn parallel(input: &str) -> Vec<Result> {
         let numbers: Vec<_> = input.iter_unsigned().collect();
-        spawn_parallel_iterator(&numbers, |iter| worker(mutex, iter));
+        spawn_parallel_iterator(&numbers, worker)
     }
 
-    fn worker(mutex: &Mutex<Exclusive>, iter: ParIter<'_, u32>) {
+    fn worker(iter: ParIter<'_, u32>) -> Result {
         let mut part_one = 0;
         let mut part_two = vec![0; 130321];
         let mut seen = vec![u16::MAX; 130321];
@@ -103,10 +104,7 @@ mod scalar {
             part_one += number as u64;
         }
 
-        // Merge into global results.
-        let mut exclusive = mutex.lock().unwrap();
-        exclusive.part_one += part_one;
-        exclusive.part_two.iter_mut().zip(part_two).for_each(|(a, b)| *a += b);
+        (part_one, part_two)
     }
 
     /// Compute next secret number using a
@@ -131,7 +129,7 @@ mod simd {
 
     type Vector = Simd<u32, 8>;
 
-    pub(super) fn parallel(input: &str, mutex: &Mutex<Exclusive>) {
+    pub(super) fn parallel(input: &str) -> Vec<Result> {
         let mut numbers: Vec<_> = input.iter_unsigned().collect();
 
         // Add zero elements so that size is a multiple of 8.
@@ -139,13 +137,13 @@ mod simd {
         numbers.resize(numbers.len().next_multiple_of(8), 0);
         let chunks: Vec<_> = numbers.chunks_exact(8).collect();
 
-        spawn_parallel_iterator(&chunks, |iter| worker(mutex, iter));
+        spawn_parallel_iterator(&chunks, worker)
     }
 
     /// Similar to scalar version but using SIMD vectors instead.
     /// 8 lanes is the sweet spot for performance as the bottleneck is the scalar loop writing
     /// to disjoint indices after each step.
-    fn worker(mutex: &Mutex<Exclusive>, iter: ParIter<'_, &[u32]>) {
+    fn worker(iter: ParIter<'_, &[u32]>) -> Result {
         let ten = Simd::splat(10);
         let x = Simd::splat(6859);
         let y = Simd::splat(361);
@@ -199,10 +197,7 @@ mod simd {
             part_one += number.reduce_sum() as u64;
         }
 
-        // Merge into global results.
-        let mut exclusive = mutex.lock().unwrap();
-        exclusive.part_one += part_one;
-        exclusive.part_two.iter_mut().zip(part_two).for_each(|(a, b)| *a += b);
+        (part_one, part_two)
     }
 
     /// SIMD vector arguments are passed in memory so inline functions to avoid slow transfers

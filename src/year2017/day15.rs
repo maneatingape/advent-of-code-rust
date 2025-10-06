@@ -10,6 +10,7 @@ use crate::util::hash::*;
 use crate::util::iter::*;
 use crate::util::math::*;
 use crate::util::parse::*;
+use crate::util::thread::*;
 use std::sync::atomic::{AtomicBool, AtomicUsize, Ordering};
 use std::sync::mpsc::{Receiver, Sender, channel};
 use std::thread;
@@ -44,7 +45,7 @@ pub fn parse(input: &str) -> Input {
 
     thread::scope(|scope| {
         // Use all cores except one to generate blocks of numbers for judging.
-        for _ in 0..thread::available_parallelism().unwrap().get() - 1 {
+        for _ in 0..threads() - 1 {
             scope.spawn(|| sender(&shared, &tx));
         }
         // Judge batches serially.

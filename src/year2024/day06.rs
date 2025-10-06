@@ -18,7 +18,6 @@ use crate::util::grid::*;
 use crate::util::hash::*;
 use crate::util::point::*;
 use crate::util::thread::*;
-use std::sync::atomic::{AtomicUsize, Ordering};
 
 pub fn parse(input: &str) -> Grid<u8> {
     Grid::parse(input)
@@ -76,22 +75,17 @@ pub fn part2(grid: &Grid<u8>) -> usize {
 
     // Use as many cores as possible to parallelize the remaining search.
     let shortcut = Shortcut::from(&grid);
-    let total = AtomicUsize::new(0);
-
-    spawn_parallel_iterator(&path, |iter| worker(&shortcut, &total, iter));
-    total.into_inner()
+    let result = spawn_parallel_iterator(&path, |iter| worker(&shortcut, iter));
+    result.into_iter().sum()
 }
 
-fn worker(shortcut: &Shortcut, total: &AtomicUsize, iter: ParIter<'_, (Point, Point)>) {
+fn worker(shortcut: &Shortcut, iter: ParIter<'_, (Point, Point)>) -> usize {
     let mut seen = FastSet::new();
-    let result = iter
-        .filter(|&&(position, direction)| {
-            seen.clear();
-            is_cycle(shortcut, &mut seen, position, direction)
-        })
-        .count();
-
-    total.fetch_add(result, Ordering::Relaxed);
+    iter.filter(|&&(position, direction)| {
+        seen.clear();
+        is_cycle(shortcut, &mut seen, position, direction)
+    })
+    .count()
 }
 
 fn is_cycle(

@@ -120,7 +120,6 @@
 //! understand however slower to calculate.
 use crate::util::parse::*;
 use crate::util::thread::*;
-use std::sync::atomic::{AtomicU64, Ordering};
 
 type Spring<'a> = (&'a [u8], Vec<usize>);
 
@@ -142,12 +141,8 @@ pub fn part1(input: &[Spring<'_>]) -> u64 {
 
 pub fn part2(input: &[Spring<'_>]) -> u64 {
     // Use as many cores as possible to parallelize the calculation.
-    let shared = AtomicU64::new(0);
-    spawn_parallel_iterator(input, |iter| {
-        let partial = solve(iter, 5);
-        shared.fetch_add(partial, Ordering::Relaxed);
-    });
-    shared.into_inner()
+    let result = spawn_parallel_iterator(input, |iter| solve(iter, 5));
+    result.into_iter().sum()
 }
 
 pub fn solve<'a, I>(iter: I, repeat: usize) -> u64
