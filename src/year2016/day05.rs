@@ -7,12 +7,10 @@
 use crate::util::md5::*;
 use crate::util::thread::*;
 use std::sync::Mutex;
-use std::sync::atomic::{AtomicBool, AtomicU32, Ordering};
 
 struct Shared {
     prefix: String,
-    done: AtomicBool,
-    counter: AtomicU32,
+    iter: AtomicIter,
     mutex: Mutex<Exclusive>,
 }
 
@@ -24,8 +22,7 @@ struct Exclusive {
 pub fn parse(input: &str) -> Vec<u32> {
     let shared = Shared {
         prefix: input.trim().to_owned(),
-        done: AtomicBool::new(false),
-        counter: AtomicU32::new(1000),
+        iter: AtomicIter::new(1000, 1000),
         mutex: Mutex::new(Exclusive { found: vec![], mask: 0 }),
     };
 
@@ -90,15 +87,14 @@ fn check_hash(buffer: &mut [u8], size: usize, n: u32, shared: &Shared) {
         exclusive.mask |= 1 << (result >> 8);
 
         if exclusive.mask & 0xff == 0xff {
-            shared.done.store(true, Ordering::Relaxed);
+            shared.iter.stop();
         }
     }
 }
 
 #[cfg(not(feature = "simd"))]
 fn worker(shared: &Shared) {
-    while !shared.done.load(Ordering::Relaxed) {
-        let offset = shared.counter.fetch_add(1000, Ordering::Relaxed);
+    while let Some(offset) = shared.iter.next() {
         let (mut buffer, size) = format_string(&shared.prefix, offset);
 
         for n in 0..1000 {
@@ -146,15 +142,14 @@ mod simd {
                 exclusive.mask |= 1 << (result[i] >> 8);
 
                 if exclusive.mask & 0xff == 0xff {
-                    shared.done.store(true, Ordering::Relaxed);
+                    shared.iter.stop();
                 }
             }
         }
     }
 
     pub(super) fn worker(shared: &Shared) {
-        while !shared.done.load(Ordering::Relaxed) {
-            let start = shared.counter.fetch_add(1000, Ordering::Relaxed);
+        while let Some(start) = shared.iter.next() {
             let (prefix, size) = format_string(&shared.prefix, start);
             let mut buffers = [prefix; 32];
 

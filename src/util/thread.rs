@@ -2,7 +2,7 @@
 //! [scoped](https://doc.rust-lang.org/stable/std/thread/fn.scope.html)
 //! threads equals to the number of cores on the machine. Unlike normal threads, scoped threads
 //! can borrow data from their environment.
-use std::sync::atomic::{AtomicUsize, Ordering::Relaxed};
+use std::sync::atomic::{AtomicBool, AtomicU32, AtomicUsize, Ordering::Relaxed};
 use std::thread::*;
 
 /// Usually the number of physical cores.
@@ -169,4 +169,25 @@ fn pack(start: usize, end: usize) -> usize {
 #[inline]
 fn unpack(both: usize) -> (usize, usize) {
     (both & 0xffffffff, both >> 32)
+}
+
+/// Shares monotonically increasing value between multiple threads.
+pub struct AtomicIter {
+    running: AtomicBool,
+    index: AtomicU32,
+    step: u32,
+}
+
+impl AtomicIter {
+    pub fn new(start: u32, step: u32) -> Self {
+        AtomicIter { running: AtomicBool::new(true), index: AtomicU32::from(start), step }
+    }
+
+    pub fn next(&self) -> Option<u32> {
+        self.running.load(Relaxed).then(|| self.index.fetch_add(self.step, Relaxed))
+    }
+
+    pub fn stop(&self) {
+        self.running.store(false, Relaxed);
+    }
 }

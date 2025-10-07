@@ -19,12 +19,11 @@
 //! [`format!`]: std::format
 use crate::util::md5::*;
 use crate::util::thread::*;
-use std::sync::atomic::{AtomicBool, AtomicU32, Ordering};
+use std::sync::atomic::{AtomicU32, Ordering};
 
 pub struct Shared {
     prefix: String,
-    done: AtomicBool,
-    counter: AtomicU32,
+    iter: AtomicIter,
     first: AtomicU32,
     second: AtomicU32,
 }
@@ -32,8 +31,7 @@ pub struct Shared {
 pub fn parse(input: &str) -> Shared {
     let shared = Shared {
         prefix: input.trim().to_owned(),
-        done: AtomicBool::new(false),
-        counter: AtomicU32::new(1000),
+        iter: AtomicIter::new(1000, 1000),
         first: AtomicU32::new(u32::MAX),
         second: AtomicU32::new(u32::MAX),
     };
@@ -78,7 +76,7 @@ fn check_hash(buffer: &mut [u8], size: usize, n: u32, shared: &Shared) {
 
     if result & 0xffffff00 == 0 {
         shared.second.fetch_min(n, Ordering::Relaxed);
-        shared.done.store(true, Ordering::Relaxed);
+        shared.iter.stop();
     } else if result & 0xfffff000 == 0 {
         shared.first.fetch_min(n, Ordering::Relaxed);
     }
@@ -86,8 +84,7 @@ fn check_hash(buffer: &mut [u8], size: usize, n: u32, shared: &Shared) {
 
 #[cfg(not(feature = "simd"))]
 fn worker(shared: &Shared) {
-    while !shared.done.load(Ordering::Relaxed) {
-        let offset = shared.counter.fetch_add(1000, Ordering::Relaxed);
+    while let Some(offset) = shared.iter.next() {
         let (mut buffer, size) = format_string(&shared.prefix, offset);
 
         for n in 0..1000 {
@@ -130,7 +127,7 @@ mod simd {
         for i in 0..N {
             if result[i] & 0xffffff00 == 0 {
                 shared.second.fetch_min(start + offset + i as u32, Ordering::Relaxed);
-                shared.done.store(true, Ordering::Relaxed);
+                shared.iter.stop();
             } else if result[i] & 0xfffff000 == 0 {
                 shared.first.fetch_min(start + offset + i as u32, Ordering::Relaxed);
             }
@@ -138,8 +135,7 @@ mod simd {
     }
 
     pub(super) fn worker(shared: &Shared) {
-        while !shared.done.load(Ordering::Relaxed) {
-            let start = shared.counter.fetch_add(1000, Ordering::Relaxed);
+        while let Some(start) = shared.iter.next() {
             let (prefix, size) = format_string(&shared.prefix, start);
             let mut buffers = [prefix; 32];
 

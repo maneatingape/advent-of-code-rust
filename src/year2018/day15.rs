@@ -79,7 +79,6 @@
 use crate::util::grid::*;
 use crate::util::point::*;
 use crate::util::thread::*;
-use std::sync::atomic::{AtomicBool, AtomicI32, Ordering};
 
 const READING_ORDER: [Point; 4] = [UP, LEFT, RIGHT, DOWN];
 
@@ -101,12 +100,6 @@ struct Unit {
     kind: Kind,
     health: i32,
     power: i32,
-}
-
-/// Shared between threads for part two.
-struct Shared {
-    done: AtomicBool,
-    elf_attack_power: AtomicI32,
 }
 
 /// Parse the input into a bitmask for the cave walls
@@ -143,24 +136,21 @@ pub fn part1(input: &Input) -> i32 {
 /// single Elf is killed. Since each fight is independent we can parallelize the search over
 /// multiple threads.
 pub fn part2(input: &Input) -> i32 {
-    let shared = Shared { done: AtomicBool::new(false), elf_attack_power: AtomicI32::new(4) };
+    let iter = AtomicIter::new(4, 1);
 
     // Use as many cores as possible to parallelize the search.
-    let result = spawn(|| worker(input, &shared));
+    let result = spawn(|| worker(input, &iter));
     // Find lowest possible power.
     result.into_iter().flatten().min_by_key(|&(eap, _)| eap).map(|(_, score)| score).unwrap()
 }
 
-fn worker(input: &Input, shared: &Shared) -> Option<(i32, i32)> {
-    while !shared.done.load(Ordering::Relaxed) {
-        // Get the next attack power, incrementing it atomically for the next fight.
-        let power = shared.elf_attack_power.fetch_add(1, Ordering::Relaxed);
-
+fn worker(input: &Input, iter: &AtomicIter) -> Option<(u32, i32)> {
+    while let Some(power) = iter.next() {
         // If the Elves win then set the score and signal all threads to stop.
         // Use a channel to queue all potential scores as another thread may already have sent a
         // different value.
-        if let Some(score) = fight(input, power, true) {
-            shared.done.store(true, Ordering::Relaxed);
+        if let Some(score) = fight(input, power as i32, true) {
+            iter.stop();
             return Some((power, score));
         }
     }

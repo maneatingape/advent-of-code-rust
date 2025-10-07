@@ -11,7 +11,6 @@ use crate::util::iter::*;
 use crate::util::math::*;
 use crate::util::parse::*;
 use crate::util::thread::*;
-use std::sync::atomic::{AtomicBool, AtomicUsize, Ordering};
 use std::sync::mpsc::{Receiver, Sender, channel};
 use std::thread;
 
@@ -26,8 +25,7 @@ type Input = (usize, usize);
 pub struct Shared {
     first: usize,
     second: usize,
-    start: AtomicUsize,
-    done: AtomicBool,
+    iter: AtomicIter,
 }
 
 /// Generated numbers from `start` to `start + BLOCK`.
@@ -40,7 +38,7 @@ struct Block {
 
 pub fn parse(input: &str) -> Input {
     let [first, second] = input.iter_unsigned().chunk::<2>().next().unwrap();
-    let shared = Shared { first, second, start: AtomicUsize::new(0), done: AtomicBool::new(false) };
+    let shared = Shared { first, second, iter: AtomicIter::new(0, BLOCK as u32) };
     let (tx, rx) = channel();
 
     thread::scope(|scope| {
@@ -62,9 +60,9 @@ pub fn part2(input: &Input) -> usize {
 }
 
 fn sender(shared: &Shared, tx: &Sender<Block>) {
-    while !shared.done.load(Ordering::Relaxed) {
+    while let Some(start) = shared.iter.next() {
         // Start at any point in the sequence using modular exponentiation.
-        let start = shared.start.fetch_add(BLOCK, Ordering::Relaxed);
+        let start = start as usize;
         let mut first = shared.first * 16807.mod_pow(start, MOD);
         let mut second = shared.second * 48271.mod_pow(start, MOD);
 
@@ -138,7 +136,7 @@ fn receiver(shared: &Shared, rx: &Receiver<Block>) -> Input {
     }
 
     // Signal worker threads to finish.
-    shared.done.store(true, Ordering::Relaxed);
+    shared.iter.stop();
 
     (part_one, part_two)
 }

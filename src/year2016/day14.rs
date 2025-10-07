@@ -6,14 +6,12 @@ use crate::util::md5::*;
 use crate::util::thread::*;
 use std::collections::{BTreeMap, BTreeSet};
 use std::sync::Mutex;
-use std::sync::atomic::{AtomicBool, AtomicI32, Ordering};
 
 /// Atomics can be safely shared between threads.
 struct Shared<'a> {
     input: &'a str,
     part_two: bool,
-    done: AtomicBool,
-    counter: AtomicI32,
+    iter: AtomicIter,
     mutex: Mutex<Exclusive>,
 }
 
@@ -40,15 +38,12 @@ pub fn part2(input: &str) -> i32 {
 
 /// Find the first 64 keys that satisfy the rules.
 fn generate_pad(input: &str, part_two: bool) -> i32 {
+    let step = if cfg!(feature = "simd") { 32 } else { 1 };
+
     let exclusive =
         Exclusive { threes: BTreeMap::new(), fives: BTreeMap::new(), found: BTreeSet::new() };
-    let shared = Shared {
-        input,
-        part_two,
-        done: AtomicBool::new(false),
-        counter: AtomicI32::new(0),
-        mutex: Mutex::new(exclusive),
-    };
+    let shared =
+        Shared { input, part_two, iter: AtomicIter::new(0, step), mutex: Mutex::new(exclusive) };
 
     // Use as many cores as possible to parallelize the search.
     spawn(|| worker(&shared));
@@ -59,9 +54,9 @@ fn generate_pad(input: &str, part_two: bool) -> i32 {
 
 #[cfg(not(feature = "simd"))]
 fn worker(shared: &Shared<'_>) {
-    while !shared.done.load(Ordering::Relaxed) {
+    while let Some(n) = shared.iter.next() {
         // Get the next key to check.
-        let n = shared.counter.fetch_add(1, Ordering::Relaxed);
+        let n = n as i32;
 
         // Calculate the hash.
         let (mut buffer, size) = format_string(shared.input, n);
@@ -88,9 +83,9 @@ fn worker(shared: &Shared<'_>) {
     let mut result = ([0; 32], [0; 32], [0; 32], [0; 32]);
     let mut buffers = [[0; 64]; 32];
 
-    while !shared.done.load(Ordering::Relaxed) {
+    while let Some(start) = shared.iter.next() {
         // Get the next key to check.
-        let start = shared.counter.fetch_add(32, Ordering::Relaxed);
+        let start = start as i32;
 
         // Calculate the hash.
         for i in 0..32 {
@@ -183,7 +178,7 @@ fn check(shared: &Shared<'_>, n: i32, hash: (u32, u32, u32, u32)) {
         exclusive.found.extend(candidates);
 
         if exclusive.found.len() >= 64 {
-            shared.done.store(true, Ordering::Relaxed);
+            shared.iter.stop();
         }
     }
 }

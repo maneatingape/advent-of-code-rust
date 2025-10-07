@@ -10,7 +10,6 @@
 use crate::util::hash::*;
 use crate::util::parse::*;
 use crate::util::thread::*;
-use std::sync::atomic::{AtomicBool, AtomicI32, Ordering};
 
 pub struct Input {
     immune: Vec<Group>,
@@ -67,12 +66,6 @@ impl Group {
     }
 }
 
-/// Shared between threads for part two.
-struct Shared {
-    done: AtomicBool,
-    boost: AtomicI32,
-}
-
 pub fn parse<'a>(input: &'a str) -> Input {
     // Use a bitmask to store each possible attack type.
     let mut elements = FastMap::new();
@@ -93,26 +86,23 @@ pub fn part1(input: &Input) -> i32 {
 }
 
 pub fn part2(input: &Input) -> i32 {
-    let shared = Shared { done: AtomicBool::new(false), boost: AtomicI32::new(1) };
+    let iter = AtomicIter::new(1, 1);
 
     // Use as many cores as possible to parallelize the search.
-    let result = spawn(|| worker(input, &shared));
+    let result = spawn(|| worker(input, &iter));
     // Find lowest possible power.
     result.into_iter().flatten().min_by_key(|&(boost, _)| boost).map(|(_, units)| units).unwrap()
 }
 
-fn worker(input: &Input, shared: &Shared) -> Option<(i32, i32)> {
-    while !shared.done.load(Ordering::Relaxed) {
-        // Get the next attack boost, incrementing it atomically for the next fight.
-        let boost = shared.boost.fetch_add(1, Ordering::Relaxed);
-
+fn worker(input: &Input, iter: &AtomicIter) -> Option<(u32, i32)> {
+    while let Some(boost) = iter.next() {
         // If the reindeer wins then set the score and signal all threads to stop.
         // Use a channel to queue all potential scores as another thread may already have sent a
         // different value.
-        let (kind, units) = fight(input, boost);
+        let (kind, units) = fight(input, boost as i32);
 
         if kind == Kind::Immune {
-            shared.done.store(true, Ordering::Relaxed);
+            iter.stop();
             return Some((boost, units));
         }
     }
