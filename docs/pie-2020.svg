@@ -2,9 +2,9 @@
 %%{init: {"themeVariables": { "pie1": "#7cb5ec", "pie2": "#90ed7d", "pie3": "#c6cdd5"}}}%%
 pie
     title Year 2020 benchmark time by % of total
-    "Day 23" : 110000
+    "Day 23" : 109000
     "Day 15" : 103000
-    "Others" : 16161
+    "Others" : 8268
 -->
 <svg viewBox="0 0 1350 450" preserveAspectRatio="xMidYMin" xmlns="http://www.w3.org/2000/svg">
 	<style>
@@ -16,12 +16,12 @@ pie
 	</style>
 	<g transform="translate(675,225)">
 		<circle class="pieOuterCircle" cx="0" cy="0" r="186"/>
-		<path class="pieCircle" d="M0,-185A185,185,0,0,1,23.173,183.543L0,0Z" fill="#7cb5ec"/>
-		<path class="pieCircle" d="M23.173,183.543A185,185,0,0,1,-79.318,-167.134L0,0Z" fill="#90ed7d"/>
-		<path class="pieCircle" d="M-79.318,-167.134A185,185,0,0,1,0,-185L0,0Z" fill="#c6cdd5"/>
-		<text class="slice" style="text-anchor: middle;" transform="translate(138.47653333980492,-8.707020971026338)">48%</text>
-		<text class="slice" style="text-anchor: middle;" transform="translate(-133.1784826531156,38.92369790004275)">45%</text>
-		<text class="slice" style="text-anchor: middle;" transform="translate(-30.489592134152105,-135.35858772716657)">7%</text>
+		<path class="pieCircle" d="M0,-185A185,185,0,0,1,5.983,184.903L0,0Z" fill="#7cb5ec"/>
+		<path class="pieCircle" d="M5.983,184.903A185,185,0,0,1,-43.228,-179.879L0,0Z" fill="#90ed7d"/>
+		<path class="pieCircle" d="M-43.228,-179.879A185,185,0,0,1,0,-185L0,0Z" fill="#c6cdd5"/>
+		<text class="slice" style="text-anchor: middle;" transform="translate(138.7318525099758,-2.2440140708839578)">49%</text>
+		<text class="slice" style="text-anchor: middle;" transform="translate(-137.50436864634548,18.550231889923033)">47%</text>
+		<text class="slice" style="text-anchor: middle;" transform="translate(-16.323937272275565,-137.78639835604534)">4%</text>
 		<text class="pieTitleText" x="0" y="-200">Year 2020 benchmark time by % of total</text>
 		<g transform="translate(216,-33)">
 			<rect height="18" style="fill: rgb(124, 181, 236); stroke: rgb(124, 181, 236);" width="18"/>

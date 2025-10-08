@@ -58,7 +58,7 @@ Improvements to solutions are always appreciated. Please see the
 ## Performance
 
 Benchmarks are measured using the built-in `cargo bench` tool run on an [Apple M2 Max][apple-link].
-All 250 solutions from 2024 to 2015 complete sequentially in **517 milliseconds**.
+All 250 solutions from 2024 to 2015 complete sequentially in **512 milliseconds**.
 Interestingly 86% of the total time is spent on just 9 solutions.
 Performance is reasonable even on older hardware, for example a 2011 MacBook Pro with an
 [Intel i7-2720QM][intel-link] processor takes 3.5 seconds to run the same 250 solutions.
@@ -67,7 +67,7 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 
 | Year | [2015](#2015) | [2016](#2016) | [2017](#2017) | [2018](#2018) | [2019](#2019) | [2020](#2020) | [2021](#2021) | [2022](#2022) | [2023](#2023) | [2024](#2024) |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Benchmark (ms) | 17 | 117 | 82 | 35 | 15 | 225 | 9 | 8 | 5 | 4 |
+| Benchmark (ms) | 17 | 117 | 82 | 35 | 15 | 220 | 9 | 8 | 5 | 4 |
 
 ## 2024
 
@@ -225,7 +225,7 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 | 20 | [Jurassic Jigsaw](https://adventofcode.com/2020/day/20) | [Source](src/year2020/day20.rs) | 42 |
 | 21 | [Allergen Assessment](https://adventofcode.com/2020/day/21) | [Source](src/year2020/day21.rs) | 45 |
 | 22 | [Crab Combat](https://adventofcode.com/2020/day/22) | [Source](src/year2020/day22.rs) | 5911 |
-| 23 | [Crab Cups](https://adventofcode.com/2020/day/23) | [Source](src/year2020/day23.rs) | 110000 |
+| 23 | [Crab Cups](https://adventofcode.com/2020/day/23) | [Source](src/year2020/day23.rs) | 109000 |
 | 24 | [Lobby Layout](https://adventofcode.com/2020/day/24) | [Source](src/year2020/day24.rs) | 330 |
 | 25 | [Combo Breaker](https://adventofcode.com/2020/day/25) | [Source](src/year2020/day25.rs) | 20 |
 
