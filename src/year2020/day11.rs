@@ -167,9 +167,9 @@ mod simd {
         }
 
         // Common constants.
-        let zero: Vector = Simd::splat(0);
-        let one: Vector = Simd::splat(1);
-        let limit: Vector = Simd::splat(limit);
+        let zero = Simd::splat(0);
+        let one = Simd::splat(1);
+        let limit = Simd::splat(limit);
 
         let mut current = grid.same_size_with(0);
         let mut next = grid.same_size_with(0);

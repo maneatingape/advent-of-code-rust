@@ -9,9 +9,6 @@
 
 /// Pad the 10x10 grid by 1 on either side so that we can avoid boundary checks.
 type Input = [u8; 144];
-/// Offsets for each of the eight neighbors. The last four offsets will wrap around when
-/// added to `u8` to give a smaller index.
-const NEIGHBORS: [u8; 8] = [1, 11, 12, 13, 243, 244, 245, 255];
 
 pub fn parse(input: &str) -> Input {
     let bytes: Vec<_> = input.lines().map(str::as_bytes).collect();
@@ -59,7 +56,7 @@ fn simulate(input: &Input, predicate: fn(usize, usize) -> bool) -> (usize, usize
                 } else {
                     grid[index] = 0;
                     flashed[index] = true;
-                    todo.push(index as u8);
+                    todo.push(index);
                 }
             }
         }
@@ -68,8 +65,16 @@ fn simulate(input: &Input, predicate: fn(usize, usize) -> bool) -> (usize, usize
         while let Some(index) = todo.pop() {
             flashes += 1;
 
-            for offset in NEIGHBORS {
-                let next = index.wrapping_add(offset) as usize;
+            for next in [
+                index + 1,
+                index + 11,
+                index + 12,
+                index + 13,
+                index - 1,
+                index - 11,
+                index - 12,
+                index - 13,
+            ] {
                 if flashed[next] {
                     continue;
                 }
@@ -79,7 +84,7 @@ fn simulate(input: &Input, predicate: fn(usize, usize) -> bool) -> (usize, usize
                 } else {
                     grid[next] = 0;
                     flashed[next] = true;
-                    todo.push(next as u8);
+                    todo.push(next);
                 }
             }
         }

@@ -37,25 +37,23 @@ pub fn parse(input: &str) -> FastSet<Hex> {
                 b'e' => q += 1,
                 b'w' => q -= 1,
                 b'n' => {
-                    if b'e' == iter.next().unwrap() {
+                    r -= 1;
+                    if iter.next().unwrap() == b'e' {
                         q += 1;
                     }
-                    r -= 1;
                 }
                 b's' => {
-                    if b'e' != iter.next().unwrap() {
+                    r += 1;
+                    if iter.next().unwrap() == b'w' {
                         q -= 1;
                     }
-                    r += 1;
                 }
                 _ => unreachable!(),
             }
         }
 
         let tile = Hex { q, r };
-        if tiles.contains(&tile) {
-            tiles.remove(&tile);
-        } else {
+        if !tiles.remove(&tile) {
             tiles.insert(tile);
         }
     }
@@ -80,7 +78,6 @@ pub fn part2(input: &FastSet<Hex>) -> usize {
 #[cfg(not(feature = "simd"))]
 mod scalar {
     use super::*;
-    use std::array::from_fn;
 
     pub(super) fn simulate(input: &FastSet<Hex>) -> usize {
         // Determine bounds
@@ -91,30 +88,32 @@ mod scalar {
 
         // Create array with enough space to allow expansion for 100 generations.
         // 2 * (100 generations + 1 buffer) + Origin = 203 extra in each dimension
-        let width = q2 - q1 + 203;
-        let height = r2 - r1 + 203;
-        let neighbors: [i32; 6] = [-1, 1, -width, width, 1 - width, width - 1];
-        let neighbors: [usize; 6] = from_fn(|i| neighbors[i] as usize);
+        let width = (q2 - q1 + 203) as usize;
+        let height = (r2 - r1 + 203) as usize;
 
+        let mut state = vec![0_u8; width * height];
         let mut active = Vec::with_capacity(5_000);
         let mut candidates = Vec::with_capacity(5_000);
         let mut next_active = Vec::with_capacity(5_000);
 
         // Create initial active state, offsetting tiles so that all indices are positive.
         for hex in input {
-            let index = width * (hex.r - r1 + 101) + (hex.q - q1 + 101);
-            active.push(index as usize);
+            let index = width * (hex.r - r1 + 101) as usize + (hex.q - q1 + 101) as usize;
+            active.push(index);
         }
 
         for _ in 0..100 {
-            let mut state: Vec<u8> = vec![0; (width * height) as usize];
+            state.fill(0);
 
             for &tile in &active {
-                for &offset in &neighbors {
-                    // Earlier we converted the offsets from signed `i32` to unsigned `usize`. To
-                    // achieve subtraction for negative indices, we use a `wrapping_add` that performs
-                    // [two's complement](https://en.wikipedia.org/wiki/Two%27s_complement) arithmetic.
-                    let index = tile.wrapping_add(offset);
+                for index in [
+                    tile + 1,
+                    tile - 1,
+                    tile + width,
+                    tile - width,
+                    tile + 1 - width,
+                    tile - 1 + width,
+                ] {
                     state[index] += 1;
 
                     if state[index] == 2 {
@@ -177,9 +176,9 @@ mod simd {
             current[index] = 1;
         }
 
-        let zero: Vector = Simd::splat(0);
-        let one: Vector = Simd::splat(1);
-        let two: Vector = Simd::splat(2);
+        let zero = Simd::splat(0);
+        let one = Simd::splat(1);
+        let two = Simd::splat(2);
 
         for round in 0..100 {
             // The active state boundary expands by 1 horizontally and vertically each round.

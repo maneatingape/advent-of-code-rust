@@ -252,7 +252,7 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 | 15 | [Oxygen System](https://adventofcode.com/2019/day/15) | [Source](src/year2019/day15.rs) | 291 |
 | 16 | [Flawed Frequency Transmission](https://adventofcode.com/2019/day/16) | [Source](src/year2019/day16.rs) | 1956 |
 | 17 | [Set and Forget](https://adventofcode.com/2019/day/17) | [Source](src/year2019/day17.rs) | 338 |
-| 18 | [Many-Worlds Interpretation](https://adventofcode.com/2019/day/18) | [Source](src/year2019/day18.rs) | 1157 |
+| 18 | [Many-Worlds Interpretation](https://adventofcode.com/2019/day/18) | [Source](src/year2019/day18.rs) | 1039 |
 | 19 | [Tractor Beam](https://adventofcode.com/2019/day/19) | [Source](src/year2019/day19.rs) | 688 |
 | 20 | [Donut Maze](https://adventofcode.com/2019/day/20) | [Source](src/year2019/day20.rs) | 189 |
 | 21 | [Springdroid Adventure](https://adventofcode.com/2019/day/21) | [Source](src/year2019/day21.rs) | 1785 |
@@ -354,7 +354,7 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 | 21 | [Scrambled Letters and Hash](https://adventofcode.com/2016/day/21) | [Source](src/year2016/day21.rs) | 10 |
 | 22 | [Grid Computing](https://adventofcode.com/2016/day/22) | [Source](src/year2016/day22.rs) | 28 |
 | 23 | [Safe Cracking](https://adventofcode.com/2016/day/23) | [Source](src/year2016/day23.rs) | 1 |
-| 24 | [Air Duct Spelunking](https://adventofcode.com/2016/day/24) | [Source](src/year2016/day24.rs) | 337 |
+| 24 | [Air Duct Spelunking](https://adventofcode.com/2016/day/24) | [Source](src/year2016/day24.rs) | 316 |
 | 25 | [Clock Signal](https://adventofcode.com/2016/day/25) | [Source](src/year2016/day25.rs) | 1 |
 
 ## 2015

@@ -86,7 +86,7 @@ pub fn parse(input: &str) -> Grid<u8> {
 }
 
 pub fn part1(input: &Grid<u8>) -> u32 {
-    explore(input.width, &input.bytes)
+    explore(input.width as usize, &input.bytes)
 }
 
 pub fn part2(input: &Grid<u8>) -> u32 {
@@ -101,10 +101,10 @@ pub fn part2(input: &Grid<u8>) -> u32 {
     patch("###", 0);
     patch("@#@", 1);
 
-    explore(input.width, &modified)
+    explore(input.width as usize, &modified)
 }
 
-fn parse_maze(width: i32, bytes: &[u8]) -> Maze {
+fn parse_maze(width: usize, bytes: &[u8]) -> Maze {
     let mut initial = State::default();
     let mut found = Vec::new();
     let mut robots = 26;
@@ -125,7 +125,6 @@ fn parse_maze(width: i32, bytes: &[u8]) -> Maze {
     // Start a BFS from each key and robot's location stopping at the nearest neighbor.
     // As a minor optimization we re-use the same `todo` and `visited` between each search.
     let default = Door { distance: u32::MAX, needed: 0 };
-    let orthogonal = [1, -1, width, -width].map(|i| i as usize);
 
     let mut maze = [[default; 30]; 30];
     let mut visited = vec![usize::MAX; bytes.len()];
@@ -150,11 +149,10 @@ fn parse_maze(width: i32, bytes: &[u8]) -> Maze {
                 continue;
             }
 
-            for delta in orthogonal {
-                let next_index = index.wrapping_add(delta);
-                if bytes[next_index] != b'#' && visited[next_index] != from {
-                    todo.push_back((next_index, distance + 1, needed));
-                    visited[next_index] = from;
+            for next in [index + 1, index - 1, index + width, index - width] {
+                if bytes[next] != b'#' && visited[next] != from {
+                    todo.push_back((next, distance + 1, needed));
+                    visited[next] = from;
                 }
             }
         }
@@ -183,7 +181,7 @@ fn parse_maze(width: i32, bytes: &[u8]) -> Maze {
     Maze { initial, maze }
 }
 
-fn explore(width: i32, bytes: &[u8]) -> u32 {
+fn explore(width: usize, bytes: &[u8]) -> u32 {
     let mut todo = MinHeap::with_capacity(5_000);
     let mut cache = FastMap::with_capacity(5_000);
 

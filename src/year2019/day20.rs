@@ -48,6 +48,7 @@ pub struct Maze {
 /// portal to build a list of distance pairs.
 pub fn parse(input: &str) -> Maze {
     let grid = Grid::parse(input);
+    let width = grid.width as usize;
 
     let mut tiles: Vec<_> =
         grid.bytes.iter().map(|&b| if b == b'.' { Tile::Open } else { Tile::Wall }).collect();
@@ -104,7 +105,6 @@ pub fn parse(input: &str) -> Maze {
     let mut portals = Vec::new();
     let mut todo = VecDeque::new();
     let mut visited = vec![0; tiles.len()];
-    let orthogonal = [1, -1, grid.width, -grid.width].map(|i| i as usize);
 
     for start in found {
         let mut edges = Vec::new();
@@ -113,8 +113,7 @@ pub fn parse(input: &str) -> Maze {
         while let Some((index, steps)) = todo.pop_front() {
             visited[index] = start;
 
-            for offset in orthogonal {
-                let next_index = index.wrapping_add(offset);
+            for next_index in [index + 1, index - 1, index + width, index - width] {
                 let next_steps = steps + 1;
 
                 if visited[next_index] != start {
