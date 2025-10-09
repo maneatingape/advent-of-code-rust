@@ -37,121 +37,164 @@
 //!   8 % 5 = 3
 //! ```
 //!
-//! Each item can be treated individually. This allows the processing to be parallelized over
-//! many threads, speeding things up in part two.
+//! A neat trick is that each item can be treated individually. This allows the processing to be
+//! parallelized over many threads. To speed things up even more, we notice that items form cycles,
+//! repeating the same path through the monkeys. Once we find a cycle for an item, then we short
+//! circuit the calculation early without having to calculate the entire 10,000 rounds.
 //!
 //! [`iter_unsigned`]: ParseOps::iter_unsigned
+use crate::util::hash::*;
 use crate::util::parse::*;
 use crate::util::thread::*;
 
-type Pair = (usize, u64);
+type Input = (Vec<Monkey>, Vec<Pair>);
+type Pair = (usize, usize);
 
 pub struct Monkey {
-    items: Vec<u64>,
+    items: Vec<usize>,
     operation: Operation,
-    test: u64,
+    test: usize,
     yes: usize,
     no: usize,
 }
 
-pub enum Operation {
+enum Operation {
     Square,
-    Multiply(u64),
-    Add(u64),
+    Multiply(usize),
+    Add(usize),
 }
 
-type Business = [u64; 8];
+#[derive(Clone, Copy)]
+struct Business([usize; 8]);
+
+impl Business {
+    fn zero() -> Self {
+        Business([0; 8])
+    }
+
+    fn inc(&mut self, from: usize) {
+        self.0[from] += 1;
+    }
+
+    fn level(mut self) -> usize {
+        self.0.sort_unstable();
+        self.0.iter().rev().take(2).product()
+    }
+
+    fn add(mut self, rhs: Self) -> Self {
+        self.0.iter_mut().zip(rhs.0).for_each(|(a, b)| *a += b);
+        self
+    }
+
+    fn sub(mut self, rhs: Self) -> Self {
+        self.0.iter_mut().zip(rhs.0).for_each(|(a, b)| *a -= b);
+        self
+    }
+
+    fn mul(mut self, rhs: usize) -> Self {
+        self.0.iter_mut().for_each(|a| *a *= rhs);
+        self
+    }
+}
 
 /// Extract each Monkey's info from the flavor text. With the exception of the lines starting
 /// `Operation` we are only interested in the numbers on each line.
-pub fn parse(input: &str) -> Vec<Monkey> {
-    /// Inner helper function to keep the parsing logic readable.
-    fn helper(chunk: &[&str]) -> Monkey {
-        let items = chunk[1].iter_unsigned().collect();
-        let tokens: Vec<_> = chunk[2].split(' ').rev().take(2).collect();
-        let operation = match tokens[..] {
-            ["old", _] => Operation::Square,
-            [y, "*"] => Operation::Multiply(y.unsigned()),
-            [y, "+"] => Operation::Add(y.unsigned()),
-            _ => unreachable!(),
-        };
-        let test = chunk[3].unsigned();
-        let yes = chunk[4].unsigned();
-        let no = chunk[5].unsigned();
-        Monkey { items, operation, test, yes, no }
-    }
-    input.lines().collect::<Vec<&str>>().chunks(7).map(helper).collect()
+pub fn parse(input: &str) -> Input {
+    let lines: Vec<_> = input.lines().collect();
+
+    let monkeys: Vec<_> = lines
+        .chunks(7)
+        .map(|chunk: &[&str]| {
+            let items = chunk[1].iter_unsigned().collect();
+            let tokens: Vec<_> = chunk[2].split(' ').rev().take(2).collect();
+            let operation = match tokens[..] {
+                ["old", _] => Operation::Square,
+                [y, "*"] => Operation::Multiply(y.unsigned()),
+                [y, "+"] => Operation::Add(y.unsigned()),
+                _ => unreachable!(),
+            };
+            let test = chunk[3].unsigned();
+            let yes = chunk[4].unsigned();
+            let no = chunk[5].unsigned();
+            Monkey { items, operation, test, yes, no }
+        })
+        .collect();
+
+    let pairs: Vec<_> = monkeys
+        .iter()
+        .enumerate()
+        .flat_map(|(from, monkey)| monkey.items.iter().map(move |&item| (from, item)))
+        .collect();
+
+    (monkeys, pairs)
 }
 
-pub fn part1(input: &[Monkey]) -> u64 {
-    solve(input, sequential)
-}
+pub fn part1(input: &Input) -> usize {
+    let (monkeys, pairs) = input;
+    let mut business = Business::zero();
 
-pub fn part2(input: &[Monkey]) -> u64 {
-    solve(input, parallel)
-}
+    for &(mut from, mut item) in pairs {
+        let mut rounds = 0;
 
-/// Convenience wrapper to reuse common logic between part one and two.
-fn solve(monkeys: &[Monkey], play: impl Fn(&[Monkey], &[Pair]) -> Business) -> u64 {
-    let mut pairs = Vec::new();
+        while rounds < 20 {
+            let worry = match monkeys[from].operation {
+                Operation::Square => item * item,
+                Operation::Multiply(y) => item * y,
+                Operation::Add(y) => item + y,
+            };
+            item = worry / 3;
 
-    for (from, monkey) in monkeys.iter().enumerate() {
-        for &item in &monkey.items {
-            pairs.push((from, item));
+            let to = if item.is_multiple_of(monkeys[from].test) {
+                monkeys[from].yes
+            } else {
+                monkeys[from].no
+            };
+
+            business.inc(from);
+
+            // Only increase the round when the item is passes to a previous monkey
+            // which will have to be processed in the next turn.
+            rounds += usize::from(to < from);
+            from = to;
         }
     }
 
-    let mut business = play(monkeys, &pairs);
-    business.sort_unstable();
-    business.iter().rev().take(2).product()
+    business.level()
 }
 
-/// Play 20 rounds dividing the worry level by 3 each inspection.
-fn sequential(monkeys: &[Monkey], pairs: &[Pair]) -> Business {
-    let mut business = [0; 8];
+pub fn part2(input: &Input) -> usize {
+    let (monkeys, pairs) = input;
 
-    for &pair in pairs {
-        let extra = play(monkeys, 20, |x| x / 3, pair);
-        business.iter_mut().enumerate().for_each(|(i, b)| *b += extra[i]);
-    }
+    // Use as many cores as possible to parallelize the calculation.
+    let result = spawn_parallel_iterator(pairs, |iter| {
+        iter.map(|&(from, item)| play(monkeys, from, item)).collect::<Vec<_>>()
+    });
 
-    business
+    // Merge results.
+    result.into_iter().flatten().fold(Business::zero(), Business::add).level()
 }
 
 /// Play 10,000 rounds adjusting the worry level modulo the product of all the monkey's test values.
-fn parallel(monkeys: &[Monkey], pairs: &[Pair]) -> Business {
-    // Use as many cores as possible to parallelize the calculation.
-    let result = spawn_parallel_iterator(pairs, |iter| worker(monkeys, iter));
+/// Look for cycles in each path so that we don't have to process the entire 10,000 rounds.
+fn play(monkeys: &[Monkey], mut from: usize, mut item: usize) -> Business {
+    let product: usize = monkeys.iter().map(|m| m.test).product();
 
-    let mut business = [0; 8];
-    for extra in result.into_iter().flatten() {
-        business.iter_mut().zip(extra).for_each(|(b, e)| *b += e);
-    }
-    business
-}
+    let mut round = 0;
+    let mut business = Business::zero();
 
-/// Multiple worker functions are executed in parallel, one per thread.
-fn worker(monkeys: &[Monkey], iter: ParIter<'_, Pair>) -> Vec<Business> {
-    let product: u64 = monkeys.iter().map(|m| m.test).product();
-    iter.map(|&pair| play(monkeys, 10000, |x| x % product, pair)).collect()
-}
+    let mut path = Vec::new();
+    let mut seen = FastMap::new();
 
-/// Play an arbitrary number of rounds for a single item.
-///
-/// The logic to adjust the worry level is passed via a closure
-/// so that we can re-use the bulk of the same logic between part 1 and 2.
-fn play(monkeys: &[Monkey], max_rounds: u32, adjust: impl Fn(u64) -> u64, pair: Pair) -> Business {
-    let (mut from, mut item) = pair;
-    let mut rounds = 0;
-    let mut business = [0; 8];
+    path.push(business);
+    seen.insert((from, item), path.len() - 1);
 
-    while rounds < max_rounds {
+    while round < 10_000 {
         let worry = match monkeys[from].operation {
             Operation::Square => item * item,
             Operation::Multiply(y) => item * y,
             Operation::Add(y) => item + y,
         };
-        item = adjust(worry);
+        item = worry % product;
 
         let to = if item.is_multiple_of(monkeys[from].test) {
             monkeys[from].yes
@@ -159,10 +202,28 @@ fn play(monkeys: &[Monkey], max_rounds: u32, adjust: impl Fn(u64) -> u64, pair: 
             monkeys[from].no
         };
 
+        business.inc(from);
+
         // Only increase the round when the item is passes to a previous monkey
         // which will have to be processed in the next turn.
-        rounds += (to < from) as u32;
-        business[from] += 1;
+        if to < from {
+            round += 1;
+            path.push(business);
+
+            // If we have found a cycle, then short ciruit and return the final result.
+            if let Some(previous) = seen.insert((to, item), path.len() - 1) {
+                let cycle_width = round - previous;
+
+                let offset = 10_000 - round;
+                let quotient = offset / cycle_width;
+                let remainder = offset % cycle_width;
+
+                let full = business.sub(path[previous]).mul(quotient);
+                let partial = path[previous + remainder].sub(path[previous]);
+                return business.add(full).add(partial);
+            }
+        }
+
         from = to;
     }
 
