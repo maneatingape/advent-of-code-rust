@@ -58,7 +58,7 @@ Improvements to solutions are always appreciated. Please see the
 ## Performance
 
 Benchmarks are measured using the built-in `cargo bench` tool run on an [Apple M2 Max][apple-link].
-All 250 solutions from 2024 to 2015 complete sequentially in **511 milliseconds**.
+All 250 solutions from 2024 to 2015 complete sequentially in **510 milliseconds**.
 Interestingly 86% of the total time is spent on just 9 solutions.
 Performance is reasonable even on older hardware, for example a 2011 MacBook Pro with an
 [Intel i7-2720QM][intel-link] processor takes 3.5 seconds to run the same 250 solutions.
@@ -67,7 +67,7 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 
 | Year | [2015](#2015) | [2016](#2016) | [2017](#2017) | [2018](#2018) | [2019](#2019) | [2020](#2020) | [2021](#2021) | [2022](#2022) | [2023](#2023) | [2024](#2024) |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Benchmark (ms) | 17 | 117 | 82 | 35 | 15 | 220 | 9 | 7 | 5 | 4 |
+| Benchmark (ms) | 17 | 117 | 82 | 35 | 15 | 220 | 8 | 7 | 5 | 4 |
 
 ## 2024
 
@@ -190,7 +190,7 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 | 17 | [Trick Shot](https://adventofcode.com/2021/day/17) | [Source](src/year2021/day17.rs) | 7 |
 | 18 | [Snailfish](https://adventofcode.com/2021/day/18) | [Source](src/year2021/day18.rs) | 476 |
 | 19 | [Beacon Scanner](https://adventofcode.com/2021/day/19) | [Source](src/year2021/day19.rs) | 615 |
-| 20 | [Trench Map](https://adventofcode.com/2021/day/20) | [Source](src/year2021/day20.rs) | 2066 |
+| 20 | [Trench Map](https://adventofcode.com/2021/day/20) | [Source](src/year2021/day20.rs) | 511 |
 | 21 | [Dirac Dice](https://adventofcode.com/2021/day/21) | [Source](src/year2021/day21.rs) | 278 |
 | 22 | [Reactor Reboot](https://adventofcode.com/2021/day/22) | [Source](src/year2021/day22.rs) | 378 |
 | 23 | [Amphipod](https://adventofcode.com/2021/day/23) | [Source](src/year2021/day23.rs) | 1714 |
