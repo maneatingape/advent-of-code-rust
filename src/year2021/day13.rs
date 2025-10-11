@@ -9,6 +9,7 @@
 //! For part 2 we can determine the final size of the paper by taking the *last* x and y
 //! coordinates from the fold instructions. It's then faster and more convenient to process
 //! each point completely and update the final location, than to step through intermediate folds.
+use crate::util::grid::*;
 use crate::util::hash::*;
 use crate::util::iter::*;
 use crate::util::parse::*;
@@ -61,40 +62,23 @@ pub fn part1(input: &Input) -> usize {
 /// The output is a multi-line string to allow integration testing. The final dimensions of the
 /// paper are found from the last `x` and `y` fold coordinates.
 pub fn part2(input: &Input) -> String {
-    let mut width = 0;
-    let mut height = 0;
+    let (width, height) = input.folds.iter().fold((0, 0), |(width, height), &fold| match fold {
+        Fold::Horizontal(x) => (x, height),
+        Fold::Vertical(y) => (width, y),
+    });
 
-    for &fold in &input.folds {
-        match fold {
-            Fold::Horizontal(x) => width = x,
-            Fold::Vertical(y) => height = y,
-        }
+    let mut grid = Grid::new(width + 1, height, '.');
+
+    for &start in &input.points {
+        let end = input.folds.iter().fold(start, |point, &fold| match fold {
+            Fold::Horizontal(x) => fold_horizontal(x, point),
+            Fold::Vertical(y) => fold_vertical(y, point),
+        });
+        grid[end + RIGHT] = '#';
     }
 
-    let mut grid = vec![false; (width * height) as usize];
-
-    for point in &input.points {
-        let mut point = *point;
-
-        for &fold in &input.folds {
-            point = match fold {
-                Fold::Horizontal(x) => fold_horizontal(x, point),
-                Fold::Vertical(y) => fold_vertical(y, point),
-            }
-        }
-
-        grid[(point.y * width + point.x) as usize] = true;
-    }
-
-    let mut code = String::new();
-    for y in 0..height {
-        code.push('\n');
-        for x in 0..width {
-            let c = if grid[(y * width + x) as usize] { '#' } else { '.' };
-            code.push(c);
-        }
-    }
-    code
+    (0..height).for_each(|y| grid[Point::new(0, y)] = '\n');
+    grid.bytes.iter().collect()
 }
 
 /// Fold point at `x` coordinate, doing nothing if the point is to the left of the fold line.
