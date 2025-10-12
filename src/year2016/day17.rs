@@ -127,7 +127,7 @@ fn explore(shared: &Shared, local: &mut State) {
             local.max = local.max.max(adjusted);
         } else {
             // Explore other paths.
-            let (result, ..) = hash(&mut path, size);
+            let [result, ..] = hash(&mut path, size);
 
             if y > 0 && ((result >> 28) & 0xf) > 0xa {
                 local.todo.push((x, y - 1, size + 1, extend(&path, size, b'U')));

@@ -11,12 +11,12 @@
 //! [`#[inline]`](https://doc.rust-lang.org/reference/attributes/codegen.html#the-inline-attribute).
 //!
 //! An optional SIMD variant that computes multiple hashes in parallel is also implemented.
-
 pub fn buffer_size(n: usize) -> usize {
     (n + 9).next_multiple_of(64)
 }
 
-pub fn hash(mut buffer: &mut [u8], size: usize) -> (u32, u32, u32, u32) {
+#[inline]
+pub fn hash(buffer: &mut [u8], size: usize) -> [u32; 4] {
     let end = buffer.len() - 8;
     let bits = size * 8;
 
@@ -24,23 +24,14 @@ pub fn hash(mut buffer: &mut [u8], size: usize) -> (u32, u32, u32, u32) {
     buffer[end..].copy_from_slice(&bits.to_le_bytes());
 
     let mut m = [0; 16];
-    let mut a0: u32 = 0x67452301;
-    let mut b0: u32 = 0xefcdab89;
-    let mut c0: u32 = 0x98badcfe;
-    let mut d0: u32 = 0x10325476;
+    let [mut a0, mut b0, mut c0, mut d0] = [0x67452301, 0xefcdab89, 0x98badcfe, 0x10325476];
 
-    while !buffer.is_empty() {
-        let (prefix, suffix) = buffer.split_at_mut(64);
-        buffer = suffix;
-
-        for (i, chunk) in prefix.chunks_exact(4).enumerate() {
+    for block in buffer.chunks_exact(64) {
+        for (i, chunk) in block.chunks_exact(4).enumerate() {
             m[i] = u32::from_le_bytes(chunk.try_into().unwrap());
         }
 
-        let mut a = a0;
-        let mut b = b0;
-        let mut c = c0;
-        let mut d = d0;
+        let [mut a, mut b, mut c, mut d] = [a0, b0, c0, d0];
 
         a = round1(a, b, c, d, m[0], 7, 0xd76aa478);
         d = round1(d, a, b, c, m[1], 12, 0xe8c7b756);
@@ -110,13 +101,11 @@ pub fn hash(mut buffer: &mut [u8], size: usize) -> (u32, u32, u32, u32) {
         c = round4(c, d, a, b, m[2], 15, 0x2ad7d2bb);
         b = round4(b, c, d, a, m[9], 21, 0xeb86d391);
 
-        a0 = a0.wrapping_add(a);
-        b0 = b0.wrapping_add(b);
-        c0 = c0.wrapping_add(c);
-        d0 = d0.wrapping_add(d);
+        [a0, b0, c0, d0] =
+            [a0.wrapping_add(a), b0.wrapping_add(b), c0.wrapping_add(c), d0.wrapping_add(d)];
     }
 
-    (a0.to_be(), b0.to_be(), c0.to_be(), d0.to_be())
+    [a0.to_be(), b0.to_be(), c0.to_be(), d0.to_be()]
 }
 
 #[inline]
@@ -150,69 +139,59 @@ fn common(f: u32, a: u32, b: u32, m: u32, s: u32, k: u32) -> u32 {
 
 #[cfg(feature = "simd")]
 pub mod simd {
-    use std::array;
+    use std::array::from_fn;
     use std::simd::num::SimdUint as _;
     use std::simd::{LaneCount, Simd, SupportedLaneCount};
 
     #[inline]
-    #[expect(clippy::too_many_lines)]
-    pub fn hash<const N: usize>(
-        buffers: &mut [[u8; 64]],
-        size: usize,
-    ) -> ([u32; N], [u32; N], [u32; N], [u32; N])
+    pub fn hash_fixed<const N: usize>(buffers: &mut [[u8; 64]; N], size: usize) -> [[u32; N]; 4]
     where
         LaneCount<N>: SupportedLaneCount,
     {
         // Assume all buffers are the same size.
-        let end = 64 - 8;
-        let bits = size * 8;
-
         for buffer in buffers.iter_mut() {
             buffer[size] = 0x80;
-            buffer[end..].copy_from_slice(&bits.to_le_bytes());
         }
 
-        let mut a0: Simd<u32, N> = Simd::splat(0x67452301);
-        let mut b0: Simd<u32, N> = Simd::splat(0xefcdab89);
-        let mut c0: Simd<u32, N> = Simd::splat(0x98badcfe);
-        let mut d0: Simd<u32, N> = Simd::splat(0x10325476);
+        let [a0, b0, c0, d0] = [
+            Simd::splat(0x67452301),
+            Simd::splat(0xefcdab89),
+            Simd::splat(0x98badcfe),
+            Simd::splat(0x10325476),
+        ];
+        let [mut a, mut b, mut c, mut d] = [a0, b0, c0, d0];
 
-        let mut a = a0;
-        let mut b = b0;
-        let mut c = c0;
-        let mut d = d0;
-
-        let m0 = message(buffers, 0);
+        let m0 = message(buffers, 0, size);
         a = round1(a, b, c, d, m0, 7, 0xd76aa478);
-        let m1 = message(buffers, 1);
+        let m1 = message(buffers, 4, size);
         d = round1(d, a, b, c, m1, 12, 0xe8c7b756);
-        let m2 = message(buffers, 2);
+        let m2 = message(buffers, 8, size);
         c = round1(c, d, a, b, m2, 17, 0x242070db);
-        let m3 = message(buffers, 3);
+        let m3 = message(buffers, 12, size);
         b = round1(b, c, d, a, m3, 22, 0xc1bdceee);
-        let m4 = message(buffers, 4);
+        let m4 = message(buffers, 16, size);
         a = round1(a, b, c, d, m4, 7, 0xf57c0faf);
-        let m5 = message(buffers, 5);
+        let m5 = message(buffers, 20, size);
         d = round1(d, a, b, c, m5, 12, 0x4787c62a);
-        let m6 = message(buffers, 6);
+        let m6 = message(buffers, 24, size);
         c = round1(c, d, a, b, m6, 17, 0xa8304613);
-        let m7 = message(buffers, 7);
+        let m7 = message(buffers, 28, size);
         b = round1(b, c, d, a, m7, 22, 0xfd469501);
-        let m8 = message(buffers, 8);
+        let m8 = message(buffers, 32, size);
         a = round1(a, b, c, d, m8, 7, 0x698098d8);
-        let m9 = message(buffers, 9);
+        let m9 = message(buffers, 36, size);
         d = round1(d, a, b, c, m9, 12, 0x8b44f7af);
-        let m10 = message(buffers, 10);
+        let m10 = message(buffers, 40, size);
         c = round1(c, d, a, b, m10, 17, 0xffff5bb1);
-        let m11 = message(buffers, 11);
+        let m11 = message(buffers, 44, size);
         b = round1(b, c, d, a, m11, 22, 0x895cd7be);
-        let m12 = message(buffers, 12);
+        let m12 = message(buffers, 48, size);
         a = round1(a, b, c, d, m12, 7, 0x6b901122);
-        let m13 = message(buffers, 13);
+        let m13 = message(buffers, 52, size);
         d = round1(d, a, b, c, m13, 12, 0xfd987193);
-        let m14 = message(buffers, 14);
+        let m14 = Simd::splat(size as u32 * 8);
         c = round1(c, d, a, b, m14, 17, 0xa679438e);
-        let m15 = message(buffers, 15);
+        let m15 = Simd::splat(0);
         b = round1(b, c, d, a, m15, 22, 0x49b40821);
 
         a = round2(a, b, c, d, m1, 5, 0xf61e2562);
@@ -266,30 +245,27 @@ pub mod simd {
         c = round4(c, d, a, b, m2, 15, 0x2ad7d2bb);
         b = round4(b, c, d, a, m9, 21, 0xeb86d391);
 
-        a0 += a;
-        b0 += b;
-        c0 += c;
-        d0 += d;
-
-        (
-            a0.swap_bytes().to_array(),
-            b0.swap_bytes().to_array(),
-            c0.swap_bytes().to_array(),
-            d0.swap_bytes().to_array(),
-        )
+        [
+            (a0 + a).swap_bytes().to_array(),
+            (b0 + b).swap_bytes().to_array(),
+            (c0 + c).swap_bytes().to_array(),
+            (d0 + d).swap_bytes().to_array(),
+        ]
     }
 
     #[inline]
-    fn message<const N: usize>(buffers: &mut [[u8; 64]], i: usize) -> Simd<u32, N>
+    fn message<const N: usize>(buffers: &[[u8; 64]; N], i: usize, size: usize) -> Simd<u32, N>
     where
         LaneCount<N>: SupportedLaneCount,
     {
-        let start = 4 * i;
-        let end = start + 4;
-        Simd::from_array(array::from_fn(|lane| {
-            let slice = &buffers[lane][start..end];
-            u32::from_le_bytes(slice.try_into().unwrap())
-        }))
+        if i > size {
+            Simd::splat(0)
+        } else {
+            Simd::from_array(from_fn(|lane| {
+                let slice = &buffers[lane][i..i + 4];
+                u32::from_le_bytes(slice.try_into().unwrap())
+            }))
+        }
     }
 
     #[inline]

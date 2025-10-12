@@ -64,10 +64,10 @@ fn worker(shared: &Shared<'_>) {
 
         if shared.part_two {
             for _ in 0..2016 {
-                buffer[0..8].copy_from_slice(&to_ascii(result.0));
-                buffer[8..16].copy_from_slice(&to_ascii(result.1));
-                buffer[16..24].copy_from_slice(&to_ascii(result.2));
-                buffer[24..32].copy_from_slice(&to_ascii(result.3));
+                buffer[0..8].copy_from_slice(&to_ascii(result[0]));
+                buffer[8..16].copy_from_slice(&to_ascii(result[1]));
+                buffer[16..24].copy_from_slice(&to_ascii(result[2]));
+                buffer[24..32].copy_from_slice(&to_ascii(result[3]));
                 result = hash(&mut buffer, 32);
             }
         }
@@ -80,7 +80,7 @@ fn worker(shared: &Shared<'_>) {
 #[cfg(feature = "simd")]
 #[expect(clippy::needless_range_loop)]
 fn worker(shared: &Shared<'_>) {
-    let mut result = ([0; 32], [0; 32], [0; 32], [0; 32]);
+    let mut result = [[0; 32]; 4];
     let mut buffers = [[0; 64]; 32];
 
     while let Some(start) = shared.iter.next() {
@@ -90,36 +90,36 @@ fn worker(shared: &Shared<'_>) {
         // Calculate the hash.
         for i in 0..32 {
             let (mut buffer, size) = format_string(shared.input, start + i as i32);
-            let (a, b, c, d) = hash(&mut buffer, size);
+            let [a, b, c, d] = hash(&mut buffer, size);
 
-            result.0[i] = a;
-            result.1[i] = b;
-            result.2[i] = c;
-            result.3[i] = d;
+            result[0][i] = a;
+            result[1][i] = b;
+            result[2][i] = c;
+            result[3][i] = d;
         }
 
         if shared.part_two {
             for _ in 0..2016 {
                 for i in 0..32 {
-                    buffers[i][0..8].copy_from_slice(&to_ascii(result.0[i]));
-                    buffers[i][8..16].copy_from_slice(&to_ascii(result.1[i]));
-                    buffers[i][16..24].copy_from_slice(&to_ascii(result.2[i]));
-                    buffers[i][24..32].copy_from_slice(&to_ascii(result.3[i]));
+                    buffers[i][0..8].copy_from_slice(&to_ascii(result[0][i]));
+                    buffers[i][8..16].copy_from_slice(&to_ascii(result[1][i]));
+                    buffers[i][16..24].copy_from_slice(&to_ascii(result[2][i]));
+                    buffers[i][24..32].copy_from_slice(&to_ascii(result[3][i]));
                 }
-                result = simd::hash::<32>(&mut buffers, 32);
+                result = simd::hash_fixed(&mut buffers, 32);
             }
         }
 
         for i in 0..32 {
-            let hash = (result.0[i], result.1[i], result.2[i], result.3[i]);
+            let hash = [result[0][i], result[1][i], result[2][i], result[3][i]];
             check(shared, start + i as i32, hash);
         }
     }
 }
 
 /// Check for sequences of 3 or 5 consecutive matching digits.
-fn check(shared: &Shared<'_>, n: i32, hash: (u32, u32, u32, u32)) {
-    let (a, b, c, d) = hash;
+fn check(shared: &Shared<'_>, n: i32, hash: [u32; 4]) {
+    let [a, b, c, d] = hash;
 
     let mut prev = u32::MAX;
     let mut same = 1;

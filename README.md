@@ -58,7 +58,7 @@ Improvements to solutions are always appreciated. Please see the
 ## Performance
 
 Benchmarks are measured using the built-in `cargo bench` tool run on an [Apple M2 Max][apple-link].
-All 250 solutions from 2024 to 2015 complete sequentially in **510 milliseconds**.
+All 250 solutions from 2024 to 2015 complete sequentially in **504 milliseconds**.
 Interestingly 86% of the total time is spent on just 9 solutions.
 Performance is reasonable even on older hardware, for example a 2011 MacBook Pro with an
 [Intel i7-2720QM][intel-link] processor takes 3.5 seconds to run the same 250 solutions.
@@ -67,7 +67,7 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 
 | Year | [2015](#2015) | [2016](#2016) | [2017](#2017) | [2018](#2018) | [2019](#2019) | [2020](#2020) | [2021](#2021) | [2022](#2022) | [2023](#2023) | [2024](#2024) |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Benchmark (ms) | 17 | 117 | 82 | 35 | 15 | 220 | 8 | 7 | 5 | 4 |
+| Benchmark (ms) | 17 | 111 | 82 | 35 | 15 | 220 | 8 | 7 | 5 | 4 |
 
 ## 2024
 
@@ -335,7 +335,7 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 | 2 | [Bathroom Security](https://adventofcode.com/2016/day/2) | [Source](src/year2016/day02.rs) | 29 |
 | 3 | [Squares With Three Sides](https://adventofcode.com/2016/day/3) | [Source](src/year2016/day03.rs) | 24 |
 | 4 | [Security Through Obscurity](https://adventofcode.com/2016/day/4) | [Source](src/year2016/day04.rs) | 79 |
-| 5 | [How About a Nice Game of Chess?](https://adventofcode.com/2016/day/5) | [Source](src/year2016/day05.rs) | 35000 |
+| 5 | [How About a Nice Game of Chess?](https://adventofcode.com/2016/day/5) | [Source](src/year2016/day05.rs) | 34000 |
 | 6 | [Signals and Noise](https://adventofcode.com/2016/day/6) | [Source](src/year2016/day06.rs) | 3 |
 | 7 | [Internet Protocol Version 7](https://adventofcode.com/2016/day/7) | [Source](src/year2016/day07.rs) | 364 |
 | 8 | [Two-Factor Authentication](https://adventofcode.com/2016/day/8) | [Source](src/year2016/day08.rs) | 9 |
@@ -344,7 +344,7 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 | 11 | [Radioisotope Thermoelectric Generators](https://adventofcode.com/2016/day/11) | [Source](src/year2016/day11.rs) | 719 |
 | 12 | [Leonardo's Monorail](https://adventofcode.com/2016/day/12) | [Source](src/year2016/day12.rs) | 1 |
 | 13 | [A Maze of Twisty Little Cubicles](https://adventofcode.com/2016/day/13) | [Source](src/year2016/day13.rs) | 3 |
-| 14 | [One-Time Pad](https://adventofcode.com/2016/day/14) | [Source](src/year2016/day14.rs) | 77000 |
+| 14 | [One-Time Pad](https://adventofcode.com/2016/day/14) | [Source](src/year2016/day14.rs) | 72000 |
 | 15 | [Timing is Everything](https://adventofcode.com/2016/day/15) | [Source](src/year2016/day15.rs) | 1 |
 | 16 | [Dragon Checksum](https://adventofcode.com/2016/day/16) | [Source](src/year2016/day16.rs) | 1 |
 | 17 | [Two Steps Forward](https://adventofcode.com/2016/day/17) | [Source](src/year2016/day17.rs) | 3858 |

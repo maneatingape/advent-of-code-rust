@@ -78,7 +78,7 @@ fn format_string(prefix: &str, n: u32) -> ([u8; 64], usize) {
 }
 
 fn check_hash(buffer: &mut [u8], size: usize, n: u32, shared: &Shared) {
-    let (result, ..) = hash(buffer, size);
+    let [result, ..] = hash(buffer, size);
 
     if result & 0xfffff000 == 0 {
         let mut exclusive = shared.mutex.lock().unwrap();
@@ -111,12 +111,12 @@ fn worker(shared: &Shared) {
 #[cfg(feature = "simd")]
 mod simd {
     use super::*;
-    use crate::util::md5::simd::hash;
+    use crate::util::md5::simd::hash_fixed;
     use std::simd::{LaneCount, SupportedLaneCount};
 
     #[expect(clippy::needless_range_loop)]
     fn check_hash_simd<const N: usize>(
-        buffers: &mut [[u8; 64]],
+        buffers: &mut [[u8; 64]; N],
         size: usize,
         start: u32,
         offset: u32,
@@ -132,7 +132,7 @@ mod simd {
             buffers[i][size - 1] = b'0' + (n % 10) as u8;
         }
 
-        let (result, ..) = hash::<N>(buffers, size);
+        let [result, ..] = hash_fixed(buffers, size);
 
         for i in 0..N {
             if result[i] & 0xfffff000 == 0 {
@@ -151,13 +151,14 @@ mod simd {
     pub(super) fn worker(shared: &Shared) {
         while let Some(start) = shared.iter.next() {
             let (prefix, size) = format_string(&shared.prefix, start);
-            let mut buffers = [prefix; 32];
+            let buffers = &mut [prefix; 32];
 
             for offset in (0..992).step_by(32) {
-                check_hash_simd::<32>(&mut buffers, size, start, offset, shared);
+                check_hash_simd(buffers, size, start, offset, shared);
             }
 
-            check_hash_simd::<8>(&mut buffers, size, start, 992, shared);
+            let buffers = &mut [prefix; 8];
+            check_hash_simd(buffers, size, start, 992, shared);
         }
     }
 }
