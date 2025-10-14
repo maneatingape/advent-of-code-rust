@@ -347,7 +347,7 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 | 14 | [One-Time Pad](https://adventofcode.com/2016/day/14) | [Source](src/year2016/day14.rs) | 72000 |
 | 15 | [Timing is Everything](https://adventofcode.com/2016/day/15) | [Source](src/year2016/day15.rs) | 1 |
 | 16 | [Dragon Checksum](https://adventofcode.com/2016/day/16) | [Source](src/year2016/day16.rs) | 1 |
-| 17 | [Two Steps Forward](https://adventofcode.com/2016/day/17) | [Source](src/year2016/day17.rs) | 3858 |
+| 17 | [Two Steps Forward](https://adventofcode.com/2016/day/17) | [Source](src/year2016/day17.rs) | 3606 |
 | 18 | [Like a Rogue](https://adventofcode.com/2016/day/18) | [Source](src/year2016/day18.rs) | 400 |
 | 19 | [An Elephant Named Joseph](https://adventofcode.com/2016/day/19) | [Source](src/year2016/day19.rs) | 1 |
 | 20 | [Firewall Rules](https://adventofcode.com/2016/day/20) | [Source](src/year2016/day20.rs) | 21 |

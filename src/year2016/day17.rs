@@ -4,8 +4,7 @@
 //! Keeping each thread busy and spreading the work as evenly as possible is quite tricky. Some
 //! paths can dead-end quickly while others can take the majority of exploration time.
 //!
-//! To solve this we implement a very simple version of
-//! [work stealing](https://en.wikipedia.org/wiki/Work_stealing). Threads process paths locally,
+//! To solve this we implement a very simple version of work sharing. Threads process paths locally
 //! stopping every now and then to return paths to a global queue. This allows other threads that
 //! have run out of work to pickup new paths to process.
 //!
@@ -16,23 +15,19 @@ use crate::util::md5::*;
 use crate::util::thread::*;
 use std::sync::{Condvar, Mutex};
 
-type Input = (String, usize);
+type Input = (Vec<u8>, usize);
 type Item = (u8, u8, usize, Vec<u8>);
 
 struct State {
     todo: Vec<Item>,
-    min: String,
+    min: Vec<u8>,
     max: usize,
-}
-
-struct Exclusive {
-    global: State,
     inflight: usize,
 }
 
 struct Shared {
     prefix: usize,
-    mutex: Mutex<Exclusive>,
+    mutex: Mutex<State>,
     not_empty: Condvar,
 }
 
@@ -43,19 +38,18 @@ pub fn parse(input: &str) -> Input {
     let start = (0, 0, prefix, extend(input, prefix, 0));
 
     // State shared between threads.
-    let global = State { todo: vec![start], min: String::new(), max: 0 };
-    let exclusive = Exclusive { global, inflight: 0 };
-    let shared = Shared { prefix, mutex: Mutex::new(exclusive), not_empty: Condvar::new() };
+    let state = State { todo: vec![start], min: vec![], max: 0, inflight: threads() };
+    let shared = Shared { prefix, mutex: Mutex::new(state), not_empty: Condvar::new() };
 
     // Search paths in parallel.
     spawn(|| worker(&shared));
 
-    let global = shared.mutex.into_inner().unwrap().global;
-    (global.min, global.max)
+    let state = shared.mutex.into_inner().unwrap();
+    (state.min, state.max)
 }
 
 pub fn part1(input: &Input) -> &str {
-    &input.0
+    str::from_utf8(&input.0).unwrap()
 }
 
 pub fn part2(input: &Input) -> usize {
@@ -65,45 +59,47 @@ pub fn part2(input: &Input) -> usize {
 /// Process local work items, stopping every now and then to redistribute items back to global pool.
 /// This prevents threads idling or hotspotting.
 fn worker(shared: &Shared) {
-    let mut local = State { todo: Vec::new(), min: String::new(), max: 0 };
+    let mut local = State { todo: vec![], min: vec![], max: 0, inflight: 0 };
 
     loop {
-        let mut exclusive = shared.mutex.lock().unwrap();
-        let item = loop {
-            // Pickup available work.
-            if let Some(item) = exclusive.global.todo.pop() {
-                exclusive.inflight += 1;
-                break item;
-            }
-            // If no work available and no other thread is doing anything, then we're done.
-            if exclusive.inflight == 0 {
-                return;
-            }
-            // Put thread to sleep until another thread notifies us that work is available.
-            // This avoids busy looping on the mutex.
-            exclusive = shared.not_empty.wait(exclusive).unwrap();
-        };
-
-        // Drop mutex to release lock and allow other threads access.
-        drop(exclusive);
-
         // Process local work items.
-        local.todo.push(item);
         explore(shared, &mut local);
 
-        // Redistribute local work items back to the global queue. Update min and max paths.
-        let mut exclusive = shared.mutex.lock().unwrap();
-        let global = &mut exclusive.global;
+        // Acquire mutex.
+        let mut state = shared.mutex.lock().unwrap();
 
-        global.todo.append(&mut local.todo);
-        if global.min.is_empty() || local.min.len() < global.min.len() {
-            global.min = local.min.clone();
+        // Update min and max paths.
+        if state.min.is_empty() || local.min.len() < state.min.len() {
+            state.min.clone_from(&local.min);
         }
-        global.max = global.max.max(local.max);
+        state.max = state.max.max(local.max);
 
-        // Mark ourselves as idle then notify all other threads that there is new work available.
-        exclusive.inflight -= 1;
-        shared.not_empty.notify_all();
+        if local.todo.is_empty() {
+            // Mark ourselves as idle then notify all other threads in case we're done.
+            state.inflight -= 1;
+            shared.not_empty.notify_all();
+
+            loop {
+                // Pickup available work.
+                if let Some(item) = state.todo.pop() {
+                    state.inflight += 1;
+                    local.todo.push(item);
+                    break;
+                }
+                // If no work available and no other thread is doing anything, then we're done.
+                if state.inflight == 0 {
+                    return;
+                }
+                // Put thread to sleep until another thread notifies us that work is available.
+                // This avoids busy looping on the mutex.
+                state = shared.not_empty.wait(state).unwrap();
+            }
+        } else {
+            // Redistribute excess local work items back to the global queue then notify all other
+            // threads that there is new work available.
+            state.todo.extend(local.todo.drain(1..));
+            shared.not_empty.notify_all();
+        }
     }
 }
 
@@ -121,37 +117,41 @@ fn explore(shared: &Shared, local: &mut State) {
             let adjusted = size - shared.prefix;
             if local.min.is_empty() || adjusted < local.min.len() {
                 // Remove salt and padding.
-                let middle = path[shared.prefix..size].to_vec();
-                local.min = String::from_utf8(middle).unwrap();
+                local.min = path[shared.prefix..size].to_vec();
             }
             local.max = local.max.max(adjusted);
         } else {
             // Explore other paths.
             let [result, ..] = hash(&mut path, size);
 
-            if y > 0 && ((result >> 28) & 0xf) > 0xa {
+            if y > 0 && is_open(result, 28) {
                 local.todo.push((x, y - 1, size + 1, extend(&path, size, b'U')));
             }
-            if y < 3 && ((result >> 24) & 0xf) > 0xa {
+            if y < 3 && is_open(result, 24) {
                 local.todo.push((x, y + 1, size + 1, extend(&path, size, b'D')));
             }
-            if x > 0 && ((result >> 20) & 0xf) > 0xa {
+            if x > 0 && is_open(result, 20) {
                 local.todo.push((x - 1, y, size + 1, extend(&path, size, b'L')));
             }
-            if x < 3 && ((result >> 16) & 0xf) > 0xa {
+            if x < 3 && is_open(result, 16) {
                 local.todo.push((x + 1, y, size + 1, extend(&path, size, b'R')));
             }
         }
     }
 }
 
+/// Check if a door is open based on MD5 hex digit (b-f means open).
+#[inline]
+fn is_open(hash: u32, shift: u32) -> bool {
+    ((hash >> shift) & 0xf) > 0xa
+}
+
 /// Convenience function to generate new path.
 fn extend(src: &[u8], size: usize, b: u8) -> Vec<u8> {
     // Leave room for MD5 padding.
-    let padded = buffer_size(size + 1);
-    let mut next = vec![0; padded];
+    let mut next = vec![0; buffer_size(size + 1)];
     // Copy existing path and next step.
-    next[0..size].copy_from_slice(&src[0..size]);
+    next[..size].copy_from_slice(&src[..size]);
     next[size] = b;
     next
 }
