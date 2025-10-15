@@ -1,170 +1,126 @@
 //! # Infinite Elves and Infinite Houses
 //!
-//! The amount of presents that each house receives in part one is 10 times the
+//! ## Part One
+//!
+//! The amount of presents that each house receives is 10 times the
 //! [divisor function](https://en.wikipedia.org/wiki/Divisor_function) `σ`.
 //! For example the divisors of 6 are 1, 2, 3 and 6, so house 6 receives
-//! 10 + 20 + 30 + 60 = 120 presents.
+//! 10 + 20 + 30 + 60 = 120 presents. The answer will be a
+//! [superabundant number](https://en.wikipedia.org/wiki/Superabundant_number).
 //!
-//! It's highly likely that the answer will be a
-//! [superabundant number](https://en.wikipedia.org/wiki/Superabundant_number) but there's no way
-//! to easily *prove* that so we brute force check every possible solution. The approach is similar
-//! to a reverse [Sieve of Eratosthenes](https://en.wikipedia.org/wiki/Sieve_of_Eratosthenes),
-//! iterating first over each elf, then over each house adding the presents.
-//! Somewhat unintuitively the `ln(x)` asymptotic complexity of this approach is much lower
-//! than the `n√n` complexity of finding the factors of each number.
+//! If `n` has the prime factorization `n = p₁^a₁ × p₂^a₂ × ... × pₖ^aₖ` then the sum of divisors is
+//! `σ(n) = [(p₁^(a₁+1) - 1)/(p₁ - 1)] × [(p₂^(a₂+1) - 1)/(p₂ - 1)] × ... × [(pₖ^(aₖ+1) - 1)/(pₖ - 1)]`
+//! or more compactly `σ(n) = ∏ᵢ₌₁ᵏ [(pᵢ^(aᵢ+1) - 1)/(pᵢ - 1)]`
 //!
-//! To speed things up we make one high level optimization and a few low tweaks.
+//! For example `n = 12 = 2² × 3¹`
 //!
-//! The high level optimization is an observation from user `warbaque` on the
-//! [Day 20 solution thread](https://www.reddit.com/r/adventofcode/comments/3xjpp2/day_20_solutions/)
-//! that [Robin's inequality](https://en.wikipedia.org/wiki/Divisor_function#Growth_rate)
-//! shows that the `σ(n)` function is lower than `eᵞ * n * ln(ln(n))` for all `n` greater than 5040.
-//! This means that we can determine a starting index close to the final result, skipping over a
-//! huge chunk of numbers.
+//! * `σ(12) = [(2³ - 1)/(2 - 1)] × [(3² - 1)/(3 - 1)]`
+//! * `[(8 - 1)/1] × [(9 - 1)/2] = 7 × 4 = 28`
 //!
-//! The low level tweaks reduce the amount of work that needs to be done.
-//! We break the search range into fixed size blocks from `start` to `end`,
-//! for example 200000 to 299999 with a block size of 100000. Then we can make some observations:
+//! Starting from 41 (the largest possible prime encountered in houses up to 50 billion presents)
+//! we recursively try smaller and smaller prime powers, finding the smallest house number that
+//! exceeds the target.
 //!
-//! * Elf 1 visits each house once.
-//! * Elves from `start` to `end` each visit a different house exactly once,
-//!   bringing start, start + 1, ... presents.
-//! * Elves from `end / 2` to `start` skip over all the houses.
-//! * Elves from `block size` to `end / 2` visit *at most* one house as the increment is
-//!   greater than the size of the block.
-//! * Elves from `2` to `block size` may visit any number of times.
-
-// More explicit syntax fits in with surrounding code better.
-#![allow(clippy::needless_range_loop)]
-
+//! ## Part Two
+//!
+//! We get a list of all possible house numbers that have divisor sums that exceed the value.
+//! Checking in ascending order, each house is broken down into its factors, including only those
+//! where the second elf will actually deliver.
+use crate::util::hash::*;
 use crate::util::parse::*;
 
-const BLOCK: usize = 100_000;
+/// Covers all possible scenarios up to 50 billion presents for part one.
+/// Checked by brute forcing all solutions that the highest prime factor is 41.
+const PRIMES: [u32; 13] = [41, 37, 31, 29, 23, 19, 17, 13, 11, 7, 5, 3, 2];
 
-type Input = (u32, usize);
-
-pub fn parse(input: &str) -> Input {
-    let robins_inequality = [
-        (100000, 4352000),
-        (200000, 8912250),
-        (300000, 13542990),
-        (400000, 18218000),
-        (500000, 22925240),
-        (600000, 27657740),
-        (700000, 32410980),
-        (800000, 37181790),
-        (900000, 41967820),
-        (1000000, 46767260),
-        (1100000, 51578680),
-        (1200000, 56400920),
-        (1300000, 61233020),
-        (1400000, 66074170),
-        (1500000, 70923680),
-        (1600000, 75780960),
-        (1700000, 80645490),
-        (1800000, 85516820),
-        (1900000, 90394550),
-        (2000000, 95278320),
-    ];
-
-    // Find a starting block closer to the answer. Part two presents overall are lower than
-    // part one so the answer will also be after this block.
-    let (target, mut start) = (input.unsigned(), 0);
-
-    for (key, value) in robins_inequality {
-        if target >= value {
-            start = key;
-        } else {
-            break;
-        }
-    }
-
-    assert!(target > 5040);
-    assert!(start > 100000);
-
-    (target, start)
+pub fn parse(input: &str) -> u32 {
+    input.unsigned()
 }
 
-pub fn part1(input: &Input) -> usize {
-    let (target, mut start) = *input;
-    let mut end = start + BLOCK;
-    let mut houses = vec![0; BLOCK];
-
-    loop {
-        // Elves that visit exactly once.
-        for i in 0..BLOCK {
-            houses[i] = 10 * (1 + start + i) as u32;
+pub fn part1(input: &u32) -> u32 {
+    // Recursively compute the divisor sum greater than the target.
+    fn divisor_sum(cache: &mut FastMap<(u32, u32), u32>, primes: &[u32], target: u32) -> u32 {
+        if primes.is_empty() {
+            return target;
         }
 
-        // Elves that visit at most once.
-        for i in BLOCK..end / 2 {
-            let presents = 10 * i as u32;
-            let j = start.next_multiple_of(i) - start;
-
-            if j < BLOCK {
-                houses[j] += presents;
-            }
+        // Cache previously seen states.
+        let key = (primes[0], target);
+        if let Some(&value) = cache.get(&key) {
+            return value;
         }
 
-        // All remaining elves.
-        for i in 2..BLOCK {
-            let presents = 10 * i as u32;
-            let mut j = start.next_multiple_of(i) - start;
+        // Try not including this prime.
+        let mut result = divisor_sum(cache, &primes[1..], target);
+        let mut power = 1;
+        let mut sum = 1;
 
-            while j < BLOCK {
-                houses[j] += presents;
-                j += i;
-            }
+        // Try increasing powers of this prime until the divisor sum exceeds the target.
+        while sum < target {
+            power *= primes[0];
+            sum += power;
+
+            let next = power * divisor_sum(cache, &primes[1..], target.div_ceil(sum));
+            result = result.min(next);
         }
 
-        if let Some(found) = houses.iter().position(|&p| p >= target) {
-            break start + found;
-        }
-
-        start += BLOCK;
-        end += BLOCK;
+        cache.insert(key, result);
+        result
     }
+
+    divisor_sum(&mut FastMap::new(), &PRIMES, input.div_ceil(10))
 }
 
-pub fn part2(input: &Input) -> usize {
-    let (target, mut start) = *input;
-    let mut end = start + BLOCK;
-    let mut houses = vec![0; BLOCK];
-
-    loop {
-        // Elves that visit exactly once (not including elf 1 anymore).
-        for i in 0..BLOCK {
-            houses[i] = 11 * (start + i) as u32;
-        }
-
-        // Elves that visit at most once.
-        for i in BLOCK..end / 2 {
-            let presents = 11 * i as u32;
-            let j = start.next_multiple_of(i) - start;
-
-            if j < BLOCK {
-                houses[j] += presents;
+pub fn part2(input: &u32) -> u32 {
+    // Differences from part one:
+    // * Return all possible house numbers.
+    // * Remove cache since each state is unique so it slows things down.
+    fn divisor_sum(candidates: &mut Vec<u32>, primes: &[u32], house: u32, target: u32) -> u32 {
+        if primes.is_empty() {
+            if target == 1 {
+                candidates.push(house);
             }
+            return target;
         }
 
-        // All remaining elves. We can start higher than 2.
-        for i in start / 50..BLOCK {
-            let presents = 11 * i as u32;
-            let mut j = start.next_multiple_of(i) - start;
-            let mut remaining = 51 - start.div_ceil(i);
+        // Try not including this prime.
+        let mut result = divisor_sum(candidates, &primes[1..], house, target);
+        let mut power = 1;
+        let mut sum = 1;
 
-            while j < BLOCK && remaining > 0 {
-                houses[j] += presents;
-                j += i;
-                remaining -= 1;
-            }
+        // Try increasing powers of this prime until the divisor sum exceeds the target.
+        while sum < target {
+            power *= primes[0];
+            sum += power;
+
+            let ds = divisor_sum(candidates, &primes[1..], house * power, target.div_ceil(sum));
+            result = result.min(power * ds);
         }
 
-        if let Some(found) = houses.iter().position(|&p| p >= target) {
-            break start + found;
-        }
+        result
+    }
 
-        start += BLOCK;
-        end += BLOCK;
+    let target = input.div_ceil(11);
+    let mut candidates = Vec::new();
+
+    // Get list of all house numbers that meet or exceed the target value in ascending order.
+    divisor_sum(&mut candidates, &PRIMES, 1, target);
+    candidates.sort_unstable();
+
+    // Find the first house taking into account the 50 present limit.
+    candidates.into_iter().find(|&house| factor_sum(&PRIMES, house, 1) >= target).unwrap()
+}
+
+/// Combine prime factors into all factors, only counting those where the elf will still deliver.
+fn factor_sum(primes: &[u32], house: u32, factor: u32) -> u32 {
+    if primes.is_empty() {
+        // Check if the elf reached this house.
+        if 50 * factor >= house { factor } else { 0 }
+    } else {
+        (0..31)
+            .map(|exp| primes[0].pow(exp))
+            .take_while(|&prime_power| house.is_multiple_of(prime_power))
+            .map(|prime_power| factor_sum(&primes[1..], house, factor * prime_power))
+            .sum()
     }
 }
