@@ -46,7 +46,7 @@ pub fn part1(input: &State) -> usize {
 
 /// [Memoization](https://en.wikipedia.org/wiki/Memoization) is the key to solving part two in a
 /// reasonable time. For each possible starting universe we record the number of winning and losing
-/// recursive universes so that we can re-use the result and avoid uneccessary calculations.
+/// recursive universes so that we can re-use the result and avoid unnecessary calculations.
 ///
 /// Each player can be in position 1 to 10 and can have a score from 0 to 20 (as a score of 21
 /// ends the game). This is a total of (10 * 21) ^ 2 = 44100 possible states. For speed this

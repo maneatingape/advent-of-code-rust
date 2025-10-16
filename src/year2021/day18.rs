@@ -165,7 +165,7 @@ fn explode(tree: &mut Snailfish, pair: usize) {
 ///
 /// Search the tree in an *in-order* traversal, splitting the first node over `10` found (if any).
 /// We can optimize the rules by immediately exploding if this results in a node 4 levels deep,
-/// as we know that the prior optimzation in the [`add`] function means that this is the only
+/// as we know that the prior optimization in the [`add`] function means that this is the only
 /// explosion possible.
 fn split(tree: &mut Snailfish) -> bool {
     for &i in &IN_ORDER {

@@ -1,6 +1,6 @@
 //! # Jurassic Jigsaw
 //!
-//! At first this seems like a daunting problem. However a little anaylsis shows that the input
+//! At first this seems like a daunting problem. However a little analysis shows that the input
 //! has some nice properties that makes solving this more tractable.
 //!
 //! * Tile edges match with at most one other tile

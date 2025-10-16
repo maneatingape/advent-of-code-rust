@@ -71,7 +71,7 @@ pub fn part2(input: &[i32]) -> usize {
 
     while index < jump.len() {
         if index < coarse {
-            // Index lies withing precomputed blocks.
+            // Index lies within precomputed blocks.
             let base = index / 16;
             let offset = index % 16;
             let value = compact[base] as usize;
