@@ -9,17 +9,17 @@ use crate::util::parse::*;
 use crate::util::thread::*;
 
 pub struct Result {
+    size: usize,
     x: usize,
     y: usize,
-    size: usize,
     power: i32,
 }
 
 pub fn parse(input: &str) -> Vec<Result> {
     let grid_serial_number: i32 = input.signed();
 
-    // Build Summed-area table.
-    let mut sat = vec![0; 301 * 301];
+    // Build Summed-area table. Add a little extra buffer to the end for the SIMD variant.
+    let mut sat = vec![0; 301 * 301 + 32];
 
     for y in 1..301 {
         for x in 1..301 {
@@ -39,7 +39,9 @@ pub fn parse(input: &str) -> Vec<Result> {
     // Use as many cores as possible to parallelize the search.
     // Smaller sizes take more time so use work stealing to keep all cores busy.
     let items: Vec<_> = (1..301).collect();
-    let result = spawn_parallel_iterator(&items, |iter| worker(&sat, iter));
+    let result = spawn_parallel_iterator(&items, |iter| {
+        iter.map(|&size| square(&sat, size)).collect::<Vec<_>>()
+    });
     result.into_iter().flatten().collect()
 }
 
@@ -49,20 +51,13 @@ pub fn part1(input: &[Result]) -> String {
 }
 
 pub fn part2(input: &[Result]) -> String {
-    let Result { x, y, size, .. } = input.iter().max_by_key(|r| r.power).unwrap();
+    let Result { size, x, y, .. } = input.iter().max_by_key(|r| r.power).unwrap();
     format!("{x},{y},{size}")
 }
 
-fn worker(sat: &[i32], iter: ParIter<'_, usize>) -> Vec<Result> {
-    iter.map(|&size| {
-        let (power, x, y) = square(sat, size);
-        Result { x, y, size, power }
-    })
-    .collect()
-}
-
 /// Find the (x,y) coordinates and max power for a square of the specified size.
-fn square(sat: &[i32], size: usize) -> (i32, usize, usize) {
+#[cfg(not(feature = "simd"))]
+fn square(sat: &[i32], size: usize) -> Result {
     let mut max_power = i32::MIN;
     let mut max_x = 0;
     let mut max_y = 0;
@@ -70,6 +65,7 @@ fn square(sat: &[i32], size: usize) -> (i32, usize, usize) {
     for y in size..301 {
         for x in size..301 {
             let index = 301 * y + x;
+
             let power =
                 sat[index] - sat[index - size] - sat[index - 301 * size] + sat[index - 302 * size];
 
@@ -81,5 +77,43 @@ fn square(sat: &[i32], size: usize) -> (i32, usize, usize) {
         }
     }
 
-    (max_power, max_x, max_y)
+    Result { size, x: max_x, y: max_y, power: max_power }
+}
+
+/// Same as the scalar version but prcessing 16 lanes simultaneously.
+#[cfg(feature = "simd")]
+fn square(sat: &[i32], size: usize) -> Result {
+    use std::simd::cmp::SimdPartialOrd as _;
+    use std::simd::*;
+
+    const LANE_WIDTH: usize = 16;
+    type Vector = Simd<i32, LANE_WIDTH>;
+
+    let mut max_power = i32::MIN;
+    let mut max_x = 0;
+    let mut max_y = 0;
+
+    for y in size..301 {
+        for x in (size..301).step_by(LANE_WIDTH) {
+            let index = 301 * y + x;
+
+            let power: Vector = Simd::from_slice(&sat[index..])
+                - Simd::from_slice(&sat[index - size..])
+                - Simd::from_slice(&sat[index - 301 * size..])
+                + Simd::from_slice(&sat[index - 302 * size..]);
+
+            if power.simd_gt(Simd::splat(max_power)).any() {
+                let limit = 301 - x;
+                for (offset, power) in power.to_array().into_iter().enumerate().take(limit) {
+                    if power > max_power {
+                        max_power = power;
+                        max_x = x - size + 1 + offset;
+                        max_y = y - size + 1;
+                    }
+                }
+            }
+        }
+    }
+
+    Result { size, x: max_x, y: max_y, power: max_power }
 }
