@@ -1,15 +1,16 @@
 # Advent of Code [![checks-badge]][checks-link] [![docs-badge]][docs-link]
 
-Complete 2024 to 2015 entries written in Rust for the annual [Advent of Code] challenge,
-solving 500 stars in less than 1 second.
+Blazing fast Rust solutions for every [Advent of Code] puzzle from 2015 to 2024, taking
+**502 milliseconds** to solve all 500 stars. Each solution is carefully optimized for performance
+while ensuring the code remains concise, readable, and idiomatic.
 
 ## Features
 
-* Each solution uses the most efficient algorithms to the best of my knowledge.
-* Self contained depending only on the `std` Rust library. No use of `unsafe` features.
-* Consistently formatted with `rustfmt` and linted by `clippy`.
-* Thoroughly commented with `rustdoc` generated [documentation online][docs-link].
-* Test coverage with continuous integration provided by [GitHub Actions][checks-link].
+* **Minimal** - Depends only on the standard library.
+* **High Quality** - Formatted with `rustfmt`, linted by `clippy` and continuously tested
+  via [GitHub Actions][checks-link]. No `unsafe` code.
+* **Well Documented** - Every solution is comprehensively commented with
+  [rustdoc-generated documentation][docs-link] also available online.
 
 ## Quickstart
 
@@ -58,7 +59,6 @@ Improvements to solutions are always appreciated. Please see the
 ## Performance
 
 Benchmarks are measured using the built-in `cargo bench` tool run on an [Apple M2 Max][apple-link].
-All 250 solutions from 2024 to 2015 complete sequentially in **502 milliseconds**.
 Interestingly 86% of the total time is spent on just 9 solutions.
 Performance is reasonable even on older hardware, for example a 2011 MacBook Pro with an
 [Intel i7-2720QM][intel-link] processor takes 3.5 seconds to run the same 250 solutions.
