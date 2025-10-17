@@ -3,7 +3,7 @@
 //! We can solve this problem using
 //! [binomial coefficients](https://en.wikipedia.org/wiki/Binomial_coefficient).
 //!
-//! For example consider an sequence of 3 arbitrary values:
+//! For example consider a sequence of 3 arbitrary values:
 //!
 //! ```none
 //!    1st:  a        b         c

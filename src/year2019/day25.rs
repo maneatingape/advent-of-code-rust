@@ -118,7 +118,7 @@ fn play_automatically(input: &[i64]) -> String {
         let changed = current ^ previous;
         let index = changed.trailing_zeros() as usize;
 
-        // Since we start with all items in our possesion, the meaning of bits in the gray code is
+        // Since we start with all items in our possession, the meaning of bits in the gray code is
         // reversed. 0 is take an item and 1 is drop an item.
         if current & changed == 0 {
             take_item(&mut computer, &inventory[index]);
@@ -244,7 +244,7 @@ fn drain_output(computer: &mut Computer) {
     while let State::Output(_) = computer.run() {}
 }
 
-// Convert an normal binary number to its Gray Code equivalent
+// Convert a normal binary number to its Gray Code equivalent.
 fn gray_code(n: u32) -> u32 {
     n ^ (n >> 1)
 }

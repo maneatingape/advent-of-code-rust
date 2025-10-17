@@ -23,7 +23,7 @@
 //!   (and this is the neat part) *add* the size of the just completed directory, since we know
 //!   that it must have been a child of the directory at the top of the stack.
 //!
-//!   Note that the end of the file is essentially an sequence of implicit `cd ..` commands
+//!   Note that the end of the file is essentially a sequence of implicit `cd ..` commands
 //!   all the way to the root. Another nice side effect is that the root directory is always the
 //!   last element in our `vec`.
 //!

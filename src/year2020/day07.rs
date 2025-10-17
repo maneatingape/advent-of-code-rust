@@ -1,7 +1,7 @@
 //! # Handy Haversacks
 //!
-//! A hashtable would be a natural data structure for this problem but is a little slow.
-//! To make things faster we implement the hashtable using an array and a combination of three
+//! A hash table would be a natural data structure for this problem but is a little slow.
+//! To make things faster we implement the hash table using an array and a combination of three
 //! [perfect hash functions](https://en.wikipedia.org/wiki/Perfect_hash_function) that map from
 //! each combination of bag descriptions to a unique index.
 //!

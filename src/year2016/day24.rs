@@ -9,7 +9,7 @@
 //! searches starting from each location.
 //!
 //! For speed we convert each location into an index, then store the distances between
-//! every pair of locations in an vec for fast lookup. Our utility [`permutations`] method uses
+//! every pair of locations in a vec for fast lookup. Our utility [`permutations`] method uses
 //! [Heap's algorithm](https://en.wikipedia.org/wiki/Heap%27s_algorithm) for efficiency,
 //! modifying the slice in place.
 //!

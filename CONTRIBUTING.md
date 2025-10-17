@@ -3,7 +3,7 @@
 I hope that you've enjoyed reading these solutions as much as I enjoyed writing them.
 They're pretty fast and clean...but can you make them even *faster and cleaner*?
 
-If you've made an improvement then please
+If you've made an improvement, then please
 [open a pull request](https://github.com/maneatingape/advent-of-code-rust/compare).
 Contributions are encouraged and valued. ❤️
 

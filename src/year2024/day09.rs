@@ -3,7 +3,7 @@
 //! ## Part One
 //!
 //! Computes the checksum by simultaneously scanning forward for free blocks and
-//! backwards for files. No memory is allocated which makes it very fast.
+//! backward for files. No memory is allocated which makes it very fast.
 //!
 //! ## Part Two
 //!

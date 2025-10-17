@@ -10,8 +10,8 @@
 //! a "pull" model where we check the surrounding neighbors of each tile, to a "push" model
 //! where we update the neighbors of each black tile instead.
 //!
-//! The SIMD alterative approach is much faster, processing 32 lanes at a time. As a further
-//! optimisation we skip rows and columns that the active state hasn't reached. The approach
+//! The SIMD alternative approach is much faster, processing 32 lanes at a time. As a further
+//! optimization we skip rows and columns that the active state hasn't reached. The approach
 //! is very similar to [`day 11`].
 //!
 //! [`day 17`]: crate::year2020::day17

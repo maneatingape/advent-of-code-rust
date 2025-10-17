@@ -186,7 +186,7 @@ fn split(tree: &mut Snailfish) -> bool {
 /// Calculate the magnitude of a snailfish number in place without using recursion.
 ///
 /// This operation is destructive but much faster than using a recursive approach and acceptable
-/// as we no longer need the original snailfish number afterwards.
+/// as we no longer need the original snailfish number afterward.
 fn magnitude(tree: &mut Snailfish) -> i32 {
     for i in (0..31).rev() {
         if tree[i] == -1 {

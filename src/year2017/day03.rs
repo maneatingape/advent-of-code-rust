@@ -19,7 +19,7 @@
 //!                                                          ------------>
 //! ```
 //!
-//! The first component is the horizontal or vertical distance from the centre to the ring,
+//! The first component is the horizontal or vertical distance from the center to the ring,
 //! in this case 2 steps. The second component is the distance from the target number to the
 //! center of each edge, in this case 2 - 1 = 1.
 //!

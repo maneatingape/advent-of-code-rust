@@ -63,7 +63,7 @@
 //! We could compute the coefficient using the formula `nᵏ/k!` however this [grows rather large]
 //! and quickly will overflow even a `u128`.
 //!
-//! However we only need to coefficient modulo 10. [Lucas's theorem] allow us to computer binomial
+//! However we only need the coefficient modulo 10. [Lucas's theorem] allows us to compute binomial
 //! coefficients modulo some prime number. If we compute the coefficients modulo 2 and modulo 5
 //! then we can use the [Chinese remainder theorem] to find the result modulo 10.
 //!

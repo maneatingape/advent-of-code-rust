@@ -6,7 +6,7 @@
 //!
 //! * [Least common multiple](https://en.wikipedia.org/wiki/Least_common_multiple)
 //!
-//! * [Modular exponentation](https://en.wikipedia.org/wiki/Modular_exponentiation).
+//! * [Modular exponentiation](https://en.wikipedia.org/wiki/Modular_exponentiation).
 //!   Calculates bᵉ mod m efficiently using
 //!   [exponentiation by squaring](https://en.wikipedia.org/wiki/Exponentiation_by_squaring).
 //!

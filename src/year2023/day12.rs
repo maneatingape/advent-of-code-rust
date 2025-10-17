@@ -212,7 +212,7 @@ where
         }
 
         // Count each subsequent spring. The previous patterns take at least the sum of their size
-        // and 1 space afterwards so no need to check indices before that.
+        // and 1 space afterward so no need to check indices before that.
         let mut start = size + 1;
 
         for (row, &size) in springs.iter().enumerate().skip(1) {

@@ -8,7 +8,7 @@
 //!
 //! First we find the complete path with a simple heuristic:
 //! * Rotate left or right to face the current path segment (a horizontal or vertical line).
-//! * Go forwards until we hit the end of the current path segment.
+//! * Go forward until we hit the end of the current path segment.
 //! * If it's a dead end then finish.
 //!
 //! Then we look for three patterns that can be repeated in any order to form the whole path.

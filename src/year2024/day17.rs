@@ -17,7 +17,7 @@
 //! ```
 //!
 //! This means that the final value of `a` must be zero. Starting with this knowledge we work
-//! backwards digit by digit. The right shift wipes out the lowest 3 bits of `a` so there could
+//! backward digit by digit. The right shift wipes out the lowest 3 bits of `a` so there could
 //! be 8 possible previous values. We check each possible value recursively, exploring only
 //! those that result in the correct program digit.
 //!

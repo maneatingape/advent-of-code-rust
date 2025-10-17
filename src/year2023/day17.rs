@@ -16,7 +16,7 @@
 //!
 //! It's a little more subtle but we also don't need to store 4 directions but only 2, horizontal
 //! and vertical. The reason is similar to not encoding the number of steps. As we are always
-//! implictly going to make a left or right turn immediately, entering a square from the opposite
+//! implicitly going to make a left or right turn immediately, entering a square from the opposite
 //! direction is equivalent. This reduces the storage space and time by half.
 //!
 //! To speed things up even further we use a trick. Classic A* uses a generic priority queue that
@@ -74,7 +74,7 @@ fn astar<const L: i32, const U: i32>(grid: &Grid<i32>) -> i32 {
             let steps = cost[index][direction];
 
             // The heuristic is used as an index into the bucket priority queue.
-            // Prefer heading towards the bottom right corner, except if we're in the top left
+            // Prefer heading toward the bottom right corner, except if we're in the top left
             // quadrant where all directions are considered equally. This prevents a pathological
             // dual frontier on some inputs that takes twice the time.
             let heuristic = |x: i32, y: i32, cost: i32| {

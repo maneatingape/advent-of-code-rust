@@ -63,7 +63,7 @@
 //! A row by row dynamic programming approach from top to bottom finds these paths. For each row
 //! we calculate all possible next rows. Interestingly it turns out that there are only 76 possible
 //! different rows. Then at each y coordinate we **deduplicate** rows to find the maximum value.
-//! This is the most important optimisation as it means that each row is at most 76 elements
+//! This is the most important optimization as it means that each row is at most 76 elements
 //! instead of growing exponentially (76², 76³, ...)
 //!
 //! ## Example paths
@@ -320,7 +320,7 @@ fn compress(input: &str) -> Graph {
                         break;
                     }
 
-                    // Follow maze path towards next POI.
+                    // Follow maze path toward next POI.
                     grid[to] = b'#';
                     to = next;
                     cost += 1;

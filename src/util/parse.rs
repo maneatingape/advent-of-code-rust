@@ -8,8 +8,8 @@
 //! ```
 //!
 //! This module provides two [`&str`] extension methods [`iter_signed`] and [`iter_unsigned`]. The
-//! reason for the separate methods is that some Advent of Code inputs contains the `-` character
-//! as a delimeter and this would cause numbers to be incorrectly parsed as negative.
+//! reason for the separate methods is that some Advent of Code inputs contain the `-` character
+//! as a delimiter and this would cause numbers to be incorrectly parsed as negative.
 //!
 //! [`iter_unsigned`]: ParseOps::iter_unsigned
 //! [`iter_signed`]: ParseOps::iter_signed

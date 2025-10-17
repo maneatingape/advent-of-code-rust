@@ -2,7 +2,7 @@
 //!
 //! The title is a reference to the [Josephus problem](https://en.wikipedia.org/wiki/Josephus_problem).
 //! We can solve both parts efficiently in `O(1)` constant storage without needing any
-//! auxiliary data strucutres.
+//! auxiliary data structures.
 //!
 //! ## Part One
 //!
@@ -58,12 +58,12 @@
 //!
 //! Part two is a variant of the problem. We solve in `log(n)` time by working *backwards*
 //! from the winning elf until we reach the starting number of elves.
-//! Starting with the winning elf `a` it must have eliminated its neighbour to the right:
+//! Starting with the winning elf `a` it must have eliminated its neighbor to the right:
 //!
 //! `a` => `a b`
 //!
 //! We then choose the previous elf to the left wrapping around to elf `b` in this case. Elf `b`
-//! must have eliminated its neighbour 1 step to the right:
+//! must have eliminated its neighbor 1 step to the right:
 //!
 //! `a b` => `a b c`
 //!

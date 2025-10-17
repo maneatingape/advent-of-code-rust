@@ -4,7 +4,7 @@
 //! [3n + 1 sequence](https://en.wikipedia.org/wiki/Collatz_conjecture)
 //! for one of two different numbers chosen depending on whether `a` is 0 or 1.
 //!
-//! The code fast enough to emulate directly without needing any understanding of what it's doing.
+//! The code is fast enough to emulate directly without needing any understanding of what it's doing.
 use crate::util::parse::*;
 
 pub enum Op {

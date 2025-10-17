@@ -5,7 +5,7 @@
 //! possible combination combined with heuristics to prune those combinations in order to achieve
 //! a reasonable running time.
 //!
-//! The most import heuristic is:
+//! The most important heuristic is:
 //! * Assume ore is infinite.
 //! * Always build a clay robot.
 //! * Check if we can do better than the highest score so far in the remaining time, building
@@ -173,7 +173,7 @@ fn dfs(blueprint: &Blueprint, result: &mut u32, time: u32, bots: Mineral, resour
 /// then check that the estimated maximum possible score is greater than the current high score.
 /// Additionally we always build a clay robot each turn.
 ///
-/// Since this will always score higher, so we can immediately prune any branch that can't
+/// Since this will always score higher, we can immediately prune any branch that can't
 /// possibly beat the high score.
 #[inline]
 fn heuristic(
@@ -206,7 +206,7 @@ fn heuristic(
 }
 
 /// "Fast forward" in time until we can build a robot of a particular type. This could possibly
-/// by the next minute if we already have enough resources.
+/// be the next minute if we already have enough resources.
 #[inline]
 fn next(
     blueprint: &Blueprint,

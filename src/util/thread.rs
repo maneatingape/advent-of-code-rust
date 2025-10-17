@@ -1,6 +1,6 @@
 //! Utility methods to spawn a number of
 //! [scoped](https://doc.rust-lang.org/stable/std/thread/fn.scope.html)
-//! threads equals to the number of cores on the machine. Unlike normal threads, scoped threads
+//! threads equal to the number of cores on the machine. Unlike normal threads, scoped threads
 //! can borrow data from their environment.
 use std::sync::atomic::{AtomicBool, AtomicU32, AtomicUsize, Ordering::Relaxed};
 use std::thread::*;
@@ -31,7 +31,7 @@ where
 /// Spawns `n` scoped threads that each receive a
 /// [work stealing](https://en.wikipedia.org/wiki/Work_stealing) iterator.
 /// Work stealing is an efficient strategy that keeps each CPU core busy when some items take longer
-/// than other to process, used by popular libraries such as [rayon](https://github.com/rayon-rs/rayon).
+/// than others to process, used by popular libraries such as [rayon](https://github.com/rayon-rs/rayon).
 /// Processing at different rates also happens on many modern CPUs with
 /// [heterogeneous performance and efficiency cores](https://en.wikipedia.org/wiki/ARM_big.LITTLE).
 pub fn spawn_parallel_iterator<F, R, T>(items: &[T], f: F) -> Vec<R>
@@ -43,7 +43,7 @@ where
     let threads = threads();
     let size = items.len().div_ceil(threads);
 
-    // Initially divide work as evenly as possible amongst each worker thread.
+    // Initially divide work as evenly as possible among each worker thread.
     let workers: Vec<_> = (0..threads)
         .map(|id| {
             let start = (id * size).min(items.len());

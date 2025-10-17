@@ -3,7 +3,7 @@
 //! This problem is interesting in that the solution is all about *reading* code not writing code.
 //!
 //! We could implement a brute force virtual machine without understanding the underlying code
-//! but it's much more efficient to analyse the code instead.
+//! but it's much more efficient to analyze the code instead.
 //!
 //! The first thing we notice is that the following idiom is repeated several times:
 //!

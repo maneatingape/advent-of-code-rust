@@ -19,7 +19,7 @@
 //! can be implemented in Rust using a [`BinaryHeap`]. However the total cost follows a strictly
 //! increasing order in a constrained range of values, so we can use a much faster
 //! [bucket queue](https://en.wikipedia.org/wiki/Bucket_queue). The range of the increase is from
-//! 0 (moving towards the target and not changing tools) to 7 (staying put and changing tools)
+//! 0 (moving toward the target and not changing tools) to 7 (staying put and changing tools)
 //! requiring 8 buckets total.
 //!
 //! [`BinaryHeap`]: std::collections::BinaryHeap

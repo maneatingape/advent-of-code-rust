@@ -45,7 +45,7 @@
 //!     ...<2> 10   5  11   1  12   6  13   3  14   7  15   0  16   8  17   4  18  (19)
 //! ```
 //!
-//! For the 20th, 21st and 22nd marbles we re-write the history of the tail then move it backwards.
+//! For the 20th, 21st and 22nd marbles we re-write the history of the tail then move it backward.
 //!
 //! ```none
 //!     20th marble
@@ -70,7 +70,7 @@
 //! It may seem that we need to generate `(last marble / 23)` blocks. However in each block we add
 //! 37 marbles (2 each for the first 18 marbles and 1 for the 19th) while the marble added to each
 //! player's score advances `23 - 7 = 16` marbles. This means we only need to generate about
-//!  `16/37` or `44%` of the total blocks to solve the game deterministcally. This saves both
+//!  `16/37` or `44%` of the total blocks to solve the game deterministically. This saves both
 //! processing time and memory storage proportionally.
 use crate::util::iter::*;
 use crate::util::parse::*;

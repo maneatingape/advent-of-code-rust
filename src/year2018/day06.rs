@@ -51,7 +51,7 @@ pub fn part1(input: &Input) -> i32 {
     let mut finite = vec![true; points.len()];
     let mut candidates: Vec<(usize, i32, i32)> = Vec::new();
 
-    // Special value for coordinates that are equidistant from nearest neighbour.
+    // Special value for coordinates that are equidistant from nearest neighbor.
     let marker = usize::MAX;
 
     // Sorts points left to right so that ranges can be merged.

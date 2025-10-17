@@ -95,7 +95,7 @@ impl Valve<'_> {
         Valve { name, flow, edges: tokens }
     }
 
-    /// Order valves is descending order of flow then ascending alpabetical order of names.
+    /// Order valves in descending order of flow then ascending alphabetical order of names.
     /// This places all non-zero valves at the start followed immediately by valve `AA`.
     fn cmp(&self, other: &Valve<'_>) -> Ordering {
         other.flow.cmp(&self.flow).then(self.name.cmp(other.name))

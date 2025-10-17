@@ -2,7 +2,7 @@
 //!
 //! This is the [Clique problem](https://en.wikipedia.org/wiki/Clique_problem). For part one we
 //! find triangles (cliques of size 3) for each node by checking if there's an edge between any
-//! distinct pair of neighbouring nodes.
+//! distinct pair of neighboring nodes.
 //!
 //! Part two asks to find the maximum clique, for which we could use the
 //! [Bron–Kerbosch algorithm](https://en.wikipedia.org/wiki/Bron%E2%80%93Kerbosch_algorithm).

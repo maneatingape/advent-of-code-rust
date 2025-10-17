@@ -2,7 +2,7 @@
 //!
 //! Solves both parts simultaneously by flood filling each region.
 //!
-//! For part one we increment the perimeter for each neighbouring plot belonging to a different
+//! For part one we increment the perimeter for each neighboring plot belonging to a different
 //! region or out of bounds.
 //!
 //! For part two we count each plot on the edge as either 0, 1 or 2 sides then divide by 2.

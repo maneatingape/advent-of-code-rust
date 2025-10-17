@@ -200,7 +200,7 @@ fn fight(input: &Input, elf_attack_power: i32, part_two: bool) -> Option<i32> {
             // Search for neighboring enemies.
             let mut nearby = attack(&grid, &units, position, kind);
 
-            // If no enemy next to unit then move towards nearest enemy in reading order,
+            // If no enemy next to unit then move toward nearest enemy in reading order,
             // breaking equal distance ties in reading order.
             if nearby.is_none()
                 && let Some(next) = double_bfs(input.walls, &units, position, kind)
