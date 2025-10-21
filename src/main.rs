@@ -73,7 +73,7 @@ macro_rules! run {
                     wrapper: |data: &str| {
                         use aoc::$year::$day::*;
 
-                        let input = parse(&data);
+                        let input = parse(data);
                         let part1 = part1(&input).to_string();
                         let part2 = part2(&input).to_string();
 

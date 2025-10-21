@@ -99,7 +99,11 @@ pub fn parse(input: &str) -> Input<'_> {
 }
 
 pub fn part1(input: &Input<'_>) -> u32 {
-    input.ingredients.values().filter(|i| i.candidates == 0).map(|i| i.food.count_ones()).sum()
+    input
+        .ingredients
+        .values()
+        .filter_map(|i| (i.candidates == 0).then_some(i.food.count_ones()))
+        .sum()
 }
 
 pub fn part2(input: &Input<'_>) -> String {

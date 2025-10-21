@@ -2,7 +2,6 @@
 //!
 //! These codes allow command line applications to show colored or styled text in most terminals.
 //! Advanced commands can move the cursor or clear the screen.
-
 pub const RESET: &str = "\x1b[0m";
 pub const BOLD: &str = "\x1b[1m";
 pub const RED: &str = "\x1b[31m";

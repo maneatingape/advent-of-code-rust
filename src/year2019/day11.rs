@@ -19,7 +19,7 @@ pub fn part2(input: &[i64]) -> String {
     let hull = paint(input, 1);
 
     // Filter only white panels
-    let panels: Vec<_> = hull.iter().filter(|&(_, &v)| v == 1).map(|(&k, _)| k).collect();
+    let panels: Vec<_> = hull.iter().filter_map(|(&k, &v)| (v == 1).then_some(k)).collect();
 
     // Get maximum extents
     let (x1, x2, y1, y2) = panels.iter().fold(
