@@ -175,7 +175,7 @@ pub fn part2(input: &[Vec<usize>]) -> usize {
 ///
 /// Each state is processed in one of two phases, "condense" or "expand".
 ///
-/// In condense, ampihpods move from the hallway or another burrow directly to their home burrow.
+/// In condense, amphipods move from the hallway or another burrow directly to their home burrow.
 /// Multiple moves are combined if possible and each burrow is tried from left to right.
 /// In terms of energy this is always an optimal move.
 ///

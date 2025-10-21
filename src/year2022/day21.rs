@@ -1,7 +1,7 @@
 //! # Monkey Math
 //!
 //! The Monkeys form a [binary tree](https://en.wikipedia.org/wiki/Binary_tree). We first
-//! compute the result by recursively following the strucuture all the ways to the leaves.
+//! compute the result by recursively following the structure all the way to the leaves.
 //! We also find the `humn` node and all its parents the same way, marking them as "unknown".
 //!
 //! For part two we know that the value on the left and the right of the root must be equal.

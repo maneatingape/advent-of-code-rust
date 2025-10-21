@@ -4,11 +4,11 @@
 //! Each input differs only in the number specified on line 10.
 //!
 //! The first section is only executed by program 0 and generates a pseudorandom sequence of
-//! 127 numbers between 0 and 9999. The programs then take turns implementing the innner loop of
-//! the [imfamous bubble sort](https://en.wikipedia.org/wiki/Bubble_sort) in descending order.
+//! 127 numbers between 0 and 9999. The programs then take turns implementing the inner loop of
+//! the [infamous bubble sort](https://en.wikipedia.org/wiki/Bubble_sort) in descending order.
 //!
 //! The partially sorted sequence is passed back and forth between each program until in final
-//! sorted order. Assembly code annotated with Rust pseduocode:
+//! sorted order. Assembly code annotated with Rust pseudocode:
 //!
 //! ```none
 //!     set i 31

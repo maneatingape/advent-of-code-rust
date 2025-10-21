@@ -5,7 +5,7 @@
 //!
 //! Sorts the weights in ascending order, then tries combinations of increasing size until a
 //! match in found. This will be the answer since the package count is the smallest and the
-//! quantum entaglement will also be the lowest.
+//! quantum entanglement will also be the lowest.
 use crate::util::bitset::*;
 use crate::util::parse::*;
 

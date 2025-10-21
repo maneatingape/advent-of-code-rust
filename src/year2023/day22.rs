@@ -30,7 +30,7 @@
 //! ## Part One
 //!
 //! If a brick is supported by only a single brick then the parent brick cannot be safely removed
-//! so we mark it as unsafe. Mutiple bricks could potentially be independently supported by a
+//! so we mark it as unsafe. Multiple bricks could potentially be independently supported by a
 //! single parent brick so using a boolean flag means that we won't overcount.
 //!
 //! ## Part Two

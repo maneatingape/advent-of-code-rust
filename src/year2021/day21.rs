@@ -11,7 +11,7 @@ type State = (Pair, Pair);
 /// happens once in the 27 rolls, but a score of 6 happens a total of 7 times.
 const DIRAC: [Pair; 7] = [(3, 1), (4, 3), (5, 6), (6, 7), (7, 6), (8, 3), (9, 1)];
 
-/// Extract the starting position for both players converting to zero based indices.
+/// Extract the starting position for both players converting to zero-based indices.
 pub fn parse(input: &str) -> State {
     let [_, one, _, two]: [usize; 4] = input.iter_unsigned().chunk::<4>().next().unwrap();
     ((one - 1, 0), (two - 1, 0))

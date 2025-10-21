@@ -1,6 +1,6 @@
 //! # Red-Nosed Reports
 //!
-//! Computes boths parts simultaneously. Each pair of levels is converted into deltas of
+//! Computes both parts simultaneously. Each pair of levels is converted into deltas of
 //! either +1, -1 or 0. For example:
 //!
 //! * `1 3 6 7 9` => `+1 +1 +1 +1`

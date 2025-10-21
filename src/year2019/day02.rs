@@ -1,6 +1,6 @@
 //! # 1202 Program Alarm
 //!
-//! Substituting symbols instead of numbers into the program shows that it calculates the value of
+//! Substituting symbols instead of numbers into the program shows that it calculates the value of:
 //!
 //! `a * noun + b * verb + c`
 //!

@@ -64,7 +64,7 @@ impl U256 {
     }
 }
 
-/// Implement operator bitswise logic so that we can use the regular `&`, `|` and `!` notation.
+/// Implement operator bitwise logic so that we can use the regular `&`, `|` and `!` notation.
 impl BitAnd for U256 {
     type Output = U256;
 

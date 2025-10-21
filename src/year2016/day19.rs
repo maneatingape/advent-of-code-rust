@@ -24,7 +24,7 @@
 //!
 //! ~~1~~ ~~2~~ 3 ~~4~~ 5
 //!
-//! We can represent this as a loop
+//! We can represent this as a loop:
 //!
 //! ```none
 //!    let mut n = <starting number of elves>
@@ -67,12 +67,12 @@
 //!
 //! `a b` => `a b c`
 //!
-//! Play passes to the left, in this case elf `a` must have eliminated an elf 2 steps away
+//! Play passes to the left, in this case elf `a` must have eliminated an elf 2 steps away:
 //!
 //! `a b c` => `a b d c`
 //!
 //! Play passes to the left, wrapping around to elf `c` that must have eliminated an elf 2 steps
-//! away
+//! away:
 //!
 //! `a b d c` => `a e b d c`
 //!

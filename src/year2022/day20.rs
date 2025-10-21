@@ -15,7 +15,7 @@
 //! although perhaps adding [balancing rotations](https://en.wikipedia.org/wiki/Tree_rotation)
 //! to the tree would make it faster.
 //!
-//! Leaf `vec`s are padded to a size modulo 64 to speed up seaching for numbers. A SIMD variant
+//! Leaf `vec`s are padded to a size modulo 64 to speed up searching for numbers. A SIMD variant
 //! can search for 64 numbers simultaneously.
 use crate::util::parse::*;
 use std::array::from_fn;

@@ -1,7 +1,7 @@
 //! # Experimental Emergency Teleportation
 //!
 //! Part two implements a 3D version of binary search. Starting with a single cube that encloses all
-//! nanbots, each cube is further split into 8 smaller cubes until we find the answer.
+//! nanobots, each cube is further split into 8 smaller cubes until we find the answer.
 //! Cubes are stored in a [`MinHeap`] ordered by:
 //!
 //! * Greatest number of nanobots in range.

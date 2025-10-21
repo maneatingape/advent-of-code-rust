@@ -5,7 +5,7 @@
 //! keys and the edge weight is the distance between keys. Doors modify which edges
 //! are connected depending on the keys currently possessed.
 //!
-//! We first find the distance betweeen every pair of keys then run
+//! We first find the distance between every pair of keys then run
 //! [Dijkstra's algorithm](https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm) to find the
 //! shortest path that visits every node in the graph.
 
@@ -25,8 +25,8 @@
 //! * When finding the distance between every pair of keys, it's faster to first only find the immediate
 //!   neighbors of each key using a [Breadth first search](https://en.wikipedia.org/wiki/Breadth-first_search)
 //!   then run the [Floyd-Warshall algorithm](https://en.wikipedia.org/wiki/Floyd%E2%80%93Warshall_algorithm)
-//!   to contruct the rest of the graph. Even though the Floyd-Warshall asymptotic bound of `O(n³)`
-//!   is higher than the asymptotic bounds of repeated BFS, this was twice as fast in practise
+//!   to construct the rest of the graph. Even though the Floyd-Warshall asymptotic bound of `O(n³)`
+//!   is higher than the asymptotic bounds of repeated BFS, this was twice as fast in practice
 //!   for my input.
 //!
 //! We also apply some low level tricks to go even faster:
@@ -37,7 +37,7 @@
 //!   part one and part two to share the same code.
 //! * For fast lookup of distance between keys, the maze is stored as
 //!   [adjacency matrix](https://en.wikipedia.org/wiki/Adjacency_matrix). `a` is index 0, `b` is
-//!   index 1 and robots's initial positions are from 26 to 29 inclusive.
+//!   index 1 and robots' initial positions are from 26 to 29 inclusive.
 //!   For example (simplifying by moving robot from index 26 to 2):
 //!
 //!   ```none

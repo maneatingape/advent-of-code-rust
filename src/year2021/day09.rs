@@ -3,7 +3,7 @@
 //! Part 2 is the classic [flood fill](https://en.wikipedia.org/wiki/Flood_fill) algorithm with a
 //! twist to return the size of the filled area. This algorithm can be implemented either as a
 //! [DFS](https://en.wikipedia.org/wiki/Depth-first_search) using recursion or as a
-//! [BFS](https://en.wikipedia.org/wiki/Breadth-first_search) using an auxilary data structure
+//! [BFS](https://en.wikipedia.org/wiki/Breadth-first_search) using an auxiliary data structure
 //! such as a [`VecDeque`].
 //!
 //! This solution uses a DFS approach as it's faster and Rust's stack size limit seems enough

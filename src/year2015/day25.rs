@@ -2,7 +2,7 @@
 //!
 //! There are two parts to solving this problem.
 //!
-//! The first is converting the row and column to an *zero based* index. Using the example of
+//! The first is converting the row and column to a *zero-based* index. Using the example of
 //! the 12th code at row 4 column 2:
 //!
 //! ```none
@@ -23,11 +23,11 @@
 //! Starting at the chosen number 12 and moving diagonally upwards to the right we intersect
 //! the top row at column `column + row - 1 = 2 + 4 - 1 = 5`. This gives the triangular number
 //! `5 * (5 + 1) / 2 = 15`. Then we count backward by `row` elements to get the one less
-//! zero based based index `15 - 4 = 11`.
+//! zero-based index `15 - 4 = 11`.
 //!
 //! The second part is realizing that the description of the code generation is
 //! [modular exponentiation](https://en.wikipedia.org/wiki/Modular_exponentiation). The exponent
-//! of the first code is zero, which is the reason for using a zero based index.
+//! of the first code is zero, which is the reason for using a zero-based index.
 use crate::util::iter::*;
 use crate::util::math::*;
 use crate::util::parse::*;

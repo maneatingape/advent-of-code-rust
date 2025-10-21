@@ -153,7 +153,7 @@ pub fn part1(input: &Input) -> i32 {
             // Skip coordinates where all points are equally distant from their neighbor.
             if i != marker {
                 if row == input.min_y || row == input.max_y {
-                    // All coordinates the are closest to the top or bottom row are infinite.
+                    // All coordinates that are closest to the top or bottom row are infinite.
                     finite[i] = false;
                 } else {
                     // Count points closest to the left, to the right and the coordinate itself.

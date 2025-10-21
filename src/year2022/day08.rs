@@ -10,7 +10,7 @@ type Input = (usize, Vec<i8>);
 
 /// Convert a 2D grid of ASCII digits into a 1D `vec` of heights.
 ///
-/// Each height is multipled by 6. For part 1 this makes no difference, but for part 2 this helps
+/// Each height is multiplied by 6. For part 1 this makes no difference, but for part 2 this helps
 /// with the bit manipulation.
 ///
 /// To convert from 2D co-ordinates to an index, the formula is `y * width + x`. For the sample grid

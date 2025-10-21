@@ -11,7 +11,7 @@
 //!            \ da db dc dd de df dg dh di dj dj dl [dx] [dy] /
 //! ```
 //!
-//! The penultimate conjuction in each row, for example `ax` both takes input and delivers output
+//! The penultimate conjunction in each row, for example `ax` both takes input and delivers output
 //! to the flips flops. This follows a pattern, for example using `v` to indicate input from the
 //! conjunction and `v` to indicate output:
 //!

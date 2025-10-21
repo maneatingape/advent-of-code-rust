@@ -30,7 +30,7 @@ struct State {
     twice: bool,
 }
 
-/// Parse the input into an adjency matrix of edges compressed into `u32` bitfields.
+/// Parse the input into an adjacency matrix of edges compressed into `u32` bitfields.
 ///
 /// First, each cave is assigned a unique index, with `0` reserved for the `start` cave and `1`
 /// reserved for the `end` cave. For example the sample input caves are:
@@ -112,8 +112,8 @@ fn explore(input: &Input, twice: bool) -> u32 {
 /// First we check if we have either reached the `end` cave or seen this state before,
 /// returning early in either case with the respective result.
 ///
-/// Next we use bit manipulation to quickly iterate through the caves connnected to our current
-/// location. The [`trailing_zeros`] method returns the next set bit. This instrinsic compiles to
+/// Next we use bit manipulation to quickly iterate through the caves connected to our current
+/// location. The [`trailing_zeros`] method returns the next set bit. This intrinsic compiles to
 /// a single machine code instruction on x86 and ARM and is blazing fast. We remove visited caves
 /// using a `^` XOR instruction.
 ///

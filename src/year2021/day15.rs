@@ -1,10 +1,10 @@
 //! # Chiton
 //!
 //! Traversing a graph with different non-negative edge weights is a job for the classic
-//! [Djisktra's algorithm](https://www.redblobgames.com/pathfinding/a-star/introduction.html),
+//! [Dijkstra's algorithm](https://www.redblobgames.com/pathfinding/a-star/introduction.html),
 //! explained really well in the linked blog post.
 //!
-//! To speed things up we use a trick. Classic Djisktra uses a generic priority queue that
+//! To speed things up we use a trick. Classic Dijkstra uses a generic priority queue that
 //! can be implemented in Rust using a [`BinaryHeap`]. However the total cost follows a strictly
 //! increasing order in a constrained range of values, so we can use a much faster single purpose
 //! data structure instead.

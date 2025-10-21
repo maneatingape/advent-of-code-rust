@@ -13,7 +13,7 @@
 //! We find the number of ones for a pattern of length `n` in `log(n)` complexity as follows:
 //! * Start with a known pattern `abcde` and let the reversed bit inverse of this pattern be
 //!   `EDCBA`.
-//! * Caculate the [prefix sum](https://en.wikipedia.org/wiki/Prefix_sum) of the known sequence.
+//! * Calculate the [prefix sum](https://en.wikipedia.org/wiki/Prefix_sum) of the known sequence.
 //! * If the requested length is within the known sequence (in this example from 0 to 5 inclusive)
 //!   then we're done, return the number of ones directly.
 //! * Else after one repetition this becomes `abcde0EDCBA`.

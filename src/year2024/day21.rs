@@ -100,7 +100,7 @@ fn pad_combinations() -> Combinations {
     combinations
 }
 
-/// Each route between two keys has 2 possibilites, horizontal first or vertical first.
+/// Each route between two keys has 2 possibilities, horizontal first or vertical first.
 /// We skip any route that would cross the gap and also avoid adding the same route twice
 /// when a key is in a straight line (e.g. directly above/below or left/right). For example:
 ///

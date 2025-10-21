@@ -96,7 +96,7 @@ pub fn part1(input: &Input) -> i32 {
         remaining -= steps;
         checksum += ones;
 
-        // Use a vector to simulate an empty tape. In practise the cursor doesn't move more than
+        // Use a vector to simulate an empty tape. In practice the cursor doesn't move more than
         // a few thousand steps in any direction, so this approach is as fast as a fixed size
         // array, but much more robust.
         if advance {

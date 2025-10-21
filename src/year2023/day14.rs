@@ -1,15 +1,15 @@
 //! # Parabolic Reflector Dish
 //!
 //! To solve part two we look for a cycle where the dish returns to a previously seen state.
-//! By storing each dish and a index in a `HashMap` we can calculate the offset and length of the
-//! cycle then use that to find to state at the billionth step.
+//! By storing each dish and an index in a `HashMap` we can calculate the offset and length of the
+//! cycle then use that to find the state at the billionth step.
 //!
 //! Calculating the state needs to be done sequentially so we use some tricks to make it as fast as
 //! possible.
 //!
-//! First the location of each each ball is stored in a `vec`. My input had ~2,000 balls compared to
+//! First the location of each ball is stored in a `vec`. My input had ~2,000 balls compared to
 //! 10,000 grid squares total, so this approach reduces the amount of data to scan by 5x. The 2D
-//! coordinates are converted so a 1D number, for example the index of a ball on the second row
+//! coordinates are converted to a 1D number, for example the index of a ball on the second row
 //! second column would be 1 * 100 + 1 = 101.
 //!
 //! Next for each possible tilt orientation (north, south, east and west) an approach similar to a

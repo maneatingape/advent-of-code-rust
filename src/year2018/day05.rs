@@ -5,7 +5,7 @@
 //! This problem is similar to checking if a parentheses expression is balanced or not.
 //! We use a similar approach, maintaining a stack of unreacted polymer units. Each unit from the
 //! polymer is compared to the head of the stack using bitwise logic. Lowercase and uppercase ASCII
-//! codes for the same lettter are always are 32 apart, which can be checked very quickly using
+//! codes for the same letter are always are 32 apart, which can be checked very quickly using
 //! bitwise XOR. For example:
 //!
 //! ```none

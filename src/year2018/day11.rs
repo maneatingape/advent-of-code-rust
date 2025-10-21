@@ -80,7 +80,7 @@ fn square(sat: &[i32], size: usize) -> Result {
     Result { size, x: max_x, y: max_y, power: max_power }
 }
 
-/// Same as the scalar version but prcessing 16 lanes simultaneously.
+/// Same as the scalar version but processing 16 lanes simultaneously.
 #[cfg(feature = "simd")]
 fn square(sat: &[i32], size: usize) -> Result {
     use std::simd::cmp::SimdPartialOrd as _;

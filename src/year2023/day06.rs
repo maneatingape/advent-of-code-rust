@@ -9,7 +9,7 @@
 //!
 //! * `x * (t - x)`
 //!
-//! To beat the record the following conditition must hold:
+//! To beat the record the following condition must hold:
 //!
 //! * `x * (t - x) = d`
 //! * `x² - tx +d = 0`

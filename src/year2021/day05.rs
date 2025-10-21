@@ -1,6 +1,6 @@
 //! # Hydrothermal Venture
 //!
-//! No subtlety with this solution, we create an 1 dimensional arrray of 1 million `u8` elements
+//! No subtlety with this solution, we create an 1 dimensional array of 1 million `u8` elements
 //! to store all possible points then increment values for each line. This assumes that no lines
 //! cross more than 255 times. This approach is much faster but less flexible than using a
 //! `HashMap` to store mappings of point to values.

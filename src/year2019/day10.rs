@@ -1,6 +1,6 @@
 //! # Monitoring Station
 //!
-//! Integer only solution, avoiding floating point or trignometric lookups such as [`atan2`].
+//! Integer only solution, avoiding floating point or trigonometric lookups such as [`atan2`].
 //!
 //! ## Part One
 //!

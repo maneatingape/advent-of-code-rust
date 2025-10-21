@@ -3,7 +3,7 @@
 //! This problem is very similar to [`Day 9`] and we solve it in almost exactly the same way by
 //! computing an adjacency matrix of happiness then permuting the order of the diners.
 //!
-//! For part one we reduce the permutatations from 8! = 40,320 permutations to 7! = 5,040
+//! For part one we reduce the permutations from 8! = 40,320 permutations to 7! = 5,040
 //! permutations by arbitrarily choosing one of the diners as the start.
 //!
 //! We solve part two at the same time by noticing that by inserting yourself between two diners

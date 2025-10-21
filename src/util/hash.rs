@@ -11,7 +11,7 @@ use std::ops::BitXor as _;
 /// Type alias for [`HashSet`] using [`FxHasher`].
 pub type FastSet<T> = HashSet<T, BuildFxHasher>;
 
-/// Convenience methods to contruct a [`FastSet`].
+/// Convenience methods to construct a [`FastSet`].
 pub trait FastSetBuilder<T> {
     fn new() -> Self;
     fn with_capacity(capacity: usize) -> Self;
@@ -37,7 +37,7 @@ impl<T: Eq + Hash> FastSetBuilder<T> for FastSet<T> {
 /// Type alias for [`HashMap`] using [`FxHasher`].
 pub type FastMap<K, V> = HashMap<K, V, BuildFxHasher>;
 
-/// Convenience methods to contruct a [`FastMap`].
+/// Convenience methods to construct a [`FastMap`].
 pub trait FastMapBuilder<K, V> {
     fn new() -> Self;
     fn with_capacity(capacity: usize) -> Self;
@@ -75,7 +75,7 @@ impl BuildHasher for BuildFxHasher {
 
 /// Simplified implementation, in particular running on a system with 64 bit `usize` is assumed.
 ///
-/// Checkout the [Firefox code](https://searchfox.org/mozilla-central/rev/633345116df55e2d37be9be6555aa739656c5a7d/mfbt/HashFunctions.h#109-153)
+/// Check out the [Firefox code](https://searchfox.org/mozilla-central/rev/633345116df55e2d37be9be6555aa739656c5a7d/mfbt/HashFunctions.h#109-153)
 /// for a full description.
 const K: u64 = 0x517cc1b727220a95;
 

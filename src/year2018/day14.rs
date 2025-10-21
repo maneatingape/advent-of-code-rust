@@ -120,7 +120,7 @@ fn reader(rx: Receiver<&[u8]>, done: &AtomicBool, input: &str) -> (String, usize
 ///
 /// The "hot" loop processes recipes efficiently in chunks of 16. The vast majority of recipes
 /// are calculated in this loop. As much as possible is parallelized using techniques similar to
-/// SIMD but using regular instructions instead of SIMD instrinsics or Rust's portable SIMD API.
+/// SIMD but using regular instructions instead of SIMD intrinsics or Rust's portable SIMD API.
 ///
 /// Interestingly on an Apple M2 Max this "poor man's SIMD" has the same performance as using
 /// the portable SIMD API. This is probably due to the fact that the serial loops that write new

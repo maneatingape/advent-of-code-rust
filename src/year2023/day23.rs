@@ -97,7 +97,7 @@
 //!
 //! ## Next row generation
 //!
-//! To create the next row from a given row, there are 5 possibilites for each of the 6 columns.
+//! To create the next row from a given row, there are 5 possibilities for each of the 6 columns.
 //!
 //! ### Leave a blank space, skipping over the column.
 //!
@@ -151,7 +151,7 @@
 //!                      ^ Closed cycles not allowed
 //! ```
 //!
-//! We implement this by not joining any (`S`, `E`) pairs in that order. Joing the reverse order
+//! We implement this by not joining any (`S`, `E`) pairs in that order. Joining the reverse order
 //! (`E`, `S`) is allowed.
 //!
 //! Finally there are two special rules when joining two nested line segments.

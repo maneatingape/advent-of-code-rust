@@ -35,7 +35,7 @@
 //! 5. Apply the rules using only bitwise logic.
 //!
 //! Consider the binary representation of a 4 bit hex digit.
-//! * A cell stays on if it has 2 or 3 neigbours, binary `0010` or binary `0011`.
+//! * A cell stays on if it has 2 or 3 neighbors, binary `0010` or binary `0011`.
 //! * A cell turns on if it has exactly 3 neighbors, binary `0011`.
 //!
 //! If we `OR` the neighbor count with the current cell, either `0000` or `0001` then the
