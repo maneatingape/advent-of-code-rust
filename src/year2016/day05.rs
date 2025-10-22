@@ -111,8 +111,10 @@ fn worker(shared: &Shared) {
 #[cfg(feature = "simd")]
 mod simd {
     use super::*;
+    use crate::util::bitset::*;
     use crate::util::md5::simd::hash_fixed;
-    use std::simd::{LaneCount, SupportedLaneCount};
+    use std::simd::cmp::SimdPartialEq as _;
+    use std::simd::*;
 
     #[expect(clippy::needless_range_loop)]
     fn check_hash_simd<const N: usize>(
@@ -133,11 +135,12 @@ mod simd {
         }
 
         let [result, ..] = hash_fixed(buffers, size);
+        let bitmask = (result & Simd::splat(0xfffff000)).simd_eq(Simd::splat(0)).to_bitmask();
 
-        for i in 0..N {
-            if result[i] & 0xfffff000 == 0 {
-                let mut exclusive = shared.mutex.lock().unwrap();
+        if bitmask != 0 {
+            let mut exclusive = shared.mutex.lock().unwrap();
 
+            for i in bitmask.biterator() {
                 exclusive.found.push((start + offset + i as u32, result[i]));
                 exclusive.mask |= 1 << (result[i] >> 8);
 

@@ -141,10 +141,10 @@ fn common(f: u32, a: u32, b: u32, m: u32, s: u32, k: u32) -> u32 {
 pub mod simd {
     use std::array::from_fn;
     use std::simd::num::SimdUint as _;
-    use std::simd::{LaneCount, Simd, SupportedLaneCount};
+    use std::simd::*;
 
     #[inline]
-    pub fn hash_fixed<const N: usize>(buffers: &mut [[u8; 64]; N], size: usize) -> [[u32; N]; 4]
+    pub fn hash_fixed<const N: usize>(buffers: &mut [[u8; 64]; N], size: usize) -> [Simd<u32, N>; 4]
     where
         LaneCount<N>: SupportedLaneCount,
     {
@@ -245,12 +245,7 @@ pub mod simd {
         c = round4(c, d, a, b, m2, 15, 0x2ad7d2bb);
         b = round4(b, c, d, a, m9, 21, 0xeb86d391);
 
-        [
-            (a0 + a).swap_bytes().to_array(),
-            (b0 + b).swap_bytes().to_array(),
-            (c0 + c).swap_bytes().to_array(),
-            (d0 + d).swap_bytes().to_array(),
-        ]
+        [(a0 + a).swap_bytes(), (b0 + b).swap_bytes(), (c0 + c).swap_bytes(), (d0 + d).swap_bytes()]
     }
 
     #[inline]

@@ -46,141 +46,13 @@ fn generate_pad(input: &str, part_two: bool) -> i32 {
         Shared { input, part_two, iter: AtomicIter::new(0, step), mutex: Mutex::new(exclusive) };
 
     // Use as many cores as possible to parallelize the search.
-    spawn(|| worker(&shared));
+    #[cfg(not(feature = "simd"))]
+    spawn(|| scalar::worker(&shared));
+    #[cfg(feature = "simd")]
+    spawn(|| simd::worker(&shared));
 
     let exclusive = shared.mutex.into_inner().unwrap();
     *exclusive.found.iter().nth(63).unwrap()
-}
-
-#[cfg(not(feature = "simd"))]
-fn worker(shared: &Shared<'_>) {
-    while let Some(n) = shared.iter.next() {
-        // Get the next key to check.
-        let n = n as i32;
-
-        // Calculate the hash.
-        let (mut buffer, size) = format_string(shared.input, n);
-        let mut result = hash(&mut buffer, size);
-
-        if shared.part_two {
-            for _ in 0..2016 {
-                buffer[0..8].copy_from_slice(&to_ascii(result[0]));
-                buffer[8..16].copy_from_slice(&to_ascii(result[1]));
-                buffer[16..24].copy_from_slice(&to_ascii(result[2]));
-                buffer[24..32].copy_from_slice(&to_ascii(result[3]));
-                result = hash(&mut buffer, 32);
-            }
-        }
-
-        check(shared, n, result);
-    }
-}
-
-/// Use SIMD to compute hashes in parallel in blocks of 32.
-#[cfg(feature = "simd")]
-#[expect(clippy::needless_range_loop)]
-fn worker(shared: &Shared<'_>) {
-    let mut result = [[0; 32]; 4];
-    let mut buffers = [[0; 64]; 32];
-
-    while let Some(start) = shared.iter.next() {
-        // Get the next key to check.
-        let start = start as i32;
-
-        // Calculate the hash.
-        for i in 0..32 {
-            let (mut buffer, size) = format_string(shared.input, start + i as i32);
-            let [a, b, c, d] = hash(&mut buffer, size);
-
-            result[0][i] = a;
-            result[1][i] = b;
-            result[2][i] = c;
-            result[3][i] = d;
-        }
-
-        if shared.part_two {
-            for _ in 0..2016 {
-                for i in 0..32 {
-                    buffers[i][0..8].copy_from_slice(&to_ascii(result[0][i]));
-                    buffers[i][8..16].copy_from_slice(&to_ascii(result[1][i]));
-                    buffers[i][16..24].copy_from_slice(&to_ascii(result[2][i]));
-                    buffers[i][24..32].copy_from_slice(&to_ascii(result[3][i]));
-                }
-                result = simd::hash_fixed(&mut buffers, 32);
-            }
-        }
-
-        for i in 0..32 {
-            let hash = [result[0][i], result[1][i], result[2][i], result[3][i]];
-            check(shared, start + i as i32, hash);
-        }
-    }
-}
-
-/// Check for sequences of 3 or 5 consecutive matching digits.
-fn check(shared: &Shared<'_>, n: i32, hash: [u32; 4]) {
-    let [a, b, c, d] = hash;
-
-    let mut prev = u32::MAX;
-    let mut same = 1;
-    let mut three = 0;
-    let mut five = 0;
-
-    for mut word in [d, c, b, a] {
-        for _ in 0..8 {
-            let next = word & 0xf;
-
-            if next == prev {
-                same += 1;
-            } else {
-                same = 1;
-            }
-
-            if same == 3 {
-                three = 1 << next;
-            }
-            if same == 5 {
-                five |= 1 << next;
-            }
-
-            word >>= 4;
-            prev = next;
-        }
-    }
-
-    if three != 0 || five != 0 {
-        let mut exclusive = shared.mutex.lock().unwrap();
-        let mut candidates = Vec::new();
-
-        // Compare against all 5 digit sequences.
-        if three != 0 {
-            exclusive.threes.insert(n, three);
-
-            for (_, mask) in exclusive.fives.range(n + 1..n + 1001) {
-                if three & mask != 0 {
-                    candidates.push(n);
-                }
-            }
-        }
-
-        // Compare against all 3 digit sequences.
-        if five != 0 {
-            exclusive.fives.insert(n, five);
-
-            for (&index, &mask) in exclusive.threes.range(n - 1000..n) {
-                if five & mask != 0 {
-                    candidates.push(index);
-                }
-            }
-        }
-
-        // Add any matching keys found, finishing once we have at least 64 keys.
-        exclusive.found.extend(candidates);
-
-        if exclusive.found.len() >= 64 {
-            shared.iter.stop();
-        }
-    }
 }
 
 /// Write the salt and integer index as ASCII characters.
@@ -195,6 +67,7 @@ fn format_string(prefix: &str, n: i32) -> ([u8; 64], usize) {
 }
 
 /// Quickly convert a `u32` to an array of 8 ASCII values.
+#[inline]
 fn to_ascii(n: u32) -> [u8; 8] {
     // Spread each nibble into its own byte, for example `1234abcd` becomes `010203040a0b0c0d`.
     let mut n = n as u64;
@@ -214,4 +87,216 @@ fn to_ascii(n: u32) -> [u8; 8] {
     let mask = ((n + 0x0606060606060606) >> 4) & 0x0101010101010101;
     n = n + 0x3030303030303030 + 0x27 * mask;
     n.to_be_bytes()
+}
+
+#[cfg(not(feature = "simd"))]
+mod scalar {
+    use super::*;
+
+    pub(super) fn worker(shared: &Shared<'_>) {
+        while let Some(n) = shared.iter.next() {
+            // Get the next key to check.
+            let n = n as i32;
+
+            // Calculate the hash.
+            let (mut buffer, size) = format_string(shared.input, n);
+            let mut result = hash(&mut buffer, size);
+
+            if shared.part_two {
+                for _ in 0..2016 {
+                    buffer[0..8].copy_from_slice(&to_ascii(result[0]));
+                    buffer[8..16].copy_from_slice(&to_ascii(result[1]));
+                    buffer[16..24].copy_from_slice(&to_ascii(result[2]));
+                    buffer[24..32].copy_from_slice(&to_ascii(result[3]));
+                    result = hash(&mut buffer, 32);
+                }
+            }
+
+            check(shared, n, result);
+        }
+    }
+
+    /// Check for sequences of 3 or 5 consecutive matching digits.
+    fn check(shared: &Shared<'_>, n: i32, hash: [u32; 4]) {
+        let [a, b, c, d] = hash;
+
+        let mut prev = u32::MAX;
+        let mut same = 1;
+        let mut three = 0;
+        let mut five = 0;
+
+        for mut word in [d, c, b, a] {
+            for _ in 0..8 {
+                let next = word & 0xf;
+
+                if next == prev {
+                    same += 1;
+                } else {
+                    same = 1;
+                }
+
+                if same == 3 {
+                    three = 1 << next;
+                }
+                if same == 5 {
+                    five |= 1 << next;
+                }
+
+                word >>= 4;
+                prev = next;
+            }
+        }
+
+        if three != 0 || five != 0 {
+            let mut exclusive = shared.mutex.lock().unwrap();
+            let mut candidates = Vec::new();
+
+            // Compare against all 5 digit sequences.
+            if three != 0 {
+                exclusive.threes.insert(n, three);
+
+                for (_, mask) in exclusive.fives.range(n + 1..n + 1001) {
+                    if three & mask != 0 {
+                        candidates.push(n);
+                    }
+                }
+            }
+
+            // Compare against all 3 digit sequences.
+            if five != 0 {
+                exclusive.fives.insert(n, five);
+
+                for (&index, &mask) in exclusive.threes.range(n - 1000..n) {
+                    if five & mask != 0 {
+                        candidates.push(index);
+                    }
+                }
+            }
+
+            // Add any matching keys found, finishing once we have at least 64 keys.
+            exclusive.found.extend(candidates);
+
+            if exclusive.found.len() >= 64 {
+                shared.iter.stop();
+            }
+        }
+    }
+}
+
+#[cfg(feature = "simd")]
+mod simd {
+    use super::*;
+    use crate::util::bitset::*;
+    use crate::util::md5::simd::hash_fixed;
+    use std::simd::cmp::SimdPartialEq as _;
+    use std::simd::*;
+
+    /// Use SIMD to compute hashes in parallel in blocks of 32.
+    #[cfg(feature = "simd")]
+    #[expect(clippy::needless_range_loop)]
+    pub(super) fn worker(shared: &Shared<'_>) {
+        let mut result = [Simd::splat(0); 4];
+        let mut buffers = [[0; 64]; 32];
+
+        while let Some(start) = shared.iter.next() {
+            // Get the next key to check.
+            let start = start as i32;
+
+            // Calculate the hash.
+            for i in 0..32 {
+                let (mut buffer, size) = format_string(shared.input, start + i as i32);
+                let [a, b, c, d] = hash(&mut buffer, size);
+
+                result[0][i] = a;
+                result[1][i] = b;
+                result[2][i] = c;
+                result[3][i] = d;
+            }
+
+            if shared.part_two {
+                for _ in 0..2016 {
+                    for i in 0..32 {
+                        buffers[i][0..8].copy_from_slice(&to_ascii(result[0][i]));
+                        buffers[i][8..16].copy_from_slice(&to_ascii(result[1][i]));
+                        buffers[i][16..24].copy_from_slice(&to_ascii(result[2][i]));
+                        buffers[i][24..32].copy_from_slice(&to_ascii(result[3][i]));
+                    }
+                    result = hash_fixed(&mut buffers, 32);
+                }
+            }
+
+            check(shared, start, &result);
+        }
+    }
+
+    /// Check for sequences of 3 or 5 consecutive matching digits.
+    #[inline]
+    fn check(shared: &Shared<'_>, start: i32, hash: &[Simd<u32, 32>; 4]) {
+        let &[a, b, c, d] = hash;
+
+        let mut prev: Simd<u32, 32> = Simd::splat(u32::MAX);
+        let mut same: Simd<u32, 32> = Simd::splat(1);
+        let mut three: Simd<u32, 32> = Simd::splat(0);
+        let mut five: Simd<u32, 32> = Simd::splat(0);
+
+        for mut word in [d, c, b, a] {
+            for _ in 0..8 {
+                let next = word & Simd::splat(0xf);
+                same = next.simd_eq(prev).select(same + Simd::splat(1), Simd::splat(1));
+
+                three = same.simd_eq(Simd::splat(3)).select(Simd::splat(1) << next, three);
+                five |= same.simd_eq(Simd::splat(5)).select(Simd::splat(1) << next, Simd::splat(0));
+
+                word >>= 4;
+                prev = next;
+            }
+        }
+
+        let three_mask = three.simd_ne(Simd::splat(0)).to_bitmask();
+        let five_mask = five.simd_ne(Simd::splat(0)).to_bitmask();
+
+        if three_mask != 0 || five_mask != 0 {
+            let mut exclusive = shared.mutex.lock().unwrap();
+            let mut candidates = Vec::new();
+
+            for i in three_mask.biterator() {
+                let three = three[i];
+                let n = start + i as i32;
+
+                // Compare against all 5 digit sequences.
+                if three != 0 {
+                    exclusive.threes.insert(n, three);
+
+                    for (_, mask) in exclusive.fives.range(n + 1..n + 1001) {
+                        if three & mask != 0 {
+                            candidates.push(n);
+                        }
+                    }
+                }
+            }
+
+            for i in five_mask.biterator() {
+                let five = five[i];
+                let n = start + i as i32;
+
+                // Compare against all 3 digit sequences.
+                if five != 0 {
+                    exclusive.fives.insert(n, five);
+
+                    for (&index, &mask) in exclusive.threes.range(n - 1000..n) {
+                        if five & mask != 0 {
+                            candidates.push(index);
+                        }
+                    }
+                }
+            }
+
+            // Add any matching keys found, finishing once we have at least 64 keys.
+            exclusive.found.extend(candidates);
+
+            if exclusive.found.len() >= 64 {
+                shared.iter.stop();
+            }
+        }
+    }
 }
