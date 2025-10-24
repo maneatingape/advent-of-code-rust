@@ -62,8 +62,8 @@ type Input = (Deck, Deck);
 type Cache = Vec<FastSet<(usize, usize)>>;
 
 enum Winner {
-    Player1,
-    Player2,
+    Player1(Deck),
+    Player2(Deck),
 }
 
 #[derive(Clone, Copy)]
@@ -72,18 +72,18 @@ pub struct Deck {
     score: usize,
     start: usize,
     end: usize,
-    cards: [u8; 50],
+    cards: [u8; 64],
 }
 
 impl Deck {
     fn new() -> Deck {
-        Deck { sum: 0, score: 0, start: 0, end: 0, cards: [0; 50] }
+        Deck { sum: 0, score: 0, start: 0, end: 0, cards: [0; 64] }
     }
 
     // To make things easier, `start` and `end` never wrap around, so that `end` is always
     // greater than or equal to `start`.
     fn pop_front(&mut self) -> usize {
-        let card = self.cards[self.start % 50] as usize;
+        let card = self.cards[self.start % 64] as usize;
         self.sum -= card;
         self.score -= self.size() * card;
         self.start += 1;
@@ -91,14 +91,14 @@ impl Deck {
     }
 
     fn push_back(&mut self, card: usize) {
-        self.cards[self.end % 50] = card as u8;
+        self.cards[self.end % 64] = card as u8;
         self.sum += card;
         self.score += self.sum;
         self.end += 1;
     }
 
     fn max(&self) -> u8 {
-        (self.start..self.end).map(|i| self.cards[i % 50]).max().unwrap()
+        (self.start..self.end).map(|i| self.cards[i % 64]).max().unwrap()
     }
 
     fn non_empty(&self) -> bool {
@@ -109,17 +109,15 @@ impl Deck {
         self.end - self.start
     }
 
-    // Sneaky trick here to speed things up a little. We don't recalculate the score properly,
-    // so it will be too high by a constant amount. This doesn't matter for recursive games as
-    // we only need the winner, not the exact score.
     fn copy(&self, amount: usize) -> Deck {
-        let mut copy = *self;
-        copy.end = copy.start + amount;
-        copy.sum = 0;
+        let mut copy = Deck::new();
+        copy.end = amount;
 
         for i in 0..amount {
-            let card = copy.cards[(copy.start + i) % 50] as usize;
-            copy.sum += card;
+            let card = self.cards[(self.start + i) % 64];
+            copy.cards[i] = card;
+            copy.sum += card as usize;
+            copy.score += copy.sum;
         }
 
         copy
@@ -155,18 +153,17 @@ pub fn part1(input: &Input) -> usize {
 }
 
 pub fn part2(input: &Input) -> usize {
-    let (mut deck1, mut deck2) = *input;
+    let (deck1, deck2) = *input;
 
-    match combat(&mut deck1, &mut deck2, &mut Vec::new(), 0) {
-        Winner::Player1 => deck1.score,
-        Winner::Player2 => deck2.score,
+    match combat(deck1, deck2, &mut Vec::new(), 0) {
+        Winner::Player1(deck) | Winner::Player2(deck) => deck.score,
     }
 }
 
-fn combat(deck1: &mut Deck, deck2: &mut Deck, cache: &mut Cache, depth: usize) -> Winner {
+fn combat(mut deck1: Deck, mut deck2: Deck, cache: &mut Cache, depth: usize) -> Winner {
     // Player 1 always wins recursive games if they have the high card.
     if depth > 0 && deck1.max() > deck2.max() {
-        return Winner::Player1;
+        return Winner::Player1(deck1);
     }
 
     // Speed things up by re-using previously created caches, avoiding slow extra heap allocations.
@@ -179,7 +176,7 @@ fn combat(deck1: &mut Deck, deck2: &mut Deck, cache: &mut Cache, depth: usize) -
     while deck1.non_empty() && deck2.non_empty() {
         // This will *very probably* work! Not 100% deterministic.
         if !cache[depth].insert((deck1.score, deck2.score)) {
-            return Winner::Player1;
+            return Winner::Player1(deck1);
         }
 
         let (card1, card2) = (deck1.pop_front(), deck2.pop_front());
@@ -193,12 +190,12 @@ fn combat(deck1: &mut Deck, deck2: &mut Deck, cache: &mut Cache, depth: usize) -
                 deck2.push_back(card1);
             }
         } else {
-            match combat(&mut deck1.copy(card1), &mut deck2.copy(card2), cache, depth + 1) {
-                Winner::Player1 => {
+            match combat(deck1.copy(card1), deck2.copy(card2), cache, depth + 1) {
+                Winner::Player1(_) => {
                     deck1.push_back(card1);
                     deck1.push_back(card2);
                 }
-                Winner::Player2 => {
+                Winner::Player2(_) => {
                     deck2.push_back(card2);
                     deck2.push_back(card1);
                 }
@@ -206,5 +203,5 @@ fn combat(deck1: &mut Deck, deck2: &mut Deck, cache: &mut Cache, depth: usize) -
         }
     }
 
-    if deck1.non_empty() { Winner::Player1 } else { Winner::Player2 }
+    if deck1.non_empty() { Winner::Player1(deck1) } else { Winner::Player2(deck2) }
 }
