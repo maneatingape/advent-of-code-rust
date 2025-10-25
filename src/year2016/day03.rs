@@ -17,10 +17,7 @@ pub fn part1(input: &[u32]) -> usize {
 }
 
 pub fn part2(input: &[u32]) -> usize {
-    let first = count(input.iter().step_by(3));
-    let second = count(input.iter().skip(1).step_by(3));
-    let third = count(input.iter().skip(2).step_by(3));
-    first + second + third
+    (0..3).map(|skip| count(input.iter().skip(skip).step_by(3))).sum()
 }
 
 fn count<'a, I>(iter: I) -> usize

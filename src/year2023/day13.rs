@@ -27,28 +27,14 @@ pub fn parse(input: &str) -> Input {
         .split("\n\n")
         .map(|block| {
             let grid: Grid<_> = Grid::parse(block);
-            let mut rows = Vec::with_capacity(grid.height as usize);
-            let mut columns = Vec::with_capacity(grid.width as usize);
+            let bit = |point| u32::from(grid[point] == b'#');
 
-            for y in 0..grid.height {
-                let mut n = 0;
-
-                for x in 0..grid.width {
-                    n = (n << 1) | (grid[Point::new(x, y)] == b'#') as u32;
-                }
-
-                rows.push(n);
-            }
-
-            for x in 0..grid.width {
-                let mut n = 0;
-
-                for y in 0..grid.height {
-                    n = (n << 1) | (grid[Point::new(x, y)] == b'#') as u32;
-                }
-
-                columns.push(n);
-            }
+            let rows: Vec<_> = (0..grid.height)
+                .map(|y| (0..grid.width).fold(0, |n, x| (n << 1) | bit(Point::new(x, y))))
+                .collect();
+            let columns: Vec<_> = (0..grid.width)
+                .map(|x| (0..grid.height).fold(0, |n, y| (n << 1) | bit(Point::new(x, y))))
+                .collect();
 
             (rows, columns)
         })
@@ -82,12 +68,9 @@ fn reflect_axis(axis: &[u32], target: u32) -> Option<usize> {
     let size = axis.len();
 
     (1..size).find(|&i| {
-        let mut smudges = 0;
-
         // Only consider rows/columns within the boundary of the grid.
-        for j in 0..i.min(size - i) {
-            smudges += (axis[i - j - 1] ^ axis[i + j]).count_ones();
-        }
+        let smudges: u32 =
+            (0..i.min(size - i)).map(|j| (axis[i - j - 1] ^ axis[i + j]).count_ones()).sum();
 
         smudges == target
     })

@@ -55,19 +55,10 @@ pub fn parse(input: &str) -> Input {
         // the mask unchanged.
         // If some nibbles have that bit set, then we will "narrow" the mask to only consider
         // those nibbles.
-        let mut mask = 0x8888888888888888;
-
-        let first = memory & mask;
-        mask = if first == 0 { mask } else { first };
-
-        let second = (memory << 1) & mask;
-        mask = if second == 0 { mask } else { second };
-
-        let third = (memory << 2) & mask;
-        mask = if third == 0 { mask } else { third };
-
-        let fourth = (memory << 3) & mask;
-        mask = if fourth == 0 { mask } else { fourth };
+        let mask = (0..4).fold(0x8888888888888888, |mask, shift| {
+            let result = (memory << shift) & mask;
+            if result == 0 { mask } else { result }
+        });
 
         // The mask will have a 1 bit set for each of the joint highest values.
         // Choose the lowest index which is the most significant bit set.

@@ -20,31 +20,23 @@ pub fn parse(input: &str) -> Vec<u32> {
 }
 
 pub fn part1(input: &[u32]) -> u32 {
-    let mut total = 0;
-    let mut group = u32::MIN;
-
-    for &passenger in input {
-        if passenger == 0 {
-            total += group.count_ones();
-            group = u32::MIN;
-        } else {
-            group |= passenger;
-        }
-    }
-
-    total + group.count_ones()
+    count_answers(input, u32::MIN, |group, passenger| group | passenger)
 }
 
 pub fn part2(input: &[u32]) -> u32 {
+    count_answers(input, u32::MAX, |group, passenger| group & passenger)
+}
+
+fn count_answers(input: &[u32], initial: u32, combine: fn(u32, u32) -> u32) -> u32 {
     let mut total = 0;
-    let mut group = u32::MAX;
+    let mut group = initial;
 
     for &passenger in input {
         if passenger == 0 {
             total += group.count_ones();
-            group = u32::MAX;
+            group = initial;
         } else {
-            group &= passenger;
+            group = combine(group, passenger);
         }
     }
 

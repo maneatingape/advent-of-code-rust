@@ -24,10 +24,7 @@ pub fn part2(input: &[i32]) -> i32 {
         (n * (n + 1)) / 2
     };
 
-    let first: i32 = input.iter().map(|&x| triangle(x, mean)).sum();
-    let second: i32 = input.iter().map(|&x| triangle(x, mean + 1)).sum();
-    let third: i32 = input.iter().map(|&x| triangle(x, mean - 1)).sum();
-    first.min(second).min(third)
+    (-1..=1).map(|delta| input.iter().map(|&x| triangle(x, mean + delta)).sum()).min().unwrap()
 }
 
 fn median(input: &[i32]) -> i32 {

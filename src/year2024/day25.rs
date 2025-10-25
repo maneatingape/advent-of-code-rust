@@ -20,12 +20,11 @@ pub fn parse(input: &str) -> &str {
 }
 
 pub fn part1(input: &str) -> u32 {
-    let mut slice = input.as_bytes();
     let mut locks = Vec::with_capacity(250);
     let mut keys = Vec::with_capacity(250);
     let mut result = 0;
 
-    while !slice.is_empty() {
+    for slice in input.as_bytes().chunks(43) {
         let bits = slice[6..35].iter().fold(0, |bits, &n| (bits << 1) | (n & 1) as u32);
 
         if slice[0] == b'#' {
@@ -33,8 +32,6 @@ pub fn part1(input: &str) -> u32 {
         } else {
             keys.push(bits);
         }
-
-        slice = &slice[43.min(slice.len())..];
     }
 
     for lock in &locks {

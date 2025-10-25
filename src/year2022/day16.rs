@@ -235,7 +235,7 @@ pub fn part2(input: &Input) -> u32 {
     let mut result = you + elephant;
 
     // Find valid non-zero results then sort in order to check combinations faster.
-    let mut candidates: Vec<_> = score.into_iter().enumerate().filter(|(_, s)| *s > 0).collect();
+    let mut candidates: Vec<_> = score.into_iter().enumerate().filter(|&(_, s)| s > 0).collect();
     candidates.sort_unstable_by_key(|t| t.1);
 
     for i in (1..candidates.len()).rev() {

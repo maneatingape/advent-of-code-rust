@@ -36,13 +36,8 @@ pub fn parse(input: &str) -> Input {
             continue;
         }
 
-        // First number
-        let mut first = 0;
-
-        while memory[index].is_ascii_digit() {
-            first = 10 * first + memory[index].to_decimal() as u32;
-            index += 1;
-        }
+        // Parse first number
+        let first = parse_number(memory, &mut index);
 
         // First delimiter
         if memory[index] != b',' {
@@ -50,13 +45,8 @@ pub fn parse(input: &str) -> Input {
         }
         index += 1;
 
-        // Second number
-        let mut second = 0;
-
-        while memory[index].is_ascii_digit() {
-            second = 10 * second + memory[index].to_decimal() as u32;
-            index += 1;
-        }
+        // Parse second number
+        let second = parse_number(memory, &mut index);
 
         // Second delimiter
         if memory[index] != b')' {
@@ -71,6 +61,15 @@ pub fn parse(input: &str) -> Input {
     }
 
     (part_one, part_two)
+}
+
+fn parse_number(memory: &[u8], index: &mut usize) -> u32 {
+    let mut number = 0;
+    while memory[*index].is_ascii_digit() {
+        number = 10 * number + memory[*index].to_decimal() as u32;
+        *index += 1;
+    }
+    number
 }
 
 pub fn part1(input: &Input) -> u32 {

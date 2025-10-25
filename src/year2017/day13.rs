@@ -65,16 +65,13 @@ pub fn parse(input: &str) -> Input {
 
 /// Leaving at time zero the packet will encounter each scanner at time `depth`.
 pub fn part1(input: &Input) -> u32 {
-    let mut result = 0;
-
-    for &[depth, range] in input {
-        let period = 2 * (range - 1);
-        if depth.is_multiple_of(period) {
-            result += depth * range;
-        }
-    }
-
-    result
+    input
+        .iter()
+        .filter_map(|&[depth, range]| {
+            let period = 2 * (range - 1);
+            depth.is_multiple_of(period).then_some(depth * range)
+        })
+        .sum()
 }
 
 /// Sieves possible values at each scanner stage to reduce the number of possible values.

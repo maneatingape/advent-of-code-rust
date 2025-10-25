@@ -34,7 +34,7 @@ fn from_snafu(snafu: &&str) -> i64 {
 /// If the answer is 3 or 4 then we must add a carry to the next digit so account for the
 /// subtraction.
 fn to_snafu(mut n: i64) -> String {
-    let mut digits = String::new();
+    let mut digits = Vec::new();
 
     while n > 0 {
         let next = match n % 5 {
@@ -45,11 +45,11 @@ fn to_snafu(mut n: i64) -> String {
             4 => '-',
             _ => unreachable!(),
         };
-        digits.insert(0, next);
+        digits.push(next);
         // If the remainder of n is 3 or higher then this will add a carry digit to account
         // for the subtraction.
         n = (n + 2) / 5;
     }
 
-    digits
+    digits.into_iter().rev().collect()
 }

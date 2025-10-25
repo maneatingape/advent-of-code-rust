@@ -35,17 +35,7 @@ pub fn parse(input: &str) -> Input {
 pub fn part1(input: &Input) -> String {
     // Move all steps with no dependencies to the `ready` map. A `BTreeMap` is sorted by key
     // so will retrieve steps in alphabetical order.
-    let mut ready = BTreeMap::new();
-    let mut blocked = FastMap::new();
-
-    for (key, step) in input.clone() {
-        if step.remaining == 0 {
-            ready.insert(key, step);
-        } else {
-            blocked.insert(key, step);
-        }
-    }
-
+    let (mut ready, mut blocked) = split_by_readiness(input);
     let mut done = String::new();
 
     while let Some((key, step)) = ready.pop_first() {
@@ -75,16 +65,7 @@ pub fn part2(input: &Input) -> u32 {
 
 pub fn part2_testable(input: &Input, max_workers: usize, base_duration: u32) -> u32 {
     // Same as part one, move all tasks that are root nodes to the `ready` map.
-    let mut ready = BTreeMap::new();
-    let mut blocked = FastMap::new();
-
-    for (key, step) in input.clone() {
-        if step.remaining == 0 {
-            ready.insert(key, step);
-        } else {
-            blocked.insert(key, step);
-        }
-    }
+    let (mut ready, mut blocked) = split_by_readiness(input);
 
     // Loop until there are no more steps available and all workers are idle.
     let mut time = 0;
@@ -122,4 +103,19 @@ pub fn part2_testable(input: &Input, max_workers: usize, base_duration: u32) -> 
     }
 
     time
+}
+
+fn split_by_readiness(input: &Input) -> (BTreeMap<u8, Step>, FastMap<u8, Step>) {
+    let mut ready = BTreeMap::new();
+    let mut blocked = FastMap::new();
+
+    for (key, step) in input.clone() {
+        if step.remaining == 0 {
+            ready.insert(key, step);
+        } else {
+            blocked.insert(key, step);
+        }
+    }
+
+    (ready, blocked)
 }

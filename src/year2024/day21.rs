@@ -112,17 +112,8 @@ fn pad_combinations() -> Combinations {
 fn pad_routes(combinations: &mut Combinations, pad: &[(char, Point)], gap: Point) {
     for &(first, from) in pad {
         for &(second, to) in pad {
-            let horizontal = || {
-                let element = if from.x < to.x { '>' } else { '<' };
-                let count = from.x.abs_diff(to.x) as usize;
-                repeat_n(element, count)
-            };
-
-            let vertical = || {
-                let element = if from.y < to.y { 'v' } else { '^' };
-                let count = from.y.abs_diff(to.y) as usize;
-                repeat_n(element, count)
-            };
+            let horizontal = || move_sequence(from.x, to.x, '>', '<');
+            let vertical = || move_sequence(from.y, to.y, 'v', '^');
 
             if Point::new(from.x, to.y) != gap {
                 let path = vertical().chain(horizontal()).chain(once('A')).collect();
@@ -135,4 +126,10 @@ fn pad_routes(combinations: &mut Combinations, pad: &[(char, Point)], gap: Point
             }
         }
     }
+}
+
+fn move_sequence(from: i32, to: i32, positive: char, negative: char) -> impl Iterator<Item = char> {
+    let element = if from < to { positive } else { negative };
+    let count = from.abs_diff(to) as usize;
+    repeat_n(element, count)
 }

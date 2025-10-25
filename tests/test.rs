@@ -12,7 +12,7 @@
 //     456
 // }
 
-// use aoc::year2024::day00::*;
+// use aoc::year2025::day00::*;
 //
 // const EXAMPLE: &str = "";
 //

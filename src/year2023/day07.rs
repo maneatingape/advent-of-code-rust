@@ -67,14 +67,7 @@ fn sort(input: &[Hand], j: usize) -> usize {
 
             // To speed up comparisons, pack the frequencies and card ranks
             // into the nibbles of a `usize`.
-            let mut key = 0;
-
-            for &f in &freq[..5] {
-                key = (key << 4) | f;
-            }
-            for r in rank {
-                key = (key << 4) | r;
-            }
+            let key = freq[..5].iter().chain(&rank).fold(0, |key, &value| (key << 4) | value);
 
             (key, bid)
         })

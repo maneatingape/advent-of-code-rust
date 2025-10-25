@@ -72,7 +72,7 @@ pub fn part2(input: &Input) -> usize {
     // that only has one possibility.
     let mut convert = [0; 16];
 
-    while let Some(index) = masks.iter().position(|m| m.count_ones() == 1) {
+    while let Some(index) = masks.iter().position(|&n| n.count_ones() == 1) {
         let mask = masks[index];
         // This opcode has only 1 possible mapping, so remove possibility from other opcodes.
         masks.iter_mut().for_each(|m| *m &= !mask);

@@ -1,4 +1,4 @@
-//! # Custom Customs
+//! # Encoding Error
 //!
 //! Part one is solved with a brute force search over every possible pair in the preamble, using a
 //! sliding window to advance to each number. To allow testing with the sample data that uses a
