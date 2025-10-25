@@ -4,11 +4,18 @@ use std::env::args;
 use std::fs::read_to_string;
 use std::time::{Duration, Instant};
 
+struct Solution {
+    year: u32,
+    day: u32,
+    wrapper: fn(&str) -> (String, String),
+}
+
 fn main() {
     // Parse command line options
     let mut iter = args().flat_map(|arg| arg.iter_unsigned().collect::<Vec<u32>>());
     let (year, day) = (iter.next(), iter.next());
 
+    // Build list of all solutions.
     let solutions = [
         year2015(),
         year2016(),
@@ -22,33 +29,13 @@ fn main() {
         year2024(),
     ];
 
-    // Filter solutions then pretty print output.
+    // Run selected solutions.
     let (stars, duration) = solutions
-        .into_iter()
+        .iter()
         .flatten()
         .filter(|s| year.is_none_or(|y| y == s.year))
         .filter(|s| day.is_none_or(|d| d == s.day))
-        .fold((0, Duration::ZERO), |(stars, duration), Solution { year, day, wrapper }| {
-            let path = format!("input/year{year}/day{day:02}.txt");
-
-            if let Ok(data) = read_to_string(&path) {
-                let instant = Instant::now();
-                let (part1, part2) = wrapper(&data);
-                let elapsed = instant.elapsed();
-
-                println!("{BOLD}{YELLOW}{year} Day {day}{RESET}");
-                println!("    Part 1: {part1}");
-                println!("    Part 2: {part2}");
-
-                (stars + 2, duration + elapsed)
-            } else {
-                eprintln!("{BOLD}{RED}{year} Day {day}{RESET}");
-                eprintln!("    Missing input!");
-                eprintln!("    Place input file in {BOLD}{WHITE}{path}{RESET}");
-
-                (stars, duration)
-            }
-        });
+        .fold((0, Duration::ZERO), run_solution);
 
     // Optionally print totals.
     if args().any(|arg| arg == "--totals") {
@@ -57,10 +44,27 @@ fn main() {
     }
 }
 
-struct Solution {
-    year: u32,
-    day: u32,
-    wrapper: fn(&str) -> (String, String),
+fn run_solution((stars, duration): (u32, Duration), solution: &Solution) -> (u32, Duration) {
+    let Solution { year, day, wrapper } = solution;
+    let path = format!("input/year{year}/day{day:02}.txt");
+
+    if let Ok(data) = read_to_string(&path) {
+        let instant = Instant::now();
+        let (part1, part2) = wrapper(&data);
+        let elapsed = instant.elapsed();
+
+        println!("{BOLD}{YELLOW}{year} Day {day}{RESET}");
+        println!("    Part 1: {part1}");
+        println!("    Part 2: {part2}");
+
+        (stars + 2, duration + elapsed)
+    } else {
+        eprintln!("{BOLD}{RED}{year} Day {day}{RESET}");
+        eprintln!("    Missing input!");
+        eprintln!("    Place input file in {BOLD}{WHITE}{path}{RESET}");
+
+        (stars, duration)
+    }
 }
 
 macro_rules! run {
