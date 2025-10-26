@@ -115,7 +115,7 @@ fn wide(grid: &mut Grid<u8>, start: &mut Point, direction: Point, todo: &mut Vec
 
     // Clear any items from previous push.
     todo.clear();
-    // Add dummy item to prevent index of out bounds when checking for previously added boxes.
+    // Add dummy item to prevent index out of bounds when checking for previously added boxes.
     todo.push(ORIGIN);
     todo.push(*start);
     let mut index = 1;

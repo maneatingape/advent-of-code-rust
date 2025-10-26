@@ -45,7 +45,7 @@ fn simulate(input: &Input, predicate: fn(usize, usize) -> bool) -> (usize, usize
     while predicate(flashes, steps) {
         flashes = 0;
 
-        // Bump each octopus' energy level by one. If it flashes then add to `todo` queue.
+        // Bump each octopus's energy level by one. If it flashes then add to `todo` queue.
         for y in 0..10 {
             for x in 0..10 {
                 let index = 12 * (y + 1) + (x + 1);

@@ -73,7 +73,7 @@ pub fn part1(input: &Input) -> i32 {
                     let width = x1 - x0;
 
                     if delta < -width {
-                        // Left coordinate is further away at every points.
+                        // Left coordinate is further away at every point.
                         // Discard and pop next left coordinate from the stack.
                         //
                         //    rrrrrrrrrrrrrrrr     <-- Considering only this row

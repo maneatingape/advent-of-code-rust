@@ -5,7 +5,7 @@
 //! same time.
 //!
 //! For part two the difference of the ASCII values of "M" and "S" is 6. No other combination of
-//! letter has this value, so if both diagonals are a 6 then we have a match.
+//! letters has this value, so if both diagonals are a 6 then we have a match.
 use crate::util::grid::*;
 use crate::util::point::*;
 

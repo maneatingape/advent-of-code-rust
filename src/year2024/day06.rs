@@ -102,7 +102,7 @@ fn is_cycle(
             return true;
         }
 
-        // The tricky part is checking for the new time travelling instigated obstacle.
+        // The tricky part is checking for the newly introduced time-traveling obstacle.
         position = match direction {
             UP => {
                 let next = shortcut.up[position];

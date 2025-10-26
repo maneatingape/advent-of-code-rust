@@ -44,7 +44,7 @@ pub fn parse(input: &str) -> Input {
     Input { grid, seen, parts }
 }
 
-/// Sum all part numbers adjacent to a least one symbol.
+/// Sum all part numbers adjacent to at least one symbol.
 pub fn part1(input: &Input) -> u32 {
     let Input { grid, seen, parts } = input;
     let mut parts = parts.clone();
@@ -60,7 +60,7 @@ pub fn part1(input: &Input) -> u32 {
                     let index = seen[p + d];
                     if index != 0 {
                         result += parts[index];
-                        // Only count each number once when its adjacent to multiple symbols.
+                        // Only count each number once when it is adjacent to multiple symbols.
                         parts[index] = 0;
                     }
                 }

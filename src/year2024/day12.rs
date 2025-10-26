@@ -6,8 +6,8 @@
 //! region or out of bounds.
 //!
 //! For part two we count each plot on the edge as either 0, 1 or 2 sides then divide by 2.
-//! An edge plot contributes nothing if it has 2 edge neighbours facing the same way,
-//! one if has a single neighbour and two if it has no neighbours.
+//! An edge plot contributes nothing if it has 2 edge neighbors facing the same way,
+//! one if it has a single neighbor and two if it has no neighbors.
 //!
 //! For example, considering the right edge:
 //!

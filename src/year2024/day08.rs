@@ -1,6 +1,6 @@
 //! # Resonant Collinearity
 //!
-//! Antennas frequencies are grouped together to reduce the O(n²) pairwise comparisons.
+//! Antenna frequencies are grouped together to reduce the O(n²) pairwise comparisons.
 use crate::util::grid::*;
 use crate::util::hash::*;
 use crate::util::point::*;
