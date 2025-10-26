@@ -13,12 +13,10 @@
 //!     0101
 //! ```
 //!
-//! We then precompute all possible combination for blocks of size 16, using this to accelerate
-//! part two.
+//! We then precompute all possible combinations for blocks of width 16,
+//! using this to accelerate part two.
 use crate::util::parse::*;
-
-const WIDTH: usize = 16;
-const LENGTH: usize = 1 << WIDTH;
+use std::array::from_fn;
 
 pub fn parse(input: &str) -> Vec<i32> {
     input.iter_signed().collect()
@@ -49,37 +47,32 @@ pub fn part2(input: &[i32]) -> usize {
     let mut fine = 0;
     let mut coarse = 0;
     let mut compact = Vec::new();
-    let mut cache = vec![[(0_u16, 0_u8, 0_u8); LENGTH]; WIDTH];
 
-    // Precompute all possible combinations. For each binary starting number we can start at any
-    // offset from 0..16.
-    for i in 0..WIDTH {
-        for j in 0..LENGTH {
-            let mut offset = i as u16;
-            let mut value = j as u16;
-            let mut steps = 0;
-
-            while offset < 16 {
-                value ^= 1 << offset;
-                steps += 1;
-                offset += 3 - ((value >> offset) & 1);
-            }
-
-            cache[i][j] = (value, steps, offset as u8 - i as u8);
-        }
-    }
+    // Precompute all possible combinations for each binary starting number from 0 to 2^16,
+    // starting at any offset from 0..2.
+    let cache: Vec<[_; 0x10000]> =
+        (0..3).map(|offset| from_fn(|value| compute_block(value, offset))).collect();
 
     while index < jump.len() {
         if index < coarse {
-            // Index lies within precomputed blocks.
-            let base = index / 16;
-            let offset = index % 16;
-            let value = compact[base] as usize;
-            let (next, steps, delta) = cache[offset][value];
+            if index % 16 >= 3 {
+                let j = index / 16;
+                let (next, steps, delta) = compute_block(compact[j], index % 16);
 
-            compact[base] = next;
-            total += steps as usize;
-            index += delta as usize;
+                compact[j] = next as usize;
+                total += steps as usize;
+                index += delta as usize;
+            }
+
+            // Index lies within precomputed blocks.
+            for j in (index / 16)..(coarse / 16) {
+                let value = compact[j];
+                let (next, steps, delta) = cache[index % 16][value];
+
+                compact[j] = next as usize;
+                total += steps as usize;
+                index += delta as usize;
+            }
         } else {
             // Fall back to part one approach.
             let next = index.wrapping_add(jump[index] as usize);
@@ -93,7 +86,7 @@ pub fn part2(input: &[i32]) -> usize {
                 if fine.is_multiple_of(16) {
                     let value = (coarse..fine).rev().fold(0, |acc, i| (acc << 1) | (jump[i] & 1));
                     coarse = fine;
-                    compact.push(value as u16);
+                    compact.push(value as usize);
                 }
             }
 
@@ -102,4 +95,18 @@ pub fn part2(input: &[i32]) -> usize {
     }
 
     total
+}
+
+#[inline]
+fn compute_block(mut value: usize, mut offset: usize) -> (u16, u8, u8) {
+    let start = offset;
+    let mut steps = 0;
+
+    while offset < 16 {
+        value ^= 1 << offset;
+        steps += 1;
+        offset += 3 - ((value >> offset) & 1);
+    }
+
+    (value as u16, steps, (offset - start) as u8)
 }

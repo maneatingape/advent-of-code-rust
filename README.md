@@ -1,7 +1,7 @@
 # Advent of Code [![checks-badge]][checks-link] [![docs-badge]][docs-link]
 
 Blazing fast Rust solutions for every [Advent of Code] puzzle from 2015 to 2024, taking
-**497 milliseconds** to solve all 500 stars. Each solution is carefully optimized for performance
+**493 milliseconds** to solve all 500 stars. Each solution is carefully optimized for performance
 while ensuring the code remains concise, readable, and idiomatic.
 
 ## Features
@@ -67,7 +67,7 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 
 | Year | [2015](#2015) | [2016](#2016) | [2017](#2017) | [2018](#2018) | [2019](#2019) | [2020](#2020) | [2021](#2021) | [2022](#2022) | [2023](#2023) | [2024](#2024) |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Benchmark (ms) | 15 | 109 | 82 | 35 | 14 | 220 | 8 | 5 | 5 | 4 |
+| Benchmark (ms) | 15 | 109 | 78 | 35 | 14 | 220 | 8 | 5 | 5 | 4 |
 
 ## 2024
 
@@ -303,7 +303,7 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 | 2 | [Corruption Checksum](https://adventofcode.com/2017/day/2) | [Source](src/year2017/day02.rs) | 2 |
 | 3 | [Spiral Memory](https://adventofcode.com/2017/day/3) | [Source](src/year2017/day03.rs) | 2 |
 | 4 | [High-Entropy Passphrases](https://adventofcode.com/2017/day/4) | [Source](src/year2017/day04.rs) | 86 |
-| 5 | [A Maze of Twisty Trampolines, All Alike](https://adventofcode.com/2017/day/5) | [Source](src/year2017/day05.rs) | 22000 |
+| 5 | [A Maze of Twisty Trampolines, All Alike](https://adventofcode.com/2017/day/5) | [Source](src/year2017/day05.rs) | 18000 |
 | 6 | [Memory Reallocation](https://adventofcode.com/2017/day/6) | [Source](src/year2017/day06.rs) | 81 |
 | 7 | [Recursive Circus](https://adventofcode.com/2017/day/7) | [Source](src/year2017/day07.rs) | 93 |
 | 8 | [I Heard You Like Registers](https://adventofcode.com/2017/day/8) | [Source](src/year2017/day08.rs) | 47 |
