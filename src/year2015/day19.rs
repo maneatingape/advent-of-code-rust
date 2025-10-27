@@ -28,7 +28,7 @@ pub fn part1(input: &Input<'_>) -> usize {
     // Group replacements of the same size together.
     for &(from, to) in replacements {
         let extra = to.len() - from.len();
-        groups.entry(extra).or_insert(Vec::new()).push((from, to));
+        groups.entry(extra).or_insert_with(Vec::new).push((from, to));
     }
 
     for (_, group) in groups {

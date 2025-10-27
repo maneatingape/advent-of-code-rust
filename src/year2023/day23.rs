@@ -327,8 +327,8 @@ fn compress(input: &str) -> Graph {
                 }
 
                 // Graph is undirected so add both edges.
-                edges.entry(from).or_insert(Vec::new()).push(to);
-                edges.entry(to).or_insert(Vec::new()).push(from);
+                edges.entry(from).or_insert_with(Vec::new).push(to);
+                edges.entry(to).or_insert_with(Vec::new).push(from);
                 weight.insert((from, to), cost);
                 weight.insert((to, from), cost);
 

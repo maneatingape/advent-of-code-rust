@@ -55,10 +55,6 @@ fn mask(s: &str) -> u128 {
 /// Find the lowest set bit (there should only be one) then convert to priority using the
 /// given rules.
 fn priority(mask: u128) -> u32 {
-    let zeroes = mask.trailing_zeros();
-    match zeroes {
-        65..=90 => zeroes - 38,
-        97..=122 => zeroes - 96,
-        _ => unreachable!(),
-    }
+    let bit = mask.trailing_zeros();
+    if bit > 96 { bit - 96 } else { bit - 38 }
 }

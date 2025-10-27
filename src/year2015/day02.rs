@@ -17,10 +17,9 @@ pub fn parse(input: &str) -> Input {
     input
         .iter_unsigned()
         .chunk::<3>()
-        .map(|chunk| {
-            let mut gift = chunk;
-            gift.sort_unstable();
-            gift
+        .map(|mut chunk| {
+            chunk.sort_unstable();
+            chunk
         })
         .collect()
 }
