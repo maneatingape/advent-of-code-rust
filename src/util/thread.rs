@@ -88,8 +88,9 @@ impl<'a, T> Iterator for ParIter<'a, T> {
         // Steal from another worker, [spinlocking](https://en.wikipedia.org/wiki/Spinlock)
         // until we acquire new items to process or there's nothing left to do.
         loop {
-            // Find worker with the most remaining items.
-            let available = self
+            // Find worker with the most remaining items, breaking out of the loop
+            // and returning `None` if there is no work remaining.
+            let (other, current, size) = self
                 .workers
                 .iter()
                 .filter_map(|other| {
@@ -99,25 +100,20 @@ impl<'a, T> Iterator for ParIter<'a, T> {
 
                     (size > 0).then_some((other, current, size))
                 })
-                .max_by_key(|&(_, _, size)| size);
+                .max_by_key(|&(_, _, size)| size)?;
 
-            if let Some((other, current, size)) = available {
-                // Split the work items into two roughly equal piles.
-                let (start, end) = unpack(current);
-                let middle = start + size.div_ceil(2);
+            // Split the work items into two roughly equal piles.
+            let (start, end) = unpack(current);
+            let middle = start + size.div_ceil(2);
 
-                let next = pack(middle, end);
-                let stolen = pack(start + 1, middle);
+            let next = pack(middle, end);
+            let stolen = pack(start + 1, middle);
 
-                // We could be preempted by another thread stealing or by the owning worker
-                // thread finishing an item, so check indices are still unmodified.
-                if other.compare_exchange(current, next) {
-                    worker.store(stolen);
-                    break Some(&self.items[start]);
-                }
-            } else {
-                // No work remaining.
-                break None;
+            // We could be preempted by another thread stealing or by the owning worker
+            // thread finishing an item, so check indices are still unmodified.
+            if other.compare_exchange(current, next) {
+                worker.store(stolen);
+                break Some(&self.items[start]);
             }
         }
     }
