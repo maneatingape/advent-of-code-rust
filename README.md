@@ -1,7 +1,7 @@
 # Advent of Code [![checks-badge]][checks-link] [![docs-badge]][docs-link]
 
 Blazing fast Rust solutions for every [Advent of Code] puzzle from 2015 to 2024, taking
-**493 milliseconds** to solve all 500 stars. Each solution is carefully optimized for performance
+**474 milliseconds** to solve all 500 stars. Each solution is carefully optimized for performance
 while ensuring the code remains concise, readable, and idiomatic.
 
 ## Features
@@ -67,7 +67,7 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 
 | Year | [2015](#2015) | [2016](#2016) | [2017](#2017) | [2018](#2018) | [2019](#2019) | [2020](#2020) | [2021](#2021) | [2022](#2022) | [2023](#2023) | [2024](#2024) |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Benchmark (ms) | 15 | 109 | 78 | 35 | 14 | 220 | 8 | 5 | 5 | 4 |
+| Benchmark (ms) | 15 | 109 | 59 | 35 | 14 | 220 | 8 | 5 | 5 | 4 |
 
 ## 2024
 
@@ -320,7 +320,7 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 | 19 | [A Series of Tubes](https://adventofcode.com/2017/day/19) | [Source](src/year2017/day19.rs) | 19 |
 | 20 | [Particle Swarm](https://adventofcode.com/2017/day/20) | [Source](src/year2017/day20.rs) | 245 |
 | 21 | [Fractal Art](https://adventofcode.com/2017/day/21) | [Source](src/year2017/day21.rs) | 5 |
-| 22 | [Sporifica Virus](https://adventofcode.com/2017/day/22) | [Source](src/year2017/day22.rs) | 36000 |
+| 22 | [Sporifica Virus](https://adventofcode.com/2017/day/22) | [Source](src/year2017/day22.rs) | 17000 |
 | 23 | [Coprocessor Conflagration](https://adventofcode.com/2017/day/23) | [Source](src/year2017/day23.rs) | 16 |
 | 24 | [Electromagnetic Moat](https://adventofcode.com/2017/day/24) | [Source](src/year2017/day24.rs) | 275 |
 | 25 | [The Halting Problem](https://adventofcode.com/2017/day/25) | [Source](src/year2017/day25.rs) | 3698 |
