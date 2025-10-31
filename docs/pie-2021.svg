@@ -2,10 +2,9 @@
 %%{init: {"themeVariables": { "pie1": "#c6cdd5", "pie2": "#7cb5ec", "pie3": "#90ed7d", "pie4": "#f7a35c"}}}%%
 pie
     title Year 2021 benchmark time by % of total
-    "Others" : 2796
-    "Day 15" : 2403
-    "Day 20" : 2066
-    "Day 23" : 1714
+    "Others" : 3205
+    "Day 15" : 2387
+    "Day 23" : 1649
 -->
 <svg viewBox="0 0 1350 450" preserveAspectRatio="xMidYMin" xmlns="http://www.w3.org/2000/svg">
 	<style>
