@@ -4,24 +4,13 @@
 //! and tape value at the cursor. Each transition is then computed via a lookup into this array.
 //!
 //! To speed things up by about ten times, multiple transitions are then precomputed to allow
-//! skipping forward multiple steps at a time.
+//! skipping forward multiple steps at a time. Blocks 128 cells wide are cached once the cursor
+//! moves off either end.
 //!
-//! For each of the 6 * 256 = 1536 combinations of a tape with 4 values to the left and 3 values
-//! to the right of the cursor, the turing machine is computed one steps at a time until the cursor
-//! leaves the area to the left or to the right. For example:
-//!
-//! ```none
-//!     State: A            => State: B
-//!       1 0 1 0 [1] 0 0 1     [0] 0 1 0 0 1 1 0
-//!
-//!     State: B
-//!       t t t t [0] 0 1 0
-//! ```
-//!
-//! In this example the tape then advances four bits to the left, loading the four values of `t`
-//! then the next batch lookup is performed.
+//! Interestingly the total number of distinct cached blocks is very low, approximately 200.
+//! The cursor also doesn't move too far, only covering a range of about 6,000 steps.
+use crate::util::hash::*;
 use crate::util::parse::*;
-use std::array::from_fn;
 
 pub struct Input {
     state: usize,
@@ -46,9 +35,8 @@ impl Rule {
 
 struct Skip {
     next_state: usize,
-    next_tape: usize,
+    next_tape: u128,
     steps: u32,
-    ones: i32,
     advance: bool,
 }
 
@@ -66,47 +54,46 @@ pub fn parse(input: &str) -> Input {
     Input { state, steps, rules }
 }
 
-pub fn part1(input: &Input) -> i32 {
-    // Precompute state transitions in larger amount in order to skip forward several transitions
-    // at a time. 100 max_steps is a safety valve in case some state transitions do not halt
-    // although this is unlikely for the inputs that are provided.
-    let table: Vec<[Skip; 256]> = (0..input.rules.len())
-        .map(|state| from_fn(|tape| turing(&input.rules, state, tape, 100)))
-        .collect();
-
+pub fn part1(input: &Input) -> u32 {
     let mut state = input.state;
     let mut remaining = input.steps;
     let mut tape = 0;
-    let mut checksum = 0;
     let mut left = Vec::new();
     let mut right = Vec::new();
+    let mut cache = FastMap::new();
 
     loop {
         // Lookup the next batch state transition.
-        let Skip { next_state, next_tape, steps, ones, advance } = table[state][tape];
+        let Skip { next_state, next_tape, steps, advance } = *cache
+            .entry((state, tape))
+            .or_insert_with(|| turing(&input.rules, state, tape, u32::MAX));
 
         // Handle any remaining transitions less than the batch size one step at a time.
         if steps > remaining {
-            let Skip { ones, .. } = turing(&input.rules, state, tape, remaining);
-            break checksum + ones;
+            let Skip { next_tape, .. } = turing(&input.rules, state, tape, remaining);
+            tape = next_tape;
+            break;
         }
 
         state = next_state;
         tape = next_tape;
         remaining -= steps;
-        checksum += ones;
 
         // Use a vector to simulate an empty tape. In practice the cursor doesn't move more than
         // a few thousand steps in any direction, so this approach is as fast as a fixed size
         // array, but much more robust.
         if advance {
-            left.push(tape & 0xf0);
-            tape = ((tape & 0xf) << 4) | right.pop().unwrap_or(0);
+            left.push(tape & 0xffffffffffffffff0000000000000000);
+            tape = (tape << 64) | right.pop().unwrap_or(0);
         } else {
-            right.push(tape & 0xf);
-            tape = (tape >> 4) | left.pop().unwrap_or(0);
+            right.push(tape & 0x0000000000000000ffffffffffffffff);
+            tape = (tape >> 64) | left.pop().unwrap_or(0);
         }
     }
+
+    tape.count_ones()
+        + left.iter().map(|&n| n.count_ones()).sum::<u32>()
+        + right.iter().map(|&n| n.count_ones()).sum::<u32>()
 }
 
 pub fn part2(_input: &Input) -> &'static str {
@@ -114,15 +101,14 @@ pub fn part2(_input: &Input) -> &'static str {
 }
 
 // Precompute state transitions up to some maximum value of steps.
-fn turing(rules: &[[Rule; 2]], mut state: usize, mut tape: usize, max_steps: u32) -> Skip {
-    let mut mask = 0b00001000;
+fn turing(rules: &[[Rule; 2]], mut state: usize, mut tape: u128, max_steps: u32) -> Skip {
+    let mut mask = 1 << 63;
     let mut steps = 0;
-    let mut ones = 0;
 
-    // `0`` means the cursor has advanced to the next nibble on the right.
+    // `0` means the cursor has advanced to the next nibble on the right.
     // `128` means that the cursor is on the left edge of the high nibble.
-    while 0 < mask && mask < 128 && steps < max_steps {
-        let current = ((tape & mask) != 0) as usize;
+    while 0 < mask && mask < (1 << 127) && steps < max_steps {
+        let current = usize::from(tape & mask != 0);
         let Rule { next_state, next_tape, advance } = rules[state][current];
 
         if next_tape == 1 {
@@ -139,10 +125,7 @@ fn turing(rules: &[[Rule; 2]], mut state: usize, mut tape: usize, max_steps: u32
 
         state = next_state;
         steps += 1;
-        // Count the total numbers of ones by summing the number of ones written minus the
-        // number of ones erased.
-        ones += next_tape as i32 - current as i32;
     }
 
-    Skip { next_state: state, next_tape: tape, steps, ones, advance: mask == 0 }
+    Skip { next_state: state, next_tape: tape, steps, advance: mask == 0 }
 }
