@@ -11,6 +11,7 @@
 //! The cursor also doesn't move too far, only covering a range of about 6,000 steps.
 use crate::util::hash::*;
 use crate::util::parse::*;
+use std::iter::repeat_with;
 
 pub struct Input {
     state: usize,
@@ -20,13 +21,13 @@ pub struct Input {
 
 struct Rule {
     next_state: usize,
-    next_tape: usize,
+    next_tape: bool,
     advance: bool,
 }
 
 impl Rule {
     fn parse(block: &[&[u8]]) -> Self {
-        let next_tape = (block[0][22] - b'0') as usize;
+        let next_tape = block[0][22] == b'1';
         let advance = block[1][27] == b'r';
         let next_state = (block[2][26] - b'A') as usize;
         Rule { next_state, next_tape, advance }
@@ -60,18 +61,18 @@ pub fn part1(input: &Input) -> u32 {
     let mut tape = 0;
     let mut left = Vec::new();
     let mut right = Vec::new();
-    let mut cache = FastMap::new();
+    let mut cache: Vec<_> = repeat_with(FastMap::new).take(input.rules.len()).collect();
 
     loop {
         // Lookup the next batch state transition.
-        let Skip { next_state, next_tape, steps, advance } = *cache
-            .entry((state, tape))
+        let Skip { next_state, next_tape, steps, advance } = *cache[state]
+            .entry(tape)
             .or_insert_with(|| turing(&input.rules, state, tape, u32::MAX));
 
         // Handle any remaining transitions less than the batch size one step at a time.
         if steps > remaining {
             let Skip { next_tape, .. } = turing(&input.rules, state, tape, remaining);
-            tape = next_tape;
+            left.push(next_tape);
             break;
         }
 
@@ -91,9 +92,7 @@ pub fn part1(input: &Input) -> u32 {
         }
     }
 
-    tape.count_ones()
-        + left.iter().map(|&n| n.count_ones()).sum::<u32>()
-        + right.iter().map(|&n| n.count_ones()).sum::<u32>()
+    left.into_iter().chain(right).map(u128::count_ones).sum()
 }
 
 pub fn part2(_input: &Input) -> &'static str {
@@ -111,7 +110,7 @@ fn turing(rules: &[[Rule; 2]], mut state: usize, mut tape: u128, max_steps: u32)
         let current = usize::from(tape & mask != 0);
         let Rule { next_state, next_tape, advance } = rules[state][current];
 
-        if next_tape == 1 {
+        if next_tape {
             tape |= mask;
         } else {
             tape &= !mask;
