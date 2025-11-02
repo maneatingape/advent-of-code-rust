@@ -14,7 +14,7 @@
 //!
 //! Next for each possible tilt orientation (north, south, east and west) an approach similar to a
 //! prefix sum is used. Each edge or fixed rock is assigned an index. We expand the grid by 2 in
-//! each direction (one for each edge) to handles the edges. For example, using west (left):
+//! each direction (one for each edge) to handle the edges. For example, using west (left):
 //!
 //! ```none
 //!     ..#.#..

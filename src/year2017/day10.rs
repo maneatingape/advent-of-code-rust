@@ -1,8 +1,8 @@
 //! # Knot Hash
 //!
 //! Instead of reversing elements from the starting position then trying to handle wrap around,
-//! its easier use [`rotate_left`] to rotate the array by the same amount so that the starting
-//! position is always zero, then take advantage of the built in [`reverse`] method.
+//! it's easier to use [`rotate_left`] to rotate the array by the same amount so that the starting
+//! position is always zero, then take advantage of the built-in [`reverse`] method.
 //!
 //! [`rotate_left`]: slice::rotate_left
 //! [`reverse`]: slice::reverse

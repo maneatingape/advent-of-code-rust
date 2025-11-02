@@ -1,6 +1,6 @@
 //! # Unstable Diffusion
 //!
-//! We represent elves as bits in a integer then use bitwise operations to efficiently figure
+//! We represent elves as bits in an integer then use bitwise operations to efficiently figure
 //! out the movement for multiple elves at once.
 use Direction::*;
 
@@ -112,7 +112,7 @@ fn step(input: &mut Input, order: &mut [Direction]) -> bool {
 
         let mut up = prev;
         let mut down = next;
-        // Find neighours in vertical columns.
+        // Find neighbors in vertical columns.
         let vertical = grid[i - 1].or(grid[i]).or(grid[i + 1]).not();
         let mut left = vertical.shr();
         let mut right = vertical.shl();

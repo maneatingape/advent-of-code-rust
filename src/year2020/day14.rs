@@ -12,7 +12,7 @@
 //! ```
 //!
 //! ## Part One
-//! The memory values are quite sparse, about 500 discrete values in a address range of about 65,000.
+//! The memory values are quite sparse, about 500 discrete values in an address range of about 65,000.
 //! This makes a [`FastMap`] a better choice than a large mostly empty array. Storing the correct
 //! value is a straightforward application of the problem rules, expressed as bitwise logic.
 //!

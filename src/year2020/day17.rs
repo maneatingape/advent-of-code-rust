@@ -4,7 +4,7 @@
 //! Of the total possible volume of the cube formed by the maximum extents in part one, only
 //! roughly 8% is active and of the hypercube from part two only 3% is active for my input.
 //!
-//! To speed things up our high level strategy will flip from a "pull" model where we check the
+//! To speed things up our high-level strategy will flip from a "pull" model where we check the
 //! surrounding neighbors of each cell, to a "push" model where we update the neighbors of each
 //! active cell instead.
 //!

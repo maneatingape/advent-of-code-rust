@@ -1,6 +1,6 @@
 //! # Mode Maze
 //!
-//! Our high level approach is an [A*](https://en.wikipedia.org/wiki/A*_search_algorithm) search.
+//! Our high-level approach is an [A*](https://en.wikipedia.org/wiki/A*_search_algorithm) search.
 //! This [fantastic blog](https://www.redblobgames.com/pathfinding/a-star/introduction.html)
 //! is a great introduction to this algorithm. The heuristic is the
 //! [Manhattan distance](https://en.wikipedia.org/wiki/Taxicab_geometry) to the target. This will

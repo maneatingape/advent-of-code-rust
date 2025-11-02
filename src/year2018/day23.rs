@@ -94,7 +94,7 @@ impl Cube {
         x + y + z
     }
 
-    /// All axes are the same same so choose `x` arbitrarily.
+    /// All axes are the same so choose `x` arbitrarily.
     fn size(&self) -> i32 {
         self.x2 - self.x1 + 1
     }

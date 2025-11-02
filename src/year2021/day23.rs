@@ -1,6 +1,6 @@
 //! # Amphipod
 //!
-//! Our high level approach is an [A*](https://en.wikipedia.org/wiki/A*_search_algorithm) search
+//! Our high-level approach is an [A*](https://en.wikipedia.org/wiki/A*_search_algorithm) search
 //! over all possible burrow states. Three techniques are used to speed things up.
 //!
 //! Firstly a good choice of heuristic is crucial. The heuristic used has the following
@@ -14,7 +14,7 @@
 //! * Detecting deadlocked states where an amphipod in the hallway prevents any possible solution.
 //!   Exploring any further is a waste of time.
 //!
-//! Thirdly low level bit manipulation is used to represent the burrow state size compactly
+//! Thirdly low-level bit manipulation is used to represent the burrow state size compactly
 //! in only 16 bytes for faster copying and hashing.
 use crate::util::hash::*;
 use crate::util::heap::*;
@@ -266,8 +266,8 @@ fn best_possible(burrow: &Burrow) -> usize {
                 // Even though we're in our home burrow we need to move out of the way of a lower
                 // amphipod of a different kind.
                 need_to_move[kind] += 1;
-                // Calculate the energy assuming we can move to one of the nearest hallway
-                // spaces on either side.
+                // Calculate the energy assuming we can move to one of the nearest hallway spaces
+                // on either side.
                 let up = 4 - depth;
                 let across = 2; // Nearest spot then back
                 let down = need_to_move[kind];

@@ -13,7 +13,7 @@
 //! First we build two maps, one vertical and one horizontal, of each line segment for the first
 //! wire. Then we trace the steps of the second wire, looking for any intersections. We calculate
 //! both part one and part two at the same time, by also including the distance so far
-//! from the starting point of each lines.
+//! from the starting point of each line.
 //!
 //! [`range`]: BTreeMap::range
 use crate::util::parse::*;

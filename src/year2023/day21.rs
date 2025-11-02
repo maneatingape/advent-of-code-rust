@@ -27,7 +27,7 @@
 //!       #
 //! ```
 //!
-//! The next insight is that if we can reach a plot in `x` steps the we can also reach it in
+//! The next insight is that if we can reach a plot in `x` steps then we can also reach it in
 //! `x + 2, x + 4...` steps by repeatedly stepping back and forth 1 tile. This means the
 //! number of tiles reachable depends on the *parity* of a plot from the center,
 //! i.e. whether it is an odd or even number of steps. As the 131 width of the tile is an odd

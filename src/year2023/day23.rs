@@ -7,7 +7,7 @@
 //! ## Compression
 //!
 //! First we "compress" the maze into a much smaller simpler graph. For example the following maze
-//! converts into a undirected weighted graph.
+//! converts into an undirected weighted graph.
 //!
 //! ```none
 //!     #.#####

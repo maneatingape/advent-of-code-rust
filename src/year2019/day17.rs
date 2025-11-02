@@ -2,7 +2,7 @@
 //!
 //! The key insight is that this is not a path finding problem but a *compression*
 //! problem. We need to reduce the robot's path into repetitions of three patterns.
-//! This is essentially a very simple version of the well known
+//! This is essentially a very simple version of the well-known
 //! [LZW](https://en.wikipedia.org/wiki/Lempel%E2%80%93Ziv%E2%80%93Welch)
 //! algorithm used by the `GIF` and `ZIP` file formats.
 //!

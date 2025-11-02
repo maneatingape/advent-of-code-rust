@@ -2,7 +2,7 @@
 //!
 //! ## Part One
 //!
-//! The "biodiversity rating" is a very strong hint to store the 5x5 grid as bits in a integer.
+//! The "biodiversity rating" is a very strong hint to store the 5x5 grid as bits in an integer.
 //! To make calculating the rating a no-op, we store the grid:
 //!
 //! ```none

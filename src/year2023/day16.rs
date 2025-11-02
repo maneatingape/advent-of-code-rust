@@ -194,7 +194,7 @@ fn beam(graph: &mut Graph, node: &mut Node, mut position: Point, mut direction: 
     }
 }
 
-/// Tarjan's algorithm to find strongly connected components, e.g cycles in a directed graph.
+/// Tarjan's algorithm to find strongly connected components, e.g. cycles in a directed graph.
 fn strong_connect(graph: &mut Graph, position: Point) -> usize {
     // Push current index to stack and insert a dummy node to keep the vector index correct when
     // processing children.

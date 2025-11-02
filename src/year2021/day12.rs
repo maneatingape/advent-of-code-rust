@@ -4,13 +4,13 @@
 //! system, exploring all possible permutations of the paths and finishing whenever we reach
 //! the `end` cave.
 //!
-//! To speed things up, 2 strategies are used, one high level and one low level:
+//! To speed things up, 2 strategies are used, one high-level and one low-level:
 //! * [Memoization](https://en.wikipedia.org/wiki/Memoization) (or caching) of the possible paths
-//!   from each position, taking into account previously visited caves is the high level strategy
+//!   from each position, taking into account previously visited caves is the high-level strategy
 //!   to re-use work and save time.
 //! * [Bit Manipulation](https://en.wikipedia.org/wiki/Bit_manipulation) to store both the graph of
 //!   cave connections as an [adjacency matrix](https://en.wikipedia.org/wiki/Adjacency_matrix)
-//!   and the list of visited caves compressed into a single `u32` is the low level strategy to
+//!   and the list of visited caves compressed into a single `u32` is the low-level strategy to
 //!   quickly and efficiently store the small cardinality set of caves.
 use crate::util::bitset::*;
 use crate::util::hash::*;

@@ -1,4 +1,4 @@
-//! Fast 2 dimensional Grid backed by a single `vec`. This module is designed to work with [`Point`].
+//! Fast 2-dimensional Grid backed by a single `vec`. This module is designed to work with [`Point`].
 //!
 //! The traits [`Index`] and [`IndexMut`] are implemented for [`Point`] to allow usage like:
 //!
@@ -16,7 +16,7 @@
 //!   assert_eq!(grid[point], b'2');
 //! ```
 //!
-//! A convenience [`parse`] method creates a `Grid` directly from a 2 dimensional set of
+//! A convenience [`parse`] method creates a `Grid` directly from a 2-dimensional set of
 //! ASCII characters, a common occurrence in Advent of Code inputs. The [`same_size_with`] function
 //! creates a grid of the same size that can be used in BFS algorithms for tracking visited
 //! locations or for tracking cost in Dijkstra.

@@ -1,6 +1,6 @@
 //! # Plutonian Pebbles
 //!
-//! The transformation rules have any interesting property that the total number of
+//! The transformation rules have an interesting property that the total number of
 //! distinct stone numbers is not very large, about 2000 for part one and 4000 for part two.
 //!
 //! This means that we can store the count of each distinct stone in a small contiguous array

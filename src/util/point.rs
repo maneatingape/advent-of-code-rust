@@ -1,4 +1,4 @@
-//! Comprehensive 2 dimensional point implementation. This class is designed to work together
+//! Comprehensive 2-dimensional point implementation. This class is designed to work together
 //! with the [`Grid`] class.
 //!
 //! A common theme in Advent of Code is operations in 2 dimensions. This module provides a

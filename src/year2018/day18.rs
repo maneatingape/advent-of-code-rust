@@ -1,6 +1,6 @@
 //! # Settlers of The North Pole
 //!
-//! This problem is a cellular automaton similar to the well known
+//! This problem is a cellular automaton similar to the well-known
 //! [Game of Life](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life). To solve part two
 //! we look for a [cycle](https://en.wikipedia.org/wiki/Cycle_detection) then
 //! extrapolate forward a billion generations.

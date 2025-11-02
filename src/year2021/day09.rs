@@ -7,7 +7,7 @@
 //! such as a [`VecDeque`].
 //!
 //! This solution uses a DFS approach as it's faster and Rust's stack size limit seems enough
-//! to accommodate the maximum basin size. 2 dimensional grids are common in Advent of Code
+//! to accommodate the maximum basin size. 2-dimensional grids are common in Advent of Code
 //! problems so we use our utility [`Grid`] and [`Point`] modules.
 //!
 //! [`VecDeque`]: std::collections::VecDeque

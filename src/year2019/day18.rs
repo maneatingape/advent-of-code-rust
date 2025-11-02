@@ -1,6 +1,6 @@
 //! # Many-Worlds Interpretation
 //!
-//! Our high level approach is to simplify the problem into graph path finding. We only
+//! Our high-level approach is to simplify the problem into graph path finding. We only
 //! ever need to move directly from key to key, so the maze becomes a graph where the nodes are
 //! keys and the edge weight is the distance between keys. Doors modify which edges
 //! are connected depending on the keys currently possessed.
@@ -18,7 +18,7 @@
 //!   along the way. We can model this by treating keys the same as doors. This optimization
 //!   sped up my solution by a factor of 30.
 //!
-//! On top of this approach we apply some high level tricks to go faster:
+//! On top of this approach we apply some high-level tricks to go faster:
 //! * We store previously seen pairs of `(location, keys collected)` to `total distance` in a map.
 //!   If we are in the same location with the same keys but at a higher cost, then this situation
 //!   can never be optimal so the solution can be discarded.
@@ -29,7 +29,7 @@
 //!   is higher than the asymptotic bounds of repeated BFS, this was twice as fast in practice
 //!   for my input.
 //!
-//! We also apply some low level tricks to go even faster:
+//! We also apply some low-level tricks to go even faster:
 //! * The set of remaining keys needed is stored as bits in an `u32`. We can have at most 26 keys
 //!   so this will always fit. For example needing `a`, `b` and `e` is represented as `10011`.
 //! * Robot location is also stored the same way. Robots can only ever be in their initial location

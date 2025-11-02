@@ -28,10 +28,10 @@
 //!           * *       * *
 //!     ```
 //!
-//! Our high level approach is as follows:
+//! Our high-level approach is as follows:
 //! * Pick any arbitrary node
 //! * Find a start node furthest from it.
-//! * Find a end node furthest from the start node.
+//! * Find an end node furthest from the start node.
 //!
 //! The key insight is that the start and end nodes must be on opposite sides of the cut.
 //! We then BFS 3 times from the start to the end to find 3 different shortest paths.
@@ -43,7 +43,7 @@
 //! on start's side of the graph and will find our answer.
 //!
 //! The complexity of each BFS is `O(V + E)` and we perform a total of 6. To speed things up even
-//! further some low level optimizations are used:
+//! further some low-level optimizations are used:
 //!
 //! * Numeric node and edge identifiers to allow `vec` to store previously seen values instead
 //!   of `HashMap`.
@@ -74,7 +74,7 @@ impl Input {
 /// Then the edges are gathered into a single vec so that each edge also has a unique index.
 ///
 /// As both node and edge indices are contiguous this allows us to use a vec to store previously
-/// seen values which is must faster than using a `HashMap`.
+/// seen values which is much faster than using a `HashMap`.
 pub fn parse(input: &str) -> Input {
     let mut lookup = vec![usize::MAX; 26 * 26 * 26];
     let mut neighbours = Vec::with_capacity(2_000);

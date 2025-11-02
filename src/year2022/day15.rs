@@ -94,7 +94,7 @@ pub fn part2_testable(input: &[Input], size: i32) -> u64 {
     let mut right = FastSet::new();
 
     // Rotate points clockwise by 45 degrees, scale by √2 and extend edge by 1.
-    // This transform each sensor into an axis aligned bounding box.
+    // This transforms each sensor into an axis aligned bounding box.
     // The distress beacon is located where the top, left, bottom and right
     // edges of 4 separate bounding boxes intersect.
     for Input { sensor, manhattan, .. } in input {

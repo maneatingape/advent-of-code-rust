@@ -1,6 +1,6 @@
 //! # The Halting Problem
 //!
-//! The input is parsed into a 2 dimensional array covering each possible combination of state
+//! The input is parsed into a 2-dimensional array covering each possible combination of state
 //! and tape value at the cursor. Each transition is then computed via a lookup into this array.
 //!
 //! To speed things up by about ten times, multiple transitions are then precomputed to allow

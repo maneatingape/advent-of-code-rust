@@ -1,6 +1,6 @@
 //! # Sonar Sweep
 //!
-//! The built in [`windows`] method comes in handy for this solution. For part 1 a straightforward
+//! The built-in [`windows`] method comes in handy for this solution. For part 1 a straightforward
 //! sliding window of size 2 allows us to compare each 2 consecutive values.
 //!
 //! For part 2 we can use a trick to simplify. If we consider the first 2 windows of 3 elements

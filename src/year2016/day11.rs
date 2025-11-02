@@ -68,7 +68,7 @@ impl Floor {
         self.generators() >= other.generators() && self.microchips() >= other.microchips()
     }
 
-    // Criticial optimization treating generators and microchips as fungible.
+    // Critical optimization treating generators and microchips as fungible.
     #[inline]
     fn valid(self) -> bool {
         self.generators() == 0 || self.generators() >= self.microchips()

@@ -12,7 +12,7 @@ Your contribution should generally fall into one of the following two categories
 * 🪲 **Bug Fix** Solutions try to be as general as possible but can't test for every input.
   Your pull request fixes an incorrect answer for your input or prevents a panic.
 * 🚀 **Performance Improvement** Your pull request gives a significant performance
-  improvement. This could be achieved by using a better algorithm, better low level optimizations,
+  improvement. This could be achieved by using a better algorithm, better low-level optimizations,
   by applying the portable SIMD library or by any other means!
 
 ## Legal Notice

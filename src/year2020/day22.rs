@@ -4,7 +4,7 @@
 //! [double-ended queue](https://en.wikipedia.org/wiki/Double-ended_queue) backed by a
 //! circular buffer. Why use our own implementation when there is a perfectly good [`VecDeque`]
 //! already available? The answer is speed. As there are at most fifty cards in the pack, the Deck
-//! can use a fix sized stack allocated array, avoiding the expensive heap allocations that
+//! can use a fixed-sized stack allocated array, avoiding the expensive heap allocations that
 //! [`VecDeque`] must use.
 //!
 //! `Deck` also keeps the score up to date as cards are added and removed, as this comes in useful

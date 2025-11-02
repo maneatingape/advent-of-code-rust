@@ -4,7 +4,7 @@
 //! of operators. However the number of states to check grows exponentially as 2ⁿ in part one
 //! and 3ⁿ in part two.
 //!
-//! As much faster approach works in reverse from the end of the equation to prune as many states
+//! A much faster approach works in reverse from the end of the equation to prune as many states
 //! as possible by checking which operations are possible. For example:
 //!
 //! ```none

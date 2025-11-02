@@ -88,7 +88,7 @@ pub fn parse(input: &str) -> Input<'_> {
             }
         }
 
-        // Total is a nodes weight plus the sum of all children recursively.
+        // Total is a node's weight plus the sum of all children recursively.
         node.total += total;
         node.processed += 1;
 
