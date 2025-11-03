@@ -1,10 +1,9 @@
 <!--
-%%{init: {"themeVariables": { "pie1": "#c6cdd5", "pie2": "#7cb5ec", "pie3": "#90ed7d", "pie4": "#f7a35c", "pie5": "#e4d354"}}}%%
+%%{init: {"themeVariables": { "pie1": "#c6cdd5", "pie2": "#7cb5ec", "pie3": "#90ed7d", "pie4": "#f7a35c"}}}%%
 pie
     title Year 2019 benchmark time by % of total
-    "Others" : 5981
+    "Others" : 6206
     "Day 13" : 2460
-    "Day 16" : 1949
     "Day 25" : 1890
     "Day 21" : 1674
 -->
@@ -18,35 +17,29 @@ pie
 	</style>
 	<g transform="translate(675,225)">
 		<circle class="pieOuterCircle" cx="0" cy="0" r="186"/>
-		<path class="pieCircle" d="M0,-185A185,185,0,0,1,80.215,166.705L0,0Z" fill="#c6cdd5"/>
-		<path class="pieCircle" d="M80.215,166.705A185,185,0,0,1,-113.311,146.238L0,0Z" fill="#7cb5ec"/>
-		<path class="pieCircle" d="M-113.311,146.238A185,185,0,0,1,-184.893,6.288L0,0Z" fill="#90ed7d"/>
-		<path class="pieCircle" d="M-184.893,6.288A185,185,0,0,1,-126.612,-134.887L0,0Z" fill="#f7a35c"/>
-		<path class="pieCircle" d="M-126.612,-134.887A185,185,0,0,1,0,-185L0,0Z" fill="#e4d354"/>
-		<text class="slice" style="text-anchor: middle;" transform="translate(135.27621115446692,-30.85302571372986)">43%</text>
-		<text class="slice" style="text-anchor: middle;" transform="translate(-14.592379816245032,137.98052381150916)">18%</text>
-		<text class="slice" style="text-anchor: middle;" transform="translate(-123.52915177996074,63.18315567082274)">14%</text>
-		<text class="slice" style="text-anchor: middle;" transform="translate(-128.2509556020454,-52.94577308116463)">14%</text>
-		<text class="slice" style="text-anchor: middle;" transform="translate(-51.06334006529674,-129.01200642333976)">12%</text>
+		<path class="pieCircle" d="M0,-185A185,185,0,1,1,-8.646,184.798L0,0Z" fill="#c6cdd5"/>
+		<path class="pieCircle" d="M-8.646,184.798A185,185,0,0,1,-178.772,47.598L0,0Z" fill="#7cb5ec"/>
+		<path class="pieCircle" d="M-178.772,47.598A185,185,0,0,1,-140.203,-120.698L0,0Z" fill="#90ed7d"/>
+		<path class="pieCircle" d="M-140.203,-120.698A185,185,0,0,1,0,-185L0,0Z" fill="#f7a35c"/>
+		<text class="slice" style="text-anchor: middle;" transform="translate(138.7120935742378,3.2430843732309658)">51%</text>
+		<text class="slice" style="text-anchor: middle;" transform="translate(-87.10105467423168,108.00448497463661)">20%</text>
+		<text class="slice" style="text-anchor: middle;" transform="translate(-135.24400339812308,-30.993903349666564)">15%</text>
+		<text class="slice" style="text-anchor: middle;" transform="translate(-57.84212423231397,-126.11840137067055)">14%</text>
 		<text class="pieTitleText" x="0" y="-200">Year 2019 benchmark time by % of total</text>
-		<g transform="translate(216,-55)">
+		<g transform="translate(216,-44)">
 			<rect height="18" style="fill: rgb(198, 205, 213); stroke: rgb(198, 205, 213);" width="18"/>
 			<text x="22" y="14">Others</text>
 		</g>
-		<g transform="translate(216,-33)">
+		<g transform="translate(216,-22)">
 			<rect height="18" style="fill: rgb(124, 181, 236); stroke: rgb(124, 181, 236);" width="18"/>
 			<text x="22" y="14">Day 13</text>
 		</g>
-		<g transform="translate(216,-11)">
+		<g transform="translate(216,0)">
 			<rect height="18" style="fill: rgb(144, 237, 125); stroke: rgb(144, 237, 125);" width="18"/>
-			<text x="22" y="14">Day 16</text>
-		</g>
-		<g transform="translate(216,11)">
-			<rect height="18" style="fill: rgb(247, 163, 92); stroke: rgb(247, 163, 92);" width="18"/>
 			<text x="22" y="14">Day 25</text>
 		</g>
-		<g transform="translate(216,33)">
-			<rect height="18" style="fill: rgb(228, 211, 84); stroke: rgb(228, 211, 84);" width="18"/>
+		<g transform="translate(216,22)">
+			<rect height="18" style="fill: rgb(247, 163, 92); stroke: rgb(247, 163, 92);" width="18"/>
 			<text x="22" y="14">Day 21</text>
 		</g>
 	</g>

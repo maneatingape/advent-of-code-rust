@@ -2,20 +2,26 @@
 //!
 //! ## Part One
 //!
-//! For each phase we split the input into two halves. The first half is processed using the
-//! pattern "stretched" for the current phase. For the second half we notice that
-//! the coefficients before are always zero and after always one, so the result can only depend
-//! on later digits. Using the first example:
+//! For each phase we first compute the prefix sum of the digits. This allows us to compute
+//! the sum of any contiguous range of digits with only 2 lookups. For example the sum of the
+//! 5 to 8 is `36 - 10 = 26`.
 //!
 //! ```none
-//!     5*1  + 6*1  + 7*1  + 8*1
-//!     5*0  + 6*1  + 7*1  + 8*1
-//!     5*0  + 6*0  + 7*1  + 8*1
-//!     5*0  + 6*0  + 7*0  + 8*1
+//!                               -----------
+//!     Digits:     1  2  3   4   5  6  7   8   9
+//!     Prefix sum: 1  3  6 [10] 15 21 28 [36] 45
 //! ```
 //!
-//! Each digit is the sum of itself and subsequent digits and can be computed using a reverse
-//! rolling [prefix sum].
+//! The complexity of each phase is the [harmonic series](https://en.wikipedia.org/wiki/Harmonic_series_(mathematics))
+//! so the total complexity is `n` for the prefix sum calculation and `log(n)` for the next digits
+//! for a total of `nlog(n)`.
+//!
+//! As a minor optimization once the phase is greater than ⅓ of the digits, then the pattern
+//! simplifies to a sum of a single range. For example with 11 digits on phase 4 the pattern is:
+//!
+//! ```none
+//!   0 0 0 1 1 1 1 0 0 0 0
+//! ```
 //!
 //! ## Part Two
 //!
@@ -67,6 +73,20 @@
 //! coefficients modulo some prime number. If we compute the coefficients modulo 2 and modulo 5
 //! then we can use the [Chinese remainder theorem] to find the result modulo 10.
 //!
+//! Two further empirical insights from [Askalski](https://www.reddit.com/user/askalski/)
+//! speed up part two even more. The first is that the coefficients modulo 2 form a cycle of
+//! length 128 and the coefficients of modulo 5 form a cycle of length 125. Since the digits also
+//! form a cycle of length 650 then we only need to process the
+//! [least common multiple](https://en.wikipedia.org/wiki/Least_common_multiple) of each cycle.
+//! This is 41600 for coefficients modulo 2 and 3250 for coefficients modulo 5.
+//!
+//! The second insight is that both of the cycles are very sparse. Only 8 out of 128 modulo 2 values
+//! and 2 out of 125 modulo 5 values respectively are non-zero. By storing the values as a
+//! compressed list of `(coefficient, skip value)` we only need to process of small fraction of
+//! the total digits. In total we need to compute `41600 * (8 / 128) + 3250 * (2 /125) = 2652`
+//! values per digit. This is much much less than the approximately 500,000 coefficients in the
+//! complete range.
+//!
 //! [prefix sum]: https://en.wikipedia.org/wiki/Prefix_sum
 //! [upper triangular matrix]: https://en.wikipedia.org/wiki/Triangular_matrix
 //! [triangular number]: https://en.wikipedia.org/wiki/Triangular_number
@@ -75,172 +95,133 @@
 //! [grows rather large]: https://oeis.org/A017763/b017763.txt
 //! [Lucas's theorem]: https://en.wikipedia.org/wiki/Lucas%27s_theorem
 //! [Chinese remainder theorem]: https://en.wikipedia.org/wiki/Chinese_remainder_theorem
+use crate::util::math::*;
 use crate::util::parse::*;
 use crate::util::slice::*;
+use std::array::from_fn;
 
-/// Lookup table for first five rows of
-/// [Pascal's triangle](https://en.wikipedia.org/wiki/Pascal%27s_triangle).
-/// A convention specifically for Lukas's theorem is that if `n` < `k` then the value is 0.
-const PASCALS_TRIANGLE: [[usize; 5]; 5] =
-    [[1, 0, 0, 0, 0], [1, 1, 0, 0, 0], [1, 2, 1, 0, 0], [1, 3, 3, 1, 0], [1, 4, 6, 4, 1]];
-
-pub fn parse(input: &str) -> Vec<u8> {
-    input.trim().bytes().map(u8::to_decimal).collect()
-}
-
-pub fn part1(input: &[u8]) -> i32 {
-    let size = input.len();
-    let mid = size / 2;
-    let end = size - 1;
-
-    let mut current = &mut input.iter().copied().map(i32::from).collect::<Vec<_>>();
-    let mut next = &mut vec![0; size];
-
-    for _ in 0..100 {
-        // Brute force the first half of the input.
-        for i in 0..mid {
-            let phase = i + 1;
-            let skip = 2 * phase;
-            let mut remaining = &current[i..];
-            let mut total: i32 = 0;
-
-            while !remaining.is_empty() {
-                let take = phase.min(remaining.len());
-                total += &remaining[..take].iter().sum();
-
-                if remaining.len() <= skip {
-                    break;
-                }
-                remaining = &remaining[skip..];
-
-                let take = phase.min(remaining.len());
-                total -= &remaining[..take].iter().sum();
-
-                if remaining.len() <= skip {
-                    break;
-                }
-                remaining = &remaining[skip..];
-            }
-
-            next[i] = total.abs() % 10;
-        }
-
-        // Use a faster reverse prefix sum approach for the second half of the input.
-        next[end] = current[end];
-
-        for i in (mid..end).rev() {
-            next[i] = (current[i] + next[i + 1]) % 10;
-        }
-
-        (current, next) = (next, current);
-    }
-
-    current[..8].fold_decimal()
-}
-
-pub fn part2(input: &[u8]) -> usize {
-    let digits: Vec<_> = input.iter().copied().map(usize::from).collect();
-    let start = digits[..7].fold_decimal();
-
-    // This approach will only work if the index is in the second half of the input.
-    let size = digits.len();
-    let lower = size * 5_000;
-    let upper = size * 10_000;
-    assert!(lower <= start && start < upper);
-
-    compute(&digits, size, start, upper)
-}
-
-#[cfg(not(feature = "simd"))]
-fn compute(digits: &[usize], size: usize, start: usize, upper: usize) -> usize {
-    let mut coefficients = [0; 8];
-    let mut result = [0; 8];
-
-    for (k, index) in (start..upper).enumerate() {
-        coefficients.rotate_right(1);
-        coefficients[0] = binomial_mod_10(k + 99, k);
-
-        let next = digits[index % size];
-        result.iter_mut().zip(coefficients).for_each(|(r, c)| *r += next * c);
-    }
-
-    result.iter_mut().for_each(|r| *r %= 10);
-    result.fold_decimal()
-}
-
-#[cfg(feature = "simd")]
-fn compute(digits: &[usize], size: usize, start: usize, upper: usize) -> usize {
-    use std::simd::Mask;
-    use std::simd::Simd;
-
-    let mask: Mask<i32, 8> = Mask::from_bitmask(1);
-    let tens: Simd<u32, 8> = Simd::splat(10);
-
-    let mut coefficients: Simd<u32, 8> = Simd::splat(0);
-    let mut result: Simd<u32, 8> = Simd::splat(0);
-
-    for (k, index) in (start..upper).enumerate() {
-        coefficients = mask.select(
-            Simd::splat(binomial_mod_10(k + 99, k) as u32),
-            coefficients.rotate_elements_right::<1>(),
-        );
-
-        let next = Simd::splat(digits[index % size] as u32);
-        result += next * coefficients;
-    }
-
-    (result % tens).to_array().fold_decimal() as usize
-}
-
-/// Computes C(n, k) % 2
-///
-/// This collapses to a special case of a product of only 4 possible values:
+/// `C(n, k) % 2` This collapses to a special case of a product of only 4 possible values
+/// which are cyclic with a length of 128.
 ///
 /// * `C(0, 0) = 1`
 /// * `C(1, 0) = 1`
 /// * `C(1, 1) = 1`
 /// * `C(0, 1) = 0`
-///
-/// So the final value will always be one or zero. The fourth zero case happens when `k` has a
-/// bit not present in `n` so we can compute the final value using bitwise logic.
-#[inline]
-fn binomial_mod_2(n: usize, k: usize) -> usize {
-    (k & !n == 0) as usize
+const BINOMIAL_MOD_2: [(i32, usize); 8] =
+    [(1, 4), (1, 4), (1, 4), (1, 4), (1, 4), (1, 4), (1, 4), (1, 100)];
+/// `C(n, k) % 5` Cyclic with a length of 125.
+const BINOMIAL_MOD_5: [(i32, usize); 2] = [(1, 25), (4, 100)];
+
+pub fn parse(input: &str) -> Vec<i32> {
+    input.trim().bytes().map(|b| b.to_decimal() as i32).collect()
 }
 
-/// Computes C(n, k) % 5
-///
-/// If `k` is zero then the remaining coefficients are 1 so we can exit early.
-/// If `r` is zero then the total result is also zero so we can exit early.
-/// To save some time we only take the result modulo 5 at the end.
-#[inline]
-fn bimonial_mod_5(mut n: usize, mut k: usize) -> usize {
-    let mut r = 1;
+pub fn part1(input: &[i32]) -> i32 {
+    let size = input.len();
+    let limit = size.div_ceil(3);
 
-    while k > 0 && r > 0 {
-        r *= PASCALS_TRIANGLE[n % 5][k % 5];
-        n /= 5;
-        k /= 5;
+    let mut digits = input.to_vec();
+    let mut prefix_sum = vec![0; size + 1];
+
+    for _ in 0..100 {
+        // Prefix sum for fast computation of arbitrary contiguous ranges.
+        let mut sum = 0;
+
+        for (i, digit) in digits.iter().enumerate() {
+            sum += digit;
+            prefix_sum[i + 1] = sum;
+        }
+
+        // The first third of the phases can contain the complete alternating pattern.
+        for (i, digit) in digits.iter_mut().enumerate().take(limit) {
+            let phase = i + 1;
+            let mut total = 0;
+            let mut sign = 1;
+
+            for start in (phase - 1..size).step_by(2 * phase) {
+                let end = (start + phase).min(size);
+                total += sign * (prefix_sum[end] - prefix_sum[start]);
+                sign *= -1;
+            }
+
+            *digit = total.abs() % 10;
+        }
+
+        // The remaining phases simplify to the sum of a single range.
+        for (i, digit) in digits.iter_mut().enumerate().skip(limit) {
+            let phase = i + 1;
+            let start = phase - 1;
+            let end = (start + phase).min(size);
+            *digit = (prefix_sum[end] - prefix_sum[start]).abs() % 10;
+        }
     }
 
-    r % 5
+    digits[..8].fold_decimal()
 }
 
-/// Computes C(n, k) % 10
-///
-/// Solving the Chinese remainder theorem for the special case of two congruences:
-///
-/// ```none
-///     x ​≡ a₁ (mod n₁) ​≡ a₁ (mod 2)
-///     x ​≡ a₂ (mod n₂) ≡ a₂ (mod 5)
-///     N = n₁n₂ = 10
-///     y₁ = N / n₁ = 5
-///     y₂ = N / n₂ = 2
-///     z₁ = y₁⁻¹ mod n₁ = 5⁻¹ mod 2 = 1
-///     z₂ = y₂⁻¹ mod n₂ = 2⁻¹ mod 5 = 3
-///     x ≡ a₁y₁z₁ + a₂y₂z₂ (mod 10) ≡ 5a₁ + 6a₂ (mod 10)
-/// ```
-#[inline]
-fn binomial_mod_10(n: usize, k: usize) -> usize {
-    5 * binomial_mod_2(n, k) + 6 * bimonial_mod_5(n, k)
+pub fn part2(input: &[i32]) -> i32 {
+    let size = input.len();
+    let lower = size * 5_000;
+    let upper = size * 10_000;
+
+    // This approach will only work if the index is in the second half of the input.
+    let start = input[..7].fold_decimal() as usize;
+    assert!(lower <= start && start < upper);
+
+    let first = compute(input, start, upper, BINOMIAL_MOD_2.iter().copied().cycle(), 128);
+    let second = compute(input, start, upper, BINOMIAL_MOD_5.iter().copied().cycle(), 125);
+
+    // Computes C(n, k) % 10
+    // Solving the Chinese remainder theorem for the special case of two congruences:
+    //
+    //     x ​≡ a₁ (mod n₁) ​≡ a₁ (mod 2)
+    //     x ​≡ a₂ (mod n₂) ≡ a₂ (mod 5)
+    //     N = n₁n₂ = 10
+    //     y₁ = N / n₁ = 5
+    //     y₂ = N / n₂ = 2
+    //     z₁ = y₁⁻¹ mod n₁ = 5⁻¹ mod 2 = 1
+    //     z₂ = y₂⁻¹ mod n₂ = 2⁻¹ mod 5 = 3
+    //     x ≡ a₁y₁z₁ + a₂y₂z₂ (mod 10) ≡ 5a₁ + 6a₂ (mod 10)
+    //
+    let result: Vec<_> = first.into_iter().zip(second).map(|(f, s)| (5 * f + 6 * s) % 10).collect();
+    result.fold_decimal()
+}
+
+/// Quickly computes a digit taking advantage of the fact
+/// that the LCM is much smaller than the whole range.
+fn compute<I>(input: &[i32], start: usize, upper: usize, mut nck: I, size: usize) -> [i32; 8]
+where
+    I: Iterator<Item = (i32, usize)>,
+{
+    from_fn(|offset| {
+        let start = start + offset;
+        let total = upper - start;
+
+        // Compute LCM, number of complete ranges and the remaining partial range.
+        let lcm = input.len().lcm(size);
+        let quotient = (total / lcm) as i32;
+        let remainder = total % lcm;
+
+        // Sum partial range first.
+        let mut index = start;
+        let mut partial = 0;
+
+        while index < start + remainder {
+            let (coefficient, skip) = nck.next().unwrap();
+            partial += input[index % input.len()] * coefficient;
+            index += skip;
+        }
+
+        // Then the full range.
+        let mut full = partial;
+
+        while index < start + lcm {
+            let (coefficient, skip) = nck.next().unwrap();
+            full += input[index % input.len()] * coefficient;
+            index += skip;
+        }
+
+        // Calculate sum for the entire range.
+        quotient * full + partial
+    })
 }
