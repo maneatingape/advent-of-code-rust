@@ -95,5 +95,5 @@ benchmark!(year2024
 );
 
 benchmark!(year2025
-    day01
+    day01, day02
 );

@@ -141,5 +141,5 @@ run!(year2024
 );
 
 run!(year2025
-    day01
+    day01, day02
 );
