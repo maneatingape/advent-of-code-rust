@@ -1,32 +1,37 @@
 //! # Lobby
-pub fn parse(input: &str) -> Vec<&[u8]> {
-    input.lines().map(str::as_bytes).collect()
+use std::mem::replace;
+
+pub fn parse(input: &str) -> Vec<&str> {
+    input.lines().collect()
 }
 
-pub fn part1(input: &[&[u8]]) -> u64 {
-    solve(input, 2)
+pub fn part1(input: &[&str]) -> u64 {
+    solve::<2>(input)
 }
 
-pub fn part2(input: &[&[u8]]) -> u64 {
-    solve(input, 12)
+pub fn part2(input: &[&str]) -> u64 {
+    solve::<12>(input)
 }
 
-fn solve(banks: &[&[u8]], limit: usize) -> u64 {
-    banks
+fn solve<const N: usize>(input: &[&str]) -> u64 {
+    let mut batteries = [0; N];
+
+    input
         .iter()
         .map(|&bank| {
-            let mut max = 0;
-            let mut start = 0;
+            let end = bank.len() - N;
+            batteries.copy_from_slice(&bank.as_bytes()[end..]);
 
-            (0..limit).rev().fold(0, |joltage, digit| {
-                let end = bank.len() - digit;
+            for mut next in bank[..end].bytes().rev() {
+                for battery in &mut batteries {
+                    if next < *battery {
+                        break;
+                    }
+                    next = replace(battery, next);
+                }
+            }
 
-                (max, start) = (start..end).fold((0, 0), |(max, start), i| {
-                    if bank[i] > max { (bank[i], i + 1) } else { (max, start) }
-                });
-
-                10 * joltage + (max - b'0') as u64
-            })
+            batteries.iter().fold(0, |joltage, &b| 10 * joltage + (b - b'0') as u64)
         })
         .sum()
 }
