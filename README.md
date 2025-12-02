@@ -79,6 +79,7 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 | --- | --- | --- | --: |
 | 1 | [Secret Entrance](https://adventofcode.com/2025/day/1) | [Source](src/year2025/day01.rs) | 25 |
 | 2 | [Gift Shop](https://adventofcode.com/2025/day/2) | [Source](src/year2025/day02.rs) | 1 |
+| 3 | [Lobby](https://adventofcode.com/2025/day/3) | [Source](src/year2025/day03.rs) | 60 |
 
 ## 2024
 
