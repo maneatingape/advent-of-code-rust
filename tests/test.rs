@@ -87,5 +87,5 @@ test!(year2024
 );
 
 test!(year2025
-    day01, day02, day03, day04
+    day01, day02, day03, day04, day05
 );
