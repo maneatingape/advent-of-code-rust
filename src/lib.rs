@@ -74,5 +74,5 @@ library!(year2024 "Locate the Chief Historian in time for the big Christmas slei
 );
 
 library!(year2025 "Finish the North Pole decorations in time for Christmas."
-    day01, day02, day03
+    day01, day02, day03, day04
 );
