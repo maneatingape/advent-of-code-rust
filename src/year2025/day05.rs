@@ -34,7 +34,7 @@ pub fn part1(input: &Input) -> usize {
     merged.iter().map(|range| position(range.end) - position(range.start)).sum()
 }
 
-pub fn part2(input: &Input) -> usize {
+pub fn part2(input: &Input) -> u64 {
     let (merged, _) = input;
-    merged.iter().cloned().flatten().count()
+    merged.iter().map(|range| range.end - range.start).sum()
 }
