@@ -2,7 +2,7 @@
 use crate::util::grid::*;
 use crate::util::point::*;
 
-type Input = (usize, usize);
+type Input = (Vec<Point>, Grid<u8>);
 
 pub fn parse(input: &str) -> Input {
     let grid = Grid::parse(input);
@@ -29,11 +29,20 @@ pub fn parse(input: &str) -> Input {
         }
     }
 
-    let part_one = todo.len();
-    let mut part_two = 0;
+    (todo, padded)
+}
+
+pub fn part1(input: &Input) -> usize {
+    let (todo, _) = input;
+    todo.len()
+}
+
+pub fn part2(input: &Input) -> usize {
+    let (mut todo, mut padded) = input.clone();
+    let mut removed = 0;
 
     while let Some(point) = todo.pop() {
-        part_two += 1;
+        removed += 1;
 
         for next in DIAGONAL.map(|d| point + d) {
             if padded[next] == 4 {
@@ -43,13 +52,5 @@ pub fn parse(input: &str) -> Input {
         }
     }
 
-    (part_one, part_two)
-}
-
-pub fn part1(input: &Input) -> usize {
-    input.0
-}
-
-pub fn part2(input: &Input) -> usize {
-    input.1
+    removed
 }
