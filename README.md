@@ -82,6 +82,7 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 | 3 | [Lobby](https://adventofcode.com/2025/day/3) | [Source](src/year2025/day03.rs) | 21 |
 | 4 | [Printing Department](https://adventofcode.com/2025/day/4) | [Source](src/year2025/day04.rs) | 177 |
 | 5 | [Cafeteria](https://adventofcode.com/2025/day/5) | [Source](src/year2025/day05.rs) | 20 |
+| 6 | [Trash Compactor](https://adventofcode.com/2025/day/6) | [Source](src/year2025/day06.rs) | 20 |
 
 ## 2024
 
