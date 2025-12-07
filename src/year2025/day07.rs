@@ -4,37 +4,26 @@ type Input = (u64, u64);
 pub fn parse(input: &str) -> Input {
     let lines: Vec<_> = input.lines().map(str::as_bytes).collect();
     let width = lines[0].len();
-    let start = lines[0].iter().position(|&b| b == b'S').unwrap();
+    let center = width / 2;
 
     let mut splits = 0;
-    let mut current = vec![0; width];
-    let mut next = vec![0; width];
+    let mut timelines = vec![0; width];
+    timelines[center] = 1;
 
-    current[start] = 1;
+    for (y, row) in lines.iter().skip(2).step_by(2).enumerate() {
+        for x in ((center - y)..(center + y + 1)).step_by(2) {
+            let count = timelines[x];
 
-    for row in lines {
-        for (i, &count) in current.iter().enumerate() {
-            if count > 0 {
-                if row[i] == b'^' {
-                    splits += 1;
-
-                    if i > 0 {
-                        next[i - 1] += count;
-                    }
-                    if i < width - 1 {
-                        next[i + 1] += count;
-                    }
-                } else {
-                    next[i] += count;
-                }
+            if count > 0 && row[x] == b'^' {
+                splits += 1;
+                timelines[x] = 0;
+                timelines[x - 1] += count;
+                timelines[x + 1] += count;
             }
         }
-
-        (current, next) = (next, current);
-        next.fill(0);
     }
 
-    (splits, current.iter().sum())
+    (splits, timelines.iter().sum())
 }
 
 pub fn part1(input: &Input) -> u64 {
