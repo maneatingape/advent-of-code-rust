@@ -1,13 +1,5 @@
-use crate::util::grid::*;
 use crate::util::hash::*;
-use crate::util::iter::*;
 use crate::util::parse::*;
-use crate::util::point::*;
-use std::collections::VecDeque;
-
-const OUTSIDE: i64 = 0;
-const INSIDE: i64 = 1;
-const UNKNOWN: i64 = 2;
 
 type Tile = [u64; 2];
 
@@ -20,9 +12,7 @@ pub fn part1(tiles: &[Tile]) -> u64 {
 
     for (i, &[x1, y1]) in tiles.iter().enumerate() {
         for &[x2, y2] in tiles.iter().skip(i + 1) {
-            let dx = x1.abs_diff(x2) + 1;
-            let dy = y1.abs_diff(y2) + 1;
-            area = area.max(dx * dy);
+            area = area.max(rect_area(x1, y1, x2, y2));
         }
     }
 
@@ -31,74 +21,59 @@ pub fn part1(tiles: &[Tile]) -> u64 {
 
 pub fn part2(tiles: &[Tile]) -> u64 {
     let size = tiles.len();
-    let shrink_x = shrink(tiles, 0);
-    let shrink_y = shrink(tiles, 1);
-    let shrunk: Vec<_> = tiles.iter().map(|&[x, y]| (shrink_x[&x], shrink_y[&y])).collect();
 
+    // Find top K longest edges and collect candidate vertices
+    let mut edge_lengths: Vec<(u64, usize)> = (0..size)
+        .map(|i| {
+            let j = (i + 1) % size;
+            let dx = tiles[i][0].abs_diff(tiles[j][0]);
+            let dy = tiles[i][1].abs_diff(tiles[j][1]);
+            (dx.max(dy), i)
+        })
+        .collect();
+    edge_lengths.sort_unstable_by(|a, b| b.0.cmp(&a.0));
+
+    let mut candidates: Vec<usize> = Vec::with_capacity(8);
+    for &(_, i) in edge_lengths.iter().take(4) {
+        candidates.push(i);
+        candidates.push((i + 1) % size);
+    }
+    candidates.sort_unstable();
+    candidates.dedup();
+
+    // Build edge AABBs for collision detection
+    let edges: Vec<_> = (0..size)
+        .map(|i| {
+            let j = (i + 1) % size;
+            let [x1, y1] = tiles[i];
+            let [x2, y2] = tiles[j];
+            (x1.min(x2), x1.max(x2), y1.min(y2), y1.max(y2))
+        })
+        .collect();
+
+    // Check candidates paired with all vertices
     let mut area = 0;
-    let mut todo = VecDeque::from([ORIGIN]);
-    let mut grid = Grid::new(shrink_x.len() as i32, shrink_y.len() as i32, UNKNOWN);
 
-    for i in 0..size {
-        let (x1, y1, x2, y2) = minmax(shrunk[i], shrunk[(i + 1) % size]);
+    for &c in &candidates {
+        let [cx, cy] = tiles[c];
 
-        for x in x1..x2 + 1 {
-            for y in y1..y2 + 1 {
-                grid[Point::new(x, y)] = INSIDE;
+        for (i, &[x, y]) in tiles.iter().enumerate() {
+            if i == c {
+                continue;
             }
-        }
-    }
 
-    while let Some(point) = todo.pop_front() {
-        for next in ORTHOGONAL.map(|o| point + o) {
-            if grid.contains(next) && grid[next] == UNKNOWN {
-                grid[next] = OUTSIDE;
-                todo.push_back(next);
-            }
-        }
-    }
+            let (min_x, max_x) = if cx < x { (cx, x) } else { (x, cx) };
+            let (min_y, max_y) = if cy < y { (cy, y) } else { (y, cy) };
 
-    for y in 1..grid.height {
-        for x in 1..grid.width {
-            let point = Point::new(x, y);
-            let value = i64::from(grid[point] != OUTSIDE);
-            grid[point] = value + grid[point + UP] + grid[point + LEFT] - grid[point + UP + LEFT];
-        }
-    }
+            let valid = !edges.iter().any(|&(ex1, ex2, ey1, ey2)| {
+                min_x < ex2 && max_x > ex1 && min_y < ey2 && max_y > ey1
+            });
 
-    for i in 0..size {
-        for j in i + 1..size {
-            let (x1, y1, x2, y2) = minmax(shrunk[i], shrunk[j]);
-
-            let expected = (x2 - x1 + 1) as i64 * (y2 - y1 + 1) as i64;
-            let actual = grid[Point::new(x2, y2)]
-                - grid[Point::new(x1 - 1, y2)]
-                - grid[Point::new(x2, y1 - 1)]
-                + grid[Point::new(x1 - 1, y1 - 1)];
-
-            if expected == actual {
-                let [x1, y1] = tiles[i];
-                let [x2, y2] = tiles[j];
-                let dx = x1.abs_diff(x2) + 1;
-                let dy = y1.abs_diff(y2) + 1;
-                area = area.max(dx * dy);
+            if valid {
+                area = area.max(rect_area(cx, cy, x, y));
             }
         }
     }
 
     area
-}
-
-fn shrink(tiles: &[Tile], index: usize) -> FastMap<u64, i32> {
-    let mut axis: Vec<_> = tiles.iter().map(|tile| tile[index]).collect();
-    axis.push(u64::MIN);
-    axis.push(u64::MAX);
-    axis.sort_unstable();
-    axis.dedup();
-    axis.iter().enumerate().map(|(i, &n)| (n, i as i32)).collect()
-}
-
-#[inline]
-fn minmax((x1, y1): (i32, i32), (x2, y2): (i32, i32)) -> (i32, i32, i32, i32) {
-    (x1.min(x2), y1.min(y2), x1.max(x2), y1.max(y2))
 }
