@@ -1,4 +1,3 @@
-use crate::util::hash::*;
 use crate::util::parse::*;
 
 type Tile = [u64; 2];
@@ -18,6 +17,10 @@ pub fn part1(tiles: &[Tile]) -> u64 {
 
     area
 }
+  #[inline]
+  fn rect_area(x1: u64, y1: u64, x2: u64, y2: u64) -> u64 {
+      (x1.abs_diff(x2) + 1) * (y1.abs_diff(y2) + 1)
+  }
 
 pub fn part2(tiles: &[Tile]) -> u64 {
     let size = tiles.len();
