@@ -28,11 +28,7 @@ pub fn part1(tiles: &[Tile]) -> u64 {
 }
 
 pub fn part2(tiles: &[Tile]) -> u64 {
-    if tiles.len() == 496 {
-        part2_fast(tiles)
-    } else {
-        part2_safe(tiles)
-    }
+    if tiles.len() == 496 { part2_fast(tiles) } else { part2_safe(tiles) }
 }
 
 fn part2_fast(tiles: &[Tile]) -> u64 {
