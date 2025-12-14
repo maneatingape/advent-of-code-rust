@@ -1,7 +1,7 @@
 # Advent of Code [![checks-badge]][checks-link] [![docs-badge]][docs-link]
 
-*2025 in progress!* Blazing fast Rust solutions for every [Advent of Code] puzzle from 2015 to 2024, taking
-**470 milliseconds** to solve all 500 stars. Each solution is carefully optimized for performance
+Blazing fast Rust solutions for every [Advent of Code] puzzle from 2015 to 2025, taking
+**472 milliseconds** to solve all 524 stars. Each solution is carefully optimized for performance
 while ensuring the code remains concise, readable, and idiomatic.
 
 ## Features
@@ -61,19 +61,21 @@ Improvements to solutions are always appreciated. Please see the
 Benchmarks are measured using the built-in `cargo bench` tool run on an [Apple M2 Max][apple-link].
 Interestingly 86% of the total time is spent on just 9 solutions.
 Performance is reasonable even on older hardware, for example a 2011 MacBook Pro with an
-[Intel i7-2720QM][intel-link] processor takes 3.5 seconds to run the same 250 solutions.
+[Intel i7-2720QM][intel-link] processor takes 3.5 seconds to run the same 262 solutions.
 
 ![pie-all]
 
 | Year | [2025](#2025) |
 | --- | --- |
-| Benchmark (ms) | WIP |
+| Benchmark (ms) | 2 |
 
 | Year | [2015](#2015) | [2016](#2016) | [2017](#2017) | [2018](#2018) | [2019](#2019) | [2020](#2020) | [2021](#2021) | [2022](#2022) | [2023](#2023) | [2024](#2024) |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | Benchmark (ms) | 14 | 109 | 57 | 35 | 13 | 220 | 8 | 5 | 5 | 4 |
 
 ## 2025
+
+![pie-2025]
 
 | Day | Problem | Solution | Benchmark (μs) |
 | --- | --- | --- | --: |
@@ -418,6 +420,7 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 [apple-link]: https://en.wikipedia.org/wiki/Apple_M2
 [intel-link]: https://ark.intel.com/content/www/us/en/ark/products/50067/intel-core-i72720qm-processor-6m-cache-up-to-3-30-ghz.html
 [pie-all]: docs/pie-all.svg
+[pie-2025]: docs/pie-2025.svg
 [pie-2024]: docs/pie-2024.svg
 [pie-2023]: docs/pie-2023.svg
 [pie-2022]: docs/pie-2022.svg
