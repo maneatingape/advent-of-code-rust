@@ -1,7 +1,43 @@
+//! # Movie Theater
 use crate::util::iter::*;
 use crate::util::parse::*;
 
 type Tile = [u64; 2];
+
+struct Candidate {
+    x: u64,
+    y: u64,
+    interval: Interval,
+}
+
+/// The set { x in u64 | l <= x <= r }.
+#[derive(Clone, Copy)]
+struct Interval {
+    l: u64,
+    r: u64,
+}
+
+impl Interval {
+    fn new(l: u64, r: u64) -> Self {
+        debug_assert!(l <= r);
+
+        Interval { l, r }
+    }
+
+    fn intersects(self, other: Self) -> bool {
+        other.l <= self.r && self.l <= other.r
+    }
+
+    fn intersection(self, other: Self) -> Self {
+        debug_assert!(self.intersects(other));
+
+        Interval::new(self.l.max(other.l), self.r.min(other.r))
+    }
+
+    fn contains(self, x: u64) -> bool {
+        self.l <= x && x <= self.r
+    }
+}
 
 pub fn parse(input: &str) -> Vec<Tile> {
     input.iter_unsigned::<u64>().chunk::<2>().collect()
@@ -33,12 +69,6 @@ pub fn part2(tiles: &[Tile]) -> u64 {
 
     // Each red tile (`x`, `y`) becomes a candidate for being a top corner of the largest area, and during the
     // scan the `interval` containing the maximum possible width is updated:
-    struct Candidate {
-        x: u64,
-        y: u64,
-        interval: Interval,
-    }
-
     let mut candidates: Vec<Candidate> = Vec::with_capacity(512);
 
     // Maintain an ordered list of descending edges, i.e. [begin_interval_0, end_interval_0, begin_interval_1, end_interval_1, ...]:
@@ -74,7 +104,7 @@ pub fn part2(tiles: &[Tile]) -> u64 {
         );
 
         // Check the rectangles this red tile could be a bottom tile for, with the current candidates:
-        for candidate in candidates.iter() {
+        for candidate in &candidates {
             for x in [x0, x1] {
                 if candidate.interval.contains(x) {
                     largest_area = largest_area
@@ -107,35 +137,6 @@ pub fn part2(tiles: &[Tile]) -> u64 {
     }
 
     largest_area
-}
-
-/// The set { x in u64 | l <= x <= r }.
-#[derive(Clone, Copy)]
-struct Interval {
-    l: u64,
-    r: u64,
-}
-
-impl Interval {
-    fn new(l: u64, r: u64) -> Self {
-        debug_assert!(l <= r);
-
-        Interval { l, r }
-    }
-
-    fn intersects(self, other: Self) -> bool {
-        other.l <= self.r && self.l <= other.r
-    }
-
-    fn intersection(self, other: Self) -> Self {
-        debug_assert!(self.intersects(other));
-
-        Interval::new(self.l.max(other.l), self.r.min(other.r))
-    }
-
-    fn contains(self, x: u64) -> bool {
-        self.l <= x && x <= self.r
-    }
 }
 
 // Adds `value` if it isn't in `ordered_list`, removes it if it is, maintaining the order.
