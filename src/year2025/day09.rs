@@ -44,17 +44,92 @@ pub fn parse(input: &str) -> Vec<Tile> {
 }
 
 pub fn part1(tiles: &[Tile]) -> u64 {
-    let mut area = 0;
+    let mut tiles = tiles.to_vec();
 
-    for (i, &[x1, y1]) in tiles.iter().enumerate() {
-        for &[x2, y2] in tiles.iter().skip(i + 1) {
-            let dx = x1.abs_diff(x2) + 1;
-            let dy = y1.abs_diff(y2) + 1;
-            area = area.max(dx * dy);
+    tiles.sort_by_key(|&[x, y]| (x, y));
+
+    let (top_left_tiles, bottom_left_tiles) =
+        get_potential_left_corner_tiles(tiles.iter().copied());
+
+    let (top_right_tiles, bottom_right_tiles) =
+        get_potential_left_corner_tiles(tiles.iter().copied().rev());
+
+    find_largest_from_all_corners(&top_left_tiles, &bottom_right_tiles)
+        .max(find_largest_from_all_corners(&bottom_left_tiles, &top_right_tiles))
+}
+
+/// This function filters `sorted_tiles` into two lists, one containing all tiles that could be the top left
+/// corner of the largest rectangle (assuming the largest rectangle has a top left corner), and the second 
+/// containing all tiles that could be the bottom left corner.
+///
+/// It assumes `sorted_tiles` is sorted in ascending "x" values, or, to get the top right and bottom right corners,
+/// that `sorted_tiles` is sorted in descending "x" order.
+///
+/// It works (for the top left corners, for illustration) by only returning tiles (from the set of all tiles, "T") within
+/// the region:
+///
+///   R = { (x, y) ∈ ℝ² : ∀ (tx, ty) ∈ T, tx ≤ x ⇒ ty ≥ y }
+///
+/// Tiles outside of this region can not possibly be a corner of the largest rectangle. Assume, for proof by contradiction,
+/// that the top left corner of the largest rectangle is in the complement of the set "R":
+///
+///   R' = { (x, y) ∈ ℝ² : ¬ (∀ (tx, ty) ∈ T, tx ≤ x ⇒ ty ≥ y) }
+///      = { (x, y) ∈ ℝ² : ∃ (tx, ty) ∈ T, tx ≤ x ∧ ty < y }
+///
+/// That is, for the corner (x, y), there exists another tile (tx, ty) that is to the left and above the corner tile, which
+/// means the tile isn't the corner of the largest possible rectangle, completing the proof by contradiction.
+///
+/// The `top_tiles` and `bottom_tiles` are the corner points of this region `R`, built up by scanning through tiles
+/// in either left to right or right to left order.
+fn get_potential_left_corner_tiles(
+    sorted_tiles: impl Iterator<Item = [u64; 2]>,
+) -> (Vec<[u64; 2]>, Vec<[u64; 2]>) {
+    let mut top_tiles = Vec::new();
+    let mut top_tiles_last_y = u64::MAX;
+
+    let mut bottom_tiles = Vec::new();
+    let mut bottom_tiles_last_y = u64::MIN;
+
+    let mut it = sorted_tiles.peekable();
+
+    while let Some(first_in_column) = it.next() {
+        let mut last_in_column = first_in_column;
+
+        while let Some(p) = it.next_if(|p| p[0] == first_in_column[0]) {
+            last_in_column = p;
+        }
+
+        let (x, top_y, bottom_y) = (
+            first_in_column[0],
+            first_in_column[1].min(last_in_column[1]),
+            first_in_column[1].max(last_in_column[1]),
+        );
+
+        if top_y < top_tiles_last_y {
+            top_tiles.push([x, top_y]);
+            top_tiles_last_y = top_y;
+        }
+
+        if bottom_y > bottom_tiles_last_y {
+            bottom_tiles.push([x, bottom_y]);
+            bottom_tiles_last_y = bottom_y;
         }
     }
 
-    area
+    (top_tiles, bottom_tiles)
+}
+
+#[inline]
+fn find_largest_from_all_corners(corner: &[[u64; 2]], opposite_corner: &[[u64; 2]]) -> u64 {
+    let mut largest = 0_u64;
+
+    for &p in corner {
+        for &q in opposite_corner {
+            largest = largest.max((p[0].abs_diff(q[0]) + 1) * (p[1].abs_diff(q[1]) + 1));
+        }
+    }
+
+    largest
 }
 
 pub fn part2(tiles: &[Tile]) -> u64 {
