@@ -69,7 +69,7 @@ fn worker(shared: &Shared) {
         let mut state = shared.mutex.lock().unwrap();
 
         // Update min and max paths.
-        if state.min.is_empty() || local.min.len() < state.min.len() {
+        if !local.min.is_empty() && (state.min.is_empty() || local.min.len() < state.min.len()) {
             state.min.clone_from(&local.min);
         }
         state.max = state.max.max(local.max);
