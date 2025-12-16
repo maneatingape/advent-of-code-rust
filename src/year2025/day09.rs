@@ -59,7 +59,7 @@ pub fn part1(tiles: &[Tile]) -> u64 {
 }
 
 /// This function filters `sorted_tiles` into two lists, one containing all tiles that could be the top left
-/// corner of the largest rectangle (assuming the largest rectangle has a top left corner), and the second 
+/// corner of the largest rectangle (assuming the largest rectangle has a top left corner), and the second
 /// containing all tiles that could be the bottom left corner.
 ///
 /// It assumes `sorted_tiles` is sorted in ascending "x" values, or, to get the top right and bottom right corners,
@@ -134,10 +134,7 @@ fn find_largest_from_all_corners(corner: &[[u64; 2]], opposite_corner: &[[u64; 2
 
 pub fn part2(tiles: &[Tile]) -> u64 {
     let mut tiles = tiles.to_vec();
-
     tiles.sort_unstable_by_key(|&[x, y]| (y, x));
-
-    let tiles = tiles;
 
     // Track the largest area so far during scanning:
     let mut largest_area: u64 = 0;
@@ -216,16 +213,13 @@ pub fn part2(tiles: &[Tile]) -> u64 {
 
 // Adds `value` if it isn't in `ordered_list`, removes it if it is, maintaining the order.
 fn toggle_value_membership_in_ordered_list(ordered_list: &mut Vec<u64>, value: u64) {
-    let mut i = 0;
-
-    while i < ordered_list.len() && ordered_list[i] < value {
-        i += 1;
-    }
-
-    if i == ordered_list.len() || ordered_list[i] != value {
-        ordered_list.insert(i, value);
-    } else {
-        ordered_list.remove(i);
+    match ordered_list.binary_search(&value) {
+        Ok(i) => {
+            ordered_list.remove(i);
+        }
+        Err(i) => {
+            ordered_list.insert(i, value);
+        }
     }
 }
 

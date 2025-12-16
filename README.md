@@ -87,7 +87,7 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 | 6 | [Trash Compactor](https://adventofcode.com/2025/day/6) | [Source](src/year2025/day06.rs) | 20 |
 | 7 | [Laboratories](https://adventofcode.com/2025/day/7) | [Source](src/year2025/day07.rs) | 5 |
 | 8 | [Playground](https://adventofcode.com/2025/day/8) | [Source](src/year2025/day08.rs) | 527 |
-| 9 | [Movie Theater](https://adventofcode.com/2025/day/9) | [Source](src/year2025/day09.rs) | 128 |
+| 9 | [Movie Theater](https://adventofcode.com/2025/day/9) | [Source](src/year2025/day09.rs) | 49 |
 | 10 | [Factory](https://adventofcode.com/2025/day/10) | [Source](src/year2025/day10.rs) | 296 |
 | 11 | [Reactor](https://adventofcode.com/2025/day/11) | [Source](src/year2025/day11.rs) | 75 |
 | 12 | [Christmas Tree Farm](https://adventofcode.com/2025/day/12) | [Source](src/year2025/day12.rs) | 25 |
