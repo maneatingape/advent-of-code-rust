@@ -2,23 +2,23 @@
 use crate::util::iter::*;
 use crate::util::parse::*;
 
-type Tile = [u64; 2];
+type Tile = [u32; 2];
 
 struct Candidate {
-    x: u64,
-    y: u64,
+    x: u32,
+    y: u32,
     interval: Interval,
 }
 
-/// The set { x in u64 | l <= x <= r }.
+/// The set { x in u32 | l <= x <= r }.
 #[derive(Clone, Copy)]
 struct Interval {
-    l: u64,
-    r: u64,
+    l: u32,
+    r: u32,
 }
 
 impl Interval {
-    fn new(l: u64, r: u64) -> Self {
+    fn new(l: u32, r: u32) -> Self {
         debug_assert!(l <= r);
 
         Interval { l, r }
@@ -34,24 +34,20 @@ impl Interval {
         Interval::new(self.l.max(other.l), self.r.min(other.r))
     }
 
-    fn contains(self, x: u64) -> bool {
+    fn contains(self, x: u32) -> bool {
         self.l <= x && x <= self.r
     }
 }
 
 pub fn parse(input: &str) -> Vec<Tile> {
-    input.iter_unsigned::<u64>().chunk::<2>().collect()
+    let mut tiles: Vec<_> = input.iter_unsigned::<u32>().chunk::<2>().collect();
+    tiles.sort_unstable_by_key(|&[x, y]| (y, x));
+    tiles
 }
 
 pub fn part1(tiles: &[Tile]) -> u64 {
-    let mut tiles = tiles.to_vec();
-
-    tiles.sort_by_key(|&[x, y]| (x, y));
-
-    let (top_left_tiles, bottom_left_tiles) =
-        get_potential_left_corner_tiles(tiles.iter().copied());
-
-    let (top_right_tiles, bottom_right_tiles) =
+    let (top_left_tiles, top_right_tiles) = get_potential_left_corner_tiles(tiles.iter().copied());
+    let (bottom_left_tiles, bottom_right_tiles) =
         get_potential_left_corner_tiles(tiles.iter().copied().rev());
 
     find_largest_from_all_corners(&top_left_tiles, &bottom_right_tiles)
@@ -60,10 +56,10 @@ pub fn part1(tiles: &[Tile]) -> u64 {
 
 /// This function filters `sorted_tiles` into two lists, one containing all tiles that could be the top left
 /// corner of the largest rectangle (assuming the largest rectangle has a top left corner), and the second
-/// containing all tiles that could be the bottom left corner.
+/// containing all tiles that could be the top right corner.
 ///
-/// It assumes `sorted_tiles` is sorted in ascending "x" values, or, to get the top right and bottom right corners,
-/// that `sorted_tiles` is sorted in descending "x" order.
+/// It assumes `sorted_tiles` is sorted in ascending "y" values, or, to get the top right and bottom right corners,
+/// that `sorted_tiles` is sorted in descending "y" order.
 ///
 /// It works (for the top left corners, for illustration) by only returning tiles (from the set of all tiles, "T") within
 /// the region:
@@ -82,50 +78,51 @@ pub fn part1(tiles: &[Tile]) -> u64 {
 /// The `top_tiles` and `bottom_tiles` are the corner points of this region `R`, built up by scanning through tiles
 /// in either left to right or right to left order.
 fn get_potential_left_corner_tiles(
-    sorted_tiles: impl Iterator<Item = [u64; 2]>,
-) -> (Vec<[u64; 2]>, Vec<[u64; 2]>) {
-    let mut top_tiles = Vec::new();
-    let mut top_tiles_last_y = u64::MAX;
+    sorted_tiles: impl Iterator<Item = [u32; 2]>,
+) -> (Vec<[u32; 2]>, Vec<[u32; 2]>) {
+    let mut left_tiles = Vec::new();
+    let mut left_tiles_last_x = u32::MAX;
 
-    let mut bottom_tiles = Vec::new();
-    let mut bottom_tiles_last_y = u64::MIN;
+    let mut right_tiles = Vec::new();
+    let mut right_tiles_last_x = u32::MIN;
 
     let mut it = sorted_tiles.peekable();
 
-    while let Some(first_in_column) = it.next() {
-        let mut last_in_column = first_in_column;
+    while let Some(first_in_row) = it.next() {
+        let mut last_in_row = first_in_row;
 
-        while let Some(p) = it.next_if(|p| p[0] == first_in_column[0]) {
-            last_in_column = p;
+        while let Some(p) = it.next_if(|p| p[1] == first_in_row[1]) {
+            last_in_row = p;
         }
 
-        let (x, top_y, bottom_y) = (
-            first_in_column[0],
-            first_in_column[1].min(last_in_column[1]),
-            first_in_column[1].max(last_in_column[1]),
+        let (y, left_x, right_x) = (
+            first_in_row[1],
+            first_in_row[0].min(last_in_row[0]),
+            first_in_row[0].max(last_in_row[0]),
         );
 
-        if top_y < top_tiles_last_y {
-            top_tiles.push([x, top_y]);
-            top_tiles_last_y = top_y;
+        if left_x < left_tiles_last_x {
+            left_tiles.push([left_x, y]);
+            left_tiles_last_x = left_x;
         }
 
-        if bottom_y > bottom_tiles_last_y {
-            bottom_tiles.push([x, bottom_y]);
-            bottom_tiles_last_y = bottom_y;
+        if right_x > right_tiles_last_x {
+            right_tiles.push([right_x, y]);
+            right_tiles_last_x = right_x;
         }
     }
 
-    (top_tiles, bottom_tiles)
+    (left_tiles, right_tiles)
 }
 
 #[inline]
-fn find_largest_from_all_corners(corner: &[[u64; 2]], opposite_corner: &[[u64; 2]]) -> u64 {
+fn find_largest_from_all_corners(corner: &[[u32; 2]], opposite_corner: &[[u32; 2]]) -> u64 {
     let mut largest = 0_u64;
 
     for &p in corner {
         for &q in opposite_corner {
-            largest = largest.max((p[0].abs_diff(q[0]) + 1) * (p[1].abs_diff(q[1]) + 1));
+            largest =
+                largest.max((p[0].abs_diff(q[0]) + 1) as u64 * (p[1].abs_diff(q[1]) + 1) as u64);
         }
     }
 
@@ -133,9 +130,6 @@ fn find_largest_from_all_corners(corner: &[[u64; 2]], opposite_corner: &[[u64; 2
 }
 
 pub fn part2(tiles: &[Tile]) -> u64 {
-    let mut tiles = tiles.to_vec();
-    tiles.sort_unstable_by_key(|&[x, y]| (y, x));
-
     // Track the largest area so far during scanning:
     let mut largest_area: u64 = 0;
 
@@ -144,13 +138,13 @@ pub fn part2(tiles: &[Tile]) -> u64 {
     let mut candidates: Vec<Candidate> = Vec::with_capacity(512);
 
     // Maintain an ordered list of descending edges, i.e. [begin_interval_0, end_interval_0, begin_interval_1, end_interval_1, ...]:
-    let mut descending_edges: Vec<u64> = vec![];
+    let mut descending_edges: Vec<u32> = vec![];
     let mut intervals_from_descending_edges = vec![];
 
     // Invariants on the input data (defined by the puzzle) result in points arriving in pairs on the same y line:
-    let mut it = tiles.into_iter();
+    let mut it = tiles.iter();
 
-    while let (Some([x0, y]), Some([x1, y1])) = (it.next(), it.next()) {
+    while let (Some(&[x0, y]), Some(&[x1, y1])) = (it.next(), it.next()) {
         debug_assert_eq!(y, y1);
 
         // Update the descending edges; since we are scanning from top to bottom, and within each line left to right,
@@ -179,8 +173,9 @@ pub fn part2(tiles: &[Tile]) -> u64 {
         for candidate in &candidates {
             for x in [x0, x1] {
                 if candidate.interval.contains(x) {
-                    largest_area = largest_area
-                        .max((candidate.x.abs_diff(x) + 1) * (candidate.y.abs_diff(y) + 1));
+                    largest_area = largest_area.max(
+                        (candidate.x.abs_diff(x) + 1) as u64 * (candidate.y.abs_diff(y) + 1) as u64,
+                    );
                 }
             }
         }
@@ -212,7 +207,7 @@ pub fn part2(tiles: &[Tile]) -> u64 {
 }
 
 // Adds `value` if it isn't in `ordered_list`, removes it if it is, maintaining the order.
-fn toggle_value_membership_in_ordered_list(ordered_list: &mut Vec<u64>, value: u64) {
+fn toggle_value_membership_in_ordered_list(ordered_list: &mut Vec<u32>, value: u32) {
     match ordered_list.binary_search(&value) {
         Ok(i) => {
             ordered_list.remove(i);
@@ -226,7 +221,7 @@ fn toggle_value_membership_in_ordered_list(ordered_list: &mut Vec<u64>, value: u
 // Changes the list of descending edges, [begin_interval_0, end_interval_0, begin_interval_1, end_interval_1, ...],
 // into a vector containing the intervals.
 #[inline]
-fn update_intervals_from_descending_edges(descending_edges: &[u64], to_update: &mut Vec<Interval>) {
+fn update_intervals_from_descending_edges(descending_edges: &[u32], to_update: &mut Vec<Interval>) {
     debug_assert!(descending_edges.len().is_multiple_of(2));
 
     to_update.clear();
