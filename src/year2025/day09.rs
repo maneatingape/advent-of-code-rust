@@ -60,10 +60,10 @@ pub fn part1(tiles: &[Tile]) -> u64 {
 
 /// This function filters `sorted_tiles` into two lists, one containing all tiles that could be the top left
 /// corner of the largest rectangle (assuming the largest rectangle has a top left corner), and the second
-/// containing all tiles that could be the bottom left corner.
+/// containing all tiles that could be the top right corner.
 ///
-/// It assumes `sorted_tiles` is sorted in ascending "x" values, or, to get the top right and bottom right corners,
-/// that `sorted_tiles` is sorted in descending "x" order.
+/// It assumes `sorted_tiles` is sorted in ascending "y" values, or, to get the top right and bottom right corners,
+/// that `sorted_tiles` is sorted in descending "y" order.
 ///
 /// It works (for the top left corners, for illustration) by only returning tiles (from the set of all tiles, "T") within
 /// the region:
