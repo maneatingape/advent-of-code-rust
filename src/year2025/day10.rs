@@ -4,7 +4,10 @@ use crate::util::math::*;
 use crate::util::parse::*;
 use std::array::from_fn;
 
-const SIZE: usize = 16;
+const MAX_BUTTONS: usize = 14;
+const MAX_JOLTAGES: usize = 11;
+
+type Column = [i32; MAX_JOLTAGES];
 
 pub struct Machine {
     lights: u32,
@@ -16,8 +19,7 @@ struct Subspace {
     rank: usize,
     nullity: usize,
     lcm: i32,
-    particular_solution: i32,
-    rhs: [i32; SIZE],
+    rhs: Column,
     basis: Vec<Basis>,
 }
 
@@ -25,7 +27,7 @@ struct Subspace {
 struct Basis {
     limit: i32,
     cost: i32,
-    vs: [i32; SIZE],
+    vs: Column,
 }
 
 pub fn parse(input: &str) -> Vec<Machine> {
@@ -59,7 +61,7 @@ fn parse_machine(line: &str) -> Machine {
     Machine { lights, buttons, joltages }
 }
 
-/// Check all patterns with one set bit, then patterns with two sets bits and so on,
+/// Check all patterns with one set bit, then patterns with two set bits, and so on,
 /// returning early as soon as we find a match without checking all possible combinations.
 fn configure_lights(machine: &Machine, todo: &mut Vec<(usize, u32, u32)>) -> u32 {
     todo.clear();
@@ -80,29 +82,30 @@ fn configure_lights(machine: &Machine, todo: &mut Vec<(usize, u32, u32)>) -> u32
     unreachable!()
 }
 
-/// Convert the buttons and joltages to simultaenous equations,
+/// Convert the buttons and joltages to simultaneous equations,
 /// then use [Gaussian Elimination](https://en.wikipedia.org/wiki/Gaussian_elimination)
-/// to reduce (the up to 11) dimensions of the full solution space to a (between 0 and 4)
+/// to reduce (the up to 13) dimensions of the full solution space to a (between 0 and 3)
 /// dimensional subspace of only the free variables.
 fn configure_joltages(machine: &Machine) -> i32 {
-    let subspace = gaussian_elimation(machine);
-    let Subspace { nullity, particular_solution, lcm, rhs, .. } = subspace;
+    let subspace @ Subspace { rank, nullity, lcm, rhs, .. } = gaussian_elimination(machine);
+    let particular_solution = rhs[..rank].iter().sum();
 
     if nullity == 0 {
-        return particular_solution / lcm;
+        particular_solution / lcm
+    } else {
+        let remaining = (1 << subspace.basis.len()) - 1;
+        recurse(&subspace, rhs, remaining, particular_solution).unwrap()
     }
-
-    let remaining = (1 << subspace.basis.len()) - 1;
-    recurse(&subspace, remaining, rhs, particular_solution).unwrap()
 }
 
-fn gaussian_elimation(machine: &Machine) -> Subspace {
+fn gaussian_elimination(machine: &Machine) -> Subspace {
     let Machine { buttons, joltages, .. } = machine;
     let width = buttons.len();
     let height = joltages.len();
-    assert!(width < 15 && height < 15, "Expect at most 15 buttons and 15 joltages");
 
-    let mut equations = [[0; SIZE]; SIZE];
+    assert!(width < MAX_BUTTONS);
+    assert!(height < MAX_BUTTONS);
+    let mut equations = [[0; MAX_BUTTONS]; MAX_JOLTAGES];
 
     for row in 0..height {
         equations[row][width] = joltages[row];
@@ -164,7 +167,6 @@ fn gaussian_elimation(machine: &Machine) -> Subspace {
 
     let nullity = width - rank;
     let rhs = from_fn(|row| equations[row][width]);
-    let particular_solution = rhs[..rank].iter().sum();
     let basis: Vec<_> = (0..nullity)
         .map(|col| {
             let limit = equations[height][col + rank];
@@ -174,15 +176,10 @@ fn gaussian_elimation(machine: &Machine) -> Subspace {
         })
         .collect();
 
-    Subspace { rank, nullity, lcm, particular_solution, rhs, basis }
+    Subspace { rank, nullity, lcm, rhs, basis }
 }
 
-fn recurse(
-    subspace: &Subspace,
-    remaining: usize,
-    mut rhs: [i32; SIZE],
-    presses: i32,
-) -> Option<i32> {
+fn recurse(subspace: &Subspace, mut rhs: Column, remaining: u32, presses: i32) -> Option<i32> {
     let rank = subspace.rank;
     let mut temp = rhs;
 
@@ -236,13 +233,12 @@ fn recurse(
     let lcm = subspace.lcm;
 
     if remaining != 0 {
-        rhs[..rank].iter_mut().zip(vs).for_each(|(rhs, v)| *rhs -= lower * v);
+        rhs[..rank].iter_mut().zip(vs).for_each(|(rhs, v)| *rhs -= (lower - 1) * v);
 
         (lower..upper + 1)
             .filter_map(|n| {
-                let result = recurse(subspace, remaining, rhs, presses + n * cost);
                 rhs[..rank].iter_mut().zip(vs).for_each(|(rhs, v)| *rhs -= v);
-                result
+                recurse(subspace, rhs, remaining, presses + n * cost)
             })
             .min()
     } else if cost >= 0 {

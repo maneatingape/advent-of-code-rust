@@ -1,4 +1,15 @@
 //! # Cafeteria
+//!
+//! We speed things up by first merging ranges. This is possible in `O(n log n)` instead of `O(n²)`
+//! complexity by first sorting the ranges in ascending order of their start.
+//!
+//! Interestingly, part one is harder than part two. We could check every ID against every range,
+//! however this is slow. It's much faster instead to first sort IDs in ascending order,
+//! then for each range use a [binary search](https://en.wikipedia.org/wiki/Binary_search) to count
+//! the number of IDs that it contains. Rust even provides a handy built-in
+//! [`binary_search`] method on slices.
+//!
+//! [`binary_search`]: https://doc.rust-lang.org/std/primitive.slice.html#method.binary_search
 use crate::util::iter::*;
 use crate::util::parse::*;
 use std::ops::Range;
@@ -15,6 +26,7 @@ pub fn parse(input: &str) -> Input {
     ranges.sort_unstable();
     ids.sort_unstable();
 
+    // Merge ranges together.
     for [from, to] in ranges {
         if from < range.end {
             range.end = range.end.max(to + 1);

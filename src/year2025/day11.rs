@@ -1,6 +1,17 @@
 //! # Reactor
+//!
+//! The devices form a [directed acyclic graph](https://en.wikipedia.org/wiki/Directed_acyclic_graph)
+//! since any cycle would imply infinite possible paths.
+//! A recursive [depth-first search](https://en.wikipedia.org/wiki/Depth-first_search) will
+//! enumerate every possible path between two nodes. The number of paths from each node to the
+//! destination is cached since we only need the *total count* of paths and not the actual
+//! distinct different paths.
+//!
+//! As a performance optimization, each 3-letter node is converted into an index so that a much
+//! faster array lookup can be used instead of a `HashMap`.
 type Input = Vec<Vec<usize>>;
 
+/// Build the graph.
 pub fn parse(input: &str) -> Input {
     let mut graph = vec![vec![]; 26 * 26 * 26];
 
@@ -17,6 +28,9 @@ pub fn part1(input: &Input) -> u64 {
     paths(input, "you", "out")
 }
 
+/// Split the route into 3 segments. The answer is the number of paths in each segment
+/// *multiplied* by each other. In the actual input, one of these paths will not be possible and will
+/// have zero total count.
 pub fn part2(input: &Input) -> u64 {
     let one = paths(input, "svr", "fft") * paths(input, "fft", "dac") * paths(input, "dac", "out");
     let two = paths(input, "svr", "dac") * paths(input, "dac", "fft") * paths(input, "fft", "out");
@@ -40,6 +54,7 @@ fn dfs(input: &Input, cache: &mut [u64], node: usize, end: usize) -> u64 {
     }
 }
 
+/// Convert 3-letter name to index.
 fn to_index(s: &str) -> usize {
     s.bytes().take(3).fold(0, |acc, b| 26 * acc + usize::from(b - b'a'))
 }

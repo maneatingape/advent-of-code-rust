@@ -66,7 +66,7 @@ pub fn part1(tiles: &[Tile]) -> u64 {
 ///
 ///   R = { (x, y) ∈ ℝ² : ∀ (tx, ty) ∈ T, tx ≤ x ⇒ ty ≥ y }
 ///
-/// Tiles outside of this region can not possibly be a corner of the largest rectangle. Assume, for proof by contradiction,
+/// Tiles outside of this region cannot possibly be a corner of the largest rectangle. Assume, for proof by contradiction,
 /// that the top left corner of the largest rectangle is in the complement of the set "R":
 ///
 ///   R' = { (x, y) ∈ ℝ² : ¬ (∀ (tx, ty) ∈ T, tx ≤ x ⇒ ty ≥ y) }
@@ -134,7 +134,7 @@ pub fn part2(tiles: &[Tile]) -> u64 {
     let mut largest_area: u64 = 0;
 
     // Each red tile (`x`, `y`) becomes a candidate for being a top corner of the largest area, and during the
-    // scan the `interval` containing the maximum possible width is updated:
+    // scan, the `interval` containing the maximum possible width is updated:
     let mut candidates: Vec<Candidate> = Vec::with_capacity(512);
 
     // Maintain an ordered list of descending edges, i.e. [begin_interval_0, end_interval_0, begin_interval_1, end_interval_1, ...]:
@@ -152,10 +152,10 @@ pub fn part2(tiles: &[Tile]) -> u64 {
         //
         // - The corner of two edges, one going right and one going down. In this case, the `descending_edges` won't contain
         //   the `x` coordinate, and we should "toggle" it on to denote that there is a new descending edge.
-        // - The corner of two edges, one going right and one going up. The `descending_edges` will contain an `x` coordinate,
+        // - The corner of two edges, one going right and one going up. The `descending_edges` will contain an `x` coordinate
         //   that should be "toggled" off.
         //
-        // Simular arguments work for when we are scanning inside the edge and we hit the corner that ends the edge; this is also
+        // Similar arguments work for when we are scanning inside the edge and we hit the corner that ends the edge; this is also
         // why corners always arrive in pairs.
         //
         // Do the update:
