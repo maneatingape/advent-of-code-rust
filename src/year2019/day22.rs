@@ -151,20 +151,16 @@ fn deck(input: &str, m: i128) -> Technique {
     input
         .lines()
         .map(|line| {
-            let tokens: Vec<_> = line.split_ascii_whitespace().collect();
-            match tokens[..] {
-                [_, "into", _, _] => Technique { a: m - 1, c: m - 1, m },
-                [_, "with", _, n] => {
-                    let n: i128 = n.signed();
-                    let a = (m + n % m) % m;
-                    Technique { a, c: 0, m }
-                }
-                ["cut", n] => {
-                    let n: i128 = n.signed();
-                    let c = (m - n % m) % m;
-                    Technique { a: 1, c, m }
-                }
-                _ => unreachable!(),
+            if line.ends_with("stack") {
+                Technique { a: m - 1, c: m - 1, m }
+            } else if line.starts_with("cut") {
+                let n: i128 = line.signed();
+                let c = (m - n % m) % m;
+                Technique { a: 1, c, m }
+            } else {
+                let n: i128 = line.signed();
+                let a = (m + n % m) % m;
+                Technique { a, c: 0, m }
             }
         })
         .reduce(|a, b| a.compose(&b))

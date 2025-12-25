@@ -244,7 +244,7 @@ fn drain_output(computer: &mut Computer) {
     while let State::Output(_) = computer.run() {}
 }
 
-// Convert a normal binary number to its Gray Code equivalent.
+/// Convert a normal binary number to its Gray Code equivalent.
 fn gray_code(n: u32) -> u32 {
     n ^ (n >> 1)
 }

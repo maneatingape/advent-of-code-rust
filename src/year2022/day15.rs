@@ -106,7 +106,7 @@ pub fn part2_testable(input: &[Input], size: i32) -> u64 {
 
     let horizontal: Vec<_> = top.intersection(&bottom).copied().collect();
     let vertical: Vec<_> = left.intersection(&right).copied().collect();
-    let range = 0..(size + 1);
+    let range = 0..=size;
 
     for &x in &vertical {
         for &y in &horizontal {

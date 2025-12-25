@@ -42,9 +42,7 @@ fn find(input: &str, marker: usize) -> usize {
         seen[index] = i + 1;
 
         // There's a duplicate so advance the start of the window one character past it.
-        if previous > start {
-            start = previous;
-        }
+        start = start.max(previous);
         // We've reached the desired packet size with no duplicates so finish.
         if i + 1 - start == marker {
             return i + 1;

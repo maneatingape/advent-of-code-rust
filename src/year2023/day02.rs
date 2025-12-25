@@ -29,8 +29,8 @@ pub fn parse(input: &str) -> Vec<Game> {
 pub fn part1(input: &[Game]) -> usize {
     input
         .iter()
-        .enumerate()
-        .filter_map(|(id, &(r, g, b))| (r <= 12 && g <= 13 && b <= 14).then_some(id + 1))
+        .zip(1..)
+        .filter_map(|(&(r, g, b), id)| (r <= 12 && g <= 13 && b <= 14).then_some(id))
         .sum()
 }
 

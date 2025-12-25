@@ -8,10 +8,9 @@ pub struct Input {
 }
 
 pub fn parse(input: &str) -> Input {
-    let chunks: Vec<_> = input.split("\n\n").collect();
-    let seeds = chunks[0].iter_unsigned().collect();
-    let stages = chunks[1..]
-        .iter()
+    let mut chunks = input.split("\n\n");
+    let seeds = chunks.next().unwrap().iter_unsigned().collect();
+    let stages = chunks
         .map(|chunk| {
             // Convert from start and length to start and end.
             chunk
@@ -31,16 +30,15 @@ pub fn part1(input: &Input) -> u64 {
 
     for stage in &input.stages {
         for seed in &mut seeds {
-            for &[dest, start, end] in stage {
-                if start <= *seed && *seed < end {
-                    *seed = *seed - start + dest;
-                    break;
-                }
+            if let Some(&[dest, start, _]) =
+                stage.iter().find(|&&[_, start, end]| start <= *seed && *seed < end)
+            {
+                *seed = *seed - start + dest;
             }
         }
     }
 
-    *seeds.iter().min().unwrap()
+    seeds.into_iter().min().unwrap()
 }
 
 /// Process ranges.

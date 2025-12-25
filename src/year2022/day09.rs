@@ -80,7 +80,7 @@ fn simulate<const N: usize>(input: &Input) -> u32 {
     distinct
 }
 
-/// Two knots are considered "apart" if the they are not diagonally adjacent, that is the absolute
+/// Two knots are considered "apart" if they are not diagonally adjacent, that is the absolute
 /// distance in either x or y axes is greater than 1.
 #[inline]
 fn apart(a: Point, b: Point) -> bool {

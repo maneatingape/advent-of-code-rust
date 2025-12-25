@@ -23,22 +23,18 @@ pub fn part1(input: &[&[u8]]) -> u32 {
         .sum()
 }
 
-pub fn part2(input: &[&[u8]]) -> usize {
+pub fn part2(input: &[&[u8]]) -> u32 {
     input
         .iter()
         .map(|line| {
-            let digit = |i: usize| -> Option<usize> {
+            let digit = |i: usize| -> Option<u32> {
                 if line[i].is_ascii_digit() {
-                    return Some(line[i].to_decimal() as usize);
+                    return Some(line[i].to_decimal() as u32);
                 }
-
-                for (value, digit) in DIGITS.iter().enumerate() {
-                    if line[i..].starts_with(digit) {
-                        return Some(value + 1);
-                    }
-                }
-
-                None
+                DIGITS
+                    .iter()
+                    .zip(1..)
+                    .find_map(|(digit, value)| line[i..].starts_with(digit).then_some(value))
             };
 
             let first = (0..line.len()).find_map(digit).unwrap();

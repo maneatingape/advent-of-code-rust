@@ -34,7 +34,7 @@ pub fn parse(input: &str) -> Vec<u32> {
     let mut containers = BTreeMap::new();
 
     for size in input.iter_unsigned() {
-        containers.entry(size).and_modify(|e| *e += 1).or_insert(1);
+        *containers.entry(size).or_insert(0) += 1;
     }
 
     // Convenience struct to group size and frequency of each container, plus the number of

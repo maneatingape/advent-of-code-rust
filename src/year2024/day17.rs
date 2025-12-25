@@ -38,16 +38,16 @@ pub fn parse(input: &str) -> Vec<u64> {
 pub fn part1(input: &[u64]) -> String {
     // We only care about the value of `a`.
     let mut computer = Computer::new(input, input[0]);
-    let mut out = Vec::new();
+    let mut out = String::new();
 
     while let Some(n) = computer.run() {
-        let digit = (n as u8 + b'0') as char;
-        out.push(digit);
-        out.push(',');
+        if !out.is_empty() {
+            out.push(',');
+        }
+        out.push((n as u8 + b'0') as char);
     }
 
-    out.pop();
-    out.iter().collect()
+    out
 }
 
 pub fn part2(input: &[u64]) -> u64 {

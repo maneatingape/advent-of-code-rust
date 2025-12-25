@@ -29,7 +29,7 @@ pub fn part1(input: &[usize]) -> usize {
 }
 
 pub fn part2(input: &[usize]) -> usize {
-    let last = input.last().unwrap();
+    let last = *input.last().unwrap();
     let mut sum = vec![0; last + 1];
     sum[0] = 1;
 
@@ -41,5 +41,5 @@ pub fn part2(input: &[usize]) -> usize {
         }
     }
 
-    *sum.last().unwrap()
+    sum[last]
 }

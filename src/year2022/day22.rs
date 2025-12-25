@@ -262,13 +262,12 @@ fn parse_grid(input: &str) -> Grid {
 
     // Convert ASCII to enums.
     for (y, row) in raw.iter().enumerate() {
-        for (x, col) in row.iter().enumerate() {
-            let tile = match col {
+        for (x, &col) in row.iter().enumerate() {
+            tiles[y * width + x] = match col {
                 b'.' => Tile::Open,
                 b'#' => Tile::Wall,
                 _ => Tile::None,
             };
-            tiles[y * width + x] = tile;
         }
     }
 

@@ -15,12 +15,16 @@
 use crate::util::integer::*;
 
 pub trait IntegerMathOps<T: Integer<T>> {
+    #[must_use]
     fn gcd(self, b: T) -> T;
+    #[must_use]
     fn lcm(self, b: T) -> T;
+    #[must_use]
     fn mod_pow(self, e: T, m: T) -> T;
 }
 
 pub trait SignedMathOps<T: Signed<T>> {
+    #[must_use]
     fn mod_inv(self, m: T) -> Option<T>;
 }
 

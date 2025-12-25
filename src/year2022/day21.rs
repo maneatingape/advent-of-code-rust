@@ -113,12 +113,16 @@ pub fn part2(input: &Input) -> i64 {
 fn compute(input: &mut Input, index: usize) -> i64 {
     let result = match input.monkeys[index] {
         Monkey::Number(n) => n,
-        Monkey::Result(left, operation, right) => match operation {
-            Operation::Add => compute(input, left) + compute(input, right),
-            Operation::Sub => compute(input, left) - compute(input, right),
-            Operation::Mul => compute(input, left) * compute(input, right),
-            Operation::Div => compute(input, left) / compute(input, right),
-        },
+        Monkey::Result(left, operation, right) => {
+            let l = compute(input, left);
+            let r = compute(input, right);
+            match operation {
+                Operation::Add => l + r,
+                Operation::Sub => l - r,
+                Operation::Mul => l * r,
+                Operation::Div => l / r,
+            }
+        }
     };
     // Cache the computed value for use in part two.
     input.yell[index] = result;

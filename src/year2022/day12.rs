@@ -52,7 +52,7 @@ fn bfs(input: &Input, end: u8) -> u32 {
         if grid[point] == end {
             return cost;
         }
-        for next in ORTHOGONAL.iter().map(|&x| x + point) {
+        for next in ORTHOGONAL.map(|d| d + point) {
             if grid.contains(next)
                 && !visited[next]
                 && height(grid, point) - height(grid, next) <= 1
@@ -69,8 +69,8 @@ fn bfs(input: &Input, end: u8) -> u32 {
 /// Map `S` to `a` and `E` to `z`, otherwise use the value unchanged.
 fn height(grid: &Grid<u8>, point: Point) -> i32 {
     match grid[point] {
-        b'S' => 'a' as i32,
-        b'E' => 'z' as i32,
+        b'S' => b'a' as i32,
+        b'E' => b'z' as i32,
         b => b as i32,
     }
 }

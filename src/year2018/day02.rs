@@ -32,10 +32,9 @@ pub fn part2(input: &[&[u8]]) -> String {
     // column at a time.
     for column in 0..width {
         for &id in input {
-            let prefix = &id[..column];
-            let suffix = &id[column + 1..];
+            let pair @ (prefix, suffix) = (&id[..column], &id[column + 1..]);
 
-            if !seen.insert([prefix, suffix]) {
+            if !seen.insert(pair) {
                 // Convert to String
                 return prefix.iter().chain(suffix).copied().map(char::from).collect();
             }

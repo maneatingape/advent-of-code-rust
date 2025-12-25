@@ -49,8 +49,8 @@ pub struct Cave {
 
 /// Creates a 2D grid cave exactly the maximum possible size.
 pub fn parse(input: &str) -> Cave {
-    let unsigned = |line: &str| line.iter_unsigned().collect();
-    let points: Vec<Vec<usize>> = input.lines().map(unsigned).collect();
+    let points: Vec<Vec<usize>> =
+        input.lines().map(|line| line.iter_unsigned().collect()).collect();
     let max_y = points.iter().flat_map(|row| row.iter().skip(1).step_by(2)).max().unwrap();
 
     // Floor is 2 below the bottommost wall.

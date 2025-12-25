@@ -3,6 +3,7 @@
 use crate::util::integer::*;
 
 pub trait BitOps<T> {
+    #[must_use]
     fn biterator(self) -> Bitset<T>;
 }
 

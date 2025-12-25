@@ -24,11 +24,10 @@ type Input = (usize, Vec<i8>);
 pub fn parse(input: &str) -> Input {
     let raw: Vec<_> = input.lines().collect();
     let width = raw[0].len();
-    let mut digits = Vec::new();
+    let mut digits = Vec::with_capacity(raw.len() * width);
 
     for line in &raw {
-        let iter = line.bytes().map(|b| 6 * (b - b'0') as i8);
-        digits.extend(iter);
+        digits.extend(line.bytes().map(|b| 6 * (b - b'0') as i8));
     }
 
     (width, digits)

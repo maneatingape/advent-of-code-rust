@@ -77,8 +77,8 @@ pub fn part1(input: &Input) -> u32 {
 /// Sieves possible values at each scanner stage to reduce the number of possible values.
 pub fn part2(input: &Input) -> u32 {
     let mut lcm = 1;
-    let mut current = &mut Vec::new();
-    let mut next = &mut Vec::new();
+    let mut current = Vec::new();
+    let mut next = Vec::new();
 
     current.push(1);
 
@@ -89,7 +89,7 @@ pub fn part2(input: &Input) -> u32 {
 
         // Check each multiple of the current `end` against the new scanner.
         for extra in (0..next_lcm).step_by(lcm as usize) {
-            for &delay in current.iter() {
+            for &delay in &current {
                 if !(delay + extra + depth).is_multiple_of(period) {
                     next.push(delay + extra);
                 }
@@ -101,5 +101,5 @@ pub fn part2(input: &Input) -> u32 {
         next.clear();
     }
 
-    *current.first().unwrap()
+    current[0]
 }

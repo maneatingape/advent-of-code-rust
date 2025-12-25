@@ -99,7 +99,8 @@ pub fn part2(_input: &Input) -> &'static str {
     "n/a"
 }
 
-// Precompute state transitions up to some maximum value of steps.
+/// Precompute state transitions up to some maximum value of steps.
+#[inline]
 fn turing(rules: &[[Rule; 2]], mut state: usize, mut tape: u128, max_steps: u32) -> Skip {
     let mut mask = 1 << 63;
     let mut steps = 0;
@@ -108,21 +109,11 @@ fn turing(rules: &[[Rule; 2]], mut state: usize, mut tape: u128, max_steps: u32)
     // `128` means that the cursor is on the left edge of the high nibble.
     while 0 < mask && mask < (1 << 127) && steps < max_steps {
         let current = usize::from(tape & mask != 0);
-        let Rule { next_state, next_tape, advance } = rules[state][current];
+        let rule = &rules[state][current];
 
-        if next_tape {
-            tape |= mask;
-        } else {
-            tape &= !mask;
-        }
-
-        if advance {
-            mask >>= 1;
-        } else {
-            mask <<= 1;
-        }
-
-        state = next_state;
+        tape = if rule.next_tape { tape | mask } else { tape & !mask };
+        mask = if rule.advance { mask >> 1 } else { mask << 1 };
+        state = rule.next_state;
         steps += 1;
     }
 

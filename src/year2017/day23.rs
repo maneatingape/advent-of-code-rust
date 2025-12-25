@@ -77,11 +77,5 @@ fn is_composite(n: u32) -> bool {
     }
 
     let root = n.isqrt() + 1;
-    for f in (3..root).step_by(2) {
-        if n.is_multiple_of(f) {
-            return true;
-        }
-    }
-
-    false
+    (3..root).step_by(2).any(|f| n.is_multiple_of(f))
 }

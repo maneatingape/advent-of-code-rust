@@ -9,7 +9,7 @@ pub fn parse(input: &str) -> Vec<&[u8]> {
 pub fn part1(input: &[&[u8]]) -> usize {
     input
         .iter()
-        .filter(|line| {
+        .filter(|&&line| {
             let mut has_abba = false;
             let mut inside_brackets = false;
 
@@ -38,7 +38,7 @@ pub fn part2(input: &[&[u8]]) -> usize {
     input
         .iter()
         .enumerate()
-        .filter(|&(version, line)| {
+        .filter(|&(version, &line)| {
             let mut inside_brackets = false;
 
             for w in line.windows(3) {
