@@ -115,7 +115,7 @@ fn fight(input: &Input, boost: i32) -> (Kind, i32) {
     let mut infection = input.infection.clone();
     let mut attacks = vec![None; immune.len() + infection.len()];
 
-    // Boost reindeer's immmune system.
+    // Boost reindeer's immune system.
     immune.iter_mut().for_each(|group| group.damage += boost);
 
     for turn in 1.. {

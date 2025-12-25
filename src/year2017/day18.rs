@@ -100,6 +100,6 @@ pub fn part2(input: &[u64]) -> usize {
         count += 1;
     }
 
-    // The sequence countains 127 numbers so the final result is multiplied by that factor.
+    // The sequence contains 127 numbers so the final result is multiplied by that factor.
     127 * count.div_ceil(2)
 }

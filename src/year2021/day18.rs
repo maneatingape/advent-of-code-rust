@@ -41,7 +41,7 @@ const IN_ORDER: [usize; 30] = [
 
 /// Parse a snailfish number into an implicit binary tree stored in an array.
 ///
-/// Since no number will greater than 9 initially we can consider each character individually.
+/// Since no number will be greater than 9 initially we can consider each character individually.
 /// `[` means moves down a level to parse children, `,` means move from left to right node,
 /// `]` means move up a level to return to parent and a digit from 0-9 creates a leaf node
 /// with that value.

@@ -44,6 +44,6 @@ fn number(slice: &[u8]) -> (&[u8], usize) {
         index += 1;
     }
 
-    // Skip over trailing delimeter.
+    // Skip over trailing delimiter.
     (&slice[index + 1..], acc)
 }

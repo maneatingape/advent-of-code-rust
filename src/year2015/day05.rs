@@ -22,7 +22,7 @@
 //! in order to use a fixed size array as an implicit data structure. Using zero as a special
 //! starting value gives 27² or 729 possibilities. To avoid having to clear the array for each
 //! string, we bump the index by 1000 (any value larger than the length of the string would do).
-//! This means that if the difference is greater than the current position in the string we can
+//! This means that if the difference is greater than the current position in the string we can be
 //! sure that we haven't encountered this pair in this particular string before.
 pub fn parse(input: &str) -> Vec<&[u8]> {
     input.lines().map(str::as_bytes).collect()

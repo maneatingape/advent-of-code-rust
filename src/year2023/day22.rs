@@ -1,7 +1,7 @@
 //! # Sand Slabs
 //!
 //! Inspecting the input provides a useful insight. The x and y coordinates of bricks are
-//! restricted to between to 0 and 9 inclusive so the final shape of the pile will resemble a tall
+//! restricted to between 0 and 9 inclusive so the final shape of the pile will resemble a tall
 //! narrow tower similar to a [Jenga game](https://en.wikipedia.org/wiki/Jenga).
 //!
 //! A second insight is that this is a graph problem in disguise. Sorting the bricks in ascending

@@ -12,8 +12,6 @@
 //!
 //! * [Modular multiplicative inverse](https://en.wikipedia.org/wiki/Modular_multiplicative_inverse)
 //!   calculated using the [extended Euclidean algorithm](https://en.wikipedia.org/wiki/Extended_Euclidean_algorithm).
-//!
-//! * [Integer square root](https://en.wikipedia.org/wiki/Integer_square_root).
 use crate::util::integer::*;
 
 pub trait IntegerMathOps<T: Integer<T>> {

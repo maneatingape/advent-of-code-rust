@@ -1,6 +1,6 @@
 //! # Pulse Propagation
 //!
-//! Similar to [`Day 8`] the input has a very specific structure. The flip-flips form 4 rows
+//! Similar to [`Day 8`] the input has a very specific structure. The flip-flops form 4 rows
 //! of 12 columns, following by 2 conjunctions (in square brackets):
 //!
 //! ```none
@@ -12,7 +12,7 @@
 //! ```
 //!
 //! The penultimate conjunction in each row, for example `ax` both takes input and delivers output
-//! to the flips flops. This follows a pattern, for example using `v` to indicate input from the
+//! to the flip-flops. This follows a pattern, for example using `v` to indicate input from the
 //! conjunction and `v` to indicate output:
 //!
 //! ```none

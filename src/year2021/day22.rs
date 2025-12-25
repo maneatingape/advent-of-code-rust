@@ -1,7 +1,7 @@
 //! # Reactor Reboot
 //!
 //! The key to solving this problem efficiently is the
-//! [inclusion-exclusion principle ](https://en.wikipedia.org/wiki/Inclusion%E2%80%93exclusion_principle).
+//! [inclusion-exclusion principle](https://en.wikipedia.org/wiki/Inclusion%E2%80%93exclusion_principle).
 //!
 //! Looking at a two dimensional example
 //! ```none

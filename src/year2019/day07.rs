@@ -52,7 +52,7 @@ pub fn part2(input: &[i64]) -> i64 {
             computer.input(phase);
         }
 
-        // Chain amplifier inputs and ouputs in a loop until all threads finish.
+        // Chain amplifier inputs and outputs in a loop until all threads finish.
         let mut signal = 0;
 
         'outer: loop {

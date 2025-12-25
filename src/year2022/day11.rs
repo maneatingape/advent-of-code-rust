@@ -152,7 +152,7 @@ pub fn part1(input: &Input) -> usize {
 
             business.inc(from);
 
-            // Only increase the round when the item is passes to a previous monkey
+            // Only increase the round when the item is passed to a previous monkey
             // which will have to be processed in the next turn.
             rounds += usize::from(to < from);
             from = to;
@@ -204,7 +204,7 @@ fn play(monkeys: &[Monkey], mut from: usize, mut item: usize) -> Business {
 
         business.inc(from);
 
-        // Only increase the round when the item is passes to a previous monkey
+        // Only increase the round when the item is passed to a previous monkey
         // which will have to be processed in the next turn.
         if to < from {
             round += 1;

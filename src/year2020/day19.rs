@@ -119,7 +119,7 @@ pub fn part2(input: &Input<'_>) -> usize {
 
 fn check(rules: &[Rule], rule: usize, message: &[u8], index: usize) -> Option<usize> {
     // Convenience closures help shorten the expressions in the match block.
-    // The compiler usually inlines short closures so these should have no affect on performance.
+    // The compiler usually inlines short closures so these should have no effect on performance.
     let apply = |a| check(rules, a, message, index);
     let sequence = |a, b| apply(a).and_then(|next| check(rules, b, message, next));
 

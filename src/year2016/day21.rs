@@ -1,6 +1,6 @@
 //! # Scrambled Letters and Hash
 //!
-//! The forward transformations are a straightforward. The trickiest reverse
+//! The forward transformations are straightforward. The trickiest reverse
 //! implementation is the rotation based on the index of the letter.
 use crate::util::parse::*;
 

@@ -8,7 +8,7 @@
 //! * `a` and `g` are the x positions of the pair of hailstones.
 //! * `b` and `h` are the y positions.
 //! * `d` and `j` are the x velocities.
-//! * `e` and `k` are the x velocities.
+//! * `e` and `k` are the y velocities.
 //! * Let `t` and `u` be the times that the first and second hailstone respectively are at the
 //!   intersection point.
 //!

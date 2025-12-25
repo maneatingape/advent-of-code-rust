@@ -110,9 +110,9 @@ pub fn part2(input: &State) -> u32 {
 }
 
 fn bfs(start: State) -> u32 {
-    // Get the total number of all generator and microchips so we know when done.
+    // Get the total number of all generators and microchips so we know when done.
     let complete = start.floor.iter().map(|&f| f.total()).sum();
-    // The lift must have a least one item and at most two.
+    // The lift must have at least one item and at most two.
     // As an optimization the list is ordered in *descending* order of number of items.
     let moves =
         [Floor::new(2, 0), Floor::new(1, 1), Floor::new(0, 2), Floor::new(1, 0), Floor::new(0, 1)];

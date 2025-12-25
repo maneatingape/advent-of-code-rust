@@ -36,7 +36,7 @@
 //!
 //! ## Conversion to grid
 //!
-//! Next we convert this graph into a 6 x 6 square graph that can represented in an array. The
+//! Next we convert this graph into a 6 x 6 square graph that can be represented in an array. The
 //! start and end are moved to the corners and extra nodes added to the other corners.
 //!
 //! ```none
@@ -68,7 +68,7 @@
 //!
 //! ## Example paths
 //!
-//! Using `S` to represents the start of a line segment and `E` to represent the end, the starting
+//! Using `S` to represent the start of a line segment and `E` to represent the end, the starting
 //! state looks like `S.....` and the end state `.....S`. One example:
 //!
 //! ```none

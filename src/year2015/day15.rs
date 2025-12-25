@@ -4,7 +4,7 @@
 //! calculated so that the ingredients always sum to 100. Solves part one and two simultaneously.
 //!
 //! As an optimization we check halfway through the loops to see if any ingredient will never be
-//! be greater than zero to skip large numbers of combinations.
+//! greater than zero to skip large numbers of combinations.
 use crate::util::iter::*;
 use crate::util::parse::*;
 use std::array::from_fn;

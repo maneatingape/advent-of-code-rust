@@ -19,12 +19,12 @@ pub fn parse(input: &str) -> Input {
         if first == b'n' {
             match iter.next().unwrap_or(0) {
                 b'e' => {
-                    iter.next(); // Consume trailing delimeter.
+                    iter.next(); // Consume trailing delimiter.
                     q += 1;
                     r -= 1;
                 }
                 b'w' => {
-                    iter.next(); // Consume trailing delimeter.
+                    iter.next(); // Consume trailing delimiter.
                     q -= 1;
                 }
                 _ => r -= 1,
@@ -32,11 +32,11 @@ pub fn parse(input: &str) -> Input {
         } else {
             match iter.next().unwrap_or(0) {
                 b'e' => {
-                    iter.next(); // Consume trailing delimeter.
+                    iter.next(); // Consume trailing delimiter.
                     q += 1;
                 }
                 b'w' => {
-                    iter.next(); // Consume trailing delimeter.
+                    iter.next(); // Consume trailing delimiter.
                     q -= 1;
                     r += 1;
                 }

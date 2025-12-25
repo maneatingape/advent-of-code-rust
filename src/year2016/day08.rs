@@ -1,6 +1,6 @@
 //! # Two-Factor Authentication
 //!
-//! The pixels are sparse enough that's it efficient to store them as [`Point`] objects and
+//! The pixels are sparse enough that it's efficient to store them as [`Point`] objects and
 //! manipulate individually. Pixels don't overlap so we can use a vec instead of a set to store
 //! distinct points without overcounting.
 //!

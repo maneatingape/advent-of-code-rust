@@ -8,7 +8,7 @@
 //! to the bottom right corner. This will never overestimate the actual distance which is an
 //! essential characteristic in the heuristic.
 //!
-//! A crucial insight speeds things up. We only needs to store `(position, direction)` pairs in
+//! A crucial insight speeds things up. We only need to store `(position, direction)` pairs in
 //! the map of previously seen costs and do not also need to store the number of steps.
 //! The reason is that each time we generate new states from the current state we loop over all
 //! possible forward states. This implicitly means that every new state will always make a left or

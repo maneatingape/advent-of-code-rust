@@ -1,7 +1,7 @@
 //! # Report Repair
 //!
 //! The straightforward approach is to compare every possible pair of elements for part one and
-//! every possible triple for part two. This would have `O(n²)` and `O(n³)`time complexity respectively.
+//! every possible triple for part two. This would have `O(n²)` and `O(n³)` time complexity respectively.
 //!
 //! We can do better with `O(n)` complexity for part one and `O(n²)` for part two.
 //!

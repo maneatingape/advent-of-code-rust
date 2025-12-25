@@ -306,7 +306,7 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 | 14 | [Chocolate Charts](https://adventofcode.com/2018/day/14) | [Source](src/year2018/day14.rs) | 24000 |
 | 15 | [Beverage Bandits](https://adventofcode.com/2018/day/15) | [Source](src/year2018/day15.rs) | 563 |
 | 16 | [Chronal Classification](https://adventofcode.com/2018/day/16) | [Source](src/year2018/day16.rs) | 37 |
-| 17 | [Reservoir Research ](https://adventofcode.com/2018/day/17) | [Source](src/year2018/day17.rs) | 151 |
+| 17 | [Reservoir Research](https://adventofcode.com/2018/day/17) | [Source](src/year2018/day17.rs) | 151 |
 | 18 | [Settlers of The North Pole](https://adventofcode.com/2018/day/18) | [Source](src/year2018/day18.rs) | 384 |
 | 19 | [Go With The Flow](https://adventofcode.com/2018/day/19) | [Source](src/year2018/day19.rs) | 1 |
 | 20 | [A Regular Map](https://adventofcode.com/2018/day/20) | [Source](src/year2018/day20.rs) | 24 |

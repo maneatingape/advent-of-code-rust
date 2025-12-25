@@ -77,7 +77,7 @@ impl Cube {
         ]
     }
 
-    // Compute the Manattan distance from the faces of the cube to the octohedron shaped region
+    // Compute the Manhattan distance from the faces of the cube to the octahedron-shaped region
     // within range of the Nanbot.
     fn in_range(&self, nb: &Nanobot) -> bool {
         let x = (self.x1 - nb.x).max(0) + (nb.x - self.x2).max(0);

@@ -66,7 +66,7 @@ pub fn parse(input: &str) -> [usize; 64] {
     }
 
     // Second optimization. Sort components with both ports the same before other components,
-    // so that the loop when choosing componentns in `build` function can terminate early.
+    // so that the loop when choosing components in `build` function can terminate early.
     components.sort_unstable_by(|a, b| {
         (a.left ^ a.right).cmp(&(b.left ^ b.right)).then(a.left.cmp(&b.left))
     });

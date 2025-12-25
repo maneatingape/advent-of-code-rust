@@ -4,7 +4,7 @@
 //!
 //! ## Modular Arithmetic
 //!
-//! To solve we'll need some knowledge of [modular arithemetic](https://en.wikipedia.org/wiki/Modular_arithmetic).
+//! To solve we'll need some knowledge of [modular arithmetic](https://en.wikipedia.org/wiki/Modular_arithmetic).
 //!
 //! Some basic modular identities:
 //! * (a + b) mod m = (a mod m) + (b mod m)

@@ -6,7 +6,7 @@
 //!
 //! To solve this we implement a very simple version of work sharing. Threads process paths locally
 //! stopping every now and then to return paths to a global queue. This allows other threads that
-//! have run out of work to pickup new paths to process.
+//! have run out of work to pick up new paths to process.
 //!
 //! The approach from "Waiting: Parking and Condition Variables" in the excellent book
 //! [Rust Atomics and Locks](https://marabos.nl/atomics/) prevent idle threads from busy

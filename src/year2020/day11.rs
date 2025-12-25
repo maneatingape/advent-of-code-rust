@@ -184,7 +184,7 @@ mod simd {
                 }
             }
 
-            // Process grid column by column using wide SIMG vectors.
+            // Process grid column by column using wide SIMD vectors.
             for x in (1..width - 1).step_by(LANE_WIDTH) {
                 let mut above = horizontal_neighbors(&current, x, 0);
                 let mut row = horizontal_neighbors(&current, x, 1);
