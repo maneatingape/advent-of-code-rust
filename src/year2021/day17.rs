@@ -87,12 +87,8 @@ pub fn part1(input: &Input) -> i32 {
 pub fn part2(input: &Input) -> usize {
     let &[left, right, bottom, top] = input;
 
-    let mut n = 1;
-    while n * (n + 1) / 2 < left {
-        n += 1;
-    }
-
-    let min_dx = n;
+    // Find minimum dx where triangular number reaches left boundary
+    let min_dx = (1..left).find(|&n| n * (n + 1) / 2 >= left).unwrap();
     let max_dx = right + 1;
     let min_dy = bottom;
     let max_dy = -bottom;

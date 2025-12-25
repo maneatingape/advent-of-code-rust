@@ -25,9 +25,9 @@ pub fn parse(input: &str) -> Input {
 }
 
 pub fn part1(input: &Input) -> u32 {
-    input.iter().map(|[l, w, h]| 2 * (l * w + w * h + h * l) + l * w).sum()
+    input.iter().map(|&[l, w, h]| 2 * (l * w + w * h + h * l) + l * w).sum()
 }
 
 pub fn part2(input: &Input) -> u32 {
-    input.iter().map(|[l, w, h]| 2 * (l + w) + (l * w * h)).sum()
+    input.iter().map(|&[l, w, h]| 2 * (l + w) + l * w * h).sum()
 }

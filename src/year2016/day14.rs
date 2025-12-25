@@ -61,7 +61,7 @@ fn format_string(prefix: &str, n: i32) -> ([u8; 64], usize) {
     let size = string.len();
 
     let mut buffer = [0; 64];
-    buffer[0..size].copy_from_slice(string.as_bytes());
+    buffer[..size].copy_from_slice(string.as_bytes());
 
     (buffer, size)
 }

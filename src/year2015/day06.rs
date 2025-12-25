@@ -14,12 +14,11 @@ enum Command {
 }
 
 impl Command {
-    fn from(bytes: &[u8]) -> Command {
+    fn from(bytes: &[u8]) -> Self {
         match bytes[6] {
-            b'n' => Command::On,
-            b'f' => Command::Off,
-            b' ' => Command::Toggle,
-            _ => unreachable!(),
+            b'n' => Self::On,
+            b'f' => Self::Off,
+            _ => Self::Toggle,
         }
     }
 }
@@ -33,9 +32,9 @@ struct Rectangle {
 }
 
 impl Rectangle {
-    // Add one to both x2 and y2 to make ranges easier.
-    fn from([x1, y1, x2, y2]: [usize; 4]) -> Rectangle {
-        Rectangle { x1, y1, x2: x2 + 1, y2: y2 + 1 }
+    /// Add one to both x2 and y2 to make ranges easier.
+    fn from([x1, y1, x2, y2]: [usize; 4]) -> Self {
+        Self { x1, y1, x2: x2 + 1, y2: y2 + 1 }
     }
 }
 
@@ -46,10 +45,8 @@ pub struct Instruction {
 }
 
 impl Instruction {
-    fn from((bytes, points): (&[u8], [usize; 4])) -> Instruction {
-        let command = Command::from(bytes);
-        let rectangle = Rectangle::from(points);
-        Instruction { command, rectangle }
+    fn from((bytes, points): (&[u8], [usize; 4])) -> Self {
+        Self { command: Command::from(bytes), rectangle: Rectangle::from(points) }
     }
 }
 

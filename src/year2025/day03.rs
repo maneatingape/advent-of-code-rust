@@ -4,7 +4,7 @@
 //! significant digit (leaving enough batteries over to make the rest of the bank),
 //! then the maximum value for the second most significant digit and so on.
 //!
-//! One approach is to scan from right to left checking for the maximum. While the complexity is
+//! One approach is to scan from left to right checking for the maximum. While the complexity is
 //! technically `O(n)` we do have to scan the same digits multiple times (up to twelve in part two).
 //!
 //! Instead, starting with enough batteries to make the bank, we scan from right to left. If we
@@ -48,7 +48,7 @@ fn solve<const N: usize>(input: &[&str]) -> u64 {
                 }
             }
 
-            batteries.iter().fold(0, |joltage, &b| 10 * joltage + (b - b'0') as u64)
+            batteries.iter().fold(0, |joltage, &b| 10 * joltage + u64::from(b - b'0'))
         })
         .sum()
 }

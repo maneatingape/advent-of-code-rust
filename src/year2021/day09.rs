@@ -29,8 +29,8 @@ pub fn part1(grid: &Grid<u8>) -> u32 {
             let point = Point::new(x, y);
             let cur = grid[point];
             let low_point = ORTHOGONAL
-                .iter()
-                .map(|&n| point + n)
+                .into_iter()
+                .map(|n| point + n)
                 .filter(|&n| grid.contains(n))
                 .all(|n| grid[n] > cur);
 
@@ -64,7 +64,7 @@ fn flood_fill(grid: &mut Grid<u8>, point: Point) -> u32 {
     grid[point] = b'9';
     let mut size = 1;
 
-    for next in ORTHOGONAL.iter().map(|&n| point + n) {
+    for next in ORTHOGONAL.map(|d| point + d) {
         if grid.contains(next) && grid[next] < b'9' {
             size += flood_fill(grid, next);
         }

@@ -16,9 +16,9 @@ pub struct Input {
 }
 
 pub fn parse(input: &str) -> Input {
-    let lines: Vec<_> = input.lines().collect();
-    let timestamp = lines[0].unsigned();
-    let buses: Vec<_> = lines[1]
+    let (first, second) = input.split_once('\n').unwrap();
+    let timestamp = first.unsigned();
+    let buses = second
         .split(',')
         .enumerate()
         .filter(|&(_, id)| id != "x")

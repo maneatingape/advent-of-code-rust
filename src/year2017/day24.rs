@@ -113,15 +113,15 @@ fn build(state: &mut State, current: usize, used: usize, strength: usize, length
     // Extract the index of each component from the bitset.
     for index in remaining.biterator() {
         let next = current ^ state.both[index];
-        let used = used | (1 << index);
-        let strength = strength + state.weight[index];
-        let length = length + state.length[index];
+        let new_used = used | (1 << index);
+        let new_strength = strength + state.weight[index];
+        let new_length = length + state.length[index];
 
-        if state.possible[next] & !used == 0 {
+        if state.possible[next] & !new_used == 0 {
             // No more possible components to add to the bridge.
-            state.bridge[length] = state.bridge[length].max(strength);
+            state.bridge[new_length] = state.bridge[new_length].max(new_strength);
         } else {
-            build(state, next, used, strength, length);
+            build(state, next, new_used, new_strength, new_length);
             // Critical optimization. If this is a component with two ports of the same values,
             // for example 5/5 or 7/7 then it's always optimal to add it to the bridge.
             // We don't need to consider further options.

@@ -14,39 +14,39 @@
 //! anagrams become the same also works but is slower.
 use crate::util::hash::*;
 
-type Input<'a> = Vec<&'a str>;
-
-pub fn parse(input: &str) -> Input<'_> {
+pub fn parse(input: &str) -> Vec<&str> {
     input.lines().collect()
 }
 
-pub fn part1(input: &Input<'_>) -> usize {
+pub fn part1(input: &[&str]) -> usize {
     let mut seen = FastSet::new();
     input
         .iter()
         .filter(|line| {
             seen.clear();
-            line.split_ascii_whitespace().all(|token| seen.insert(token.as_bytes()))
+            line.split_ascii_whitespace().all(|token| seen.insert(token))
         })
         .count()
 }
 
-pub fn part2(input: &Input<'_>) -> usize {
-    // Only 26 elements are needed but 32 is faster to hash.
-    fn convert(token: &str) -> [u8; 32] {
-        let mut freq = [0; 32];
-        for b in token.bytes() {
-            freq[(b - b'a') as usize] += 1;
-        }
-        freq
-    }
-
+pub fn part2(input: &[&str]) -> usize {
     let mut seen = FastSet::new();
     input
         .iter()
         .filter(|line| {
             seen.clear();
-            line.split_ascii_whitespace().all(|token| seen.insert(convert(token)))
+            line.split_ascii_whitespace().all(|token| seen.insert(letter_frequency(token)))
         })
         .count()
+}
+
+/// Convert a token to its letter frequency histogram.
+/// Only 26 elements are needed but 32 is faster to hash.
+#[inline]
+fn letter_frequency(token: &str) -> [u8; 32] {
+    let mut freq = [0; 32];
+    for b in token.bytes() {
+        freq[(b - b'a') as usize] += 1;
+    }
+    freq
 }

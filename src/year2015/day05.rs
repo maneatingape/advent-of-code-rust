@@ -34,67 +34,70 @@ pub fn part1(input: &[&[u8]]) -> usize {
     // Bitmask for forbidden pairs
     const FORBIDDEN_MASK: u32 = 0x101000a;
 
-    let nice = |line: &&&[u8]| {
-        let mut vowels = 0;
-        let mut pairs = 0;
-        let mut previous = 0;
+    input
+        .iter()
+        .filter(|line| {
+            let mut vowels = 0;
+            let mut pairs = 0;
+            let mut previous = 0;
 
-        for &c in line.iter() {
-            let current = 1 << (c - b'a');
+            for &c in line.iter() {
+                let current = 1 << (c - b'a');
 
-            if FORBIDDEN_MASK & current & (previous << 1) != 0 {
-                return false;
+                if FORBIDDEN_MASK & current & (previous << 1) != 0 {
+                    return false;
+                }
+                if VOWEL_MASK & current != 0 {
+                    vowels += 1;
+                }
+                if previous == current {
+                    pairs += 1;
+                }
+
+                previous = current;
             }
-            if VOWEL_MASK & current != 0 {
-                vowels += 1;
-            }
-            if previous == current {
-                pairs += 1;
-            }
 
-            previous = current;
-        }
-
-        vowels >= 3 && pairs >= 1
-    };
-
-    input.iter().filter(nice).count()
+            vowels >= 3 && pairs >= 1
+        })
+        .count()
 }
 
 pub fn part2(input: &[&[u8]]) -> usize {
     let mut pairs = [0; 729];
 
-    let nice = |(base, line): &(usize, &&[u8])| {
-        let mut first = 0;
-        let mut second = 0;
+    input
+        .iter()
+        .enumerate()
+        .filter(|(base, line)| {
+            let mut first = 0;
+            let mut second = 0;
 
-        let mut two_pair = false;
-        let mut split_pair = false;
+            let mut two_pair = false;
+            let mut split_pair = false;
 
-        for (offset, c) in line.iter().enumerate() {
-            let third = (c - b'a' + 1) as usize;
-            let index = 27 * second + third;
+            for (offset, &c) in line.iter().enumerate() {
+                let third = (c - b'a' + 1) as usize;
+                let index = 27 * second + third;
 
-            let position = base * 1000 + offset;
-            let delta = position - pairs[index];
+                let position = base * 1000 + offset;
+                let delta = position - pairs[index];
 
-            if delta > offset {
-                // This is the first time we've seen the pair for this string.
-                pairs[index] = position;
-            } else if delta > 1 {
-                // No overlapping means that the distance must be at least two.
-                two_pair = true;
+                if delta > offset {
+                    // This is the first time we've seen the pair for this string.
+                    pairs[index] = position;
+                } else if delta > 1 {
+                    // No overlapping means that the distance must be at least two.
+                    two_pair = true;
+                }
+                if first == third {
+                    split_pair = true;
+                }
+
+                first = second;
+                second = third;
             }
-            if first == third {
-                split_pair = true;
-            }
 
-            first = second;
-            second = third;
-        }
-
-        two_pair && split_pair
-    };
-
-    input.iter().enumerate().filter(nice).count()
+            two_pair && split_pair
+        })
+        .count()
 }

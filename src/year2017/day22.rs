@@ -148,6 +148,7 @@ pub fn part2(input: &Grid<u8>) -> usize {
 }
 
 /// Computes the number of steps taken, infected nodes and next location for 2 x 2 blocks of nodes.
+#[inline]
 fn compute_block(grid: &mut [u8], mut quadrant: usize, mut direction: usize, state: usize) -> u32 {
     let mut index = CENTER;
     let mut infected = 0;
@@ -181,7 +182,8 @@ fn compute_block(grid: &mut [u8], mut quadrant: usize, mut direction: usize, sta
         | (next_index << 20) as u32
 }
 
-// Process a single step in any arbitrary location on the grid.
+/// Process a single step in any arbitrary location on the grid.
+#[inline]
 fn step(grid: &mut [u8], index: usize, quadrant: usize, direction: usize) -> [usize; 4] {
     // 4 nodes are packed into a single byte with quadrants arranged as:
     // [ 0 1 ]
@@ -207,8 +209,7 @@ fn step(grid: &mut [u8], index: usize, quadrant: usize, direction: usize) -> [us
         0 => (x, y - 1),
         1 => (x + 1, y),
         2 => (x, y + 1),
-        3 => (x - 1, y),
-        _ => unreachable!(),
+        _ => (x - 1, y),
     };
 
     // Convert the x and y coordinates back into the compressed values for 2 x 2 nodes in each cell.

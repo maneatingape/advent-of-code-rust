@@ -62,14 +62,13 @@ fn count(cube: &[u8], adjust: fn(u32) -> u32) -> u32 {
     for (i, &cell) in cube.iter().enumerate() {
         if cell == 1 {
             // No need for boundary checks as all cubes are at least 1 away from the edge.
-            total += adjust(
-                (cube[i - 1]
-                    + cube[i + 1]
-                    + cube[i - SIZE]
-                    + cube[i + SIZE]
-                    + cube[i - SIZE * SIZE]
-                    + cube[i + SIZE * SIZE]) as u32,
-            );
+            let neighbors = cube[i - 1] as u32
+                + cube[i + 1] as u32
+                + cube[i - SIZE] as u32
+                + cube[i + SIZE] as u32
+                + cube[i - SIZE * SIZE] as u32
+                + cube[i + SIZE * SIZE] as u32;
+            total += adjust(neighbors);
         }
     }
 

@@ -206,15 +206,7 @@ pub fn parse(input: &str) -> Vec<Located> {
 
 /// Calculate the total number of distinct beacons.
 pub fn part1(input: &[Located]) -> usize {
-    let mut result = FastSet::with_capacity(1_000);
-
-    for located in input {
-        for beacon in &located.beacons {
-            result.insert(beacon);
-        }
-    }
-
-    result.len()
+    input.iter().flat_map(|located| &located.beacons).collect::<FastSet<_>>().len()
 }
 
 /// Calculate the maximum manhattan distance between any two scanners.

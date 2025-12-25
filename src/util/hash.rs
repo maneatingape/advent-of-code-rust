@@ -13,8 +13,11 @@ pub type FastSet<T> = HashSet<T, BuildFxHasher>;
 
 /// Convenience methods to construct a [`FastSet`].
 pub trait FastSetBuilder<T> {
+    #[must_use]
     fn new() -> Self;
+    #[must_use]
     fn with_capacity(capacity: usize) -> Self;
+    #[must_use]
     fn build<const N: usize>(array: [T; N]) -> Self;
 }
 
@@ -39,8 +42,11 @@ pub type FastMap<K, V> = HashMap<K, V, BuildFxHasher>;
 
 /// Convenience methods to construct a [`FastMap`].
 pub trait FastMapBuilder<K, V> {
+    #[must_use]
     fn new() -> Self;
+    #[must_use]
     fn with_capacity(capacity: usize) -> Self;
+    #[must_use]
     fn build<const N: usize>(array: [(K, V); N]) -> Self;
 }
 

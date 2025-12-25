@@ -84,16 +84,12 @@ pub fn parse(input: &str) -> Input {
 }
 
 pub fn part1(input: &Input) -> i32 {
-    let Input { scaffold, .. } = input;
-    let mut result = 0;
-
-    for &point in scaffold {
-        if ORTHOGONAL.iter().all(|&delta| scaffold.contains(&(point + delta))) {
-            result += point.x * point.y;
-        }
-    }
-
-    result
+    input
+        .scaffold
+        .iter()
+        .filter(|&point| ORTHOGONAL.iter().all(|&delta| input.scaffold.contains(&(*point + delta))))
+        .map(|point| point.x * point.y)
+        .sum()
 }
 
 pub fn part2(input: &Input) -> i64 {

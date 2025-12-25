@@ -6,10 +6,11 @@
 //! [`Day 10`]: crate::year2017::day10
 //! [`Day 12`]: crate::year2017::day12
 use crate::util::thread::*;
+use std::array::from_fn;
 
 /// Parallelize the hashing as each row is independent.
 pub fn parse(input: &str) -> Vec<u8> {
-    let prefix = &input.trim();
+    let prefix = input.trim();
     let rows: Vec<_> = (0..128).collect();
     let result = spawn_parallel_iterator(&rows, |iter| worker(prefix, iter));
 
@@ -63,8 +64,10 @@ fn fill_row(prefix: &str, index: usize) -> Vec<u8> {
 }
 
 /// Slightly tweaked version of the code from Day 10 that always performs 64 rounds.
-fn knot_hash(lengths: &[usize]) -> Vec<u8> {
-    let mut knot: Vec<_> = (0..=255).collect();
+/// Uses a fixed-size array for better performance.
+#[inline]
+fn knot_hash(lengths: &[usize]) -> [u8; 256] {
+    let mut knot: [u8; 256] = from_fn(|i| i as u8);
     let mut position = 0;
     let mut skip = 0;
 

@@ -7,6 +7,7 @@
 //! [`rotate_left`]: slice::rotate_left
 //! [`reverse`]: slice::reverse
 use crate::util::parse::*;
+use std::array::from_fn;
 use std::fmt::Write as _;
 
 pub fn parse(input: &str) -> &str {
@@ -16,7 +17,7 @@ pub fn parse(input: &str) -> &str {
 pub fn part1(input: &str) -> u32 {
     let lengths: Vec<_> = input.iter_unsigned().collect();
     let knot = hash(&lengths, 1);
-    knot.iter().take(2).map(|&b| b as u32).product()
+    (knot[0] as u32) * (knot[1] as u32)
 }
 
 pub fn part2(input: &str) -> String {
@@ -34,8 +35,10 @@ pub fn part2(input: &str) -> String {
     result
 }
 
-fn hash(lengths: &[usize], rounds: usize) -> Vec<u8> {
-    let mut knot: Vec<_> = (0..=255).collect();
+/// Performs the knot hash algorithm using a fixed-size array for better performance.
+#[inline]
+fn hash(lengths: &[usize], rounds: usize) -> [u8; 256] {
+    let mut knot: [u8; 256] = from_fn(|i| i as u8);
     let mut position = 0;
     let mut skip = 0;
 

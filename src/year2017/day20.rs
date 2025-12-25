@@ -23,15 +23,18 @@ struct Vector {
 }
 
 impl Vector {
+    #[inline]
     fn new(cs: [i32; 3]) -> Self {
         Vector { x: cs[0], y: cs[1], z: cs[2] }
     }
 
-    fn manhattan(&self) -> i32 {
+    #[inline]
+    fn manhattan(self) -> i32 {
         self.x.abs() + self.y.abs() + self.z.abs()
     }
 
-    fn tick(&mut self, other: &Vector) {
+    #[inline]
+    fn tick(&mut self, other: Vector) {
         self.x += other.x;
         self.y += other.y;
         self.z += other.z;
@@ -47,9 +50,10 @@ pub struct Particle {
 }
 
 impl Particle {
+    #[inline]
     fn tick(&mut self) {
-        self.velocity.tick(&self.acceleration);
-        self.position.tick(&self.velocity);
+        self.velocity.tick(self.acceleration);
+        self.position.tick(self.velocity);
     }
 }
 

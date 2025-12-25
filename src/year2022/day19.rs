@@ -41,6 +41,7 @@
 //! The final important optimization is that we don't increment minute by minute. Instead once
 //! we decide to build a robot of a particular type, we "fast forward" in time until there are
 //! enough resources to build that robot. This cuts down on a lot of duplicate intermediate states.
+use crate::util::iter::*;
 use crate::util::parse::*;
 use std::ops::{Add, Sub};
 
@@ -125,12 +126,7 @@ impl Blueprint {
 }
 
 pub fn parse(input: &str) -> Vec<Blueprint> {
-    input
-        .iter_unsigned()
-        .collect::<Vec<_>>()
-        .chunks_exact(7)
-        .map(|slice| Blueprint::from(slice.try_into().unwrap()))
-        .collect()
+    input.iter_unsigned().chunk::<7>().map(Blueprint::from).collect()
 }
 
 pub fn part1(input: &[Blueprint]) -> u32 {
