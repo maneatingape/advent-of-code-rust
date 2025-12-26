@@ -9,11 +9,11 @@ Contributions are encouraged and valued. 🎁
 
 Your contribution should generally fall into one of the following two categories:
 
-* 🪲 **Bug Fix** Solutions try to be as general as possible but can't test for every input.
-  Your pull request fixes an incorrect answer for your input or prevents a panic.
 * 🚀 **Performance Improvement** Your pull request gives a significant performance
   improvement. This could be achieved by using a better algorithm, better low-level optimizations,
   by applying the portable SIMD library or by any other means!
+* 🪲 **Bug Fix** Solutions try to be as general as possible but can't test for every input.
+  Your pull request fixes an incorrect answer for your input or prevents a panic.
 
 ## Legal Notice
 
@@ -29,7 +29,7 @@ Pull requests should meet the following baseline standards:
 * Code style matches the existing code. This one is somewhat subjective, but try to "fit in" by
   using the same naming conventions. Code should be portable, avoiding any architecture
   specific intrinsics.
-* Unit tests pass.
+* Tests pass `cargo test`
 * Code is formatted using `rustfmt`.
 * Code is linted using `clippy`.
 
