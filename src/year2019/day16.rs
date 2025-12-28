@@ -97,7 +97,6 @@
 //! [Chinese remainder theorem]: https://en.wikipedia.org/wiki/Chinese_remainder_theorem
 use crate::util::math::*;
 use crate::util::parse::*;
-use crate::util::slice::*;
 use std::array::from_fn;
 
 /// `C(n, k) % 2` This collapses to a special case of a product of only 4 possible values
@@ -156,7 +155,7 @@ pub fn part1(input: &[i32]) -> i32 {
         }
     }
 
-    digits[..8].fold_decimal()
+    fold_decimal(&digits[..8])
 }
 
 pub fn part2(input: &[i32]) -> i32 {
@@ -165,7 +164,7 @@ pub fn part2(input: &[i32]) -> i32 {
     let upper = size * 10_000;
 
     // This approach will only work if the index is in the second half of the input.
-    let start = input[..7].fold_decimal() as usize;
+    let start = fold_decimal(&input[..7]) as usize;
     assert!(lower <= start && start < upper);
 
     let first = compute(input, start, upper, BINOMIAL_MOD_2.iter().copied().cycle(), 128);
@@ -184,7 +183,7 @@ pub fn part2(input: &[i32]) -> i32 {
     //     x ≡ a₁y₁z₁ + a₂y₂z₂ (mod 10) ≡ 5a₁ + 6a₂ (mod 10)
     //
     let result: Vec<_> = first.into_iter().zip(second).map(|(f, s)| (5 * f + 6 * s) % 10).collect();
-    result.fold_decimal()
+    fold_decimal(&result)
 }
 
 /// Quickly computes a digit taking advantage of the fact
@@ -224,4 +223,9 @@ where
         // Calculate sum for the entire range.
         quotient * full + partial
     })
+}
+
+#[inline]
+fn fold_decimal(slice: &[i32]) -> i32 {
+    slice.iter().fold(0, |acc, &b| 10 * acc + b)
 }

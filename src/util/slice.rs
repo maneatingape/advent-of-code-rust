@@ -9,14 +9,7 @@
 //! Uses [Heap's algorithm](https://en.wikipedia.org/wiki/Heap%27s_algorithm) for efficiency,
 //! modifying the slice in place.
 //!
-//! [`fold_decimal`]
-//!
-//! Accumulates a slice of digits from 0 to 9 inclusive into a single integer.
-//!
 //! [`permutations`]: SliceOps::permutations
-//! [`fold_decimal`]: SliceOps2::fold_decimal
-use super::integer::*;
-
 pub trait SliceOps<T> {
     fn permutations(self, callback: impl FnMut(&[T]));
 }
@@ -41,17 +34,5 @@ impl<T> SliceOps<T> for &mut [T] {
                 i += 1;
             }
         }
-    }
-}
-
-pub trait SliceOps2<T: Integer<T>> {
-    /// Folds a slice of digits into an integer.
-    fn fold_decimal(self) -> T;
-}
-
-impl<T: Integer<T>> SliceOps2<T> for &[T] {
-    #[inline]
-    fn fold_decimal(self) -> T {
-        self.iter().fold(T::ZERO, |acc, &b| T::TEN * acc + b)
     }
 }

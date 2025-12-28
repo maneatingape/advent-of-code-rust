@@ -27,7 +27,6 @@
 //! * Add the occurrences of each scrambled segment for each digit after the `|` symbol, then
 //!   lookup the total and map directly to the unscrambled digit.
 use crate::util::iter::*;
-use crate::util::slice::*;
 
 type Input = Vec<[u32; 4]>;
 
@@ -40,7 +39,7 @@ pub fn part1(input: &Input) -> usize {
 }
 
 pub fn part2(input: &Input) -> u32 {
-    input.iter().map(|digits| digits.fold_decimal()).sum()
+    input.iter().map(|[a, b, c, d]| 1000 * a + 100 * b + 10 * c + d).sum()
 }
 
 fn descramble(line: &str) -> [u32; 4] {
