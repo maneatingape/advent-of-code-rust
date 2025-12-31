@@ -13,5 +13,6 @@ fn part1_test() {
 
 #[test]
 fn part2_test() {
-    // No working part two yet.
+    let input = parse(EXAMPLE);
+    assert_eq!(part2(&input), 33);
 }

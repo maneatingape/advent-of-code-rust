@@ -35,8 +35,7 @@ pub fn parse(input: &str) -> Vec<Machine> {
 }
 
 pub fn part1(input: &[Machine]) -> u32 {
-    let mut todo = Vec::with_capacity(1_000);
-    input.iter().map(|machine| configure_lights(machine, &mut todo)).sum()
+    input.iter().map(configure_lights).sum()
 }
 
 pub fn part2(input: &[Machine]) -> i32 {
@@ -63,23 +62,48 @@ fn parse_machine(line: &str) -> Machine {
 
 /// Check all patterns with one set bit, then patterns with two set bits, and so on,
 /// returning early as soon as we find a match without checking all possible combinations.
-fn configure_lights(machine: &Machine, todo: &mut Vec<(usize, u32, u32)>) -> u32 {
-    todo.clear();
-    todo.push((machine.buttons.len(), 0, 0));
+fn configure_lights(machine: &Machine) -> u32 {
+    let Machine { lights, buttons, joltages } = machine;
+    let width = joltages.len();
+    let height = buttons.len();
 
-    for index in 0.. {
-        let (limit, pressed, pattern) = todo[index];
+    let mut rank = 0;
+    let mut h = [0; MAX_BUTTONS];
+    let mut u: [u32; MAX_BUTTONS] = from_fn(|row| 1 << row);
 
-        for i in 0..limit {
-            let next_pattern = pattern ^ machine.buttons[i];
-            if next_pattern == machine.lights {
-                return pressed + 1;
+    h[..height].copy_from_slice(buttons);
+
+    for col in 0..width {
+        let mask = 1 << col;
+        let Some(found) = (rank..height).find(|&row| h[row] & mask != 0) else {
+            continue;
+        };
+
+        h.swap(rank, found);
+        u.swap(rank, found);
+
+        for row in 0..height {
+            if row != rank && h[row] & mask != 0 {
+                h[row] ^= h[rank];
+                u[row] ^= u[rank];
             }
-            todo.push((i, pressed + 1, next_pattern));
         }
+
+        rank += 1;
     }
 
-    unreachable!()
+    let nullity = height - rank;
+    let particular_solution = (0..rank).fold(0, |particular_solution, row| {
+        let mask = 1 << h[row].trailing_zeros();
+        particular_solution ^ if lights & mask == 0 { 0 } else { u[row] }
+    });
+
+    (0..1 << nullity)
+        .map(|i| {
+            i.biterator().fold(particular_solution, |presses, j| presses ^ u[rank + j]).count_ones()
+        })
+        .min()
+        .unwrap()
 }
 
 /// Convert the buttons and joltages to simultaneous equations,
@@ -104,7 +128,7 @@ fn gaussian_elimination(machine: &Machine) -> Subspace {
     let height = joltages.len();
 
     assert!(width < MAX_BUTTONS);
-    assert!(height < MAX_BUTTONS);
+    assert!(height < MAX_JOLTAGES);
     let mut equations = [[0; MAX_BUTTONS]; MAX_JOLTAGES];
 
     for row in 0..height {
