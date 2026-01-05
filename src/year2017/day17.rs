@@ -1,5 +1,9 @@
 //! # Spinlock
 //!
+//! For part one, we simulate 2017 rounds and record the position (index) at which each number
+//! is inserted. We then find the index after the number 2017. Finally, we iterate backwards
+//! through the stored indexes to find the first (i.e. last) number inserted at that index.
+//!
 //! There are two insights that speed up part two.
 //!
 //! The first is that we don't need a buffer. We only need to preserve the last value inserted
@@ -19,17 +23,28 @@ pub fn parse(input: &str) -> usize {
     input.unsigned()
 }
 
-pub fn part1(input: &usize) -> u16 {
+pub fn part1(input: &usize) -> usize {
     let step = input + 1;
     let mut index = 0;
-    let mut buffer = vec![0];
+    let mut indexes = vec![0; 2017];
+    for len in 1..=2017 {
+        index = (index + step) % len;
+        indexes[len - 1] = index;
+    }
+    let mut next = (indexes[2016] + 1) % 2017;
 
-    for n in 0..2017 {
-        index = (index + step) % buffer.len();
-        buffer.insert(index, n + 1);
+    let mut result = 0;
+    for (i, &o) in indexes.iter().enumerate().rev() {
+        if o == next {
+            result = i + 1;
+            break;
+        }
+        if o < next {
+            next -= 1;
+        }
     }
 
-    buffer[(index + 1) % buffer.len()]
+    result
 }
 
 pub fn part2(input: &usize) -> usize {
