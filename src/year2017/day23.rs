@@ -66,16 +66,31 @@ pub fn part1(input: &u32) -> u32 {
 pub fn part2(input: &u32) -> usize {
     let start = 100_000 + 100 * input;
     let end = start + 17001;
-    (start..end).step_by(17).filter(|&n| is_composite(n)).count()
+    (start..end).step_by(17).filter(|&n| !is_prime(n)).count()
 }
 
-/// Simple [prime number check](https://en.wikipedia.org/wiki/Primality_test)
-/// of all factors from 2 to √n inclusive.
-fn is_composite(n: u32) -> bool {
-    if n.is_multiple_of(2) {
+/// Simple but effective [prime number check](https://en.wikipedia.org/wiki/Primality_test)
+/// trying to identify composite numbers quickly and to test as few factors as possible.
+fn is_prime(n: u32) -> bool {
+    if n <= 1 {
+        return false;
+    }
+
+    if n <= 3 {
         return true;
     }
 
-    let root = n.isqrt() + 1;
-    (3..root).step_by(2).any(|f| n.is_multiple_of(f))
+    if n.is_multiple_of(2) || n.is_multiple_of(3) {
+        return false;
+    }
+
+    let mut i = 5;
+    while i * i <= n {
+        if n.is_multiple_of(i) || n.is_multiple_of(i + 2) {
+            return false;
+        }
+        i += 6; // numbers divisible by 2 and 3 don't have to be tested again
+    }
+
+    true
 }
