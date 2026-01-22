@@ -2,7 +2,7 @@
 name = "aoc"
 version = "2024.12.25"
 edition = "2024"
-rust-version = "1.92"
+rust-version = "1.93"
 
 # Speed up benchmarking by not recompiling everything when only a single file changes.
 [profile.bench]
@@ -95,6 +95,7 @@ doc_comment_double_space_linebreaks = "warn"
 doc_include_without_cfg = "warn"
 doc_link_with_quotes = "warn"
 doc_markdown = "warn"
+doc_paragraphs_missing_punctuation = "allow"
 elidable_lifetime_names = "warn"
 else_if_without_else = "allow"
 empty_drop = "warn"
