@@ -27,5 +27,5 @@ fn part1_test() {
 #[test]
 fn part2_test() {
     let input = parse(EXAMPLE);
-    assert_eq!(part2(&input), 50000000501);
+    assert_eq!(part2(&input), 999999999374);
 }

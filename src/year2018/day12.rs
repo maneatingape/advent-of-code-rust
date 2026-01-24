@@ -3,85 +3,185 @@
 //! The problem is a one dimensional version of
 //! [Conway's Game of Life](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life).
 //!
+//! We use a bit vector to store which pots are occupied and which are empty in a generation. The
+//! left-most pot is represented by the least-significant bit. To simplify extracting bit patterns,
+//! we always leave the first four bits empty. For example, the pattern `#..#.#..##......###...###`
+//! becomes `11100011100000011001010010000`. Also, after each step, we truncate the bit vector on
+//! the left and right. This makes it easier to compare generations in part two.
+//!
 //! The trick for part two is that the plants will eventually stabilize into a repeating pattern
-//! that expands by the same amount each generation. Once 2 deltas between 3 subsequent
-//! generations are the same we extrapolate 50 billion generations into the future.
-use std::iter::repeat_n;
+//! that expands by the same amount each generation. Once two subsequent generations are the same,
+//! we extrapolate 50 billion generations into the future.
+use std::mem::swap;
+
+use crate::util::bitset::BitOps as _;
 
 pub struct Input {
-    rules: Vec<usize>,
-    state: Tunnel,
-}
-
-#[derive(Clone)]
-pub struct Tunnel {
-    plants: Vec<usize>,
-    start: i64,
-    sum: i64,
+    rules: [bool; 32],
+    pots: Pots,
 }
 
 pub fn parse(input: &str) -> Input {
-    let lines: Vec<_> = input.lines().map(str::as_bytes).collect();
-    // Convert ASCII characters to `1` for a plant and `0` for an empty pot.
-    let plants: Vec<_> = lines[0][15..].iter().map(|b| (b & 1) as usize).collect();
-    // 5 plants gives 2⁵ = 32 possible combinations to consider.
-    let mut rules = vec![0; 32];
+    let mut lines = input.lines().map(str::as_bytes);
 
-    // Convert each pattern into an index for fast lookup. For example `..#.#` becomes 5.
-    for line in &lines[2..] {
-        let binary = line.iter().fold(0, |acc, b| (acc << 1) | (b & 1) as usize);
-        rules[binary >> 5] = binary & 1;
+    // Parse initial state
+    let initial_state = lines.next().unwrap();
+    let initial_state = &initial_state[15..];
+    let pots = Pots::from(initial_state);
+
+    // Parse rules into a table with all possible 2⁵=32 patterns
+    lines.next();
+    let mut rules = [false; 32];
+    for line in lines {
+        let from = &line[0..5];
+        let to = line[9];
+        if to == b'#' {
+            let mut p = 0_usize;
+            for (i, &b) in from.iter().enumerate() {
+                if b == b'#' {
+                    p |= 1 << i;
+                }
+            }
+            rules[p] = true;
+        }
     }
 
-    Input { rules, state: Tunnel { plants, start: 0, sum: 0 } }
+    Input { rules, pots }
 }
 
 pub fn part1(input: &Input) -> i64 {
-    let mut current = input.state.clone();
+    let rules = input.rules;
+    let mut pots = input.pots.clone();
 
     for _ in 0..20 {
-        current = step(&input.rules, &current);
+        pots.step(&rules);
     }
 
-    current.sum
+    pots.sum()
 }
 
 pub fn part2(input: &Input) -> i64 {
-    let mut current = input.state.clone();
-    let mut delta = 0;
-    let mut generations = 0;
+    let rules = input.rules;
+    let mut pots = input.pots.clone();
 
-    loop {
-        let next = step(&input.rules, &current);
-        let next_delta = next.sum - current.sum;
-
-        // Two identical deltas indicates that the pattern has stabilized.
-        if delta == next_delta {
-            break current.sum + delta * (50_000_000_000 - generations);
+    // Only simulate until the generation repeats
+    let mut prev_pos = 0;
+    let mut steps = 0;
+    while steps < 50_000_000_000 {
+        prev_pos = pots.pos;
+        pots.step(&rules);
+        steps += 1;
+        if pots.state == pots.prev_state {
+            // Generation has repeated
+            break;
         }
-
-        current = next;
-        delta = next_delta;
-        generations += 1;
     }
+
+    // Extrapolate to 50 billion steps
+    pots.pos += (pots.pos - prev_pos) * (50_000_000_000 - steps);
+    pots.sum()
 }
 
-fn step(rules: &[usize], tunnel: &Tunnel) -> Tunnel {
-    let mut index = 0;
-    let mut sum = 0;
-    let mut position = tunnel.start - 2;
-    let mut plants = Vec::with_capacity(1_000);
+/// Compute the length of the given bit vector
+fn get_len(state: &[u64]) -> usize {
+    let l = state.len() - 1;
+    l * 64 + (64 - state[l].leading_zeros() as usize)
+}
 
-    // Add four extra empty pots to the end to make checking the last pattern easier.
-    for plant in tunnel.plants.iter().copied().chain(repeat_n(0, 4)) {
-        index = ((index << 1) | plant) & 0b11111;
+#[derive(Clone)]
+struct Pots {
+    /// A bit vector representing the pots. 1 means there is a plant in the pot, 0 means there
+    /// isn't.
+    state: Vec<u64>,
 
-        sum += position * rules[index] as i64;
-        position += 1;
+    /// A copy of the bit vector `state` before [`Self::step`] was called
+    prev_state: Vec<u64>,
 
-        plants.push(rules[index]);
+    /// The ID of the pot at the beginning (least-significant bit) of the bit vector `state`
+    pos: i64,
+
+    /// The length of the bit vector `state` (in bits)
+    len: usize,
+}
+
+impl Pots {
+    /// Parses the initial state into a bit vector
+    fn from(initial_state: &[u8]) -> Self {
+        // Leave four bits empty at the beginning, so extracting bits in `step()` is easier
+        let mut state: Vec<u64> = vec![0];
+        let mut index_last = 0;
+        for (i, &b) in initial_state.iter().enumerate() {
+            let r = (i + 4) % 64;
+            if r == 0 {
+                state.push(0);
+                index_last += 1;
+            }
+            if b == b'#' {
+                state[index_last] |= 1 << r;
+            }
+        }
+
+        // Truncate bit vector at the last set bit
+        let len = get_len(&state);
+
+        Self { state, prev_state: Vec::new(), pos: -4, len }
     }
 
-    // Tunnel expands by 2 pots at each end.
-    Tunnel { plants, start: tunnel.start - 2, sum }
+    /// Applies the given rules to the pots and updates [`Self::state`]. A copy of the state before
+    /// this method was called is left in [`Self::prev_state`].
+    fn step(&mut self, rules: &[bool; 32]) {
+        // Prepare new state
+        swap(&mut self.state, &mut self.prev_state);
+        self.state.clear();
+        self.state.push(0);
+        let mut index_last = 0;
+
+        // Leave four bits empty at the beginning
+        let mut j = 4;
+
+        // Skip trailing zeros so the pots always start at the same bit position, regardless of
+        // `self::pos`
+        let mut i = self.prev_state[0].trailing_zeros() as usize - 4;
+        self.pos += i as i64 - 2;
+
+        // Apply rules and built up new state
+        while i < self.len {
+            let q = i / 64;
+            let r = i % 64;
+
+            // Extract up to five bits from the state at index q and position r
+            let mut w = ((self.prev_state[q] >> r) & 0b11111) as usize;
+
+            // If necessary, extract remaining bits from index q + 1
+            if r >= 60 && q + 1 < self.prev_state.len() {
+                w |= (self.prev_state[q + 1] as usize & ((1 << (r - 59)) - 1)) << (64 - r);
+            }
+
+            if j % 64 == 0 {
+                self.state.push(0);
+                index_last += 1;
+                j = 0;
+            }
+            if rules[w] {
+                self.state[index_last] |= 1 << j;
+            }
+
+            j += 1;
+            i += 1;
+        }
+
+        // Truncate bit vector at the last set bit
+        self.len = get_len(&self.state);
+    }
+
+    /// Returns the sum of the numbers of all pots containing plants
+    fn sum(&self) -> i64 {
+        let mut result = 0;
+        for (i, s) in self.state.iter().enumerate() {
+            for j in s.biterator() {
+                result += (i * 64 + j) as i64 + self.pos;
+            }
+        }
+        result
+    }
 }
