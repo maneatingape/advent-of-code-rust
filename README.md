@@ -301,7 +301,7 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 | 9 | [Marble Mania](https://adventofcode.com/2018/day/9) | [Source](src/year2018/day09.rs) | 909 |
 | 10 | [The Stars Align](https://adventofcode.com/2018/day/10) | [Source](src/year2018/day10.rs) | 11 |
 | 11 | [Chronal Charge](https://adventofcode.com/2018/day/11) | [Source](src/year2018/day11.rs) | 542 |
-| 12 | [Subterranean Sustainability](https://adventofcode.com/2018/day/12) | [Source](src/year2018/day12.rs) | 37 |
+| 12 | [Subterranean Sustainability](https://adventofcode.com/2018/day/12) | [Source](src/year2018/day12.rs) | 22 |
 | 13 | [Mine Cart Madness](https://adventofcode.com/2018/day/13) | [Source](src/year2018/day13.rs) | 349 |
 | 14 | [Chocolate Charts](https://adventofcode.com/2018/day/14) | [Source](src/year2018/day14.rs) | 24000 |
 | 15 | [Beverage Bandits](https://adventofcode.com/2018/day/15) | [Source](src/year2018/day15.rs) | 563 |
