@@ -16,10 +16,7 @@ use std::mem::swap;
 
 use crate::util::bitset::BitOps as _;
 
-pub struct Input {
-    rules: [bool; 32],
-    pots: Pots,
-}
+type Input = (i64, i64);
 
 pub fn parse(input: &str) -> Input {
     let mut lines = input.lines().map(str::as_bytes);
@@ -27,7 +24,7 @@ pub fn parse(input: &str) -> Input {
     // Parse initial state
     let initial_state = lines.next().unwrap();
     let initial_state = &initial_state[15..];
-    let pots = Pots::from(initial_state);
+    let mut pots = Pots::from(initial_state);
 
     // Parse rules into a table with all possible 2⁵=32 patterns
     lines.next();
@@ -46,27 +43,16 @@ pub fn parse(input: &str) -> Input {
         }
     }
 
-    Input { rules, pots }
-}
-
-pub fn part1(input: &Input) -> i64 {
-    let rules = input.rules;
-    let mut pots = input.pots.clone();
-
-    for _ in 0..20 {
+    // Part 1 - Simulate the first 20 steps
+    let mut steps = 0_i64;
+    while steps < 20 {
         pots.step(&rules);
+        steps += 1;
     }
+    let total1 = pots.sum();
 
-    pots.sum()
-}
-
-pub fn part2(input: &Input) -> i64 {
-    let rules = input.rules;
-    let mut pots = input.pots.clone();
-
-    // Only simulate until the generation repeats
+    // Part 2 - Only simulate until the generation repeats
     let mut prev_pos = 0;
-    let mut steps = 0;
     while steps < 50_000_000_000 {
         prev_pos = pots.pos;
         pots.step(&rules);
@@ -79,7 +65,18 @@ pub fn part2(input: &Input) -> i64 {
 
     // Extrapolate to 50 billion steps
     pots.pos += (pots.pos - prev_pos) * (50_000_000_000 - steps);
-    pots.sum()
+    let total2 = pots.sum();
+
+    // Return answer
+    (total1, total2)
+}
+
+pub fn part1(input: &Input) -> i64 {
+    input.0
+}
+
+pub fn part2(input: &Input) -> i64 {
+    input.1
 }
 
 /// Compute the length of the given bit vector
