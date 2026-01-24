@@ -18,16 +18,7 @@ pub fn part1(input: &[i64]) -> usize {
     let mut computer = Computer::new(input);
     let mut blocks = 0;
 
-    loop {
-        let State::Output(_) = computer.run() else {
-            break;
-        };
-        let State::Output(_) = computer.run() else {
-            break;
-        };
-        let State::Output(t) = computer.run() else {
-            break;
-        };
+    while let [_, _, State::Output(t)] = [computer.run(), computer.run(), computer.run()] {
         if t == 2 {
             blocks += 1;
         }
