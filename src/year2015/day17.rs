@@ -5,53 +5,35 @@
 //! This will work but is a little slow as there are 20 containers, giving 2²⁰ = 1048576
 //! combinations to check.
 //!
-//! We speed things up by noticing that some containers are the same size, so the total number
-//! of combinations is fewer. For example if there are 3 containers of size `x` that is only
-//! 4 possibilities rather than 8.
-//!
-//! We have to multiply the result by [nCr](https://en.wikipedia.org/wiki/Combination)
-//! or the number of ways of choosing `r` items from `n`. For example if 2 containers out of 3
-//! are used in a solution then there are 3 ways of selecting the 2 containers. This solution
-//! hardcodes nCr tables for `n` up to 4.
-//!
-//! As an optimization containers are ordered from largest to smallest so that the
-//! recursive checking can exit as early as possible if we exceed 150 litres.
+//! Tackle this with dynamic programming.  All we really have to compute is how
+//! many ways a given group size can be reached for any given item index used as
+//! the next item added to a smaller group whose item(s) are all smaller indices.
+//! Part 1 is then the sum of all counted group sizes that summed to 150, while
+//! Part 2 is the counter for the smallest size.
 use crate::util::parse::*;
-use std::collections::BTreeMap;
 
-/// nCr for `n` from 0 to 4 inclusive.
-const NCR: [[u32; 5]; 5] =
-    [[1, 0, 0, 0, 0], [1, 1, 0, 0, 0], [1, 2, 1, 0, 0], [1, 3, 3, 1, 0], [1, 4, 6, 4, 1]];
+const GOAL: usize = 150;
+const ITEMS: usize = 20;
 
-struct State {
-    size: Vec<u32>,
-    freq: Vec<usize>,
-    result: Vec<u32>,
-}
+pub fn parse(input: &str) -> [u32; ITEMS + 1] {
+    // Initialize an array to collect counts of reachable group sizes.
+    let mut counts = [[0; ITEMS + 1]; GOAL + 1];
+    let mut cap = 0;
+    counts[0][0] = 1;
 
-pub fn parse(input: &str) -> Vec<u32> {
-    // Collect size and frequency of each container.
-    let mut containers = BTreeMap::new();
-
-    for size in input.iter_unsigned() {
-        *containers.entry(size).or_insert(0) += 1;
+    // For each container, update ways to reach group sizes, starting from largest sum.
+    for (rank, size) in input.iter_unsigned().enumerate() {
+        cap += size;
+        let goal = if cap < GOAL { cap } else { GOAL };
+        for i in (size..goal + 1).rev() {
+            for j in 0..rank + 1 {
+                counts[i][j + 1] += counts[i - size][j];
+            }
+        }
     }
 
-    // Convenience struct to group size and frequency of each container, plus the number of
-    // combinations grouped by total number of containers.
-    let mut state = State {
-        size: containers.keys().copied().collect(),
-        freq: containers.values().copied().collect(),
-        result: vec![0; containers.len()],
-    };
-
-    // As an optimization order largest containers first so that we can exit early if the total
-    // size is greater than 150.
-    state.size.reverse();
-    state.freq.reverse();
-
-    combinations(&mut state, 0, 0, 0, 1);
-    state.result
+    // Result is row 150.
+    counts[GOAL]
 }
 
 /// We only care about the total combinations, so sum the entire vec.
@@ -62,31 +44,4 @@ pub fn part1(input: &[u32]) -> u32 {
 /// We want the number of combinations with the fewest containers, so find first non-zero value.
 pub fn part2(input: &[u32]) -> u32 {
     *input.iter().find(|&&n| n > 0).unwrap()
-}
-
-/// Recursively try every possible combination, returning early if the size exceeds 150 litres.
-///
-/// `state`: Convenience struct to reduce parameters
-/// `index`: Current container
-/// `containers`: Number of containers used so far
-/// `litres`: How many litres of eggnog stored so far
-/// `factor`: The total different number of ways of selecting previous containers
-#[expect(clippy::needless_range_loop)]
-fn combinations(state: &mut State, index: usize, containers: usize, litres: u32, factor: u32) {
-    let n = state.freq[index];
-    let mut next = litres;
-
-    for r in 0..(n + 1) {
-        if next < 150 {
-            if index < state.size.len() - 1 {
-                combinations(state, index + 1, containers + r, next, factor * NCR[n][r]);
-            }
-        } else {
-            if next == 150 {
-                state.result[containers + r] += factor * NCR[n][r];
-            }
-            break;
-        }
-        next += state.size[index];
-    }
 }
