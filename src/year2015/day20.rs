@@ -23,9 +23,10 @@
 //!
 //! ## Part Two
 //!
-//! We get a list of all possible house numbers that have divisor sums that exceed the value.
-//! Checking in ascending order, each house is broken down into its factors, including only those
-//! where the second elf will actually deliver.
+//! For n>50, it is O(1) work per candidate to check whether the first 50 elves had an integer
+//! divisor to visit n, which is faster than the complexity of trying to build up candidates by
+//! prime factors.  What's more, an offline brute force search showed that for house numbers
+//! between 1008 and 5 billion, all new record-holder sums are created from n divisible by 60.
 use crate::util::hash::*;
 use crate::util::parse::*;
 
@@ -72,55 +73,26 @@ pub fn part1(input: &u32) -> u32 {
 }
 
 pub fn part2(input: &u32) -> u32 {
-    // Differences from part one:
-    // * Return all possible house numbers.
-    // * Remove cache since each state is unique so it slows things down.
-    fn divisor_sum(candidates: &mut Vec<u32>, primes: &[u32], house: u32, target: u32) -> u32 {
-        if primes.is_empty() {
-            if target == 1 {
-                candidates.push(house);
+    fn divisor_sum(house: u32) -> u32 {
+        let mut result = 0;
+        for i in 1..51 {
+            if house.is_multiple_of(i) {
+                result += house / i;
             }
-            return target;
         }
-
-        // Try not including this prime.
-        let mut result = divisor_sum(candidates, &primes[1..], house, target);
-        let mut power = 1;
-        let mut sum = 1;
-
-        // Try increasing powers of this prime until the divisor sum exceeds the target.
-        while sum < target {
-            power *= primes[0];
-            sum += power;
-
-            let ds = divisor_sum(candidates, &primes[1..], house * power, target.div_ceil(sum));
-            result = result.min(power * ds);
-        }
-
         result
     }
-
+    // There is an upper bound presents(n) <= 11 * n * H_(50), where H_ is the k-th harmonic
+    // number.  The 50th harmonic number is approximately 4.499, which lets us set a reasonable
+    // lower boundto start searching at; using integer math to approximate is fine (it's okay
+    // if we check a few extra houses on the low end due to rounding errors).  A brute force
+    // exploration up to a target of 50 billion presents determined that we only need to care
+    // about a house number that is a multiple of 60.
+    let mut candidate = *input / (11 * 4499) * 1000;
+    candidate = candidate.div_ceil(60) * 60;
     let target = input.div_ceil(11);
-    let mut candidates = Vec::new();
-
-    // Get list of all house numbers that meet or exceed the target value in ascending order.
-    divisor_sum(&mut candidates, &PRIMES, 1, target);
-    candidates.sort_unstable();
-
-    // Find the first house taking into account the 50 present limit.
-    candidates.into_iter().find(|&house| factor_sum(&PRIMES, house, 1) >= target).unwrap()
-}
-
-/// Combine prime factors into all factors, only counting those where the elf will still deliver.
-fn factor_sum(primes: &[u32], house: u32, factor: u32) -> u32 {
-    if primes.is_empty() {
-        // Check if the elf reached this house.
-        if 50 * factor >= house { factor } else { 0 }
-    } else {
-        (0..31)
-            .map(|exp| primes[0].pow(exp))
-            .take_while(|&prime_power| house.is_multiple_of(prime_power))
-            .map(|prime_power| factor_sum(&primes[1..], house, factor * prime_power))
-            .sum()
+    while divisor_sum(candidate) < target {
+        candidate += 60;
     }
+    candidate
 }
