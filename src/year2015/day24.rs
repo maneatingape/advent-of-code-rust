@@ -15,11 +15,11 @@
 //! entries already populated during part 1.  Thus, this solution
 //! computes the results during `parse()`, at which point `part1()`
 //! and `part2()` merely return the already-known results.
+use crate::util::hash::*;
 use crate::util::parse::*;
 
 const MAX_SUM: usize = 600;
 const ITEMS: usize = 28;
-const MAX_GROUP: usize = 7;
 
 #[derive(Clone, Copy)]
 struct Info {
@@ -29,9 +29,9 @@ struct Info {
 
 struct State {
     info: [Info; MAX_SUM], // Info learned during dynamic programming pre-pass
-    memo: Box<[[[u64; MAX_GROUP + 1]; ITEMS]; MAX_SUM]>, // Memoization cache, u64::MAX for unknown
     packages: Vec<usize>,  // Package weights from input
     total: usize,          // Total weight of all packages
+    memo: FastMap<(usize, usize, usize), u64>, // Memoization cache over (sum, maxindex, groupsize); with u64::MAX for no solution
 }
 
 pub struct Input {
@@ -43,9 +43,9 @@ pub fn parse(input: &str) -> Input {
     let packages: Vec<_> = input.iter_unsigned().collect();
     let mut state = State {
         info: [Info { sizes: 0, items: 0 }; MAX_SUM],
-        memo: Box::new([[[u64::MAX; MAX_GROUP + 1]; ITEMS]; MAX_SUM]),
         packages: packages.clone(),
         total: packages.iter().sum::<usize>(),
+        memo: FastMap::with_capacity(MAX_SUM * ITEMS),
     };
     state.info[0].sizes = 1 << 0;
     let mut cap = 0;
@@ -116,20 +116,21 @@ fn combinations(state: &mut State, size: usize, maxindex: usize, sum: usize) -> 
     }
 
     // Check if answer still needs to be computed
-    if state.memo[sum][maxindex][size] == u64::MAX {
+    if !state.memo.contains_key(&(sum, maxindex, size)) {
         let nextsum = sum - state.packages[maxindex];
         let by_group =
             combinations(state, size - 1, msb_below(state.info[nextsum].items, maxindex), nextsum);
         let by_index = combinations(state, size, msb_below(state.info[sum].items, maxindex), sum);
-        let entry = &mut state.memo[sum][maxindex][size];
-        if by_group < u64::MAX && by_group * (state.packages[maxindex] as u64) < *entry {
-            *entry = by_group * (state.packages[maxindex] as u64);
+        let mut entry = u64::MAX;
+        if by_group < u64::MAX {
+            entry = by_group * (state.packages[maxindex] as u64);
         }
-        if by_index < *entry {
-            *entry = by_index;
+        if by_index < entry {
+            entry = by_index;
         }
+        state.memo.insert((sum, maxindex, size), entry);
     }
 
     // Return cached answer
-    state.memo[sum][maxindex][size]
+    state.memo[&(sum, maxindex, size)]
 }
