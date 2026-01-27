@@ -1,59 +1,58 @@
 //! # It Hangs in the Balance
 //!
-//! To simplify things assumes that the remaining items after the first best combination is found
-//! can be split evenly.
+//! To simplify things the solution assumes that the remaining items after the first best
+//! combination is found can be split evenly.
 //!
-//! Sorts the weights in ascending order, then tries combinations of increasing size until a
-//! match in found. This will be the answer since the package count is the smallest and the
-//! quantum entanglement will also be the lowest.
-use crate::util::bitset::*;
+//! This problem is the same as [`Day 17`] part two and we use the same dynamic programming approach
+//! with two tables. This approach is described in detail in the day 17 solution.
+//!
+//! The key difference is that we store the partial quantum entanglement as we build the table.
+//! If the number of items from a take/not take choice is fewer, then we just use that quantum
+//! entanglement. If the number of items is the same then we use the smaller value. Otherwise
+//! we do nothing.
+//!
+//! [`Day 17`]: crate::year2015::day17
 use crate::util::parse::*;
 
-pub fn parse(input: &str) -> Vec<u32> {
-    let mut packages: Vec<_> = input.iter_unsigned().collect();
-    packages.sort_unstable();
-    packages
+pub fn parse(input: &str) -> Vec<usize> {
+    input.iter_unsigned().collect()
 }
 
-pub fn part1(input: &[u32]) -> u64 {
-    combinations(input, 3)
+pub fn part1(input: &[usize]) -> usize {
+    arrangements(input, 3)
 }
 
-pub fn part2(input: &[u32]) -> u64 {
-    combinations(input, 4)
+pub fn part2(input: &[usize]) -> usize {
+    arrangements(input, 4)
 }
 
-/// Breadth first search over all possible package combinations as we want the fewest possible
-/// packages that sum to the target weight. Uses a bitmask as a set for each package combination.
-fn combinations(input: &[u32], groups: u32) -> u64 {
-    let target = input.iter().sum::<u32>() / groups;
-    let mut current = &mut Vec::with_capacity(100_000);
-    let mut next = &mut Vec::with_capacity(100_000);
+fn arrangements(input: &[usize], groups: usize) -> usize {
+    let goal = input.iter().sum::<usize>() / groups;
 
-    // Start with no packages.
-    current.push((0_u32, 0_u32));
+    // Zero weight needs zero packages.
+    let mut minimum = vec![u32::MAX; goal + 1];
+    minimum[0] = 0;
 
-    loop {
-        for (weight, packages) in current.drain(..) {
-            // Find the next highest power of two.
-            let start = 32 - packages.leading_zeros() as usize;
+    // Define quantum entanglement for zero packages to be 1.
+    let mut qe = vec![usize::MAX; goal + 1];
+    qe[0] = 1;
 
-            // Add one package at a time to this combination.
-            for i in start..input.len() {
-                let next_weight = weight + input[i];
-                let next_packages = packages | (1 << i);
+    for &item in input {
+        for i in (item..goal + 1).rev() {
+            let take = minimum[i - item].saturating_add(1);
+            let not_take = minimum[i];
 
-                if next_weight == target {
-                    return next_packages.biterator().map(|i| input[i] as u64).product();
-                }
-                if next_weight > target {
-                    break;
-                }
-
-                next.push((next_weight, next_packages));
+            if take < not_take {
+                // Taking the item result in fewer packages, use the new quantum entanglement even
+                // if it's greater than the existing value.
+                qe[i] = item.saturating_mul(qe[i - item]);
+                minimum[i] = take;
+            } else if take == not_take {
+                // Number of packages is the same, so choose the minimum quantum entanglement.
+                qe[i] = qe[i].min(item.saturating_mul(qe[i - item]));
             }
         }
-
-        (current, next) = (next, current);
     }
+
+    qe[goal]
 }
