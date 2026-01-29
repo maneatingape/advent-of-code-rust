@@ -405,7 +405,7 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 | 17 | [No Such Thing as Too Much](https://adventofcode.com/2015/day/17) | [Source](src/year2015/day17.rs) | 4 |
 | 18 | [Like a GIF For Your Yard](https://adventofcode.com/2015/day/18) | [Source](src/year2015/day18.rs) | 154 |
 | 19 | [Medicine for Rudolph](https://adventofcode.com/2015/day/19) | [Source](src/year2015/day19.rs) | 23 |
-| 20 | [Infinite Elves and Infinite Houses](https://adventofcode.com/2015/day/20) | [Source](src/year2015/day20.rs) | 368 |
+| 20 | [Infinite Elves and Infinite Houses](https://adventofcode.com/2015/day/20) | [Source](src/year2015/day20.rs) | 1 |
 | 21 | [RPG Simulator 20XX](https://adventofcode.com/2015/day/21) | [Source](src/year2015/day21.rs) | 2 |
 | 22 | [Wizard Simulator 20XX](https://adventofcode.com/2015/day/22) | [Source](src/year2015/day22.rs) | 235 |
 | 23 | [Opening the Turing Lock](https://adventofcode.com/2015/day/23) | [Source](src/year2015/day23.rs) | 6 |
