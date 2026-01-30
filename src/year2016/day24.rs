@@ -9,14 +9,14 @@
 //! searches starting from each location.
 //!
 //! For speed we convert each location into an index, then store the distances between
-//! every pair of locations in a vec for fast lookup. Our utility [`permutations`] method uses
-//! [Heap's algorithm](https://en.wikipedia.org/wiki/Heap%27s_algorithm) for efficiency,
+//! every pair of locations in a vec for fast lookup. Our utility [`half_permutations`] method uses
+//! [Steinhaus-Johnson-Trotter's algorithm](https://en.wikipedia.org/wiki/Steinhaus%E2%80%93Johnson%E2%80%93Trotter_algorithm) for efficiency,
 //! modifying the slice in place.
 //!
 //! There are 8 locations, however since we always start at `0` this requires checking only
-//! 7! = 5,040 permutations. We find the answer to both part one and two simultaneously.
+//! 7!/2 = 2,520 permutations. We find the answer to both part one and two simultaneously.
 //!
-//! [`permutations`]: crate::util::slice
+//! [`half_permutations`]: crate::util::slice
 //! [`Year 2015 Day 13`]: crate::year2015::day13
 use crate::util::grid::*;
 use crate::util::parse::*;
@@ -64,14 +64,14 @@ pub fn parse(input: &str) -> Input {
     let mut part_two = u32::MAX;
     let mut indices: Vec<_> = (1..stride).collect();
 
-    indices.permutations(|slice| {
+    indices.half_permutations(|slice| {
         let link = |from, to| distance[stride * from + to];
 
         let first = link(0, slice[0]);
         let middle = slice.windows(2).map(|w| link(w[0], w[1])).sum::<u32>();
         let last = link(slice[slice.len() - 1], 0);
 
-        part_one = part_one.min(first + middle);
+        part_one = part_one.min(first + middle).min(middle + last);
         part_two = part_two.min(first + middle + last);
     });
 

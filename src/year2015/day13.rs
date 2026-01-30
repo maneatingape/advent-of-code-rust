@@ -3,8 +3,9 @@
 //! This problem is very similar to [`Day 9`] and we solve it in almost exactly the same way by
 //! computing an adjacency matrix of happiness then permuting the order of the diners.
 //!
-//! For part one we reduce the permutations from 8! = 40,320 permutations to 7! = 5,040
-//! permutations by arbitrarily choosing one of the diners as the start.
+//! For part one we reduce the permutations from 8! = 40,320 permutations to 7!/2 = 2,520
+//! permutations by arbitrarily choosing one of the diners as the start, and skipping lexically
+//! reversed forms (seating a->b->c->a gives the same happiness as seating c->b->a->c).
 //!
 //! We solve part two at the same time by noticing that by inserting yourself between two diners
 //! you set the value of their mutual link to zero. Keeping tracking of the weakest link
@@ -51,7 +52,7 @@ pub fn parse(input: &str) -> Input {
     let mut part_two = 0;
     let mut indices: Vec<_> = (1..stride).collect();
 
-    indices.permutations(|slice| {
+    indices.half_permutations(|slice| {
         let mut sum = 0;
         let mut weakest_link = i32::MAX;
 
