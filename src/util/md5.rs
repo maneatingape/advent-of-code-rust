@@ -144,10 +144,10 @@ pub mod simd {
     use std::simd::*;
 
     #[inline]
-    pub fn hash_fixed<const N: usize>(buffers: &mut [[u8; 64]; N], size: usize) -> [Simd<u32, N>; 4]
-    where
-        LaneCount<N>: SupportedLaneCount,
-    {
+    pub fn hash_fixed<const N: usize>(
+        buffers: &mut [[u8; 64]; N],
+        size: usize,
+    ) -> [Simd<u32, N>; 4] {
         // Assume all buffers are the same size.
         for buffer in buffers.iter_mut() {
             buffer[size] = 0x80;
@@ -249,10 +249,7 @@ pub mod simd {
     }
 
     #[inline]
-    fn message<const N: usize>(buffers: &[[u8; 64]; N], i: usize, size: usize) -> Simd<u32, N>
-    where
-        LaneCount<N>: SupportedLaneCount,
-    {
+    fn message<const N: usize>(buffers: &[[u8; 64]; N], i: usize, size: usize) -> Simd<u32, N> {
         if i > size {
             Simd::splat(0)
         } else {
@@ -272,10 +269,7 @@ pub mod simd {
         m: Simd<u32, N>,
         s: u32,
         k: u32,
-    ) -> Simd<u32, N>
-    where
-        LaneCount<N>: SupportedLaneCount,
-    {
+    ) -> Simd<u32, N> {
         let f = (b & c) | (!b & d);
         common(f, a, b, m, s, k)
     }
@@ -289,10 +283,7 @@ pub mod simd {
         m: Simd<u32, N>,
         s: u32,
         k: u32,
-    ) -> Simd<u32, N>
-    where
-        LaneCount<N>: SupportedLaneCount,
-    {
+    ) -> Simd<u32, N> {
         let f = (b & d) | (c & !d);
         common(f, a, b, m, s, k)
     }
@@ -307,9 +298,7 @@ pub mod simd {
         s: u32,
         k: u32,
     ) -> Simd<u32, N>
-    where
-        LaneCount<N>: SupportedLaneCount,
-    {
+where {
         let f = b ^ c ^ d;
         common(f, a, b, m, s, k)
     }
@@ -324,9 +313,7 @@ pub mod simd {
         s: u32,
         k: u32,
     ) -> Simd<u32, N>
-    where
-        LaneCount<N>: SupportedLaneCount,
-    {
+where {
         let f = c ^ (b | !d);
         common(f, a, b, m, s, k)
     }
@@ -340,9 +327,7 @@ pub mod simd {
         s: u32,
         k: u32,
     ) -> Simd<u32, N>
-    where
-        LaneCount<N>: SupportedLaneCount,
-    {
+where {
         let k = Simd::splat(k);
         let first = f + a + k + m;
         let second = (first << s) | (first >> (32 - s));

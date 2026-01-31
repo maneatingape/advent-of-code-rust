@@ -113,9 +113,7 @@ mod simd {
         start: u32,
         offset: u32,
         shared: &Shared,
-    ) where
-        LaneCount<N>: SupportedLaneCount,
-    {
+    ) {
         // Format macro is very slow, so update digits directly
         for i in 0..N {
             let n = offset + i as u32;
