@@ -50,8 +50,8 @@ pub fn part1(tiles: &[Tile]) -> u64 {
     let (bottom_left_tiles, bottom_right_tiles) =
         get_potential_left_corner_tiles(tiles.iter().copied().rev());
 
-    find_largest_from_all_corners(&top_left_tiles, &bottom_right_tiles)
-        .max(find_largest_from_all_corners(&bottom_left_tiles, &top_right_tiles))
+    find_largest_from_all_corners(&top_left_tiles, &bottom_right_tiles, true)
+        .max(find_largest_from_all_corners(&bottom_left_tiles, &top_right_tiles, false))
 }
 
 /// This function filters `sorted_tiles` into two lists, one containing all tiles that could be the top left
@@ -112,17 +112,74 @@ fn get_potential_left_corner_tiles(
         }
     }
 
+    right_tiles.reverse();
     (left_tiles, right_tiles)
 }
 
 #[inline]
-fn find_largest_from_all_corners(corner: &[[u32; 2]], opposite_corner: &[[u32; 2]]) -> u64 {
-    let mut largest = 0_u64;
+fn find_largest_from_all_corners(
+    corner: &[[u32; 2]],
+    opposite_corner: &[[u32; 2]],
+    top_left: bool,
+) -> u64 {
+    // Helper struct for a work queue of remaining pairings that need to be checked
+    struct Work {
+        p_lo: usize,
+        p_hi: usize,
+        q_lo: usize,
+        q_hi: usize,
+    }
 
-    for &p in corner {
-        for &q in opposite_corner {
-            largest =
-                largest.max((p[0].abs_diff(q[0]) + 1) as u64 * (p[1].abs_diff(q[1]) + 1) as u64);
+    fn addrange(work: &mut Vec<Work>, p_lo: usize, p_hi: usize, q_lo: usize, q_hi: usize) {
+        if p_lo <= p_hi && q_lo <= q_hi {
+            let job = Work { p_lo, p_hi, q_lo, q_hi };
+            work.push(job);
+        }
+    }
+
+    // Instead of performing an O(n^2) pairing of every point between the two sets, we can
+    // divide and conquer for O(n log n) work by repeatedly dividing the set corner against
+    // the partitions of opposite_corner that correspond to the best result from the halfway
+    // point of corner.
+    let mut largest = 0_u64;
+    let start = Work { p_lo: 0, p_hi: corner.len() - 1, q_lo: 0, q_hi: opposite_corner.len() - 1 };
+    let mut work = vec![start];
+
+    while let Some(job) = work.pop() {
+        // For a given point in corner, sweep the points in opposite_corner to find the
+        // partition point for the best rectangle on the sweep.
+        let p_mid = usize::midpoint(job.p_lo, job.p_hi);
+        let p = corner[p_mid];
+        let mut best_i = None;
+        let mut maxsize = 0_u64;
+        let mut q_lim = job.q_lo;
+
+        for (q_i, q) in opposite_corner.iter().enumerate().take(job.q_hi + 1).skip(job.q_lo) {
+            if p[0] > q[0] {
+                q_lim = q_i;
+            } else if (p[1] < q[1]) == top_left {
+                let size = (p[0].abs_diff(q[0]) + 1) as u64 * (p[1].abs_diff(q[1]) + 1) as u64;
+                if size > maxsize {
+                    maxsize = size;
+                    best_i = Some(q_i);
+                }
+            }
+        }
+
+        // The sweep determined how to partition smaller searches on the left and right halves
+        if let Some(i) = best_i {
+            largest = largest.max(maxsize);
+            if p_mid > 0 {
+                addrange(&mut work, job.p_lo, p_mid - 1, job.q_lo, i);
+            }
+            addrange(&mut work, p_mid + 1, job.p_hi, i, job.q_hi);
+        } else {
+            if p_mid > 0 && q_lim > 0 {
+                addrange(&mut work, job.p_lo, p_mid - 1, job.q_lo, q_lim - 1);
+            }
+            if q_lim > 0 {
+                addrange(&mut work, p_mid + 1, job.p_hi, q_lim, job.q_hi);
+            }
         }
     }
 
