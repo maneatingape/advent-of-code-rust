@@ -210,7 +210,7 @@ fn play(monkeys: &[Monkey], mut from: usize, mut item: usize) -> Business {
             round += 1;
             path.push(business);
 
-            // If we have found a cycle, then short ciruit and return the final result.
+            // If we have found a cycle, then short circuit and return the final result.
             if let Some(previous) = seen.insert((to, item), path.len() - 1) {
                 let cycle_width = round - previous;
 
