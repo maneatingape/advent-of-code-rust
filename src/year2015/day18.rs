@@ -1,14 +1,17 @@
 //! # Like a GIF For Your Yard
 //!
 //! To solve this efficiently we use a [SWAR](https://en.wikipedia.org/wiki/SWAR) approach,
-//! packing 50 lights into a `u64` taking 1 bit each.  But rather than taking the bits consecutively,
+//! packing 50 lights into a `u64` taking 1 bit each, drawing inspiration from a solution from
+//! [u/terje_wiig_mathisen/](https://github.com/TerjeWiigMathisen/aoc-2015-day18).
+//!
+//! But rather than taking the bits consecutively,
 //! split the odd columns into one int and the even into another - that way, when it is time to
 //! check neighbors, all left and right neighbors of the odd lanes are already available with just
 //! one shift of all the even lanes, and vice versa.  We calculate the next generation using no
 //! conditional statements with the following steps.
 //!
 //! 1. Pack the input bytes into register values that can be represented as binary digits, split
-//! into odd and even lanes.  An extra empty row at the bottom reduces later special-casing.
+//!    into odd and even lanes.  An extra empty row at the bottom reduces later special-casing.
 //!
 //! ```none
 //!                    .even .odd
