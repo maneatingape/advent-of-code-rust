@@ -22,6 +22,13 @@
 //! An overlap indicates a potential match, but we need to confirm by checking the beacons against
 //! each other in two steps. First confirming orientation by matching the deltas between
 //! points, then by translating the beacons until 12 overlap.
+//!
+//! For part 2, an obvious solution for finding the largest Manhattan distance between any two
+//! points is a quadratic comparison of every point against another.  But a linear solution
+//! exists, by doing a single pass over all points to identify the maximum delta between the
+//! largest and smallest sums possible along each of the four possible combinations of each
+//! choice of direction among the three dimensions.  [This post](https://www.reddit.com/r/adventofcode/comments/rygnl8/2021_day_19_part_2pseudocode_speeding_up/)
+//! explains the trick a bit better.
 use crate::util::hash::*;
 use crate::util::iter::*;
 use crate::util::parse::*;
@@ -75,9 +82,14 @@ impl Point3D {
         dx * dx + dy * dy + dz * dz
     }
 
-    fn manhattan(&self, other: &Point3D) -> i32 {
-        let Point3D(dx, dy, dz) = *self - *other;
-        dx.abs() + dy.abs() + dz.abs()
+    /// Return the four ways this point can contribute to a Manhattan distance.
+    fn extrema(&self) -> (i32, i32, i32, i32) {
+        (
+            self.0 + self.1 + self.2,
+            self.0 + self.1 - self.2,
+            self.0 - self.1 + self.2,
+            self.0 - self.1 - self.2,
+        )
     }
 }
 
@@ -211,15 +223,34 @@ pub fn part1(input: &[Located]) -> usize {
 
 /// Calculate the maximum manhattan distance between any two scanners.
 pub fn part2(input: &[Located]) -> i32 {
-    let mut result = 0;
+    // Rather than actually having to pair up scanners and compute a Manhattan distance, it
+    // is sufficient to just find the global extremes among each point's extrema in a linear
+    // pass over all the points.  The largest Manhattan distance will be the largest delta
+    // among those pairs of extremes.
 
-    for first in input {
-        for second in input {
-            result = result.max(first.translation.manhattan(&second.translation));
-        }
+    let mut maximums = (i32::MIN, i32::MIN, i32::MIN, i32::MIN);
+    let mut minimums = (i32::MAX, i32::MAX, i32::MAX, i32::MAX);
+
+    for loc in input {
+        let extrema = loc.translation.extrema();
+        maximums = (
+            maximums.0.max(extrema.0),
+            maximums.1.max(extrema.1),
+            maximums.2.max(extrema.2),
+            maximums.3.max(extrema.3),
+        );
+        minimums = (
+            minimums.0.min(extrema.0),
+            minimums.1.min(extrema.1),
+            minimums.2.min(extrema.2),
+            minimums.3.min(extrema.3),
+        );
     }
 
-    result
+    (maximums.0 - minimums.0)
+        .max(maximums.1 - minimums.1)
+        .max(maximums.2 - minimums.2)
+        .max(maximums.3 - minimums.3)
 }
 
 /// At least 66 Euclidean distances must overlap for a potential match.
