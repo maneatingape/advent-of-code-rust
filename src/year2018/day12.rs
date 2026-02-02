@@ -4,7 +4,7 @@
 //! [Conway's Game of Life](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life).
 //!
 //! We use a vector to store which pots are occupied and which are empty in each generation.
-//! When calulating the next step, we truncate the bit vector on the left and right.
+//! When calculating the next step, we truncate the bit vector on the left and right.
 //! This makes it easier to compare generations in part two.
 //!
 //! The trick for part two is that the plants will eventually stabilize into a stable pattern

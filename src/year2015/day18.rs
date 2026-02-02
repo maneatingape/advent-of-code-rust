@@ -63,8 +63,8 @@
 //! If we `OR` the neighbor count with the current cell, either `0000` or `0001` then the
 //! binary representation of a lit cell will always be `0011`.
 //!
-//! Using the bits as labelled above, the next cell is `(orig|s) & (q^r) & !p`, masked back
-//! to the 50 bits per integer..
+//! Using the bits as labelled above, the next cell is `(e|s) & (q^r) & !p`, masked back
+//! to the 50 bits per integer.
 
 const MASK: u64 = (1 << 50) - 1;
 const LEFT_CORNER: u64 = 1 << 49;

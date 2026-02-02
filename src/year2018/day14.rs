@@ -46,7 +46,7 @@ pub fn part2(input: &Input) -> usize {
 }
 
 /// Receives batches of recipes from the writer thread, then scans them byte by byte searching
-/// for the part two pattern. For simplicity the pattern is always assumed to by six digits.
+/// for the part two pattern. For simplicity the pattern is always assumed to be six digits.
 fn reader(rx: Receiver<&[u8]>, done: &AtomicBool, input: &str) -> (String, usize) {
     let part_one_target = input.unsigned::<usize>() + 10;
     let part_two_target = u32::from_str_radix(input.trim(), 16).unwrap();
@@ -291,7 +291,7 @@ fn unpack(first: usize, second: usize) -> (usize, usize, usize) {
     const SIXES: usize = 0x0606060606060606;
     const INDICES: usize = 0x0001020304050607;
 
-    // Example values, showing each byte in a columm:
+    // Example values, showing each byte in a column:
     //
     // first      | 04 | 01 | 09 | 08 | 00 | 03 | 05 | 07 |
     // second     | 03 | 00 | 02 | 04 | 09 | 06 | 05 | 01 |
