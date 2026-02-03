@@ -51,7 +51,7 @@ pub fn parse(input: &str) -> Vec<Room<'_>> {
         }
 
         // Check each pair making sure that the frequency is non-increasing and that there are
-        // no letters in between (`fof` should be zero for all intervening letters).
+        // no letters in between (`fof` should be zero for all intervening frequencies).
         // If the frequency is equal then also make sure letters are in alphabetical order.
         for w in checksum.windows(2) {
             let end = freq[to_index(w[0])];
