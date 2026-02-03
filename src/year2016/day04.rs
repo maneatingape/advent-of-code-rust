@@ -16,13 +16,11 @@ pub struct Room<'a> {
 
 pub fn parse(input: &str) -> Vec<Room<'_>> {
     let mut valid = Vec::new();
-    let to_index = |b: u8| (b - b'a') as usize;
 
-    'outer: for line in input.lines() {
+    for line in input.lines() {
         // The sector id and checksum are fixed size leaving whatever is left over as the name.
         let size = line.len();
         let name = &line[..size - 11];
-        let sector_id = (&line[size - 10..size - 7]).unsigned();
         let checksum = &line.as_bytes()[size - 6..size - 1];
 
         // Count the frequency of each digit, the frequency of each frequency `fof` and the
@@ -45,28 +43,11 @@ pub fn parse(input: &str) -> Vec<Room<'_>> {
             }
         }
 
-        // Initial check.
-        if freq[to_index(checksum[0])] != highest {
-            continue;
+        // Filter real rooms vs decoys.
+        if freq[to_index(checksum[0])] == highest && rules(checksum, &freq, &fof) {
+            let sector_id = (&line[size - 10..size - 7]).unsigned();
+            valid.push(Room { name, sector_id });
         }
-
-        // Check each pair making sure that the frequency is non-increasing and that there are
-        // no letters in between (`fof` should be zero for all intervening frequencies).
-        // If the frequency is equal then also make sure letters are in alphabetical order.
-        for w in checksum.windows(2) {
-            let end = freq[to_index(w[0])];
-            let start = freq[to_index(w[1])];
-
-            if start > end || (start == end && w[1] <= w[0]) {
-                continue 'outer;
-            }
-
-            if (start + 1..end).any(|i| fof[i] != 0) {
-                continue 'outer;
-            }
-        }
-
-        valid.push(Room { name, sector_id });
     }
 
     valid
@@ -102,4 +83,19 @@ pub fn part2(input: &[Room<'_>]) -> u32 {
     }
 
     unreachable!()
+}
+
+/// Check each pair making sure that the frequency is non-increasing and that there are
+/// no letters in between (`fof` should be zero for all intervening frequencies).
+/// If the frequency is equal then also make sure letters are in alphabetical order.
+fn rules(checksum: &[u8], freq: &[usize], fof: &[i32]) -> bool {
+    checksum.windows(2).all(|w| {
+        let end = freq[to_index(w[0])];
+        let start = freq[to_index(w[1])];
+        !(start > end || (start == end && w[1] <= w[0]) || (start + 1..end).any(|i| fof[i] != 0))
+    })
+}
+
+fn to_index(b: u8) -> usize {
+    (b - b'a') as usize
 }
