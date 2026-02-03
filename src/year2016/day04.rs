@@ -44,7 +44,7 @@ pub fn parse(input: &str) -> Vec<Room<'_>> {
         }
 
         // Filter real rooms vs decoys.
-        if freq[to_index(checksum[0])] == highest && rules(checksum, &freq, &fof) {
+        if freq[to_index(checksum[0])] == highest && rules(checksum, &freq, &mut fof) {
             let sector_id = (&line[size - 10..size - 7]).unsigned();
             valid.push(Room { name, sector_id });
         }
@@ -88,11 +88,14 @@ pub fn part2(input: &[Room<'_>]) -> u32 {
 /// Check each pair making sure that the frequency is non-increasing and that there are
 /// no letters in between (`fof` should be zero for all intervening frequencies).
 /// If the frequency is equal then also make sure letters are in alphabetical order.
-fn rules(checksum: &[u8], freq: &[usize], fof: &[i32]) -> bool {
+fn rules(checksum: &[u8], freq: &[usize], fof: &mut [i32]) -> bool {
     checksum.windows(2).all(|w| {
         let end = freq[to_index(w[0])];
         let start = freq[to_index(w[1])];
-        !(start > end || (start == end && w[1] <= w[0]) || (start + 1..end).any(|i| fof[i] != 0))
+        fof[end] -= 1;
+        !(start > end
+            || (start == end && w[1] <= w[0])
+            || (start + 1..end + 1).any(|i| fof[i] != 0))
     })
 }
 
