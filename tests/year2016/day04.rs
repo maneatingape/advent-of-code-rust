@@ -10,9 +10,11 @@ totally-real-room-200[decoy]";
 // ties broken by alphabetization".  This is ambiguous on whether the tie must have been broken
 // by the first such letter, or whether we merely need the letters present in the checksum in
 // order regardless of the order of skipped letters.  Go with the looser interpretation, since
-// it gives slightly faster code, and no one has reported an input file where it fails.
+// it gives slightly faster code, and no one has reported an input file where it fails.  However,
+// when there is more than one higher-frequency letter, both should be in the checksum.
 const EXAMPLE2: &str = "\
-a-b-c-d-e-f-g-h-001[bcdef]";
+a-b-c-d-e-f-g-h-001[bcdef]
+aa-bb-c-d-e-f-g-h-002[acdef]";
 
 #[test]
 fn part1_test() {
