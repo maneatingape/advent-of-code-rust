@@ -9,6 +9,7 @@
 //!
 //! [`parse`]: crate::util::parse
 //! [`point`]: crate::util::point
+use crate::util::integer::*;
 use crate::util::parse::*;
 use crate::util::point::*;
 
@@ -22,14 +23,10 @@ struct Segment {
     y2: i32,
 }
 
-fn minmax(a: i32, b: i32) -> (i32, i32) {
-    if a < b { (a, b) } else { (b, a) }
-}
-
 impl Segment {
     fn new(first: Point, second: Point) -> Self {
-        let (x1, x2) = minmax(first.x, second.x);
-        let (y1, y2) = minmax(first.y, second.y);
+        let (x1, x2) = first.x.minmax(second.x);
+        let (y1, y2) = first.y.minmax(second.y);
         Segment { x1, x2, y1, y2 }
     }
 

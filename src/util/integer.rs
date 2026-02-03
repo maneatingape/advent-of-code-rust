@@ -23,6 +23,7 @@ pub trait Integer<T>:
     const TEN: T;
 
     fn trailing_zeros(self) -> u32;
+    fn minmax(self, other: T) -> (T, T);
 }
 
 pub trait Unsigned<T>: Integer<T> {}
@@ -39,6 +40,11 @@ macro_rules! integer {
             #[inline]
             fn trailing_zeros(self) -> u32 {
                 <$t>::trailing_zeros(self)
+            }
+
+            #[inline]
+            fn minmax(self, other: $t) -> ($t, $t) {
+                if self < other { (self, other) } else { (other, self) }
             }
         }
     )*)
