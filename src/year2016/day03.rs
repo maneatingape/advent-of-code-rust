@@ -5,6 +5,7 @@
 //!
 //! [`iter`]: crate::util::iter
 //! [`parse`]: crate::util::parse
+use crate::util::integer::*;
 use crate::util::iter::*;
 use crate::util::parse::*;
 
@@ -24,5 +25,12 @@ fn count<'a, I>(iter: I) -> usize
 where
     I: Iterator<Item = &'a u32>,
 {
-    iter.chunk::<3>().filter(|&[&a, &b, &c]| a + b > c && a + c > b && b + c > a).count()
+    iter.chunk::<3>()
+        .filter(|&[&a, &b, &c]| {
+            // It is faster to manually sort out the largest element and do one compare
+            let (a, b) = a.minmax(b);
+            let (b, c) = b.minmax(c);
+            a + b > c
+        })
+        .count()
 }

@@ -8,6 +8,7 @@
 //!
 //! [`iter_unsigned`]: crate::util::parse
 //! [`chunk`]: crate::util::iter
+use crate::util::integer::*;
 use crate::util::iter::*;
 use crate::util::parse::*;
 
@@ -17,9 +18,12 @@ pub fn parse(input: &str) -> Input {
     input
         .iter_unsigned()
         .chunk::<3>()
-        .map(|mut chunk| {
-            chunk.sort_unstable();
-            chunk
+        .map(|[a, b, c]: [u32; 3]| {
+            // We only care which element is largest; it is faster to partially sort ourselves
+            // than to use sort_unstable.
+            let (a, b) = a.minmax(b);
+            let (b, c) = b.minmax(c);
+            [a, b, c]
         })
         .collect()
 }
