@@ -13,7 +13,8 @@ totally-real-room-200[decoy]";
 // it gives slightly faster code, and no one has reported an input file where it fails.
 const EXAMPLE2: &str = "\
 a-b-c-d-e-f-g-h-001[bcdef]
-a-b-c-d-e-f-g-h-002[abcef]";
+a-b-c-d-e-f-g-h-002[abcef]
+aaaaa-bbbbb-c-d-e-f-g-h-004[acdef]";
 
 #[test]
 fn part1_test() {
