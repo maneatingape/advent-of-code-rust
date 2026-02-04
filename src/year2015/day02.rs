@@ -16,9 +16,9 @@ type Input = Vec<[u32; 3]>;
 
 pub fn parse(input: &str) -> Input {
     input
-        .iter_unsigned()
+        .iter_unsigned::<u32>()
         .chunk::<3>()
-        .map(|[a, b, c]: [u32; 3]| {
+        .map(|[a, b, c]| {
             // We only care which element is largest; it is faster to partially sort ourselves
             // than to use sort_unstable.
             let (a, b) = a.minmax(b);
