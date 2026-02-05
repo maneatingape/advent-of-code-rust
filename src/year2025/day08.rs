@@ -12,7 +12,9 @@ struct Node {
     size: usize,
 }
 
-const BUCKETS: usize = 5;
+/// Since the input is rather uniformly spaced, we assume that any two points further apart
+/// than 4*size will eventually be connected by some point in between.
+const BUCKETS: usize = 4;
 const SIZE: usize = 10_000 * 10_000;
 
 pub fn parse(input: &str) -> Input {
@@ -72,8 +74,10 @@ fn worker(boxes: &[Box], iter: ParIter<'_, usize>) -> Vec<Vec<Pair>> {
             let dz = v1[2].abs_diff(v2[2]);
             let distance = dx * dx + dy * dy + dz * dz;
 
-            let index = (distance / SIZE).min(BUCKETS - 1);
-            buckets[index].push((i as u16, j as u16, distance));
+            let index = distance / SIZE;
+            if index < BUCKETS {
+                buckets[index].push((i as u16, j as u16, distance));
+            }
         }
     }
 
