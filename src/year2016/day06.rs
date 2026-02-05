@@ -17,11 +17,8 @@ pub fn parse(input: &str) -> Input {
             let mut freq = [0; 26];
             input.iter().skip(offset).step_by(stride).for_each(|&b| freq[to_index(b)] += 1);
 
-            let (max, _) =
-                freq.iter().enumerate().filter(|&(_, &f)| f > 0).max_by_key(|&(_, &f)| f).unwrap();
-            let (min, _) =
-                freq.iter().enumerate().filter(|&(_, &f)| f > 0).min_by_key(|&(_, &f)| f).unwrap();
-
+            let max = (0..26).max_by_key(|&i| freq[i]).unwrap();
+            let min = (0..26).filter(|&i| freq[i] > 0).min_by_key(|&i| freq[i]).unwrap();
             (to_char(max), to_char(min))
         })
         .unzip()
