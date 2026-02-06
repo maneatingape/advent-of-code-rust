@@ -7,11 +7,11 @@
 //! The key to optimizing is to cache previously seen states. As we receive states in strictly
 //! increasing order of mana spent if we see a state again then it cannot possibly be optimal
 //! and we can discard.  As an additional heuristic, for any given state, we know that we must
-//! spend a minimum mana on every turn, and that that the game will last for at least as many
+//! spend a minimum mana on every turn, and that the game will last for at least as many
 //! turns as it requires for maximum damage to deplete the boss's hit points.  This heuristic
 //! does not take into account the fact that maximum damage is only possible while Poison is
 //! still active, where re-casting Poison costs more mana but can end the game faster; but
-//! that's okay: as long as the heuristic is consitent, underestimating is fine.
+//! that's okay: as long as the heuristic is consistent, underestimating is fine.
 use crate::util::hash::*;
 use crate::util::heap::*;
 use crate::util::iter::*;

@@ -1,7 +1,7 @@
 //! Provides fast [`HashSet`] and [`HashMap`] implementations based on a simplified implementation of
 //! the fast [Rust C hash algorithm](https://github.com/rust-lang/rustc-hash) also used by
 //! [Firefox](https://nnethercote.github.io/2021/12/08/a-brutally-effective-hash-function-in-rust.html).
-//
+//!
 //! By default, Rust's [`HashMap`] and [`HashSet`] use a [DDoS](https://en.wikipedia.org/wiki/Denial-of-service_attack)
 //! resistant but slower hashing algorithm. [`FxHasher`] is much faster (between 2x to 5x from my testing).
 use std::collections::{HashMap, HashSet};
