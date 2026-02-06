@@ -98,7 +98,7 @@ struct Set {
 impl Set {
     /// The one bits are from the original address, plus any from the mask, less any that
     /// overlap with Xs.
-    fn from(address: u64, value: u64, ones: u64, floating: u64) -> Set {
+    fn new(address: u64, value: u64, ones: u64, floating: u64) -> Set {
         Set { ones: (address | ones) & !floating, floating, weight: value }
     }
 
@@ -126,21 +126,17 @@ impl Set {
 }
 
 pub fn parse(input: &str) -> Vec<Instruction> {
-    let mut instructions = Vec::new();
-
-    for line in input.lines() {
-        let instruction = if line.len() == 43 {
-            Instruction::mask(&line[7..])
-        } else {
-            let (address, value) = line[4..].split_once("] = ").unwrap();
-            let address = address.unsigned();
-            let value = value.unsigned();
-            Instruction::Mem { address, value }
-        };
-        instructions.push(instruction);
-    }
-
-    instructions
+    input
+        .lines()
+        .map(|line| {
+            if line.len() == 43 {
+                Instruction::mask(&line[7..])
+            } else {
+                let (address, value) = line[4..].split_once("] = ").unwrap();
+                Instruction::Mem { address: address.unsigned(), value: value.unsigned() }
+            }
+        })
+        .collect()
 }
 
 pub fn part1(input: &[Instruction]) -> u64 {
@@ -175,7 +171,7 @@ pub fn part2(input: &[Instruction]) -> u64 {
                 floating = xs;
             }
             Instruction::Mem { address, value } => {
-                sets.push(Set::from(address, value, ones, floating));
+                sets.push(Set::new(address, value, ones, floating));
             }
         }
     }

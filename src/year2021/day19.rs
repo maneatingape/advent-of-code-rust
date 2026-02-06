@@ -151,7 +151,7 @@ pub struct Located {
 }
 
 impl Located {
-    fn from(scanner: Scanner, found: Found) -> Located {
+    fn new(scanner: Scanner, found: Found) -> Self {
         let Scanner { beacons, signature } = scanner;
         let Found { orientation, translation } = found;
 
@@ -185,14 +185,14 @@ pub fn parse(input: &str) -> Vec<Located> {
 
     let scanner = unknown.pop().unwrap();
     let found = Found { orientation: 0, translation: Point3D(0, 0, 0) };
-    todo.push(Located::from(scanner, found));
+    todo.push(Located::new(scanner, found));
 
     while let Some(known) = todo.pop() {
         let mut next_unknown = Vec::new();
 
         while let Some(scanner) = unknown.pop() {
             match check(&known, &scanner) {
-                Some(found) => todo.push(Located::from(scanner, found)),
+                Some(found) => todo.push(Located::new(scanner, found)),
                 None => next_unknown.push(scanner),
             }
         }

@@ -82,12 +82,10 @@ pub fn parse(input: &str) -> Input {
             let delta = points[j] - points[i];
             let key = Point::new(delta.x.abs(), delta.y.abs());
 
-            let gcd = if cache[key] > 0 {
-                cache[key]
-            } else {
+            if cache[key] == 0 {
                 cache[key] = key.x.gcd(key.y);
-                cache[key]
-            };
+            }
+            let gcd = cache[key];
 
             // Key insight is that points on the same line are integer multiples of each other.
             let adjusted = Point::new(delta.x / gcd, delta.y / gcd);

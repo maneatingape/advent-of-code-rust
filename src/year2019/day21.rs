@@ -22,28 +22,37 @@
 use super::intcode::*;
 use crate::util::parse::*;
 
-const SLOW: &str = "\
+const WALK: &str = "\
 OR A J
 AND B J
 AND C J
 NOT J J
-AND D J";
+AND D J
+WALK
+";
 
-const FAST: &str = "\
+const RUN: &str = "\
+OR A J
+AND B J
+AND C J
+NOT J J
+AND D J
 OR E T
 OR H T
-AND T J";
+AND T J
+RUN
+";
 
 pub fn parse(input: &str) -> Vec<i64> {
     input.iter_signed().collect()
 }
 
 pub fn part1(input: &[i64]) -> i64 {
-    survey(input, &format!("{SLOW}\nWALK\n"))
+    survey(input, WALK)
 }
 
 pub fn part2(input: &[i64]) -> i64 {
-    survey(input, &format!("{SLOW}\n{FAST}\nRUN\n"))
+    survey(input, RUN)
 }
 
 fn survey(input: &[i64], springscript: &str) -> i64 {

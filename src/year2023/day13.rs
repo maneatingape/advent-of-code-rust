@@ -26,7 +26,7 @@ pub fn parse(input: &str) -> Input {
     input
         .split("\n\n")
         .map(|block| {
-            let grid: Grid<_> = Grid::parse(block);
+            let grid = Grid::parse(block);
             let bit = |point| u32::from(grid[point] == b'#');
 
             let rows: Vec<_> = (0..grid.height)

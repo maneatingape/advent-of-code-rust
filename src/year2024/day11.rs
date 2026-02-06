@@ -29,7 +29,8 @@ fn count(input: &[u64], blinks: usize) -> u64 {
     let mut todo = Vec::new();
     let mut numbers = Vec::new();
     // Amount of each stone of a particular number.
-    let mut current = Vec::new();
+    let mut current = Vec::with_capacity(5000);
+    let mut next = Vec::with_capacity(5000);
 
     // Initialize stones from input.
     for &number in input {
@@ -73,16 +74,17 @@ fn count(input: &[u64], blinks: usize) -> u64 {
         }
 
         // Add amount of each stone to either 1 or 2 stones in the next blink.
-        let mut next = vec![0; indices.len()];
+        next.clear();
+        next.resize(indices.len(), 0);
 
-        for (&(first, second), amount) in stones.iter().zip(current) {
+        for (&(first, second), &amount) in stones.iter().zip(&current) {
             next[first] += amount;
             if second != usize::MAX {
                 next[second] += amount;
             }
         }
 
-        current = next;
+        (current, next) = (next, current);
     }
 
     current.iter().sum()

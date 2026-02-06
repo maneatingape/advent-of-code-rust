@@ -57,7 +57,7 @@ pub fn part2(robots: &[Robot]) -> usize {
         let mut xs = [0; 101];
         let mut ys = [0; 103];
 
-        for [x, y, dx, dy] in robots {
+        for &[x, y, dx, dy] in robots {
             let x = (x + time * dx) % 101;
             xs[x] += 1;
             let y = (y + time * dy) % 103;

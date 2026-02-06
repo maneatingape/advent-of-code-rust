@@ -8,26 +8,26 @@ use crate::util::parse::*;
 use crate::util::point::*;
 use std::iter::{once, repeat_n};
 
-type Input = (Vec<(String, usize)>, Combinations);
+type Input<'a> = (Vec<(&'a str, usize)>, Combinations);
 type Combinations = FastMap<(char, char), Vec<String>>;
 type Cache = FastMap<(char, char, usize), usize>;
 
 /// Convert codes to pairs of the sequence itself with the numeric part.
 /// The pad combinations are the same between both parts so only need to be computed once.
-pub fn parse(input: &str) -> Input {
-    let pairs = input.lines().map(String::from).zip(input.iter_unsigned()).collect();
+pub fn parse(input: &str) -> Input<'_> {
+    let pairs = input.lines().zip(input.iter_unsigned()).collect();
     (pairs, pad_combinations())
 }
 
-pub fn part1(input: &Input) -> usize {
+pub fn part1(input: &Input<'_>) -> usize {
     chain(input, 3)
 }
 
-pub fn part2(input: &Input) -> usize {
+pub fn part2(input: &Input<'_>) -> usize {
     chain(input, 26)
 }
 
-fn chain(input: &Input, depth: usize) -> usize {
+fn chain(input: &Input<'_>, depth: usize) -> usize {
     let (pairs, combinations) = input;
     let cache = &mut FastMap::with_capacity(500);
     pairs.iter().map(|(code, numeric)| dfs(cache, combinations, code, depth) * numeric).sum()

@@ -21,7 +21,7 @@ pub fn part1(input: &[usize]) -> usize {
     total[input[0]] += 1;
 
     for w in input.windows(2) {
-        let diff = w[0].abs_diff(w[1]);
+        let diff = w[1] - w[0];
         total[diff] += 1;
     }
 

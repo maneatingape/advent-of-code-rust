@@ -33,11 +33,11 @@ pub fn part2(input: &Input) -> i32 {
 }
 
 fn check(input: &[usize], first: usize, second: usize) -> usize {
-    let code = &mut input.to_vec();
+    let mut code = input.to_vec();
     code[1] = first;
     code[2] = second;
 
-    execute(code)
+    execute(&mut code)
 }
 
 fn execute(code: &mut [usize]) -> usize {

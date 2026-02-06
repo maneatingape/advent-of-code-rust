@@ -66,22 +66,16 @@ pub fn part2(input: &Result) -> u64 {
 }
 
 fn solve_part_one(rules: &[Rule], tickets: &[Ticket]) -> (u32, Vec<bool>) {
-    let mut ranges = Vec::new();
-    for rule in rules {
-        ranges.push(rule.a..rule.b + 1);
-        ranges.push(rule.c..rule.d + 1);
-    }
+    let mut ranges: Vec<_> = rules.iter().flat_map(|r| [r.a..r.b + 1, r.c..r.d + 1]).collect();
     ranges.sort_unstable_by_key(|r| r.start);
-
-    let mut i = 1;
-    while i < ranges.len() {
-        if ranges[i].start < ranges[i - 1].end {
-            ranges[i - 1].end = ranges[i - 1].end.max(ranges[i].end);
-            ranges.remove(i);
+    ranges.dedup_by(|next, prev| {
+        if next.start <= prev.end {
+            prev.end = prev.end.max(next.end);
+            true
         } else {
-            i += 1;
+            false
         }
-    }
+    });
 
     let mut total = 0;
     let mut valid = vec![true; tickets[0].len()];

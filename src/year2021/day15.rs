@@ -26,11 +26,7 @@ pub struct Square {
 pub fn parse(input: &str) -> Square {
     let raw: Vec<_> = input.lines().map(str::as_bytes).collect();
     let size = raw.len();
-    let mut bytes = Vec::with_capacity(size * size);
-
-    raw.iter().for_each(|slice| bytes.extend_from_slice(slice));
-    bytes.iter_mut().for_each(|b| *b = b.to_decimal());
-
+    let bytes = raw.into_iter().flatten().map(|b| b.to_decimal()).collect();
     Square { size, bytes }
 }
 

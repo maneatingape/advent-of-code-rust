@@ -196,7 +196,10 @@ mod scalar {
         }
 
         pub(super) fn as_array(&self) -> [u8; 32] {
-            [self.left.to_be_bytes(), self.right.to_be_bytes()].concat().try_into().unwrap()
+            let mut result = [0; 32];
+            result[..16].copy_from_slice(&self.left.to_be_bytes());
+            result[16..].copy_from_slice(&self.right.to_be_bytes());
+            result
         }
 
         pub(super) fn non_zero(&self) -> bool {

@@ -40,14 +40,13 @@ impl BitStream<'_> {
     }
 
     fn hex_to_binary(&mut self) -> u64 {
-        let hex_digit = self.iter.next().unwrap();
-
-        if hex_digit.is_ascii_digit() { (hex_digit - 48) as u64 } else { (hex_digit - 55) as u64 }
+        let b = self.iter.next().unwrap();
+        u64::from(if b.is_ascii_digit() { b - b'0' } else { b - b'A' + 10 })
     }
 }
 
 pub enum Packet {
-    Literal { version: u64, type_id: u64, value: u64 },
+    Literal { version: u64, value: u64 },
     Operator { version: u64, type_id: u64, packets: Vec<Packet> },
 }
 
@@ -65,7 +64,7 @@ impl Packet {
                 value = (value << 4) | bit_stream.next(4);
             }
 
-            Packet::Literal { version, type_id, value }
+            Packet::Literal { version, value }
         } else {
             let mut packets = Vec::new();
 

@@ -109,18 +109,18 @@ pub fn part1(input: &[Particle]) -> usize {
 pub fn part2(input: &[Particle]) -> usize {
     let mut particles = input.to_vec();
     let mut collisions = FastMap::with_capacity(input.len());
-    let mut exists = vec![i64::MAX; input.len()];
+    let mut alive = vec![true; input.len()];
 
-    for time in 1..40 {
+    for _ in 1..40 {
         for (i, particle) in particles.iter_mut().enumerate() {
             // Only consider particles that haven't collided in a previous tick.
             // Multiple particles can collide in the same tick.
-            if exists[i] >= time {
+            if alive[i] {
                 particle.tick();
 
                 if let Some(j) = collisions.insert(particle.position, i) {
-                    exists[i] = time;
-                    exists[j] = time;
+                    alive[i] = false;
+                    alive[j] = false;
                 }
             }
         }
@@ -128,5 +128,5 @@ pub fn part2(input: &[Particle]) -> usize {
         collisions.clear();
     }
 
-    exists.iter().filter(|&&t| t == i64::MAX).count()
+    alive.iter().filter(|&&a| a).count()
 }

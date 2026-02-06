@@ -2,7 +2,7 @@
 //!
 //! Calculates part one and two at the same time as a speed optimization.
 use crate::util::parse::*;
-use std::iter::repeat_with;
+use std::array::from_fn;
 
 type Input = (usize, usize);
 
@@ -14,7 +14,7 @@ struct Item<'a> {
 pub fn parse(input: &str) -> Input {
     let mut part_one = 0;
     let mut part_two = 0;
-    let mut boxes: Vec<Vec<Item<'_>>> = repeat_with(Vec::new).take(256).collect();
+    let mut boxes: [Vec<Item<'_>>; 256] = from_fn(|_| Vec::new());
 
     for step in input.trim().as_bytes().split(|&b| b == b',') {
         let size = step.len();

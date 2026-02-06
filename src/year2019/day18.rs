@@ -45,16 +45,14 @@
 //!       #b.A.@.a# => [6 0 4]
 //!       #########    [2 4 0]
 //!   ```
-
-// Disable lints with false positives
-#![allow(clippy::needless_range_loop)]
-#![allow(clippy::unnecessary_lazy_evaluations)]
-
 use crate::util::bitset::*;
 use crate::util::grid::*;
 use crate::util::hash::*;
 use crate::util::heap::*;
 use std::collections::VecDeque;
+use std::ops::Range;
+
+const RANGE: Range<usize> = 0..30;
 
 /// `position` and `remaining` are both bitfields. For example a robot at key `d` that needs
 /// `b` and `c` would be stored as `position = 1000` and `remaining = 110`.
@@ -160,13 +158,13 @@ fn parse_maze(width: usize, bytes: &[u8]) -> Maze {
 
     // Fill in the rest of the graph using the Floyd–Warshal algorithm.
     // As a slight twist we also build the list of intervening doors at the same time.
-    for i in 0..30 {
+    for i in RANGE {
         maze[i][i].distance = 0;
     }
 
-    for k in 0..30 {
-        for i in 0..30 {
-            for j in 0..30 {
+    for k in RANGE {
+        for i in RANGE {
+            for j in RANGE {
                 let candidate = maze[i][k].distance.saturating_add(maze[k][j].distance);
                 if maze[i][j].distance > candidate {
                     maze[i][j].distance = candidate;

@@ -74,7 +74,7 @@ fn signal(key: usize, circuit: &[Gate], cache: &mut [u32]) -> u32 {
         Constant(c) => c,
         Wire(w) => signal(w, circuit, cache),
         Not(w) => 0xffff & !signal(w, circuit, cache),
-        Bit(r) => 1 & &signal(r, circuit, cache),
+        Bit(r) => 1 & signal(r, circuit, cache),
         And(l, r) => signal(l, circuit, cache) & signal(r, circuit, cache),
         Or(l, r) => signal(l, circuit, cache) | signal(r, circuit, cache),
         LeftShift(w, n) => 0xffff & (signal(w, circuit, cache) << n),

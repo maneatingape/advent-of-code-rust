@@ -46,7 +46,7 @@ pub fn part2(grid: &Grid<u8>) -> u32 {
                 let ur = grid[Point::new(x + 1, y - 1)];
                 let dl = grid[Point::new(x - 1, y + 1)];
                 let dr = grid[Point::new(x + 1, y + 1)];
-                // ASCII "M" is 77 and "S" is 53 so the absolute difference is 6.
+                // ASCII "M" is 77 and "S" is 83 so the absolute difference is 6.
                 // No other combination of letters causes this difference.
                 // "MS" on both diagonals is a match.
                 result += (ul.abs_diff(dr) == 6 && ur.abs_diff(dl) == 6) as u32;

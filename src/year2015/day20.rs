@@ -40,7 +40,7 @@ pub fn parse(input: &str) -> u32 {
 }
 
 pub fn part1(input: &u32) -> u32 {
-    #[allow(clippy::decimal_literal_representation)]
+    #[expect(clippy::decimal_literal_representation)]
     const MAPPING: [Mapping; 28] = [
         Mapping { sum: 22_579_200, house: 540_540 },
         Mapping { sum: 24_373_440, house: 554_400 },
@@ -75,7 +75,7 @@ pub fn part1(input: &u32) -> u32 {
 }
 
 pub fn part2(input: &u32) -> u32 {
-    #[allow(clippy::decimal_literal_representation)]
+    #[expect(clippy::decimal_literal_representation)]
     const MAPPING: [Mapping; 46] = [
         Mapping { sum: 22_103_774, house: 540_540 },
         Mapping { sum: 22_113_630, house: 544_320 },

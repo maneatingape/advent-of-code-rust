@@ -8,11 +8,6 @@ pub fn parse(input: &str) -> &[u8] {
 }
 
 /// Each layer is 25 * 6 = 150 bytes and there are 100 layers total.
-/// It's faster to count pixels 8 at a time by parsing the bytes as `u64` then using bitwise logic
-/// and the [`count_ones`] intrinsic. The only minor wrinkle is that 8 does not divide 150 evenly
-/// so we must handle the last 6 bytes specially.
-///
-/// [`count_ones`]: u64::count_ones
 pub fn part1(input: &[u8]) -> u32 {
     let mut most = 0;
     let mut result = 0;
@@ -21,19 +16,10 @@ pub fn part1(input: &[u8]) -> u32 {
         let mut ones = 0;
         let mut twos = 0;
 
-        // First 144 of 150 bytes.
-        for slice in layer.chunks_exact(8) {
-            let n = u64::from_be_bytes(slice.try_into().unwrap());
-            ones += (n & 0x0101010101010101).count_ones();
-            twos += (n & 0x0202020202020202).count_ones();
+        for &b in layer {
+            ones += u32::from(b & 1);
+            twos += u32::from((b >> 1) & 1);
         }
-
-        // Handle remaining 6 bytes.
-        // The masks exclude the most significant 2 bytes to prevent double counting.
-        let slice = &layer[142..150];
-        let n = u64::from_be_bytes(slice.try_into().unwrap());
-        ones += (n & 0x0000010101010101).count_ones();
-        twos += (n & 0x0000020202020202).count_ones();
 
         if ones + twos > most {
             most = ones + twos;

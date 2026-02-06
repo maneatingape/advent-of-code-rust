@@ -11,18 +11,6 @@
 type Input = (u32, usize);
 
 pub fn parse(input: &str) -> Input {
-    explore(input)
-}
-
-pub fn part1(input: &Input) -> u32 {
-    input.0
-}
-
-pub fn part2(input: &Input) -> usize {
-    input.1
-}
-
-fn explore(input: &str) -> Input {
     // Start in the center.
     let mut index = 6105;
     // 55 in each direction, gives a width and height of 110, for a total size of 12,100.
@@ -52,4 +40,12 @@ fn explore(input: &str) -> Input {
 
     let part_two = grid.iter().filter(|d| (1000..u32::MAX).contains(d)).count();
     (part_one, part_two)
+}
+
+pub fn part1(input: &Input) -> u32 {
+    input.0
+}
+
+pub fn part2(input: &Input) -> usize {
+    input.1
 }

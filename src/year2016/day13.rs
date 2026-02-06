@@ -7,9 +7,6 @@
 //! As we start at (1, 1) and the most steps that we are interested in is 50, we can bound
 //! the maze to 2 + 50 = 52 in each dimension and used a fixed size array.
 
-// Explicit syntax is cleaner for this case.
-#![allow(clippy::needless_range_loop)]
-
 use crate::util::parse::*;
 use std::collections::VecDeque;
 
@@ -19,10 +16,10 @@ pub fn parse(input: &str) -> Input {
     let favorite: usize = input.unsigned();
     let mut maze = [[false; 52]; 52];
 
-    for x in 0..52 {
-        for y in 0..52 {
+    for (x, row) in maze.iter_mut().enumerate() {
+        for (y, cell) in row.iter_mut().enumerate() {
             let n = (x * x) + (3 * x) + (2 * x * y) + y + (y * y) + favorite;
-            maze[x][y] = n.count_ones().is_multiple_of(2);
+            *cell = n.count_ones().is_multiple_of(2);
         }
     }
 
