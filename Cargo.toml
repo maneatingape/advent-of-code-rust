@@ -1,6 +1,6 @@
 [package]
 name = "aoc"
-version = "2024.12.25"
+version = "2025.12.25"
 edition = "2024"
 rust-version = "1.93"
 
