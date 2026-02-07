@@ -17,16 +17,16 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - run: rustup default 1.93
       - run: cargo doc
         env:
           RUSTDOCFLAGS: "--document-private-items --default-theme=ayu --deny warnings"
       - run: rm target/doc/.lock
       - run: cp docs/* target/doc
-      - uses: actions/upload-pages-artifact@v3
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v4
         with:
           path: 'target/doc'
-      - uses: actions/configure-pages@v4
       - uses: actions/deploy-pages@v4
         id: deployment

@@ -10,7 +10,7 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
     - run: rustup install nightly --profile default
     - run: rustup default nightly
     - run: cargo fmt --check -- `find . -name "*.rs"`
@@ -19,13 +19,13 @@ jobs:
   test-stable:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
     - run: rustup default 1.93
     - run: cargo test
 
   test-nightly:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
     - run: rustup default nightly
     - run: cargo test --features simd
