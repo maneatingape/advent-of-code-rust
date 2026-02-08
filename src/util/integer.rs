@@ -39,7 +39,7 @@ macro_rules! integer {
 
             #[inline]
             fn trailing_zeros(self) -> u32 {
-                <$t>::trailing_zeros(self)
+                self.trailing_zeros()
             }
 
             #[inline]
