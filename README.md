@@ -364,7 +364,7 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 | 7 | [Internet Protocol Version 7](https://adventofcode.com/2016/day/7) | [Source](src/year2016/day07.rs) | 364 |
 | 8 | [Two-Factor Authentication](https://adventofcode.com/2016/day/8) | [Source](src/year2016/day08.rs) | 9 |
 | 9 | [Explosives in Cyberspace](https://adventofcode.com/2016/day/9) | [Source](src/year2016/day09.rs) | 7 |
-| 10 | [Balance Bots](https://adventofcode.com/2016/day/10) | [Source](src/year2016/day10.rs) | 16 |
+| 10 | [Balance Bots](https://adventofcode.com/2016/day/10) | [Source](src/year2016/day10.rs) | 14 |
 | 11 | [Radioisotope Thermoelectric Generators](https://adventofcode.com/2016/day/11) | [Source](src/year2016/day11.rs) | 719 |
 | 12 | [Leonardo's Monorail](https://adventofcode.com/2016/day/12) | [Source](src/year2016/day12.rs) | 1 |
 | 13 | [A Maze of Twisty Little Cubicles](https://adventofcode.com/2016/day/13) | [Source](src/year2016/day13.rs) | 3 |

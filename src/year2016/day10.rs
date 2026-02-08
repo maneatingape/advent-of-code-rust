@@ -8,25 +8,25 @@
 //!
 //! As a minor optimization we only need to store the product of outputs 0, 1 and 2.
 use crate::util::hash::*;
+use crate::util::integer::*;
 use crate::util::parse::*;
 use std::collections::VecDeque;
 
 type Input = (u32, u32);
-type Dest<'a> = (&'a str, &'a str);
+type Dest = (bool, u32);
 
-struct Bot<'a> {
-    low: Dest<'a>,
-    high: Dest<'a>,
-    chips: [u32; 2],
-    amount: usize,
+struct Bot {
+    low: Dest,
+    high: Dest,
+    chip: Option<u32>,
 }
 
 pub fn parse(input: &str) -> Input {
     let tokens: Vec<_> = input.split_ascii_whitespace().collect();
     let mut tokens = &tokens[..];
 
-    let mut todo = VecDeque::new();
-    let mut bots = FastMap::new();
+    let mut todo = VecDeque::with_capacity(500);
+    let mut bots = FastMap::with_capacity(500);
 
     let mut part_one = u32::MAX;
     let mut part_two = 1;
@@ -34,40 +34,35 @@ pub fn parse(input: &str) -> Input {
     while !tokens.is_empty() {
         if tokens[0] == "value" {
             let value = tokens[1].unsigned();
-            let dest = (tokens[4], tokens[5]);
+            let dest = to_dest(tokens[4], tokens[5]);
 
-            tokens = &tokens[6..];
             todo.push_back((dest, value));
+            tokens = &tokens[6..];
         } else {
-            let key = tokens[1].unsigned();
-            let low = (tokens[5], tokens[6]);
-            let high = (tokens[10], tokens[11]);
+            let key: u32 = tokens[1].unsigned();
+            let low = to_dest(tokens[5], tokens[6]);
+            let high = to_dest(tokens[10], tokens[11]);
 
+            bots.insert(key, Bot { low, high, chip: None });
             tokens = &tokens[12..];
-            bots.insert(key, Bot { low, high, chips: [0; 2], amount: 0 });
         }
     }
 
-    while let Some(((kind, index), value)) = todo.pop_front() {
-        let index = index.unsigned();
+    while let Some(((is_bot, index), value)) = todo.pop_front() {
+        if is_bot {
+            let bot = bots.get_mut(&index).unwrap();
 
-        if kind == "bot" {
-            bots.entry(index).and_modify(|bot| {
-                bot.chips[bot.amount] = value;
-                bot.amount += 1;
-
-                if bot.amount == 2 {
-                    let min = bot.chips[0].min(bot.chips[1]);
-                    let max = bot.chips[0].max(bot.chips[1]);
-
-                    todo.push_back((bot.low, min));
-                    todo.push_back((bot.high, max));
-
-                    if min == 17 && max == 61 {
-                        part_one = index;
-                    }
+            if let Some(previous) = bot.chip {
+                let (min, max) = previous.minmax(value);
+                if min == 17 && max == 61 {
+                    part_one = index;
                 }
-            });
+
+                todo.push_back((bot.low, min));
+                todo.push_back((bot.high, max));
+            } else {
+                bot.chip = Some(value);
+            }
         } else if index <= 2 {
             part_two *= value;
         }
@@ -82,4 +77,8 @@ pub fn part1(input: &Input) -> u32 {
 
 pub fn part2(input: &Input) -> u32 {
     input.1
+}
+
+fn to_dest(first: &str, second: &str) -> Dest {
+    (first == "bot", second.unsigned())
 }
