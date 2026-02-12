@@ -5,160 +5,178 @@
 //! down. This was faster than using [A*](https://en.wikipedia.org/wiki/A*_search_algorithm)
 //! with a heuristic.
 //!
-//! A huge critical optimization is the observation that generators and chips are *fungible*.
-//! Only the total number of generators and chips on each floor is important.
+//! A huge critical optimization is the observation that generator and chip pairs are *fungible*.
+//! A configuration that starts with two pairs on floor one takes the same number of steps to
+//! solve whether pair A or pair B is moved first (that is, the setup [-;-;AG,AM;BG,BM] while on
+//! floor 2 is indistinguishible from [-;-;BG,BM;AG,AM] on floor 2 in terms of the final result).
+//! However, the relative positions of pairs still matters (the setup [AM;AG;BG;BM] on floor two
+//! can move BG up or down; but the setup [AM;BG;AG;BM] on floor two can only move AG up).  To
+//! maximize state sharing, represent each pair's generator and microchip position as hex
+//! digits, but merge all permutations by sorting those hex digit pairs during the hash
+//! function.  Including the elevator position, the hash value requires up to 30 useful bits
+//! (2 + 7*4) if densely packed, although this uses a 64-bit struct with one-hot encodings.
+//!
+//! Next, observe that adding a chip and generator pair on floor 1 adds 12 moves to the final
+//! solution; likewise, removing a pair from floor 1 (but only if there is still something
+//! else left on the floor) can be solved in 12 fewer moves.  Tracking a smaller number of
+//! chip and generator pairs, then adjusting by the 12 times the number of ignored pairs,
+//! is inherently faster.
+//!
 //! The rules for a valid floor are either:
 //!
 //! * Any amount of microchips only with no generators.
-//! * The amount of generators is greater than the number of microchips, ensuring that each chip
-//!   is paired with its generator.
+//! * Any microchip on a floor with at least one generator must have its own generator on that floor.
 //!
 //! This allows us to efficiently memoize previously seen states and reject any that we've seen
 //! before extremely quickly. Other optimizations:
 //!
 //! * If we can move 2 items up, then skip only moving 1 item up.
-//! * If we can move 1 item down, then skip moving 2 items down
+//! * If we can move 1 item down, then skip moving 2 items down.
+//! * Moving a microchip and generator together is only safe if they are the same type (if they
+//!   are not from the same type, then the old floor will necessarily have the generator that
+//!   pairs with the chip being moved, leaving that chip to be fried on its new floor).
 //! * If floor 1 is empty then don't move items back down to it, similarly if both floor 1 and
 //!   floor 2 are empty then don't move items to them.
-//!
-//! As a further optimization we assume that there are no more than 15 generators and microchips
-//! and store the total packed into a single byte for each floor. This reduces the size of each
-//! state to only 8 bytes making it quick to copy and hash.
+use crate::util::bitset::*;
 use crate::util::hash::*;
 use std::collections::VecDeque;
 
-// Interestingly it was slightly faster using a `u32` for `elevator` so that the total size of
-// the struct is 8 bytes instead of using a `u8` so that the size is 5 bytes.
+// A one-hot encoding is more efficient than 0-3.  For each byte, the generator is the
+// high nibble, and the microchip the low nibble.  Only 5 bytes matter, because the part 2
+// pairs contribute a constant input; the used bytes are stored in little-endian order;
+// unused lanes will be 0.
+const MASK: usize = 0x00000001_01010101;
+const FLOOR1: usize = (MASK << 4) | MASK;
+const FLOOR2: usize = FLOOR1 << 1;
+const FLOOR3: usize = FLOOR2 << 1;
+const FLOOR4: usize = FLOOR3 << 1;
+const PAIR1: u8 = (1 << 4) | 1;
+
 #[derive(Clone, Copy, Default, PartialEq, Eq, Hash)]
 pub struct State {
-    elevator: u32,
-    floor: [Floor; 4],
+    elevator: u8, // 0-3
+    pairs: usize, // One-hot encoded floors for up to 5 item pairs.
 }
 
-#[derive(Clone, Copy, Default, PartialEq, Eq, Hash)]
-struct Floor {
-    both: u8,
-}
-
-impl Floor {
-    // Pack generators into the high nibble and microchips into the low nibble.
-    #[inline]
-    fn new(generators: usize, microchips: usize) -> Self {
-        Floor { both: ((generators << 4) + microchips) as u8 }
-    }
-
-    #[inline]
-    fn generators(self) -> u8 {
-        self.both >> 4
-    }
-
-    #[inline]
-    fn microchips(self) -> u8 {
-        self.both & 0xf
-    }
-
-    #[inline]
-    fn total(self) -> u8 {
-        self.generators() + self.microchips()
-    }
-
-    // Check if we can move the requested number of items from this floor.
-    #[inline]
-    fn gte(self, other: Floor) -> bool {
-        self.generators() >= other.generators() && self.microchips() >= other.microchips()
+impl State {
+    // Reject any inconsistent setup.
+    fn valid(&self, floor: u8) -> bool {
+        let chips = (self.pairs) & (MASK << floor);
+        let gens = (self.pairs >> 4) & (MASK << floor);
+        gens == 0 || (chips & !gens) == 0
     }
 
     // Critical optimization treating generators and microchips as fungible.
-    #[inline]
-    fn valid(self) -> bool {
-        self.generators() == 0 || self.generators() >= self.microchips()
+    // Rearrange the pairs into canonical order; endianness matters for getting valid slice indices.
+    fn canon(mut self) -> State {
+        let mut array = self.pairs.to_le_bytes();
+        array[..5].sort_unstable();
+        self.pairs = usize::from_le_bytes(array);
+        self
     }
 
-    // Addition and subtraction can be done in parallel for both generators and microchips.
-    #[inline]
-    fn add(self, other: Floor) -> Floor {
-        Floor { both: self.both + other.both }
-    }
+    // Attempt to adjust state by moving one or two items up or down.
+    fn move_floor(self, up: bool, item_mask: usize) -> Option<State> {
+        // Build the new state
+        let mut state = self;
 
-    #[inline]
-    fn sub(self, other: Floor) -> Floor {
-        Floor { both: self.both - other.both }
+        if up {
+            state.pairs += item_mask;
+            state.elevator += 1;
+        } else {
+            state.pairs -= item_mask >> 1;
+            state.elevator -= 1;
+        }
+
+        (state.valid(self.elevator) && state.valid(state.elevator)).then(|| state.canon())
     }
 }
 
-pub fn parse(input: &str) -> State {
-    // Only the *total* number of generators and microchips on each floor is important.
-    let mut state = State::default();
+pub fn parse(input: &str) -> u32 {
+    let mut pairs = FastMap::new();
 
-    for (i, line) in input.lines().enumerate() {
-        let generators = line.matches("generator").count();
-        let microchips = line.matches("microchip").count();
-        state.floor[i] = Floor::new(generators, microchips);
+    // Find all items, and set an entry in state.pairs for each element name
+    let mut floor = 1;
+    let words: Vec<_> = input.split(&[' ', ',', '.', '-']).skip(3).collect();
+
+    for w in words.windows(2) {
+        match w[1] {
+            "floor" => floor <<= 1,
+            "compatible" => *pairs.entry(w[0]).or_insert(0) |= floor,
+            "generator" => *pairs.entry(w[0]).or_insert(0) |= floor << 4,
+            _ => (),
+        }
     }
 
-    state
+    // Optimize search by pre-handling item pairs starting on non-empty floor 1
+    let mut floors = [0_u8; 8];
+    let mut non_empty = false;
+    let mut steps = 0;
+    let mut i = 0;
+
+    for pair in pairs.into_values() {
+        if non_empty && pair == PAIR1 {
+            steps += 12;
+        } else {
+            if (pair & PAIR1) != 0 {
+                non_empty = true;
+            }
+            floors[i] = pair;
+            i += 1;
+        }
+    }
+
+    // Little-endian matters, based on the indices that canon() will use.
+    let state = State { elevator: 0, pairs: usize::from_le_bytes(floors) };
+    bfs(state.canon(), steps)
 }
 
-pub fn part1(input: &State) -> u32 {
-    bfs(*input)
+pub fn part1(input: &u32) -> u32 {
+    *input
 }
 
-pub fn part2(input: &State) -> u32 {
-    let mut modified = *input;
-    modified.floor[0] = modified.floor[0].add(Floor::new(2, 2));
-    bfs(modified)
+pub fn part2(input: &u32) -> u32 {
+    // Both pairs add 12 steps each
+    *input + 24
 }
 
-fn bfs(start: State) -> u32 {
-    // Get the total number of all generators and microchips so we know when done.
-    let complete = start.floor.iter().map(|&f| f.total()).sum();
-    // The lift must have at least one item and at most two.
-    // As an optimization the list is ordered in *descending* order of number of items.
-    let moves =
-        [Floor::new(2, 0), Floor::new(1, 1), Floor::new(0, 2), Floor::new(1, 0), Floor::new(0, 1)];
-
+fn bfs(start: State, steps: u32) -> u32 {
     let mut todo = VecDeque::new();
-    let mut seen = FastSet::with_capacity(30_000);
+    let mut seen = FastSet::with_capacity(500);
 
-    todo.push_back((start, 0));
+    todo.push_back((start, steps));
     seen.insert(start);
 
     while let Some((state, steps)) = todo.pop_front() {
-        if state.floor[3].total() == complete {
+        // Done if all items are on the top floor (the elevator will necessarily be there too).
+        if state.pairs & FLOOR4 == state.pairs {
             return steps;
         }
 
-        let current = state.elevator as usize;
+        // Iterate over items that can be moved.
+        let items = state.pairs & (FLOOR1 << state.elevator);
+        let mut added = false;
 
-        // Only move down if it makes sense.
-        if (state.elevator == 1 && state.floor[0].total() > 0)
-            || (state.elevator == 2 && (state.floor[0].total() > 0 || state.floor[1].total() > 0))
-            || state.elevator == 3
+        // When moving down, try one item first; try two only if one didn't work.
+        // Don't move down from bottom floor, or down into empty region
+        if !(state.elevator == 0
+            || (state.elevator == 1 && (state.pairs & FLOOR1) == 0)
+            || (state.elevator == 2 && (state.pairs & (FLOOR1 | FLOOR2) == 0)))
         {
-            let below = current - 1;
-            let mut min = 2;
-
-            for &delta in moves.iter().rev() {
-                // If we can move 1 item down then skip moving 2.
-                if delta.total() > min {
-                    break;
+            for i in items.biterator() {
+                if let Some(next) = state.move_floor(false, 1 << i)
+                    && seen.insert(next)
+                {
+                    added = true;
+                    todo.push_back((next, steps + 1));
                 }
-
-                // Check we have enough items to move
-                if state.floor[current].gte(delta) {
-                    let candidate = state.floor[below].add(delta);
-
-                    // Check the destination floor won't fry any microchips.
-                    if candidate.valid() {
-                        // Compute the next state
-                        let mut next = state;
-                        next.floor[current] = next.floor[current].sub(delta);
-                        next.floor[below] = candidate;
-                        next.elevator -= 1;
-
-                        // Reject any previously seen states.
-                        if seen.insert(next) {
-                            min = delta.total();
+            }
+            if !added {
+                for i in items.biterator() {
+                    for j in items.biterator().take_while(|&j| j < i) {
+                        if let Some(next) = state.move_floor(false, (1 << i) | (1 << j))
+                            && seen.insert(next)
+                        {
                             todo.push_back((next, steps + 1));
                         }
                     }
@@ -166,33 +184,26 @@ fn bfs(start: State) -> u32 {
             }
         }
 
-        if state.elevator < 3 {
-            let above = current + 1;
-            let mut max = 0;
-
-            for delta in moves {
-                // If we can move 2 items up then skip moving just 1.
-                if delta.total() < max {
-                    break;
+        // When moving up, try two items first; try one only if two didn't work.
+        // Don't move up from top floor.
+        if state.elevator != 3 {
+            added = false;
+            for i in items.biterator() {
+                for j in items.biterator().take_while(|&j| j < i) {
+                    if let Some(next) = state.move_floor(true, (1 << i) | (1 << j))
+                        && seen.insert(next)
+                    {
+                        added = true;
+                        todo.push_back((next, steps + 1));
+                    }
                 }
-
-                // Check we have enough items to move
-                if state.floor[current].gte(delta) {
-                    let candidate = state.floor[above].add(delta);
-
-                    // Check the destination floor won't fry any microchips.
-                    if candidate.valid() {
-                        // Compute the next state
-                        let mut next = state;
-                        next.floor[current] = next.floor[current].sub(delta);
-                        next.floor[above] = candidate;
-                        next.elevator += 1;
-
-                        // Reject any previously seen states.
-                        if seen.insert(next) {
-                            max = delta.total();
-                            todo.push_back((next, steps + 1));
-                        }
+            }
+            if !added {
+                for i in items.biterator() {
+                    if let Some(next) = state.move_floor(true, 1 << i)
+                        && seen.insert(next)
+                    {
+                        todo.push_back((next, steps + 1));
                     }
                 }
             }
