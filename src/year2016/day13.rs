@@ -35,6 +35,8 @@ pub fn parse(input: &str) -> Input {
     todo.push_back((1, 1, 0));
 
     while let Some((x, y, cost)) = todo.pop_front() {
+        // Target is at least 68 moves from the start. Since we're doing a BFS we're guaranteed
+        // to have checked all locations less than or equal to 50 before reaching the target.
         if x == 31 && y == 39 {
             return (cost, part_two);
         }
