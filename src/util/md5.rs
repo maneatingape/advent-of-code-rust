@@ -297,8 +297,7 @@ pub mod simd {
         m: Simd<u32, N>,
         s: u32,
         k: u32,
-    ) -> Simd<u32, N>
-where {
+    ) -> Simd<u32, N> {
         let f = b ^ c ^ d;
         common(f, a, b, m, s, k)
     }
@@ -312,8 +311,7 @@ where {
         m: Simd<u32, N>,
         s: u32,
         k: u32,
-    ) -> Simd<u32, N>
-where {
+    ) -> Simd<u32, N> {
         let f = c ^ (b | !d);
         common(f, a, b, m, s, k)
     }
@@ -326,8 +324,7 @@ where {
         m: Simd<u32, N>,
         s: u32,
         k: u32,
-    ) -> Simd<u32, N>
-where {
+    ) -> Simd<u32, N> {
         let k = Simd::splat(k);
         let first = f + a + k + m;
         let second = (first << s) | (first >> (32 - s));

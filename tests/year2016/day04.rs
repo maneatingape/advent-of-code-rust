@@ -12,7 +12,7 @@ totally-real-room-200[decoy]";
 // order regardless of the order of skipped letters.  Go with the looser interpretation, since
 // it gives slightly faster code, and no one has reported an input file where it fails.  However,
 // when there is more than one higher-frequency letter, both should be in the checksum.
-const EXAMPLE2: &str = "\
+const SECOND_EXAMPLE: &str = "\
 a-b-c-d-e-f-g-h-001[bcdef]
 aa-bb-c-d-e-f-g-h-002[acdef]";
 
@@ -20,7 +20,7 @@ aa-bb-c-d-e-f-g-h-002[acdef]";
 fn part1_test() {
     let input = parse(EXAMPLE);
     assert_eq!(part1(&input), 1514);
-    let input = parse(EXAMPLE2);
+    let input = parse(SECOND_EXAMPLE);
     assert_eq!(part1(&input), 1);
 }
 
