@@ -33,6 +33,14 @@
 //! Now for the really neat part. We can recursively find the number of ones in `y` by repeating
 //! the same process by setting the new `length` to `next`. We keep recursing until the length
 //! is less the size of the initial input and we can lookup the final count from the prefix sum.
+//!
+//! Note that it is also possible to compute the parity of any prefix of the Dragon Curve in
+//! O(1) time; the formula is available on [OEIS A255070](https://oeis.org/A255070), and there
+//! are a [couple](https://www.reddit.com/r/adventofcode/comments/5ititq/2016_day_16_c_how_to_tame_your_dragon_in_under_a/)
+//! of [posts](https://www.reddit.com/r/adventofcode/comments/1r642oc/2016_day_16_in_review_dragon_checksum/)
+//! showing how to utilize that approach.  However, the logarithmic solution shown here is
+//! fast enough to not need to worry about askalski's comment "I have no idea why it works,
+//! only that it does work."
 use crate::util::parse::*;
 
 /// Build a prefix sum of the number of ones at each length in the pattern
@@ -51,18 +59,22 @@ pub fn parse(input: &str) -> Vec<usize> {
 
 /// 272 is 17 * 2⁴
 pub fn part1(input: &[usize]) -> String {
-    checksum(input, 1 << 4)
+    checksum(input, 272)
 }
 
 /// 35651584 is 17 * 2²¹
 pub fn part2(input: &[usize]) -> String {
-    checksum(input, 1 << 21)
+    checksum(input, 35651584)
 }
 
 /// Collect the ones count at each `step_size` then subtract in pairs to calculate the number of
 /// ones in each interval to give the checksum.
-fn checksum(input: &[usize], step_size: usize) -> String {
-    let counts: Vec<_> = (0..18).map(|i| count(input, i * step_size)).collect();
+pub fn checksum(input: &[usize], disk_size: usize) -> String {
+    // Determine how many blocks and how big each one is, by lowest 1-bit in disk_size
+    let step_size = disk_size & (!disk_size + 1);
+    let blocks = disk_size / step_size;
+
+    let counts: Vec<_> = (0..blocks + 1).map(|i| count(input, i * step_size)).collect();
     counts.windows(2).map(|w| if (w[1] - w[0]) % 2 == 0 { '1' } else { '0' }).collect()
 }
 
