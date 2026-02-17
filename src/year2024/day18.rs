@@ -19,7 +19,7 @@
 //! Part two uses an incremental flood fill, getting a little further each time and removing
 //! blocking bytes in descending order of time until we reach the exit.
 //!
-//! * Start with `t = i32::MAX`
+//! * Start with `t = i32::MAX - 1`
 //! * Start flood fill from top-left origin.
 //! * If we encounter a blocking byte with a time less than `t`
 //!   then push `(time, position)` onto a max heap keyed by time.
@@ -72,7 +72,7 @@ pub fn part1(grid: &Grid<i32>) -> u32 {
 pub fn part2(grid: &Grid<i32>) -> String {
     let exit = Point::new(70, 70);
 
-    let mut time = i32::MAX;
+    let mut time = i32::MAX - 1;
     let mut grid = grid.clone();
     let mut todo = VecDeque::new();
     let mut heap = MinHeap::new();
