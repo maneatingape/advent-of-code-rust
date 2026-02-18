@@ -8,7 +8,7 @@
 //! `Nop` to a `Jmp` or vice-versa, then executing the remaining program from that point and
 //! checking if it finishes.
 //!
-//! The trick is to re-use the `visited` vec that stores if we have executed an instruction before.
+//! The trick is to re-use the `seen` vec that stores if we have executed an instruction before.
 //! As each previous failed code path will have executed some instructions, trying to execute an
 //! instruction twice means that we know immediately we are on a bad path and can stop.
 use crate::util::iter::*;
@@ -42,9 +42,9 @@ pub fn parse(input: &str) -> Vec<Instruction> {
 }
 
 pub fn part1(input: &[Instruction]) -> i32 {
-    let mut visited = vec![false; input.len()];
+    let mut seen = vec![false; input.len()];
 
-    match execute(input, 0, 0, &mut visited) {
+    match execute(input, 0, 0, &mut seen) {
         State::Infinite(acc) => acc,
         State::Halted(_) => unreachable!(),
     }
@@ -53,7 +53,7 @@ pub fn part1(input: &[Instruction]) -> i32 {
 pub fn part2(input: &[Instruction]) -> i32 {
     let mut pc = 0;
     let mut acc = 0;
-    let visited = &mut vec![false; input.len()];
+    let seen = &mut vec![false; input.len()];
 
     loop {
         match input[pc] {
@@ -63,14 +63,14 @@ pub fn part2(input: &[Instruction]) -> i32 {
             }
             Instruction::Jmp(arg) => {
                 let speculative = pc + 1;
-                match execute(input, speculative, acc, visited) {
+                match execute(input, speculative, acc, seen) {
                     State::Infinite(_) => pc = pc.wrapping_add(arg as usize),
                     State::Halted(acc) => break acc,
                 }
             }
             Instruction::Nop(arg) => {
                 let speculative = pc.wrapping_add(arg as usize);
-                match execute(input, speculative, acc, visited) {
+                match execute(input, speculative, acc, seen) {
                     State::Infinite(_) => pc += 1,
                     State::Halted(acc) => break acc,
                 }
@@ -79,15 +79,15 @@ pub fn part2(input: &[Instruction]) -> i32 {
     }
 }
 
-fn execute(input: &[Instruction], mut pc: usize, mut acc: i32, visited: &mut [bool]) -> State {
+fn execute(input: &[Instruction], mut pc: usize, mut acc: i32, seen: &mut [bool]) -> State {
     loop {
         if pc >= input.len() {
             break State::Halted(acc);
-        } else if visited[pc] {
+        } else if seen[pc] {
             break State::Infinite(acc);
         }
 
-        visited[pc] = true;
+        seen[pc] = true;
 
         match input[pc] {
             Instruction::Acc(arg) => {

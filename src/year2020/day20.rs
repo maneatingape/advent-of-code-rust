@@ -132,21 +132,19 @@ pub fn parse(input: &str) -> Vec<Tile> {
 }
 
 pub fn part1(input: &[Tile]) -> u64 {
-    let mut frequency = [0; 1024];
+    let mut freq = [0; 1024];
     let mut result = 1;
 
     for tile in input {
         for edge in tile.top {
-            frequency[edge] += 1;
+            freq[edge] += 1;
         }
     }
 
     for tile in input {
         // Any orientation will do, pick the first.
-        let total = frequency[tile.top[0]]
-            + frequency[tile.left[0]]
-            + frequency[tile.bottom[0]]
-            + frequency[tile.right[0]];
+        let total =
+            freq[tile.top[0]] + freq[tile.left[0]] + freq[tile.bottom[0]] + freq[tile.right[0]];
         if total == 6 {
             result *= tile.id;
         }
@@ -159,21 +157,21 @@ pub fn part2(input: &[Tile]) -> u32 {
     // Store mapping of tile edges to tile index in order to allow
     // constant time lookup by edge when assembling the jigsaw.
     let mut edge_to_tile = [[0; 2]; 1024];
-    let mut frequency = [0; 1024];
+    let mut freq = [0; 1024];
     let mut placed = [false; 1024];
 
     for (i, tile) in input.iter().enumerate() {
         for edge in tile.top {
-            edge_to_tile[edge][frequency[edge]] = i;
-            frequency[edge] += 1;
+            edge_to_tile[edge][freq[edge]] = i;
+            freq[edge] += 1;
         }
     }
 
     let mut find_arbitrary_corner = || {
         for tile in input {
             for j in 0..8 {
-                if frequency[tile.top[j]] == 1 && frequency[tile.left[j]] == 1 {
-                    frequency[tile.top[j]] += 1;
+                if freq[tile.top[j]] == 1 && freq[tile.left[j]] == 1 {
+                    freq[tile.top[j]] += 1;
                     return tile.top[j];
                 }
             }
@@ -192,7 +190,7 @@ pub fn part2(input: &[Tile]) -> u32 {
     let mut image = [0; 96];
     let mut index = 0;
 
-    while frequency[next_top] == 2 {
+    while freq[next_top] == 2 {
         let tile = find_matching_tile(next_top);
         let permutation = (0..8).position(|i| tile.top[i] == next_top).unwrap();
         tile.transform(&mut image[index..], permutation);
@@ -200,7 +198,7 @@ pub fn part2(input: &[Tile]) -> u32 {
 
         let mut next_left = tile.right[permutation];
 
-        while frequency[next_left] == 2 {
+        while freq[next_left] == 2 {
             let tile = find_matching_tile(next_left);
             let permutation = (0..8).position(|i| tile.left[i] == next_left).unwrap();
             tile.transform(&mut image[index..], permutation);

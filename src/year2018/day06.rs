@@ -168,7 +168,7 @@ pub fn part1(input: &Input) -> i32 {
     }
 
     // Find largest area closest to finite coordinate.
-    (0..points.len()).filter_map(|i| finite[i].then_some(area[i])).max().unwrap()
+    area.iter().zip(&finite).filter_map(|(&a, &f)| f.then_some(a)).max().unwrap()
 }
 
 pub fn part2(input: &Input) -> i32 {
@@ -260,11 +260,15 @@ pub fn part2_testable(input: &Input, max_distance: i32) -> i32 {
 }
 
 /// Calculate the change in distance moving left or up.
+/// The slice is sorted so we can use binary search instead of a linear scan.
 fn prev(slice: &[i32], n: i32) -> i32 {
-    slice.iter().map(|&s| if s >= n { 1 } else { -1 }).sum()
+    let below = slice.partition_point(|&s| s < n) as i32;
+    slice.len() as i32 - 2 * below
 }
 
 /// Calculate the change in distance moving down or right.
+/// The slice is sorted so we can use binary search instead of a linear scan.
 fn next(slice: &[i32], n: i32) -> i32 {
-    slice.iter().map(|&s| if s <= n { 1 } else { -1 }).sum()
+    let at_or_below = slice.partition_point(|&s| s <= n) as i32;
+    2 * at_or_below - slice.len() as i32
 }

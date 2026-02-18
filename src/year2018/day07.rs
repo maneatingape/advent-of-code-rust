@@ -3,6 +3,7 @@
 //! Part one is a [topological sort](https://en.wikipedia.org/wiki/Topological_sorting)
 //! of the steps based on the dependencies between them.
 use crate::util::hash::*;
+use std::cmp::Reverse;
 use std::collections::BTreeMap;
 
 type Input = FastMap<u8, Step>;
@@ -80,7 +81,7 @@ pub fn part2_testable(input: &Input, max_workers: usize, base_duration: u32) -> 
             // Sort workers in reverse order, so that the worker that will finish first is at
             // the end of the vec.
             workers.push((finish, step));
-            workers.sort_unstable_by_key(|(time, _)| u32::MAX - time);
+            workers.sort_unstable_by_key(|&(time, _)| Reverse(time));
         }
 
         // Fast forward time until the earliest available worker finishes their step.

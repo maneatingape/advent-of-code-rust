@@ -5,7 +5,7 @@
 //! connected groups or cliques.
 //!
 //! For each program we [depth first search](https://en.wikipedia.org/wiki/Depth-first_search)
-//! from each of its neighbors that we have not already visited. If a neighbor has been visited
+//! from each of its neighbors that we have not already seen. If a neighbor has been seen
 //! then it must be either already in this clique or in another clique.
 use crate::util::parse::*;
 
@@ -13,14 +13,14 @@ pub fn parse(input: &str) -> Vec<u32> {
     let lines: Vec<_> = input.lines().collect();
     let size = lines.len();
 
-    let mut visited = vec![false; size];
+    let mut seen = vec![false; size];
     let mut groups = Vec::new();
 
     for start in 0..size {
-        // DFS from each unvisited program.
-        if !visited[start] {
-            visited[start] = true;
-            let size = dfs(&lines, &mut visited, start);
+        // DFS from each unseen program.
+        if !seen[start] {
+            seen[start] = true;
+            let size = dfs(&lines, &mut seen, start);
             groups.push(size);
         }
     }
@@ -36,15 +36,15 @@ pub fn part2(input: &[u32]) -> usize {
     input.len()
 }
 
-fn dfs(lines: &[&str], visited: &mut [bool], index: usize) -> u32 {
+fn dfs(lines: &[&str], seen: &mut [bool], index: usize) -> u32 {
     let mut size = 1;
 
     // At least the first 6 characters of each line can be skipped as it only contains the index
     // that we already know.
     for next in (&lines[index][6..]).iter_unsigned::<usize>() {
-        if !visited[next] {
-            visited[next] = true;
-            size += dfs(lines, visited, next);
+        if !seen[next] {
+            seen[next] = true;
+            size += dfs(lines, seen, next);
         }
     }
 

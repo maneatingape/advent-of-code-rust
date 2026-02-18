@@ -91,7 +91,7 @@ pub fn parse(input: &str) -> Input {
     let mut grid = Grid::new(inner.width + 2, inner.height + 2, b'#');
 
     // Copy inner grid.
-    for y in 0..inner.width {
+    for y in 0..inner.height {
         for x in 0..inner.width {
             let src = Point::new(x, y);
             let dst = Point::new(x + 1, y + 1);

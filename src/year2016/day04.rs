@@ -58,25 +58,18 @@ pub fn part1(input: &[Room<'_>]) -> u32 {
 }
 
 pub fn part2(input: &[Room<'_>]) -> u32 {
+    let target = b"northpole object storage";
+
     for &Room { name, sector_id } in input {
         let bytes = name.as_bytes();
 
         // Quickly eliminate most rooms as the length of words doesn't change.
-        if bytes.len() == 24 && bytes[9] == b'-' && bytes[16] == b'-' {
-            let mut buffer = String::with_capacity(24);
-
-            // Decrypt potential candidates.
-            for b in name.bytes() {
-                if b == b'-' {
-                    buffer.push(' ');
-                } else {
-                    let rotate = (sector_id % 26) as u8;
-                    let decrypted = (b - b'a' + rotate) % 26 + b'a';
-                    buffer.push(decrypted as char);
-                }
-            }
-
-            if buffer == "northpole object storage" {
+        if bytes.len() == target.len() && bytes[9] == b'-' && bytes[16] == b'-' {
+            let rotate = (sector_id % 26) as u8;
+            let matches = bytes.iter().zip(target).all(|(&b, &t)| {
+                t == if b == b'-' { b' ' } else { (b - b'a' + rotate) % 26 + b'a' }
+            });
+            if matches {
                 return sector_id;
             }
         }

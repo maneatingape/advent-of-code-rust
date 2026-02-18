@@ -40,7 +40,7 @@ pub fn parse(input: &str) -> Input {
 }
 
 pub fn part1(input: &Input) -> &str {
-    input.0.as_str()
+    &input.0
 }
 
 pub fn part2(input: &Input) -> u32 {

@@ -121,16 +121,16 @@ fn parse_maze(width: usize, bytes: &[u8]) -> Maze {
     }
 
     // Start a BFS from each key and robot's location stopping at the nearest neighbor.
-    // As a minor optimization we re-use the same `todo` and `visited` between each search.
+    // As a minor optimization we re-use the same `todo` and `seen` between each search.
     let default = Door { distance: u32::MAX, needed: 0 };
 
     let mut maze = [[default; 30]; 30];
-    let mut visited = vec![usize::MAX; bytes.len()];
+    let mut seen = vec![usize::MAX; bytes.len()];
     let mut todo = VecDeque::new();
 
     for (start, from) in found {
         todo.push_front((start, 0, 0));
-        visited[start] = from;
+        seen[start] = from;
 
         while let Some((index, distance, mut needed)) = todo.pop_front() {
             if let Some(door) = is_door(bytes[index]) {
@@ -148,9 +148,9 @@ fn parse_maze(width: usize, bytes: &[u8]) -> Maze {
             }
 
             for next in [index + 1, index - 1, index + width, index - width] {
-                if bytes[next] != b'#' && visited[next] != from {
+                if bytes[next] != b'#' && seen[next] != from {
                     todo.push_back((next, distance + 1, needed));
-                    visited[next] = from;
+                    seen[next] = from;
                 }
             }
         }
@@ -210,18 +210,11 @@ fn explore(width: usize, bytes: &[u8]) -> u32 {
                     };
 
                     // Memoize previously seen states to eliminate suboptimal states right away.
-                    cache
-                        .entry(next_state)
-                        .and_modify(|e| {
-                            if next_total < *e {
-                                todo.push(next_total, next_state);
-                                *e = next_total;
-                            }
-                        })
-                        .or_insert_with(|| {
-                            todo.push(next_total, next_state);
-                            next_total
-                        });
+                    let best = cache.entry(next_state).or_insert(u32::MAX);
+                    if next_total < *best {
+                        *best = next_total;
+                        todo.push(next_total, next_state);
+                    }
                 }
             }
         }

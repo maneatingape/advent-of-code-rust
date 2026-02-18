@@ -58,7 +58,7 @@ pub fn parse(input: &str) -> Input {
         }
     }
 
-    unreachable!();
+    unreachable!()
 }
 
 pub fn part1(input: &Input) -> u32 {

@@ -34,15 +34,15 @@ pub fn parse(input: &str) -> Input {
     let stride = found.len();
     let mut distance = vec![0; stride * stride];
 
-    // BFS from each location. As a minor optimization we reuse `todo` and `visited`.
+    // BFS from each location. As a minor optimization we reuse `todo` and `seen`.
     let mut todo = VecDeque::new();
-    let mut visited = vec![0; grid.bytes.len()];
+    let mut seen = vec![0; grid.bytes.len()];
 
     for start in found {
         let from = grid.bytes[start].to_decimal() as usize;
 
         todo.push_back((start, 0));
-        visited[start] = start;
+        seen[start] = start;
 
         while let Some((index, steps)) = todo.pop_front() {
             if grid.bytes[index].is_ascii_digit() {
@@ -51,8 +51,8 @@ pub fn parse(input: &str) -> Input {
             }
 
             for next in [index + 1, index - 1, index + width, index - width] {
-                if grid.bytes[next] != b'#' && visited[next] != start {
-                    visited[next] = start;
+                if grid.bytes[next] != b'#' && seen[next] != start {
+                    seen[next] = start;
                     todo.push_back((next, steps + 1));
                 }
             }

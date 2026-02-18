@@ -53,10 +53,10 @@ pub fn part2(input: &[Command]) -> i32 {
 }
 
 fn rotate(point: Point, amount: i32) -> Point {
-    match amount {
-        90 | -270 => point.clockwise(),
-        180 | -180 => point * -1,
-        270 | -90 => point.counter_clockwise(),
+    match amount.rem_euclid(360) {
+        90 => point.clockwise(),
+        180 => point * -1,
+        270 => point.counter_clockwise(),
         _ => unreachable!(),
     }
 }

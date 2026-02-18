@@ -11,7 +11,7 @@ use std::array::from_fn;
 use std::fmt::Write as _;
 
 pub fn parse(input: &str) -> &str {
-    input
+    input.trim()
 }
 
 pub fn part1(input: &str) -> u32 {
@@ -21,7 +21,7 @@ pub fn part1(input: &str) -> u32 {
 }
 
 pub fn part2(input: &str) -> String {
-    let mut lengths: Vec<_> = input.trim().bytes().map(|b| b as usize).collect();
+    let mut lengths: Vec<_> = input.bytes().map(|b| b as usize).collect();
     lengths.extend([17, 31, 73, 47, 23]);
 
     let knot = hash(&lengths, 64);

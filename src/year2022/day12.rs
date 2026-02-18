@@ -7,7 +7,7 @@
 //! Implementation notes:
 //! * A [`VecDeque`] of [`Point`] is used to store the frontier as it gives better performance
 //!   than [`vec`] when used as a FIFO queue.
-//! * [`Grid`] is used to store both the height information and visited nodes.
+//! * [`Grid`] is used to store both the height information and seen nodes.
 //!
 //! For Part 2 we could search for all `a` locations and repeatedly start a BFS search from there,
 //! then find the lowest value. However a much faster approach is to search *backwards* from the
@@ -46,19 +46,16 @@ pub fn part2(input: &Input) -> u32 {
 fn bfs(input: &Input, end: u8) -> u32 {
     let (grid, start) = input;
     let mut todo = VecDeque::from([(*start, 0)]);
-    let mut visited = grid.same_size_with(false);
+    let mut seen = grid.same_size_with(false);
 
     while let Some((point, cost)) = todo.pop_front() {
         if grid[point] == end {
             return cost;
         }
         for next in ORTHOGONAL.map(|d| d + point) {
-            if grid.contains(next)
-                && !visited[next]
-                && height(grid, point) - height(grid, next) <= 1
-            {
+            if grid.contains(next) && !seen[next] && height(grid, point) - height(grid, next) <= 1 {
                 todo.push_back((next, cost + 1));
-                visited[next] = true;
+                seen[next] = true;
             }
         }
     }

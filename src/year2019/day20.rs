@@ -8,7 +8,7 @@
 //!
 //! Then a second BFS over this list efficiently solves both parts. For part two we use a cache to
 //! memoize previously seen values. We optimize part two further by not recursing deeper than the
-//! number of portals as this would mean a redundant trip to an already visited portal.
+//! number of portals as this would mean a redundant trip to an already seen portal.
 //!
 //! [`Day 18`]: crate::year2019::day18
 //! [breadth first search]: https://en.wikipedia.org/wiki/Breadth-first_search
@@ -101,22 +101,22 @@ pub fn parse(input: &str) -> Maze {
         }
     }
 
-    // BFS from each portal. As a minor optimization we reuse `todo` and `visited`.
+    // BFS from each portal. As a minor optimization we reuse `todo` and `seen`.
     let mut portals = Vec::new();
     let mut todo = VecDeque::new();
-    let mut visited = vec![0; tiles.len()];
+    let mut seen = vec![0; tiles.len()];
 
     for start in found {
         let mut edges = Vec::new();
         todo.push_back((start, 0));
 
         while let Some((index, steps)) = todo.pop_front() {
-            visited[index] = start;
+            seen[index] = start;
 
             for next_index in [index + 1, index - 1, index + width, index - width] {
                 let next_steps = steps + 1;
 
-                if visited[next_index] != start {
+                if seen[next_index] != start {
                     match tiles[next_index] {
                         Tile::Wall => (),
                         Tile::Open => {
