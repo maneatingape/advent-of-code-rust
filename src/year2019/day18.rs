@@ -156,7 +156,7 @@ fn parse_maze(width: usize, bytes: &[u8]) -> Maze {
         }
     }
 
-    // Fill in the rest of the graph using the Floyd–Warshal algorithm.
+    // Fill in the rest of the graph using the Floyd-Warshall algorithm.
     // As a slight twist we also build the list of intervening doors at the same time.
     for i in RANGE {
         maze[i][i].distance = 0;

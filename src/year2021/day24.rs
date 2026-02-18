@@ -54,7 +54,7 @@
 //!     add z y     // z = (26 * z) + (w + 14)
 //! ```
 //!
-//! ## Detailed Push block analysis
+//! ## Detailed Pop block analysis
 //!
 //! ```none
 //!     inp w       // w = 1 to 9 inclusive
@@ -66,7 +66,7 @@
 //!     eql x w     // if (z % 26 - 13) == w { x = 1 } else { x = 0 }
 //!     eql x 0     // if (z % 26 - 13) == w { x = 0 } else { x = 1 }
 //!                 // Inverts the previous conditional.
-//!                 // Unlike the push blocks, this may true or false
+//!                 // Unlike the push blocks, this may be true or false
 //!                 // We'll split into 2 paths, depending on equals (x = 0) or
 //!                 // not equal (x = 1).
 //!                 | Equals (x = 0)        | Not Equals (x = 1)        |

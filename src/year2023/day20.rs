@@ -1,7 +1,7 @@
 //! # Pulse Propagation
 //!
 //! Similar to [`Day 8`] the input has a very specific structure. The flip-flops form 4 rows
-//! of 12 columns, following by 2 conjunctions (in square brackets):
+//! of 12 columns, followed by 2 conjunctions (in square brackets):
 //!
 //! ```none
 //!            / aa ab ac ad ae af ag ah ai aj aj al [ax] [ay] \

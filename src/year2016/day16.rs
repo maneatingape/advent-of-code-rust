@@ -6,7 +6,7 @@
 //!
 //! This means that only the *total number of ones is important* not the pattern itself. Each
 //! checksum bit is computed over the largest power of two divisible into the output size. For part
-//! one this is 2⁴ or 16 and for part this is 2²¹ or 2097152. If we can calculate the number of
+//! one this is 2⁴ or 16 and for part two this is 2²¹ or 2097152. If we can calculate the number of
 //! ones for any arbitrary length then we can find the number at the start and end of each block,
 //! subtract from each other to get the total in the range then find the checksum bit.
 //!

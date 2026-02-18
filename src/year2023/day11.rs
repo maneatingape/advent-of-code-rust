@@ -18,7 +18,7 @@
 //! * Total: `2 * [2c - (a + b)]`
 //!
 //! This implies that we only need the *count* of the number of galaxies at each coordinate and
-//! can multiply the total value by that count. This also find gaps with no galaxies to
+//! can multiply the total value by that count. This also finds gaps with no galaxies to
 //! calculate the expanded coordinates.
 pub struct Input {
     xs: [usize; 140],

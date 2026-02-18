@@ -20,7 +20,7 @@
 //! frequencies, then lastly by index as this is needed in the next step.
 //!
 //! For the example this produces `[(0, 0, 0), (1, 1, 1), (2, -1, 2), (2, 2, 3)]`. Then we use
-//! a sliding windows of size two to compare each pair of adjacent candidates, considering only
+//! a sliding window of size two to compare each pair of adjacent candidates, considering only
 //! candidates with the same remainder. For each valid pair we then produce a tuple of
 //! `(frequency gap, index, frequency)`.
 //!

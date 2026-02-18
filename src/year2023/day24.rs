@@ -36,15 +36,15 @@
 //!
 //! ## Part Two
 //!
-//! First we choose 3 arbitrary hailstones. Then we subtract the position and velocity of the
+//! First we choose 3 arbitrary hailstones. Then we subtract the position and velocity of
 //! the first to make the other two relative.
 //!
 //! The two hailstones will intercept a line leaving the origin. We can determine this line
-//! by intersection the two planes that the hailstone's velocity lie in. These planes are
+//! by intersecting the two planes that the hailstone's velocity lie in. These planes are
 //! defined by a normal vector orthogonal to the plane.
 //!
 //! This normal vector is the [cross product](https://en.wikipedia.org/wiki/Cross_product) of
-//! any two vector that lie in the plane, in this case the velocity and also the vector from the
+//! any two vectors that lie in the plane, in this case the velocity and also the vector from the
 //! origin to the starting location of the hailstone.
 //!
 //! The direction but not necessarily the magnitude of the velocity is then given by the cross

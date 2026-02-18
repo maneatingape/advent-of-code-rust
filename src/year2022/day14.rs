@@ -14,7 +14,7 @@
 //! and so on. More generally it would take `∑n` = `n * (n + 1) / 2` or `O(n²)` complexity for
 //! the whole pile.
 //!
-//! We instead simulate in `O(n)` complexity by recursively check each grain's underneath
+//! We instead simulate in `O(n)` complexity by recursively checking each grain's underneath
 //! neighbors until we have a conclusive result then propagating that back up the stack,
 //! for example:
 //!

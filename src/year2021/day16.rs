@@ -1,4 +1,4 @@
-//! Packet Decoder
+//! # Packet Decoder
 //!
 //! [`BitStream`] is the key to making this problem tractable. It works like an iterator, allowing
 //! us to consume an arbitrary number of bits from the input and convert this to a number.

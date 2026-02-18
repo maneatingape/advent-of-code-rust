@@ -5,7 +5,7 @@
 //! ## Part One
 //! Part one can be solved analytically. Movement upwards in the positive y direction is symmetrical.
 //! For example launching a probe at a y-velocity of 5 initially,
-//! would result in a  speed and y-position:
+//! would result in a speed and y-position:
 //!
 //! ```text
 //!     Time:       0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12

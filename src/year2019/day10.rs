@@ -14,7 +14,7 @@
 //! in a given direction, if a vector is already in the set then we ignore it. The final size of
 //! the set is the number of visible asteroids.
 //!
-//! To speeds things up a little, we rely on the fact that if asteroid `a` can see `b`, then `b`
+//! To speed things up a little, we rely on the fact that if asteroid `a` can see `b`, then `b`
 //! can see `a`. The solution is still `O(n²)` complexity but we reduce the work by half. This
 //! works by implicitly processing asteroids in the same order as the input, from left to right and
 //! top to bottom, so that nearest asteroids are always encountered first.
@@ -34,7 +34,7 @@
 //! 2. Clockwise angle
 //! 3. Distance
 //!
-//! This results in a something like (where letters indicate angle and numbers indicate distance):
+//! This results in something like (where letters indicate angle and numbers indicate distance):
 //!
 //! `a1 a2 a3 b1 c1 c2 c3 c4 d1 d2`
 //!

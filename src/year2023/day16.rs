@@ -243,7 +243,7 @@ fn strong_connect(graph: &mut Graph, position: Point) -> usize {
         // Mark node as done.
         node.from.iter().for_each(|&p| graph.state[p] = Done(index));
 
-        // Merge depduplicated children, removing self-references that point to this node.
+        // Merge deduplicated children, removing self-references that point to this node.
         for &next in node.to.difference(&node.from) {
             if let Done(other) = graph.state[next] {
                 node.tiles.union(&graph.nodes[other].tiles);
