@@ -45,17 +45,17 @@ use std::collections::VecDeque;
 // high nibble, and the microchip the low nibble.  Only 5 bytes matter, because the part 2
 // pairs contribute a constant input; the used bytes are stored in little-endian order;
 // unused lanes will be 0.
-const MASK: usize = 0x00000001_01010101;
-const FLOOR1: usize = (MASK << 4) | MASK;
-const FLOOR2: usize = FLOOR1 << 1;
-const FLOOR3: usize = FLOOR2 << 1;
-const FLOOR4: usize = FLOOR3 << 1;
+const MASK: u64 = 0x0000000101010101;
+const FLOOR1: u64 = (MASK << 4) | MASK;
+const FLOOR2: u64 = FLOOR1 << 1;
+const FLOOR3: u64 = FLOOR2 << 1;
+const FLOOR4: u64 = FLOOR3 << 1;
 const PAIR1: u8 = (1 << 4) | 1;
 
 #[derive(Clone, Copy, Default, PartialEq, Eq, Hash)]
 pub struct State {
     elevator: u8, // 0-3
-    pairs: usize, // One-hot encoded floors for up to 5 item pairs.
+    pairs: u64,   // One-hot encoded floors for up to 5 item pairs.
 }
 
 impl State {
@@ -71,12 +71,12 @@ impl State {
     fn canon(mut self) -> State {
         let mut array = self.pairs.to_le_bytes();
         array[..5].sort_unstable();
-        self.pairs = usize::from_le_bytes(array);
+        self.pairs = u64::from_le_bytes(array);
         self
     }
 
     // Attempt to adjust state by moving one or two items up or down.
-    fn move_floor(self, up: bool, item_mask: usize) -> Option<State> {
+    fn move_floor(self, up: bool, item_mask: u64) -> Option<State> {
         // Build the new state
         let mut state = self;
 
@@ -127,7 +127,7 @@ pub fn parse(input: &str) -> u32 {
     }
 
     // Little-endian matters, based on the indices that canon() will use.
-    let state = State { elevator: 0, pairs: usize::from_le_bytes(floors) };
+    let state = State { elevator: 0, pairs: u64::from_le_bytes(floors) };
     bfs(state.canon(), steps)
 }
 
@@ -155,7 +155,6 @@ fn bfs(start: State, steps: u32) -> u32 {
 
         // Iterate over items that can be moved.
         let items = state.pairs & (FLOOR1 << state.elevator);
-        let mut added = false;
 
         // When moving down, try one item first; try two only if one didn't work.
         // Don't move down from bottom floor, or down into empty region
@@ -163,6 +162,8 @@ fn bfs(start: State, steps: u32) -> u32 {
             || (state.elevator == 1 && (state.pairs & FLOOR1) == 0)
             || (state.elevator == 2 && (state.pairs & (FLOOR1 | FLOOR2) == 0)))
         {
+            let mut added = false;
+
             for i in items.biterator() {
                 if let Some(next) = state.move_floor(false, 1 << i)
                     && seen.insert(next)
@@ -171,6 +172,7 @@ fn bfs(start: State, steps: u32) -> u32 {
                     todo.push_back((next, steps + 1));
                 }
             }
+
             if !added {
                 for i in items.biterator() {
                     for j in items.biterator().take_while(|&j| j < i) {
@@ -186,8 +188,9 @@ fn bfs(start: State, steps: u32) -> u32 {
 
         // When moving up, try two items first; try one only if two didn't work.
         // Don't move up from top floor.
-        if state.elevator != 3 {
-            added = false;
+        if state.elevator < 3 {
+            let mut added = false;
+
             for i in items.biterator() {
                 for j in items.biterator().take_while(|&j| j < i) {
                     if let Some(next) = state.move_floor(true, (1 << i) | (1 << j))
@@ -198,6 +201,7 @@ fn bfs(start: State, steps: u32) -> u32 {
                     }
                 }
             }
+
             if !added {
                 for i in items.biterator() {
                     if let Some(next) = state.move_floor(true, 1 << i)
