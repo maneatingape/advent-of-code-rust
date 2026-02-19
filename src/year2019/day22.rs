@@ -99,6 +99,30 @@
 //! one modular inverse, allowing us to solve part two efficiently.
 //!
 //! `Xₙ₊₁ = (aⁿXₙ + c(aⁿ - 1)((a - 1)⁻¹)) mod m`
+//! 
+//! ## Why Const Generics?
+//!
+//! The deck size `m` is known at compile time for each part:
+//! * Part 1 uses `m = 10007`
+//! * Part 2 uses `m = 119315717514047`
+//!
+//! All arithmetic in this problem is performed modulo `m`, and every shuffle
+//! technique is parameterized by that same modulus. Instead of storing `m`
+//! as a runtime field inside the struct, we make it a **const generic
+//! parameter**: `Technique<const M: i128>`.
+//!
+//! This has several advantages:
+//!
+//! * The modulus becomes part of the *type*, preventing accidental mixing
+//!   of techniques built with different deck sizes.
+//! * No runtime storage of `m` is required.
+//! * The compiler can treat `M` as a true constant, enabling better
+//!   optimization and inlining of modular arithmetic.
+//! * It makes the mathematical intent explicit: a `Technique<M>` is a
+//!   linear congruence defined over ℤ/Mℤ.
+//!
+//! In short, the modulus is a compile-time property of the shuffle,
+//! not a runtime variable.
 use crate::util::math::*;
 use crate::util::parse::*;
 
