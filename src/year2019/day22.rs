@@ -102,36 +102,32 @@
 use crate::util::math::*;
 use crate::util::parse::*;
 
-struct Technique {
+struct Technique<const M: i128> {
     a: i128,
     c: i128,
-    m: i128,
 }
 
-impl Technique {
-    fn compose(&self, other: &Technique) -> Technique {
-        let m = self.m;
-        let a = (self.a * other.a) % m;
-        let c = (self.c * other.a + other.c) % m;
-        Technique { a, c, m }
+impl<const M: i128> Technique<M> {
+    fn compose(&self, other: &Technique<M>) -> Technique<M> {
+        let a = (self.a * other.a) % M;
+        let c = (self.c * other.a + other.c) % M;
+        Technique::<M> { a, c }
     }
 
-    fn inverse(&self) -> Technique {
-        let m = self.m;
-        let a = self.a.mod_inv(m).unwrap();
-        let c = m - (a * self.c) % m;
-        Technique { a, c, m }
+    fn inverse(&self) -> Technique<M> {
+        let a = self.a.mod_inv(M).unwrap();
+        let c = M - (a * self.c) % M;
+        Technique::<M> { a, c }
     }
 
-    fn power(&self, e: i128) -> Technique {
-        let m = self.m;
-        let a = self.a.mod_pow(e, m);
-        let c = (((a - 1) * (self.a - 1).mod_inv(m).unwrap() % m) * self.c) % m;
-        Technique { a, c, m }
+    fn power(&self, e: i128) -> Technique<M> {
+        let a = self.a.mod_pow(e, M);
+        let c = (((a - 1) * (self.a - 1).mod_inv(M).unwrap() % M) * self.c) % M;
+        Technique::<M> { a, c }
     }
 
     fn shuffle(&self, index: i128) -> i128 {
-        (self.a * index + self.c) % self.m
+        (self.a * index + self.c) % M
     }
 }
 
@@ -140,27 +136,27 @@ pub fn parse(input: &str) -> &str {
 }
 
 pub fn part1(input: &str) -> i128 {
-    deck(input, 10007).shuffle(2019)
+    deck::<10007>(input).shuffle(2019)
 }
 
 pub fn part2(input: &str) -> i128 {
-    deck(input, 119315717514047).inverse().power(101741582076661).shuffle(2020)
+    deck::<119315717514047>(input).inverse().power(101741582076661).shuffle(2020)
 }
 
-fn deck(input: &str, m: i128) -> Technique {
+fn deck<const M: i128>(input: &str) -> Technique<M> {
     input
         .lines()
         .map(|line| {
             if line.ends_with("stack") {
-                Technique { a: m - 1, c: m - 1, m }
+                Technique::<M> { a: M - 1, c: M - 1 }
             } else if line.starts_with("cut") {
                 let n: i128 = line.signed();
-                let c = (m - n % m) % m;
-                Technique { a: 1, c, m }
+                let c = (M - n % M) % M;
+                Technique::<M> { a: 1, c }
             } else {
                 let n: i128 = line.signed();
-                let a = (m + n % m) % m;
-                Technique { a, c: 0, m }
+                let a = (M + n % M) % M;
+                Technique::<M> { a, c: 0 }
             }
         })
         .reduce(|a, b| a.compose(&b))
