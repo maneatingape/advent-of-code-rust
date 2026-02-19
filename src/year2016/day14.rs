@@ -56,12 +56,18 @@ fn generate_pad(input: &str, part_two: bool) -> i32 {
 }
 
 /// Write the salt and integer index as ASCII characters.
-fn format_string(prefix: &str, n: i32) -> ([u8; 64], usize) {
-    let string = format!("{prefix}{n}");
-    let size = string.len();
+fn format_string(prefix: &str, mut n: i32) -> ([u8; 64], usize) {
+    let prefix_len = prefix.len();
+    let digits = n.max(1).ilog10() as usize + 1;
+    let size = prefix_len + digits;
 
     let mut buffer = [0; 64];
-    buffer[..size].copy_from_slice(string.as_bytes());
+    buffer[..prefix_len].copy_from_slice(prefix.as_bytes());
+
+    for i in (prefix_len..size).rev() {
+        buffer[i] = b'0' + (n % 10) as u8;
+        n /= 10;
+    }
 
     (buffer, size)
 }
