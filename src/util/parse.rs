@@ -17,6 +17,8 @@ use crate::util::integer::*;
 use std::marker::PhantomData;
 use std::str::Bytes;
 
+const MINUS: u8 = b'-'.wrapping_sub(b'0');
+
 pub trait ParseByte {
     fn to_decimal(self) -> u8;
 }
@@ -117,7 +119,7 @@ fn try_unsigned<T: Unsigned<T>>(bytes: &mut Bytes<'_>) -> Option<T> {
 fn try_signed<T: Signed<T>>(bytes: &mut Bytes<'_>) -> Option<T> {
     let (mut n, negative) = loop {
         let digit = bytes.next()?.to_decimal();
-        if digit == 253 {
+        if digit == MINUS {
             break (T::ZERO, true);
         }
         if digit < 10 {
