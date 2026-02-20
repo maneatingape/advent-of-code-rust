@@ -25,6 +25,12 @@ macro_rules! iterator {
             type Item = [I::Item; $n];
 
             #[inline]
+            fn size_hint(&self) -> (usize, Option<usize>) {
+                let (lo, hi) = self.iter.size_hint();
+                (lo / $n, hi.map(|h| h / $n))
+            }
+
+            #[inline]
             fn next(&mut self) -> Option<Self::Item> {
                 Some([$({
                     let $var = self.iter.next()?;
