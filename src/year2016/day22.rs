@@ -66,36 +66,17 @@ pub struct Node {
     x: u32,
     y: u32,
     used: u32,
-    avail: u32,
 }
 
 pub fn parse(input: &str) -> Vec<Node> {
-    input
-        .iter_unsigned()
-        .chunk::<6>()
-        .map(|[x, y, _, used, avail, _]| Node { x, y, used, avail })
-        .collect()
+    input.iter_unsigned().chunk::<6>().map(|[x, y, _, used, _, _]| Node { x, y, used }).collect()
 }
 
-/// Filter the used and available space in ascending order to find the viable pairs efficiently.
+/// No need to actually check node pairs: only the empty node can receive data, and all but
+/// the wall nodes can pair with the empty node but not each other.
 pub fn part1(input: &[Node]) -> usize {
-    let mut used: Vec<_> = input.iter().map(|n| n.used).filter(|&n| n > 0).collect();
-    used.sort_unstable();
-
-    let mut avail: Vec<_> = input.iter().map(|n| n.avail).collect();
-    avail.sort_unstable();
-
-    let mut i = 0;
-    let mut viable = 0;
-
-    for next in used {
-        while i < avail.len() && avail[i] < next {
-            i += 1;
-        }
-        viable += avail.len() - i;
-    }
-
-    viable
+    // Skip the empty node and the large nodes bigger than 100T.
+    input.iter().filter(|Node { used, .. }| (1..100).contains(used)).count()
 }
 
 pub fn part2(input: &[Node]) -> u32 {
@@ -104,7 +85,7 @@ pub fn part2(input: &[Node]) -> u32 {
     let mut empty_y = 0;
     let mut wall_x = u32::MAX;
 
-    for &Node { x, y, used, .. } in input {
+    for &Node { x, y, used } in input {
         width = width.max(x + 1);
 
         if used == 0 {
