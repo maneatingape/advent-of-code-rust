@@ -1,8 +1,16 @@
 //! # Scrambled Letters and Hash
 //!
-//! The forward transformations are straightforward. The trickiest reverse
-//! implementation is the rotation based on the index of the letter.
+//! The forward transformations are straightforward. The trickiest reverse transformation is the
+//! rotation based on the index of the letter. First we build a lookup table of how many places to
+//! rotate right based on the letter index. This is +1 for positions 0-3 and +2 for positions 4-7.
+//!
+//! Then we invert this by mapping the transformed index to the rotation. For example position 3 is
+//! rotated right by 4 places, ending up at position 7, so the inverse lookup table to rotate left
+//! stores 4 at index 7.
 use crate::util::parse::*;
+
+const ROTATE_LETTER_RIGHT: [usize; 8] = [1, 2, 3, 4, 6, 7, 0, 1];
+const ROTATE_LETTER_LEFT: [usize; 8] = [1, 1, 6, 2, 7, 3, 0, 4];
 
 #[derive(Clone, Copy)]
 pub enum Op {
@@ -48,27 +56,15 @@ impl Op {
             }
             Op::RotateLeft(first) => password.rotate_left(first),
             Op::RotateRight(first) => password.rotate_right(first),
-            // This is the trickiest transformation to invert.
-            // Tests each possible starting index to check if it matches the current index.
             Op::RotateLetterLeft(first) => {
                 let first = position(first);
-                for i in 0..password.len() {
-                    let second = if i >= 4 { 2 } else { 1 };
-                    let third = (2 * i + second) % password.len();
-                    if first == third {
-                        if i < first {
-                            password.rotate_left(first - i);
-                        } else {
-                            password.rotate_right(i - first);
-                        }
-                    }
-                }
+                let second = ROTATE_LETTER_LEFT[first] % password.len();
+                password.rotate_left(second);
             }
             Op::RotateLetterRight(first) => {
                 let first = position(first);
-                let second = if first >= 4 { 2 } else { 1 };
-                let third = (first + second) % password.len();
-                password.rotate_right(third);
+                let second = ROTATE_LETTER_RIGHT[first] % password.len();
+                password.rotate_right(second);
             }
             Op::Reverse(first, second) => password[first..=second].reverse(),
             Op::Move(first, second) => {
