@@ -13,7 +13,7 @@
 //! The `check` function implements a recursive matcher. If a rule is a prefix of the message
 //! then the function returns `Some(index)` where `index` is the first character *after* the
 //! matching pattern, in order to allow matching to continue with the next rule.
-//! If there is no match then the function return `None`. For example:
+//! If there is no match then the function returns `None`. For example:
 //!
 //! | Rule   | Message   | Result    |
 //! | ------ | --------- | --------- |

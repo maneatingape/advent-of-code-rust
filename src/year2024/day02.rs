@@ -6,12 +6,12 @@
 //! * `1 3 6 7 9` => `+1 +1 +1 +1`
 //! * `9 7 6 2 1` => `-1 -1 0 -1`
 //!
-//! If the sum of all delta equals ±4, then we know that all levels are increasing or
+//! If the sum of all deltas equals ±4, then we know that all levels are increasing or
 //! decreasing. Any other value indicates either mixed up and down transitions or levels that
 //! are too far apart.
 //!
-//! For part two we remove each pair of deltas (or single delta at each end) then replace with
-//! the sum of the delta from the new neighbors on either side.
+//! For part two, we remove each pair of deltas (or single delta at each end) then replace with
+//! the delta from the new neighbors on either side.
 use crate::util::parse::*;
 
 type Input = (u32, u32);
@@ -48,7 +48,7 @@ fn check(report: &[i32]) -> (u32, u32) {
     for i in 0..size {
         let mut score = score;
 
-        // Snip out each level and replace with new level computed from neighbors to either side.
+        // Snip out each level and replace with a new level computed from neighbors on either side.
         if i > 0 {
             score -= delta(report[i - 1], report[i]);
         }

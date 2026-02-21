@@ -53,7 +53,7 @@ struct State {
 /// | c     | 4     |    100 |
 /// | d     | 5     |   1000 |
 ///
-/// Finally all small caves are added to a single `u32`, for example the
+/// Finally, all small caves are added to a single `u32`, for example the
 /// sample data looks like `111011`.
 pub fn parse(input: &str) -> Input {
     let tokens: Vec<_> =
@@ -117,8 +117,8 @@ fn explore(input: &Input, twice: bool) -> u32 {
 /// a single machine code instruction on x86 and ARM and is blazing fast. We remove visited caves
 /// using a `^` XOR instruction.
 ///
-/// The nuance is re-using the same code for both part 1 and part 2. First we check if we can visit
-/// a cave using the rules for part 1. If not, then we also check if the `twice` variable is
+/// The nuance is re-using the same code for both part one and part two. First we check if we can visit
+/// a cave using the rules for part one. If not, then we also check if the `twice` variable is
 /// still `true`. This variable allows a single second visit to a small cave. The expression
 /// `once && twice` sets this value to `false` whenever we need to use it to visit a small cave.
 ///

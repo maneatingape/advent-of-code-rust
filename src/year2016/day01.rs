@@ -1,6 +1,6 @@
 //! # No Time for a Taxicab
 //!
-//! The solution is short as it leverages two utility classes,
+//! The solution is short as it leverages two utility modules,
 //! [`parse`] for extracting integers from surrounding text and [`point`] for two dimensional
 //! rotations and translations.
 //!

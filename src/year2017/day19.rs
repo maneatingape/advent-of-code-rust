@@ -1,6 +1,6 @@
 //! # A Series of Tubes
 //!
-//! Uses the utility [`Grid`] to parse the input, then the [`Point`] class to follow the path.
+//! Uses the utility [`Grid`] to parse the input, then [`Point`] to follow the path.
 //!
 //! [`Grid`]: crate::util::grid
 //! [`Point`]: crate::util::point

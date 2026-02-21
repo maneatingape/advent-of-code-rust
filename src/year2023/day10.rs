@@ -5,7 +5,7 @@
 //!
 //! Starting at `S` we trace out the path followed by the pipes. Each corner piece
 //! (`7`, `F`, `J`, `L` and finally `S`) is considered a vertex and added to the running total
-//! for the area using the Shoelace formula. Additionally we keep track of the perimeter length.
+//! for the area using the Shoelace formula. Additionally, we keep track of the perimeter length.
 //!
 //! As the path is a loop the answer for part one is half the perimeter length.
 //!

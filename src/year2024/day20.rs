@@ -10,7 +10,7 @@
 //! * Don't check any squares only 1 away as we can always just move to these normally.
 //! * Checking from point `p => q` is always the negative of `q => p`, e.g. if `p = 30, q = 50` then
 //!   `p => q = 20` and `q => p = -20`. This means we only ever need to check any pair once.
-//! * Additionally we only need to check down and right. Previous rows and columns will already
+//! * Additionally, we only need to check down and right. Previous rows and columns will already
 //!   have checked points above and to the left when we reach an empty square.
 //!
 //! ```none

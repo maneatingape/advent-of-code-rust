@@ -1,6 +1,6 @@
 //! # Treetop Tree House
 //!
-//! Part 1 is solved with an efficient `O(n)` algorithm. Part 2 is also solved with an efficient `O(n)`
+//! Part one is solved with an efficient `O(n)` algorithm. Part two is also solved with an efficient `O(n)`
 //! algorithm, using a bit manipulation trick to make the complexity independent of the number of digits.
 
 const ONES: u64 = 0x0041041041041041;
@@ -10,7 +10,7 @@ type Input = (usize, Vec<i8>);
 
 /// Convert a 2D grid of ASCII digits into a 1D `vec` of heights.
 ///
-/// Each height is multiplied by 6. For part 1 this makes no difference, but for part 2 this helps
+/// Each height is multiplied by 6. For part one this makes no difference, but for part two this helps
 /// with the bit manipulation.
 ///
 /// To convert from 2D co-ordinates to an index, the formula is `y * width + x`. For the sample grid
@@ -49,10 +49,10 @@ pub fn parse(input: &str) -> Input {
 /// by the loop in the opposite direction.
 ///
 /// A tree is visible if it can be seen from any direction. As a minor optimization, rather
-/// than have 4 separate loops pairs, the left, right, up and down loops are all rolled into
+/// than have 4 separate loop pairs, the left, right, up and down loops are all rolled into
 /// one pair, to amortise the cost of loop logic.
 ///
-/// The 4 corners trees don't need to be checked since they're always visible
+/// The 4 corner trees don't need to be checked since they're always visible
 /// so they're added directly to the total.
 pub fn part1(input: &Input) -> usize {
     let (width, digits) = input;
@@ -98,12 +98,12 @@ pub fn part1(input: &Input) -> usize {
 /// Calculate the distance visible in each direction by using 10 rolling maximum values for each
 /// height packed into a single `u64`.
 ///
-/// Part 2 is similar to part 1, but instead of keeping a single maximum for each direction, we
+/// Part two is similar to part one, but instead of keeping a single maximum for each direction, we
 /// need to keep an *array* of 10 values, one for each possible height.
 ///
 /// For each tree its score is the current value at the same index as its height. Then we increment
 /// the value of previously seen trees greater than the current height by one
-/// and reset the values of trees less than or equal than the current height to one.
+/// and reset the values of trees less than or equal to the current height to one.
 ///
 /// We skip processing the edge and corner trees. Strictly speaking their score should be zero, but
 /// as the maximum value will always be greater than or equal to one, it's fine to leave them

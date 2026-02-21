@@ -5,7 +5,7 @@
 //! [linear feedback shift register](https://en.wikipedia.org/wiki/Linear-feedback_shift_register).
 //! with a cycle of 2²⁴.
 //!
-//! Interestingly this means that with some clever math it's possible to generate the `n`th number
+//! Interestingly, this means that with some clever math it's possible to generate the `n`th number
 //! from any starting secret number with only 24 calculations. Unfortunately this doesn't help for
 //! part two since we need to check every possible price change. However to speed things up we can
 //! make several optimizations:

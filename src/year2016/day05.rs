@@ -1,6 +1,6 @@
 //! # How About a Nice Game of Chess?
 //!
-//! Essentially a repeat of [`Year 2015 Day 4`]. We brute force MD5 hashes as quickly as
+//! Essentially, a repeat of [`Year 2015 Day 4`]. We brute force MD5 hashes as quickly as
 //! possible in parallel in blocks of 1000 at a time.
 //!
 //! [`Year 2015 Day 4`]: crate::year2015::day04

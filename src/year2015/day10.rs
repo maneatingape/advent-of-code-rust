@@ -14,7 +14,7 @@
 //! 92 elements total so we can use a fixed size array to store the decay chain information.
 //!
 //! It would be possible (but less fun) to precompute all possible 92 answers into a
-//! look up table.
+//! lookup table.
 use crate::util::hash::*;
 
 const ELEMENTS: &str = "\

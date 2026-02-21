@@ -9,7 +9,7 @@
 //! A configuration that starts with two pairs on floor one takes the same number of steps to
 //! solve whether pair A or pair B is moved first (that is, the setup `[-;-;AG,AM;BG,BM]` while on
 //! floor 2 is indistinguishable from `[-;-;BG,BM;AG,AM]` on floor 2 in terms of the final result).
-//! However, the relative positions of pairs still matters (the setup `[AM;AG;BG;BM]` on floor two
+//! However, the relative positions of pairs still matter (the setup `[AM;AG;BG;BM]` on floor two
 //! can move BG up or down; but the setup `[AM;BG;AG;BM]` on floor two can only move AG up).  To
 //! maximize state sharing, represent each pair's generator and microchip position as hex
 //! digits, but merge all permutations by sorting those hex digit pairs during the hash
@@ -42,7 +42,7 @@ use crate::util::hash::*;
 use std::collections::VecDeque;
 
 // A one-hot encoding is more efficient than 0-3.  For each byte, the generator is the
-// high nibble, and the microchip the low nibble.  Only 5 bytes matter, because the part 2
+// high nibble, and the microchip the low nibble.  Only 5 bytes matter, because the part two
 // pairs contribute a constant input; the used bytes are stored in little-endian order;
 // unused lanes will be 0.
 const MASK: u64 = 0x0000000101010101;

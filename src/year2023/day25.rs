@@ -38,7 +38,7 @@
 //! We keep track of the edges each time and only allow each edge to be used once so that each
 //! path has no common edges.
 //!
-//! This will "saturate" the 3 edges across the middle. Finally we BFS from the start node
+//! This will "saturate" the 3 edges across the middle. Finally, we BFS from the start node
 //! a fourth time. As the middle links are already used, this will only be able to reach the nodes
 //! on start's side of the graph and will find our answer.
 //!

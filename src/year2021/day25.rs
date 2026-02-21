@@ -10,7 +10,7 @@
 //! * Bitwise AND together to find cucumbers that can move `00000000100`
 //! * Rotate `00000001000` left by one, invert `11111110111` then bitwise AND with original
 //!   cucumbers to remove moving cucumbers from static `00011110000`
-//! * Finally bitwise OR static and moving cucumbers together for the final result
+//! * Finally, bitwise OR static and moving cucumbers together for the final result
 //!   `00011110000 | 00000000100 = 00011110100`
 //!
 //! In the actual implementation `across` and `down` are stored separately so that we know

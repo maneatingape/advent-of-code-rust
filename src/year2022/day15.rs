@@ -44,7 +44,7 @@ pub fn part1_testable(input: &[Input], row: i32) -> i32 {
         (extra >= 0).then(|| (sensor.x - extra)..(sensor.x + extra))
     }
 
-    // Returns the x position off all beacons that are located on the specified row
+    // Returns the x position of all beacons that are located on the specified row
     // or `None`.
     fn build_beacons(input: &Input, row: i32) -> Option<i32> {
         let Input { beacon, .. } = input;

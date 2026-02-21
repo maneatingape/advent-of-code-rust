@@ -66,7 +66,7 @@ fn sender(shared: &Shared, tx: &Sender<Block>) {
         let mut first = shared.first * 16807.mod_pow(start, MOD);
         let mut second = shared.second * 48271.mod_pow(start, MOD);
 
-        // Estimate capacity at one quarter or one eight.
+        // Estimate capacity at one quarter or one eighth.
         let mut ones = 0;
         let mut fours = Vec::with_capacity(BLOCK / 4);
         let mut eights = Vec::with_capacity(BLOCK / 8);

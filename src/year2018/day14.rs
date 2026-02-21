@@ -122,7 +122,7 @@ fn reader(rx: Receiver<&[u8]>, done: &AtomicBool, input: &str) -> (String, usize
 /// are calculated in this loop. As much as possible is parallelized using techniques similar to
 /// SIMD but using regular instructions instead of SIMD intrinsics or Rust's portable SIMD API.
 ///
-/// Interestingly on an Apple M2 Max this "poor man's SIMD" has the same performance as using
+/// Interestingly, on an Apple M2 Max this "poor man's SIMD" has the same performance as using
 /// the portable SIMD API. This is probably due to the fact that the serial loops that write new
 /// recipes take the majority of the time.
 fn writer<'a>(tx: Sender<&'a [u8]>, done: &AtomicBool, mut recipes: &'a mut [u8]) {
@@ -240,7 +240,7 @@ fn writer<'a>(tx: Sender<&'a [u8]>, done: &AtomicBool, mut recipes: &'a mut [u8]
         }
 
         // Split the mutable `recipes` slice into two parts. This allows the reader thread to
-        // access the head in parallel while the reader thread continues to write to the tail,
+        // access the head in parallel while the writer thread continues to write to the tail,
         // ensuring unique ownership of each part of memory to prevent any concurrency issues.
         let (head, tail) = recipes.split_at_mut(size - base);
         let _unused = tx.send(head);

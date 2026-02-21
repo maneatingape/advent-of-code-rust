@@ -58,7 +58,7 @@
 //!
 //! `Xₙ₊₁ = a₂ * (a₁Xₙ + c₁) + c₂) mod m = (a₁a₂Xₙ + a₂c₁ + c₂) mod m`
 //!
-//! so we could combine the previous "cut 3" and deal with increment 3" as:
+//! so we could combine the previous "cut 3" and "deal with increment 3" as:
 //!
 //! `Xₙ₊₁ = 3 * (1Xₙ + 2) + 0) mod m = (3Xₙ + 6) mod m`.
 //!
@@ -78,7 +78,7 @@
 //!
 //! ## Exponentiation
 //!
-//! To find of inverse of 101741582076661 shuffles we need to raise to our inverse to the same
+//! To find the inverse of 101741582076661 shuffles we need to raise our inverse to the same
 //! power. Let's look at the first few powers
 //! * ax + c
 //! * a * (ax + c) + c = a²x + ac + c

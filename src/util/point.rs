@@ -1,5 +1,4 @@
-//! Comprehensive 2-dimensional point implementation. This class is designed to work together
-//! with the [`Grid`] class.
+//! Comprehensive 2-dimensional point implementation, designed to work together with [`Grid`].
 //!
 //! A common theme in Advent of Code is operations in 2 dimensions. This module provides a
 //! [`Point`] struct along with implementations of several of the [`std::ops`] traits to support
@@ -17,8 +16,8 @@
 //!   assert_eq!(a * k, Point::new(2, 4));
 //! ```
 //!
-//! Additionally there are [`clockwise`] and [`counter_clockwise`] functions for 90 degree rotations
-//! and a [`manhattan`] function for the
+//! Additionally, there are [`clockwise`] and [`counter_clockwise`]
+//! functions for 90-degree rotations and a [`manhattan`] function for the
 //! [Manhattan distance](https://en.wikipedia.org/wiki/Taxicab_geometry) between 2 points.
 //!
 //! [`clockwise`]: Point::clockwise

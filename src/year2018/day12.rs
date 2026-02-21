@@ -32,13 +32,13 @@ pub fn parse(input: &str) -> Input {
         }
     }
 
-    // Part 1 - Simulate the first 20 steps
+    // Part one - Simulate the first 20 steps
     for _ in 0..20 {
         pots.step(&rules);
     }
     let part_one = pots.sum();
 
-    // Part 2 - Only simulate until the generation repeats
+    // Part two - Only simulate until the generation repeats
     let mut prev_pos;
     for steps in 20.. {
         prev_pos = pots.pos;

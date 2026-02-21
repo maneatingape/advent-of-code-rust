@@ -1,7 +1,7 @@
 //! # Toboggan Trajectory
 //!
 //! Two dimensional grids of ASCII characters are a common Advent of Code theme,
-//! so we use our utility [`Grid`] class to parse the data.
+//! so we use our utility [`Grid`] module to parse the data.
 //!
 //! [`Grid`]: crate::util::grid
 use crate::util::grid::*;

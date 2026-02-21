@@ -8,9 +8,9 @@
 //! Part two is a [constraint satisfaction problem](https://en.wikipedia.org/wiki/Constraint_satisfaction_problem).
 //! First we transpose the ticket rows to columns, grouping each number in the same position in the
 //! ticket. For each column we check every number, eliminating rules that don't fit, since
-//! we know that potential rules must be valid for every field in same position.
+//! we know that potential rules must be valid for every field in the same position.
 //!
-//! To solve there must be at least one column with only one rule remaining. As this rule can
+//! To solve this, there must be at least one column with only one rule remaining. As this rule can
 //! only belong to this column, we eliminate it from other columns. This causes a chain reaction
 //! where a second column will reduce to only one rule, continuing until all columns have been
 //! resolved.

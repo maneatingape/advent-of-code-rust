@@ -51,7 +51,7 @@ fn decrypt(input: &[i64], key: i64, rounds: usize) -> i64 {
     let mut lookup = Vec::with_capacity(input.len());
     // Size of each block of 16 elements for faster lookup.
     let mut skip = [0; 16];
-    // Break 5000 numbers into roughly equals chunks.
+    // Break 5000 numbers into roughly equal chunks.
     let mut mixed: [_; 256] = from_fn(|_| PaddedVec { size: 0, vec: Vec::with_capacity(128) });
 
     for (second, slice) in indices.chunks(input.len().div_ceil(256)).enumerate() {

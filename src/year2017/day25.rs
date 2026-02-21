@@ -7,7 +7,7 @@
 //! skipping forward multiple steps at a time. Blocks 128 cells wide are cached once the cursor
 //! moves off either end.
 //!
-//! Interestingly the total number of distinct cached blocks is very low, approximately 200.
+//! Interestingly, the total number of distinct cached blocks is very low, approximately 200.
 //! The cursor also doesn't move too far, only covering a range of about 6,000 steps.
 use crate::util::hash::*;
 use crate::util::parse::*;

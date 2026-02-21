@@ -151,7 +151,7 @@ mod simd {
         let mut end = extra + grid.width + 1;
 
         for _ in 0..steps {
-            // Edge pixels on the infinite grid flip flop between on and off.
+            // Edge pixels on the infinite grid flip-flop between on and off.
             for y in (start - 1)..(end + 1) {
                 pixels[Point::new(start - 1, y)] = default;
                 pixels[Point::new(start, y)] = default;

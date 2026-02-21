@@ -11,7 +11,7 @@
 //! sorted in ascending order of period. To combine the previous sieved values with the next
 //! scanner, we find the [least common multiple](https://en.wikipedia.org/wiki/Least_common_multiple)
 //! of their ranges. Then we "stretch" the sieved values to cover the new range, by adding
-//! multiples of the factor between the previous range and the new lcm. Finally any values
+//! multiples of the factor between the previous range and the new lcm. Finally, any values
 //! that would collide with the new scanner are filtered out.
 //!
 //! Using the sample data:

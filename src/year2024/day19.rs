@@ -11,7 +11,7 @@
 //! function maps indices between 0 and 7 so that they fit into a fixed size array. This is faster
 //! than using a `HashSet`.
 //!
-//! Additionally we store the Trie in a flat `vec`. This is simpler and faster than creating
+//! Additionally, we store the Trie in a flat `vec`. This is simpler and faster than creating
 //! objects on the heap using [`Box`].
 type Input = (usize, usize);
 

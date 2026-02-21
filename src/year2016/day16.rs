@@ -32,7 +32,7 @@
 //!
 //! Now for the really neat part. We can recursively find the number of ones in `y` by repeating
 //! the same process by setting the new `length` to `next`. We keep recursing until the length
-//! is less the size of the initial input and we can lookup the final count from the prefix sum.
+//! is less than the size of the initial input and we can lookup the final count from the prefix sum.
 //!
 //! Note that it is also possible to compute the parity of any prefix of the Dragon Curve in
 //! O(1) time; the formula is available on [OEIS A255070](https://oeis.org/A255070), and there

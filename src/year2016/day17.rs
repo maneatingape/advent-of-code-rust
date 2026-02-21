@@ -90,7 +90,7 @@ fn worker(shared: &Shared) {
                 if state.inflight == 0 {
                     return;
                 }
-                // Put thread to sleep until another thread notifies us that work is available.
+                // Put the thread to sleep until another thread notifies us that work is available.
                 // This avoids busy looping on the mutex.
                 state = shared.not_empty.wait(state).unwrap();
             }

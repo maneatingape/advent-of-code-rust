@@ -5,7 +5,7 @@
 //! by swapping only one item at a time.
 //!
 //! Makes some assumptions:
-//! * The ship's layout contains no loops, so a depth first search will explore every room
+//! * The ship's layout contains no loops, so a depth-first search will explore every room
 //!   then return to the starting point.
 //! * The 5 dangerous items are common across all inputs.
 //! * No items are called "north", "south", "west" or "east".

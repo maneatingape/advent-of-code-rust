@@ -45,7 +45,7 @@ fn collapse(polymer: impl Iterator<Item = u8>) -> Vec<u8> {
     for unit in polymer {
         // Uppercase and lowercase ASCII are always 32 apart.
         if head ^ unit == 32 {
-            // The head reacts with the unit to annihilate each other so replace with the next unit
+            // The head reacts with the unit to annihilate each other, so replace with the next unit
             // from the stack.
             head = stack.pop().unwrap_or(0);
         } else {

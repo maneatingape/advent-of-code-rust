@@ -5,7 +5,7 @@
 //! Part one is a normal [Dijkstra](https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm)
 //! search from start to end.
 //!
-//! Part two is a BFS *backward* from the end to the finish, tracing the cost exactly
+//! Part two is a BFS *backward* from the end to the start, tracing the cost exactly
 //! to find all possible paths. This reuses the cost information from the Dijkstra without
 //! requiring any extra state keeping for the paths.
 use crate::util::grid::*;

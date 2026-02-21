@@ -4,8 +4,8 @@
 //! [BFS](https://en.wikipedia.org/wiki/Breadth-first_search) solving both part one and part
 //! two simultaneously.
 //!
-//! As we start at (1, 1) and the most steps that we are interested in for part 2 is 50, while
-//! part 1 requires more than 50 steps but should easily be reachable without exceeding bounds,
+//! As we start at (1, 1) and the most steps that we are interested in for part two is 50, while
+//! part one requires more than 50 steps but should easily be reachable without exceeding bounds,
 //! we can bound the maze to 2 + 50 = 52 in each dimension and use a fixed size array.  Rather
 //! than filling the array up front, we can lazily populate it as the horizon expands.
 

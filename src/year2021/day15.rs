@@ -9,7 +9,7 @@
 //! increasing order in a constrained range of values, so we can use a much faster single purpose
 //! data structure instead.
 //!
-//! The maximum possible increase in risk in 9, so we create an array of 10 `vec`s. The current
+//! The maximum possible increase in risk is 9, so we create an array of 10 `vec`s. The current
 //! list of items to process is at `risk % 10` and each new item is added at `risk % 10 + new_cost`.
 //! Once we have processed the current risk level we clear the vec to avoid having to reallocate
 //! memory.

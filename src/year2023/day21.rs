@@ -128,7 +128,7 @@ pub fn part2(input: &Input) -> u64 {
     input.1
 }
 
-/// Breadth first search from any number of starting locations with a limit on maximum steps.
+/// Breadth-first search from any number of starting locations with a limit on maximum steps.
 fn bfs(grid: &Grid<u8>, starts: &[Point], limit: u32) -> (u64, u64, u64, u64) {
     let mut grid = grid.clone();
     let mut todo = VecDeque::new();

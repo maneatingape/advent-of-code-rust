@@ -33,12 +33,12 @@
 //!
 //! Final result: Soy
 //!
-//! To solve there must be at least one ingredient with only one allergen remaining.
+//! To solve this, there must be at least one ingredient with only one allergen remaining.
 //! As this allergen can only belong to this ingredient, we eliminate it from other ingredients.
 //! This causes a chain reaction where a second ingredient will reduce to only one allergen,
 //! continuing until all allergens have been resolved.
 //!
-//! As there are less than 64 lines and allergens we can speed things up by using bitwise logic
+//! As there are fewer than 64 lines and allergens we can speed things up by using bitwise logic
 //! on a `usize` to compute set addition and subtraction. To add to a set use OR `|`,
 //! to remove use AND `&` and to calculate the size use [`count_ones`].
 //!

@@ -5,7 +5,7 @@
 //! is a great introduction to this algorithm. The heuristic is the
 //! [Manhattan distance](https://en.wikipedia.org/wiki/Taxicab_geometry) to the target. This will
 //! never overestimate the actual distance which is an essential characteristic in the heuristic.
-//! Interestingly benchmarking showed that adding the time to switch tools if we don't have the
+//! Interestingly, benchmarking showed that adding the time to switch tools if we don't have the
 //! torch to the heuristic slowed things down.
 //!
 //! Using A* instead of [Dijkstra](https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm) results

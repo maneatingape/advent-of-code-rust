@@ -7,7 +7,7 @@
 //! in that direction.
 //!
 //! Part two re-uses the part one logic for horizontal moves. Vertical moves use a
-//! [breadth first search](https://en.wikipedia.org/wiki/Breadth-first_search) to identify the
+//! [breadth-first search](https://en.wikipedia.org/wiki/Breadth-first_search) to identify the
 //! cascading boxes that need to be moved. Boxes are added strictly left to right to make checking
 //! for previously added boxes easier. To prevent adding a box twice we check that the
 //! item at `index - 2` is different. For example:

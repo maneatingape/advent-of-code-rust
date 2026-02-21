@@ -10,7 +10,7 @@
 //! we reuse the same `u8` buffer, incrementing digits one at a time.
 //! The numbers from 1 to 999 are handled specially.
 //!
-//! Interestingly the total time to solve this problem is *extremely* sensitive to the secret key
+//! Interestingly, the total time to solve this problem is *extremely* sensitive to the secret key
 //! provided as input. For example my key required ~10⁷ iterations to find the answer to part two.
 //! However for unit testing, I was able to randomly find a value that takes only 455 iterations,
 //! about 22,000 times faster!

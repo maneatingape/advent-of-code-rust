@@ -1,6 +1,6 @@
 //! # Hill Climbing Algorithm
 //!
-//! Pretty much textbook implementation of a BFS (Breadth First Search). If you're not familiar with
+//! Pretty much textbook implementation of a BFS (Breadth-first search). If you're not familiar with
 //! BFS, [this blog post is a great introduction](https://www.redblobgames.com/pathfinding/a-star/introduction.html)
 //! to the algorithm, plus some others that come in handy for Advent of Code.
 //!
@@ -9,10 +9,10 @@
 //!   than [`vec`] when used as a FIFO queue.
 //! * [`Grid`] is used to store both the height information and seen nodes.
 //!
-//! For Part 2 we could search for all `a` locations and repeatedly start a BFS search from there,
+//! For part two we could search for all `a` locations and repeatedly start a BFS search from there,
 //! then find the lowest value. However a much faster approach is to search *backwards* from the
 //! end location. Due to the fact that BFS always explores closest nodes first this will find the
-//! closest `a` location in a single search. For part 1 it will have the same result, so we
+//! closest `a` location in a single search. For part one it will have the same result, so we
 //! can re-use the same code.
 //!
 //! [`Grid`]: crate::util::grid
@@ -23,7 +23,7 @@ use std::collections::VecDeque;
 
 type Input = (Grid<u8>, Point);
 
-/// Uses the utility [`Grid`] class to parse a 2D array of ASCII characters.
+/// Uses the utility [`Grid`] module to parse a 2D array of ASCII characters.
 ///
 /// [`Grid`]: crate::util::grid
 pub fn parse(input: &str) -> Input {

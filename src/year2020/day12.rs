@@ -1,6 +1,6 @@
 //! # Rain Risk
 //!
-//! Our [`Point`] utility class comes in handy for this problem.
+//! Our [`Point`] utility module comes in handy for this problem.
 //!
 //! [`Point`]: crate::util::point
 use crate::util::parse::*;

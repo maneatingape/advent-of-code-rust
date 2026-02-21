@@ -10,7 +10,7 @@
 //! The sequences `\\` and `\"` both increase the difference by one.
 //!
 //! Part two is even more straightforward. Quotes and backslashes need to be escaped so increase
-//! the difference by one. Each newline increases by the difference by two.
+//! the difference by one. Each newline increases the difference by two.
 const NEWLINE: u8 = b'\n';
 const QUOTE: u8 = b'\"';
 const SLASH: u8 = b'\\';

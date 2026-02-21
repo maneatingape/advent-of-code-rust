@@ -21,7 +21,7 @@
 //!     v  v     v  v     v  v  v   v     v
 //! ```
 //!
-//! The flip flops form a binary counter. When the counter reaches a specific value the conjunction
+//! The flip-flops form a binary counter. When the counter reaches a specific value the conjunction
 //! will pulse low and reset the counter to zero. When all 4 counters hit their limit at the
 //! same time then a low pulse will be sent to `rx`. The answer is the
 //! [LCM](https://en.wikipedia.org/wiki/Least_common_multiple) of the 4 limit values.
@@ -100,7 +100,7 @@ pub fn part1(input: &Input) -> u32 {
 
         for &(number, feedback) in &pairs {
             // Factor is the number of high pulses sent to the conjunction.
-            // For each pulse the conjunction feeds a high pulse back to "feedback" flip flops.
+            // For each pulse the conjunction feeds a high pulse back to "feedback" flip-flops.
             // In addition the penultimate conjunction in each row receives "factor" high pulses,
             // resulting in "factor" low pulses the final conjunction and finally "factor" high
             // pulses to "rx".
@@ -109,7 +109,7 @@ pub fn part1(input: &Input) -> u32 {
             low += factor;
 
             // Factor is the number of low pulses sent to the conjunction.
-            // For each pulse the conjunction feeds a high pulse back to "feedback" flip flops.
+            // For each pulse the conjunction feeds a high pulse back to "feedback" flip-flops.
             // In addition the penultimate conjunction in each row receives "factor" high pulses,
             // resulting in "factor" low pulses the final conjunction and finally "factor" high
             // pulses to "rx".

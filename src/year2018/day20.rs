@@ -5,7 +5,7 @@
 //! general inputs, as it's easy to construct paths which violate this constraint.
 //!
 //! We use a stack to save the position before a branch, pushing whenever an opening `(` is
-//! encountered then popping whenever the closing `)` is found. Additionally we assume that
+//! encountered then popping whenever the closing `)` is found. Additionally, we assume that
 //! the location will never move more than 55 rooms from the starting location in order to use
 //! a fixed size array to hold the minimum distance to any room.
 type Input = (u32, usize);

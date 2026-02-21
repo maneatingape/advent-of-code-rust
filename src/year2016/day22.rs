@@ -36,7 +36,7 @@
 //!     ........
 //! ```
 //!
-//! Finally we move the data to the origin by repeating the same sequence of 5 moves.
+//! Finally, we move the data to the origin by repeating the same sequence of 5 moves.
 //! First moving the empty spot back around to in front of the data in 4 moves.
 //!
 //! ```none
@@ -107,7 +107,7 @@ pub fn part2(input: &[Node]) -> u32 {
     let c = width - 2 - wall_x;
     // Move data into empty spot.
     let d = 1;
-    // Repeatedly move empty spot 4 places around from behind data then move data one spot left.
+    // Repeatedly move the empty spot 4 places around from behind the data then move the data one spot left.
     let e = 5 * (width - 2);
 
     a + b + c + d + e
