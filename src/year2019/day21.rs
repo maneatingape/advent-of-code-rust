@@ -1,6 +1,6 @@
 //! # Springdroid Adventure
 //!
-//! Jumps are always 4 tiles wide landing on `D`. If needed we can jump again immediately
+//! Jumps are always 4 tiles wide, landing on `D`. If needed we can jump again immediately
 //! landing on `H`.
 //!
 //! ## Part One

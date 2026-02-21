@@ -7,7 +7,7 @@
 //!
 //! The second insight is that after 3 generations, the 9x9 image can be split into nine 3x3
 //! images that are independent of each other and the enhancement cycle can start over.
-//! Interestingly most of the 3x3 patterns in the input are not needed, only the starting 3x3
+//! Interestingly, most of the 3x3 patterns in the input are not needed, only the starting 3x3
 //! pattern and the six 2x2 to 3x3 patterns.
 //!
 //! Adding a few extra made up rules:

@@ -4,9 +4,9 @@
 //! * A `HashSet` that will collapse duplicate entries
 //! * An array of sufficient dimensions to track every possible coordinate.
 //!
-//! We will use both approaches for speed, the first in part 1 and the second in part 2.
+//! We will use both approaches for speed, the first in part one and the second in part two.
 //!
-//! For part 2 we can determine the final size of the paper by taking the *last* x and y
+//! For part two we can determine the final size of the paper by taking the *last* x and y
 //! coordinates from the fold instructions. It's then faster and more convenient to process
 //! each point completely and update the final location, than to step through intermediate folds.
 use crate::util::grid::*;
@@ -44,7 +44,7 @@ pub fn parse(input: &str) -> Input {
     Input { points, folds }
 }
 
-/// Fold once then count dots. The sample data folds along `y` and my input folded along `x`
+/// Fold once then count dots. The sample data folds along `y` and my input folded along `x`,
 /// testing both possibilities.
 pub fn part1(input: &Input) -> usize {
     match input.folds[0] {

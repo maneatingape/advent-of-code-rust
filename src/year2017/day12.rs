@@ -4,7 +4,7 @@
 //! A variant of [flood fill](https://en.wikipedia.org/wiki/Flood_fill) is used to find the
 //! connected groups or cliques.
 //!
-//! For each program we [depth first search](https://en.wikipedia.org/wiki/Depth-first_search)
+//! For each program we [depth-first search](https://en.wikipedia.org/wiki/Depth-first_search)
 //! from each of its neighbors that we have not already seen. If a neighbor has been seen
 //! then it must be either already in this clique or in another clique.
 use crate::util::parse::*;

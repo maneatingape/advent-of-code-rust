@@ -78,7 +78,7 @@ impl BuildHasher for BuildFxHasher {
     }
 }
 
-/// Simplified implementation, in particular running on a system with 64 bit `usize` is assumed.
+/// Simplified implementation, in particular running on a system with 64-bit `usize` is assumed.
 ///
 /// Check out the [Firefox code](https://searchfox.org/mozilla-central/rev/633345116df55e2d37be9be6555aa739656c5a7d/mfbt/HashFunctions.h#109-153)
 /// for a full description.

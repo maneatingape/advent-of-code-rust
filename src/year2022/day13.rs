@@ -8,16 +8,16 @@
 //!
 //! The rules to compare 2 packets become:
 //! * If both characters are the same then it's a draw, move onto the next character in each packet.
-//! * If the first packet is `]` and the second packet anything else, then the first list is shorter
+//! * If the first packet is `]` and the second packet is anything else, then the first list is shorter
 //!   so the packets are in order.
-//! * Conversely if the second packet is `]` and the first packet anything else, the packets are not
+//! * Conversely, if the second packet is `]` and the first packet is anything else, the packets are not
 //!   in order.
-//! * If the first packet is an opening `[` and the second character anything else, then we're
+//! * If the first packet is an opening `[` and the second character is anything else, then we're
 //!   comparing a number with a list, so *push* the second character back onto the list to check
 //!   again along with a closing `]` character.
-//! * Do a similar push if the second character is an opening `[` and the first anything else.
-//! * Finally compare the 2 characters by value. Since we've already covered the equal case, one
-//!   is guaranteed to be greater or less than the other.
+//! * Do a similar push if the second character is an opening `[` and the first is anything else.
+//! * Finally, compare the 2 characters by value. Since we've already covered the equal case, one
+//!   is guaranteed to be greater than or less than the other.
 struct Packet<'a> {
     slice: &'a [u8],
     index: usize,

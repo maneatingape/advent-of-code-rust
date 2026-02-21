@@ -1,6 +1,6 @@
 //! # Many-Worlds Interpretation
 //!
-//! Our high-level approach is to simplify the problem into graph path finding. We only
+//! Our high-level approach is to simplify the problem into graph pathfinding. We only
 //! ever need to move directly from key to key, so the maze becomes a graph where the nodes are
 //! keys and the edge weight is the distance between keys. Doors modify which edges
 //! are connected depending on the keys currently possessed.
@@ -23,7 +23,7 @@
 //!   If we are in the same location with the same keys but at a higher cost, then this situation
 //!   can never be optimal so the solution can be discarded.
 //! * When finding the distance between every pair of keys, it's faster to first only find the immediate
-//!   neighbors of each key using a [Breadth first search](https://en.wikipedia.org/wiki/Breadth-first_search)
+//!   neighbors of each key using a [Breadth-first search](https://en.wikipedia.org/wiki/Breadth-first_search)
 //!   then run the [Floyd-Warshall algorithm](https://en.wikipedia.org/wiki/Floyd%E2%80%93Warshall_algorithm)
 //!   to construct the rest of the graph. Even though the Floyd-Warshall asymptotic bound of `O(n³)`
 //!   is higher than the asymptotic bounds of repeated BFS, this was twice as fast in practice

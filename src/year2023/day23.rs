@@ -61,7 +61,7 @@
 //! skip 1). There are only 10180 of these paths making it much faster.
 //!
 //! A row by row dynamic programming approach from top to bottom finds these paths. For each row
-//! we calculate all possible next rows. Interestingly it turns out that there are only 76 possible
+//! we calculate all possible next rows. Interestingly, it turns out that there are only 76 possible
 //! different rows. Then at each y coordinate we **deduplicate** rows to find the maximum value.
 //! This is the most important optimization as it means that each row is at most 76 elements
 //! instead of growing exponentially (76², 76³, ...)
@@ -154,7 +154,7 @@
 //! We implement this by not joining any (`S`, `E`) pairs in that order. Joining the reverse order
 //! (`E`, `S`) is allowed.
 //!
-//! Finally there are two special rules when joining two nested line segments.
+//! Finally, there are two special rules when joining two nested line segments.
 //! When joining (`S`, `S`) the next `E` convert to an `S` to maintain balance.
 //!
 //! ```none
@@ -404,7 +404,7 @@ fn graph_to_grid(graph: &Graph) -> Input {
     Input { extra, horizontal, vertical }
 }
 
-/// Modified depth first search that only allows rows that skip one node.
+/// Modified depth-first search that only allows rows that skip one node.
 fn dfs(
     result: &mut Vec<(Row, bool, u32, u32)>,
     previous: Row,

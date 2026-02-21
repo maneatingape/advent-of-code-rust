@@ -1,7 +1,7 @@
 //! # A Maze of Twisty Trampolines, All Alike
 //!
-//! Part one brute forces the jumps. For part two we can make an observation that the jump offsets
-//! will eventually flip flop between 2 or 3 starting from the beginning, for example:
+//! Part one brute forces the jumps. For part two, we can make an observation that the jump offsets
+//! will eventually flip-flop between 2 or 3 starting from the beginning, for example:
 //!
 //! ```none
 //!     2 3 2 3 -1

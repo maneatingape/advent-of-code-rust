@@ -10,7 +10,7 @@
 //! at its value. If this is marked then we have seen the reciprocal `2020 - value` before
 //! so we can return the product. If not then we mark the reciprocal value in the array.
 //!
-//! Part 2 reuses the pair finding logic, finding the third element by stepping through the slice
+//! Part two reuses the pair finding logic, finding the third element by stepping through the slice
 //! one by one and adjusting the target total. To reuse the array without reallocating
 //! (which is slow) we use a `round` value instead of `bool`.
 use crate::util::parse::*;

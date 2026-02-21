@@ -3,7 +3,7 @@
 //! The approach to this solution is very similar to [`Day 18`] however parsing the maze
 //! cleanly is quite tricky.
 //!
-//! We first simplify the problem by running a [breadth first search] from each portal
+//! We first simplify the problem by running a [breadth-first search] from each portal
 //! creating a list of distances between each pair of portals.
 //!
 //! Then a second BFS over this list efficiently solves both parts. For part two we use a cache to
@@ -11,7 +11,7 @@
 //! number of portals as this would mean a redundant trip to an already seen portal.
 //!
 //! [`Day 18`]: crate::year2019::day18
-//! [breadth first search]: https://en.wikipedia.org/wiki/Breadth-first_search
+//! [breadth-first search]: https://en.wikipedia.org/wiki/Breadth-first_search
 use crate::util::grid::*;
 use crate::util::hash::*;
 use crate::util::point::*;

@@ -1,6 +1,6 @@
 //! # Safe Cracking
 //!
-//! Like [`Day 12`] this problem is all about *reading* code not writing code.
+//! Like [`Day 12`] this problem is all about *reading* code, not writing code.
 //!
 //! We could implement a brute force virtual machine without understanding the underlying code
 //! but it's much more efficient to analyze the code instead.

@@ -1,4 +1,4 @@
-//! Fast 2-dimensional Grid backed by a single `vec`. This module is designed to work with [`Point`].
+//! Fast 2-dimensional Grid backed by a single `vec`, designed to work with [`Point`].
 //!
 //! The traits [`Index`] and [`IndexMut`] are implemented for [`Point`] to allow usage like:
 //!

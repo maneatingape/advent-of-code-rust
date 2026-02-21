@@ -42,7 +42,7 @@ pub fn parse(input: &str) -> Input {
 ///
 /// We sort the coordinates in ascending x value then for each row, compare the next coordinate
 /// against the head of a stack. This quickly eliminates coordinates that are further away at all
-/// points. Interestingly this approach is very similar to the previous [`Day 5`].
+/// points. Interestingly, this approach is very similar to the previous [`Day 5`].
 ///
 /// [`Day 5`]: crate::year2018::day05
 pub fn part1(input: &Input) -> i32 {

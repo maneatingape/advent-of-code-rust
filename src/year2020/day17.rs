@@ -14,7 +14,7 @@
 use crate::util::grid::*;
 use crate::util::point::*;
 
-/// Use our utility [`Grid`] method to parse the input.
+/// Use our utility [`Grid`] module to parse the input.
 ///
 /// [`Grid`]: crate::util::grid::Grid
 pub fn parse(input: &str) -> Grid<u8> {

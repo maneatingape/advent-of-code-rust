@@ -82,9 +82,9 @@
 //!
 //! The second insight is that both of the cycles are very sparse. Only 8 out of 128 modulo 2 values
 //! and 2 out of 125 modulo 5 values respectively are non-zero. By storing the values as a
-//! compressed list of `(coefficient, skip value)` we only need to process of small fraction of
-//! the total digits. In total we need to compute `41600 * (8 / 128) + 3250 * (2 /125) = 2652`
-//! values per digit. This is much much less than the approximately 500,000 coefficients in the
+//! compressed list of `(coefficient, skip value)` we only need to process a small fraction of
+//! the total digits. In total we need to compute `41600 * (8 / 128) + 3250 * (2 / 125) = 2652`
+//! values per digit. This is much less than the approximately 500,000 coefficients in the
 //! complete range.
 //!
 //! [prefix sum]: https://en.wikipedia.org/wiki/Prefix_sum

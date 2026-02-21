@@ -2,7 +2,7 @@
 //!
 //! The types of each hand are computed from the frequency of the cards ordered in descending order.
 //! For example a full house would have 1 card with a frequency of 3 and a second with a
-//! frequency of 2, giving `[3, 2]`. Similarly two pair would be `[2, 2, 1]`.
+//! frequency of 2, giving `[3, 2]`. Similarly, two pair would be `[2, 2, 1]`.
 //! Array comparisons will sort the hand types in order.
 //!
 //! To make comparisons faster the frequencies and the card ranks are packed into a `usize`:

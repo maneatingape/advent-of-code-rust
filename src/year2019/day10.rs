@@ -29,7 +29,7 @@
 //! This works for angles up to 90°. To handle the complete 360° rotation, we first order points
 //! by [quadrant](https://en.wikipedia.org/wiki/Quadrant_(plane_geometry)) then by relative angle.
 //!
-//! Finally we also order points from nearest to furthest, so that the total ordering is:
+//! Finally, we also order points from nearest to furthest, so that the total ordering is:
 //! 1. Quadrant
 //! 2. Clockwise angle
 //! 3. Distance

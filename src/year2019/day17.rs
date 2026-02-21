@@ -1,6 +1,6 @@
 //! # Set and Forget
 //!
-//! The key insight is that this is not a path finding problem but a *compression*
+//! The key insight is that this is not a pathfinding problem but a *compression*
 //! problem. We need to reduce the robot's path into repetitions of three patterns.
 //! This is essentially a very simple version of the well-known
 //! [LZW](https://en.wikipedia.org/wiki/Lempel%E2%80%93Ziv%E2%80%93Welch)
@@ -12,7 +12,7 @@
 //! * If it's a dead end then finish.
 //!
 //! Then we look for three patterns that can be repeated in any order to form the whole path.
-//! Without loss of any generality the first pattern anchored at the start is always `A`,
+//! Without loss of generality the first pattern anchored at the start is always `A`,
 //! the next `B` and the last `C`.
 use super::intcode::*;
 use crate::util::hash::*;

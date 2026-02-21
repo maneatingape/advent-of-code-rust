@@ -36,7 +36,7 @@
 //!     ........
 //! ```
 //!
-//! Finally we move the data to the origin by repeating the same sequence of 5 moves.
+//! Finally, we move the data to the origin by repeating the same sequence of 5 moves.
 //! First moving the empty spot back around to in front of the data in 4 moves.
 //!
 //! ```none

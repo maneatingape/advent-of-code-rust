@@ -29,7 +29,7 @@
 //! ## Part Two
 //!
 //! Since there's no reasonable way to analytically predict the height after some `n` rocks
-//! and brute force would take too long we can assume that there must be a
+//! and brute force would take too long, we can assume that there must be a
 //! [cycle](https://en.wikipedia.org/wiki/Cycle_(graph_theory)) in the output.
 //!
 //! We choose an arbitrary length and generate a sequence of that size then search

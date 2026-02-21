@@ -1,6 +1,6 @@
 //! # Historian Hysteria
 //!
-//! For part 2, the time needed to allocate memory and grow the map is a large percentage
+//! For part two, the time needed to allocate memory and grow the map is a large percentage
 //! of the total. Creating the [`FastMap`] with capacity 1000 reduces this.
 use crate::util::hash::*;
 use crate::util::iter::*;

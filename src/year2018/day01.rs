@@ -15,7 +15,7 @@
 //!
 //! Two frequencies that are a multiple of the sum will eventually repeat. First we group each
 //! frequencies by its remainder modulo the sum, using `rem_euclid` to handle negative frequencies
-//! correctly, Then we sort, first by the remainder to group frequencies that can repeat together,
+//! correctly, then we sort, first by the remainder to group frequencies that can repeat together,
 //! then by the frequency increasing in order to help find the smallest gap between similar
 //! frequencies, then lastly by index as this is needed in the next step.
 //!
@@ -24,7 +24,7 @@
 //! candidates with the same remainder. For each valid pair we then produce a tuple of
 //! `(frequency gap, index, frequency)`.
 //!
-//! Finally we sort the tuples in ascending order, first by smallest frequency gap, breaking any
+//! Finally, we sort the tuples in ascending order, first by smallest frequency gap, breaking any
 //! ties using the index to find frequencies that appear earlier in the list. The first tuple
 //! in the list gives the result, in the example this is `[(3, 2, 2)]`.
 use crate::util::parse::*;

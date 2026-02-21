@@ -1,9 +1,9 @@
 //! # Oxygen System
 //!
-//! [Breadth first search](https://en.wikipedia.org/wiki/Breadth-first_search) is the simplest
-//! path finding algorithm and is suitable when the cost of moving between locations is identical.
+//! [Breadth-first search](https://en.wikipedia.org/wiki/Breadth-first_search) is the simplest
+//! pathfinding algorithm and is suitable when the cost of moving between locations is identical.
 //! [This excellent blog](https://www.redblobgames.com/pathfinding/a-star/introduction.html)
-//! has more detail on the various path finding algorithms that come in handy during Advent of Code.
+//! has more detail on the various pathfinding algorithms that come in handy during Advent of Code.
 //!
 //! The tricky part is determining the shape of the maze. If we assume the maze consists only of
 //! corridors of width one and has no loops or rooms, then we can use the simple

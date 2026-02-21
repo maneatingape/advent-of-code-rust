@@ -2,7 +2,7 @@
 //!
 //! We can quickly eliminate decoys without needing an expensive sort by checking that the
 //! frequency of checksum letters is non-increasing, letters of equal frequency are in alphabetical
-//! order and that there are no intervening letters in between any two frequencies.
+//! order and that there are no intervening letters between any two frequencies.
 //!
 //! In part two as the [Caesar cipher](https://en.wikipedia.org/wiki/Caesar_cipher) does
 //! not change the length of words, we can also eliminate most candidates with a simple length

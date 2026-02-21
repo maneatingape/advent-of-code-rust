@@ -7,11 +7,11 @@
 //! the buffer's current size then additional bits are added to the buffer 4 at a time from each
 //! hexadecimal digit of the input data.
 //!
-//! Additionally it keeps track of the total number of bits consumed so far. This is needed when
+//! Additionally, it keeps track of the total number of bits consumed so far. This is needed when
 //! parsing packets that use the total length in bits to determine sub-packets.
 //!
-//! The decoded packet data is stored as a tree-like struct allowing recursive solutions to part 1
-//! and part 2 to reuse the same decoded input.
+//! The decoded packet data is stored as a tree-like struct allowing recursive solutions to part one
+//! and part two to reuse the same decoded input.
 use std::str::Bytes;
 
 struct BitStream<'a> {

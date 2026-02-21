@@ -1,7 +1,7 @@
 //! # Two-Factor Authentication
 //!
 //! The pixels are sparse enough that it's efficient to store them as [`Point`] objects and
-//! manipulate individually. Pixels don't overlap so we can use a vec instead of a set to store
+//! manipulate them individually. Pixels don't overlap so we can use a vec instead of a set to store
 //! distinct points without overcounting.
 //!
 //! [`Point`]: crate::util::point

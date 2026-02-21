@@ -117,7 +117,7 @@ impl Hallway {
         (self.packed >> (index * 4)) & 0xf
     }
 
-    /// Updated the amphipod at a specific location.
+    /// Update the amphipod at a specific location.
     fn set(&mut self, index: usize, value: usize) {
         let mask = !(0xf << (index * 4));
         let value = value << (index * 4);

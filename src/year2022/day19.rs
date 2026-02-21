@@ -1,7 +1,7 @@
 //! # Not Enough Minerals
 //!
 //! The solution is [branch and bound](https://en.wikipedia.org/wiki/Branch_and_bound) using
-//! a [depth first search](https://en.wikipedia.org/wiki/Depth-first_search) to enumerate every
+//! a [depth-first search](https://en.wikipedia.org/wiki/Depth-first_search) to enumerate every
 //! possible combination combined with heuristics to prune those combinations in order to achieve
 //! a reasonable running time.
 //!
@@ -143,7 +143,7 @@ fn maximize(blueprint: &Blueprint, time: u32) -> u32 {
     result
 }
 
-/// Depth first search over every possible combination pruning branches using heuristics.
+/// Depth-first search over every possible combination pruning branches using heuristics.
 fn dfs(blueprint: &Blueprint, result: &mut u32, time: u32, bots: Mineral, resources: Mineral) {
     // Extrapolate total geodes from the current state in the remaining time.
     *result = (*result).max(resources.geode + bots.geode * time);
@@ -167,7 +167,7 @@ fn dfs(blueprint: &Blueprint, result: &mut u32, time: u32, bots: Mineral, resour
 
 /// Simplify the blueprints so that we only attempt to build either geode or obsidian robots,
 /// then check that the estimated maximum possible score is greater than the current high score.
-/// Additionally we always build a clay robot each turn.
+/// Additionally, we always build a clay robot each turn.
 ///
 /// Since this will always score higher, we can immediately prune any branch that can't
 /// possibly beat the high score.

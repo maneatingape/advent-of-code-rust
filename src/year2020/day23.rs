@@ -4,12 +4,12 @@
 //!
 //! For performance instead of using pointers, we store the cups in a `vec` where an element
 //! at index `i` stores the index of the next cup. For example `cup[1]` points to the first cup
-//! after cup one and `cup[cup[1]]` points to second cup after cup one.
+//! after cup one and `cup[cup[1]]` points to the second cup after cup one.
 //!
 //! Notes:
 //! * One million is approximately 2²⁰ so the closest integer size that fits is `u32`.
 //!   Using `u32` instead of `usize` increases speed due to better cache locality.
-//! * Cups use one based indexing so the vec is one longer than the number of cups and the zeroth
+//! * Cups use one-based indexing so the vec is one longer than the number of cups and the zeroth
 //!   index is unused.
 use crate::util::parse::*;
 

@@ -21,7 +21,7 @@
 //! even just grab one from [OEIS A002093](https://oeis.org/A002093/b002093.txt).
 //! Inspecting that list shows that between house numbers `540_540` and `1_201_200`,
 //! there are only 28 candidates.  In turn, it is easy to precompute their
-//! sum of divisors, turning this into a LUT (look-up table) on the target,
+//! sum of divisors, turning this into a LUT (lookup table) on the target,
 //! sufficient to cover the range of all known puzzle inputs (30-40 million).
 //!
 //! ## Part Two

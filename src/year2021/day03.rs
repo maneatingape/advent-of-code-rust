@@ -1,8 +1,8 @@
 //! # Binary Diagnostic
 //!
-//! Part 1 uses bit manipulation to build up the binary numbers directly one digit at a time.
+//! Part one uses bit manipulation to build up the binary numbers directly one digit at a time.
 //!
-//! Part 2 clones the input `vec` then uses [`retain`] to efficiently discard numbers that
+//! Part two clones the input `vec` then uses [`retain`] to efficiently discard numbers that
 //! don't meet the criteria.
 //!
 //! [`retain`]: Vec::retain
