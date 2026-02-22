@@ -14,9 +14,11 @@ pub fn parse(input: &str) -> Vec<u8> {
     let rows: Vec<_> = (0..128).collect();
     let result = spawn_parallel_iterator(&rows, |iter| worker(prefix, iter));
 
-    let mut sorted: Vec<_> = result.into_iter().flatten().collect();
-    sorted.sort_unstable_by_key(|&(index, _)| index);
-    sorted.into_iter().flat_map(|(_, row)| row).collect()
+    let mut grid = vec![0; 128 * 128];
+    for (index, row) in result.into_iter().flatten() {
+        grid[index * 128..(index + 1) * 128].copy_from_slice(&row);
+    }
+    grid
 }
 
 pub fn part1(input: &[u8]) -> u32 {
@@ -40,18 +42,18 @@ pub fn part2(input: &[u8]) -> u32 {
 
 /// Each worker thread chooses the next available index then computes the hash and patches the
 /// final vec with the result.
-fn worker(prefix: &str, iter: ParIter<'_, usize>) -> Vec<(usize, Vec<u8>)> {
+fn worker(prefix: &str, iter: ParIter<'_, usize>) -> Vec<(usize, [u8; 128])> {
     iter.map(|&index| (index, fill_row(prefix, index))).collect()
 }
 
-/// Compute the knot hash for a row and expand into an array of bytes.
-fn fill_row(prefix: &str, index: usize) -> Vec<u8> {
+/// Compute the knot hash for a row and expand into a fixed-size array.
+fn fill_row(prefix: &str, index: usize) -> [u8; 128] {
     let s = format!("{prefix}-{index}");
     let mut lengths: Vec<_> = s.bytes().map(|b| b as usize).collect();
     lengths.extend([17, 31, 73, 47, 23]);
 
     let knot = knot_hash(&lengths);
-    let mut result = vec![0; 128];
+    let mut result = [0; 128];
 
     for (i, chunk) in knot.chunks_exact(16).enumerate() {
         let reduced = chunk.iter().fold(0, |acc, n| acc ^ n);
