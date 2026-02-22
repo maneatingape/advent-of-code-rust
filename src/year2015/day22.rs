@@ -16,6 +16,7 @@ use crate::util::hash::*;
 use crate::util::heap::*;
 use crate::util::iter::*;
 use crate::util::parse::*;
+use std::ops::ControlFlow;
 
 type Input = [i16; 2];
 
@@ -66,11 +67,11 @@ pub fn parse(input: &str) -> Input {
 }
 
 pub fn part1(input: &Input) -> i16 {
-    play(*input, false)
+    play(*input, false).break_value().unwrap()
 }
 
 pub fn part2(input: &Input) -> i16 {
-    play(*input, true)
+    play(*input, true).break_value().unwrap()
 }
 
 fn heuristic(spent: i16, boss_hp: i16) -> i16 {
@@ -86,7 +87,7 @@ fn heuristic(spent: i16, boss_hp: i16) -> i16 {
     spent + (boss_hp + (damage_per_turn - 1) - 6) / damage_per_turn * mana_per_turn
 }
 
-fn play(input: Input, hard_mode: bool) -> i16 {
+fn play(input: Input, hard_mode: bool) -> ControlFlow<i16> {
     let [boss_hp, boss_damage] = input;
     let start = State {
         boss_hp,
@@ -108,7 +109,7 @@ fn play(input: Input, hard_mode: bool) -> i16 {
         let spent = state.spent;
         // Check winning condition
         if state.apply_spell_effects() {
-            return spent;
+            return ControlFlow::Break(spent);
         }
 
         // Part two
@@ -120,90 +121,71 @@ fn play(input: Input, hard_mode: bool) -> i16 {
             }
         }
 
+        // Apply spell effects and boss turn, returning the winning mana spent if the boss dies.
+        let mut try_cast = |mut next: State| {
+            if next.apply_spell_effects() {
+                return ControlFlow::Break(next.spent);
+            }
+            if next.boss_turn(boss_damage) && cache.insert(next) {
+                todo.push(heuristic(next.spent, next.boss_hp), next);
+            }
+            ControlFlow::Continue(())
+        };
+
         // Magic Missile
         if state.player_mana >= 53 {
-            let mut next = State {
+            let next = State {
                 boss_hp: state.boss_hp - 4,
                 player_mana: state.player_mana - 53,
                 spent: spent + 53,
                 ..state
             };
-
-            if next.apply_spell_effects() {
-                return spent + 53;
-            }
-            if next.boss_turn(boss_damage) && cache.insert(next) {
-                todo.push(heuristic(next.spent, next.boss_hp), next);
-            }
+            try_cast(next)?;
         }
 
         // Drain
         if state.player_mana >= 73 {
-            let mut next = State {
+            let next = State {
                 boss_hp: state.boss_hp - 2,
                 player_hp: state.player_hp + 2,
                 player_mana: state.player_mana - 73,
                 spent: spent + 73,
                 ..state
             };
-
-            if next.apply_spell_effects() {
-                return spent + 73;
-            }
-            if next.boss_turn(boss_damage) && cache.insert(next) {
-                todo.push(heuristic(next.spent, next.boss_hp), next);
-            }
+            try_cast(next)?;
         }
 
         // Shield
         if state.player_mana >= 113 && state.shield_effect == 0 {
-            let mut next = State {
+            let next = State {
                 player_mana: state.player_mana - 113,
                 shield_effect: 6,
                 spent: spent + 113,
                 ..state
             };
-
-            if next.apply_spell_effects() {
-                return spent + 113;
-            }
-            if next.boss_turn(boss_damage) && cache.insert(next) {
-                todo.push(heuristic(next.spent, next.boss_hp), next);
-            }
+            try_cast(next)?;
         }
 
         // Poison
         if state.player_mana >= 173 && state.poison_effect == 0 {
-            let mut next = State {
+            let next = State {
                 player_mana: state.player_mana - 173,
                 poison_effect: 6,
                 spent: spent + 173,
                 ..state
             };
-
-            if next.apply_spell_effects() {
-                return spent + 173;
-            }
-            if next.boss_turn(boss_damage) && cache.insert(next) {
-                todo.push(heuristic(next.spent, next.boss_hp), next);
-            }
+            try_cast(next)?;
         }
 
         // Recharge
         if state.player_mana >= 229 && state.recharge_effect == 0 {
-            let mut next = State {
+            let next = State {
                 player_mana: state.player_mana - 229,
                 recharge_effect: 5,
                 spent: spent + 229,
                 ..state
             };
-
-            if next.apply_spell_effects() {
-                return spent + 229;
-            }
-            if next.boss_turn(boss_damage) && cache.insert(next) {
-                todo.push(heuristic(next.spent, next.boss_hp), next);
-            }
+            try_cast(next)?;
         }
     }
 
