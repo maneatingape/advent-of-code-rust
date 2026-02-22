@@ -78,6 +78,11 @@
 //!
 //! Now that we have 5 elves our starting elf `a` is one step away from `c` so the answer is 2.
 //!
+//! ## Part Two alternative
+//!
+//! There is a also a closed form `O(1)` mathematical solution,
+//! called the n-cowboy shootout problem, described in [OEIS A334473](https://oeis.org/A334473).
+//!
 //! [`ilog2`]: u32::ilog2
 use crate::util::parse::*;
 
