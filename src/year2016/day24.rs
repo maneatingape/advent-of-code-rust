@@ -34,20 +34,31 @@ pub fn parse(input: &str) -> Input {
     let stride = found.len();
     let mut distance = vec![0; stride * stride];
 
-    // BFS from each location. As a minor optimization we reuse `todo` and `seen`.
+    // BFS from each location. As minor optimizations we reuse `todo` and `seen`,
+    // and short-circuit each BFS once it will not learn anything new.
     let mut todo = VecDeque::new();
     let mut seen = vec![0; grid.bytes.len()];
 
-    for start in found {
+    for (rank, &start) in found.iter().skip(1).enumerate() {
         let from = grid.bytes[start].to_decimal() as usize;
+        let mut need = found.len() - rank;
 
+        todo.clear();
         todo.push_back((start, 0));
         seen[start] = start;
 
         while let Some((index, steps)) = todo.pop_front() {
             if grid.bytes[index].is_ascii_digit() {
                 let to = grid.bytes[index].to_decimal() as usize;
-                distance[stride * from + to] = steps;
+                if distance[stride * from + to] == 0 {
+                    distance[stride * from + to] = steps;
+                    distance[stride * to + from] = steps;
+                    need -= 1;
+                    // Short-circuit once we found all needed pairs
+                    if need == 0 {
+                        break;
+                    }
+                }
             }
 
             for next in [index + 1, index - 1, index + width, index - width] {
