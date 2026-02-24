@@ -30,7 +30,7 @@ pub fn parse(input: &str) -> Input {
     let found: Vec<_> =
         grid.bytes.iter().enumerate().filter(|(_, b)| b.is_ascii_digit()).map(|(i, _)| i).collect();
 
-    let width = grid.width as usize;
+    let width = grid.width as isize;
     let stride = found.len();
     let mut distance = vec![0; stride * stride];
 
@@ -61,10 +61,14 @@ pub fn parse(input: &str) -> Input {
                 }
             }
 
-            for next in [index + 1, index - 1, index + width, index - width] {
-                if grid.bytes[next] != b'#' && seen[next] != start {
-                    seen[next] = start;
-                    todo.push_back((next, steps + 1));
+            for delta in [1, -1, width, -width] {
+                let first = index.wrapping_add_signed(delta);
+                if grid.bytes[first] != b'#' {
+                    let second = index.wrapping_add_signed(2 * delta);
+                    if seen[second] != start {
+                        seen[second] = start;
+                        todo.push_back((second, steps + 2));
+                    }
                 }
             }
         }
