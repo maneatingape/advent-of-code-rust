@@ -27,6 +27,10 @@
 //!
 //! We use the [`Point`] utility to move in the spiral direction. Values are stored in a hashmap
 //! defaulting to zero if the value doesn't exist yet.
+//!
+//! Note that [OEIS A141481](https://oeis.org/A141481/b141481.txt) shows the sequence well
+//! past the limit requested by the puzzle.  However, this is fast enough to solve to not
+//! be worth turning this into a lookup table.
 use crate::util::hash::*;
 use crate::util::parse::*;
 use crate::util::point::*;
