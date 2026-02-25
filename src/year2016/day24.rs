@@ -31,8 +31,8 @@ pub fn parse(input: &str) -> Input {
         grid.bytes.iter().enumerate().filter(|(_, b)| b.is_ascii_digit()).map(|(i, _)| i).collect();
 
     let width = grid.width as isize;
-    let stride = found.len();
-    let mut distance = vec![0; stride * stride];
+    // There are 8 locations.
+    let mut distance = [[0; 8]; 8];
 
     // BFS from each location. As minor optimizations we reuse `todo` and `seen`,
     // and short-circuit each BFS once it will not learn anything new.
@@ -50,9 +50,9 @@ pub fn parse(input: &str) -> Input {
         while let Some((index, steps)) = todo.pop_front() {
             if grid.bytes[index].is_ascii_digit() {
                 let to = grid.bytes[index].to_decimal() as usize;
-                if distance[stride * from + to] == 0 {
-                    distance[stride * from + to] = steps;
-                    distance[stride * to + from] = steps;
+                if distance[from][to] == 0 {
+                    distance[from][to] = steps;
+                    distance[to][from] = steps;
                     need -= 1;
                     // Short-circuit once we found all needed pairs
                     if need == 0 {
@@ -61,6 +61,8 @@ pub fn parse(input: &str) -> Input {
                 }
             }
 
+            // All interesting points (digits and junctions) are at odd locations,
+            // so we step by 2 spaces in each direction.
             for delta in [1, -1, width, -width] {
                 let first = index.wrapping_add_signed(delta);
                 if grid.bytes[first] != b'#' {
@@ -77,14 +79,12 @@ pub fn parse(input: &str) -> Input {
     // Solve both parts simultaneously.
     let mut part_one = u32::MAX;
     let mut part_two = u32::MAX;
-    let mut indices: Vec<_> = (1..stride).collect();
+    let mut indices: Vec<_> = (1..found.len()).collect();
 
     indices.half_permutations(|slice| {
-        let link = |from, to| distance[stride * from + to];
-
-        let first = link(0, slice[0]);
-        let middle = slice.windows(2).map(|w| link(w[0], w[1])).sum::<u32>();
-        let last = link(slice[slice.len() - 1], 0);
+        let first = distance[0][slice[0]];
+        let middle = slice.windows(2).map(|w| distance[w[0]][w[1]]).sum::<u32>();
+        let last = distance[slice[slice.len() - 1]][0];
 
         part_one = part_one.min(first + middle).min(middle + last);
         part_two = part_two.min(first + middle + last);
