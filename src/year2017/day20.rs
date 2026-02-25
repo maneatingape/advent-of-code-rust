@@ -97,13 +97,13 @@ pub fn part1(input: &[Particle]) -> usize {
     }
 
     // Tie break by velocity then by position.
-    candidates.sort_unstable_by(|a, b| {
-        let first = a.velocity.manhattan().cmp(&b.velocity.manhattan());
-        let second = a.position.manhattan().cmp(&b.position.manhattan());
-        first.then(second)
-    });
-
-    candidates[0].id
+    candidates
+        .iter()
+        .min_by_key(|p| {
+            (p.acceleration.manhattan(), p.velocity.manhattan(), p.position.manhattan())
+        })
+        .unwrap()
+        .id
 }
 
 pub fn part2(input: &[Particle]) -> usize {
