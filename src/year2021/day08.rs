@@ -35,7 +35,7 @@ pub fn parse(input: &str) -> Input {
 }
 
 pub fn part1(input: &Input) -> usize {
-    input.iter().flatten().filter(|&&d| d == 1 || d == 4 || d == 7 || d == 8).count()
+    input.iter().flatten().filter(|&&d| matches!(d, 1 | 4 | 7 | 8)).count()
 }
 
 pub fn part2(input: &Input) -> u32 {

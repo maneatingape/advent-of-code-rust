@@ -122,10 +122,7 @@ pub fn part2(input: &[RebootStep]) -> i64 {
         // Previous cubes have already had all possible intersections subtracted from their
         // volume, so no longer need to be considered.
         // We check both "on" and "off" cubes when calculating overlaps to subtract volume.
-        input[(i + 1)..]
-            .iter()
-            .filter_map(|rs| cube.intersect(&rs.cube))
-            .for_each(|next| candidates.push(next));
+        candidates.extend(input[(i + 1)..].iter().filter_map(|rs| cube.intersect(&rs.cube)));
 
         // Apply the inclusion/exclusion principle recursively, considering overlaps of
         // increasingly higher order until there are no more overlaps remaining.

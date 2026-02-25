@@ -180,10 +180,7 @@ pub fn part2(input: &[Instruction]) -> u64 {
     let mut candidates = Vec::new();
 
     for (i, set) in sets.iter().enumerate() {
-        sets[(i + 1)..]
-            .iter()
-            .filter_map(|other| set.intersect(other))
-            .for_each(|next| candidates.push(next));
+        candidates.extend(sets[(i + 1)..].iter().filter_map(|other| set.intersect(other)));
 
         let size = set.size() + subsets(set, -1, &candidates);
 
