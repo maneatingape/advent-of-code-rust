@@ -11,23 +11,22 @@
 use crate::util::iter::*;
 use crate::util::parse::*;
 
-type Disc = [usize; 2];
+type Pair = [usize; 2];
 
-pub fn parse(input: &str) -> Vec<Disc> {
-    input.iter_unsigned().skip(1).step_by(2).chunk::<2>().collect()
+pub fn parse(input: &str) -> Pair {
+    let disks: Vec<Pair> = input.iter_unsigned().skip(1).step_by(2).chunk::<2>().collect();
+    solve(&disks)
 }
 
-pub fn part1(input: &[Disc]) -> usize {
-    solve(input)
+pub fn part1(input: &Pair) -> usize {
+    input[0]
 }
 
-pub fn part2(input: &[Disc]) -> usize {
-    let mut modified = input.to_vec();
-    modified.push([11, 0]);
-    solve(&modified)
+pub fn part2(input: &Pair) -> usize {
+    input[1]
 }
 
-fn solve(discs: &[Disc]) -> usize {
+fn solve(discs: &[Pair]) -> Pair {
     let mut time = 0;
     let mut step = 1;
 
@@ -35,9 +34,15 @@ fn solve(discs: &[Disc]) -> usize {
         while !(time + offset + 1 + position).is_multiple_of(size) {
             time += step;
         }
-
         step *= size;
     }
-
-    time
+    let p1 = time;
+    // Part1 finished, solve for the additional disk with fixed size and position
+    let (offset, size, position) = (discs.len(), 11, 0);
+    while !(time + offset + 1 + position).is_multiple_of(size) {
+        time += step;
+    }
+    // Part2 result
+    let p2 = time;
+    [p1, p2]
 }
