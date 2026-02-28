@@ -49,8 +49,6 @@ pub fn parse(input: &str) -> Input {
     let mut seen = FastMap::with_capacity(20_000);
     let mut cycles = 0;
 
-    seen.insert(memory, cycles);
-
     loop {
         // Find the highest nibble in the integer.
         // We check each of the 4 bits for all nibbles in descending order by bitwise ANDing with
@@ -85,7 +83,6 @@ pub fn parse(input: &str) -> Input {
             // cycles, with at most two adjacent overflows per encounter, with all overflows
             // before cycle 200, well before the first repeated configuration.  Thus, it is
             // okay to not cache these states in seen.
-
             let mut array = [0; 16];
 
             for i in (0..16).rev() {
