@@ -16,7 +16,7 @@ type Pair = [usize; 2];
 pub fn parse(input: &str) -> Pair {
     let disks: Vec<Pair> = input.iter_unsigned().skip(1).step_by(2).chunk::<2>().collect();
     let (part1, step) = solve(&disks, 0, 0, 1);
-    let (part2, _step) = solve(&[[11,0]], disks.len(),part1, step);
+    let (part2, _step) = solve(&[[11, 0]], disks.len(), part1, step);
     [part1, part2]
 }
 
@@ -28,15 +28,13 @@ pub fn part2(results: &Pair) -> usize {
     results[1]
 }
 
-fn solve(discs: &[Pair], offset:usize, time:usize, step:usize) -> (usize, usize) {
-    let mut time = time;
-    let mut step = step;
-
+fn solve(discs: &[Pair], offset: usize, mut time: usize, mut step: usize) -> (usize, usize) {
     for (o, &[size, position]) in discs.iter().enumerate() {
         while !(time + offset + o + 1 + position).is_multiple_of(size) {
             time += step;
         }
         step *= size;
     }
+
     (time, step)
 }
