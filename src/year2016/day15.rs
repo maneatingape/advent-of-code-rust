@@ -15,34 +15,28 @@ type Pair = [usize; 2];
 
 pub fn parse(input: &str) -> Pair {
     let disks: Vec<Pair> = input.iter_unsigned().skip(1).step_by(2).chunk::<2>().collect();
-    solve(&disks)
+    let (part1, step) = solve(&disks, 0, 0, 1);
+    let (part2, _step) = solve(&[[11,0]], disks.len(),part1, step);
+    [part1, part2]
 }
 
-pub fn part1(input: &Pair) -> usize {
-    input[0]
+pub fn part1(results: &Pair) -> usize {
+    results[0]
 }
 
-pub fn part2(input: &Pair) -> usize {
-    input[1]
+pub fn part2(results: &Pair) -> usize {
+    results[1]
 }
 
-fn solve(discs: &[Pair]) -> Pair {
-    let mut time = 0;
-    let mut step = 1;
+fn solve(discs: &[Pair], offset:usize, time:usize, step:usize) -> (usize, usize) {
+    let mut time = time;
+    let mut step = step;
 
-    for (offset, &[size, position]) in discs.iter().enumerate() {
-        while !(time + offset + 1 + position).is_multiple_of(size) {
+    for (o, &[size, position]) in discs.iter().enumerate() {
+        while !(time + offset + o + 1 + position).is_multiple_of(size) {
             time += step;
         }
         step *= size;
     }
-    let p1 = time;
-    // Part1 finished, solve for the additional disk with fixed size and position
-    let (offset, size, position) = (discs.len(), 11, 0);
-    while !(time + offset + 1 + position).is_multiple_of(size) {
-        time += step;
-    }
-    // Part2 result
-    let p2 = time;
-    [p1, p2]
+    (time, step)
 }
