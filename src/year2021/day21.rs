@@ -49,10 +49,10 @@ pub fn part1(input: &State) -> usize {
 /// recursive universes so that we can re-use the result and avoid unnecessary calculations.
 ///
 /// Each player can be in position 1 to 10 and can have a score from 0 to 20 (as a score of 21
-/// ends the game). This is a total of (10 * 21) ^ 2 = 44100 possible states. For speed this
+/// ends the game). This is a total of (10 * 21) ^ 2 = 44,100 possible states. For speed this
 /// can fit in an array with perfect hashing, instead of using a slower `HashMap`.
 pub fn part2(input: &State) -> usize {
-    let mut cache = vec![None; 44100];
+    let mut cache = vec![None; 44_100];
     let (win, lose) = dirac(*input, &mut cache);
     win.max(lose)
 }

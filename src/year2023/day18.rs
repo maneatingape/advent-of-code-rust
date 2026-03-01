@@ -16,8 +16,8 @@ type Move = (Point, i32);
 type Input = (Vec<Move>, Vec<Move>);
 
 pub fn parse(input: &str) -> Input {
-    let mut first = Vec::with_capacity(1000);
-    let mut second = Vec::with_capacity(1000);
+    let mut first = Vec::with_capacity(1_000);
+    let mut second = Vec::with_capacity(1_000);
 
     for [a, b, c] in input.split_ascii_whitespace().chunk::<3>() {
         // Parse part one

@@ -50,12 +50,8 @@ pub fn part2(input: &[i64]) -> i64 {
             State::Output(x) => x,
             State::Halted => unreachable!(),
         };
-        let State::Output(y) = computer.run() else {
-            unreachable!();
-        };
-        let State::Output(t) = computer.run() else {
-            unreachable!();
-        };
+        let State::Output(y) = computer.run() else { unreachable!() };
+        let State::Output(t) = computer.run() else { unreachable!() };
 
         if x < 0 {
             score = t;

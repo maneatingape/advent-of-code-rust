@@ -13,8 +13,8 @@
 //! * First the sequence of 4 prices is converted from -9..9 to a base 19 index of 0..19.
 //! * Whether a monkey has seen a sequence before and the total bananas for each sequence are
 //!   stored in an array. This is much faster than a `HashMap`. Using base 19 gives much better
-//!   cache locality needing only 130321 elements, for example compared to shifting each new cost
-//!   by 5 bits and storing in an array of 2²⁰ = 1048675 elements. Multiplication on modern
+//!   cache locality needing only 130,321 elements, for example compared to shifting each new cost
+//!   by 5 bits and storing in an array of 2²⁰ = 1,048,675 elements. Multiplication on modern
 //!   processors is cheap (and several instructions can issue at once) but random memory access
 //!   is expensive.
 //!
@@ -35,7 +35,7 @@ pub fn parse(input: &str) -> Input {
 
     // Merge results from different threads.
     let mut part_one = 0;
-    let mut part_two = vec![0; 130321];
+    let mut part_two = vec![0; 130_321];
 
     for (first, second) in result {
         part_one += first;
@@ -65,8 +65,8 @@ mod scalar {
 
     fn worker(iter: ParIter<'_, u32>) -> Result {
         let mut part_one = 0;
-        let mut part_two = vec![0; 130321];
-        let mut seen = vec![u16::MAX; 130321];
+        let mut part_two = vec![0; 130_321];
+        let mut seen = vec![u16::MAX; 130_321];
 
         for (id, &number) in iter.enumerate() {
             let id = id as u16;
@@ -150,11 +150,11 @@ mod simd {
         let z = Simd::splat(19);
 
         let mut part_one = 0;
-        let mut part_two = vec![0; 130321];
+        let mut part_two = vec![0; 130_321];
 
         for slice in iter {
             // Each lane uses a different bit to track if a sequence has been seen before.
-            let mut seen = vec![u8::MAX; 130321];
+            let mut seen = vec![u8::MAX; 130_321];
 
             let zeroth = Simd::from_slice(slice);
             let first = hash(zeroth);

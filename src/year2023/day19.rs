@@ -35,7 +35,7 @@ pub struct Input<'a> {
 /// four numbers than to first collect into a `vec`.
 pub fn parse(input: &str) -> Input<'_> {
     let (prefix, suffix) = input.split_once("\n\n").unwrap();
-    let mut workflows = FastMap::with_capacity(1000);
+    let mut workflows = FastMap::with_capacity(1_000);
 
     for line in prefix.lines() {
         let mut rules = Vec::with_capacity(5);

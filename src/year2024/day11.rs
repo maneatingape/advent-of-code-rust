@@ -22,15 +22,15 @@ pub fn part2(input: &[u64]) -> u64 {
 
 fn count(input: &[u64], blinks: usize) -> u64 {
     // Allocate enough room to prevent reallocations.
-    let mut stones = Vec::with_capacity(5000);
+    let mut stones = Vec::with_capacity(5_000);
     // Maps number on stone to a much smaller contiguous range of indices.
-    let mut indices = FastMap::with_capacity(5000);
+    let mut indices = FastMap::with_capacity(5_000);
     // Numbers of any new stones generated during the previous blink.
     let mut todo = Vec::new();
     let mut numbers = Vec::new();
     // Amount of each stone of a particular number.
-    let mut current = Vec::with_capacity(5000);
-    let mut next = Vec::with_capacity(5000);
+    let mut current = Vec::with_capacity(5_000);
+    let mut next = Vec::with_capacity(5_000);
 
     // Initialize stones from input.
     for &number in input {

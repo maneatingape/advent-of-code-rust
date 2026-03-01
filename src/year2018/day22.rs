@@ -73,7 +73,7 @@ pub fn part2(input: &Input) -> i32 {
 
     // Initialise bucket queue with pre-allocated capacity to reduce reallocations needed.
     let mut base = 0;
-    let mut todo: [_; BUCKETS] = from_fn(|_| Vec::with_capacity(1000));
+    let mut todo: [_; BUCKETS] = from_fn(|_| Vec::with_capacity(1_000));
 
     // Add extra width and height so the search does not exceed the bounds of the grid.
     let mut cave = scan_cave(input, width + 10, height + 140);

@@ -104,7 +104,7 @@ fn compare(left: &str, right: &str) -> bool {
         }
     }
 
-    unreachable!();
+    unreachable!()
 }
 
 impl Iterator for Packet<'_> {

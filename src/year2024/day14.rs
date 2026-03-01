@@ -11,7 +11,7 @@
 //! giving a time `u` mod 103.
 //!
 //! Using the [Chinese Remainder Theorem](https://en.wikipedia.org/wiki/Chinese_remainder_theorem)
-//! we combine the two times into a single time mod 10403 that is the answer.
+//! we combine the two times into a single time mod 10,403 that is the answer.
 use crate::util::iter::*;
 use crate::util::parse::*;
 use std::cmp::Ordering::*;
@@ -77,16 +77,16 @@ pub fn part2(robots: &[Robot]) -> usize {
     if rows.len() == 1 && columns.len() == 1 {
         let t = columns[0];
         let u = rows[0];
-        // Combine indices using the Chinese Remainder Theorem to get index mod 10403.
-        return (5253 * t + 5151 * u) % 10403;
+        // Combine indices using the Chinese Remainder Theorem to get index mod 10_403.
+        return (5_253 * t + 5_151 * u) % 10_403;
     }
 
     // Backup check looking for time when all robot positions are unique.
-    let mut floor = vec![0; 10403];
+    let mut floor = vec![0; 10_403];
 
     for &t in &columns {
         'outer: for &u in &rows {
-            let time = (5253 * t + 5151 * u) % 10403;
+            let time = (5_253 * t + 5_151 * u) % 10_403;
 
             for &[x, y, dx, dy] in robots {
                 let x = (x + time * dx) % 101;

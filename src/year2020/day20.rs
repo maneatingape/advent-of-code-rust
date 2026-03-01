@@ -176,7 +176,7 @@ pub fn part2(input: &[Tile]) -> u32 {
                 }
             }
         }
-        unreachable!();
+        unreachable!()
     };
     let mut find_matching_tile = |edge: usize| {
         let [first, second] = edge_to_tile[edge];
