@@ -6,16 +6,13 @@ pub fn parse(input: &str) -> &[u8] {
 }
 
 pub fn part1(input: &[u8]) -> u32 {
-    captcha(input, 1)
+    let last = input.len() - 1;
+    sum(&input[..last], &input[1..]) + sum(&input[..1], &input[last..])
 }
 
 pub fn part2(input: &[u8]) -> u32 {
-    captcha(input, input.len() / 2)
-}
-
-fn captcha(input: &[u8], offset: usize) -> u32 {
-    let split = input.len() - offset;
-    sum(&input[..split], &input[offset..]) + sum(&input[split..], &input[..offset])
+    let (first, second) = input.split_at(input.len() / 2);
+    2 * sum(first, second)
 }
 
 fn sum(a: &[u8], b: &[u8]) -> u32 {
