@@ -1,7 +1,4 @@
 //! # Inverse Captcha
-//!
-//! Modern hardware is so good at shuffling memory around that it's faster to rotate the entire
-//! array instead of stepping through elements one at a time with an index modulo array length.
 use crate::util::parse::*;
 
 pub fn parse(input: &str) -> &[u8] {
@@ -17,12 +14,10 @@ pub fn part2(input: &[u8]) -> u32 {
 }
 
 fn captcha(input: &[u8], offset: usize) -> u32 {
-    let mut rotated = input.to_vec();
-    rotated.rotate_left(offset);
+    let split = input.len() - offset;
+    sum(&input[..split], &input[offset..]) + sum(&input[split..], &input[..offset])
+}
 
-    input
-        .iter()
-        .zip(rotated.iter())
-        .filter_map(|(a, b)| (a == b).then_some(a.to_decimal() as u32))
-        .sum()
+fn sum(a: &[u8], b: &[u8]) -> u32 {
+    a.iter().zip(b).filter_map(|(a, b)| (a == b).then_some(a.to_decimal() as u32)).sum()
 }
