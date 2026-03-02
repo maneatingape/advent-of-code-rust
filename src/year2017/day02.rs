@@ -27,7 +27,7 @@ pub fn part2(input: &Input) -> u32 {
         .iter()
         .map(|values| {
             for &smaller in values {
-                for &larger in values.iter().rev().take_while(|&larger| *larger >= 2 * smaller) {
+                for &larger in values.iter().rev().take_while(|&&larger| larger >= 2 * smaller) {
                     if larger.is_multiple_of(smaller) {
                         return larger / smaller;
                     }
