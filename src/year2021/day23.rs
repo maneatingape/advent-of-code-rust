@@ -57,7 +57,7 @@ impl Room {
     /// The marker bit is always in the most significant position, so can be used to find out the
     /// size of a room.
     fn size(self) -> usize {
-        ((15 - self.packed.leading_zeros()) / 3) as usize
+        (self.packed.ilog2() / 3) as usize
     }
 
     /// Find the type of an amphipod closest to the hallway.
