@@ -62,9 +62,7 @@ pub fn parse(input: &str) -> Cave {
     let mut kind = vec![Air; width * height];
 
     for row in points {
-        for window in row.windows(4).step_by(2) {
-            let &[x1, y1, x2, y2] = window else { unreachable!() };
-
+        for &[x1, y1, x2, y2] in row.array_windows().step_by(2) {
             if x1 == x2 {
                 for y in y1.min(y2)..=y1.max(y2) {
                     kind[width * y + x1 + height - 500] = Stopped;

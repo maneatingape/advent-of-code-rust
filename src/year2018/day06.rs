@@ -145,11 +145,7 @@ pub fn part1(input: &Input) -> i32 {
         }
 
         // Only consider finite coordinates.
-        for window in candidates.windows(3) {
-            let (_, m0, x0) = window[0];
-            let (i, m1, x1) = window[1];
-            let (_, m2, x2) = window[2];
-
+        for &[(_, m0, x0), (i, m1, x1), (_, m2, x2)] in candidates.array_windows() {
             // Skip coordinates where all points are equally distant from their neighbor.
             if i != marker {
                 if row == input.min_y || row == input.max_y {

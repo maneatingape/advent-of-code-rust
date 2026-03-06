@@ -39,7 +39,7 @@ pub fn part2(input: &Input) -> u32 {
 
 fn check(report: &[i32]) -> (u32, u32) {
     let size = report.len();
-    let score: i32 = report.windows(2).map(|w| delta(w[0], w[1])).sum();
+    let score: i32 = report.array_windows().map(|&[a, b]| delta(a, b)).sum();
 
     if score.abs() == (size - 1) as i32 {
         return (1, 1);

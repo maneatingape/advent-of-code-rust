@@ -20,14 +20,14 @@ pub fn parse(input: &str) -> Input {
     // Increase the starting number to the next number that has all digits in non-decreasing order
     // to ensure that the incrementing logic in the search loop works correctly.
     // For example 223450 => 223455, 120568 => 122222 and 439999 => 444444.
-    if let Some(index) = digits.windows(2).position(|w| w[0] > w[1]) {
+    if let Some(index) = digits.array_windows().position(|&[a, b]| a > b) {
         let next = digits[index];
         digits[index..].fill(next);
     }
 
     while digits <= end {
         // Build a 5 bit binary mask with a `1` if two adjacent digits are equal.
-        let mask = digits.windows(2).fold(0, |acc, w| (acc << 1) | (w[0] == w[1]) as u32);
+        let mask = digits.array_windows().fold(0, |acc, &[a, b]| (acc << 1) | (a == b) as u32);
 
         // Password must contain at least one pair.
         part_one += (mask != 0) as u32;

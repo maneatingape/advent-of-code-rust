@@ -55,11 +55,8 @@ pub fn part2(input: &[i32]) -> i32 {
 
     // Compare each adjacent pair of tuples to find candidates, then find the first tuple
     // sorting by smallest gap first, tie breaking with index if needed.
-    seen.windows(2)
-        .filter_map(|window| {
-            let (remainder0, freq0, index0) = window[0];
-            let (remainder1, freq1, _) = window[1];
-
+    seen.array_windows()
+        .filter_map(|&[(remainder0, freq0, index0), (remainder1, freq1, _)]| {
             (remainder0 == remainder1).then_some((freq1 - freq0, index0, freq1))
         })
         .min()

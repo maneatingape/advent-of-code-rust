@@ -75,7 +75,7 @@ pub fn checksum(input: &[usize], disk_size: usize) -> String {
     let blocks = disk_size / step_size;
 
     let counts: Vec<_> = (0..blocks + 1).map(|i| count(input, i * step_size)).collect();
-    counts.windows(2).map(|w| if (w[1] - w[0]) % 2 == 0 { '1' } else { '0' }).collect()
+    counts.array_windows().map(|&[a, b]| if (b - a) % 2 == 0 { '1' } else { '0' }).collect()
 }
 
 /// Counts the number of ones from the start to the index (inclusive).

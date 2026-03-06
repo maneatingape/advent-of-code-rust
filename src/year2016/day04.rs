@@ -82,13 +82,11 @@ pub fn part2(input: &[Room<'_>]) -> u32 {
 /// no letters in between (`fof` should be zero for all intervening frequencies).
 /// If the frequency is equal then also make sure letters are in alphabetical order.
 fn rules(checksum: &[u8], freq: &[usize], fof: &mut [i32]) -> bool {
-    checksum.windows(2).all(|w| {
-        let end = freq[to_index(w[0])];
-        let start = freq[to_index(w[1])];
+    checksum.array_windows().all(|&[a, b]| {
+        let end = freq[to_index(a)];
+        let start = freq[to_index(b)];
         fof[end] -= 1;
-        !(start > end
-            || (start == end && w[1] <= w[0])
-            || (start + 1..end + 1).any(|i| fof[i] != 0))
+        !(start > end || (start == end && b <= a) || (start + 1..end + 1).any(|i| fof[i] != 0))
     })
 }
 

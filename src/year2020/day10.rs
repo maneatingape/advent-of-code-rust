@@ -20,8 +20,8 @@ pub fn part1(input: &[usize]) -> usize {
     let mut total = [0, 0, 0, 1];
     total[input[0]] += 1;
 
-    for w in input.windows(2) {
-        let diff = w[1] - w[0];
+    for &[a, b] in input.array_windows() {
+        let diff = b - a;
         total[diff] += 1;
     }
 

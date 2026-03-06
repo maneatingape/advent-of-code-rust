@@ -13,16 +13,16 @@ pub fn part1(input: &[&[u8]]) -> usize {
             let mut has_abba = false;
             let mut inside_brackets = false;
 
-            for w in line.windows(4) {
-                if w[0].is_ascii_lowercase() {
-                    if w[0] == w[3] && w[1] == w[2] && w[0] != w[1] {
+            for [w, x, y, z] in line.array_windows() {
+                if w.is_ascii_lowercase() {
+                    if w == z && x == y && w != x {
                         if inside_brackets {
                             return false;
                         }
                         has_abba = true;
                     }
                 } else {
-                    inside_brackets = w[0] == b'[';
+                    inside_brackets = *w == b'[';
                 }
             }
 
@@ -41,11 +41,11 @@ pub fn part2(input: &[&[u8]]) -> usize {
         .filter(|&(version, &line)| {
             let mut inside_brackets = false;
 
-            for w in line.windows(3) {
-                if w[0].is_ascii_lowercase() {
-                    if w[0] == w[2] && w[0] != w[1] && w[1].is_ascii_lowercase() {
-                        let first = (w[0] - b'a') as usize;
-                        let second = (w[1] - b'a') as usize;
+            for [x, y, z] in line.array_windows() {
+                if x.is_ascii_lowercase() {
+                    if x == z && x != y && y.is_ascii_lowercase() {
+                        let first = (x - b'a') as usize;
+                        let second = (y - b'a') as usize;
 
                         if inside_brackets {
                             // Reverse the order of letters
@@ -63,7 +63,7 @@ pub fn part2(input: &[&[u8]]) -> usize {
                         }
                     }
                 } else {
-                    inside_brackets = w[0] == b'[';
+                    inside_brackets = *x == b'[';
                 }
             }
 

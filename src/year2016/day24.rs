@@ -83,7 +83,7 @@ pub fn parse(input: &str) -> Input {
 
     indices.half_permutations(|slice| {
         let first = distance[0][slice[0]];
-        let middle = slice.windows(2).map(|w| distance[w[0]][w[1]]).sum::<u32>();
+        let middle = slice.array_windows().map(|&[from, to]| distance[from][to]).sum::<u32>();
         let last = distance[slice[slice.len() - 1]][0];
 
         part_one = part_one.min(first + middle).min(middle + last);

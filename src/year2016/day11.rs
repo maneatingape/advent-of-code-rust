@@ -99,11 +99,11 @@ pub fn parse(input: &str) -> u32 {
     let mut floor = 1;
     let words: Vec<_> = input.split(&[' ', ',', '.', '-']).skip(3).collect();
 
-    for w in words.windows(2) {
-        match w[1] {
+    for &[first, second] in words.array_windows() {
+        match second {
             "floor" => floor <<= 1,
-            "compatible" => *pairs.entry(w[0]).or_insert(0) |= floor,
-            "generator" => *pairs.entry(w[0]).or_insert(0) |= floor << 4,
+            "compatible" => *pairs.entry(first).or_insert(0) |= floor,
+            "generator" => *pairs.entry(first).or_insert(0) |= floor << 4,
             _ => (),
         }
     }
