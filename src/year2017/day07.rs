@@ -59,8 +59,13 @@ pub fn parse(input: &str) -> Input<'_> {
         }
     }
 
-    // The root is the only node without a parent.
-    let part_one = indices.iter().find(|&(_, &v)| !nodes[v].has_parent).unwrap().0;
+    // The root is the only node without a parent.  Start from any node, and walk up the
+    // tree until finding the root.
+    let mut candidate = 0;
+    while nodes[candidate].has_parent {
+        candidate = nodes[candidate].parent;
+    }
+    let part_one = pairs[candidate].0;
     let mut part_two = 0;
 
     while let Some(index) = todo.pop_front() {
@@ -74,10 +79,10 @@ pub fn parse(input: &str) -> Input<'_> {
         } else {
             // Representing the balanced nodes as `b` and the unbalanced node as `u`,
             // there are 4 possibilities:
-            // b + [b b] => [b b] Swap
-            // b + [b u] => [u b] Swap
-            // u + [b b] -> [u b] Overwrite
-            // b + [u b] => [u b] Do nothing
+            // b3 + [b1 b2] => [b2 b1] Swap, keep accumulating
+            // b3 + [b1 u2] => [u2 b1] Swap, unbalanced node identified
+            // u3 + [b1 b2] -> [u3 b2] Overwrite, unbalanced node identified
+            // b3 + [u1 b2] => [u1 b2] Do nothing, unbalanced node identified
             // The unbalanced node will always be first (if it exists).
             if node.sub_totals[0] == total {
                 node.sub_weights.swap(0, 1);
@@ -85,6 +90,15 @@ pub fn parse(input: &str) -> Input<'_> {
             } else if node.sub_totals[1] != total {
                 node.sub_weights[0] = weight;
                 node.sub_totals[0] = total;
+            }
+
+            // If the unbalanced node was identified, it is now first, and we can short-circuit
+            // summing the weights of the rest of the tree.
+            let [x, y] = node.sub_totals;
+
+            if x != y {
+                part_two = node.sub_weights[0] - x + y;
+                break;
             }
         }
 
@@ -95,18 +109,6 @@ pub fn parse(input: &str) -> Input<'_> {
         // If we've processed all children then add to the queue and check balance.
         if node.processed == node.children {
             todo.push_back(parent);
-
-            // The unbalanced node will always be first, due to the way we swap the weight
-            // when processing children.
-            if node.children >= 3 {
-                let [w, _] = node.sub_weights;
-                let [x, y] = node.sub_totals;
-
-                if x != y {
-                    part_two = w - x + y;
-                    break;
-                }
-            }
         }
     }
 
