@@ -85,23 +85,23 @@ pub fn part1(input: &Dance) -> String {
     input.apply()
 }
 
-/// If a bit is set in the binary representation of 1 billion apply the current transformation,
-/// then apply the transformation to itself to double the number of complete dances.
+/// Repeatedly applying a transformation to itself allows the computation of exponentially
+/// more dances, until reaching the complete 1 billion transformations.
 pub fn part2(input: &Dance) -> String {
-    let mut e = 1_000_000_000;
     let mut dance = *input;
-    let mut result = Dance::new();
 
-    while e > 0 {
-        if e & 1 == 1 {
-            result = result.compose(dance);
-        }
-
-        e >>= 1;
-        dance = dance.compose(dance);
+    // 1 billion is 0b00111011_10011010_11001010_00000000: 30 bits, with 13 set.  Typical
+    // exponentiation by squaring would be 30 doubles and 13 additions, or 43 calls to
+    // compose; but since one billion is a power of ten, we can do better by 9 cycles of
+    // reaching each next power of ten by two doubles, one addition, and one more double
+    // per cycle, for a total of only 36 calls to compose.
+    for _ in 0..9 {
+        let dance2 = dance.compose(dance);
+        let dance5 = dance2.compose(dance2).compose(dance);
+        dance = dance5.compose(dance5);
     }
 
-    result.apply()
+    dance.apply()
 }
 
 fn from_byte(b: u8) -> usize {
