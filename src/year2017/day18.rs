@@ -64,6 +64,7 @@ pub fn parse(input: &str) -> Vec<u64> {
 
     // Generate pseudorandom sequence.
     for _ in 0..127 {
+        // Here, we could reuse fast_mod from day 15; but this generator is not on the hot path.
         p = (p * 8505) % 0x7fffffff;
         p = (p * 129749 + 12345) % 0x7fffffff;
         numbers.push(p % 10000);
