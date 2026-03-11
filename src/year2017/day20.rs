@@ -55,6 +55,15 @@ impl Particle {
         self.velocity.tick(self.acceleration);
         self.position.tick(self.velocity);
     }
+
+    // Perform a tick on particle, and return true if it is aligned.
+    #[inline]
+    fn align(&mut self) -> bool {
+        let oldp = self.position.manhattan();
+        let oldv = self.velocity.manhattan();
+        self.tick();
+        oldp <= self.position.manhattan() && oldv <= self.velocity.manhattan()
+    }
 }
 
 pub fn parse(input: &str) -> Vec<Particle> {
@@ -89,21 +98,12 @@ pub fn part1(input: &[Particle]) -> usize {
         }
     }
 
-    // Ensure all acceleration, velocity and position vectors are "aligned", that is the
-    // sign of each component is the same, for example a particle with a negative x acceleration
-    // should also have a negative x velocity and negative x position.
-    for _ in 0..1000 {
-        candidates.iter_mut().for_each(Particle::tick);
-    }
+    // Ensure all acceleration, velocity and position vectors are "aligned", that is, the
+    // particles are moving away from the origin.
+    while !candidates.iter_mut().fold(true, |acc, particle| acc & particle.align()) {}
 
     // Tie break by velocity then by position.
-    candidates
-        .iter()
-        .min_by_key(|p| {
-            (p.acceleration.manhattan(), p.velocity.manhattan(), p.position.manhattan())
-        })
-        .unwrap()
-        .id
+    candidates.iter().min_by_key(|p| (p.velocity.manhattan(), p.position.manhattan())).unwrap().id
 }
 
 pub fn part2(input: &[Particle]) -> usize {
