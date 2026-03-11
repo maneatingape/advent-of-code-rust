@@ -16,38 +16,29 @@ pub fn parse(input: &str) -> Input {
     let mut part_two = 0;
 
     while let Some(first) = iter.next() {
-        if first == b'n' {
-            match iter.next().unwrap_or(0) {
-                b'e' => {
-                    iter.next(); // Consume trailing delimiter.
-                    q += 1;
-                    r -= 1;
-                }
-                b'w' => {
-                    iter.next(); // Consume trailing delimiter.
-                    q -= 1;
-                }
-                _ => r -= 1,
-            }
-        } else {
-            match iter.next().unwrap_or(0) {
-                b'e' => {
-                    iter.next(); // Consume trailing delimiter.
-                    q += 1;
-                }
-                b'w' => {
-                    iter.next(); // Consume trailing delimiter.
-                    q -= 1;
-                    r += 1;
-                }
-                _ => r += 1,
-            }
+        let second = iter.next().unwrap_or(0);
+        let (dq, dr) = match (first, second) {
+            (b'n', b'e') => (1, -1),
+            (b'n', b'w') => (-1, 0),
+            (b'n', _) => (0, -1),
+            (b's', b'e') => (1, 0),
+            (b's', b'w') => (-1, 1),
+            (b's', _) => (0, 1),
+            _ => unreachable!(),
+        };
+
+        // Update axial coordinates.
+        q += dq;
+        r += dr;
+
+        // Two-letter directions (ne, nw, se, sw) need the trailing delimiter consumed.
+        if second == b'e' || second == b'w' {
+            iter.next();
         }
 
-        // q + r + s = 0, so we can always determine s given the other two.
-        let s = q + r;
         // Manhattan distance to the center.
-        part_one = (q.abs() + r.abs() + s.abs()) / 2;
+        // q + r + s = 0, so we can always determine s given the other two.
+        part_one = (q.abs() + r.abs() + (q + r).abs()) / 2;
         // Keep track of furthest distance.
         part_two = part_two.max(part_one);
     }
