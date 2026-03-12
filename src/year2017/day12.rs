@@ -9,44 +9,34 @@
 //! then it must be either already in this clique or in another clique.
 use crate::util::parse::*;
 
-pub fn parse(input: &str) -> Vec<u32> {
+type Input = (u32, usize);
+
+pub fn parse(input: &str) -> Input {
     let lines: Vec<_> = input.lines().collect();
     let size = lines.len();
 
     let mut seen = vec![false; size];
-    let mut groups = Vec::new();
+    let part_one = dfs(&lines, &mut seen, 0);
+    let part_two = 1 + (1..size).filter(|&i| dfs(&lines, &mut seen, i) > 0).count();
 
-    for start in 0..size {
-        // DFS from each unseen program.
-        if !seen[start] {
-            seen[start] = true;
-            let size = dfs(&lines, &mut seen, start);
-            groups.push(size);
-        }
-    }
-
-    groups
+    (part_one, part_two)
 }
 
-pub fn part1(input: &[u32]) -> u32 {
-    input[0]
+pub fn part1(input: &Input) -> u32 {
+    input.0
 }
 
-pub fn part2(input: &[u32]) -> usize {
-    input.len()
+pub fn part2(input: &Input) -> usize {
+    input.1
 }
 
+#[inline]
 fn dfs(lines: &[&str], seen: &mut [bool], index: usize) -> u32 {
-    let mut size = 1;
-
-    // At least the first 6 characters of each line can be skipped as it only contains the index
-    // that we already know.
-    for next in (&lines[index][6..]).iter_unsigned::<usize>() {
-        if !seen[next] {
-            seen[next] = true;
-            size += dfs(lines, seen, next);
-        }
+    if seen[index] {
+        0
+    } else {
+        seen[index] = true;
+        // Skip the first 6 characters of each line as it contains the index that we already know.
+        1 + (&lines[index][6..]).iter_unsigned::<usize>().map(|i| dfs(lines, seen, i)).sum::<u32>()
     }
-
-    size
 }

@@ -25,19 +25,10 @@ pub fn part1(input: &[u8]) -> u32 {
     input.iter().map(|&n| n as u32).sum()
 }
 
-pub fn part2(input: &[u8]) -> u32 {
-    let mut grid: Vec<_> = input.iter().map(|&n| n == 1).collect();
-    let mut groups = 0;
-
-    for start in 0..0x4000 {
-        // DFS from each new group.
-        if grid[start] {
-            groups += 1;
-            dfs(&mut grid, start);
-        }
-    }
-
-    groups
+pub fn part2(input: &[u8]) -> usize {
+    let mut grid = input.to_vec();
+    let connect = |i: usize| (grid[i] == 1).then(|| dfs(&mut grid, i));
+    (0..input.len()).filter_map(connect).count()
 }
 
 /// Each worker thread chooses the next available index then computes the hash and patches the
@@ -89,21 +80,21 @@ fn knot_hash(lengths: &[usize]) -> [u8; 256] {
 }
 
 /// Flood fill that explores the connected squares in the grid.
-fn dfs(grid: &mut [bool], index: usize) {
-    grid[index] = false;
+fn dfs(grid: &mut [u8], index: usize) {
+    grid[index] = 0;
     let x = index % 128;
     let y = index / 128;
 
-    if x > 0 && grid[index - 1] {
+    if x > 0 && grid[index - 1] == 1 {
         dfs(grid, index - 1);
     }
-    if x < 127 && grid[index + 1] {
+    if x < 127 && grid[index + 1] == 1 {
         dfs(grid, index + 1);
     }
-    if y > 0 && grid[index - 128] {
+    if y > 0 && grid[index - 128] == 1 {
         dfs(grid, index - 128);
     }
-    if y < 127 && grid[index + 128] {
+    if y < 127 && grid[index + 128] == 1 {
         dfs(grid, index + 128);
     }
 }
