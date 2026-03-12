@@ -23,7 +23,7 @@
 //! can be implemented in Rust using a [`BinaryHeap`]. However the total cost follows a strictly
 //! increasing order in a constrained range of values, so we can use a much faster
 //! [bucket queue](https://en.wikipedia.org/wiki/Bucket_queue). The maximum possible increase in
-//! heuristic is 10 * 9 from heat plus 10 for the distance change for a total of 100 buckets.
+//! heuristic is 10 × 9 from heat plus 10 for the distance change for a total of 100 buckets.
 //!
 //! [`BinaryHeap`]: std::collections::BinaryHeap
 use crate::util::grid::*;

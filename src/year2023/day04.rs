@@ -8,7 +8,7 @@ pub fn parse(input: &str) -> Vec<usize> {
     input
         .lines()
         .map(|line| {
-            // Numbers are at most 99 so we can use a fixed size array instead of a HashSet.
+            // Numbers are at most 99 so we can use a fixed-size array instead of a HashSet.
             let mut found = [false; 100];
             let (win, have) = line.split_once('|').unwrap();
             win.iter_unsigned::<usize>().skip(1).for_each(|i| found[i] = true);

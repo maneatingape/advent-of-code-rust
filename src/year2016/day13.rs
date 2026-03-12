@@ -6,7 +6,7 @@
 //!
 //! As we start at (1, 1) and the most steps that we are interested in for part two is 50, while
 //! part one requires more than 50 steps but should easily be reachable without exceeding bounds,
-//! we can bound the maze to 2 + 50 = 52 in each dimension and use a fixed size array.  Rather
+//! we can bound the maze to 2 + 50 = 52 in each dimension and use a fixed-size array. Rather
 //! than filling the array up front, we can lazily populate it as the horizon expands.
 
 use crate::util::parse::*;

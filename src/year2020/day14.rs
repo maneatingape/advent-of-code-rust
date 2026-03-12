@@ -23,7 +23,7 @@
 //! more elegant approach.
 //!
 //! We treat each address and mask combination as a set. Then by using the
-//! [inclusion-exclusion principle ](https://en.wikipedia.org/wiki/Inclusion%E2%80%93exclusion_principle)
+//! [inclusion-exclusion principle](https://en.wikipedia.org/wiki/Inclusion-exclusion_principle)
 //! we can determine any overlaps with other sets and deduct the correct number of values.
 //!
 //! For example:
@@ -54,7 +54,7 @@
 //! there are no more overlaps remaining.
 //!
 //! To calculate the final answer we treat the value as the weight of the set, in this case:
-//! 2 * 3 + 1 * 5 + 1 * 7 = 18
+//! 2 × 3 + 1 × 5 + 1 × 7 = 18
 //!
 //! The complexity of this approach depends on how many addresses overlap. In my input most
 //! addresses overlapped with zero others, a few with one and rarely with more than one.

@@ -81,7 +81,7 @@ pub fn part1(input: &Input) -> u32 {
         remaining -= steps;
 
         // Use a vector to simulate an empty tape. In practice the cursor doesn't move more than
-        // a few thousand steps in any direction, so this approach is as fast as a fixed size
+        // a few thousand steps in any direction, so this approach is as fast as a fixed-size
         // array, but much more robust.
         if advance {
             left.push(tape & 0xffffffffffffffff0000000000000000);

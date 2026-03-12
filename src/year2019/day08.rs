@@ -7,7 +7,7 @@ pub fn parse(input: &str) -> &[u8] {
     input.as_bytes()
 }
 
-/// Each layer is 25 * 6 = 150 bytes and there are 100 layers total.
+/// Each layer is 25 × 6 = 150 bytes and there are 100 layers total.
 pub fn part1(input: &[u8]) -> u32 {
     let mut most = 0;
     let mut result = 0;

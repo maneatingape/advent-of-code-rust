@@ -100,7 +100,7 @@ fn step(input: &mut Input, order: &mut [Direction]) -> bool {
 
     let mut prev;
     // Find horizontal neighbors in each row. To make movement calculations easier
-    // we invert so that a bit is 1 is movement is *possible*.
+    // we invert so that a 1 bit means movement is *possible*.
     let mut cur = grid[0].shr().or(grid[0]).or(grid[0].shl()).not();
     let mut next = grid[1].shr().or(grid[1]).or(grid[1].shl()).not();
 

@@ -10,15 +10,15 @@
 //! solve whether pair A or pair B is moved first (that is, the setup `[-;-;AG,AM;BG,BM]` while on
 //! floor 2 is indistinguishable from `[-;-;BG,BM;AG,AM]` on floor 2 in terms of the final result).
 //! However, the relative positions of pairs still matter (the setup `[AM;AG;BG;BM]` on floor two
-//! can move BG up or down; but the setup `[AM;BG;AG;BM]` on floor two can only move AG up).  To
+//! can move BG up or down; but the setup `[AM;BG;AG;BM]` on floor two can only move AG up). To
 //! maximize state sharing, represent each pair's generator and microchip position as hex
 //! digits, but merge all permutations by sorting those hex digit pairs during the hash
-//! function.  Including the elevator position, the hash value requires up to 30 useful bits
+//! function. Including the elevator position, the hash value requires up to 30 useful bits
 //! (2 + 7*4) if densely packed, although this uses a 64-bit struct with one-hot encodings.
 //!
 //! Next, observe that adding a chip and generator pair on floor 1 adds 12 moves to the final
 //! solution; likewise, removing a pair from floor 1 (but only if there is still something
-//! else left on the floor) can be solved in 12 fewer moves.  Tracking a smaller number of
+//! else left on the floor) can be solved in 12 fewer moves. Tracking a smaller number of
 //! chip and generator pairs, then adjusting by the 12 times the number of ignored pairs,
 //! is inherently faster.
 //!
@@ -41,8 +41,8 @@ use crate::util::bitset::*;
 use crate::util::hash::*;
 use std::collections::VecDeque;
 
-// A one-hot encoding is more efficient than 0-3.  For each byte, the generator is the
-// high nibble, and the microchip the low nibble.  Only 5 bytes matter, because the part two
+// A one-hot encoding is more efficient than 0-3. For each byte, the generator is the
+// high nibble, and the microchip the low nibble. Only 5 bytes matter, because the part two
 // pairs contribute a constant input; the used bytes are stored in little-endian order;
 // unused lanes will be 0.
 const MASK: u64 = 0x0000000101010101;

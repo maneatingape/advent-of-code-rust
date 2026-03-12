@@ -15,7 +15,7 @@
 //!     set a 1
 //!     mul p 17
 //!     jgz p p         if p == 0 {
-//!     mul a 2             let a = 2 ^ 31 - 1 = 0x7fffffff;
+//!     mul a 2             let a = 2³¹ - 1 = 0x7fffffff;
 //!     add i -1
 //!     jgz i -2
 //!     add a -1

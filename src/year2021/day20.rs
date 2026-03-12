@@ -3,10 +3,10 @@
 //! This is a cellular automata problem, similar to Conway's Game of Life, except that the rules
 //! are encoded in the enhancement algorithm string, instead of being statically specified. Each
 //! round the initial square area of cells expands by at most one in each direction, so we can store
-//! the cell in a fixed size array with enough space on either side to expand into.
+//! the cell in a fixed-size array with enough space on either side to expand into.
 //!
 //! The interesting nuance is handling the edge cells when all 9 cells are empty (index 0) or all
-//! 9 cell are active (index 511). The sample data encodes a blank cell in both scenarios.
+//! 9 cells are active (index 511). The sample data encodes a blank cell in both scenarios.
 //! My input encoded an active cell for index 0 and a blank cell for index 511, meaning that each
 //! turn the edge cells toggle from set to unset.
 //!

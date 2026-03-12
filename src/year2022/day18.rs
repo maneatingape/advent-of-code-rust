@@ -1,6 +1,6 @@
 //! # Boiling Boulders
 //!
-//! The lava droplet is a fixed size so we can use a one dimensional fixed size array to store the
+//! The lava droplet is a fixed size so we can use a one-dimensional fixed-size array to store the
 //! cube data for speed.
 //!
 //! For part two we use the [flood fill](https://en.wikipedia.org/wiki/Flood_fill) algorithm

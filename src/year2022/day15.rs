@@ -29,14 +29,14 @@ pub fn part1(input: &[Input]) -> i32 {
 
 /// A beacon cannot be located within the radius of a sensor unless it is the closest beacon.
 ///
-/// We first convert each scanner's diamond shaped area into a one dimensional range at the
+/// We first convert each scanner's diamond shaped area into a one-dimensional range at the
 /// specified row. By sorting the ranges, we can quickly calculate the total number of distinct
 /// ranges where another beacon cannot exist, only counting overlapping areas once.
 ///
 /// Beacons can also not be located at the same position as another beacon so we then also discount
 /// any beacon located exactly on the specified row.
 pub fn part1_testable(input: &[Input], row: i32) -> i32 {
-    // Converts the "diamond" shaped area of each scanner into a one dimensional row.
+    // Converts the "diamond" shaped area of each scanner into a one-dimensional row.
     // If the scanner's range does not reach the specified row then return `None`.
     fn build_range(input: &Input, row: i32) -> Option<Range<i32>> {
         let Input { sensor, manhattan, .. } = input;

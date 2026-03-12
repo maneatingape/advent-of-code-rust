@@ -16,13 +16,13 @@
 //! ```
 //!
 //! The addition rules have an important consequence. Exploding removes two leaf nodes at depth 5
-//! and moves them to neighbouring nodes. Since exploding repeatedly happens before splitting until
+//! and moves them to neighboring nodes. Since exploding repeatedly happens before splitting until
 //! there are no more values at depth 5 this means that the tree will never exceed a depth of 5.
 //!
 //! Each level of a tree can contain up to 2ⁿ nodes, so the maximum size of a snailfish tree is
 //! 1 + 2 + 4 + 8 + 16 + 32 = 2⁶-1 = 63 nodes.
 //!
-//! This means that we can store each snailfish number as an implicit data structure in a fixed size
+//! This means that we can store each snailfish number as an implicit data structure in a fixed-size
 //! array. This is faster, smaller and more convenient than using a traditional struct with pointers.
 //! The root node is stored at index 0. For a node at index `i` its left child is at index
 //! `2i + 1`, right child at index `2i + 2` and parent at index `i / 2`. As leaf nodes are
@@ -128,7 +128,7 @@ fn add(left: &Snailfish, right: &Snailfish) -> Snailfish {
 ///
 /// Storing the tree as an implicit structure has a nice benefit that finding the next left or right
 /// node is straightforward. We first move to the next left or right leaf node by adding or
-/// subtracting one to the index. If this node is empty then we move to the parent node until we
+/// subtracting one from the index. If this node is empty then we move to the parent node until we
 /// find a leaf node.
 ///
 /// The leaf node at index 31 has no possible nodes to the left and similarly the leaf node at

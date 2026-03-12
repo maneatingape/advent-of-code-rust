@@ -84,7 +84,7 @@
 //! *second* BFS starting from the corners and working inwards. All tiles within 64 steps are
 //! reachable at the edges of the diamond. For some inputs this happens to be the same as the number
 //! of tiles greater than 65 steps from the center by coincidence, however this is not guaranteed so
-//! a second BFS is more reliable solution.
+//! a second BFS is a more reliable solution.
 use crate::util::grid::*;
 use crate::util::point::*;
 use std::collections::VecDeque;

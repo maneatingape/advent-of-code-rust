@@ -25,7 +25,7 @@ pub fn parse(input: &str) -> Input {
     let (tx, rx) = channel();
     // Thread safe flag to let writer know when to stop.
     let done = AtomicBool::new(false);
-    // Store recipes in fixed size vec prefilled with ones. Part two result is around 20 million
+    // Store recipes in fixed-size vec prefilled with ones. Part two result is around 20 million
     // so size should be sufficient for most inputs.
     let mut recipes = vec![1; 25_000_000];
 
@@ -215,7 +215,7 @@ fn writer<'a>(tx: Sender<&'a [u8]>, done: &AtomicBool, mut recipes: &'a mut [u8]
             let (digits2, indices2, extra2) = unpack(third, fourth);
 
             // Scatter each digit into the correct location, leaving "holes" where ones should go.
-            // This is handled correctly by prefilling `recipes`` with ones when initializing.
+            // This is handled correctly by prefilling `recipes` with ones when initializing.
             for shift in (0..64).step_by(8) {
                 let digit = lsb(digits1 >> shift);
                 let index = lsb(indices1 >> shift);
@@ -314,7 +314,7 @@ fn unpack(first: usize, second: usize) -> (usize, usize, usize) {
     // digits     | 07 | 01 | 01 | 02 | 09 | 09 | 00 | 08 |
     let digits = sum - 10 * tens;
 
-    // Columns greater than 10 will takes 2 bytes when written to recipes. Each index is
+    // Columns greater than 10 will take 2 bytes when written to recipes. Each index is
     // offset by the number of 10s before it. Adding the normal increase indices gives the
     // final location of each byte.
     //

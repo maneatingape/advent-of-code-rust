@@ -8,9 +8,9 @@
 //! 10 + 20 + 30 + 60 = 120 presents. The answer will be a
 //! [highly abundant number](https://en.wikipedia.org/wiki/Highly_abundant_number).
 //!
-//! If `n` has the prime factorization `n = p₁^a₁ × p₂^a₂ × ... × pₖ^aₖ` then the sum of divisors is
-//! `σ(n) = [(p₁^(a₁+1) - 1)/(p₁ - 1)] × [(p₂^(a₂+1) - 1)/(p₂ - 1)] × ... × [(pₖ^(aₖ+1) - 1)/(pₖ - 1)]`
-//! or more compactly `σ(n) = ∏ᵢ₌₁ᵏ [(pᵢ^(aᵢ+1) - 1)/(pᵢ - 1)]`
+//! If `n` has the prime factorization `n = p₁ᵃ¹ × p₂ᵃ² × … × pₖᵃᵏ` then the sum of divisors is
+//! `σ(n) = [(p₁ᵃ¹⁺¹ - 1)/(p₁ - 1)] × [(p₂ᵃ²⁺¹ - 1)/(p₂ - 1)] × … × [(pₖᵃᵏ⁺¹ - 1)/(pₖ - 1)]`
+//! or more compactly `σ(n) = ∏ᵢ₌₁ᵏ [(pᵢᵃⁱ⁺¹ - 1)/(pᵢ - 1)]`
 //!
 //! For example `n = 12 = 2² × 3¹`
 //!
@@ -20,7 +20,7 @@
 //! It is easy enough to pre-generate a list of highly-abundant numbers, or
 //! even just grab one from [OEIS A002093](https://oeis.org/A002093/b002093.txt).
 //! Inspecting that list shows that between house numbers `540_540` and `1_201_200`,
-//! there are only 28 candidates.  In turn, it is easy to precompute their
+//! there are only 28 candidates. In turn, it is easy to precompute their
 //! sum of divisors, turning this into a LUT (lookup table) on the target,
 //! sufficient to cover the range of all known puzzle inputs (30-40 million).
 //!

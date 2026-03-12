@@ -9,7 +9,7 @@
 //! The second *reverse* search from the target to the current unit finds the correct direction
 //! to move.
 //!
-//! Since the cave dimensions are 32 x 32 we use a fixed sized array of bitmasks stored in `u32`
+//! Since the cave dimensions are 32 x 32 we use a fixed-size array of bitmasks stored in `u32`
 //! to execute each BFS efficiently. Each step we expand the frontier using the bitwise logic
 //! applied to each row:
 //!

@@ -23,7 +23,7 @@
 //! ## Part Two
 //! A brute force solution would check every possible combination of `x` and `y` for a total
 //! complexity of `O(xy)`. By thinking in terms of time `t` instead and applying a dynamic
-//! programming solution we can instead solve in a complexity of `O(x + y)`by treating `x` and `y`
+//! programming solution we can instead solve in a complexity of `O(x + y)` by treating `x` and `y`
 //! independently.
 //!
 //! We create 2 `vecs`. The first `new` counts how many x-velocity values enter the target area at

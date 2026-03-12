@@ -59,7 +59,7 @@ pub fn parse(input: &str) -> Input<'_> {
         }
     }
 
-    // The root is the only node without a parent.  Start from any node, and walk up the
+    // The root is the only node without a parent. Start from any node, and walk up the
     // tree until finding the root.
     let mut candidate = 0;
     while nodes[candidate].has_parent {

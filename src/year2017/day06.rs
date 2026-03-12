@@ -78,10 +78,10 @@ pub fn parse(input: &str) -> Input {
                 break (cycles, cycles - previous);
             }
         } else {
-            // Overflow case.  This can happen in the early steps of the system, but resolves
+            // Overflow case. This can happen in the early steps of the system, but resolves
             // fairly quickly - in practice, the worst known input file had a total of 10 overflow
             // cycles, with at most two adjacent overflows per encounter, with all overflows
-            // before cycle 200, well before the first repeated configuration.  Thus, it is
+            // before cycle 200, well before the first repeated configuration. Thus, it is
             // okay to not cache these states in seen.
             let mut array = [0; 16];
 

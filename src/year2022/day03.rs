@@ -19,7 +19,7 @@
 //! that is blazing fast.
 //!
 //! Notes:
-//! * We could get away with a `u64` for the set, but by using an `u128` we can shift directly by the
+//! * We could get away with a `u64` for the set, but by using a `u128` we can shift directly by the
 //!   raw ASCII codes and not bother computing offsets until the very end.
 //!
 //! [`trailing_zeros`]: u128::trailing_zeros

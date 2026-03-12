@@ -9,7 +9,7 @@
 //! have run out of work to pick up new paths to process.
 //!
 //! The approach from "Waiting: Parking and Condition Variables" in the excellent book
-//! [Rust Atomics and Locks](https://marabos.nl/atomics/) prevent idle threads from busy
+//! [Rust Atomics and Locks](https://marabos.nl/atomics/) prevents idle threads from busy
 //! looping on the mutex.
 use crate::util::md5::*;
 use crate::util::thread::*;

@@ -1,10 +1,10 @@
 //! # Crossed Wires
 //!
-//! The input follow some implicit rules that can be used to simplify our approach:
+//! The input follows some implicit rules that can be used to simplify our approach:
 //!
 //! * Wires cross only at right angles to each other, so we only need to consider horizontal lines
 //!   when moving vertically and vice-versa.
-//! * There is only a single vertical line at a given x coordinates and vice-versa.
+//! * There is only a single vertical line at a given x coordinate and vice-versa.
 //!
 //! This makes [`BTreeMap`] a great choice to store horizontal or vertical line segments as there
 //! are no collisions. The [`range`] method can lookup all line segments contained between two

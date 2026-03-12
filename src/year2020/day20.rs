@@ -1,7 +1,7 @@
 //! # Jurassic Jigsaw
 //!
 //! At first this seems like a daunting problem. However a little analysis shows that the input
-//! has some nice properties that makes solving this more tractable.
+//! has some nice properties that make solving this more tractable.
 //!
 //! * Tile edges match with at most one other tile
 //! * The forward and reverse tile edges form two distinct sets of 312 values with no overlap.
@@ -32,7 +32,7 @@
 //! very fast constant time `O(1)` operation.
 //!
 //! The complete picture is stored as an array of `u128` values as the tiles form a square 12 wide,
-//! for a total of 12 * 8 = 96 pixels. As we add each tile, we convert its pixels into a `u8` binary
+//! for a total of 12 × 8 = 96 pixels. As we add each tile, we convert its pixels into a `u8` binary
 //! number and left shift to add to the existing pixels.
 //!
 //! When finding the monsters we make some further assumptions about the input:

@@ -4,7 +4,7 @@
 //! each pair as the positions don't affect the final result.
 //!
 //! Fixed sized arrays are used for speed as we know that the elements are limited to 26 values
-//! and the possible pairs to 26 * 26 values.
+//! and the possible pairs to 26 × 26 values.
 //!
 //! [`Day 6`]: crate::year2021::day06
 use crate::util::iter::*;

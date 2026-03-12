@@ -7,11 +7,11 @@
 //! But rather than taking the bits consecutively,
 //! split the odd columns into one int and the even into another - that way, when it is time to
 //! check neighbors, all left and right neighbors of the odd lanes are already available with just
-//! one shift of all the even lanes, and vice versa.  We calculate the next generation using no
+//! one shift of all the even lanes, and vice versa. We calculate the next generation using no
 //! conditional statements with the following steps.
 //!
 //! 1. Pack the input bytes into register values that can be represented as binary digits, split
-//!    into odd and even lanes.  An extra empty row at the bottom reduces later special-casing.
+//!    into odd and even lanes. An extra empty row at the bottom reduces later special-casing.
 //!
 //! ```none
 //!                    .even .odd
@@ -22,9 +22,9 @@
 //! ```
 //!
 //! 2. Perform half-adder and full-adder computation of each bit with its vertical neighbors, using
-//!    only bitwise logic.  Just two bit-wise additions provides data for three 2-bit column sums,
+//!    only bitwise logic. Just two bit-wise additions provides data for three 2-bit column sums,
 //!    since the left and right neighbors are one bit apart in the opposite parity integer and
-//!    already added in parallel.  Visually, for cell e, we are computing a+b+c, d+f, and g+h+i
+//!    already added in parallel. Visually, for cell e, we are computing a+b+c, d+f, and g+h+i
 //!    of its neighbors.
 //!
 //! ```none
@@ -37,7 +37,7 @@
 //!
 //! 3. Taking the 3 two-bit column sums learned in the last step, perform two more full-adders to
 //!    form four new bits p, q, r, s, which we could add into a usual four-bit number, but which
-//!    are good enough for our needs as-is.  Bit s is set if there were an odd number of neighbors;
+//!    are good enough for our needs as-is. Bit s is set if there were an odd number of neighbors;
 //!    bit p must be clear or we already know there are more than 3 neighbors; and exactly one of
 //!    bits q and r must be set for the final 4-bit sum to have the second bit set.
 //!

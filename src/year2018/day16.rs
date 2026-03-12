@@ -19,7 +19,7 @@
 //!
 //! For part two we need to determine the mapping of the unknown codes. First we reduce each
 //! unknown to a single set by taking the intersection of all examples. Then similar to
-//! solving simultaneous equation, we eliminate one unknown at a time, removing it from the other
+//! solving simultaneous equations, we eliminate one unknown at a time, removing it from the other
 //! possibilities. This causes a domino effect, continuing until all unknowns are resolved.
 //!
 //! [`count_ones`]: u32::count_ones

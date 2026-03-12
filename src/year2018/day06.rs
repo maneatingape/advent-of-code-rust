@@ -175,13 +175,13 @@ pub fn part2(input: &Input) -> i32 {
 /// a specified maximum distance from all other points.
 ///
 /// Finding the center of this circle to act as a starting point is an interesting sub-problem.
-/// The two dimensional [geometric median](https://en.wikipedia.org/wiki/Geometric_median) that
+/// The two-dimensional [geometric median](https://en.wikipedia.org/wiki/Geometric_median) that
 /// minimizes the Euclidean distance to all other points has no general closed form formula.
 /// The [centroid](https://en.wikipedia.org/wiki/Centroid) is close but not exact as it minimizes
 /// the distance *squared*.
 ///
 /// However the Manhattan distance is independent for each axis, so we can instead solve for the
-/// one dimensional case. This is the [median](https://en.wikipedia.org/wiki/Median) of each axis.
+/// one-dimensional case. This is the [median](https://en.wikipedia.org/wiki/Median) of each axis.
 /// Intuitively this makes sense, as the median has the same number of points on either side,
 /// so moving either direction, the increase from half the points is cancelled out by the decrease
 /// of the other half of the points.

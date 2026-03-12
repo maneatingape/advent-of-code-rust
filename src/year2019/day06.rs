@@ -1,7 +1,7 @@
 //! # Universal Orbit Map
 //!
 //! Each object name is 3 characters long, using the characters `A` to `Z` and `0` to `9`.
-//! This is only 36 ^ 3 = 46656 possibilities, so we can use
+//! This is only 36³ = 46656 possibilities, so we can use
 //! [perfect hashing](https://en.wikipedia.org/wiki/Perfect_hash_function) to store contiguous
 //! indices for each object, allowing us to lookup a perfect *minimal* hash for each object.
 //!

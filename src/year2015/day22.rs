@@ -6,9 +6,9 @@
 //!
 //! The key to optimizing is to cache previously seen states. As we receive states in strictly
 //! increasing order of mana spent if we see a state again then it cannot possibly be optimal
-//! and we can discard it.  As an additional heuristic, for any given state, we know that we must
+//! and we can discard it. As an additional heuristic, for any given state, we know that we must
 //! spend a minimum mana on every turn, and that the game will last for at least as many
-//! turns as it requires for maximum damage to deplete the boss's hit points.  This heuristic
+//! turns as it requires for maximum damage to deplete the boss's hit points. This heuristic
 //! does not take into account the fact that maximum damage is only possible while Poison is
 //! still active, where re-casting Poison costs more mana but can end the game faster; but
 //! that's okay: as long as the heuristic is consistent, underestimating is fine.
@@ -76,10 +76,10 @@ pub fn part2(input: &Input) -> i16 {
 
 fn heuristic(spent: i16, boss_hp: i16) -> i16 {
     // Assume that Poison is still active; this can deal the boss up to 6 damage prior to the next
-    // time we can cast.  Beyond that, we must spend mana every turn; the minimum is 53 for Magic
+    // time we can cast. Beyond that, we must spend mana every turn; the minimum is 53 for Magic
     // Missile; and we need to survive at least as many turns as what the boss will survive even
     // if we have maximum damage per turn (the most damage possible is 6 from Poison and 4 from
-    // Magic Missile from here on out).  Since this is a heuristic, it does not matter that it
+    // Magic Missile from here on out). Since this is a heuristic, it does not matter that it
     // underestimates actual costs needed to keep Poison active, or that the boss will survive
     // longer than the minimum number of turns for every time we cast a different spell.
     let damage_per_turn = 4 + 6; // Poison still active and cast Magic Missile

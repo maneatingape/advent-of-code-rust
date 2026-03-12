@@ -6,7 +6,7 @@
 //! ## Part One
 //!
 //! We jump if any of `A`, `B` or `C` are holes and there is ground where we will land at `D`.
-//! This take 7 instructions:
+//! This takes 7 instructions:
 //!
 //! `J = (NOT A OR NOT B OR NOT C) AND D`
 //!

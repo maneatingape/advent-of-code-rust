@@ -1,6 +1,6 @@
 //! # Subterranean Sustainability
 //!
-//! The problem is a one dimensional version of
+//! The problem is a one-dimensional version of
 //! [Conway's Game of Life](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life).
 //!
 //! We use a vector to store which pots are occupied and which are empty in each generation.

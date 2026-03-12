@@ -49,7 +49,7 @@
 //!    which must output to `z45`.
 //!
 //! We only need to find swapped outputs (not fix them) so the result is the labels of gates
-//! that breaks the rules in alphabetical order.
+//! that break the rules in alphabetical order.
 use crate::util::hash::*;
 use crate::util::iter::*;
 use crate::util::parse::*;

@@ -8,7 +8,7 @@
 //! if it's a valid towel and links to the next node for each possible color.
 //!
 //! There are only 5 colors. A custom [perfect hash](https://en.wikipedia.org/wiki/Perfect_hash_function)
-//! function maps indices between 0 and 7 so that they fit into a fixed size array. This is faster
+//! function maps indices between 0 and 7 so that they fit into a fixed-size array. This is faster
 //! than using a `HashSet`.
 //!
 //! Additionally, we store the Trie in a flat `vec`. This is simpler and faster than creating

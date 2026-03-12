@@ -8,7 +8,7 @@
 //! reversed forms (seating a->b->c->a gives the same happiness as seating c->b->a->c).
 //!
 //! We solve part two at the same time by noticing that by inserting yourself between two diners
-//! you set the value of their mutual link to zero. Keeping tracking of the weakest link
+//! you set the value of their mutual link to zero. Keeping track of the weakest link
 //! then subtracting that from the value for part one gives the result for part two at almost
 //! no additional cost.
 //!

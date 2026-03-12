@@ -55,7 +55,7 @@
 //!
 //! ## Dynamic programming
 //!
-//! For a 6x6 grid graph there are 1262816 total possible rook walks, given by
+//! For a 6 x 6 grid graph there are 1262816 total possible rook walks, given by
 //! [OEIS A007764](https://oeis.org/A007764). However since we want the longest path it only makes
 //! sense to consider the paths that visit the most possible nodes, in this case 35 (we have to
 //! skip 1). There are only 10180 of these paths making it much faster.
@@ -187,7 +187,7 @@ struct Graph {
     weight: FastMap<(Point, Point), u32>,
 }
 
-/// Distilled two dimensional array of only weights.
+/// Distilled two-dimensional array of only weights.
 pub struct Input {
     extra: u32,
     horizontal: [[u32; 6]; 6],
@@ -343,7 +343,7 @@ fn compress(input: &str) -> Graph {
     Graph { start, end, edges, weight }
 }
 
-/// Convert graph to 6 x6 two dimensional array of weights.
+/// Convert graph to 6 x 6 two-dimensional array of weights.
 fn graph_to_grid(graph: &Graph) -> Input {
     let Graph { start, end, edges, weight } = graph;
 

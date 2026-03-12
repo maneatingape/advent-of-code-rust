@@ -5,7 +5,7 @@
 //! distinct pair of neighboring nodes.
 //!
 //! Part two asks to find the maximum clique, for which we could use the
-//! [Bron–Kerbosch algorithm](https://en.wikipedia.org/wiki/Bron%E2%80%93Kerbosch_algorithm).
+//! [Bron-Kerbosch algorithm](https://en.wikipedia.org/wiki/Bron-Kerbosch_algorithm).
 //! However the input has a specific structure that enables a simpler approach of finding the
 //! largest *maximal* clique using a greedy algorithm. Nodes are arranged in clusters of 13 and
 //! the maximum clique is size 14. This approach will not necessarily work for any general graph,
@@ -46,11 +46,11 @@ pub fn part1(input: &Input) -> usize {
 
     // Only consider nodes starting with `t`.
     for n1 in 494..520 {
-        if let Some(neighbours) = nodes.get(&n1) {
+        if let Some(neighbors) = nodes.get(&n1) {
             seen[n1] = true;
 
-            for (i, &n2) in neighbours.iter().enumerate() {
-                for &n3 in neighbours.iter().skip(i) {
+            for (i, &n2) in neighbors.iter().enumerate() {
+                for &n3 in neighbors.iter().skip(i) {
                     // Skip nodes if we've already seen them.
                     if !seen[n2] && !seen[n3] && edges[n2][n3] {
                         triangles += 1;
@@ -70,13 +70,13 @@ pub fn part2(input: &Input) -> String {
     let mut largest = Vec::new();
 
     // Greedy algorithm to find *maximal* (not maximum) cliques.
-    for (&n1, neighbours) in nodes {
+    for (&n1, neighbors) in nodes {
         if !seen[n1] {
             clique.clear();
             clique.push(n1);
 
             // Add nodes if they're connected to every node already in the clique.
-            for &n2 in neighbours {
+            for &n2 in neighbors {
                 if clique.iter().all(|&c| edges[n2][c]) {
                     seen[n2] = true;
                     clique.push(n2);

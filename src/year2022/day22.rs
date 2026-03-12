@@ -32,7 +32,7 @@
 //!
 //! ```
 //!
-//! Then for each neighbouring face we can find its `i`, `j` and `k` vectors depending on which
+//! Then for each neighboring face we can find its `i`, `j` and `k` vectors depending on which
 //! edge it shares in common. For example if we move from face A to face B along the top edge
 //! then the new vectors are:
 //!
@@ -58,7 +58,7 @@
 //!
 //! For example say we transition from face `A` to face `B`. Our `k` is (0, 1, 0) which is
 //! equal to minus the new `j`, so we know that we're travelling upwards from the bottom edge.
-//! Then we can use this information to figure out the two dimensional offsets into the new face.
+//! Then we can use this information to figure out the two-dimensional offsets into the new face.
 use crate::util::hash::*;
 use crate::util::math::*;
 use crate::util::parse::*;

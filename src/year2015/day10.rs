@@ -11,7 +11,7 @@
 //! if we had five `Ni` then next step we would decay to five `Zn` and five `Co`.
 //!
 //! Computing the result is simply multiplying the number of each element by its length. There are
-//! 92 elements total so we can use a fixed size array to store the decay chain information.
+//! 92 elements total so we can use a fixed-size array to store the decay chain information.
 //!
 //! It would be possible (but less fun) to precompute all possible 92 answers into a
 //! lookup table.

@@ -28,7 +28,7 @@ pub fn part2(input: &str) -> usize {
     find(input, 14)
 }
 
-/// The cardinality of the input is only 26 so a fixed size array can store the last position
+/// The cardinality of the input is only 26 so a fixed-size array can store the last position
 /// of each character.
 fn find(input: &str, marker: usize) -> usize {
     let mut start = 0;

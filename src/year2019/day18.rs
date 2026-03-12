@@ -13,7 +13,7 @@
 //! * There is only ever one possible path to each key. We do not need to consider
 //!   paths of different lengths that need different keys.
 //! * As a corollary, if key `b` lies between `a` and `c` then `|ac| = |ab| + |bc|`. This
-//!   enables a huge optimization that we only need to consider immediate neighbours.
+//!   enables a huge optimization that we only need to consider immediate neighbors.
 //!   If we do not possess key `b` then it never makes sense to skip from `a` to `c` since `b` is
 //!   along the way. We can model this by treating keys the same as doors. This optimization
 //!   sped up my solution by a factor of 30.
@@ -24,13 +24,13 @@
 //!   can never be optimal so the solution can be discarded.
 //! * When finding the distance between every pair of keys, it's faster to first only find the immediate
 //!   neighbors of each key using a [Breadth-first search](https://en.wikipedia.org/wiki/Breadth-first_search)
-//!   then run the [Floyd-Warshall algorithm](https://en.wikipedia.org/wiki/Floyd%E2%80%93Warshall_algorithm)
+//!   then run the [Floyd-Warshall algorithm](https://en.wikipedia.org/wiki/Floyd-Warshall_algorithm)
 //!   to construct the rest of the graph. Even though the Floyd-Warshall asymptotic bound of `O(n³)`
 //!   is higher than the asymptotic bounds of repeated BFS, this was twice as fast in practice
 //!   for my input.
 //!
 //! We also apply some low-level tricks to go even faster:
-//! * The set of remaining keys needed is stored as bits in an `u32`. We can have at most 26 keys
+//! * The set of remaining keys needed is stored as bits in a `u32`. We can have at most 26 keys
 //!   so this will always fit. For example needing `a`, `b` and `e` is represented as `10011`.
 //! * Robot location is also stored the same way. Robots can only ever be in their initial location
 //!   or at a key, so this gives a max of 26 + 4 = 30 locations. As a nice bonus this allows
@@ -195,7 +195,7 @@ fn explore(width: usize, bytes: &[u8]) -> u32 {
 
         // The set of robots is stored as bits in a `u32` shifted by the index of the location.
         for from in position.biterator() {
-            // The set of keys still needed is also stored as bits in a `u32` similar as robots.
+            // The set of keys still needed is also stored as bits in a `u32` similarly to robots.
             for to in remaining.biterator() {
                 let Door { distance, needed } = maze[from][to];
 

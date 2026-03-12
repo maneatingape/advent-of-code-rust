@@ -8,7 +8,7 @@
 //! ## Part Two
 //!
 //! To detect anagrams we first convert each word into a histogram of its letter frequency values.
-//! As the cardinality is at most 26 we can use a fixed size array to represent the set.
+//! As the cardinality is at most 26 we can use a fixed-size array to represent the set.
 //!
 //! Then a [`FastSet`] is used to detect duplicates. Sorting the letters in each word so that
 //! anagrams become the same also works but is slower.

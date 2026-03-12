@@ -90,7 +90,7 @@ pub fn part1(input: &Dance) -> String {
 pub fn part2(input: &Dance) -> String {
     let mut dance = *input;
 
-    // 1 billion is 0b00111011_10011010_11001010_00000000: 30 bits, with 13 set.  Typical
+    // 1 billion is 0b00111011_10011010_11001010_00000000: 30 bits, with 13 set. Typical
     // exponentiation by squaring would be 30 doubles and 13 additions, or 43 calls to
     // compose; but since one billion is a power of ten, we can do better by 9 cycles of
     // reaching each next power of ten by two doubles, one addition, and one more double

@@ -8,13 +8,13 @@
 //!
 //! Some basic modular identities:
 //! * (a + b) mod m = (a mod m) + (b mod m)
-//! * (a * b) mod m = (a mod m) * (b mod m)
+//! * (a × b) mod m = (a mod m) × (b mod m)
 //! * The [modular inverse](https://en.wikipedia.org/wiki/Modular_multiplicative_inverse)
 //!   is used instead of division.
 //!
 //! ## Linear Congruences
 //!
-//! The next required insight is that each of the shuffle operation is a *linear congruence*
+//! The next required insight is that each of the shuffle operations is a *linear congruence*
 //! of the form:
 //!
 //! `Xₙ₊₁ = (aXₙ + c) mod m`
@@ -24,20 +24,20 @@
 //! `Xₙ₊₁ = ((m - 1) * Xₙ + (m - 1)) mod m`
 //!
 //! With a deck of 3 cards this is:
-//! * 0 => (2 * 0 + 2) mod 3 = 2
-//! * 1 => (2 * 1 + 2) mod 3 = 1
-//! * 2 => (2 * 2 + 2) mod 3 = 0
+//! * 0 => (2 × 0 + 2) mod 3 = 2
+//! * 1 => (2 × 1 + 2) mod 3 = 1
+//! * 2 => (2 × 2 + 2) mod 3 = 0
 //!
 //! "cut N cards" is:
 //!
 //! `Xₙ₊₁ = 1 * Xₙ + (m - N)) mod m`
 //!
 //! For example "cut 3" with a deck of 5 cards is:
-//! * 0 => (1 * 0 + (5 - 3)) mod 5 = 2
-//! * 1 => (1 * 1 + (5 - 3)) mod 5 = 3
-//! * 2 => (1 * 2 + (5 - 3)) mod 5 = 4
-//! * 3 => (1 * 3 + (5 - 3)) mod 5 = 0
-//! * 4 => (1 * 3 + (5 - 3)) mod 5 = 1
+//! * 0 => (1 × 0 + (5 - 3)) mod 5 = 2
+//! * 1 => (1 × 1 + (5 - 3)) mod 5 = 3
+//! * 2 => (1 × 2 + (5 - 3)) mod 5 = 4
+//! * 3 => (1 × 3 + (5 - 3)) mod 5 = 0
+//! * 4 => (1 × 3 + (5 - 3)) mod 5 = 1
 //!
 //! If N is negative the cut works from the end. If N is greater than m then take N mod m.
 //!
@@ -46,11 +46,11 @@
 //! `Xₙ₊₁ = N * Xₙ + 0) mod m`
 //!
 //! For example "deal with increment 3" with a deck of 5 cards is:
-//! * 0 => (3 * 0 + 0) mod 5 = 0
-//! * 1 => (3 * 1 + 0) mod 5 = 3
-//! * 2 => (3 * 2 + 0) mod 5 = 1
-//! * 3 => (3 * 3 + 0) mod 5 = 4
-//! * 4 => (3 * 4 + 0) mod 5 = 2
+//! * 0 => (3 × 0 + 0) mod 5 = 0
+//! * 1 => (3 × 1 + 0) mod 5 = 3
+//! * 2 => (3 × 2 + 0) mod 5 = 1
+//! * 3 => (3 × 3 + 0) mod 5 = 4
+//! * 4 => (3 × 4 + 0) mod 5 = 2
 //!
 //! ## Composition
 //!
@@ -72,7 +72,7 @@
 //!
 //! `(a₁a₂Xₙ + a₂c₁ + c₂) mod m = (Xₙ + 0) mod m`
 //!
-//! This implies that `a₁a₂ mod m = 1` which is the definition of the modular inverse`a₂ = a₁⁻¹`.
+//! This implies that `a₁a₂ mod m = 1` which is the definition of the modular inverse `a₂ = a₁⁻¹`.
 //!
 //! The constant term `(a₂c₁ + c₂) mod m = 0` implies `c₂ = m - a₂c₁`.
 //!
@@ -81,9 +81,9 @@
 //! To find the inverse of 101741582076661 shuffles we need to raise our inverse to the same
 //! power. Let's look at the first few powers
 //! * ax + c
-//! * a * (ax + c) + c = a²x + ac + c
-//! * a * (a²x + ac + c) = a³x + a²c + ac + c
-//! * a * (a³x + a²c + ac + c) = a⁴x + a³c + a²c + ac + c
+//! * a × (ax + c) + c = a²x + ac + c
+//! * a × (a²x + ac + c) = a³x + a²c + ac + c
+//! * a × (a³x + a²c + ac + c) = a⁴x + a³c + a²c + ac + c
 //!
 //! We notice that the constant terms are the sum of a [geometric series](https://en.wikipedia.org/wiki/Geometric_series)
 //! which is given by the closed-form formula:

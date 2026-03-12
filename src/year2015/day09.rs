@@ -15,7 +15,7 @@
 //!
 //! For speed we first convert each location into an index, then store the distances between
 //! every pair of locations in an array for fast lookup. Our utility [`half_permutations`] method uses
-//! [Steinhaus-Johnson-Trotter's algorithm](https://en.wikipedia.org/wiki/Steinhaus%E2%80%93Johnson%E2%80%93Trotter_algorithm) for efficiency,
+//! [Steinhaus-Johnson-Trotter's algorithm](https://en.wikipedia.org/wiki/Steinhaus-Johnson-Trotter_algorithm) for efficiency,
 //! modifying the slice in place.
 //!
 //! [`half_permutations`]: crate::util::slice

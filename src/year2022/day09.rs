@@ -10,7 +10,7 @@ type Input = (i32, i32, i32, i32, Vec<Pair>);
 
 /// Converts input lines into a pair of [`Point`] and integer amount, to indicate direction and
 /// magnitude respectively. Then determines the maximum extent of the head so that we can allocate
-/// a two dimensional grid.
+/// a two-dimensional grid.
 pub fn parse(input: &str) -> Input {
     let first = input.bytes().filter(u8::is_ascii_alphabetic).map(Point::from);
     let second = input.iter_signed::<i32>();

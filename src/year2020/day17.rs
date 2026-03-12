@@ -49,14 +49,14 @@ mod scalar {
 
     /// x and y dimensions are in the plane of the input. Each dimension can expand by at most two
     /// in each axis per round (one positive and one negative). Adding padding at the edges to avoid
-    /// boundary checks gives a maximum width of 8 + 2 * (6 + 1) = 22 for the x and y dimensions and
-    /// 1 + 2 * (6 + 1) = 15 for the z and w dimensions.
+    /// boundary checks gives a maximum width of 8 + 2 × (6 + 1) = 22 for the x and y dimensions and
+    /// 1 + 2 × (6 + 1) = 15 for the z and w dimensions.
     const X: i32 = 22;
     const Y: i32 = 22;
     const Z: i32 = 15;
     const W: i32 = 15;
 
-    /// Pack a four dimensional array into a one dimensional vec to avoid the speed penalty of
+    /// Pack a four-dimensional array into a one-dimensional vec to avoid the speed penalty of
     /// following multiple pointers and increase memory locality for caching.
     const STRIDE_X: i32 = 1;
     const STRIDE_Y: i32 = X * STRIDE_X;

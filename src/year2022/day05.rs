@@ -20,7 +20,7 @@ type Input = (Stack, Vec<Move>);
 /// divided by 4 (the last column has no trailing space). Then we build the vectors from the bottom
 /// up by iterating through the rows in reverse. This places the elements at the top of each stack
 /// at the end of the `vec` which is a more natural location for mutation (as removing elements from
-/// the start of a `vec` involved moving all remaining elements).
+/// the start of a `vec` involves moving all remaining elements).
 ///
 /// [`iter_unsigned`]: ParseOps::iter_unsigned
 /// [`chunk`]: ChunkOps::chunk

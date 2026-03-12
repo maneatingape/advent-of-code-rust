@@ -68,7 +68,7 @@ type Input = (usize, usize);
 pub fn parse(input: &str) -> Input {
     // Parse each brick into an array of 6 elements, one for each coordinate.
     let mut bricks: Vec<_> = input.iter_unsigned::<usize>().chunk::<6>().collect();
-    // x and y are limited to 10 in each direction so we can use a fixed size array.
+    // x and y are limited to 10 in each direction so we can use a fixed-size array.
     let mut heights = [0; 100];
     let mut indices = [usize::MAX; 100];
 

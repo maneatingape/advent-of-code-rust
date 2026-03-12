@@ -48,7 +48,7 @@ pub fn parse(input: &str) -> Input<'_> {
                 Rule { start: 1, end: 4001, category: 0, next: first }
             } else {
                 // Map each category to an index for convenience so that we can store a part
-                // in a fixed size array.
+                // in a fixed-size array.
                 let category = match first.as_bytes()[0] {
                     b'x' => 0,
                     b'm' => 1,

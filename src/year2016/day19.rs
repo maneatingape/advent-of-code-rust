@@ -80,7 +80,7 @@
 //!
 //! ## Part Two alternative
 //!
-//! There is a also a closed form `O(1)` mathematical solution,
+//! There is also a closed form `O(1)` mathematical solution,
 //! called the n-cowboy shootout problem, described in [OEIS A334473](https://oeis.org/A334473).
 //!
 //! [`ilog2`]: u32::ilog2

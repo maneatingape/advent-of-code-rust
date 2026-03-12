@@ -173,13 +173,13 @@ pub fn part2(input: &[i32]) -> i32 {
     // Computes C(n, k) % 10
     // Solving the Chinese remainder theorem for the special case of two congruences:
     //
-    //     x ​≡ a₁ (mod n₁) ​≡ a₁ (mod 2)
-    //     x ​≡ a₂ (mod n₂) ≡ a₂ (mod 5)
+    //     x ≡ a₁ (mod n₁) ≡ a₁ (mod 2)
+    //     x ≡ a₂ (mod n₂) ≡ a₂ (mod 5)
     //     N = n₁n₂ = 10
     //     y₁ = N / n₁ = 5
     //     y₂ = N / n₂ = 2
-    //     z₁ = y₁⁻¹ mod n₁ = 5⁻¹ mod 2 = 1
-    //     z₂ = y₂⁻¹ mod n₂ = 2⁻¹ mod 5 = 3
+    //     z₁ = y₁⁻¹ mod n₁ = 5⁻¹ mod 2 = 1
+    //     z₂ = y₂⁻¹ mod n₂ = 2⁻¹ mod 5 = 3
     //     x ≡ a₁y₁z₁ + a₂y₂z₂ (mod 10) ≡ 5a₁ + 6a₂ (mod 10)
     //
     let result: Vec<_> = first.into_iter().zip(second).map(|(f, s)| (5 * f + 6 * s) % 10).collect();

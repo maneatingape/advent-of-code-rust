@@ -10,7 +10,7 @@
 //! First the location of each ball is stored in a `vec`. My input had ~2,000 balls compared to
 //! 10,000 grid squares total, so this approach reduces the amount of data to scan by 5x. The 2D
 //! coordinates are converted to a 1D number, for example the index of a ball on the second row
-//! second column would be 1 * 100 + 1 = 101.
+//! second column would be 1 × 100 + 1 = 101.
 //!
 //! Next for each possible tilt orientation (north, south, east and west) an approach similar to a
 //! prefix sum is used. Each edge or fixed rock is assigned an index. We expand the grid by 2 in
@@ -42,7 +42,7 @@
 //!
 //! First, the number of balls resting against each fixed point completely represents the state of the
 //! grid in a very compact format. For example my input has ~1600 fixed points. Using 2 bytes per
-//! point needs 3.2K total to represent the grid, compared to 100 * 100 = 10K for the simple approach.
+//! point needs 3.2K total to represent the grid, compared to 100 × 100 = 10K for the simple approach.
 //! 3x less data is 3x faster to hash when storing states in a `HashMap` looking for duplicates.
 //!
 //! Second, calculating the new position of a ball is very fast. For each ball:

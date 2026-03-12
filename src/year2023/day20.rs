@@ -4,11 +4,11 @@
 //! of 12 columns, followed by 2 conjunctions (in square brackets):
 //!
 //! ```none
-//!            / aa ab ac ad ae af ag ah ai aj aj al [ax] [ay] \
-//!           /  ba bb bc bd be bf bg bh bi bj bj bl [bx] [by]  \
+//!            / aa ab ac ad ae af ag ah ai aj ak al [ax] [ay] \
+//!           /  ba bb bc bd be bf bg bh bi bj bk bl [bx] [by]  \
 //!     () - ()                                                 [zz] -> [rx]
-//!           \  ca cb dc cd ce cf cg ch ci cj cj cl [cx] [cy]  /
-//!            \ da db dc dd de df dg dh di dj dj dl [dx] [dy] /
+//!           \  ca cb cc cd ce cf cg ch ci cj ck cl [cx] [cy]  /
+//!            \ da db dc dd de df dg dh di dj dk dl [dx] [dy] /
 //! ```
 //!
 //! The penultimate conjunction in each row, for example `ax` both takes input and delivers output
@@ -17,7 +17,7 @@
 //!
 //! ```none
 //!     v     v        v              v
-//!     aa ab ac ad ae af ag ah ai aj aj al
+//!     aa ab ac ad ae af ag ah ai aj ak al
 //!     v  v     v  v     v  v  v   v     v
 //! ```
 //!
@@ -25,7 +25,7 @@
 //! will pulse low and reset the counter to zero. When all 4 counters hit their limit at the
 //! same time then a low pulse will be sent to `rx`. The answer is the
 //! [LCM](https://en.wikipedia.org/wiki/Least_common_multiple) of the 4 limit values.
-//!  For my input the numbers were co-prime so the LCM simplified to a product.
+//! For my input the numbers were co-prime so the LCM simplified to a product.
 //!
 //! For part one, as long as all numbers are greater than 1000, then the counting pulses follow
 //! a predictable pattern that we can calculate with some bitwise logic.

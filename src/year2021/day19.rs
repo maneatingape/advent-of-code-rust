@@ -15,8 +15,8 @@
 //!
 //! The set of Euclidean distance squared between all beacons is a good choice, as it's invariant
 //! under rotation and translation, quick to calculate and a good discriminant. To check for an
-//! overlap of 12 beacons, we look for an overlap of a least 12 * 11 / 2 = 66 distances.
-//! (12 beacons gives 12 * 11 = 132 pairs of distances but divided by 2 since the distance from
+//! overlap of 12 beacons, we look for an overlap of a least 12 × 11 / 2 = 66 distances.
+//! (12 beacons gives 12 × 11 = 132 pairs of distances but divided by 2 since the distance from
 //! a -> b is the same as b -> a).
 //!
 //! An overlap indicates a potential match, but we need to confirm by checking the beacons against
@@ -213,9 +213,9 @@ pub fn part1(input: &[Located]) -> usize {
 pub fn part2(input: &[Located]) -> i32 {
     let mut result = 0;
 
-    // This solution uses the usual quadratic pairing of every point.  This is okay because
+    // This solution uses the usual quadratic pairing of every point. This is okay because
     // the set is not terribly large, and the runtime here is dwarfed by the earlier runtime
-    // taken to get the coordinates in place.  However, a linear solution is also possible:
+    // taken to get the coordinates in place. However, a linear solution is also possible:
     // https://www.reddit.com/r/adventofcode/comments/rygnl8/2021_day_19_part_2pseudocode_speeding_up/
     for first in input {
         for second in input {

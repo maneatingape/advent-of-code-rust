@@ -13,7 +13,7 @@
 //!
 //! * `O` is our destination
 //! * `G` is the data
-//! * `#` are large nodes that can't be moved to neighbours, effectively acting as walls.
+//! * `#` are large nodes that can't be moved to neighbors, effectively acting as walls.
 //! * `-` is the empty node.
 //!
 //! First we move the empty spot in front of the data:

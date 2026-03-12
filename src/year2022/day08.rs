@@ -13,7 +13,7 @@ type Input = (usize, Vec<i8>);
 /// Each height is multiplied by 6. For part one this makes no difference, but for part two this helps
 /// with the bit manipulation.
 ///
-/// To convert from 2D co-ordinates to an index, the formula is `y * width + x`. For the sample grid
+/// To convert from 2D coordinates to an index, the formula is `y * width + x`. For the sample grid
 /// of width 5, the top middle point at `(2, 0)` is at index `0 * 5 + 2 = 2` and the point directly
 /// below `(2, 1)` is at index `1 * 5 + 2 = 7`.
 ///
@@ -42,7 +42,7 @@ pub fn parse(input: &str) -> Input {
 /// |---|---|---|
 /// | 3 | -1 | true |
 /// | 0 | 3 | false |
-/// | 3 | 3 | false
+/// | 3 | 3 | false |
 /// | 7 | 3 | true |
 ///
 /// The last tree in each row and column doesn't need to be checked since it's covered
@@ -119,7 +119,7 @@ pub fn part1(input: &Input) -> usize {
 ///
 /// Instead of using an array and iterating over it to update the values, we can achieve the same
 /// result much faster by packing the ten values into a single `u64` in blocks of 6 bits. 6 bits
-/// gives a maximum value of `2^6 = 64` that's a bit of a gamble. It's less than the maximum
+/// gives a maximum value of `2⁶ = 64` that's a bit of a gamble. It's less than the maximum
 /// possible value of 98 that could be theoretically encountered but should work for most inputs.
 ///
 /// To obtain the current value we right shift by the current height times 6 (this is why we

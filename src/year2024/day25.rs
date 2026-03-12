@@ -3,7 +3,7 @@
 //! Efficiently checks if locks and keys overlap using bitwise logic. The ASCII character
 //! `#` (35) is odd and `.` (46) is even so bitwise AND with 1 results in either 1 or 0.
 //! The newline character `\n` (10) is even so will result in 0 and not contribute to matches.
-//! There are 25 bits plus 4 newline bits so each lock or key can be stored in an `u32`.
+//! There are 25 bits plus 4 newline bits so each lock or key can be stored in a `u32`.
 //! For example:
 //!
 //! ```none

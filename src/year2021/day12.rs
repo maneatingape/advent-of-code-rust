@@ -40,7 +40,7 @@ struct State {
 /// |   0   |  1  | 2 | 3 | 4 | 5 |
 ///
 /// Next a `vec` of `u32` with an entry for each cave at the corresponding index is created with
-/// a bit set for each other cave reachable at `2^n` where n is the cave index. The start cave
+/// a bit set for each other cave reachable at `2ⁿ` where n is the cave index. The start cave
 /// can only be visited once at the beginning, so it is removed from all edges.
 /// For example the sample start cave `vec` looks like:
 ///
@@ -99,7 +99,7 @@ fn explore(input: &Input, twice: bool) -> u32 {
     // Calculate the needed size of the cache as the product of:
     // * 2 states for boolean "twice".
     // * n states for the number of caves including start and end.
-    // * 2^(n-2) states for the possible visited combinations, not including start and end cave.
+    // * 2⁽ⁿ⁻²⁾ states for the possible visited combinations, not including start and end cave.
     let size = 2 * input.edges.len() * (1 << (input.edges.len() - 2));
     let mut cache = vec![0; size];
 

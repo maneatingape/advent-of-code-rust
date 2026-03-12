@@ -10,7 +10,7 @@
 //! `Deck` also keeps the score up to date as cards are added and removed, as this comes in useful
 //! during part two. To update the score when a card is removed we subtract the card's value
 //! multiplied by the size of the deck. For example if 5 is removed then the new
-//! score is 67 - 5 * 4 = 47.
+//! score is 67 - 5 × 4 = 47.
 //!
 //! | Deck ↓ | Weight | Score | Sum |
 //! | - | - | -- | -- |
@@ -24,11 +24,11 @@
 //!
 //! | Old Score | New Score | Difference |
 //! | ----- | ----- | - |
-//! | 5 * 4 | 5 * 5 | 5 |
-//! | 8 * 3 | 8 * 4 | 8 |
-//! | 7 * 2 | 7 * 3 | 7 |
-//! | 9 * 1 | 9 * 2 | 9 |
-//! | -     | 6 * 1 | 6 |
+//! | 5 × 4 | 5 × 5 | 5 |
+//! | 8 × 3 | 8 × 4 | 8 |
+//! | 7 × 2 | 7 × 3 | 7 |
+//! | 9 × 1 | 9 × 2 | 9 |
+//! | -     | 6 × 1 | 6 |
 //! | Total: 67 | Total: 102 | Total: 35 |
 //!
 //! ## Part One

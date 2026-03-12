@@ -77,7 +77,7 @@ impl Room {
     ///
     /// We use a multiplication by a constant to figure out the bit pattern. For example a room
     /// with three `B`s would have a bit pattern of `0000001001001001` which is the marker bit
-    /// plus B << 6 + B << 3 + B << 0 = B * 64 + B * 8 + B = B * 73.
+    /// plus B << 6 + B << 3 + B << 0 = B × 64 + B × 8 + B = B × 73.
     fn open(self, kind: usize) -> bool {
         self.packed == 1
             || self.packed == (1 << 3) + (kind as u16) // 1
@@ -126,7 +126,7 @@ impl Hallway {
 }
 
 /// Combine hallway and four rooms into a complete burrow representation in only
-/// 8 + 4 * 2 = 16 bytes.
+/// 8 + 4 × 2 = 16 bytes.
 #[derive(Copy, Clone, PartialEq, Eq, Hash)]
 struct Burrow {
     hallway: Hallway,

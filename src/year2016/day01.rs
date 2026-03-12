@@ -1,7 +1,7 @@
 //! # No Time for a Taxicab
 //!
 //! The solution is short as it leverages two utility modules,
-//! [`parse`] for extracting integers from surrounding text and [`point`] for two dimensional
+//! [`parse`] for extracting integers from surrounding text and [`point`] for two-dimensional
 //! rotations and translations.
 //!
 //! For part two, it is faster to remember line segments and check for intersections than

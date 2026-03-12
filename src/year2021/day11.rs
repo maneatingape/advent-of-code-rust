@@ -1,7 +1,7 @@
 //! # Dumbo Octopus
 //!
 //! This puzzle resembles the [`Day 9`] flood fill a little. Since there are only 100 octopuses
-//! a fixed size array is used both to track current energy levels and a second array to track
+//! a fixed-size array is used both to track current energy levels and a second array to track
 //! if an octopus has flashed this turn. Each time an octopus flashes it bumps its neighbors
 //! energy levels, which can propagate recursively through the entire grid.
 //!

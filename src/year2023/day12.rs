@@ -215,7 +215,7 @@ where
         let mut start = size + 1;
 
         for (row, &size) in springs.iter().enumerate().skip(1) {
-            // We're using a 1 dimensional vec to implement a two dimensional table.
+            // We're using a one-dimensional vec to implement a two-dimensional table.
             // Calculate the starting index of current and previous row for convenience.
             let previous = (row - 1) * pattern.len();
             let current = row * pattern.len();

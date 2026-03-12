@@ -12,7 +12,7 @@
 //! To beat the record the following condition must hold:
 //!
 //! * `x * (t - x) = d`
-//! * `x² - tx +d = 0`
+//! * `x² - tx + d = 0`
 //!
 //! The start and end times where we will be the record are given by the roots of the
 //! quadratic equation which we can solve using the

@@ -38,7 +38,7 @@
 //! O(1) time; the formula is available on [OEIS A255070](https://oeis.org/A255070), and there
 //! are a [couple](https://www.reddit.com/r/adventofcode/comments/5ititq/2016_day_16_c_how_to_tame_your_dragon_in_under_a/)
 //! of [posts](https://www.reddit.com/r/adventofcode/comments/1r642oc/2016_day_16_in_review_dragon_checksum/)
-//! showing how to utilize that approach.  However, the logarithmic solution shown here is
+//! showing how to utilize that approach. However, the logarithmic solution shown here is
 //! fast enough to not need to worry about askalski's comment "I have no idea why it works,
 //! only that it does work."
 use crate::util::parse::*;
@@ -57,12 +57,12 @@ pub fn parse(input: &str) -> Vec<usize> {
     ones
 }
 
-/// 272 is 17 * 2⁴
+/// 272 is 17 × 2⁴
 pub fn part1(input: &[usize]) -> String {
     checksum(input, 272)
 }
 
-/// 35651584 is 17 * 2²¹
+/// 35651584 is 17 × 2²¹
 pub fn part2(input: &[usize]) -> String {
     checksum(input, 35651584)
 }

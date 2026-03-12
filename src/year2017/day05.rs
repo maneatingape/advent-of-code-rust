@@ -48,7 +48,7 @@ pub fn part2(input: &[i32]) -> usize {
     let mut coarse = 0;
     let mut compact = Vec::new();
 
-    // Precompute all possible combinations for each binary starting number from 0 to 2^16,
+    // Precompute all possible combinations for each binary starting number from 0 to 2¹⁶,
     // starting at any offset from 0..2.
     let cache: Vec<[_; 0x10000]> =
         (0..3).map(|offset| from_fn(|value| compute_block(value, offset))).collect();

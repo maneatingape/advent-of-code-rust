@@ -8,7 +8,7 @@
 //! 15 non-zero valves versus around 60 valves total.
 //!
 //! For each valve we find the distance to its immediate non-zero neighbors. Then we use the
-//! [Floyd Warshall algorithm](https://en.wikipedia.org/wiki/Floyd%E2%80%93Warshall_algorithm) to
+//! [Floyd Warshall algorithm](https://en.wikipedia.org/wiki/Floyd-Warshall_algorithm) to
 //! find the distance between any two non-zero valves, storing this information in an
 //! [adjacency matrix](https://en.wikipedia.org/wiki/Adjacency_matrix) for fast lookup.
 //!

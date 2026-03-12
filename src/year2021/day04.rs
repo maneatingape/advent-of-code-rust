@@ -3,7 +3,7 @@
 //! We use a trick to immediately calculate the winning turn and score for each board.
 //!
 //! First we create a bidirectional map between each number and turn that it's drawn. Since the
-//! numbers are at most 2 digits we can use a fixed size array instead of a `HashMap` for speed.
+//! numbers are at most 2 digits we can use a fixed-size array instead of a `HashMap` for speed.
 //!
 //! Then for each column and row within a board, map each number to a turn and take the maximum
 //! value. This is the turn that the row or column will win. Then take the *minimum* of

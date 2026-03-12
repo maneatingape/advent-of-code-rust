@@ -10,7 +10,7 @@
 //!
 //! For speed we convert each location into an index, then store the distances between
 //! every pair of locations in a vec for fast lookup. Our utility [`half_permutations`] method uses
-//! [Steinhaus-Johnson-Trotter's algorithm](https://en.wikipedia.org/wiki/Steinhaus%E2%80%93Johnson%E2%80%93Trotter_algorithm) for efficiency,
+//! [Steinhaus-Johnson-Trotter's algorithm](https://en.wikipedia.org/wiki/Steinhaus-Johnson-Trotter_algorithm) for efficiency,
 //! modifying the slice in place.
 //!
 //! There are 8 locations, however since we always start at `0` this requires checking only

@@ -7,7 +7,7 @@
 //! For part two we can further optimize by precalculating the locations of the nearest visible
 //! seats only once then reusing that information for each step.
 //!
-//! The SIMD version speed things up by calculating 32 lanes at a time.
+//! The SIMD version speeds things up by calculating 32 lanes at a time.
 use crate::util::grid::*;
 use crate::util::point::*;
 

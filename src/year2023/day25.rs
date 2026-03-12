@@ -3,17 +3,17 @@
 //! We need to find a [minimum cut](https://en.wikipedia.org/wiki/Minimum_cut) of 3 edges that
 //! divides the graph into 2 parts. Several general purpose algorithms exist:
 //!
-//! * Deterministic [Stoer–Wagner algorithm](https://en.wikipedia.org/wiki/Stoer%E2%80%93Wagner_algorithm)
+//! * Deterministic [Stoer-Wagner algorithm](https://en.wikipedia.org/wiki/Stoer-Wagner_algorithm)
 //! * Probabilistic [Karger's algorithm](https://en.wikipedia.org/wiki/Karger%27s_algorithm)
 //!
 //! The [max-flow min-cut theorem](https://en.wikipedia.org/wiki/Max-flow_min-cut_theorem) also
 //! allows the minimum cut to be expressed as a [maximum flow problem](https://en.wikipedia.org/wiki/Maximum_flow_problem).
 //! There are several general purpose algorithms:
 //!
-//! * [Ford–Fulkerson algorithm](https://en.wikipedia.org/wiki/Ford%E2%80%93Fulkerson_algorithm)
-//! * [Edmonds–Karp algorithm](https://en.wikipedia.org/wiki/Edmonds%E2%80%93Karp_algorithm)
+//! * [Ford-Fulkerson algorithm](https://en.wikipedia.org/wiki/Ford-Fulkerson_algorithm)
+//! * [Edmonds-Karp algorithm](https://en.wikipedia.org/wiki/Edmonds-Karp_algorithm)
 //!
-//! We can use a simplified version of the Edmonds–Karp algorithm taking advantage of two pieces of
+//! We can use a simplified version of the Edmonds-Karp algorithm taking advantage of two pieces of
 //! information and a special property of the input graph structure:
 //!
 //! * The minimum cut size is already known to be 3.
@@ -63,7 +63,7 @@ pub struct Input {
 impl Input {
     /// Convenience function to return an iterator of `(edge, node)` pairs.
     #[inline]
-    fn neighbours(&self, node: usize) -> impl Iterator<Item = (usize, usize)> + '_ {
+    fn neighbors(&self, node: usize) -> impl Iterator<Item = (usize, usize)> + '_ {
         let (start, end) = self.nodes[node];
         (start..end).map(|edge| (edge, self.edges[edge]))
     }
@@ -77,24 +77,24 @@ impl Input {
 /// seen values which is much faster than using a `HashMap`.
 pub fn parse(input: &str) -> Input {
     let mut lookup = vec![usize::MAX; 26 * 26 * 26];
-    let mut neighbours = Vec::with_capacity(2_000);
+    let mut neighbors = Vec::with_capacity(2_000);
 
     for line in input.lines().map(str::as_bytes) {
-        let first = perfect_minimal_hash(&mut lookup, &mut neighbours, line);
+        let first = perfect_minimal_hash(&mut lookup, &mut neighbors, line);
 
         // The graph is undirected so each link is bidirectional.
         for chunk in line[5..].chunks(4) {
-            let second = perfect_minimal_hash(&mut lookup, &mut neighbours, chunk);
-            neighbours[first].push(second);
-            neighbours[second].push(first);
+            let second = perfect_minimal_hash(&mut lookup, &mut neighbors, chunk);
+            neighbors[first].push(second);
+            neighbors[second].push(first);
         }
     }
 
     // Assign each edge a unique index. Each node then specifies a range into the edges vec.
     let mut edges = Vec::with_capacity(5_000);
-    let mut nodes = Vec::with_capacity(neighbours.len());
+    let mut nodes = Vec::with_capacity(neighbors.len());
 
-    for list in neighbours {
+    for list in neighbors {
         let start = edges.len();
         let end = edges.len() + list.len();
         edges.extend(list);
@@ -153,7 +153,7 @@ fn furthest(input: &Input, start: usize) -> usize {
         // The last node visited will be the furthest.
         result = current;
 
-        for (_, next) in input.neighbours(current) {
+        for (_, next) in input.neighbors(current) {
             if !seen[next] {
                 todo.push_back(next);
                 seen[next] = true;
@@ -164,7 +164,7 @@ fn furthest(input: &Input, start: usize) -> usize {
     result
 }
 
-/// Simplified approach based on Edmonds–Karp algorithm.
+/// Simplified approach based on Edmonds-Karp algorithm.
 fn flow(input: &Input, start: usize, end: usize) -> usize {
     let mut todo = VecDeque::new();
     // The path forms a linked list. During the BFS each path shares most nodes, so it's
@@ -204,8 +204,8 @@ fn flow(input: &Input, start: usize, end: usize) -> usize {
                 break;
             }
 
-            // Find neighbouring nodes to explore, only allowing each edge to be used once.
-            for (edge, next) in input.neighbours(current) {
+            // Find neighboring nodes to explore, only allowing each edge to be used once.
+            for (edge, next) in input.neighbors(current) {
                 if !used[edge] && !seen[next] {
                     seen[next] = true;
                     todo.push_back((next, path.len()));

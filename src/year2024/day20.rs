@@ -3,7 +3,7 @@
 //! Examining the input shows that there is only a single path from start to finish with
 //! no branches. This simplifies checking for shortcuts as any empty space will be on the shortest
 //! path from start to end. The cheating rules allow us to "warp" up to `n` squares away to any
-//! empty space as measured by [manhattan distance](https://en.wikipedia.org/wiki/Taxicab_geometry).
+//! empty space as measured by [Manhattan distance](https://en.wikipedia.org/wiki/Taxicab_geometry).
 //!
 //! For part one this is a distance of 2. When checking surrounding squares we make 2 optimizations:
 //!

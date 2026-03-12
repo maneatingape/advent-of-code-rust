@@ -1,7 +1,7 @@
 //! # Internet Protocol Version 7
 //!
-//! For part two there are at most 26 * 26 = 676 possible ABA or BAB sequences so we can use
-//! a fixed size array to keep track of which ones we've seen for the current address so far.
+//! For part two there are at most 26 × 26 = 676 possible ABA or BAB sequences so we can use
+//! a fixed-size array to keep track of which ones we've seen for the current address so far.
 pub fn parse(input: &str) -> Vec<&[u8]> {
     input.lines().map(str::as_bytes).collect()
 }

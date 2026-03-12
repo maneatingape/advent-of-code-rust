@@ -29,8 +29,8 @@
 //! Let's use a concrete example of `(9,3)`. This range starts at 100100100 and we can generate
 //! the next number in the set by adding 001001001. The step value is given mathematically as
 //! `(10ⁿ - 1) / (10ᵏ - 1)`, that is 999999999 / 999 = 1001001. The start value is then `10ᵏ⁻¹`
-//! times the step (100 * 1001001 = 100100100) and the end value is `10ᵏ - 1` times the step
-//! (999 * 1001001 = 999999999).
+//! times the step (100 × 1001001 = 100100100) and the end value is `10ᵏ - 1` times the step
+//! (999 × 1001001 = 999999999).
 //!
 //! We then check each range of ids for the minimum and maximum multiple of the step value that it
 //! contains, clamping at the start and end values. For example, the id range 50-70 contains

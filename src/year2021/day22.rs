@@ -1,9 +1,9 @@
 //! # Reactor Reboot
 //!
 //! The key to solving this problem efficiently is the
-//! [inclusion-exclusion principle](https://en.wikipedia.org/wiki/Inclusion%E2%80%93exclusion_principle).
+//! [inclusion-exclusion principle](https://en.wikipedia.org/wiki/Inclusion-exclusion_principle).
 //!
-//! Looking at a two dimensional example
+//! Looking at a two-dimensional example
 //! ```none
 //!    ┌──────────────┐A            Volume of A: 144
 //!    │              │             Volume of B: 66

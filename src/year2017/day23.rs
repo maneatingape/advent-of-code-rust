@@ -45,7 +45,7 @@
 //! ## Part Two
 //!
 //! Counts the number of composite numbers starting from `100,000 + 100 * n` checking the next
-//! 1,000 numbers in steps of 17. The raw code take `O(n²)` complexity for each number so emulating
+//! 1,000 numbers in steps of 17. The raw code takes `O(n²)` complexity for each number so emulating
 //! this directly would take at least 10⁵.10⁵.10³ = 10¹³ = 10,000,000,000,000 steps.
 //!
 //! [`Day 18`]: crate::year2017::day18
