@@ -5,7 +5,7 @@
 //! explained really well in the linked blog post.
 //!
 //! To speed things up we use a trick. Classic Dijkstra uses a generic priority queue that
-//! can be implemented in Rust using a [`BinaryHeap`]. However the total cost follows a strictly
+//! can be implemented in Rust using a [`BinaryHeap`]. However, the total cost follows a strictly
 //! increasing order in a constrained range of values, so we can use a much faster single purpose
 //! data structure instead.
 //!
@@ -64,7 +64,7 @@ fn dijkstra(square: &Square) -> usize {
     let edge = size - 1;
     let end = size * size - 1;
 
-    // Initialise our specialized priority queue with 10 vecs.
+    // Initialize our specialized priority queue with 10 vecs.
     let mut todo: [Vec<u32>; 10] = from_fn(|_| Vec::with_capacity(1_000));
     let mut cost = vec![u16::MAX; size * size];
     let mut risk = 0;

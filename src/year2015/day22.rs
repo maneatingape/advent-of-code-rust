@@ -107,7 +107,7 @@ fn play(input: Input, hard_mode: bool) -> ControlFlow<i16> {
 
     while let Some((_, mut state)) = todo.pop() {
         let spent = state.spent;
-        // Check winning condition
+        // Check winning condition.
         if state.apply_spell_effects() {
             return ControlFlow::Break(spent);
         }

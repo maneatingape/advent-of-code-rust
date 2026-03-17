@@ -46,7 +46,7 @@ pub fn part2(input: &[u32]) -> usize {
     }
     cups[current] = 10;
 
-    // Wrap around to the start
+    // Wrap around to the start.
     cups[1_000_000] = start as u32;
 
     play(&mut cups, start, 10_000_000);
@@ -58,12 +58,12 @@ pub fn part2(input: &[u32]) -> usize {
 
 fn play(cups: &mut [u32], mut current: usize, rounds: usize) {
     for _ in 0..rounds {
-        // Pickup three cups (a, b, c)
+        // Pick up three cups (a, b, c).
         let a = cups[current] as usize;
         let b = cups[a] as usize;
         let c = cups[b] as usize;
 
-        // Calculate destination
+        // Calculate destination.
         let mut dest = if current > 1 { current - 1 } else { cups.len() - 1 };
         while dest == a || dest == b || dest == c {
             dest = if dest > 1 { dest - 1 } else { cups.len() - 1 };
@@ -73,7 +73,7 @@ fn play(cups: &mut [u32], mut current: usize, rounds: usize) {
         cups[current] = cups[c];
         current = cups[c] as usize;
 
-        // Insert the three picked up cups into their new location
+        // Insert the three picked up cups into their new location.
         cups[c] = cups[dest];
         cups[dest] = a as u32;
     }

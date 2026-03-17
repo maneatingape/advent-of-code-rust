@@ -1,6 +1,6 @@
 //! # Jurassic Jigsaw
 //!
-//! At first this seems like a daunting problem. However a little analysis shows that the input
+//! At first this seems like a daunting problem. However, a little analysis shows that the input
 //! has some nice properties that make solving this more tractable.
 //!
 //! * Tile edges match with at most one other tile
@@ -10,7 +10,6 @@
 //! the tiles we store all 8 edge possibilities to enable assembling the jigsaw in part two. For
 //! performance we avoid transforming the inner 8x8 pixels until we have determined the
 //! layout of the grid.
-
 //!
 //! ## Part One
 //!
@@ -38,7 +37,7 @@
 //! When finding the monsters we make some further assumptions about the input:
 //!
 //! * The monsters will all be oriented the same way
-//! * Monsters will not overlap with each other
+//! * Monsters will not overlap with each other.
 //!
 //! For speed the monster bit patterns are rotated and flipped instead of the image, then stored
 //! in hardcoded arrays. The search ends as soon as we find monsters in any orientation.
@@ -185,7 +184,7 @@ pub fn part2(input: &[Tile]) -> u32 {
         &input[next]
     };
 
-    // Assemble the image
+    // Assemble the image.
     let mut next_top = find_arbitrary_corner();
     let mut image = [0; 96];
     let mut index = 0;
@@ -208,7 +207,7 @@ pub fn part2(input: &[Tile]) -> u32 {
         index += 8;
     }
 
-    // Common search logic
+    // Common search logic.
     let sea: u32 = image.iter().map(|n| n.count_ones()).sum();
     let find = |monster: &mut [u128], width: usize, height: usize| {
         let mut rough = sea;
@@ -240,7 +239,7 @@ pub fn part2(input: &[Tile]) -> u32 {
         }
     }
 
-    // Hardcoded bit patterns [R, RH, RV, RHV].
+    // Hardcoded bit patterns for [R, RH, RV, RHV].
     let mut monsters = [
         [2, 4, 0, 0, 4, 2, 2, 4, 0, 0, 4, 2, 2, 4, 0, 0, 4, 2, 3, 2],
         [2, 3, 2, 4, 0, 0, 4, 2, 2, 4, 0, 0, 4, 2, 2, 4, 0, 0, 4, 2],

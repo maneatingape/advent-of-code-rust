@@ -64,7 +64,7 @@
 //! instead of the square root of `n` itself.
 //!
 //! As `n` is on the order of 10,000,000 this gives a worst case upper bound of `√10000000 = 3162`
-//! when `n` is prime. However for most composite numbers the largest prime factor will be much
+//! when `n` is prime. However, for most composite numbers the largest prime factor will be much
 //! smaller, on the order of 100,000 for an approximate complexity of `√100000 = 316`.
 use crate::util::parse::*;
 

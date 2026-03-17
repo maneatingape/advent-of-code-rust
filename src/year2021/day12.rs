@@ -7,7 +7,7 @@
 //! To speed things up, 2 strategies are used, one high-level and one low-level:
 //! * [Memoization](https://en.wikipedia.org/wiki/Memoization) (or caching) of the possible paths
 //!   from each position, taking into account previously visited caves is the high-level strategy
-//!   to re-use work and save time.
+//!   to reuse work and save time.
 //! * [Bit Manipulation](https://en.wikipedia.org/wiki/Bit_manipulation) to store both the graph of
 //!   cave connections as an [adjacency matrix](https://en.wikipedia.org/wiki/Adjacency_matrix)
 //!   and the list of visited caves compressed into a single `u32` is the low-level strategy to
@@ -33,7 +33,7 @@ struct State {
 /// Parse the input into an adjacency matrix of edges compressed into `u32` bitfields.
 ///
 /// First, each cave is assigned a unique index, with `0` reserved for the `start` cave and `1`
-/// reserved for the `end` cave. For example the sample input caves are:
+/// reserved for the `end` cave. For example, the sample input caves are:
 ///
 /// | start | end | A | b | c | d |
 /// | :---: | :-: | - | - | - | - |
@@ -42,7 +42,7 @@ struct State {
 /// Next a `vec` of `u32` with an entry for each cave at the corresponding index is created with
 /// a bit set for each other cave reachable at `2ⁿ` where n is the cave index. The start cave
 /// can only be visited once at the beginning, so it is removed from all edges.
-/// For example the sample start cave `vec` looks like:
+/// For example, the sample start cave `vec` looks like:
 ///
 /// | cave  | index | edges  |
 /// | ----- | ----- | ------ |
@@ -117,7 +117,7 @@ fn explore(input: &Input, twice: bool) -> u32 {
 /// a single machine code instruction on x86 and ARM and is blazing fast. We remove visited caves
 /// using a `^` XOR instruction.
 ///
-/// The nuance is re-using the same code for both part one and part two. First we check if we can visit
+/// The nuance is reusing the same code for both part one and part two. First we check if we can visit
 /// a cave using the rules for part one. If not, then we also check if the `twice` variable is
 /// still `true`. This variable allows a single second visit to a small cave. The expression
 /// `once && twice` sets this value to `false` whenever we need to use it to visit a small cave.

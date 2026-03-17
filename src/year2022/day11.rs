@@ -21,11 +21,11 @@
 //! factor of that number. The smallest number that meets this criteria is the
 //! [least common multiple](https://en.wikipedia.org/wiki/Least_common_multiple).
 //!
-//! However before you rush off to implement the LCM algorithm, it's worth examining the input. Each
+//! However, before you rush off to implement the LCM algorithm, it's worth examining the input. Each
 //! monkey's test number is prime, so in this specific case the LCM is simply the product of all
 //! monkey's test numbers.
-
-//! For example if we also need to test modulo 5 then the previous factor of 15 will work for both
+//!
+//! For example, if we also need to test modulo 5 then the previous factor of 15 will work for both
 //! 3 and 5.
 //!
 //! ```none

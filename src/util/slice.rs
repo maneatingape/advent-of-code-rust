@@ -50,7 +50,7 @@ impl<T> SliceOps<T> for &mut [T] {
         // Compute n!/2, the number of iterations we need.
         let limit = (1..n + 1).product::<usize>() / 2;
 
-        // Track how far each element has moved from its original position
+        // Track how far each element has moved from its original position.
         let mut pos = vec![0_usize; n];
 
         // Track which direction an element needs to move next (-1 or 1)

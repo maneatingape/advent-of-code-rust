@@ -3,7 +3,7 @@
 //! ## Part One
 //!
 //! For each phase we first compute the prefix sum of the digits. This allows us to compute
-//! the sum of any contiguous range of digits with only 2 lookups. For example the sum of the
+//! the sum of any contiguous range of digits with only 2 lookups. For example, the sum from
 //! 5 to 8 is `36 - 10 = 26`.
 //!
 //! ```none
@@ -17,7 +17,7 @@
 //! for a total of `nlog(n)`.
 //!
 //! As a minor optimization once the phase is greater than ⅓ of the digits, then the pattern
-//! simplifies to a sum of a single range. For example with 11 digits on phase 4 the pattern is:
+//! simplifies to a sum of a single range. For example, with 11 digits on phase 4 the pattern is:
 //!
 //! ```none
 //!   0 0 0 1 1 1 1 0 0 0 0
@@ -69,7 +69,7 @@
 //! We could compute the coefficient using the formula `nᵏ/k!` however this [grows rather large]
 //! and quickly will overflow even a `u128`.
 //!
-//! However we only need the coefficient modulo 10. [Lucas's theorem] allows us to compute binomial
+//! However, we only need the coefficient modulo 10. [Lucas's theorem] allows us to compute binomial
 //! coefficients modulo some prime number. If we compute the coefficients modulo 2 and modulo 5
 //! then we can use the [Chinese remainder theorem] to find the result modulo 10.
 //!

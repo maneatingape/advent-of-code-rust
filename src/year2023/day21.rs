@@ -65,12 +65,12 @@
 //! ```
 //!
 //! The total area is adjusted by:
-//! * Adding `n` extra even corners
+//! * Adding `n` extra even corners.
 //!     ```none
 //!         ◤◥
 //!         ◣◢
 //!     ```
-//! * Subtracting `n + 1` odd corners
+//! * Subtracting `n + 1` odd corners.
 //!     ```none
 //!         ◸◹
 //!         ◺◿

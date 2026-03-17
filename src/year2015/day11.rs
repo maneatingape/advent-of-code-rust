@@ -1,6 +1,6 @@
 //! # Corporate Policy
 //!
-//! Like the [previous day] we rely on the special structure of the input to solve
+//! Like the [previous day], we rely on the special structure of the input to solve
 //! more efficiently than the general case.
 //!
 //! The key observation is that if there are no straights or pairs in the first 4 digits then the
@@ -21,15 +21,15 @@ type Input = [Password; 2];
 pub fn parse(input: &str) -> Input {
     let password = clean(input.trim().as_bytes().try_into().unwrap());
 
-    // No pairs in the first 4 characters
+    // No pairs in the first 4 characters.
     let pair = |i, j| password[i] == password[j];
     assert!(!(pair(0, 1) | pair(1, 2) | pair(2, 3)));
 
-    // No straights in the first 4 characters
+    // No straights in the first 4 characters.
     let sequence = |i, j| password[j] > password[i] && password[j] - password[i] == 1;
     assert!(!(sequence(1, 2) && (sequence(0, 1) || sequence(2, 3))));
 
-    // No potential carry in the third character
+    // No potential carry in the third character.
     assert_ne!(password[2], b'z');
 
     let first = next_password(password);
@@ -72,7 +72,7 @@ fn next_password(mut password: Password) -> Password {
         }
     }
 
-    // Otherwise we need to increment the first digit of the sequence.
+    // Otherwise, we need to increment the first digit of the sequence.
     if password[3] == b'x' {
         // If it starts with `x` then increment the third digit and wrap around.
         password[2] += if matches!(password[2], b'h' | b'n' | b'k') { 2 } else { 1 };
@@ -81,7 +81,7 @@ fn next_password(mut password: Password) -> Password {
         // If it would enter the invalid range from `g` to `o` then take the next valid start `p`.
         fill(password, b'p')
     } else {
-        // Otherwise increment the first digit.
+        // Otherwise, increment the first digit.
         fill(password, password[3] + 1)
     }
 }

@@ -33,7 +33,7 @@
 //! ```
 //!
 //! Then for each neighboring face we can find its `i`, `j` and `k` vectors depending on which
-//! edge it shares in common. For example if we move from face A to face B along the top edge
+//! edge it shares in common. For example, if we move from face A to face B along the top edge
 //! then the new vectors are:
 //!
 //! * `i` (1, 0, 0) Remains unchanged
@@ -46,7 +46,7 @@
 //! * `j` (0, 0, -1)
 //! * `k` (-1, 0, 0)
 //!
-//! However if A and C were connected then the vectors for face C are:
+//! However, if A and C were connected then the vectors for face C are:
 //!
 //! * `i` (0, 0, 1)
 //! * `j` (0, 1, 0)
@@ -56,7 +56,7 @@
 //! 3D vector *is always `k`* no matter which edge. We can find the new direction by comparing
 //! the previous `k` against the new `i` and `j` vectors.
 //!
-//! For example say we transition from face `A` to face `B`. Our `k` is (0, 1, 0) which is
+//! For example, say we transition from face `A` to face `B`. Our `k` is (0, 1, 0) which is
 //! equal to minus the new `j`, so we know that we're travelling upwards from the bottom edge.
 //! Then we can use this information to figure out the two-dimensional offsets into the new face.
 use crate::util::hash::*;
@@ -100,7 +100,7 @@ impl Grid {
     }
 }
 
-/// Minimal 3D vector implementation
+/// Minimal 3D vector implementation.
 #[derive(Copy, Clone, Hash, PartialEq, Eq)]
 struct Vector {
     x: i32,
@@ -255,7 +255,7 @@ pub fn part2(input: &Input) -> i32 {
 
 fn parse_grid(input: &str) -> Grid {
     let raw: Vec<_> = input.lines().map(str::as_bytes).collect();
-    // Width is the maximum width of any row
+    // Width is the maximum width of any row.
     let width = raw.iter().map(|line| line.len()).max().unwrap();
     let height = raw.len();
     let mut tiles = vec![Tile::None; width * height];

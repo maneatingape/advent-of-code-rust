@@ -3,7 +3,7 @@
 //! The key observation is that snailfish numbers represent
 //! [binary trees](https://en.wikipedia.org/wiki/Binary_tree).
 //!
-//! For example the first four sample numbers on the problem description look like the following
+//! For example, the first four sample numbers on the problem description look like the following
 //! in binary tree form:
 //!
 //! ```text
@@ -20,7 +20,7 @@
 //! there are no more values at depth 5 this means that the tree will never exceed a depth of 5.
 //!
 //! Each level of a tree can contain up to 2ⁿ nodes, so the maximum size of a snailfish tree is
-//! 1 + 2 + 4 + 8 + 16 + 32 = 2⁶-1 = 63 nodes.
+//! 1 + 2 + 4 + 8 + 16 + 32 = 2⁶ - 1 = 63 nodes.
 //!
 //! This means that we can store each snailfish number as an implicit data structure in a fixed-size
 //! array. This is faster, smaller and more convenient than using a traditional struct with pointers.

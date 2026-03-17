@@ -62,7 +62,7 @@ pub fn parse(input: &str) -> Vec<Reaction> {
         }
     }
 
-    // Sort reactions in topological order
+    // Sort reactions in topological order.
     let mut order = vec![0; reactions.len()];
     topological(&reactions, &mut order, 0, 0);
     reactions.sort_unstable_by_key(|r| order[r.chemical]);

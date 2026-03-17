@@ -1,11 +1,11 @@
 //! # Packet Scanners
 //!
-//! This problem is similar to [`Year 2016 Day 15`]. However the key difference is that we need
+//! This problem is similar to [`Year 2016 Day 15`]. However, the key difference is that we need
 //! to *avoid* the scanners, so the [Chinese Remainder Theorem](https://en.wikipedia.org/wiki/Chinese_remainder_theorem)
 //! is not applicable.
 //!
 //! Part one checks that we can calculate the period for each scanner which is `2 * (range - 1)`.
-//! For example a scanner with range 3 will be at the top position at time 0, 4, 8 and so on.
+//! For example, a scanner with range 3 will be at the top position at time 0, 4, 8 and so on.
 //!
 //! To avoid a brute force approach for part two we sieve possible values for each scanner
 //! sorted in ascending order of period. To combine the previous sieved values with the next

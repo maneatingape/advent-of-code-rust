@@ -8,7 +8,7 @@
 //! `Nop` to a `Jmp` or vice-versa, then executing the remaining program from that point and
 //! checking if it finishes.
 //!
-//! The trick is to re-use the `seen` vec that stores if we have executed an instruction before.
+//! The trick is to reuse the `seen` vec that stores if we have executed an instruction before.
 //! As each previous failed code path will have executed some instructions, trying to execute an
 //! instruction twice means that we know immediately we are on a bad path and can stop.
 use crate::util::iter::*;

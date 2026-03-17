@@ -10,7 +10,7 @@
 //!    v#####.##.v => 111110110 ^ 111110110 = 00000000 => 0
 //!    ^#####.##.^
 //!     ...#..###
-//! ````
+//! ```
 //!
 //! To handle columns we transpose the grid then convert into integers the same way. For part one
 //! we look for a reflection axis with 0 smudges and for part two 1 smudge, allowing the same

@@ -1,6 +1,6 @@
 //! # Aplenty
 //!
-//! Each rule is converted into a half open interval, including the start but excluding the end.
+//! Each rule is converted into a half-open interval, including the start but excluding the end.
 //! For example:
 //!
 //! * `x > 10` => `10..4001`

@@ -60,7 +60,7 @@ fn helper(program: &[u64], index: usize, a: u64) -> ControlFlow<u64> {
         return ControlFlow::Break(a);
     }
 
-    // Try all 8 combination of lower 3 bits.
+    // Try all 8 combinations of lower 3 bits.
     for i in 0..8 {
         let next_a = (a << 3) | i;
         let out = Computer::new(program, next_a).run().unwrap();

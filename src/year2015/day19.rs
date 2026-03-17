@@ -5,7 +5,7 @@
 //! length strings can never match.
 //!
 //! Next replacement ranges are sorted into ascending order. Non-overlapping ranges can never match,
-//! so checking for other equals string only needs to consider ranges that intersect.
+//! so checking for other equal strings only needs to consider ranges that intersect.
 //!
 //! Part two uses the analysis from `askalski` provided on the
 //! [Day 19 solution megathread](https://www.reddit.com/r/adventofcode/comments/3xflz8/day_19_solutions/).

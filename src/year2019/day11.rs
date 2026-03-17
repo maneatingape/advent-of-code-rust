@@ -18,10 +18,10 @@ pub fn part1(input: &[i64]) -> usize {
 pub fn part2(input: &[i64]) -> String {
     let hull = paint(input, 1);
 
-    // Filter only white panels
+    // Filter only white panels.
     let panels: Vec<_> = hull.iter().filter_map(|(&k, &v)| (v == 1).then_some(k)).collect();
 
-    // Get maximum extents
+    // Get maximum extents.
     let (x1, x2, y1, y2) = panels.iter().fold(
         (i32::MAX, i32::MIN, i32::MAX, i32::MIN),
         |(min_x, max_x, min_y, max_y), p| {
@@ -29,7 +29,7 @@ pub fn part2(input: &[i64]) -> String {
         },
     );
 
-    // Convert panels to characters
+    // Convert panels to characters.
     let width = x2 - x1 + 2; // Leave room for newline character.
     let height = y2 - y1 + 1;
     let mut image = Grid::new(width, height, b'.');

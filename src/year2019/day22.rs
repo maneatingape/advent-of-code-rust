@@ -30,20 +30,20 @@
 //!
 //! "cut N cards" is:
 //!
-//! `Xₙ₊₁ = 1 * Xₙ + (m - N)) mod m`
+//! `Xₙ₊₁ = (1 * Xₙ + (m - N)) mod m`
 //!
 //! For example "cut 3" with a deck of 5 cards is:
 //! * 0 => (1 × 0 + (5 - 3)) mod 5 = 2
 //! * 1 => (1 × 1 + (5 - 3)) mod 5 = 3
 //! * 2 => (1 × 2 + (5 - 3)) mod 5 = 4
 //! * 3 => (1 × 3 + (5 - 3)) mod 5 = 0
-//! * 4 => (1 × 3 + (5 - 3)) mod 5 = 1
+//! * 4 => (1 × 4 + (5 - 3)) mod 5 = 1
 //!
 //! If N is negative the cut works from the end. If N is greater than m then take N mod m.
 //!
 //! "deal with increment N" is:
 //!
-//! `Xₙ₊₁ = N * Xₙ + 0) mod m`
+//! `Xₙ₊₁ = (N * Xₙ + 0) mod m`
 //!
 //! For example "deal with increment 3" with a deck of 5 cards is:
 //! * 0 => (3 × 0 + 0) mod 5 = 0
@@ -56,11 +56,11 @@
 //!
 //! Congruences can be composed:
 //!
-//! `Xₙ₊₁ = a₂ * (a₁Xₙ + c₁) + c₂) mod m = (a₁a₂Xₙ + a₂c₁ + c₂) mod m`
+//! `Xₙ₊₁ = (a₂ * (a₁Xₙ + c₁) + c₂) mod m = (a₁a₂Xₙ + a₂c₁ + c₂) mod m`
 //!
 //! so we could combine the previous "cut 3" and "deal with increment 3" as:
 //!
-//! `Xₙ₊₁ = 3 * (1Xₙ + 2) + 0) mod m = (3Xₙ + 6) mod m`.
+//! `Xₙ₊₁ = (3 * (1Xₙ + 2) + 0) mod m = (3Xₙ + 6) mod m`.
 //!
 //! This allows us to take all the input techniques and then combine them into a *single*
 //! technique with the same effect, providing an efficient solution for part one.

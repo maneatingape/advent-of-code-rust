@@ -17,7 +17,7 @@ pub fn part1(grid: &Grid<u8>) -> u32 {
     let size = grid.width;
     let mut result = 0;
 
-    // Horizontal and vertical
+    // Horizontal and vertical.
     for i in 0..size {
         result += scan_line(grid, Point::new(i, 0), DOWN, size);
         result += scan_line(grid, Point::new(0, i), RIGHT, size);

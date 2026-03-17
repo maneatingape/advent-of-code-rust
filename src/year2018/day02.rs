@@ -35,7 +35,7 @@ pub fn part2(input: &[&[u8]]) -> String {
             let pair @ (prefix, suffix) = (&id[..column], &id[column + 1..]);
 
             if !seen.insert(pair) {
-                // Convert to String
+                // Convert to String.
                 return prefix.iter().chain(suffix).copied().map(char::from).collect();
             }
         }

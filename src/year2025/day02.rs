@@ -5,7 +5,7 @@
 //! of invalid patterns numerically then check how many overlap the range given by each pair of ids.
 //!
 //! Let `(n,k)` denote the set of patterns `k` wide in a number `n` digits long, where `k` must
-//! divide `n` evenly. For example some `(6,3)` patterns are 123123, 456456 and 789789.
+//! divide `n` evenly. For example, some `(6,3)` patterns are 123123, 456456 and 789789.
 //!
 //! ## Part One
 //!
@@ -14,7 +14,7 @@
 //!
 //! ## Part Two
 //!
-//! We also consider the remaining patterns where `n` is evenly divisible by `k`. However we need
+//! We also consider the remaining patterns where `n` is evenly divisible by `k`. However, we need
 //! to be careful to avoid double counting. We notice that pattern sets with the same `n` contain
 //! other sets when the second `k` is a factor of the first. For example `(8,4)` contains `(8,2)`,
 //! as a number such as 23232323 can be split into either two fours or four twos.

@@ -1,7 +1,7 @@
 //! # Chronal Calibration
 //!
 //! The simplest approach to part two is to store previously seen numbers in a `HashSet` then
-//! stop once a duplicate is found. However this approach requires scanning the input of ~1,000
+//! stop once a duplicate is found. However, this approach requires scanning the input of ~1,000
 //! numbers multiple times, around 150 times for my input.
 //!
 //! A much faster `O(nlogn)` approach relies on the fact that each frequency increases by the same
@@ -14,7 +14,7 @@
 //! ```
 //!
 //! Two frequencies that are a multiple of the sum will eventually repeat. First we group each
-//! frequencies by its remainder modulo the sum, using `rem_euclid` to handle negative frequencies
+//! frequency by its remainder modulo the sum, using `rem_euclid` to handle negative frequencies
 //! correctly, then we sort, first by the remainder to group frequencies that can repeat together,
 //! then by the frequency increasing in order to help find the smallest gap between similar
 //! frequencies, then lastly by index as this is needed in the next step.

@@ -1,7 +1,7 @@
 //! # Camel Cards
 //!
 //! The types of each hand are computed from the frequency of the cards ordered in descending order.
-//! For example a full house would have 1 card with a frequency of 3 and a second with a
+//! For example, a full house would have 1 card with a frequency of 3 and a second with a
 //! frequency of 2, giving `[3, 2]`. Similarly, two pair would be `[2, 2, 1]`.
 //! Array comparisons will sort the hand types in order.
 //!
@@ -10,7 +10,7 @@
 //! * `55222` => `0x3200055222`
 //! * `32T3K` => `0x2111032a3d`
 //!
-//! For part two we add the numbers of jokers to the highest frequency (which could already be
+//! For part two we add the number of jokers to the highest frequency (which could already be
 //! jokers!).
 //!
 //! * `QQQJA` => `0x41000ccc1a`

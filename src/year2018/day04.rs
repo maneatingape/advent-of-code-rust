@@ -9,7 +9,7 @@ pub fn parse(input: &str) -> Input {
     let mut records: Vec<_> = input.lines().collect();
     records.sort_unstable();
 
-    // Build each sleep schedule
+    // Build each sleep schedule.
     let mut id = 0;
     let mut start = 0;
     let mut guards = FastMap::new();
@@ -42,8 +42,8 @@ pub fn part2(input: &Input) -> usize {
 fn choose(input: &Input, strategy: fn(&(&usize, &[u32; 60])) -> u32) -> usize {
     // Find the guard using a specific strategy.
     let (id, minutes) = input.iter().max_by_key(strategy).unwrap();
-    // Find the minute spent asleep the most
+    // Find the minute spent asleep the most.
     let (minute, _) = minutes.iter().enumerate().max_by_key(|&(_, &m)| m).unwrap();
-    // Return result
+    // Return the result.
     id * minute
 }

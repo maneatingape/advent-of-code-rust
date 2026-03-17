@@ -41,7 +41,7 @@ pub fn parse(input: &str) -> Input {
             let [unknown, a, b, c] = instruction;
             let mut mask = 0;
 
-            // Build set of possible opcodes
+            // Build set of possible opcodes.
             for opcode in 0..16 {
                 if cpu(opcode, a, b, &before) == after[c] {
                     mask |= 1 << opcode;

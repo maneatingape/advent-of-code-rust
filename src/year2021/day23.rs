@@ -75,7 +75,7 @@ impl Room {
     /// A room is "open" if amphipods of that type can move to it. This means that it must be
     /// empty or only already contain amphipods of that type.
     ///
-    /// We use a multiplication by a constant to figure out the bit pattern. For example a room
+    /// We use a multiplication by a constant to figure out the bit pattern. For example, a room
     /// with three `B`s would have a bit pattern of `0000001001001001` which is the marker bit
     /// plus B << 6 + B << 3 + B << 0 = B × 64 + B × 8 + B = B × 73.
     fn open(self, kind: usize) -> bool {
@@ -211,7 +211,7 @@ fn organize(burrow: Burrow) -> usize {
             }
 
             // Moving back to home burrow does not change total energy due to the way the
-            // heuristic is calculated. For example if we have spent 100 energy and the heuristic
+            // heuristic is calculated. For example, if we have spent 100 energy and the heuristic
             // is 100, spending 10 to move an amphipod would result in 110 energy spent and a
             // heuristic of 90.
             let min = seen.get(&burrow).unwrap_or(&usize::MAX);
@@ -249,7 +249,7 @@ fn best_possible(burrow: &Burrow) -> usize {
     for (original_kind, room) in burrow.rooms.iter().enumerate() {
         let mut blocker = false;
 
-        // Search from bottom to top
+        // Search from bottom to top.
         for depth in 0..room.size() {
             let kind = room.spaces(depth);
             if kind != original_kind {
@@ -329,7 +329,7 @@ fn expand(
         match burrow.hallway.get(hallway_index) {
             // Amphipods can't stop directly outside rooms.
             ROOM => (),
-            // Check each empty space
+            // Check each empty space.
             EMPTY => {
                 let mut next = burrow;
                 next.hallway.set(hallway_index, kind);

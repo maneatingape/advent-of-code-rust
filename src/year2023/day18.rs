@@ -20,12 +20,12 @@ pub fn parse(input: &str) -> Input {
     let mut second = Vec::with_capacity(1_000);
 
     for [a, b, c] in input.split_ascii_whitespace().chunk::<3>() {
-        // Parse part one
+        // Parse part one.
         let direction = Point::from(a.as_bytes()[0]);
         let amount = b.signed();
         first.push((direction, amount));
 
-        // Parse part two
+        // Parse part two.
         let direction = match c.as_bytes()[7] {
             b'0' => RIGHT,
             b'1' => DOWN,

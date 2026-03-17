@@ -48,7 +48,7 @@ pub fn part2(input: &[&[u8]]) -> usize {
                         let second = (y - b'a') as usize;
 
                         if inside_brackets {
-                            // Reverse the order of letters
+                            // Reverse the order of letters.
                             let index = 26 * second + first;
                             bab[index] = version;
                             if aba[index] == version {

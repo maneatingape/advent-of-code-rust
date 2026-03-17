@@ -16,7 +16,7 @@
 //! packed into a `u32` as `yxwvutsrqponmlkjihgfedcba`.
 //!
 //! Then for each position we create a bitmask for up to 4 potential neighbors.
-//! For example the bitmask for position `a` is `100010` and for position `h` is `1000101000100`.
+//! For example, the bitmask for position `a` is `100010` and for position `h` is `1000101000100`.
 //!
 //! For each generation we bitwise `AND` each position with its mask, then use the [`count_ones`]
 //! intrinsic to efficiently find the number of neighbors.
@@ -129,7 +129,7 @@ pub fn part1(input: &u32) -> u32 {
     let mut grid = *input;
     let mut seen = FastSet::new();
 
-    // `insert` returns false if the element is already present
+    // `insert` returns false if the element is already present.
     while seen.insert(grid) {
         let mut next = 0;
 

@@ -42,7 +42,7 @@ pub fn part2(input: &[i64]) -> i64 {
     loop {
         let x = match computer.run() {
             State::Input => {
-                // Always track the ball
+                // Always track the ball.
                 let delta = (ball - paddle).signum();
                 computer.input(delta);
                 continue;
@@ -78,7 +78,7 @@ pub fn part2(input: &[i64]) -> i64 {
             tiles[index] = t;
         }
 
-        // Non essential but hilarious. Enable feature then run program in a command line
+        // Non-essential but hilarious. Enable feature then run program in a command line
         // console to observe an animated game of breakout.
         #[cfg(feature = "frivolity")]
         draw(&tiles, stride, score, blocks);
@@ -92,7 +92,7 @@ fn draw(tiles: &[i64], stride: i64, score: i64, blocks: i64) {
     use std::thread::sleep;
     use std::time::Duration;
 
-    // Wait until the initial screen is complete
+    // Wait until the initial screen is complete.
     let paddle = tiles.iter().rposition(|&t| t == 3).unwrap_or(tiles.len());
     if tiles[paddle..].iter().filter(|&&t| t == 1).count() < 3 {
         return;

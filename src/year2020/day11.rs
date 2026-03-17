@@ -202,7 +202,7 @@ mod simd {
 
                     // Empty to occupied.
                     let first = total.simd_eq(zero).select(one, zero);
-                    // Occupied to empty
+                    // Occupied to empty.
                     let second = total.simd_le(limit).select(occupied, zero);
                     // Nobody sits on the floor.
                     let result = (first + second) & seats;

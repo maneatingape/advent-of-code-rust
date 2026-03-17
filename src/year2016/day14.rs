@@ -88,7 +88,7 @@ fn to_ascii(n: u32) -> [u8; 8] {
     // * If digit is 10 or higher then the highest bit in each nibble will be set
     // * Shift this bit to create a mask
     // * Multiply mask by 0x27 to get ASCII conversion offset
-    // For example mask of `010203040a0b0c0d` is `0000000001010101`.
+    // For example, mask of `010203040a0b0c0d` is `0000000001010101`.
 
     let mask = ((n + 0x0606060606060606) >> 4) & 0x0101010101010101;
     n = n + 0x3030303030303030 + 0x27 * mask;

@@ -29,7 +29,7 @@ pub fn parse(input: &str) -> Input {
 
 pub fn part1(input: &Input) -> i64 {
     let code = &input.code;
-    // Handle origin specially
+    // Handle origin specially.
     let mut result = test(code, 0, 0) as i64;
 
     // The beam is continuous so we only need to find the left and right edges.

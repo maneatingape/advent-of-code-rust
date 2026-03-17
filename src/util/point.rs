@@ -17,7 +17,7 @@
 //! ```
 //!
 //! Additionally, there are [`clockwise`] and [`counter_clockwise`]
-//! functions for 90-degree rotations and a [`manhattan`] function for the
+//! methods for 90-degree rotations and a [`manhattan`] method for the
 //! [Manhattan distance](https://en.wikipedia.org/wiki/Taxicab_geometry) between 2 points.
 //!
 //! [`clockwise`]: Point::clockwise

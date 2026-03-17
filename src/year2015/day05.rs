@@ -1,15 +1,15 @@
 //! # Doesn't He Have Intern-Elves For This?
 //!
 //! [Regular expressions](https://en.wikipedia.org/wiki/Regular_expression) are a good fit for this
-//! problem. However in the interest of speed we'll take a different approach for both parts.
+//! problem. However, in the interest of speed we'll take a different approach for both parts.
 //!
 //! ## Part One
 //! Each string consists only of lowercase ASCII characters so the cardinality is 26. We can
 //! test for vowels and invalid characters more quickly by converting each character into a bitmask
-//! that fits into a `i32`. For example `a` becomes `1`, b becomes `10` and so on.
+//! that fits into a `i32`. For example `a` becomes `1`, `b` becomes `10` and so on.
 //!
 //! To check if a character is a vowel we logically `AND` against `100000100000100010001` which is
-//! "aeiou" converted to a bitmask. Similarly to check for the invalid sequence "ab" we `AND`
+//! "aeiou" converted to a bitmask. Similarly, to check for the invalid sequence "ab" we `AND`
 //! against a mask that has `b` set and notice the previous character is always one less, so we
 //! can left shift to reuse the same mask.
 //!
@@ -18,7 +18,7 @@
 //! each pair in the string. If the difference is more than one, then we know that the pairs are
 //! non-overlapping.
 //!
-//! Instead of using a `HashMap` we rely on the fact there at most 26² possible combinations
+//! Instead of using a `HashMap` we rely on the fact there are at most 26² possible combinations
 //! in order to use a fixed-size array as an implicit data structure. Using zero as a special
 //! starting value gives 27² or 729 possibilities. To avoid having to clear the array for each
 //! string, we bump the index by 1000 (any value larger than the length of the string would do).
@@ -31,7 +31,7 @@ pub fn parse(input: &str) -> Vec<&[u8]> {
 pub fn part1(input: &[&[u8]]) -> usize {
     // Bitmask for vowels (a, e, i, o, u)
     const VOWEL_MASK: u32 = 0x0104111;
-    // Bitmask for forbidden pairs
+    // Bitmask for forbidden pairs.
     const FORBIDDEN_MASK: u32 = 0x101000a;
 
     input

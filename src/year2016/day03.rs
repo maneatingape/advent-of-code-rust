@@ -24,7 +24,7 @@ pub fn part2(input: &[u32]) -> usize {
 fn count(iter: impl Iterator<Item = u32>) -> usize {
     iter.chunk::<3>()
         .filter(|&[a, b, c]| {
-            // It is faster to manually sort out the largest element and do one compare
+            // It is faster to manually sort out the largest element and do one compare.
             let (a, b) = a.minmax(b);
             let (b, c) = b.minmax(c);
             a + b > c

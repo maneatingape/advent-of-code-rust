@@ -6,7 +6,7 @@
 //!
 //! Part two asks to find the maximum clique, for which we could use the
 //! [Bron-Kerbosch algorithm](https://en.wikipedia.org/wiki/Bron-Kerbosch_algorithm).
-//! However the input has a specific structure that enables a simpler approach of finding the
+//! However, the input has a specific structure that enables a simpler approach of finding the
 //! largest *maximal* clique using a greedy algorithm. Nodes are arranged in clusters of 13 and
 //! the maximum clique is size 14. This approach will not necessarily work for any general graph,
 //! but will work for the inputs provided.

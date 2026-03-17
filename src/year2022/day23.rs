@@ -105,7 +105,7 @@ fn step(input: &mut Input, order: &mut [Direction]) -> bool {
     let mut next = grid[1].shr().or(grid[1]).or(grid[1].shl()).not();
 
     for i in start..end {
-        // Calculating neighbors is relatively expensive so re-use results between rows.
+        // Calculating neighbors is relatively expensive so reuse results between rows.
         prev = cur;
         cur = next;
         next = grid[i + 1].shr().or(grid[i + 1]).or(grid[i + 1].shl()).not();

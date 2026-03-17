@@ -104,7 +104,7 @@ fn worker(shared: &Shared) {
         let (mut buffer, size) = format_string(&shared.prefix, offset);
 
         for n in 0..1000 {
-            // Format macro is very slow, so update digits directly
+            // Format macro is very slow, so update digits directly.
             buffer[size - 3] = b'0' + (n / 100) as u8;
             buffer[size - 2] = b'0' + ((n / 10) % 10) as u8;
             buffer[size - 1] = b'0' + (n % 10) as u8;
@@ -130,7 +130,7 @@ mod simd {
         offset: u32,
         shared: &Shared,
     ) {
-        // Format macro is very slow, so update digits directly
+        // Format macro is very slow, so update digits directly.
         for i in 0..N {
             let n = offset + i as u32;
             buffers[i][size - 3] = b'0' + (n / 100) as u8;

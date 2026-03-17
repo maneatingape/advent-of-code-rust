@@ -43,7 +43,7 @@ fn arrangements(input: &[usize], groups: usize) -> usize {
             let not_take = minimum[i];
 
             if take < not_take {
-                // Taking the item result in fewer packages, use the new quantum entanglement even
+                // Taking the item results in fewer packages, use the new quantum entanglement even
                 // if it's greater than the existing value.
                 qe[i] = item.saturating_mul(qe[i - item]);
                 minimum[i] = take;

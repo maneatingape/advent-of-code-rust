@@ -12,7 +12,7 @@
 //! well to computing a remainder with less work than a hardware division (the analysis here works
 //! for any number adjacent to a power of two, not just Mersenne primes). At a high level,
 //! computing `X % Y` is the same as repeatedly subtracting `Y` from a starting point of `X` until
-//! reaching a value less than `X`. How many times does that subtraction occur? That's easy,
+//! reaching a value less than `Y`. How many times does that subtraction occur? That's easy,
 //! `X / Y`. But when dividing by `Y` is expensive (a hardware division by an odd number takes
 //! multiple clock cycles), what if we divide by `Y + 1` instead (dividing by 2ᵏ is just
 //! performing a bit mask). Conceptually, the remainder after each subtraction of `Y + 1`
@@ -157,7 +157,7 @@ fn receiver(shared: &Shared, rx: &Receiver<Block>) -> Input {
     (part_one, part_two)
 }
 
-// Fast computation of n % 0x7fffffff.
+/// Fast computation of n % 0x7fffffff.
 #[inline]
 fn fast_mod(n: usize) -> usize {
     let low = n & MOD;

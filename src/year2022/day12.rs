@@ -10,10 +10,10 @@
 //! * [`Grid`] is used to store both the height information and seen nodes.
 //!
 //! For part two we could search for all `a` locations and repeatedly start a BFS search from there,
-//! then find the lowest value. However a much faster approach is to search *backwards* from the
+//! then find the lowest value. However, a much faster approach is to search *backwards* from the
 //! end location. Due to the fact that BFS always explores closest nodes first this will find the
 //! closest `a` location in a single search. For part one it will have the same result, so we
-//! can re-use the same code.
+//! can reuse the same code.
 //!
 //! [`Grid`]: crate::util::grid
 //! [`Point`]: crate::util::point
@@ -32,12 +32,12 @@ pub fn parse(input: &str) -> Input {
     (grid, start.unwrap())
 }
 
-/// Find the shortest path from `E` to `S`
+/// Find the shortest path from `E` to `S`.
 pub fn part1(input: &Input) -> u32 {
     bfs(input, b'S')
 }
 
-/// Find the shortest path from `E` to closest `a`
+/// Find the shortest path from `E` to closest `a`.
 pub fn part2(input: &Input) -> u32 {
     bfs(input, b'a')
 }

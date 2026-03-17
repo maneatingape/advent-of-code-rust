@@ -2,7 +2,7 @@
 //!
 //! Similar to [`Day 15`] we implement the rules precisely, paying attention to edge cases.
 //!
-//! In particular during part two, it's possible for a fight to end in a draw, if both armies
+//! In particular, during part two, it's possible for a fight to end in a draw, if both armies
 //! become too weak to destroy any further units. As each fight is independent, we find the
 //! minimum boost value with a multithreaded parallel search.
 //!

@@ -31,7 +31,7 @@ fn from_snafu(snafu: &&str) -> i64 {
 }
 
 /// Convert to decimal by first finding the result modulus 5 for each digit.
-/// If the answer is 3 or 4 then we must add a carry to the next digit so account for the
+/// If the answer is 3 or 4 then we must add a carry to the next digit to account for the
 /// subtraction.
 fn to_snafu(mut n: i64) -> String {
     let mut digits = Vec::new();

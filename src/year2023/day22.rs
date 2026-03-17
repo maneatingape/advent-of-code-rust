@@ -9,7 +9,7 @@
 //! where each brick is a node and a directed edge links bricks that support other bricks.
 //!
 //! By iterating over each brick in order its final resting location and supporting bricks can be
-//! calculated immediately. For example taking the first 3 example bricks:
+//! calculated immediately. For example, taking the first 3 example bricks:
 //!
 //! ```none
 //!     Brick               Heights    Indices
@@ -109,7 +109,7 @@ pub fn parse(input: &str) -> Input {
                     if underneath == 1 {
                         (parent, depth) = dominator[previous];
                     } else {
-                        // Find common ancestor
+                        // Find common ancestor.
                         let (mut a, mut b) = (parent, depth);
                         let (mut x, mut y) = dominator[previous];
 
@@ -133,7 +133,7 @@ pub fn parse(input: &str) -> Input {
                 }
             }
 
-            // Update the x-y grid underneath the brick the with the new highest point and index.
+            // Update the x-y grid underneath the brick with the new highest point and index.
             heights[j] = top + height;
             indices[j] = i;
         }

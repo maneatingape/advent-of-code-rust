@@ -114,7 +114,7 @@ pub fn part2(input: &Input) -> String {
             }
         }
 
-        // Removed crashed carts to speed up future ticks.
+        // Remove crashed carts to speed up future ticks.
         carts.retain(|c| c.active);
     }
 

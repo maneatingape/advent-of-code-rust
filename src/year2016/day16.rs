@@ -70,7 +70,7 @@ pub fn part2(input: &[usize]) -> String {
 /// Collect the ones count at each `step_size` then subtract in pairs to calculate the number of
 /// ones in each interval to give the checksum.
 pub fn checksum(input: &[usize], disk_size: usize) -> String {
-    // Determine how many blocks and how big each one is, by lowest 1-bit in disk_size
+    // Determine how many blocks and how big each one is, by lowest 1-bit in disk_size.
     let step_size = disk_size & (!disk_size + 1);
     let blocks = disk_size / step_size;
 

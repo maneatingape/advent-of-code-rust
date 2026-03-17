@@ -31,7 +31,7 @@
 //! Building any robot during the last minute means that it will be ready *after* the time runs
 //! out so it will contribute nothing. The other two rules are corollaries of this rule.
 //!
-//! For example say we build an obsidian robot with 3 minutes left. It will be ready and collect
+//! For example, say we build an obsidian robot with 3 minutes left. It will be ready and collect
 //! a resource with two minutes left, which can be spent on a geode robot with 1 minute left,
 //! which is too late.
 //!

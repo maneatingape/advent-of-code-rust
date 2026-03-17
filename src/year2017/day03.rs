@@ -6,7 +6,7 @@
 //! which gives one component of the Manhattan value. The second component is the distance from
 //! the center of each edge.
 //!
-//! For example say the target value is 20. We find the donut then subtract the inner donuts
+//! For example, say the target value is 20. We find the donut then subtract the inner donuts
 //! to make the values relative then calculate the values modulo the edge size.
 //!
 //! ```none

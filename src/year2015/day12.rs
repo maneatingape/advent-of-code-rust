@@ -14,7 +14,7 @@
 //! * We don't care about the content of strings, only if they equal "red" or not.
 //!
 //! Each parsing function returns a [`Result`] struct which has 3 fields:
-//! * `next` The index of the character *after* this object. For example parsing "123," returns
+//! * `next` The index of the character *after* this object. For example, parsing "123," returns
 //!   a value of 3 for next.
 //! * `ignore`: Only true for strings that exactly equal "red", false otherwise and always
 //!   false for numbers, arrays and objects.

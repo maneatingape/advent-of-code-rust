@@ -67,13 +67,13 @@ pub fn parse(input: &str) -> Input {
         let offset = mask.leading_zeros();
         let max = (memory.rotate_left(offset + 4) & 0xf) as usize;
 
-        // Common case: no overflow
+        // Common case: no overflow.
         if max < 15 || mask.count_ones() == 1 {
             // Empty the largest memory bank and reallocate its contents to the following banks.
             memory = (memory & REMOVE.rotate_right(offset)) + SPREAD[max].rotate_right(offset);
             cycles += 1;
 
-            // Check if we've seen this configuration before
+            // Check if we've seen this configuration before.
             if let Some(previous) = seen.insert(memory, cycles) {
                 break (cycles, cycles - previous);
             }

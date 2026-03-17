@@ -55,7 +55,7 @@ mod scalar {
     pub(super) fn enhance(input: &Input, steps: i32) -> u32 {
         let (algorithm, grid) = input;
 
-        // Offset the initial square by `step` + 1 buffer cells in both dimensions.
+        // Offset the initial square by `steps` + 1 buffer cells in both dimensions.
         // The square expands by at most one in each step so this is enough room to stay within bounds.
         let extra = steps + 1;
         let offset = Point::new(extra, extra);
@@ -110,7 +110,7 @@ mod scalar {
             (pixels, next) = (next, pixels);
             default = if default == 0 { algorithm[0] } else { algorithm[511] };
 
-            // Boundaries expand by one each turn
+            // Boundaries expand by one each turn.
             start -= 1;
             end += 1;
         }

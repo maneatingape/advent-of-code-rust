@@ -6,7 +6,7 @@
 //! are needed as the maze is enclosed. If a space is found then all items are pushed one block
 //! in that direction.
 //!
-//! Part two re-uses the part one logic for horizontal moves. Vertical moves use a
+//! Part two reuses the part one logic for horizontal moves. Vertical moves use a
 //! [breadth-first search](https://en.wikipedia.org/wiki/Breadth-first_search) to identify the
 //! cascading boxes that need to be moved. Boxes are added strictly left to right to make checking
 //! for previously added boxes easier. To prevent adding a box twice we check that the
@@ -101,7 +101,7 @@ fn narrow(grid: &mut Grid<u8>, start: &mut Point, direction: Point) {
             position += direction;
         }
 
-        // Move robot
+        // Move robot.
         *start += direction;
     }
 }
@@ -145,7 +145,7 @@ fn wide(grid: &mut Grid<u8>, start: &mut Point, direction: Point, todo: &mut Vec
         grid[point] = b'.';
     }
 
-    // Move robot
+    // Move robot.
     *start += direction;
 }
 

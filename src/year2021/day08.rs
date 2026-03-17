@@ -14,7 +14,7 @@
 //! | 8 | 6 | 8 | 7 | 4 | 9 | 7 |
 //!
 //! shows that 2 segments share 7 occurrences and 2 share 8 occurrences so this is still not quite enough
-//! information. However if we combine these 2 tables by *summing* the segment occurrences for each
+//! information. However, if we combine these 2 tables by *summing* the segment occurrences for each
 //! digit, for example `1` has segments `c` and `f` for a total of 17, then the table looks like:
 //!
 //! | 0  |  1 |  2 |  3 |  4 |  5 |  6 |  7 |  8 |  9 |

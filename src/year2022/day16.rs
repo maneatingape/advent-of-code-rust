@@ -48,7 +48,7 @@ use std::cmp::Ordering;
 /// This descending order is used by the heuristic to prune branches.
 ///
 /// * `size` Number of non-zero valves plus 1 for `AA`
-/// * `todo` Bitmask with a `1` for each initial unopened non-zero valve. For example if there
+/// * `todo` Bitmask with a `1` for each initial unopened non-zero valve. For example, if there
 ///   are 5 valves this would be binary `11111`.
 /// * `flow` Stores the flow for each valve
 /// * `distance` Adjacency matrix of distances between each pair of valves.
@@ -63,7 +63,7 @@ pub struct Input {
 
 /// State of a single exploration path through the valves.
 ///
-/// * `todo` Binary mask of unopened valves. For example if there are 3 unopened valves left this
+/// * `todo` Binary mask of unopened valves. For example, if there are 3 unopened valves left this
 ///   could look like `11100`.
 /// * `from` Index of current valve.
 /// * `time` The *remaining* time left.
@@ -103,7 +103,7 @@ impl Valve<'_> {
 }
 
 pub fn parse(input: &str) -> Input {
-    // Sort valves so that non-zero valves are at the start
+    // Sort valves so that non-zero valves are at the start.
     let mut valves: Vec<_> = input.lines().map(Valve::parse).collect();
     valves.sort_unstable_by(Valve::cmp);
 
@@ -153,13 +153,13 @@ pub fn parse(input: &str) -> Input {
 
     // Add 1 minute to each distance to include the time needed to open a valve.
     distance.iter_mut().for_each(|d| *d += 1);
-    // Index of AA is one less than size
+    // Index of AA is one less than size.
     let aa = size - 1;
     // Binary mask of all initial unopened valves not including AA.
     let all_valves = (1 << aa) - 1;
     // Extract flow information.
     let flow: Vec<_> = valves.iter().take(size).map(|v| v.flow).collect();
-    // Closest neighbor to each valve
+    // Closest neighbor to each valve.
     let closest: Vec<_> = distance
         .chunks_exact(size)
         .map(|chunk| *chunk.iter().filter(|&&d| d > 1).min().unwrap())

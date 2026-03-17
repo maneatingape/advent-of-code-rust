@@ -6,15 +6,15 @@
 //! with a cycle of 2²⁴.
 //!
 //! Interestingly, this means that with some clever math it's possible to generate the `n`th number
-//! from any starting secret number with only 24 calculations. Unfortunately this doesn't help for
-//! part two since we need to check every possible price change. However to speed things up we can
+//! from any starting secret number with only 24 calculations. Unfortunately, this doesn't help for
+//! part two since we need to check every possible price change. However, to speed things up we can
 //! make several optimizations:
 //!
 //! * First the sequence of 4 prices is converted from -9..9 to a base 19 index of 0..19.
 //! * Whether a monkey has seen a sequence before and the total bananas for each sequence are
 //!   stored in an array. This is much faster than a `HashMap`. Using base 19 gives much better
 //!   cache locality needing only 130,321 elements, for example compared to shifting each new cost
-//!   by 5 bits and storing in an array of 2²⁰ = 1,048,675 elements. Multiplication on modern
+//!   by 5 bits and storing in an array of 2²⁰ = 1,048,576 elements. Multiplication on modern
 //!   processors is cheap (and several instructions can issue at once) but random memory access
 //!   is expensive.
 //!

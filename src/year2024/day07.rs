@@ -1,7 +1,7 @@
 //! # Bridge Repair
 //!
 //! The equations can be validated using a recursive solution that checks all possible combinations
-//! of operators. However the number of states to check grows exponentially as 2ⁿ in part one
+//! of operators. However, the number of states to check grows exponentially as 2ⁿ in part one
 //! and 3ⁿ in part two.
 //!
 //! A much faster approach works in reverse from the end of the equation to prune as many states

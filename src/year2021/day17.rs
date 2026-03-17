@@ -4,7 +4,7 @@
 //!
 //! ## Part One
 //! Part one can be solved analytically. Movement upwards in the positive y direction is symmetrical.
-//! For example launching a probe at a y-velocity of 5 initially,
+//! For example, launching a probe at a y-velocity of 5 initially,
 //! would result in a speed and y-position:
 //!
 //! ```text
@@ -30,7 +30,7 @@
 //! time `t` for the first time, only considering horizontal movement. The second `continuing`
 //! counts how many are still in the target area at time `t`.
 //!
-//! For example using the sample `target area: x=20..30, y=-10..-5` gives a progression:
+//! For example, using the sample `target area: x=20..30, y=-10..-5` gives a progression:
 //!
 //! ```text
 //!     X-Velocity : 6
@@ -59,7 +59,7 @@
 //! Then for each y velocity value we find the time when it enters the target area. The first time
 //! this happens we add *both* `new` and `continuing` to the total. For subsequent times while we're
 //! still in the target area we add only the `new` values, as the `continuing` are trajectories
-//! that we've already considered. For example for an initial y-velocity of 0:
+//! that we've already considered. For example, for an initial y-velocity of 0:
 //!
 //! ```text
 //!     Time:       0,   1,   2,     3,   4
@@ -87,7 +87,7 @@ pub fn part1(input: &Input) -> i32 {
 pub fn part2(input: &Input) -> usize {
     let &[left, right, bottom, top] = input;
 
-    // Find minimum dx where triangular number reaches left boundary
+    // Find minimum dx where triangular number reaches left boundary.
     let min_dx = (1..left).find(|&n| n * (n + 1) / 2 >= left).unwrap();
     let max_dx = right + 1;
     let min_dy = bottom;

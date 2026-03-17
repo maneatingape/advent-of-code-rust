@@ -119,7 +119,7 @@ impl Scanner {
 
         // Include indices of the points so that we can match translation and rotation for
         // points that have the same signature. Use indices so that we don't need to recalculate
-        // signature when rotating and translation a beacon from unknown to known.
+        // signature when rotating and translating a beacon from unknown to known.
         let mut signature = FastMap::with_capacity(1_000);
         for i in 0..(beacons.len() - 1) {
             for j in (i + 1)..beacons.len() {

@@ -18,12 +18,12 @@ pub fn parse(input: &str) -> &str {
     input
 }
 
-/// Find the first unique set of size 4
+/// Find the first unique set of size 4.
 pub fn part1(input: &str) -> usize {
     find(input, 4)
 }
 
-/// Find the first unique set of size 14
+/// Find the first unique set of size 14.
 pub fn part2(input: &str) -> usize {
     find(input, 14)
 }

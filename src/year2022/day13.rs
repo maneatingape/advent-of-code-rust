@@ -110,7 +110,7 @@ fn compare(left: &str, right: &str) -> bool {
 impl Iterator for Packet<'_> {
     type Item = u8;
 
-    // Rely on the fact that all input is valid to avoid bounds checks
+    // Rely on the fact that all input is valid to avoid bounds checks.
     fn next(&mut self) -> Option<Self::Item> {
         self.extra.pop().or_else(|| {
             let (index, slice) = (self.index, self.slice);

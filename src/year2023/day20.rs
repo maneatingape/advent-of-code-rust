@@ -12,8 +12,8 @@
 //! ```
 //!
 //! The penultimate conjunction in each row, for example `ax` both takes input and delivers output
-//! to the flip-flops. This follows a pattern, for example using `v` to indicate input from the
-//! conjunction and `v` to indicate output:
+//! to the flip-flops. This follows a pattern, for example, using `v` above to indicate input from the
+//! conjunction and `v` below to indicate output:
 //!
 //! ```none
 //!     v     v        v              v
@@ -36,7 +36,7 @@ use crate::util::hash::*;
 type Input = [u32; 4];
 
 pub fn parse(input: &str) -> Input {
-    // Build the graph
+    // Build the graph.
     let mut node = FastMap::with_capacity(100);
     let mut kind = FastMap::with_capacity(100);
 
@@ -101,8 +101,8 @@ pub fn part1(input: &Input) -> u32 {
         for &(number, feedback) in &pairs {
             // Factor is the number of high pulses sent to the conjunction.
             // For each pulse the conjunction feeds a high pulse back to "feedback" flip-flops.
-            // In addition the penultimate conjunction in each row receives "factor" high pulses,
-            // resulting in "factor" low pulses the final conjunction and finally "factor" high
+            // In addition, the penultimate conjunction in each row receives "factor" high pulses,
+            // resulting in "factor" low pulses to the final conjunction and finally "factor" high
             // pulses to "rx".
             let factor = (rising & number).count_ones();
             high += factor * (feedback + 3);
@@ -110,8 +110,8 @@ pub fn part1(input: &Input) -> u32 {
 
             // Factor is the number of low pulses sent to the conjunction.
             // For each pulse the conjunction feeds a high pulse back to "feedback" flip-flops.
-            // In addition the penultimate conjunction in each row receives "factor" high pulses,
-            // resulting in "factor" low pulses the final conjunction and finally "factor" high
+            // In addition, the penultimate conjunction in each row receives "factor" high pulses,
+            // resulting in "factor" low pulses to the final conjunction and finally "factor" high
             // pulses to "rx".
             let factor = (falling & number).count_ones();
             high += factor * (feedback + 2);

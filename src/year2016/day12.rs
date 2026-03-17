@@ -14,7 +14,7 @@
 //! ```
 //!
 //! This is equivalent to `x += y` only much less efficient. Replacing this in the code then
-//! rewriting the remainder to Rust the program becomes:
+//! rewriting the remainder in Rust the program becomes:
 //!
 //! ```none
 //!     let mut a = 1;

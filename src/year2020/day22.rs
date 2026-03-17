@@ -9,7 +9,7 @@
 //!
 //! `Deck` also keeps the score up to date as cards are added and removed, as this comes in useful
 //! during part two. To update the score when a card is removed we subtract the card's value
-//! multiplied by the size of the deck. For example if 5 is removed then the new
+//! multiplied by the size of the deck. For example, if 5 is removed then the new
 //! score is 67 - 5 × 4 = 47.
 //!
 //! | Deck ↓ | Weight | Score | Sum |
@@ -20,7 +20,7 @@
 //! | 9 | 1 |    |    |
 //!
 //! When adding a card, it helps to have the sum of the existing cards. The new score is the old
-//! score added to the new sum. For example if 6 is added to the deck:
+//! score added to the new sum. For example, if 6 is added to the deck:
 //!
 //! | Old Score | New Score | Difference |
 //! | ----- | ----- | - |
@@ -34,7 +34,7 @@
 //! ## Part One
 //!
 //! The winner will always eventually be the player that starts with card 50 as they can never
-//! lose this card in a round. However we need to play the full game in order to find out the
+//! lose this card in a round. However, we need to play the full game in order to find out the
 //! score of the winner's deck.
 //!
 //! ## Part Two
@@ -166,7 +166,7 @@ fn combat(mut deck1: Deck, mut deck2: Deck, cache: &mut Cache, depth: usize) -> 
         return Winner::Player1(deck1);
     }
 
-    // Speed things up by re-using previously created caches, avoiding slow extra heap allocations.
+    // Speed things up by reusing previously created caches, avoiding slow extra heap allocations.
     if cache.len() == depth {
         cache.push(FastSet::with_capacity(1_000));
     } else {

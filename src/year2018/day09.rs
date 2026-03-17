@@ -1,6 +1,6 @@
 //! # Marble Mania
 //!
-//! Efficient solution using an append only `vec` and generating only the minimum number of marbles
+//! Efficient solution using an append-only `vec` and generating only the minimum number of marbles
 //! needed to play the game.
 //!
 //! First let's consider some other slower approaches:
@@ -10,7 +10,7 @@
 //! total complexity is `100,000 * 100 * 100,000 = 10¹²` which is infeasible.
 //!
 //! A better approach is a linked list. Insert and remove operations are now `O(1)` for a total
-//! part two complexity of `100,000 * 1 * 100  = 10⁷`. This is slow but practical. However linked
+//! part two complexity of `100,000 * 1 * 100  = 10⁷`. This is slow but practical. However, linked
 //! lists have a number of drawbacks:
 //!
 //! 1. Poor cache locality
@@ -23,7 +23,7 @@
 //! The first key insight is that we can generate the marble sequence by only appending to a `vec`.
 //! We keep track of the head `()` and tail `<>` of the circle. Each turn adds two marbles to the
 //! head and removes one from the tail, growing the circle by one each time.
-//! For example the first 4 marbles look like:
+//! For example, the first 4 marbles look like:
 //!
 //! ```none
 //!    <0>
@@ -67,7 +67,7 @@
 //!
 //! ## Second optimization
 //!
-//! It may seem that we need to generate `(last marble / 23)` blocks. However in each block we add
+//! It may seem that we need to generate `(last marble / 23)` blocks. However, in each block we add
 //! 37 marbles (2 each for the first 18 marbles and 1 for the 19th) while the marble added to each
 //! player's score advances `23 - 7 = 16` marbles. This means we only need to generate about
 //!  `16/37` or `44%` of the total blocks to solve the game deterministically. This saves both

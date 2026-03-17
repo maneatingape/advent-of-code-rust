@@ -51,14 +51,14 @@ pub fn part1_testable(input: &[Input], row: i32) -> i32 {
         (beacon.y == row).then_some(beacon.x)
     }
 
-    // Sort the ranges first
+    // Sort the ranges first.
     let mut ranges: Vec<_> = input.iter().filter_map(|i| build_range(i, row)).collect();
     ranges.sort_unstable_by_key(|r| r.start);
 
     let mut total = 0;
     let mut max = i32::MIN;
 
-    // Compare each range to the next
+    // Compare each range to the next.
     for Range { start, end } in ranges {
         if start > max {
             // If there is no overlap with the previous range, then add the entire length.

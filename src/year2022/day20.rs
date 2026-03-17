@@ -41,7 +41,7 @@ pub fn part2(input: &[i64]) -> i64 {
 fn decrypt(input: &[i64], key: i64, rounds: usize) -> i64 {
     // Important nuance, size is one less because we don't consider the moving number.
     let size = input.len() - 1;
-    // Another nuance, input contain duplicate numbers, so use index to refer to each number uniquely.
+    // Another nuance, input contains duplicate numbers, so use index to refer to each number uniquely.
     let indices: Vec<_> = (0..input.len() as u16).collect();
     // Pre-process the numbers, converting any negative indices to positive indices that will wrap.
     // For example, -1 becomes 4998.

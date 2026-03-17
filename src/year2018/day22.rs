@@ -16,7 +16,7 @@
 //! the time per tool separately.
 //!
 //! To speed things up even further we use a trick. Classic A* uses a generic priority queue that
-//! can be implemented in Rust using a [`BinaryHeap`]. However the total cost follows a strictly
+//! can be implemented in Rust using a [`BinaryHeap`]. However, the total cost follows a strictly
 //! increasing order in a constrained range of values, so we can use a much faster
 //! [bucket queue](https://en.wikipedia.org/wiki/Bucket_queue). The range of the increase is from
 //! 0 (moving toward the target and not changing tools) to 7 (staying put and changing tools)
@@ -71,7 +71,7 @@ pub fn part2(input: &Input) -> i32 {
     let [_, height, width] = *input;
     let target = Point::new(width, height);
 
-    // Initialise bucket queue with pre-allocated capacity to reduce reallocations needed.
+    // Initialize bucket queue with pre-allocated capacity to reduce reallocations needed.
     let mut base = 0;
     let mut todo: [_; BUCKETS] = from_fn(|_| Vec::with_capacity(1_000));
 

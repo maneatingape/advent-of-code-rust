@@ -1,4 +1,4 @@
-//! Add `biterator` method that treats an integer as a set, iterating over each element where
+//! Add a `biterator` method that treats an integer as a set, iterating over each element where
 //! the respective bit is set. For example `1101` would return 0, 2 and 3.
 use crate::util::integer::*;
 

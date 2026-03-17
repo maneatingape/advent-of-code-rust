@@ -40,7 +40,7 @@
 //! the first to make the other two relative.
 //!
 //! The two hailstones will intercept a line leaving the origin. We can determine this line
-//! by intersecting the two planes that the hailstone's velocity lie in. These planes are
+//! by intersecting the two planes that the hailstones' velocities lie in. These planes are
 //! defined by a normal vector orthogonal to the plane.
 //!
 //! This normal vector is the [cross product](https://en.wikipedia.org/wiki/Cross_product) of

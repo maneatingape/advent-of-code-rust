@@ -19,7 +19,7 @@ pub fn part2(input: &Input) -> usize {
 }
 
 fn parse_node(iter: &mut impl Iterator<Item = usize>, stack: &mut Vec<usize>) -> (usize, usize) {
-    // Save stack size
+    // Save stack size.
     let stack_base = stack.len();
 
     // Parse header

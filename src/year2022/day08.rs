@@ -128,7 +128,7 @@ pub fn part1(input: &Input) -> usize {
 /// To update the next value, we first use [`MASK`] left shifted to zero out all bits less than
 /// or equal to the current height then add 1 to all values in parallel using the [`ONES`] pattern.
 ///
-/// For example going from 3 to 5 in the sample above:
+/// For example, going from 3 to 5 in the sample above:
 /// ```none
 ///   scenic:        000001_000001_000001_000001_000001_000001_000001_000001_000001_000001
 ///   mask:          111111_111111_111111_111111_111111_111111_000000_000000_000000_000000

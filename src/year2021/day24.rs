@@ -79,7 +79,7 @@
 //!     add y w     | y = w                 | y = w                     |
 //!     add y 4     | y = w + 4             | y = w + 4                 |
 //!     mul y x     | y = (w + 4) * 0       | y = (w + 4) * 1           |
-//!     add z y     | z = z                 | z = (26 * z) * (w + 4)    |
+//!     add z y     | z = z                 | z = (26 * z) + (w + 4)    |
 //! ```
 use crate::util::parse::*;
 use Block::*;
@@ -147,7 +147,7 @@ pub fn parse(input: &str) -> Vec<Constraint> {
         }
     }
 
-    // Sort by original ALU program order
+    // Sort by original ALU program order.
     constraints.sort_unstable_by_key(|c| c.index);
     constraints
 }

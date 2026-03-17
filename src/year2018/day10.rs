@@ -46,7 +46,7 @@ pub fn parse(input: &str) -> Input {
 
     let message = grid.bytes.iter().collect();
 
-    // Return answer
+    // Return the answer.
     (message, time)
 }
 

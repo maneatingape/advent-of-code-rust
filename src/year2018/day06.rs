@@ -180,7 +180,7 @@ pub fn part2(input: &Input) -> i32 {
 /// The [centroid](https://en.wikipedia.org/wiki/Centroid) is close but not exact as it minimizes
 /// the distance *squared*.
 ///
-/// However the Manhattan distance is independent for each axis, so we can instead solve for the
+/// However, the Manhattan distance is independent for each axis, so we can instead solve for the
 /// one-dimensional case. This is the [median](https://en.wikipedia.org/wiki/Median) of each axis.
 /// Intuitively this makes sense, as the median has the same number of points on either side,
 /// so moving either direction, the increase from half the points is cancelled out by the decrease
@@ -207,7 +207,7 @@ pub fn part2_testable(input: &Input, max_distance: i32) -> i32 {
     let median = Point::new(x, y);
     let mut y_distance: i32 = input.points.iter().map(|o| o.manhattan(median)).sum();
 
-    // Find top of region
+    // Find top of region.
     while y_distance + prev(&ys, y) < max_distance {
         y_distance += prev(&ys, y);
         y -= 1;
@@ -221,22 +221,22 @@ pub fn part2_testable(input: &Input, max_distance: i32) -> i32 {
 
     // Sweep top to bottom.
     while y_distance < max_distance {
-        // Expand moving left edge to the left
+        // Expand moving left edge to the left.
         while left_dist < max_distance {
             left_dist += prev(&xs, left);
             left -= 1;
         }
-        // Contract moving left edge to the right
+        // Contract moving left edge to the right.
         while left_dist >= max_distance {
             left_dist += next(&xs, left);
             left += 1;
         }
-        // Expand moving right edge to the right
+        // Expand moving right edge to the right.
         while right_dist < max_distance {
             right_dist += next(&xs, right);
             right += 1;
         }
-        // Contract moving right edge to the left
+        // Contract moving right edge to the left.
         while right_dist >= max_distance {
             right_dist += prev(&xs, right);
             right -= 1;

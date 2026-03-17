@@ -41,7 +41,7 @@
 //! This approach has two huge advantages:
 //!
 //! First, the number of balls resting against each fixed point completely represents the state of the
-//! grid in a very compact format. For example my input has ~1600 fixed points. Using 2 bytes per
+//! grid in a very compact format. For example, my input has ~1600 fixed points. Using 2 bytes per
 //! point needs 3.2K total to represent the grid, compared to 100 × 100 = 10K for the simple approach.
 //! 3x less data is 3x faster to hash when storing states in a `HashMap` looking for duplicates.
 //!

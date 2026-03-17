@@ -42,7 +42,7 @@ pub fn parse(input: &str) -> Input {
         let sign = if tokens[2] == "gain" { 1 } else { -1 };
         let value: i32 = tokens[3].signed();
 
-        // Add the values together to make the mutual link reciprocal
+        // Add the values together to make the mutual link reciprocal.
         happiness[stride * start + end] += sign * value;
         happiness[stride * end + start] += sign * value;
     }

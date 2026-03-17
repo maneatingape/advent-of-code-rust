@@ -4,7 +4,7 @@
 //! rotation based on the index of the letter. First we build a lookup table of how many places to
 //! rotate right based on the letter index. This is +1 for positions 0-3 and +2 for positions 4-7.
 //!
-//! Then we invert this by mapping the transformed index to the rotation. For example position 3 is
+//! Then we invert this by mapping the transformed index to the rotation. For example, position 3 is
 //! rotated right by 4 places, ending up at position 7, so the inverse lookup table to rotate left
 //! stores 4 at index 7.
 use crate::util::parse::*;

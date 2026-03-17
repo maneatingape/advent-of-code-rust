@@ -90,7 +90,7 @@ fn steps(input: &Input, rounds: usize) -> u64 {
     max - min
 }
 
-/// Convert a single uppercase ASCII character to an index between 0 and 25
+/// Convert a single uppercase ASCII character to an index between 0 and 25.
 fn element(byte: u8) -> usize {
     (byte - b'A') as usize
 }

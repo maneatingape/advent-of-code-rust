@@ -1,6 +1,6 @@
 //! # Clock Signal
 //!
-//! Like [`Day 12`] and [`Day 23`] this problem is all about *reading* code not writing code.
+//! Like [`Day 12`] and [`Day 23`], this problem is all about *reading* code, not writing code.
 //!
 //! Reverse engineering the code shows that it takes the initial value of `a` then adds
 //! two constants multiplied by each other to create a seed.

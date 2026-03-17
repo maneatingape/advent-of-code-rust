@@ -64,7 +64,7 @@ impl Computer {
                     self.code[third] = self.code[first].wrapping_mul(self.code[second]);
                     self.pc += 4;
                 }
-                // Read input channel
+                // Read input channel.
                 3 => {
                     let Some(value) = self.input.pop_front() else {
                         break State::Input;
@@ -73,21 +73,21 @@ impl Computer {
                     self.code[first] = value;
                     self.pc += 2;
                 }
-                // Write output channel
+                // Write output channel.
                 4 => {
                     let first = self.address(op / 100, 1);
                     let value = self.code[first];
                     self.pc += 2;
                     break State::Output(value as i64);
                 }
-                // Jump if true
+                // Jump if true.
                 5 => {
                     let first = self.address(op / 100, 1);
                     let second = self.address(op / 1000, 2);
                     let value = self.code[first] == 0;
                     self.pc = if value { self.pc + 3 } else { self.code[second] };
                 }
-                // Jump if false
+                // Jump if false.
                 6 => {
                     let first = self.address(op / 100, 1);
                     let second = self.address(op / 1000, 2);
@@ -112,7 +112,7 @@ impl Computer {
                     self.code[third] = value as usize;
                     self.pc += 4;
                 }
-                // Adjust relative base
+                // Adjust relative base.
                 9 => {
                     let first = self.address(op / 100, 1);
                     self.base = self.base.wrapping_add(self.code[first]);

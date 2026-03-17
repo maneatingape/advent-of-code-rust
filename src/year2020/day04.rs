@@ -1,7 +1,7 @@
 //! # Passport Processing
 //!
 //! [Regular expressions](https://en.wikipedia.org/wiki/Regular_expression) are a good fit for this
-//! problem. However as the principles of this crate are to avoid external dependencies and
+//! problem. However, as the principles of this crate are to avoid external dependencies and
 //! maximize speed we'll instead hand code validation functions for each of the
 //! passport field criteria.
 use crate::util::iter::*;

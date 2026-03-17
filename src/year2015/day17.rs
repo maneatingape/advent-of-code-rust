@@ -101,7 +101,7 @@ pub fn part2_testable(input: &[usize], goal: usize) -> u32 {
     let mut ways = vec![0; goal + 1];
     ways[0] = 1;
 
-    // The minimum number of containers to store 0 litres is 0.
+    // The minimum number of containers to store 0 liters is 0.
     let mut minimum = vec![u32::MAX; goal + 1];
     minimum[0] = 0;
 

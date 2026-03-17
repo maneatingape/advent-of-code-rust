@@ -20,7 +20,7 @@
 //!
 //! Final result: Ø (the empty set)
 //!
-//! # Part Two
+//! ## Part Two
 //! This is a [constraint satisfaction problem](https://en.wikipedia.org/wiki/Constraint_satisfaction_problem),
 //! similar to [`day 16`]. Using `fvjkl` from the example:
 //!

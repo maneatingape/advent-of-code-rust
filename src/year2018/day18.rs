@@ -108,7 +108,7 @@ pub fn part2(input: &Key) -> u32 {
 fn step(area: &mut [u64], rows: &mut [u64]) {
     // Compute the horizontal sum of each column with its immediate neighbors.
     for y in 0..50 {
-        // Shadow slices at correct starting offset for convenience. We pad `rows` on the top and
+        // Shadow slices at the correct starting offset for convenience. We pad `rows` on the top and
         // bottom then shift index by 7 to avoid having to check for edge conditions.
         let area = &area[7 * y..];
         let rows = &mut rows[7 * (y + 1)..];

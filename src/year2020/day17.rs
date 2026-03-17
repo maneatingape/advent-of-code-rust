@@ -75,7 +75,7 @@ mod scalar {
         boot_process(input, size, base, &[-1, 0, 1])
     }
 
-    /// Re-use logic between both parts.
+    /// Reuse logic between both parts.
     fn boot_process(input: &Grid<u8>, size: i32, base: i32, fourth_dimension: &[i32]) -> usize {
         let dimension = [-1, 0, 1];
         let mut neighbors = Vec::new();

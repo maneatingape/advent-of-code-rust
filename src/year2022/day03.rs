@@ -6,7 +6,7 @@
 //! integer and using bit manipulation.
 //!
 //! If a letter is present in the set then the corresponding bit will be `1` otherwise `0`.
-//! For example to add the letter "a", logical OR the set with 1 shifted left by 97
+//! For example, to add the letter "a", logical OR the set with 1 shifted left by 97.
 //!
 //! `set | (1 << 97)`
 //!

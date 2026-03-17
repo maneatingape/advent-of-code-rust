@@ -29,7 +29,7 @@ pub trait SignedMathOps<T: Signed<T>> {
 }
 
 impl<T: Integer<T>> IntegerMathOps<T> for T {
-    /// Greatest common divisor
+    /// Greatest common divisor.
     #[inline]
     fn gcd(self, mut b: T) -> T {
         let mut a = self;
@@ -41,13 +41,13 @@ impl<T: Integer<T>> IntegerMathOps<T> for T {
         a
     }
 
-    /// Least common multiple
+    /// Least common multiple.
     #[inline]
     fn lcm(self, b: T) -> T {
         self * (b / self.gcd(b))
     }
 
-    /// Modular exponentiation
+    /// Modular exponentiation.
     #[inline]
     fn mod_pow(self, mut e: T, m: T) -> T {
         let mut base = self;
@@ -66,7 +66,7 @@ impl<T: Integer<T>> IntegerMathOps<T> for T {
 }
 
 impl<T: Signed<T>> SignedMathOps<T> for T {
-    /// Modular multiplicative inverse
+    /// Modular multiplicative inverse.
     #[inline]
     fn mod_inv(self, m: T) -> Option<T> {
         let mut t = T::ZERO;

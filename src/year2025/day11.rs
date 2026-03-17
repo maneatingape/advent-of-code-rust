@@ -5,7 +5,7 @@
 //! A recursive [depth-first search](https://en.wikipedia.org/wiki/Depth-first_search) will
 //! enumerate every possible path between two nodes. The number of paths from each node to the
 //! destination is cached since we only need the *total count* of paths and not the actual
-//! distinct different paths.
+//! distinct paths.
 //!
 //! As a performance optimization, each 3-letter node is converted into an index so that a much
 //! faster array lookup can be used instead of a `HashMap`.

@@ -14,13 +14,13 @@ pub fn parse(input: &str) -> Input {
     let mut part_two = 0;
 
     while index < memory.len() {
-        // Skip junk characters
+        // Skip junk characters.
         if memory[index] != b'm' && memory[index] != b'd' {
             index += 1;
             continue;
         }
 
-        // Check possible prefixes
+        // Check possible prefixes.
         if memory[index..].starts_with(b"mul(") {
             index += 4;
         } else if memory[index..].starts_with(b"do()") {
@@ -36,7 +36,7 @@ pub fn parse(input: &str) -> Input {
             continue;
         }
 
-        // Parse first number
+        // Parse first number.
         let first = parse_number(memory, &mut index);
 
         // First delimiter
@@ -45,7 +45,7 @@ pub fn parse(input: &str) -> Input {
         }
         index += 1;
 
-        // Parse second number
+        // Parse second number.
         let second = parse_number(memory, &mut index);
 
         // Second delimiter

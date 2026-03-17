@@ -105,8 +105,8 @@ fn turing(rules: &[[Rule; 2]], mut state: usize, mut tape: u128, max_steps: u32)
     let mut mask = 1 << 63;
     let mut steps = 0;
 
-    // `0` means the cursor has advanced to the next nibble on the right.
-    // `128` means that the cursor is on the left edge of the high nibble.
+    // `0` means the cursor has advanced to the next half on the right.
+    // `128` means that the cursor is on the left edge of the high half.
     while 0 < mask && mask < (1 << 127) && steps < max_steps {
         let current = usize::from(tape & mask != 0);
         let rule = &rules[state][current];

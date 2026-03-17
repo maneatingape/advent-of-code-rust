@@ -56,7 +56,7 @@ pub fn parse(input: &str) -> Maze {
     let mut found = Vec::new();
     let mut start = usize::MAX;
 
-    // Find all labels
+    // Find all labels.
     for y in (1..grid.height - 1).step_by(2) {
         for x in (1..grid.width - 1).step_by(2) {
             let point = Point::new(x, y);
@@ -64,7 +64,7 @@ pub fn parse(input: &str) -> Maze {
                 continue;
             }
 
-            // Decode the relative orientation of the label and the portal
+            // Decode the relative orientation of the label and the portal.
             let (first, second, third) = if grid[point + UP] == b'.' {
                 (point, point + DOWN, point + UP)
             } else if grid[point + DOWN] == b'.' {
@@ -176,7 +176,7 @@ pub fn part2(input: &Maze) -> u32 {
             let next_steps = steps + distance + 1;
 
             match kind {
-                // No need to recurse further than the number of portals
+                // No need to recurse further than the number of portals.
                 Kind::Inner if level < input.portals.len() => {
                     todo.push_back((next_steps, to, level + 1));
                 }

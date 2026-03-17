@@ -127,7 +127,7 @@ pub fn part2(input: &Grid<u8>) -> usize {
         // By bit-packing 6 fields into a single `u32`, we limit the size of the array to 16kB
         // making sure that it fits into L1 cache.
         grid[index] = packed as u8; // bits 0-7
-        index = index + (packed >> 20) as usize - SIZE; // bits 20 to 31
+        index = index + (packed >> 20) as usize - SIZE; // bits 20-31
         quadrant = ((packed >> 8) % 4) as usize; // bits 8-9
         direction = ((packed >> 10) % 4) as usize; // bits 10-11
         infected += ((packed >> 12) % 16) as usize; // bits 12-15

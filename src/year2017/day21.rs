@@ -68,7 +68,7 @@ pub fn parse(input: &str) -> Vec<u32> {
         let bit = |i: usize| line[i] & 1;
 
         if line.len() == 20 {
-            // 2x2 to 3x3
+            // 2x2 to 3x3.
             let indices = [0, 1, 3, 4];
             let from = indices.map(bit);
 
@@ -83,7 +83,7 @@ pub fn parse(input: &str) -> Vec<u32> {
                 pattern_lookup[key] = pattern;
             }
         } else {
-            // 3x3 to 4x4
+            // 3x3 to 4x4.
             let indices = [0, 1, 2, 4, 5, 6, 8, 9, 10];
             let from = indices.map(bit);
 
@@ -99,7 +99,7 @@ pub fn parse(input: &str) -> Vec<u32> {
     let patterns: Vec<_> = todo
         .iter()
         .map(|&index| {
-            // Lookup 4x4 pattern then map to 6x6
+            // Lookup 4x4 pattern then map to 6x6.
             let four = three_to_four[index];
             let mut six = [0; 36];
 
@@ -128,7 +128,7 @@ pub fn parse(input: &str) -> Vec<u32> {
     let mut current = vec![0; patterns.len()];
     let mut result = Vec::new();
 
-    // Begin with single starting pattern
+    // Begin with single starting pattern.
     current[0] = 1;
 
     // Calculate generations 0 to 20 inclusive.
@@ -163,7 +163,7 @@ pub fn part2(input: &[u32]) -> u32 {
     input[18]
 }
 
-/// Generate an array of the 8 possible transformations possible from rotating and flipping
+/// Generate an array of the 8 possible transformations from rotating and flipping
 /// the 2x2 input.
 fn two_by_two_permutations(mut a: [u8; 4]) -> [usize; 8] {
     let mut indices = [0; 8];
@@ -186,7 +186,7 @@ fn two_by_two_permutations(mut a: [u8; 4]) -> [usize; 8] {
     indices
 }
 
-/// Generate an array of the 8 possible transformations possible from rotating and flipping
+/// Generate an array of the 8 possible transformations from rotating and flipping
 /// the 3x3 input.
 fn three_by_three_permutations(mut a: [u8; 9]) -> [usize; 8] {
     let mut indices = [0; 8];

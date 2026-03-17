@@ -40,7 +40,7 @@
 //! ```
 //!
 //! If we examine the loop we can see that the winner is simply the binary digits of `n` multiplied
-//! by two, excluding the highest bit, with one added. For example for 5 elves:
+//! by two, excluding the highest bit, with one added. For example, for 5 elves:
 //!
 //! ```none
 //!     n = 5 = 101
@@ -94,9 +94,9 @@ pub fn part1(input: &u32) -> u32 {
     let mut elf = *input;
 
     elf *= 2;
-    // Remove highest 1 bit
+    // Remove highest 1 bit.
     elf -= 1 << elf.ilog2();
-    // Elves use 1-based indexing
+    // Elves use 1-based indexing.
     elf += 1;
 
     elf

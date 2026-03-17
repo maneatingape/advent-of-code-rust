@@ -3,7 +3,8 @@
 //! The key to solving this problem efficiently is the
 //! [inclusion-exclusion principle](https://en.wikipedia.org/wiki/Inclusion-exclusion_principle).
 //!
-//! Looking at a two-dimensional example
+//! Looking at a two-dimensional example:
+//!
 //! ```none
 //!    ┌──────────────┐A            Volume of A: 144
 //!    │              │             Volume of B: 66
@@ -95,7 +96,7 @@ pub fn parse(input: &str) -> Vec<RebootStep> {
     first.zip(second).map(RebootStep::from).collect()
 }
 
-/// We re-use the logic between part one and two, by first intersecting all cubes with
+/// We reuse the logic between part one and two, by first intersecting all cubes with
 /// the specified range. Any cubes that lie completely outside the range will be filtered out.
 pub fn part1(input: &[RebootStep]) -> i64 {
     let region = Cube { x1: -50, x2: 50, y1: -50, y2: 50, z1: -50, z2: 50 };
@@ -114,7 +115,7 @@ pub fn part2(input: &[RebootStep]) -> i64 {
     let mut total = 0;
     let mut candidates = Vec::new();
     // Only "on" cubes contribute to volume.
-    // "off" cubes are considered when subtracting volume
+    // "off" cubes are considered when subtracting volume.
     let on_cubes = input.iter().enumerate().filter_map(|(i, rs)| rs.on.then_some((i, rs.cube)));
 
     for (i, cube) in on_cubes {

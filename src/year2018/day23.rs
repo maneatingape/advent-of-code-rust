@@ -52,7 +52,7 @@ impl Cube {
     }
 
     /// Split the cube into 8 non-overlapping sub-cubes.
-    /// Since each cube size is always of power of two, we can safely divide by 2.
+    /// Since each cube size is always a power of two, we can safely divide by 2.
     fn split(&self) -> [Cube; 8] {
         let Cube { x1, x2, y1, y2, z1, z2 } = *self;
 

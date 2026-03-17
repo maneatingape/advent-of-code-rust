@@ -21,7 +21,7 @@ use std::array::from_fn;
 type Axis = [i32; 8];
 type Input = [Axis; 3];
 
-/// Group each axis together
+/// Group each axis together.
 pub fn parse(input: &str) -> Input {
     let n: Vec<_> = input.iter_signed().collect();
     [
@@ -79,7 +79,7 @@ pub fn part2(input: &Input) -> usize {
 }
 
 fn step(axis: Axis) -> Axis {
-    // "p" is position and "v" velocity
+    // "p" is position and "v" velocity.
     let [p0, p1, p2, p3, v0, v1, v2, v3] = axis;
 
     let a = (p1 - p0).signum();

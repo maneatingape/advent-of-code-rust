@@ -16,7 +16,7 @@ pub fn parse(input: &str) -> Input {
     let second = input.iter_signed::<i32>();
     let pairs: Vec<_> = first.zip(second).collect();
 
-    // Determine maximum extents
+    // Determine maximum extents.
     let (x1, y1, x2, y2, _) = pairs.iter().fold(
         (i32::MAX, i32::MAX, i32::MIN, i32::MIN, ORIGIN),
         |(x1, y1, x2, y2, point), &(step, amount)| {
@@ -28,19 +28,19 @@ pub fn parse(input: &str) -> Input {
     (x1, y1, x2, y2, pairs)
 }
 
-/// Simulate a rope length of 2
+/// Simulate a rope length of 2.
 pub fn part1(input: &Input) -> u32 {
     simulate::<2>(input)
 }
 
-/// Simulate a rope length of 10
+/// Simulate a rope length of 10.
 pub fn part2(input: &Input) -> u32 {
     simulate::<10>(input)
 }
 
 /// Simulates a rope of arbitrary length.
 ///
-/// The head knot always moves according the instructions from the problem input. Remaining knots
+/// The head knot always moves according to the instructions from the problem input. Remaining knots
 /// move according to their delta from the head (2nd knot) or the previous knot
 /// (3rd and subsequent knots).
 ///

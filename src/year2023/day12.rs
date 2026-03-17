@@ -24,7 +24,7 @@
 //! ```
 //!
 //! Each pattern updates the total at the index one *after* its end, if it can fit at that location
-//! For example the first spring can only match at indices `[1, 2, 3]` so it updates the total
+//! For example, the first spring can only match at indices `[1, 2, 3]` so it updates the total
 //! at index 4 to 1.
 //!
 //! The key insight is that the number of arrangements is then propagated as a prefix sum
@@ -34,7 +34,7 @@
 //! To calculate the next row, each matching pattern adds the value from the row above at the
 //! index one before its start. The first row is a special case where this value is always 1.
 //!
-//! As a nice side effect this approach always overwrites values so we can re-use the memory buffer
+//! As a nice side effect this approach always overwrites values so we can reuse the memory buffer
 //! for different entries without having to zero out values.
 //!
 //! ## Alternate approach
@@ -49,9 +49,9 @@
 //!     ```none
 //!          . # # # . . . . . . . . .
 //!         [0 0 0 0 1 0 0 0 0 0 0 0 0]
-//!     ````
+//!     ```
 //!
-//!* The next `##` can match at 4 possible locations:
+//! * The next `##` can match at 4 possible locations:
 //!     ```none
 //!         . # # # . # # . . . . . .
 //!        [0 0 0 0 1 0 0 0 0 0 0 0 0]
@@ -79,8 +79,8 @@
 //!                 <<<<<<<<
 //!        [0 0 0 0 0 0 0 1 1 1 1 0 0]
 //!     ```
-//!* The final `#` can also match at 4 possible locations (for brevity only showing the 2nd pattern
-//!  in a single position):
+//! * The final `#` can also match at 4 possible locations
+//!   (for brevity only showing the 2nd pattern in a single position):
 //!     ```none
 //!         . # # # . # # . # . . . .
 //!        [0 0 0 0 1 0 0 0 0 0 0 0 0]
@@ -195,7 +195,7 @@ where
         let mut valid = true;
 
         for i in 0..wiggle {
-            // In order to be a broken spring, an interval must only contains `#` or `?`
+            // In order to be a broken spring, an interval must only contain `#` or `?`
             // characters and not have a '#' character immediately before or after.
             if pattern[i + size] == b'#' {
                 sum = 0;

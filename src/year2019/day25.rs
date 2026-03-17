@@ -239,7 +239,7 @@ fn drop_item(computer: &mut Computer, item: &str) {
 }
 
 // A quirk of the intcode program is that commands can't be stacked. We must first read all the
-// input from previous command before the next command can be submitted.
+// output from the previous command before the next command can be submitted.
 fn drain_output(computer: &mut Computer) {
     while let State::Output(_) = computer.run() {}
 }

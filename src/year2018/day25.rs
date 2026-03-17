@@ -1,7 +1,7 @@
 //! # Four-Dimensional Adventure
 //!
 //! This problem is the classic [union find](https://en.wikipedia.org/wiki/Disjoint-set_data_structure).
-//! However since we only need the *count* of the distinct sets we can use a much simpler approach.
+//! However, since we only need the *count* of the distinct sets we can use a much simpler approach.
 //!
 //! Starting with an arbitrary point we find all other points within range, adding them to a
 //! todo list. We then transitively determine the neighbors of those points, and so on until
@@ -23,7 +23,7 @@ use crate::util::iter::*;
 use crate::util::parse::*;
 
 pub fn parse(input: &str) -> Vec<usize> {
-    // Collapse inputs into a single positive base-23 number offset from -11,-11,-11,-11
+    // Collapse inputs into a single positive base-23 number offset from -11,-11,-11,-11.
     input
         .iter_signed::<i32>()
         .chunk::<4>()

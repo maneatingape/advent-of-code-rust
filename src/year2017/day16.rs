@@ -4,7 +4,7 @@
 //! The spin and exchange moves compose into a single transformation and the partner swaps compose
 //! into a second independent transformation.
 //!
-//! Each transformation can then be applied to itself to double the effect. For example a single
+//! Each transformation can then be applied to itself to double the effect. For example, a single
 //! complete dance turns into two dances, then doubles to four dances and so on.
 //!
 //! This allows us to compute part two with a similar approach to
@@ -43,7 +43,7 @@ impl Dance {
 
 /// Reduces all 10,000 individual dance moves into just two independent transformations.
 pub fn parse(input: &str) -> Dance {
-    // Tokenize the input into two parallel iterators
+    // Tokenize the input into two parallel iterators.
     let mut letters = input.bytes().filter(u8::is_ascii_lowercase);
     let mut numbers = input.iter_unsigned::<usize>();
 

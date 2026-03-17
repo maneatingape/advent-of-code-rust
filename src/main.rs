@@ -11,7 +11,7 @@ struct Solution {
 }
 
 fn main() {
-    // Parse command line options
+    // Parse command line options.
     let mut iter = args().flat_map(|arg| arg.iter_unsigned().collect::<Vec<u32>>());
     let (year, day) = (iter.next(), iter.next());
 

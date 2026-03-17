@@ -173,12 +173,12 @@ fn compress<'a>(path: &'a str, movement: &mut Movement<'a>) -> ControlFlow<()> {
         movement.routine.push(',');
 
         if let Some(needle) = movement.functions[i] {
-            // Try known patterns first
+            // Try known patterns first.
             if let Some(remaining) = path.strip_prefix(needle) {
                 compress(remaining, movement)?;
             }
         } else {
-            // Then combinations up to length 20 characters
+            // Then combinations up to length 20 characters.
             for (needle, remaining) in segments(path) {
                 movement.functions[i] = Some(needle);
                 compress(remaining, movement)?;
@@ -197,20 +197,20 @@ fn compress<'a>(path: &'a str, movement: &mut Movement<'a>) -> ControlFlow<()> {
 fn segments(path: &str) -> impl Iterator<Item = (&str, &str)> {
     path.bytes()
         .enumerate()
-        // Index of every comma ',' in the string
+        // Index of every comma ',' in the string.
         .filter_map(|(i, b)| (b == b',').then_some(i))
-        // Maximum length for movement function is 20 characters
+        // Maximum length for movement function is 20 characters.
         .take_while(|&i| i < 21)
-        // Include trailing comma in "needle" to make matching easier
+        // Include trailing comma in "needle" to make matching easier.
         .map(|i| path.split_at(i + 1))
-        // Movement is always pairs of (rotation, magnitude) so return every second comma
+        // Movement is always pairs of (rotation, magnitude) so return every second comma.
         .skip(1)
         .step_by(2)
 }
 
 #[cfg(not(feature = "frivolity"))]
 fn visit(mut computer: Computer) -> i64 {
-    // Disable continuous video feed
+    // Disable continuous video feed.
     computer.input_ascii("n\n");
 
     let mut result = 0;
@@ -231,14 +231,14 @@ fn visit(mut computer: Computer) -> i64 {
     let mut previous = ' ';
     let mut buffer = String::new();
 
-    // Enable continuous video feed
+    // Enable continuous video feed.
     computer.input_ascii("y\n");
 
     while let State::Output(next) = computer.run() {
         result = next;
         let ascii = (next as u8) as char;
 
-        // Highlight the robot's position
+        // Highlight the robot's position.
         match ascii {
             '^' | 'v' | '<' | '>' => {
                 let _ = write!(&mut buffer, "{BOLD}{YELLOW}{ascii}{RESET}");
@@ -246,7 +246,7 @@ fn visit(mut computer: Computer) -> i64 {
             _ => buffer.push(ascii),
         }
 
-        // Each frame is separated by a blank line
+        // Each frame is separated by a blank line.
         if ascii == '\n' && previous == '\n' {
             print!("{HOME}{CLEAR}{buffer}");
             sleep(Duration::from_millis(25));

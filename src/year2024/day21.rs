@@ -1,6 +1,6 @@
 //! # Keypad Conundrum
 //!
-//! Each key sequence always end in `A`. This means that we can consider each group of button
+//! Each key sequence always ends in `A`. This means that we can consider each group of button
 //! presses between `A`s independently using a recursive approach with memoization to efficiently
 //! compute the minimum presses needed for any depth of chained robots.
 use crate::util::hash::*;

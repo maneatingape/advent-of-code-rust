@@ -1,7 +1,7 @@
 //! # Beverage Bandits
 //!
 //! This problem is notoriously tricky due to the finicky rules that must be followed precisely and
-//! that not all inputs trigger all edge cases. However from a performance aspect most of the time
+//! that not all inputs trigger all edge cases. However, from a performance aspect most of the time
 //! is consumed finding the nearest target whenever a unit needs to move.
 //!
 //! For each move we perform two [BFS](https://en.wikipedia.org/wiki/Breadth-first_search).
@@ -191,7 +191,7 @@ fn fight(input: &Input, elf_attack_power: i32, part_two: bool) -> Option<i32> {
 
             // Check if there are no more remaining targets then return *complete* turns.
             // Determining a complete turn is subtle. If the last unit to act (in reading order)
-            // kills the last remaining enemy then that counts as a complete turn. Otherwise the
+            // kills the last remaining enemy then that counts as a complete turn. Otherwise, the
             // turn is considered incomplete and doesn't count.
             if elves == 0 || goblins == 0 {
                 return Some(turn * units.iter().map(|u| u.health.max(0)).sum::<i32>());

@@ -11,8 +11,8 @@
 //! The numbers from 1 to 999 are handled specially.
 //!
 //! Interestingly, the total time to solve this problem is *extremely* sensitive to the secret key
-//! provided as input. For example my key required ~10⁷ iterations to find the answer to part two.
-//! However for unit testing, I was able to randomly find a value that takes only 455 iterations,
+//! provided as input. For example, my key required ~10⁷ iterations to find the answer to part two.
+//! However, for unit testing, I was able to randomly find a value that takes only 455 iterations,
 //! about 22,000 times faster!
 //!
 //! [`MD5`]: crate::util::md5
@@ -94,7 +94,7 @@ fn worker(shared: &Shared) {
         let (mut buffer, size) = format_string(&shared.prefix, offset);
 
         for n in 0..1000 {
-            // Format macro is very slow, so update digits directly
+            // Format macro is very slow, so update digits directly.
             buffer[size - 3] = b'0' + (n / 100) as u8;
             buffer[size - 2] = b'0' + ((n / 10) % 10) as u8;
             buffer[size - 1] = b'0' + (n % 10) as u8;
@@ -120,7 +120,7 @@ mod simd {
         offset: u32,
         shared: &Shared,
     ) {
-        // Format macro is very slow, so update digits directly
+        // Format macro is very slow, so update digits directly.
         for i in 0..N {
             let n = offset + i as u32;
             buffers[i][size - 3] = b'0' + (n / 100) as u8;

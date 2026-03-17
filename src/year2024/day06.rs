@@ -159,7 +159,7 @@ impl Shortcut {
         let mut left = grid.same_size_with(ORIGIN);
         let mut right = grid.same_size_with(ORIGIN);
 
-        // Process columns for up/down
+        // Process columns for up/down.
         for x in 0..grid.width {
             let mut last = Point::new(x, -1);
             for y in 0..grid.height {
@@ -180,7 +180,7 @@ impl Shortcut {
             }
         }
 
-        // Process rows for left/right
+        // Process rows for left/right.
         for y in 0..grid.height {
             let mut last = Point::new(-1, y);
             for x in 0..grid.width {

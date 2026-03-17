@@ -47,7 +47,7 @@ pub fn parse(input: &str) -> Input {
         }
     }
 
-    // Similarly vertical blizzards repeat every `height` minutes so precompute to save time later.
+    // Similarly, vertical blizzards repeat every `height` minutes so precompute to save time later.
     let mut vertical = Vec::with_capacity(height * height);
     for time in 0..height {
         for i in 0..height {

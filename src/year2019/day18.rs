@@ -31,7 +31,7 @@
 //!
 //! We also apply some low-level tricks to go even faster:
 //! * The set of remaining keys needed is stored as bits in a `u32`. We can have at most 26 keys
-//!   so this will always fit. For example needing `a`, `b` and `e` is represented as `10011`.
+//!   so this will always fit. For example, needing `a`, `b` and `e` is represented as `10011`.
 //! * Robot location is also stored the same way. Robots can only ever be in their initial location
 //!   or at a key, so this gives a max of 26 + 4 = 30 locations. As a nice bonus this allows
 //!   part one and part two to share the same code.
@@ -54,7 +54,7 @@ use std::ops::Range;
 
 const RANGE: Range<usize> = 0..30;
 
-/// `position` and `remaining` are both bitfields. For example a robot at key `d` that needs
+/// `position` and `remaining` are both bitfields. For example, a robot at key `d` that needs
 /// `b` and `c` would be stored as `position = 1000` and `remaining = 110`.
 #[derive(Clone, Copy, Default, PartialEq, Eq, Hash)]
 struct State {
@@ -121,7 +121,7 @@ fn parse_maze(width: usize, bytes: &[u8]) -> Maze {
     }
 
     // Start a BFS from each key and robot's location stopping at the nearest neighbor.
-    // As a minor optimization we re-use the same `todo` and `seen` between each search.
+    // As a minor optimization we reuse the same `todo` and `seen` between each search.
     let default = Door { distance: u32::MAX, needed: 0 };
 
     let mut maze = [[default; 30]; 30];
@@ -223,7 +223,7 @@ fn explore(width: usize, bytes: &[u8]) -> u32 {
     unreachable!()
 }
 
-// Convenience functions to find keys and robots
+// Convenience functions to find keys and robots.
 fn is_key(b: u8) -> Option<usize> {
     b.is_ascii_lowercase().then(|| (b - b'a') as usize)
 }

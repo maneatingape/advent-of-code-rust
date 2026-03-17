@@ -6,7 +6,7 @@
 //!
 //! ## Compression
 //!
-//! First we "compress" the maze into a much smaller simpler graph. For example the following maze
+//! First we "compress" the maze into a much smaller simpler graph. For example, the following maze
 //! converts into an undirected weighted graph.
 //!
 //! ```none
@@ -56,7 +56,7 @@
 //! ## Dynamic programming
 //!
 //! For a 6 x 6 grid graph there are 1262816 total possible rook walks, given by
-//! [OEIS A007764](https://oeis.org/A007764). However since we want the longest path it only makes
+//! [OEIS A007764](https://oeis.org/A007764). However, since we want the longest path it only makes
 //! sense to consider the paths that visit the most possible nodes, in this case 35 (we have to
 //! skip 1). There are only 10180 of these paths making it much faster.
 //!
@@ -143,7 +143,7 @@
 //! ### Join two open segments from a previous row.
 //!
 //! A restriction is that we can't create closed cycles that don't connect to the start or end,
-//! as this would skip several nodes. For example this is not allowed:
+//! as this would skip several nodes. For example, this is not allowed:
 //!
 //! ```none
 //!     Previous .....S |┌───┐

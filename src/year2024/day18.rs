@@ -25,7 +25,7 @@
 //!   then push `(time, position)` onto a max heap keyed by time.
 //! * If we exhaust the flood fill `VecDeque` then pop the heap's top item.
 //!   This is the oldest byte that we encountered blocking the way.
-//!   Set `t` to the byte's time and push position to the dequeue.
+//!   Set `t` to the byte's time and push position to the deque.
 //! * Restart flood fill from new position until we reach the exit.
 use crate::util::grid::*;
 use crate::util::heap::*;

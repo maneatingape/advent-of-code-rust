@@ -33,7 +33,7 @@
 //! * If we can move 2 items up, then skip only moving 1 item up.
 //! * If we can move 1 item down, then skip moving 2 items down.
 //! * Moving a microchip and generator together is only safe if they are the same type (if they
-//!   are not from the same type, then the old floor will necessarily have the generator that
+//!   are not of the same type, then the old floor will necessarily have the generator that
 //!   pairs with the chip being moved, leaving that chip to be fried on its new floor).
 //! * If floor 1 is empty then don't move items back down to it, similarly if both floor 1 and
 //!   floor 2 are empty then don't move items to them.
@@ -77,7 +77,7 @@ impl State {
 
     // Attempt to adjust state by moving one or two items up or down.
     fn move_floor(self, up: bool, item_mask: u64) -> Option<State> {
-        // Build the new state
+        // Build the new state.
         let mut state = self;
 
         if up {
@@ -95,7 +95,7 @@ impl State {
 pub fn parse(input: &str) -> u32 {
     let mut pairs = FastMap::new();
 
-    // Find all items, and set an entry in state.pairs for each element name
+    // Find all items, and set an entry in state.pairs for each element name.
     let mut floor = 1;
     let words: Vec<_> = input.split(&[' ', ',', '.', '-']).skip(3).collect();
 
@@ -108,7 +108,7 @@ pub fn parse(input: &str) -> u32 {
         }
     }
 
-    // Optimize search by pre-handling item pairs starting on non-empty floor 1
+    // Optimize search by pre-handling item pairs starting on non-empty floor 1.
     let mut floors = [0_u8; 8];
     let mut non_empty = false;
     let mut steps = 0;
@@ -136,7 +136,7 @@ pub fn part1(input: &u32) -> u32 {
 }
 
 pub fn part2(input: &u32) -> u32 {
-    // Both pairs add 12 steps each
+    // Both pairs add 12 steps each.
     *input + 24
 }
 
@@ -157,7 +157,7 @@ fn bfs(start: State, steps: u32) -> u32 {
         let items = state.pairs & (FLOOR1 << state.elevator);
 
         // When moving down, try one item first; try two only if one didn't work.
-        // Don't move down from bottom floor, or down into empty region
+        // Don't move down from bottom floor, or down into empty region.
         if !(state.elevator == 0
             || (state.elevator == 1 && (state.pairs & FLOOR1) == 0)
             || (state.elevator == 2 && (state.pairs & (FLOOR1 | FLOOR2) == 0)))

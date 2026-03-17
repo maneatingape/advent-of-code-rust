@@ -20,7 +20,7 @@
 //! direction is equivalent. This reduces the storage space and time by half.
 //!
 //! To speed things up even further we use a trick. Classic A* uses a generic priority queue that
-//! can be implemented in Rust using a [`BinaryHeap`]. However the total cost follows a strictly
+//! can be implemented in Rust using a [`BinaryHeap`]. However, the total cost follows a strictly
 //! increasing order in a constrained range of values, so we can use a much faster
 //! [bucket queue](https://en.wikipedia.org/wiki/Bucket_queue). The maximum possible increase in
 //! heuristic is 10 × 9 from heat plus 10 for the distance change for a total of 100 buckets.
@@ -93,7 +93,7 @@ fn astar<const L: i32, const U: i32>(grid: &Grid<i32>) -> i32 {
                 // We just moved vertically so now check both left and right directions.
 
                 // Each direction loop is the same:
-                // * Check to see if we gone out of bounds
+                // * Check to see if we've gone out of bounds
                 // * Increase the cost by the "heat" of the square we've just moved into.
                 // * Check if we've already been to this location with a lower cost.
                 // * Add new state to priority queue.

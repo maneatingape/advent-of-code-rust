@@ -5,7 +5,7 @@
 //! exactly as described in the excellent [Red Blob Games](https://www.redblobgames.com/) blog.
 //!
 //! As mentioned in the blog, the Manhattan distance to the center has the formula
-//! `(q.abs() + r.abs() + s.abs()) / 2`
+//! `(q.abs() + r.abs() + s.abs()) / 2`.
 type Input = (i32, i32);
 
 pub fn parse(input: &str) -> Input {

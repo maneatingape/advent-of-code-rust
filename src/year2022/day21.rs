@@ -8,7 +8,7 @@
 //! Following the tree down the path previously marked "unknown" we recursively solve
 //! equations until we reach the `humn` node.
 //!
-//! For example say the root's children are `a` and `b`
+//! For example, say the root's children are `a` and `b`
 //!
 //! ```none
 //!     yell[a] = 6

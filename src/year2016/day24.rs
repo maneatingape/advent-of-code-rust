@@ -54,7 +54,7 @@ pub fn parse(input: &str) -> Input {
                     distance[from][to] = steps;
                     distance[to][from] = steps;
                     need -= 1;
-                    // Short-circuit once we found all needed pairs
+                    // Short-circuit once we've found all needed pairs.
                     if need == 0 {
                         break;
                     }
