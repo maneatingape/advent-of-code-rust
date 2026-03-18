@@ -9,14 +9,14 @@ pie
     "Day 9" : 128
 -->
 <svg viewBox="0 0 1350 450" preserveAspectRatio="xMidYMin" xmlns="http://www.w3.org/2000/svg">
-	<style>
-		text {font-family:sans-serif;font-size:17px;}
-		.pieOuterCircle {stroke:black;stroke-width:2px;fill:none;}
-		.pieCircle {stroke:black;stroke-width:2px;opacity:0.7;}
-		.slice {text-anchor:middle;}
-		.pieTitleText {text-anchor:middle;font-size:25px;}
-	</style>
-	<g transform="translate(675,225)">
+    <style>
+        text {font-family:sans-serif;font-size:17px;}
+        .pieOuterCircle {stroke:black;stroke-width:2px;fill:none;}
+        .pieCircle {stroke:black;stroke-width:2px;opacity:0.7;}
+        .slice {text-anchor:middle;}
+        .pieTitleText {text-anchor:middle;font-size:25px;}
+    </style>
+    <g transform="translate(675,225)">
         <circle class="pieOuterCircle" cx="0" cy="0" r="186"/>
         <path class="pieCircle" d="M0,-185A185,185,0,0,1,112.165,147.119L0,0Z" fill="#7cb5ec"/>
         <path class="pieCircle" d="M112.165,147.119A185,185,0,0,1,-129.63,131.989L0,0Z" fill="#90ed7d"/>
@@ -49,5 +49,5 @@ pie
             <rect height="18" style="fill: rgb(228, 211, 84); stroke: rgb(228, 211, 84);" width="18"/>
             <text x="22" y="14">Day 9</text>
         </g>
-	</g>
+    </g>
 </svg>
