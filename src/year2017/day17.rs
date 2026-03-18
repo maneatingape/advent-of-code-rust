@@ -14,7 +14,8 @@
 //! wraps around. For example, if the index is 1, the current value 10,000 and the step 300,
 //! then we can insert 34 values at once. The [`div_ceil`] method is perfect for this computation.
 //!
-//! This reduces the number of loops needed to approximately √50000000 = 7071.
+//! The number of skips grows geometrically, or O(ln n) overall effort, learning the answer in
+//! just a few thousand iterations.
 //!
 //! [`div_ceil`]: usize::div_ceil
 use crate::util::parse::*;
@@ -58,7 +59,7 @@ pub fn part2(input: &usize) -> usize {
             result = n;
         }
 
-        let skip = (n - index).div_ceil(step);
+        let skip = (n - index).div_ceil(*input);
         n += skip;
         index = (index + skip * step) % n;
     }
