@@ -20,12 +20,12 @@
 //! [`div_ceil`]: usize::div_ceil
 use crate::util::parse::*;
 
-pub fn parse(input: &str) -> usize {
-    input.unsigned()
-}
+type Input = (usize, usize);
 
-pub fn part1(input: &usize) -> usize {
-    let step = input + 1;
+pub fn parse(input: &str) -> Input {
+    let step = input.unsigned::<usize>() + 1;
+
+    // For part one, track the index every node had when inserted.
     let mut index = 0;
     let mut indexes = vec![0; 2017];
     for len in 1..=2017 {
@@ -34,10 +34,12 @@ pub fn part1(input: &usize) -> usize {
     }
     let mut next = (indexes[2016] + 1) % 2017;
 
-    let mut result = 0;
+    // Now back up to find the prior node that shares the same index, accounting for when
+    // the index moved because an intermediate number was assigned an earlier index.
+    let mut part_one = 0;
     for (i, &o) in indexes.iter().enumerate().rev() {
         if o == next {
-            result = i + 1;
+            part_one = i + 1;
             break;
         }
         if o < next {
@@ -45,24 +47,29 @@ pub fn part1(input: &usize) -> usize {
         }
     }
 
-    result
-}
-
-pub fn part2(input: &usize) -> usize {
-    let step = input + 1;
-    let mut n: usize = 1;
-    let mut index = 0;
-    let mut result = 0;
+    // For part two, we only need to focus on nodes inserted at index 0.
+    let mut n: usize = 2017;
+    let mut part_two = 0;
 
     while n <= 50_000_000 {
         if index == 0 {
-            result = n;
+            part_two = n;
         }
 
-        let skip = (n - index).div_ceil(*input);
+        let skip = (n - index).div_ceil(step - 1);
         n += skip;
-        index = (index + skip * step) % n;
+        // Here, n is larger than 2017, while step is on the order of 300 to 400; therefore, step
+        // wraps only once, and subtraction works instead of modulus.
+        index = index + skip * step - n;
     }
 
-    result
+    (part_one, part_two)
+}
+
+pub fn part1(input: &Input) -> usize {
+    input.0
+}
+
+pub fn part2(input: &Input) -> usize {
+    input.1
 }
