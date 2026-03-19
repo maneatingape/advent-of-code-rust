@@ -15,6 +15,7 @@
 //!
 //! * `QQQJA` => `0x41000ccc1a`
 use crate::util::parse::*;
+use std::cmp::Reverse;
 
 pub struct Hand {
     cards: [u8; 5],
@@ -61,8 +62,7 @@ fn sort(input: &[Hand], j: usize) -> usize {
 
             let jokers = freq[1];
             freq[1] = 0;
-            freq.sort_unstable();
-            freq.reverse();
+            freq.sort_unstable_by_key(|&card| Reverse(card));
             freq[0] += jokers;
 
             // To speed up comparisons, pack the frequencies and card ranks
