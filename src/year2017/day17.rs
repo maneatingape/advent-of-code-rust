@@ -27,17 +27,19 @@ pub fn parse(input: &str) -> Input {
 
     // For part one, track the index every node had when inserted.
     let mut index = 0;
-    let mut indexes = vec![0; 2017];
-    for len in 1..=2017 {
-        index = (index + step) % len;
-        indexes[len - 1] = index;
-    }
-    let mut next = (indexes[2016] + 1) % 2017;
+    let indices: Vec<_> = (1..=2017)
+        .map(|n| {
+            index = (index + step) % n;
+            index
+        })
+        .collect();
 
     // Now back up to find the prior node that shares the same index, accounting for when
     // the index moved because an intermediate number was assigned an earlier index.
+    let mut next = (index + 1) % 2017;
     let mut part_one = 0;
-    for (i, &o) in indexes.iter().enumerate().rev() {
+
+    for (i, &o) in indices.iter().enumerate().rev() {
         if o == next {
             part_one = i + 1;
             break;
@@ -48,7 +50,7 @@ pub fn parse(input: &str) -> Input {
     }
 
     // For part two, we only need to focus on nodes inserted at index 0.
-    let mut n: usize = 2017;
+    let mut n = 2017;
     let mut part_two = 0;
 
     while n <= 50_000_000 {
