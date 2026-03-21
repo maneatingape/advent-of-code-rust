@@ -37,8 +37,8 @@ pub fn part1(grid: &Grid<u8>) -> u32 {
 pub fn part2(grid: &Grid<u8>) -> u32 {
     let mut result = 0;
 
-    for x in 1..grid.width - 1 {
-        for y in 1..grid.height - 1 {
+    for y in 1..grid.height - 1 {
+        for x in 1..grid.width - 1 {
             let point = Point::new(x, y);
 
             if grid[point] == b'A' {

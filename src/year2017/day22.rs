@@ -98,8 +98,8 @@ pub fn part2(input: &Grid<u8>) -> usize {
     // packing 4 nodes into each byte.
     let offset = SIZE - (input.width / 2) as usize;
 
-    for x in 0..input.width {
-        for y in 0..input.height {
+    for y in 0..input.height {
+        for x in 0..input.width {
             if input[Point::new(x, y)] == b'#' {
                 let (adjusted_x, adjusted_y) = (x as usize + offset, y as usize + offset);
                 let index = SIZE * (adjusted_y / 2) + (adjusted_x / 2);
