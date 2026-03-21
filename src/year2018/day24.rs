@@ -6,6 +6,13 @@
 //! become too weak to destroy any further units. As each fight is independent, we find the
 //! minimum boost value with a multithreaded parallel search.
 //!
+//! Additionally, it is possible to speed up part 2 with a heuristic comparing the ratio of
+//! infection hit points to immune effective power, vs. the ratio of immune hit points to
+//! infection effective power. A larger ratio requires more turns to defeat the other side. It is
+//! possible to win with the larger ratio, but larger boosts bring the ratios closer together;
+//! so this code skips boosts where the immune system has more than twice the nominal work to
+//! do to wipe out the infection hit points.
+//!
 //! [`Day 15`]: crate::year2018::day15
 use crate::util::hash::*;
 use crate::util::parse::*;
@@ -21,6 +28,7 @@ enum Kind {
     Immune,
     Infection,
     Draw,
+    Unbalanced,
 }
 
 #[derive(Clone, Copy)]
@@ -117,6 +125,21 @@ fn fight(input: &Input, boost: i32) -> (Kind, i32) {
 
     // Boost reindeer's immune system.
     immune.iter_mut().for_each(|group| group.damage += boost);
+
+    // Determine if the fight is even worth running.
+    if boost != 0 {
+        let infect_hp: usize =
+            infection.iter().map(|group| (group.units * group.hit_points) as usize).sum();
+        let immune_hp: usize =
+            immune.iter().map(|group| (group.units * group.hit_points) as usize).sum();
+        let infect_eff: usize =
+            infection.iter().map(|group| (group.units * group.damage) as usize).sum();
+        let immune_eff: usize =
+            immune.iter().map(|group| (group.units * group.damage) as usize).sum();
+        if infect_hp / immune_eff > 2 * immune_hp / infect_eff {
+            return (Kind::Unbalanced, 0);
+        }
+    }
 
     for turn in 1.. {
         // Target selection phase.
