@@ -100,6 +100,7 @@ mod scalar {
 
         // To prevent negative array indices offset the starting cells by seven units in each
         // dimension. This allows six for growth, plus one for padding to prevent needing edge checks.
+        // Iteration is intentionally column-major, instead of the usual row-major.
         for x in 0..input.width {
             for y in 0..input.height {
                 if input[Point::new(x, y)] == b'#' {
@@ -170,8 +171,8 @@ mod simd {
         let mut first = current;
 
         // Set initial cubes offset from the edges to allow for growth.
-        for x in 0..input.width {
-            for y in 0..input.height {
+        for y in 0..input.height {
+            for x in 0..input.width {
                 if input[Point::new(x, y)] == b'#' {
                     current[7][y as usize + 7][x as usize + 7] = 1;
                 }
@@ -237,8 +238,8 @@ mod simd {
         let mut second = current;
 
         // Set initial cubes offset from the edges to allow for growth.
-        for x in 0..input.width {
-            for y in 0..input.height {
+        for y in 0..input.height {
+            for x in 0..input.width {
                 if input[Point::new(x, y)] == b'#' {
                     current[7][7][y as usize + 7][x as usize + 7] = 1;
                 }
