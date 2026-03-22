@@ -100,10 +100,12 @@ pub fn part2(input: &Grid<u8>) -> usize {
     // [8] 2  3 [3]
     // [7] 4  5 [4]
     //    [6][5]
-    let mut grid3 = vec![0; 2 * HALF_WIDTH * 2 * THIRD_HEIGHT];
+    let mut grid3 = vec![0_u16; 2 * HALF_WIDTH * 2 * THIRD_HEIGHT];
 
-    // Precompute all 10 * 4096 possible state transitions for faster simulation.
-    let cache3: [[_; 4096]; 10] =
+    // Precompute half of the 10 * 4096 possible state transitions for faster simulation.
+    // Since a block is symmetric about 180-degree rotation, headings 5-9 utilize rotation
+    // on the results of the cache for 0-4.
+    let cache3: [[_; 4096]; 5] =
         from_fn(|heading| from_fn(|state| compute_block3(&mut grid3, heading, state)));
 
     // Copy the smaller initial input grid to the center of the larger grid, packing 6 nodes
@@ -131,18 +133,26 @@ pub fn part2(input: &Grid<u8>) -> usize {
 
     // Memoized blocks can combine up to 12 steps. Handle the last few steps individually to
     // prevent overshooting the step target and overcounting the infected node transitions.
+    // With 4.1 million cache lookups for 10 million repetitions, saving time inside this hot
+    // loop is essential. By bit-packing 5 fields into a single `u32`, we limit the size of the
+    // array to 20k entries * 4 bytes = 80kB making sure that it stays smaller than L1 cache.
     while remaining > 12 {
         let state = grid3[index] as usize;
-        let packed = cache3[heading][state];
-
-        // With 4.1 million cache lookups for 10 million repetitions, saving time inside this
-        // hot loop is essential. By bit-packing 5 fields into a single `u32`, we limit the size
-        // of the array to 160kB making sure that it is not too much larger than L1 cache.
-        grid3[index] = (packed % 4096) as u16; // bits 0-11
-        index = index + (packed >> 23) as usize - SIZE; // bits 23-31
-        heading = ((packed >> 12) % 16) as usize; // bits 12-15
-        infected += ((packed >> 16) % 8) as usize; // bits 16-18
-        remaining -= ((packed >> 19) % 16) as usize; // bits 19-22
+        if heading < 5 {
+            let packed = cache3[heading][state];
+            grid3[index] = (packed % 4096) as u16; // bits 0-11
+            index = index + (packed >> 23) as usize - SIZE; // bits 23-31
+            heading = ((packed >> 12) % 16) as usize; // bits 12-15
+            infected += ((packed >> 16) % 8) as usize; // bits 16-18
+            remaining -= ((packed >> 19) % 16) as usize; // bits 19-22
+        } else {
+            let packed = cache3[heading - 5][rotate_block(state)];
+            grid3[index] = rotate_block(packed as usize % 4096) as u16; // bits 0-11
+            index = index + SIZE - (packed >> 23) as usize; // bits 23-31
+            heading = (((packed >> 12) % 16) + 5) as usize % 10; // bits 12-15
+            infected += ((packed >> 16) % 8) as usize; // bits 16-18
+            remaining -= ((packed >> 19) % 16) as usize; // bits 19-22
+        }
     }
 
     let (mut sextant, mut direction) = decode(heading);
@@ -263,4 +273,18 @@ fn decode(heading: usize) -> (usize, usize) {
         8 => (2, 1),
         _ => (0, 1),
     }
+}
+
+/// Rotate a 2x3 block by 180 degrees. The two bits for sextant 012345 become 543210.
+#[inline]
+fn rotate_block(value: usize) -> usize {
+    // See https://graphics.stanford.edu/~seander/bithacks.html#ReverseByteWith64Bits
+    // for inspiration. Expand 12 bits into three 16-bit lanes.
+    let reps = value * 0x4_0004_0004;
+    // Mask out each pair that occurs in right 12-bit lane.
+    let bits = reps & 0x30c_0c30_30c0;
+    // Multiply to merge those lanes into a common 12-bit middle; carry is not an issue.
+    let prod = bits.wrapping_mul(0x10_0100_1001);
+    // Grab the desired result.
+    (prod >> 36) & 0xfff
 }
