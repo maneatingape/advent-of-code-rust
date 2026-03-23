@@ -49,15 +49,8 @@
 //! this directly would take at least 10⁵.10⁵.10³ = 10¹³ = 10,000,000,000,000 steps.
 //!
 //! [`Day 18`]: crate::year2017::day18
+use crate::util::math::*;
 use crate::util::parse::*;
-
-/// Pre-compile a list of the primes under 400; adequate for all two-digit seeds.
-const PRIMES: [u32; 78] = [
-    2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97,
-    101, 103, 107, 109, 113, 127, 131, 137, 139, 149, 151, 157, 163, 167, 173, 179, 181, 191, 193,
-    197, 199, 211, 223, 227, 229, 233, 239, 241, 251, 257, 263, 269, 271, 277, 281, 283, 293, 307,
-    311, 313, 317, 331, 337, 347, 349, 353, 359, 367, 373, 379, 383, 389, 397,
-];
 
 /// We only need the very first number from the input.
 pub fn parse(input: &str) -> u32 {
@@ -74,17 +67,43 @@ pub fn part1(input: &u32) -> u32 {
 pub fn part2(input: &u32) -> usize {
     let start = 100_000 + 100 * input;
     let end = start + 17001;
-    let last_prime = PRIMES.partition_point(|&p| p * p < end);
-    (start..end).step_by(17).filter(|&n| !is_prime(n, &PRIMES[0..last_prime])).count()
+    (start..end).step_by(17).filter(|&n| !is_prime(n)).count()
 }
 
 /// Simple but effective [prime number check](https://en.wikipedia.org/wiki/Primality_test)
 /// trying to identify composite numbers quickly and to test as few factors as possible.
-fn is_prime(n: u32, primes: &[u32]) -> bool {
-    for &p in primes {
-        if n.is_multiple_of(p) {
+fn is_prime(n: u32) -> bool {
+    if n <= 1 {
+        return false;
+    }
+
+    if n <= 3 {
+        return true;
+    }
+
+    if n.is_multiple_of(2) || n.is_multiple_of(3) {
+        return false;
+    }
+
+    let s = (n - 1).trailing_zeros();
+    let d = n >> s;
+
+    // https://en.wikipedia.org/wiki/Miller%E2%80%93Rabin_primality_test#Testing_against_small_sets_of_bases
+    // "If n < 1,373,653, it is enough to test a = 2 and 3."
+    miller_rabin(n, 2, s, d) && miller_rabin(n, 3, s, d)
+}
+
+/// Return true if odd n is probably prime, after testing against base a. n must equal 1 + 2**s * d.
+#[inline]
+fn miller_rabin(n: u32, a: u64, s: u32, d: u32) -> bool {
+    let mut x: u64 = a.mod_pow(d as u64, n as u64);
+    let mut y = 0;
+    for _ in 0..s {
+        y = x * x % n as u64;
+        if y == 1 && x != 1 && x != n as u64 - 1 {
             return false;
         }
+        x = y;
     }
-    true
+    y == 1
 }
