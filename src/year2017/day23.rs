@@ -49,7 +49,7 @@
 //! this directly would take at least 10⁵.10⁵.10³ = 10¹³ = 10,000,000,000,000 steps.
 //!
 //! [`Day 18`]: crate::year2017::day18
-use crate::util::math::*;
+//use crate::util::math::*;
 use crate::util::parse::*;
 
 /// We only need the very first number from the input.
@@ -95,15 +95,31 @@ fn is_prime(n: u32) -> bool {
 
 /// Return true if odd n is probably prime, after testing against base a. n must equal 1 + 2**s * d.
 #[inline]
-fn miller_rabin(n: u32, a: u64, s: u32, d: u32) -> bool {
-    let mut x: u64 = a.mod_pow(d as u64, n as u64);
+fn miller_rabin(n: u32, a: u32, s: u32, d: u32) -> bool {
+    let mut x = safe_mod_pow(a, d, n);
     let mut y = 0;
     for _ in 0..s {
-        y = x * x % n as u64;
-        if y == 1 && x != 1 && x != n as u64 - 1 {
+        y = ((x as u64 * x as u64) % n as u64) as u32;
+        if y == 1 && x != 1 && x != n - 1 {
             return false;
         }
         x = y;
     }
     y == 1
+}
+
+/// Custom reimplementation of `crate::util::math::*` that avoids overflow.
+#[inline]
+fn safe_mod_pow(mut base: u32, mut e: u32, m: u32) -> u32 {
+    let mut result = 1;
+
+    while e > 0 {
+        if e & 1 == 1 {
+            result = ((result as u64 * base as u64) % m as u64) as u32;
+        }
+        base = ((base as u64 * base as u64) % m as u64) as u32;
+        e >>= 1;
+    }
+
+    result
 }
