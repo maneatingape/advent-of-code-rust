@@ -5,14 +5,14 @@ They're pretty fast and clean...but can you make them even *faster and cleaner*?
 
 If you've made an improvement, then please
 [open a pull request](https://github.com/maneatingape/advent-of-code-rust/compare).
-Contributions are encouraged and valued. 🎁
+Contributions are encouraged and appreciated.
 
 Your contribution should generally fall into one of the following two categories:
 
-* 🚀 **Performance Improvement** Your pull request gives a significant performance
+* **Performance Improvement** Your pull request gives a significant performance
   improvement. This could be achieved by using a better algorithm, better low-level optimizations,
   by applying the portable SIMD library or by any other means!
-* 🪲 **Bug Fix** Solutions try to be as general as possible but can't test for every input.
+* **Bug Fix** Solutions try to be as general as possible but can't test for every input.
   Your pull request fixes an incorrect answer for your input or prevents a panic.
 
 ## Legal Notice
