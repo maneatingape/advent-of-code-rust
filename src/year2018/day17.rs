@@ -33,28 +33,16 @@ pub struct Scan {
 pub fn parse(input: &str) -> Scan {
     let first = input.lines().map(|line| line.as_bytes()[0]);
     let second = input.iter_unsigned::<usize>().chunk::<3>();
-    let clay: Vec<_> = first.zip(second).collect();
+    let clay: Vec<_> = first
+        .zip(second)
+        .map(|(d, [a, b, c])| if d == b'x' { (a, a, b, c) } else { (b, c, a, a) })
+        .collect();
 
     // Find boundaries of the 2D scan.
-    let mut min_x = usize::MAX;
-    let mut max_x = 0;
-    let mut min_y = usize::MAX;
-    let mut max_y = 0;
-
-    for &(direction, triple) in &clay {
-        let (x1, x2, y1, y2) = if direction == b'x' {
-            let [x, y1, y2] = triple;
-            (x, x, y1, y2)
-        } else {
-            let [y, x1, x2] = triple;
-            (x1, x2, y, y)
-        };
-
-        min_x = min_x.min(x1);
-        max_x = max_x.max(x2);
-        min_y = min_y.min(y1);
-        max_y = max_y.max(y2);
-    }
+    let min_x = clay.iter().map(|c| c.0).min().unwrap();
+    let max_x = clay.iter().map(|c| c.1).max().unwrap();
+    let min_y = clay.iter().map(|c| c.2).min().unwrap();
+    let max_y = clay.iter().map(|c| c.3).max().unwrap();
 
     // Leave room for water on either side.
     let width = max_x - min_x + 3;
@@ -63,16 +51,14 @@ pub fn parse(input: &str) -> Scan {
     let mut kind = vec![Sand; bottom];
 
     // Draw each of the clay veins.
-    for (direction, triple) in clay {
-        if direction == b'x' {
-            let [x, y1, y2] = triple;
+    for (x1, x2, y1, y2) in clay {
+        if x1 == x2 {
             for y in y1..y2 + 1 {
-                kind[(width * y) + (x - min_x + 1)] = Stopped;
+                kind[width * y + x1 - min_x + 1] = Stopped;
             }
         } else {
-            let [y, x1, x2] = triple;
             for x in x1..x2 + 1 {
-                kind[(width * y) + (x - min_x + 1)] = Stopped;
+                kind[width * y1 + x - min_x + 1] = Stopped;
             }
         }
     }
@@ -107,33 +93,30 @@ fn flow(scan: &mut Scan, index: usize) -> Kind {
         Moving
     } else {
         // Tile is stopped (either clay or still water) so water flows both left and right.
-        let mut left = index;
-        let mut right = index;
+        let left = (0..index).rev().find(|&i| !spread(scan, i)).unwrap();
+        let right = (index + 1..scan.bottom).find(|&i| !spread(scan, i)).unwrap();
 
-        while scan.kind[left - 1] == Sand && flow(scan, left + scan.width) == Stopped {
-            left -= 1;
-        }
-
-        while scan.kind[right + 1] == Sand && flow(scan, right + scan.width) == Stopped {
-            right += 1;
-        }
-
-        if scan.kind[left - 1] == Stopped && scan.kind[right + 1] == Stopped {
-            for index in left..right + 1 {
-                scan.kind[index] = Stopped;
-            }
-            if index >= scan.top {
-                scan.stopped += right + 1 - left;
-            }
+        if scan.kind[left] == Stopped && scan.kind[right] == Stopped {
+            scan.kind[left + 1..right].fill(Stopped);
+            scan.stopped += right - left - 1;
             Stopped
         } else {
-            for index in left..right + 1 {
-                scan.kind[index] = Moving;
-            }
+            // Open on one or both sides, continue to flow off the sides.
+            flow(scan, left);
+            flow(scan, right);
+            scan.kind[left + 1..right].fill(Moving);
             if index >= scan.top {
-                scan.moving += right + 1 - left;
+                scan.moving += right - left - 1;
             }
             Moving
         }
     }
+}
+
+/// Check the neighboring horizontal tile first to see if we can keep spreading, then check the
+/// tile underneath. Speed things up by first checking via the middle condition if the tile
+/// is already stopped water or clay.
+fn spread(scan: &mut Scan, index: usize) -> bool {
+    scan.kind[index] == Sand
+        && (scan.kind[index + scan.width] == Stopped || flow(scan, index + scan.width) == Stopped)
 }
