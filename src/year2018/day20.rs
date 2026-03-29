@@ -8,13 +8,16 @@
 //! encountered then popping whenever the closing `)` is found. Additionally, we assume that
 //! the location will never move more than 55 rooms from the starting location in order to use
 //! a fixed-size array to hold the minimum distance to any room.
+
+/// 55 rooms in each direction gives a width and height of 110.
+const SIZE: usize = 110;
+
 type Input = (u32, usize);
 
 pub fn parse(input: &str) -> Input {
     // Start in the center.
-    let mut index = 6105;
-    // 55 in each direction, gives a width and height of 110, for a total size of 12,100.
-    let mut grid = vec![u32::MAX; 12_100];
+    let mut index = SIZE / 2 * SIZE + SIZE / 2;
+    let mut grid = vec![u32::MAX; SIZE * SIZE];
     let mut stack = Vec::with_capacity(500);
     let mut part_one = 0;
 
@@ -27,8 +30,8 @@ pub fn parse(input: &str) -> Input {
             b'(' => stack.push(index),
             b'|' => index = *stack.last().unwrap(),
             b')' => index = stack.pop().unwrap(),
-            b'N' => index -= 110,
-            b'S' => index += 110,
+            b'N' => index -= SIZE,
+            b'S' => index += SIZE,
             b'W' => index -= 1,
             b'E' => index += 1,
             _ => (),

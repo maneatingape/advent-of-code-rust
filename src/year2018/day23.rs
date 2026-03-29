@@ -57,9 +57,9 @@ impl Cube {
         let Cube { x1, x2, y1, y2, z1, z2 } = *self;
 
         // Lower and upper halves of the new sub-cubes.
-        let lx = self.x1.midpoint(self.x2);
-        let ly = self.y1.midpoint(self.y2);
-        let lz = self.z1.midpoint(self.z2);
+        let lx = x1.midpoint(x2);
+        let ly = y1.midpoint(y2);
+        let lz = z1.midpoint(z2);
         let ux = lx + 1;
         let uy = ly + 1;
         let uz = lz + 1;

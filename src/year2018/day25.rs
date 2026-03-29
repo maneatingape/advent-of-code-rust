@@ -88,5 +88,5 @@ pub fn part2(_input: &[usize]) -> &'static str {
 
 // Flatten a point into a 1D base-23 number relative to an offset.
 fn flatten(x: i32, y: i32, z: i32, w: i32, offset: i32) -> i32 {
-    (x + offset) * 23 * 23 * 23 + (y + offset) * 23 * 23 + (z + offset) * 23 + (w + offset)
+    [x, y, z, w].into_iter().fold(0, |acc, v| acc * 23 + v + offset)
 }

@@ -21,7 +21,7 @@ pub struct Cart {
 }
 
 impl Cart {
-    fn new(position: Point, direction: Point) -> Cart {
+    fn new(position: Point, direction: Point) -> Self {
         Cart { position, direction, turns: 0, active: true }
     }
 
@@ -71,7 +71,7 @@ pub fn part1(input: &Input) -> String {
 
     loop {
         // Turn order is important.
-        carts.sort_unstable_by_key(|c| input.grid.width * c.position.y + c.position.x);
+        carts.sort_unstable_by_key(|c| (c.position.y, c.position.x));
 
         for cart in &mut carts {
             // Follow tracks to next position.
@@ -94,7 +94,7 @@ pub fn part2(input: &Input) -> String {
 
     while carts.len() > 1 {
         // Turn order is important.
-        carts.sort_unstable_by_key(|c| input.grid.width * c.position.y + c.position.x);
+        carts.sort_unstable_by_key(|c| (c.position.y, c.position.x));
 
         for i in 0..carts.len() {
             // Crashed carts may not have been removed yet.
