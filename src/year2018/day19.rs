@@ -68,22 +68,19 @@
 //! smaller, on the order of 100,000 for an approximate complexity of `√100000 = 316`.
 use crate::util::parse::*;
 
-type Input = (u32, u32);
-
 /// Extracts the two unique numbers from the input then calculates the composite numbers
 /// needed for both parts.
-pub fn parse(input: &str) -> Input {
+pub fn parse(input: &str) -> u32 {
     let tokens: Vec<u32> = input.iter_unsigned().collect();
-    let base = 22 * tokens[65] + tokens[71];
-    (base + 836, base + 10551236)
+    22 * tokens[65] + tokens[71] + 836
 }
 
-pub fn part1(input: &Input) -> u32 {
-    divisor_sum(input.0)
+pub fn part1(input: &u32) -> u32 {
+    divisor_sum(*input)
 }
 
-pub fn part2(input: &Input) -> u32 {
-    divisor_sum(input.1)
+pub fn part2(input: &u32) -> u32 {
+    divisor_sum(input + 10_550_400)
 }
 
 /// Returns the sum of the divisors of an integer `n`, including 1 and `n` itself.

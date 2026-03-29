@@ -43,16 +43,15 @@ pub fn part2(input: &[i32]) -> i32 {
 
     // Calculate tuples of `(frequency gap, index, frequency)` then sort to group frequencies that
     // can collide together.
-    let mut frequency: i32 = 0;
+    let mut freq: i32 = 0;
     let mut seen = Vec::with_capacity(input.len());
 
-    for n in input {
-        seen.push((frequency.rem_euclid(total), frequency, seen.len()));
-        frequency += n;
+    for (i, &delta) in input.iter().enumerate() {
+        seen.push((freq.rem_euclid(total), freq, i));
+        freq += delta;
     }
 
     seen.sort_unstable();
-
     // Compare each adjacent pair of tuples to find candidates, then find the first tuple
     // sorting by smallest gap first, tie breaking with index if needed.
     seen.array_windows()

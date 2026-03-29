@@ -17,15 +17,13 @@ use std::mem::swap;
 type Input = (i64, i64);
 
 pub fn parse(input: &str) -> Input {
-    let lines: Vec<_> = input.lines().map(str::as_bytes).collect();
-
     // Parse initial state.
-    let initial_state = &lines[0][15..];
-    let mut pots = Pots::from(initial_state);
+    let (prefix, suffix) = input.split_once("\n\n").unwrap();
+    let mut pots = Pots::from(&prefix.as_bytes()[15..]);
 
     // Parse rules into a table with all possible 2⁵=32 patterns.
     let mut rules = [0; 32];
-    for line in &lines[2..] {
+    for line in suffix.lines().map(str::as_bytes) {
         if line[9] == b'#' {
             let binary = (0..5).fold(0, |acc, i| (acc << 1) | usize::from(line[i] == b'#'));
             rules[binary] = 1;
@@ -39,9 +37,8 @@ pub fn parse(input: &str) -> Input {
     let part_one = pots.sum();
 
     // Part two - Only simulate until the generation repeats.
-    let mut prev_pos;
     for steps in 20.. {
-        prev_pos = pots.pos;
+        let prev_pos = pots.pos;
         pots.step(&rules);
         if pots.state == pots.prev_state {
             // Generation has repeated - extrapolate to 50 billion steps.

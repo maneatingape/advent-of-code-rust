@@ -19,20 +19,10 @@ pub struct Input {
     points: Vec<Point>,
 }
 
-/// Parse points while keeping track of the min and max y coordinates.
 pub fn parse(input: &str) -> Input {
-    let mut min_y = i32::MAX;
-    let mut max_y = i32::MIN;
-    let points: Vec<_> = input
-        .iter_signed()
-        .chunk::<2>()
-        .map(|[x, y]| {
-            min_y = min_y.min(y);
-            max_y = max_y.max(y);
-            Point::new(x, y)
-        })
-        .collect();
-
+    let points: Vec<_> = input.iter_signed().chunk::<2>().map(|[x, y]| Point::new(x, y)).collect();
+    let min_y = points.iter().map(|p| p.y).min().unwrap();
+    let max_y = points.iter().map(|p| p.y).max().unwrap();
     Input { min_y, max_y, points }
 }
 
@@ -139,7 +129,7 @@ pub fn part1(input: &Input) -> i32 {
             finite[left] = false;
         }
 
-        let right = candidates[candidates.len() - 1].0;
+        let right = candidates.last().unwrap().0;
         if right != marker {
             finite[right] = false;
         }

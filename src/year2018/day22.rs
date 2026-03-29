@@ -130,7 +130,7 @@ fn scan_cave(input: &Input, width: i32, height: i32) -> Grid<Region> {
     let region = Region { erosion: 0, minutes: [i32::MAX; 3] };
     let mut grid = Grid::new(width, height, region);
 
-    grid[Point::new(0, 0)].update(depth);
+    grid[ORIGIN].update(depth);
 
     for x in 1..width {
         grid[Point::new(x, 0)].update(48271 * x + depth);

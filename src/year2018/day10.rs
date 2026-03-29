@@ -27,11 +27,8 @@ pub fn parse(input: &str) -> Input {
 
     // Message is 62 wide and 10 high (8 characters each 6 wide with 2 space gap between).
     // Shrink one second at a time until area of points is exactly 620.
-    let mut area = size(&points);
-
-    while area > 620 {
+    while size(&points) > 620 {
         tick(&mut points, &velocity, 1);
-        area = size(&points);
         time += 1;
     }
 
