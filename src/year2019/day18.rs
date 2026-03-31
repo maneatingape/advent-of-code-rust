@@ -8,7 +8,7 @@
 //! We first find the distance between every pair of keys then run
 //! [Dijkstra's algorithm](https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm) to find the
 //! shortest path that visits every node in the graph.
-
+//!
 //! The maze is also constructed in such a way to make our life easier:
 //! * There is only ever one possible path to each key. We do not need to consider
 //!   paths of different lengths that need different keys.

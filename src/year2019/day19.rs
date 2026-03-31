@@ -34,23 +34,10 @@ pub fn part1(input: &Input) -> i64 {
 
     // The beam is continuous so we only need to find the left and right edges.
     for y in 0..50 {
-        let mut left = i64::MAX;
-        let mut right = i64::MIN;
-
-        for x in 0..50 {
-            if precheck(input, x, y) && test(code, x, y) {
-                left = x;
-                break;
-            }
-        }
-        for x in (0..50).rev() {
-            if precheck(input, x, y) && test(code, x, y) {
-                right = x;
-                break;
-            }
-        }
-        if left <= right {
-            result += right - left + 1;
+        let left = (0..50).find(|&x| precheck(input, x, y) && test(code, x, y));
+        let right = (0..50).rfind(|&x| precheck(input, x, y) && test(code, x, y));
+        if let (Some(l), Some(r)) = (left, right) {
+            result += r - l + 1;
         }
     }
 

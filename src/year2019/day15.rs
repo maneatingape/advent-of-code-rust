@@ -99,10 +99,10 @@ pub fn part2(input: &Input) -> i32 {
     let mut todo = VecDeque::from([(oxygen_system, 0)]);
     let mut minutes = 0;
 
-    maze.remove(&ORIGIN);
+    maze.remove(&oxygen_system);
 
     while let Some((point, cost)) = todo.pop_front() {
-        minutes = minutes.max(cost);
+        minutes = cost;
 
         for next in ORTHOGONAL.map(|o| point + o) {
             if maze.remove(&next) {

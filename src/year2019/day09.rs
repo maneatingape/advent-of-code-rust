@@ -20,8 +20,6 @@ fn run(input: &[i64], value: i64) -> i64 {
     let mut computer = Computer::new(input);
     computer.input(value);
 
-    match computer.run() {
-        State::Output(result) => result,
-        _ => unreachable!(),
-    }
+    let State::Output(result) = computer.run() else { unreachable!() };
+    result
 }

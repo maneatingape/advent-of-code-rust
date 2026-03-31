@@ -25,11 +25,8 @@ pub fn part1(input: &[i64]) -> i64 {
             computer.reset();
             computer.input(phase);
             computer.input(signal);
-
-            match computer.run() {
-                State::Output(next) => signal = next,
-                _ => unreachable!(),
-            }
+            let State::Output(next) = computer.run() else { unreachable!() };
+            signal = next;
         }
 
         result = result.max(signal);
@@ -48,7 +45,7 @@ pub fn part2(input: &[i64]) -> i64 {
         computers.iter_mut().for_each(Computer::reset);
 
         // Send each initial phase setting exactly once.
-        for (computer, &phase) in computers.iter_mut().zip(slice.iter()) {
+        for (computer, &phase) in computers.iter_mut().zip(slice) {
             computer.input(phase);
         }
 
@@ -58,11 +55,8 @@ pub fn part2(input: &[i64]) -> i64 {
         'outer: loop {
             for computer in &mut computers {
                 computer.input(signal);
-
-                match computer.run() {
-                    State::Output(next) => signal = next,
-                    _ => break 'outer,
-                }
+                let State::Output(next) = computer.run() else { break 'outer };
+                signal = next;
             }
         }
 
