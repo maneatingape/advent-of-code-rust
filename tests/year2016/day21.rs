@@ -13,11 +13,11 @@ rotate based on position of letter d";
 #[test]
 fn part1_test() {
     let input = parse(EXAMPLE);
-    assert_eq!(scramble(&input, b"abcde"), "decab");
+    assert_eq!(scramble(&input, "abcde"), "decab");
 }
 
 #[test]
 fn part2_test() {
     let input = parse(EXAMPLE);
-    assert_eq!(unscramble(&input, b"decab"), "abcde");
+    assert_eq!(unscramble(&input, "decab"), "abcde");
 }

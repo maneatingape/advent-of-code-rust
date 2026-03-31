@@ -15,11 +15,11 @@ const ROTATE_LETTER_LEFT: [usize; 8] = [1, 1, 6, 2, 7, 3, 0, 4];
 #[derive(Clone, Copy)]
 pub enum Op {
     SwapPosition(usize, usize),
-    SwapLetter(u8, u8),
+    SwapLetter(char, char),
     RotateLeft(usize),
     RotateRight(usize),
-    RotateLetterLeft(u8),
-    RotateLetterRight(u8),
+    RotateLetterLeft(char),
+    RotateLetterRight(char),
     Reverse(usize, usize),
     Move(usize, usize),
 }
@@ -28,7 +28,7 @@ impl Op {
     fn from(line: &str) -> Op {
         let tokens: Vec<_> = line.split_ascii_whitespace().collect();
         let digit = |i: usize| tokens[i].unsigned();
-        let letter = |i: usize| tokens[i].as_bytes()[0];
+        let letter = |i: usize| tokens[i].chars().next().unwrap();
 
         match tokens[0] {
             "reverse" => Op::Reverse(digit(2), digit(4)),
@@ -44,8 +44,8 @@ impl Op {
         }
     }
 
-    fn transform(self, password: &mut Vec<u8>) {
-        let position = |a: u8| password.iter().position(|&b| a == b).unwrap();
+    fn transform(self, password: &mut Vec<char>) {
+        let position = |a: char| password.iter().position(|&b| a == b).unwrap();
 
         match self {
             Op::SwapPosition(first, second) => password.swap(first, second),
@@ -92,29 +92,29 @@ pub fn parse(input: &str) -> Vec<Op> {
 }
 
 pub fn part1(input: &[Op]) -> String {
-    scramble(input, b"abcdefgh")
+    scramble(input, "abcdefgh")
 }
 
 pub fn part2(input: &[Op]) -> String {
-    unscramble(input, b"fbgdceah")
+    unscramble(input, "fbgdceah")
 }
 
-pub fn scramble(input: &[Op], slice: &[u8]) -> String {
-    let mut password = slice.to_vec();
+pub fn scramble(input: &[Op], slice: &str) -> String {
+    let mut password = slice.chars().collect();
 
     for op in input {
         op.transform(&mut password);
     }
 
-    String::from_utf8(password).unwrap()
+    password.iter().collect()
 }
 
-pub fn unscramble(input: &[Op], slice: &[u8]) -> String {
-    let mut password = slice.to_vec();
+pub fn unscramble(input: &[Op], slice: &str) -> String {
+    let mut password = slice.chars().collect();
 
     for op in input.iter().rev() {
         op.inverse().transform(&mut password);
     }
 
-    String::from_utf8(password).unwrap()
+    password.iter().collect()
 }
