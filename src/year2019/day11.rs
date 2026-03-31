@@ -22,24 +22,21 @@ pub fn part2(input: &[i64]) -> String {
     let panels: Vec<_> = hull.iter().filter_map(|(&k, &v)| (v == 1).then_some(k)).collect();
 
     // Get maximum extents.
-    let (x1, x2, y1, y2) = panels.iter().fold(
-        (i32::MAX, i32::MIN, i32::MAX, i32::MIN),
-        |(min_x, max_x, min_y, max_y), p| {
-            (min_x.min(p.x), max_x.max(p.x), min_y.min(p.y), max_y.max(p.y))
-        },
-    );
+    let x1 = panels.iter().map(|p| p.x).min().unwrap();
+    let x2 = panels.iter().map(|p| p.x).max().unwrap();
+    let y1 = panels.iter().map(|p| p.y).min().unwrap();
+    let y2 = panels.iter().map(|p| p.y).max().unwrap();
 
     // Convert panels to characters.
     let width = x2 - x1 + 2; // Leave room for newline character.
     let height = y2 - y1 + 1;
-    let mut image = Grid::new(width, height, b'.');
+    let mut grid = Grid::new(width, height, '.');
 
     let offset = Point::new(x1 - 1, y1);
-    panels.iter().for_each(|&point| image[point - offset] = b'#');
+    panels.iter().for_each(|&point| grid[point - offset] = '#');
+    (0..height).for_each(|y| grid[Point::new(0, y)] = '\n');
 
-    (0..height).for_each(|y| image[Point::new(0, y)] = b'\n');
-
-    String::from_utf8(image.bytes).unwrap()
+    grid.bytes.iter().collect()
 }
 
 fn paint(input: &[i64], initial: i64) -> FastMap<Point, i64> {
@@ -54,21 +51,12 @@ fn paint(input: &[i64], initial: i64) -> FastMap<Point, i64> {
         let panel = hull.entry(position).or_default();
         computer.input(*panel);
 
-        match computer.run() {
-            State::Output(color) => {
-                *panel = color;
-            }
-            _ => break,
-        }
+        let State::Output(color) = computer.run() else { break };
+        *panel = color;
 
-        match computer.run() {
-            State::Output(next) => {
-                direction =
-                    if next == 0 { direction.counter_clockwise() } else { direction.clockwise() };
-                position += direction;
-            }
-            _ => break,
-        }
+        let State::Output(turn) = computer.run() else { break };
+        direction = if turn == 0 { direction.counter_clockwise() } else { direction.clockwise() };
+        position += direction;
     }
 
     hull

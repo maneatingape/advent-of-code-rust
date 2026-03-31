@@ -34,13 +34,10 @@ pub fn parse(input: &str) -> Vec<usize> {
     let mut lookup = |s: &str| {
         let hash = perfect_hash(s);
         if indices[hash] == 0 {
-            let previous = current;
             indices[hash] = current;
             current += 1;
-            previous as usize
-        } else {
-            indices[hash] as usize
         }
+        indices[hash] as usize
     };
 
     // Build parent-child relationships for each object. Add one extra for the unused 0 special

@@ -45,39 +45,27 @@ pub fn parse(input: &str) -> Input {
     let mut direction = ORIGIN;
 
     while let State::Output(next) = computer.run() {
+        let next = next as u8;
+        let point = Point::new(x, y);
+
         match next {
-            // '\n'
-            10 => {
+            b'\n' => {
                 y += 1;
+                x = 0;
+                continue;
             }
-            // '#'
-            35 => {
-                scaffold.insert(Point::new(x, y));
+            b'#' => {
+                scaffold.insert(point);
             }
-            // '<'
-            60 => {
-                position = Point::new(x, y);
-                direction = LEFT;
+            b'<' | b'>' | b'^' | b'v' => {
+                scaffold.insert(point);
+                position = point;
+                direction = Point::from(next);
             }
-            // '>'
-            62 => {
-                position = Point::new(x, y);
-                direction = RIGHT;
-            }
-            // '^'
-            94 => {
-                position = Point::new(x, y);
-                direction = UP;
-            }
-            // 'v'
-            118 => {
-                position = Point::new(x, y);
-                direction = DOWN;
-            }
-            // '.'
             _ => (),
         }
-        x = if next == 10 { 0 } else { x + 1 };
+
+        x += 1;
     }
 
     Input { code, scaffold, position, direction }

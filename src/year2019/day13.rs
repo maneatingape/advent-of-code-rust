@@ -59,9 +59,7 @@ pub fn part2(input: &[i64]) -> i64 {
                 break score;
             }
         } else {
-            if x >= stride {
-                stride = x + 1;
-            }
+            stride = stride.max(x + 1);
             let index = (stride * y + x) as usize;
             if index >= tiles.len() {
                 tiles.resize(index + 1, 0);
