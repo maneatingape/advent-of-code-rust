@@ -6,7 +6,7 @@ use crate::util::parse::*;
 use crate::util::point::*;
 
 type Pair = (Point, i32);
-type Input = (i32, i32, i32, i32, Vec<Pair>);
+type Input = (i32, i32, Point, Vec<Pair>);
 
 /// Converts input lines into a pair of [`Point`] and integer amount, to indicate direction and
 /// magnitude respectively. Then determines the maximum extent of the head so that we can allocate
@@ -25,7 +25,10 @@ pub fn parse(input: &str) -> Input {
         },
     );
 
-    (x1, y1, x2, y2, pairs)
+    let width = x2 - x1 + 1;
+    let height = y2 - y1 + 1;
+    let start = Point::new(-x1, -y1);
+    (width, height, start, pairs)
 }
 
 /// Simulate a rope length of 2.
@@ -47,16 +50,13 @@ pub fn part2(input: &Input) -> u32 {
 /// Using const generics for the rope length allows the compiler to optimize the loop and speeds
 /// things up by about 40%.
 fn simulate<const N: usize>(input: &Input) -> u32 {
-    let (x1, y1, x2, y2, pairs) = input;
-    let width = x2 - x1 + 1;
-    let height = y2 - y1 + 1;
-    let start = Point::new(-x1, -y1);
+    let (width, height, start, ..) = *input;
 
     let mut distinct = 0;
     let mut rope = [start; N];
     let mut grid = vec![false; (width * height) as usize];
 
-    for &(step, amount) in pairs {
+    for &(step, amount) in &input.3 {
         for _ in 0..amount {
             rope[0] += step;
             for i in 1..N {

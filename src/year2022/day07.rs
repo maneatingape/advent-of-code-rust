@@ -38,23 +38,20 @@ use crate::util::parse::*;
 
 /// Tokenize the input and return a `vec` of directory sizes.
 pub fn parse(input: &str) -> Vec<u32> {
-    let mut cd = false;
+    let mut iter = input.split_ascii_whitespace();
     let mut total = 0;
     let mut stack = Vec::new();
     let mut sizes = Vec::new();
 
-    for token in input.split_ascii_whitespace() {
-        if cd {
-            if token == ".." {
+    while let Some(token) = iter.next() {
+        if token == "cd" {
+            if iter.next() == Some("..") {
                 sizes.push(total);
                 total += stack.pop().unwrap();
             } else {
                 stack.push(total);
                 total = 0;
             }
-            cd = false;
-        } else if token == "cd" {
-            cd = true;
         } else if token.as_bytes()[0].is_ascii_digit() {
             total += token.unsigned::<u32>();
         }

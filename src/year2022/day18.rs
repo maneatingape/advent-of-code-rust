@@ -32,24 +32,23 @@ pub fn part2(input: &[u8]) -> u32 {
     let mut cube = input.to_vec();
     cube[0] = 8;
 
-    let mut todo = Vec::new();
-    todo.push(0);
+    let mut todo = vec![0_usize];
 
     while let Some(index) = todo.pop() {
-        let mut flood_fill = |next| {
-            if next < input.len() && cube[next] == 0 {
+        // We may wrap around but that index will be out of bounds.
+        for next in [
+            index.wrapping_sub(1),
+            index + 1,
+            index.wrapping_sub(SIZE),
+            index + SIZE,
+            index.wrapping_sub(SIZE * SIZE),
+            index + SIZE * SIZE,
+        ] {
+            if next < cube.len() && cube[next] == 0 {
                 cube[next] = 8;
                 todo.push(next);
             }
-        };
-
-        // We may wrap around but that index will be out of bounds.
-        flood_fill(index.wrapping_sub(1));
-        flood_fill(index + 1);
-        flood_fill(index.wrapping_sub(SIZE));
-        flood_fill(index + SIZE);
-        flood_fill(index.wrapping_sub(SIZE * SIZE));
-        flood_fill(index + SIZE * SIZE);
+        }
     }
 
     // Divide by 8 so that we only count water cubes.
