@@ -71,19 +71,9 @@ pub enum Instruction {
 
 impl Instruction {
     fn mask(pattern: &str) -> Instruction {
-        let mut ones = 0;
-        let mut xs = 0;
-
-        for b in pattern.bytes() {
-            ones <<= 1;
-            xs <<= 1;
-            match b {
-                b'1' => ones |= 1,
-                b'X' => xs |= 1,
-                _ => (),
-            }
-        }
-
+        let (ones, xs) = pattern.bytes().fold((0, 0), |(ones, xs), b| {
+            ((ones << 1) | (b == b'1') as u64, (xs << 1) | (b == b'X') as u64)
+        });
         Self::Mask { ones, xs }
     }
 }
@@ -128,7 +118,7 @@ pub fn parse(input: &str) -> Vec<Instruction> {
     input
         .lines()
         .map(|line| {
-            if line.len() == 43 {
+            if line.starts_with("mask") {
                 Instruction::mask(&line[7..])
             } else {
                 let (address, value) = line[4..].split_once("] = ").unwrap();

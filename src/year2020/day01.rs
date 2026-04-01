@@ -16,7 +16,7 @@
 use crate::util::parse::*;
 
 pub fn parse(input: &str) -> Vec<usize> {
-    input.lines().map(|line| line.unsigned()).collect()
+    input.iter_unsigned().collect()
 }
 
 pub fn part1(input: &[usize]) -> usize {

@@ -26,6 +26,5 @@ pub fn part1(input: &Input) -> u32 {
 }
 
 pub fn part2(input: &Input) -> u32 {
-    let rows = (input.min..=input.max).fold(0, |acc, b| acc ^ b);
-    rows ^ input.xor
+    (input.min..=input.max).fold(input.xor, |acc, b| acc ^ b)
 }

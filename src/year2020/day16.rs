@@ -17,7 +17,7 @@
 use crate::util::iter::*;
 use crate::util::parse::*;
 
-type Result = (u32, u64);
+type Input = (u32, u64);
 type Ticket = Vec<u32>;
 
 #[derive(Clone, Copy, PartialEq, Eq)]
@@ -37,11 +37,11 @@ impl Rule {
     }
 
     fn check(&self, n: u32) -> bool {
-        (self.a <= n && n <= self.b) || (self.c <= n && n <= self.d)
+        (self.a..=self.b).contains(&n) || (self.c..=self.d).contains(&n)
     }
 }
 
-pub fn parse(input: &str) -> Result {
+pub fn parse(input: &str) -> Input {
     let [first, second, third] = input.splitn(3, "\n\n").chunk::<3>().next().unwrap();
     let rules: Vec<_> = first.lines().map(Rule::from).collect();
     let your_ticket: Ticket = second.iter_unsigned().collect();
@@ -57,11 +57,11 @@ pub fn parse(input: &str) -> Result {
     (error_rate, product)
 }
 
-pub fn part1(input: &Result) -> u32 {
+pub fn part1(input: &Input) -> u32 {
     input.0
 }
 
-pub fn part2(input: &Result) -> u64 {
+pub fn part2(input: &Input) -> u64 {
     input.1
 }
 

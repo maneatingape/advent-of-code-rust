@@ -128,18 +128,9 @@ mod scalar {
             }
 
             // Active cubes remain active with both two and three neighbors.
-            for &cube in &active {
-                if state[cube] == 2 {
-                    next_active.push(cube);
-                }
-            }
-
-            // Check that the neighbor count for inactive cubes hasn't exceeded three.
-            for &cube in &candidates {
-                if state[cube] == 3 {
-                    next_active.push(cube);
-                }
-            }
+            next_active.extend(active.iter().filter(|&&cube| state[cube] == 2));
+            // Inactive cubes with exactly three neighbors become active.
+            next_active.extend(candidates.iter().filter(|&&cube| state[cube] == 3));
 
             // Swap to make next generation the current generation.
             (active, next_active) = (next_active, active);

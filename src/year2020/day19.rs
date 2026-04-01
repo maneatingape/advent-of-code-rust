@@ -95,26 +95,29 @@ pub fn part1(input: &Input<'_>) -> usize {
 
 pub fn part2(input: &Input<'_>) -> usize {
     let (rules, messages) = input;
-    let predicate = |message: &&&[u8]| {
-        let mut index = 0;
-        let mut first = 0;
-        let mut second = 0;
+    messages
+        .iter()
+        .copied()
+        .filter(|&message| {
+            let mut index = 0;
+            let mut first = 0;
+            let mut second = 0;
 
-        while let Some(next) = check(rules, 42, message, index) {
-            index = next;
-            first += 1;
-        }
-
-        if first >= 2 {
-            while let Some(next) = check(rules, 31, message, index) {
+            while let Some(next) = check(rules, 42, message, index) {
                 index = next;
-                second += 1;
+                first += 1;
             }
-        }
 
-        index == message.len() && second >= 1 && (first > second)
-    };
-    messages.iter().filter(predicate).count()
+            if first >= 2 {
+                while let Some(next) = check(rules, 31, message, index) {
+                    index = next;
+                    second += 1;
+                }
+            }
+
+            index == message.len() && second >= 1 && first > second
+        })
+        .count()
 }
 
 fn check(rules: &[Rule], rule: usize, message: &[u8], index: usize) -> Option<usize> {

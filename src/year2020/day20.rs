@@ -78,17 +78,14 @@ impl Tile {
         // The ASCII code for "#" 35 is odd and the code for "." 46 is even
         // so we can convert to a 1 or 0 bit using bitwise AND with 1.
         let binary = |row: usize, col: usize| (pixels[row][col] & 1) as usize;
-        let mut t = 0;
-        let mut l = 0;
-        let mut b = 0;
-        let mut r = 0;
-
-        for i in 0..10 {
-            t = (t << 1) | binary(0, i);
-            l = (l << 1) | binary(i, 0);
-            b = (b << 1) | binary(9, i);
-            r = (r << 1) | binary(i, 9);
-        }
+        let (t, l, b, r) = (0..10).fold((0, 0, 0, 0), |(t, l, b, r), i| {
+            (
+                (t << 1) | binary(0, i),
+                (l << 1) | binary(i, 0),
+                (b << 1) | binary(9, i),
+                (r << 1) | binary(i, 9),
+            )
+        });
 
         let reverse = |edge: usize| edge.reverse_bits() >> 54;
         let rt = reverse(t);

@@ -74,11 +74,10 @@ pub fn parse(input: &str) -> Haversack {
         let [first, second, _, _] = tokens.next().unwrap();
         let outer = perfect_minimal_hash(first, second);
 
-        for (index, chunk) in tokens.enumerate() {
-            let [amount, first, second, _] = chunk;
+        for (slot, [amount, first, second, _]) in bags[outer].iter_mut().zip(tokens) {
             let amount = amount.unsigned();
             let next = perfect_minimal_hash(first, second);
-            bags[outer][index] = Some(Rule { amount, next });
+            *slot = Some(Rule { amount, next });
         }
     }
 

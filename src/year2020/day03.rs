@@ -24,9 +24,6 @@ pub fn part2(input: &Grid<u8>) -> usize {
 
 fn toboggan(grid: &Grid<u8>, dx: i32, dy: i32) -> usize {
     (0..grid.height / dy)
-        .filter(|&i| {
-            let point = Point::new((i * dx) % grid.width, i * dy);
-            grid[point] == b'#'
-        })
+        .filter(|&i| grid[Point::new((i * dx) % grid.width, i * dy)] == b'#')
         .count()
 }
