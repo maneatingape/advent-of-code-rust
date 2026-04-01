@@ -11,12 +11,11 @@
 type Input = [u8; 144];
 
 pub fn parse(input: &str) -> Input {
-    let bytes: Vec<_> = input.lines().map(str::as_bytes).collect();
     let mut grid = [0; 144];
 
-    for y in 0..10 {
-        for x in 0..10 {
-            grid[12 * (y + 1) + (x + 1)] = bytes[y][x] - b'0';
+    for (y, row) in input.lines().enumerate() {
+        for (x, b) in row.bytes().enumerate() {
+            grid[12 * (y + 1) + (x + 1)] = b - b'0';
         }
     }
 
@@ -55,19 +54,10 @@ fn simulate(input: &Input, predicate: fn(usize, usize) -> bool) -> (usize, usize
         }
 
         // Process each flash, possibly adding more to the queue.
-        while let Some(index) = todo.pop() {
+        while let Some(i) = todo.pop() {
             flashes += 1;
 
-            for next in [
-                index + 1,
-                index + 11,
-                index + 12,
-                index + 13,
-                index - 1,
-                index - 11,
-                index - 12,
-                index - 13,
-            ] {
+            for next in [i + 1, i + 11, i + 12, i + 13, i - 1, i - 11, i - 12, i - 13] {
                 if !flashed[next] {
                     bump_octopus(&mut grid, &mut flashed, &mut todo, next);
                 }

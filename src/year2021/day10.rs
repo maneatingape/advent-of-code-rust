@@ -43,29 +43,19 @@ pub fn part2(input: &Input) -> u64 {
 
 fn syntax_score(line: &str, stack: &mut Vec<u8>) -> u64 {
     for b in line.bytes() {
-        match b {
-            b'(' | b'[' | b'{' | b'<' => stack.push(b),
-            b')' => {
-                if stack.pop().unwrap() != b'(' {
-                    return 3;
-                }
+        let (open, score) = match b {
+            b'(' | b'[' | b'{' | b'<' => {
+                stack.push(b);
+                continue;
             }
-            b']' => {
-                if stack.pop().unwrap() != b'[' {
-                    return 57;
-                }
-            }
-            b'}' => {
-                if stack.pop().unwrap() != b'{' {
-                    return 1197;
-                }
-            }
-            b'>' => {
-                if stack.pop().unwrap() != b'<' {
-                    return 25137;
-                }
-            }
+            b')' => (b'(', 3),
+            b']' => (b'[', 57),
+            b'}' => (b'{', 1197),
+            b'>' => (b'<', 25137),
             _ => unreachable!(),
+        };
+        if stack.pop().unwrap() != open {
+            return score;
         }
     }
 
