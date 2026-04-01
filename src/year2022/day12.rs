@@ -47,6 +47,7 @@ fn bfs(input: &Input, end: u8) -> u32 {
     let (grid, start) = input;
     let mut todo = VecDeque::from([(*start, 0)]);
     let mut seen = grid.same_size_with(false);
+    seen[*start] = true;
 
     while let Some((point, cost)) = todo.pop_front() {
         if grid[point] == end {

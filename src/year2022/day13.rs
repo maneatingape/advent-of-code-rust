@@ -39,10 +39,7 @@ pub fn part1(input: &[&str]) -> usize {
     input
         .chunks_exact(2)
         .enumerate()
-        .map(|(i, chunk)| {
-            let ordered = compare(chunk[0], chunk[1]);
-            if ordered { i + 1 } else { 0 }
-        })
+        .filter_map(|(i, chunk)| compare(chunk[0], chunk[1]).then_some(i + 1))
         .sum()
 }
 
