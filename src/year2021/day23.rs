@@ -252,27 +252,18 @@ fn best_possible(burrow: &Burrow) -> usize {
         // Search from bottom to top.
         for depth in 0..room.size() {
             let kind = room.spaces(depth);
-            if kind != original_kind {
-                // Any amphipod above us will need to move out of the way.
-                blocker = true;
-                need_to_move[kind] += 1;
-                // Calculate the energy to return directly to our home burrow
-                // taking into account how many other amphipods of our kind also need to move.
-                let up = 4 - depth;
-                let across = 2 * kind.abs_diff(original_kind); // Distance between rooms.
-                let down = need_to_move[kind];
-                energy += COST[kind] * (up + across + down);
+            let across = if kind != original_kind {
+                blocker = true; // Any amphipod above will need to move out of the way.
+                2 * kind.abs_diff(original_kind) // Distance between rooms.
             } else if blocker {
-                // Even though we're in our home burrow we need to move out of the way of a lower
-                // amphipod of a different kind.
-                need_to_move[kind] += 1;
-                // Calculate the energy assuming we can move to one of the nearest hallway spaces
-                // on either side.
-                let up = 4 - depth;
-                let across = 2; // Nearest spot then back
-                let down = need_to_move[kind];
-                energy += COST[kind] * (up + across + down);
-            }
+                2 // In home burrow but must still move for a lower amphipod of a different kind.
+            } else {
+                continue; // Already in correct position with no blocker below.
+            };
+            need_to_move[kind] += 1;
+            let up = 4 - depth;
+            let down = need_to_move[kind];
+            energy += COST[kind] * (up + across + down);
         }
     }
 

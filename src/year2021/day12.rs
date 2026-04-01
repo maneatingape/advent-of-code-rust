@@ -61,9 +61,8 @@ pub fn parse(input: &str) -> Input {
 
     let mut indices = FastMap::build([("start", START), ("end", END)]);
     for token in &tokens {
-        if !indices.contains_key(token) {
-            indices.insert(token, indices.len());
-        }
+        let next = indices.len();
+        indices.entry(token).or_insert(next);
     }
 
     let mut edges = vec![0; indices.len()];

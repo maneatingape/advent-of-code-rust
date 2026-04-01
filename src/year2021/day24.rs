@@ -130,8 +130,8 @@ pub fn parse(input: &str) -> Vec<Constraint> {
     let mut stack = Vec::new();
     let mut constraints = Vec::new();
 
-    for (index, blocks) in blocks.into_iter().enumerate() {
-        match blocks {
+    for (index, block) in blocks.into_iter().enumerate() {
+        match block {
             Push(value) => stack.push(Constraint { index, value }),
             Pop(second_value) => {
                 // Find the matching "push" instruction at the top of the stack.

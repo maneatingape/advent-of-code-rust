@@ -47,14 +47,8 @@ pub fn parse(input: &str) -> Input {
 /// Fold once then count dots. The sample data folds along `y` and my input folded along `x`,
 /// testing both possibilities.
 pub fn part1(input: &Input) -> usize {
-    match input.folds[0] {
-        Fold::Horizontal(x) => {
-            input.points.iter().map(|&p| fold_horizontal(x, p)).collect::<FastSet<_>>().len()
-        }
-        Fold::Vertical(y) => {
-            input.points.iter().map(|&p| fold_vertical(y, p)).collect::<FastSet<_>>().len()
-        }
-    }
+    let fold = input.folds[0];
+    input.points.iter().map(|&p| apply_fold(fold, p)).collect::<FastSet<_>>().len()
 }
 
 /// Decode secret message.
@@ -70,10 +64,7 @@ pub fn part2(input: &Input) -> String {
     let mut grid = Grid::new(width + 1, height, '.');
 
     for &start in &input.points {
-        let end = input.folds.iter().fold(start, |point, &fold| match fold {
-            Fold::Horizontal(x) => fold_horizontal(x, point),
-            Fold::Vertical(y) => fold_vertical(y, point),
-        });
+        let end = input.folds.iter().fold(start, |point, &fold| apply_fold(fold, point));
         grid[end + RIGHT] = '#';
     }
 
@@ -81,14 +72,15 @@ pub fn part2(input: &Input) -> String {
     grid.bytes.iter().collect()
 }
 
-/// Fold point at `x` coordinate, doing nothing if the point is to the left of the fold line.
 #[inline]
-fn fold_horizontal(x: i32, p: Point) -> Point {
-    if p.x < x { p } else { Point::new(2 * x - p.x, p.y) }
-}
+fn apply_fold(fold: Fold, point: Point) -> Point {
+    let horizontal = |p: Point, x: i32| if p.x < x { p } else { Point::new(2 * x - p.x, p.y) };
+    let vertical = |p: Point, y: i32| if p.y < y { p } else { Point::new(p.x, 2 * y - p.y) };
 
-/// Fold point at `y` coordinate, doing nothing if the point is above the fold line.
-#[inline]
-fn fold_vertical(y: i32, p: Point) -> Point {
-    if p.y < y { p } else { Point::new(p.x, 2 * y - p.y) }
+    match fold {
+        // Fold point at `x` coordinate, doing nothing if the point is to the left of the fold line.
+        Fold::Horizontal(x) => horizontal(point, x),
+        // Fold point at `y` coordinate, doing nothing if the point is above the fold line.
+        Fold::Vertical(y) => vertical(point, y),
+    }
 }

@@ -211,19 +211,15 @@ pub fn part1(input: &[Located]) -> usize {
 
 /// Calculate the maximum manhattan distance between any two scanners.
 pub fn part2(input: &[Located]) -> i32 {
-    let mut result = 0;
-
     // This solution uses the usual quadratic pairing of every point. This is okay because
     // the set is not terribly large, and the runtime here is dwarfed by the earlier runtime
     // taken to get the coordinates in place. However, a linear solution is also possible:
     // https://www.reddit.com/r/adventofcode/comments/rygnl8/2021_day_19_part_2pseudocode_speeding_up/
-    for first in input {
-        for second in input {
-            result = result.max(first.translation.manhattan(&second.translation));
-        }
-    }
-
-    result
+    input
+        .iter()
+        .flat_map(|a| input.iter().map(|b| a.translation.manhattan(&b.translation)))
+        .max()
+        .unwrap()
 }
 
 /// At least 66 Euclidean distances must overlap for a potential match.
