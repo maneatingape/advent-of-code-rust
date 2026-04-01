@@ -43,7 +43,7 @@ pub fn part1(input: &[Rule<'_>]) -> usize {
         .iter()
         .filter(|rule| {
             let count = rule.password.iter().filter(|&&l| l == rule.letter).count();
-            rule.start <= count && count <= rule.end
+            (rule.start..=rule.end).contains(&count)
         })
         .count()
 }

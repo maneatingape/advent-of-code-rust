@@ -27,18 +27,6 @@ pub fn part2(input: &[u32]) -> u32 {
     count_answers(input, u32::MAX, |group, passenger| group & passenger)
 }
 
-fn count_answers(input: &[u32], initial: u32, combine: fn(u32, u32) -> u32) -> u32 {
-    let mut total = 0;
-    let mut group = initial;
-
-    for &passenger in input {
-        if passenger == 0 {
-            total += group.count_ones();
-            group = initial;
-        } else {
-            group = combine(group, passenger);
-        }
-    }
-
-    total + group.count_ones()
+fn count_answers(input: &[u32], initial: u32, combine: fn(u32, &u32) -> u32) -> u32 {
+    input.split(|&p| p == 0).map(|group| group.iter().fold(initial, combine).count_ones()).sum()
 }

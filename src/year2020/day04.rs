@@ -38,11 +38,7 @@ pub fn part2(input: &Input) -> u32 {
 }
 
 fn parse_block<'a>(passport: &mut Vec<[&'a str; 2]>, block: &'a str) {
-    for pair @ [key, _] in block.split([':', ' ', '\n']).chunk::<2>() {
-        if key != "cid" {
-            passport.push(pair);
-        }
-    }
+    passport.extend(block.split([':', ' ', '\n']).chunk::<2>().filter(|&[key, _]| key != "cid"));
 }
 
 fn validate_field(&[key, value]: &[&str; 2]) -> bool {
@@ -63,10 +59,10 @@ fn validate_range(s: &str, range: RangeInclusive<u32>) -> bool {
 }
 
 fn validate_height(hgt: &str) -> bool {
-    if hgt.len() == 4 && hgt.ends_with("in") {
-        validate_range(&hgt[..2], 59..=76)
-    } else if hgt.len() == 5 && hgt.ends_with("cm") {
-        validate_range(&hgt[..3], 150..=193)
+    if let Some(n) = hgt.strip_suffix("in") {
+        validate_range(n, 59..=76)
+    } else if let Some(n) = hgt.strip_suffix("cm") {
+        validate_range(n, 150..=193)
     } else {
         false
     }

@@ -53,7 +53,7 @@ pub fn part1(input: &[Instruction]) -> i32 {
 pub fn part2(input: &[Instruction]) -> i32 {
     let mut pc = 0;
     let mut acc = 0;
-    let seen = &mut vec![false; input.len()];
+    let mut seen = vec![false; input.len()];
 
     loop {
         match input[pc] {
@@ -63,14 +63,14 @@ pub fn part2(input: &[Instruction]) -> i32 {
             }
             Instruction::Jmp(arg) => {
                 let speculative = pc + 1;
-                match execute(input, speculative, acc, seen) {
+                match execute(input, speculative, acc, &mut seen) {
                     State::Infinite(_) => pc = pc.wrapping_add(arg as usize),
                     State::Halted(acc) => break acc,
                 }
             }
             Instruction::Nop(arg) => {
                 let speculative = pc.wrapping_add(arg as usize);
-                match execute(input, speculative, acc, seen) {
+                match execute(input, speculative, acc, &mut seen) {
                     State::Infinite(_) => pc += 1,
                     State::Halted(acc) => break acc,
                 }

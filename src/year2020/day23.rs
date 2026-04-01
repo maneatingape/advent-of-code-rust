@@ -19,15 +19,13 @@ pub fn parse(input: &str) -> Vec<u32> {
 
 pub fn part1(input: &[u32]) -> u32 {
     let start = input[0] as usize;
-    let mut current = start;
     let mut cups = vec![0; 10];
 
     // Link the 9 input cups, wrapping around to the start.
-    for &next in &input[1..] {
-        cups[current] = next;
-        current = next as usize;
+    for w in input.windows(2) {
+        cups[w[0] as usize] = w[1];
     }
-    cups[current] = start as u32;
+    cups[*input.last().unwrap() as usize] = start as u32;
 
     play(&mut cups, start, 100);
 
@@ -36,15 +34,13 @@ pub fn part1(input: &[u32]) -> u32 {
 
 pub fn part2(input: &[u32]) -> usize {
     let start = input[0] as usize;
-    let mut current = start;
     let mut cups: Vec<_> = (1..1_000_002).collect();
 
     // Link the 9 input cups, continuing to the extra elements.
-    for &next in &input[1..] {
-        cups[current] = next;
-        current = next as usize;
+    for w in input.windows(2) {
+        cups[w[0] as usize] = w[1];
     }
-    cups[current] = 10;
+    cups[*input.last().unwrap() as usize] = 10;
 
     // Wrap around to the start.
     cups[1_000_000] = start as u32;
@@ -57,6 +53,9 @@ pub fn part2(input: &[u32]) -> usize {
 }
 
 fn play(cups: &mut [u32], mut current: usize, rounds: usize) {
+    let end = cups.len() - 1;
+    let wrap = |n| if n > 1 { n - 1 } else { end };
+
     for _ in 0..rounds {
         // Pick up three cups (a, b, c).
         let a = cups[current] as usize;
@@ -64,9 +63,9 @@ fn play(cups: &mut [u32], mut current: usize, rounds: usize) {
         let c = cups[b] as usize;
 
         // Calculate destination.
-        let mut dest = if current > 1 { current - 1 } else { cups.len() - 1 };
+        let mut dest = wrap(current);
         while dest == a || dest == b || dest == c {
-            dest = if dest > 1 { dest - 1 } else { cups.len() - 1 };
+            dest = wrap(dest);
         }
 
         // Link current cup to the fourth cup after the three cups that have just been picked up.

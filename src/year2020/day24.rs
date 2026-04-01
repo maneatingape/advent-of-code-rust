@@ -123,18 +123,9 @@ mod scalar {
             }
 
             // Active tiles remain active with both one and two neighbors.
-            for &tile in &active {
-                if state[tile] == 1 {
-                    next_active.push(tile);
-                }
-            }
-
+            next_active.extend(active.iter().filter(|&&tile| state[tile] == 1));
             // Check that the neighbor count for inactive tiles hasn't exceeded two.
-            for &tile in &candidates {
-                if state[tile] == 2 {
-                    next_active.push(tile);
-                }
-            }
+            next_active.extend(candidates.iter().filter(|&&tile| state[tile] == 2));
 
             // Swap to make next generation the current generation.
             (active, next_active) = (next_active, active);
