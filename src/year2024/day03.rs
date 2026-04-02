@@ -57,7 +57,7 @@ pub fn parse(input: &str) -> Input {
         // Multiply
         let product = first * second;
         part_one += product;
-        part_two += if enabled { product } else { 0 };
+        part_two += product * enabled as u32;
     }
 
     (part_one, part_two)

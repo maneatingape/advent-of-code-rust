@@ -44,7 +44,7 @@ pub fn part1(input: &[u64]) -> String {
         if !out.is_empty() {
             out.push(',');
         }
-        out.push((n as u8 + b'0') as char);
+        out.push(char::from(n as u8 + b'0'));
     }
 
     out
