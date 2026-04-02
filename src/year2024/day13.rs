@@ -45,16 +45,13 @@ fn play(&[ax, ay, bx, by, mut px, mut py]: &Claw, part_two: bool) -> i64 {
         return 0;
     }
 
-    let mut a = by * px - bx * py;
-    let mut b = ax * py - ay * px;
+    let a = by * px - bx * py;
+    let b = ax * py - ay * px;
 
     // Integer solutions only.
     if a % det != 0 || b % det != 0 {
         return 0;
     }
 
-    a /= det;
-    b /= det;
-
-    3 * a + b
+    (3 * a + b) / det
 }

@@ -73,6 +73,7 @@ pub fn part2(grid: &Grid<i32>) -> String {
     let exit = Point::new(70, 70);
 
     let mut time = i32::MAX - 1;
+    let mut last = ORIGIN;
     let mut grid = grid.clone();
     let mut todo = VecDeque::new();
     let mut heap = MinHeap::new();
@@ -84,8 +85,7 @@ pub fn part2(grid: &Grid<i32>) -> String {
         // Incremental flood fill that makes as much progress as possible.
         while let Some(position) = todo.pop_front() {
             if position == exit {
-                let index = grid.bytes.iter().position(|&b| b == time).unwrap() as i32;
-                return format!("{},{}", index % grid.width, index / grid.width);
+                return format!("{},{}", last.x, last.y);
             }
 
             for next in ORTHOGONAL.map(|o| position + o) {
@@ -104,6 +104,7 @@ pub fn part2(grid: &Grid<i32>) -> String {
         // Remove the latest blocking byte then try to make a little more progress in flood fill.
         let (first, saved) = heap.pop().unwrap();
         time = -first;
+        last = saved;
         todo.push_back(saved);
     }
 }

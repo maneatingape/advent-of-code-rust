@@ -76,9 +76,10 @@ fn valid(terms: &[u64], test_value: u64, index: usize, concat: bool) -> bool {
     if index == 1 {
         test_value == terms[1]
     } else {
+        let pow = next_power_of_ten(terms[index]);
         (concat
-            && test_value % next_power_of_ten(terms[index]) == terms[index]
-            && valid(terms, test_value / next_power_of_ten(terms[index]), index - 1, concat))
+            && test_value % pow == terms[index]
+            && valid(terms, test_value / pow, index - 1, concat))
             || (test_value.is_multiple_of(terms[index])
                 && valid(terms, test_value / terms[index], index - 1, concat))
             || (test_value >= terms[index]

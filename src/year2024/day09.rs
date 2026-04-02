@@ -98,8 +98,7 @@ pub fn part2(disk: &[usize]) -> usize {
         let mut next_index = usize::MAX;
 
         for (i, heap) in free.iter().enumerate().skip(size) {
-            let top = heap.len() - 1;
-            let first = heap[top];
+            let first = *heap.last().unwrap();
 
             if first < next_block {
                 next_block = first;
@@ -110,13 +109,8 @@ pub fn part2(disk: &[usize]) -> usize {
         // We can make smaller free block from bigger blocks but not the other way around.
         // As an optimization if all blocks of the biggest size are after our position then
         // we can ignore them.
-        if !free.is_empty() {
-            let biggest = free.len() - 1;
-            let top = free[biggest].len() - 1;
-
-            if free[biggest][top] > block {
-                free.pop();
-            }
+        if free.last().is_some_and(|h| *h.last().unwrap() > block) {
+            free.pop();
         }
 
         // Update the checksum with the file's location (possibly unchanged).
