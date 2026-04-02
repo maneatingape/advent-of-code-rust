@@ -165,12 +165,9 @@ fn gaussian_elimination(machine: &Machine) -> Subspace {
             for row in 0..height {
                 let coefficient = equations[row][rank];
                 if row != rank && coefficient != 0 {
-                    let lcm = coefficient.abs().lcm(pivot);
-                    let x = lcm / coefficient.abs();
-                    let y = lcm / pivot * coefficient.signum();
-
                     for col in 0..equations[row].len() {
-                        equations[row][col] = x * equations[row][col] - y * equations[rank][col];
+                        equations[row][col] =
+                            pivot * equations[row][col] - coefficient * equations[rank][col];
                     }
                 }
             }

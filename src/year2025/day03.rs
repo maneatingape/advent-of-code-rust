@@ -14,8 +14,6 @@
 //!
 //! While the worst case complexity of bubble sort is `O(n²)`, in practice this approach is much
 //! faster due to the randomized nature of the inputs.
-use std::mem::replace;
-
 pub fn parse(input: &str) -> Vec<&str> {
     input.lines().collect()
 }
@@ -44,7 +42,7 @@ fn solve<const N: usize>(input: &[&str]) -> u64 {
                     if next < *battery {
                         break;
                     }
-                    next = replace(battery, next);
+                    (*battery, next) = (next, *battery);
                 }
             }
 
