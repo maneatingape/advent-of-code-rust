@@ -56,7 +56,7 @@
 use crate::util::iter::*;
 use crate::util::math::*;
 use crate::util::parse::*;
-use std::ops::RangeInclusive;
+use std::ops::{Add, RangeInclusive, Sub};
 
 const RANGE: RangeInclusive<i64> = 200_000_000_000_000..=400_000_000_000_000;
 
@@ -67,22 +67,23 @@ struct Vector {
     z: i128,
 }
 
-/// 3D vector implementation.
+impl Add for Vector {
+    type Output = Self;
+
+    fn add(self, rhs: Self) -> Self {
+        Vector { x: self.x + rhs.x, y: self.y + rhs.y, z: self.z + rhs.z }
+    }
+}
+
+impl Sub for Vector {
+    type Output = Self;
+
+    fn sub(self, rhs: Self) -> Self {
+        Vector { x: self.x - rhs.x, y: self.y - rhs.y, z: self.z - rhs.z }
+    }
+}
+
 impl Vector {
-    fn add(self, other: Self) -> Self {
-        let x = self.x + other.x;
-        let y = self.y + other.y;
-        let z = self.z + other.z;
-        Vector { x, y, z }
-    }
-
-    fn sub(self, other: Self) -> Self {
-        let x = self.x - other.x;
-        let y = self.y - other.y;
-        let z = self.z - other.z;
-        Vector { x, y, z }
-    }
-
     fn cross(self, other: Self) -> Self {
         let x = self.y * other.z - self.z * other.y;
         let y = self.z * other.x - self.x * other.z;
@@ -94,10 +95,7 @@ impl Vector {
     // Prevents numeric overflow.
     fn gcd(self) -> Self {
         let gcd = self.x.gcd(self.y).gcd(self.z);
-        let x = self.x / gcd;
-        let y = self.y / gcd;
-        let z = self.z / gcd;
-        Vector { x, y, z }
+        Vector { x: self.x / gcd, y: self.y / gcd, z: self.z / gcd }
     }
 
     fn sum(self) -> i128 {
@@ -155,10 +153,10 @@ pub fn part2(input: &[[i64; 6]]) -> i128 {
 
     // Subtract the positions and velocities to make them relative.
     // The first hailstone is stationary at the origin.
-    let p3 = p1.sub(p0);
-    let p4 = p2.sub(p0);
-    let v3 = v1.sub(v0);
-    let v4 = v2.sub(v0);
+    let p3 = p1 - p0;
+    let p4 = p2 - p0;
+    let v3 = v1 - v0;
+    let v4 = v2 - v0;
 
     // Find the normal to the plane that the second and third hailstones velocity lies in.
     // This is the cross product of their respective position and velocity.
@@ -178,8 +176,8 @@ pub fn part2(input: &[[i64; 6]]) -> i128 {
 
     // Calculate the original position of the rock, remembering to add the first hailstone's
     // position to convert back to absolute coordinates.
-    let a = p0.add(p3).sum();
-    let b = p0.add(p4).sum();
-    let c = v3.sub(v4).sum();
+    let a = (p0 + p3).sum();
+    let b = (p0 + p4).sum();
+    let c = (v3 - v4).sum();
     (u * a - t * b + u * t * c) / (u - t)
 }

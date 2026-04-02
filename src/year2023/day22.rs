@@ -149,7 +149,7 @@ pub fn parse(input: &str) -> Input {
     }
 
     let part_one = safe.iter().filter(|&&b| b).count();
-    let part_two = dominator.iter().map(|(_, d)| d).sum();
+    let part_two = dominator.iter().map(|&(_, d)| d).sum();
     (part_one, part_two)
 }
 
