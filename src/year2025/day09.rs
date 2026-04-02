@@ -222,13 +222,6 @@ fn toggle_value_membership_in_ordered_list(ordered_list: &mut Vec<u32>, value: u
 // into a vector containing the intervals.
 #[inline]
 fn update_intervals_from_descending_edges(descending_edges: &[u32], to_update: &mut Vec<Interval>) {
-    debug_assert!(descending_edges.len().is_multiple_of(2));
-
     to_update.clear();
-
-    let mut it = descending_edges.iter();
-
-    while let (Some(&l), Some(&r)) = (it.next(), it.next()) {
-        to_update.push(Interval::new(l, r));
-    }
+    to_update.extend(descending_edges.chunks_exact(2).map(|c| Interval::new(c[0], c[1])));
 }
