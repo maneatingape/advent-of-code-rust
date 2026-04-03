@@ -22,13 +22,9 @@ pub fn parse(input: &str) -> Input {
     let password = clean(input.trim().as_bytes().try_into().unwrap());
 
     // No pairs in the first 4 characters.
-    let pair = |i, j| password[i] == password[j];
-    assert!(!(pair(0, 1) | pair(1, 2) | pair(2, 3)));
-
+    assert!(!password[..4].array_windows().any(|&[a, b]| a == b));
     // No straights in the first 4 characters.
-    let sequence = |i, j| password[j] > password[i] && password[j] - password[i] == 1;
-    assert!(!(sequence(1, 2) && (sequence(0, 1) || sequence(2, 3))));
-
+    assert!(!password[..4].array_windows().any(|&[a, b, c]| a + 1 == b && b + 1 == c));
     // No potential carry in the third character.
     assert_ne!(password[2], b'z');
 

@@ -41,15 +41,16 @@ fn arrangements(input: &[usize], groups: usize) -> usize {
         for i in (item..goal + 1).rev() {
             let take = minimum[i - item].saturating_add(1);
             let not_take = minimum[i];
+            let take_qe = item.saturating_mul(qe[i - item]);
 
             if take < not_take {
                 // Taking the item results in fewer packages, use the new quantum entanglement even
                 // if it's greater than the existing value.
-                qe[i] = item.saturating_mul(qe[i - item]);
+                qe[i] = take_qe;
                 minimum[i] = take;
             } else if take == not_take {
                 // Number of packages is the same, so choose the minimum quantum entanglement.
-                qe[i] = qe[i].min(item.saturating_mul(qe[i - item]));
+                qe[i] = qe[i].min(take_qe);
             }
         }
     }

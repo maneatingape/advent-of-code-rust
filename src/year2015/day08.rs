@@ -27,10 +27,8 @@ pub fn part1(input: &[u8]) -> usize {
 
     while index < input.len() {
         let skip = match input[index] {
-            SLASH => match input[index + 1] {
-                ESCAPE => 4,
-                _ => 2,
-            },
+            SLASH if input[index + 1] == ESCAPE => 4,
+            SLASH => 2,
             QUOTE => 3,
             _ => 1,
         };
