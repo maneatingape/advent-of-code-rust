@@ -399,8 +399,8 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 | 10 | [Elves Look, Elves Say](https://adventofcode.com/2015/day/10) | [Source](src/year2015/day10.rs) | 17 |
 | 11 | [Corporate Policy](https://adventofcode.com/2015/day/11) | [Source](src/year2015/day11.rs) | 1 |
 | 12 | [JSAbacusFramework.io](https://adventofcode.com/2015/day/12) | [Source](src/year2015/day12.rs) | 71 |
-| 13 | [Knights of the Dinner Table](https://adventofcode.com/2015/day/13) | [Source](src/year2015/day13.rs) | 30 |
-| 14 | [Reindeer Olympics](https://adventofcode.com/2015/day/14) | [Source](src/year2015/day14.rs) | 24 |
+| 13 | [Knights of the Dinner Table](https://adventofcode.com/2015/day/13) | [Source](src/year2015/day13.rs) | 25 |
+| 14 | [Reindeer Olympics](https://adventofcode.com/2015/day/14) | [Source](src/year2015/day14.rs) | 21 |
 | 15 | [Science for Hungry People](https://adventofcode.com/2015/day/15) | [Source](src/year2015/day15.rs) | 43 |
 | 16 | [Aunt Sue](https://adventofcode.com/2015/day/16) | [Source](src/year2015/day16.rs) | 20 |
 | 17 | [No Such Thing as Too Much](https://adventofcode.com/2015/day/17) | [Source](src/year2015/day17.rs) | 4 |

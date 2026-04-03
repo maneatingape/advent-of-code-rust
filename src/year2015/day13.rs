@@ -14,6 +14,7 @@
 //!
 //! [`Day 9`]: crate::year2015::day09
 use crate::util::hash::*;
+use crate::util::iter::*;
 use crate::util::parse::*;
 use crate::util::slice::*;
 
@@ -21,26 +22,26 @@ type Input = (i32, i32);
 
 pub fn parse(input: &str) -> Input {
     // Assign each diner an index on a first come first served basis.
-    let lines: Vec<Vec<_>> = input.lines().map(|line| line.split([' ', '.']).collect()).collect();
+    let tokens: Vec<_> = input.split([' ', '.', '\n']).chunk::<12>().collect();
     let mut indices = FastMap::new();
 
-    for tokens in &lines {
+    for &[from, .., to, _] in &tokens {
         let size = indices.len();
-        indices.entry(tokens[0]).or_insert(size);
+        indices.entry(from).or_insert(size);
 
         let size = indices.len();
-        indices.entry(tokens[10]).or_insert(size);
+        indices.entry(to).or_insert(size);
     }
 
     // Calculate the happiness values. Note that the values are not reciprocal a => b != b => a.
     let stride = indices.len();
     let mut happiness = vec![0; stride * stride];
 
-    for tokens in &lines {
-        let start = indices[tokens[0]];
-        let end = indices[tokens[10]];
-        let sign = if tokens[2] == "gain" { 1 } else { -1 };
-        let value: i32 = tokens[3].signed();
+    for &[from, _, gain_lose, value, .., to, _] in &tokens {
+        let start = indices[from];
+        let end = indices[to];
+        let sign = if gain_lose == "gain" { 1 } else { -1 };
+        let value: i32 = value.signed();
 
         // Add the values together to make the mutual link reciprocal.
         happiness[stride * start + end] += sign * value;

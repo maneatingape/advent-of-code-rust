@@ -35,17 +35,15 @@ pub fn part2(input: &str) -> usize {
 }
 
 fn solve(input: &str, predicate: fn(&str, u32) -> bool) -> usize {
-    for (index, line) in input.lines().enumerate() {
-        if line
-            .split([' ', ':', ','])
-            .filter(|s| !s.is_empty())
-            .chunk::<2>()
-            .skip(1)
-            .all(|[key, value]| predicate(key, value.unsigned()))
-        {
-            return index + 1;
-        }
-    }
-
-    unreachable!()
+    input
+        .lines()
+        .position(|line| {
+            line.split([' ', ':', ','])
+                .filter(|s| !s.is_empty())
+                .chunk::<2>()
+                .skip(1)
+                .all(|[key, value]| predicate(key, value.unsigned()))
+        })
+        .map(|i| i + 1)
+        .unwrap()
 }
