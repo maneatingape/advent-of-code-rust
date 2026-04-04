@@ -1,8 +1,6 @@
 //! # Explosives in Cyberspace
 //!
 //! The only difference between part one and two is that we recursively decompress inner sequences.
-use crate::util::parse::*;
-
 pub fn parse(input: &str) -> &[u8] {
     input.trim().as_bytes()
 }
@@ -35,15 +33,8 @@ fn decompress(mut slice: &[u8], part_two: bool) -> usize {
 }
 
 fn number(slice: &[u8]) -> (&[u8], usize) {
-    // Parse number digit by digit.
-    let mut index = 0;
-    let mut acc = 0;
-
-    while slice[index].is_ascii_digit() {
-        acc = 10 * acc + slice[index].to_decimal() as usize;
-        index += 1;
-    }
-
+    let end = slice.iter().position(|b| !b.is_ascii_digit()).unwrap();
+    let n = slice[..end].iter().fold(0, |n, &b| 10 * n + (b - b'0') as usize);
     // Skip over trailing delimiter.
-    (&slice[index + 1..], acc)
+    (&slice[end + 1..], n)
 }

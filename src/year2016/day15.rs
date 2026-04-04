@@ -20,12 +20,12 @@ pub fn parse(input: &str) -> Pair {
     [part1, part2]
 }
 
-pub fn part1(results: &Pair) -> usize {
-    results[0]
+pub fn part1(input: &Pair) -> usize {
+    input[0]
 }
 
-pub fn part2(results: &Pair) -> usize {
-    results[1]
+pub fn part2(input: &Pair) -> usize {
+    input[1]
 }
 
 fn solve(discs: &[Pair], offset: usize, mut time: usize, mut step: usize) -> (usize, usize) {

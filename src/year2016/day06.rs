@@ -1,6 +1,6 @@
 //! # Signals and Noise
 //!
-//! The cardinality of uppercase letters is only 26 so we can use a fixed-size array to
+//! The cardinality of lowercase letters is only 26 so we can use a fixed-size array to
 //! count the frequency of each character efficiently.
 type Input = (String, String);
 

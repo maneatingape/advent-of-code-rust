@@ -41,7 +41,6 @@
 //! showing how to utilize that approach. However, the logarithmic solution shown here is
 //! fast enough to not need to worry about askalski's comment "I have no idea why it works,
 //! only that it does work."
-use crate::util::parse::*;
 
 /// Build a prefix sum of the number of ones at each length in the pattern
 /// including zero at the start.
@@ -50,7 +49,7 @@ pub fn parse(input: &str) -> Vec<usize> {
     let mut ones = vec![0];
 
     for b in input.trim().bytes() {
-        sum += b.to_decimal() as usize;
+        sum += (b & 1) as usize;
         ones.push(sum);
     }
 
@@ -71,7 +70,7 @@ pub fn part2(input: &[usize]) -> String {
 /// ones in each interval to give the checksum.
 pub fn checksum(input: &[usize], disk_size: usize) -> String {
     // Determine how many blocks and how big each one is, by lowest 1-bit in disk_size.
-    let step_size = disk_size & (!disk_size + 1);
+    let step_size = 1 << disk_size.trailing_zeros();
     let blocks = disk_size / step_size;
 
     let counts: Vec<_> = (0..blocks + 1).map(|i| count(input, i * step_size)).collect();

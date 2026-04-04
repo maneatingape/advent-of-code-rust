@@ -118,9 +118,7 @@ pub fn parse(input: &str) -> u32 {
         if non_empty && pair == PAIR1 {
             steps += 12;
         } else {
-            if (pair & PAIR1) != 0 {
-                non_empty = true;
-            }
+            non_empty |= pair & PAIR1 != 0;
             floors[i] = pair;
             i += 1;
         }
@@ -155,6 +153,16 @@ fn bfs(start: State, steps: u32) -> u32 {
 
         // Iterate over items that can be moved.
         let items = state.pairs & (FLOOR1 << state.elevator);
+        let mut push = |up: bool, mask: u64| -> bool {
+            if let Some(next) = state.move_floor(up, mask)
+                && seen.insert(next)
+            {
+                todo.push_back((next, steps + 1));
+                true
+            } else {
+                false
+            }
+        };
 
         // When moving down, try one item first; try two only if one didn't work.
         // Don't move down from bottom floor, or down into empty region.
@@ -165,22 +173,12 @@ fn bfs(start: State, steps: u32) -> u32 {
             let mut added = false;
 
             for i in items.biterator() {
-                if let Some(next) = state.move_floor(false, 1 << i)
-                    && seen.insert(next)
-                {
-                    added = true;
-                    todo.push_back((next, steps + 1));
-                }
+                added |= push(false, 1 << i);
             }
-
             if !added {
                 for i in items.biterator() {
                     for j in items.biterator().take_while(|&j| j < i) {
-                        if let Some(next) = state.move_floor(false, (1 << i) | (1 << j))
-                            && seen.insert(next)
-                        {
-                            todo.push_back((next, steps + 1));
-                        }
+                        push(false, (1 << i) | (1 << j));
                     }
                 }
             }
@@ -193,22 +191,12 @@ fn bfs(start: State, steps: u32) -> u32 {
 
             for i in items.biterator() {
                 for j in items.biterator().take_while(|&j| j < i) {
-                    if let Some(next) = state.move_floor(true, (1 << i) | (1 << j))
-                        && seen.insert(next)
-                    {
-                        added = true;
-                        todo.push_back((next, steps + 1));
-                    }
+                    added |= push(true, (1 << i) | (1 << j));
                 }
             }
-
             if !added {
                 for i in items.biterator() {
-                    if let Some(next) = state.move_floor(true, 1 << i)
-                        && seen.insert(next)
-                    {
-                        todo.push_back((next, steps + 1));
-                    }
+                    push(true, 1 << i);
                 }
             }
         }
