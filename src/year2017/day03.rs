@@ -56,46 +56,26 @@ pub fn part1(input: &u32) -> u32 {
 
 pub fn part2(input: &u32) -> u32 {
     let target = *input;
-    let mut size = 2;
-
-    let mut position = Point::new(1, 0);
-    let mut direction = UP;
-    let mut left = LEFT;
-
     let mut values = FastMap::build([(ORIGIN, 1)]);
+    let mut position = ORIGIN;
+    let mut direction = RIGHT;
+    let mut steps = 1;
 
-    'outer: loop {
-        // Fill in one donut at a time.
-        for edge in 0..4 {
-            for i in 0..size {
-                // Default to zero if a value doesn't exist yet.
-                let value = |point| values.get(&point).unwrap_or(&0);
+    loop {
+        for _ in 0..2 {
+            for _ in 0..steps {
+                position += direction;
 
-                // Values in front and to the right (relative to our current direction) are not
-                // filled in yet, so we only need to consider values to the left and behind.
-                let next = value(position - direction)
-                    + value(position + left + direction)
-                    + value(position + left)
-                    + value(position + left - direction);
+                let next: u32 =
+                    DIAGONAL.iter().map(|&d| values.get(&(position + d)).unwrap_or(&0)).sum();
 
                 if next > target {
-                    break 'outer next;
+                    return next;
                 }
                 values.insert(position, next);
-
-                // Turn left at the very end of each edge, unless this is the last edge of
-                // the square.
-                if i == size - 1 && edge < 3 {
-                    position += left;
-                } else {
-                    position += direction;
-                }
             }
-
-            direction = left;
-            left = left.counter_clockwise();
+            direction = direction.counter_clockwise();
         }
-
-        size += 2;
+        steps += 1;
     }
 }

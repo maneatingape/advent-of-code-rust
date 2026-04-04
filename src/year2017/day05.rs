@@ -38,7 +38,6 @@ pub fn part1(input: &[i32]) -> usize {
     total
 }
 
-#[expect(clippy::needless_range_loop)]
 pub fn part2(input: &[i32]) -> usize {
     let mut jump = input.to_vec();
     let mut total = 0;
@@ -65,11 +64,10 @@ pub fn part2(input: &[i32]) -> usize {
             }
 
             // Index lies within precomputed blocks.
-            for j in (index / 16)..(coarse / 16) {
-                let value = compact[j];
-                let (next, steps, delta) = cache[index % 16][value];
+            for value in &mut compact[(index / 16)..(coarse / 16)] {
+                let (next, steps, delta) = cache[index % 16][*value];
 
-                compact[j] = next as usize;
+                *value = next as usize;
                 total += steps as usize;
                 index += delta as usize;
             }

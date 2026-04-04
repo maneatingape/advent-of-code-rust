@@ -54,9 +54,7 @@ pub fn parse(input: &str) -> Dance {
     while let Some(op) = letters.next() {
         match op {
             // Increasing the offset has the same effect as rotating elements to the right.
-            b's' => {
-                offset += 16 - numbers.next().unwrap();
-            }
+            b's' => offset += 16 - numbers.next().unwrap(),
             // Swap two elements taking into account the offset when calculating indices.
             b'x' => {
                 let first = numbers.next().unwrap();

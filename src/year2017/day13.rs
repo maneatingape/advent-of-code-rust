@@ -77,10 +77,8 @@ pub fn part1(input: &Input) -> u32 {
 /// Sieves possible values at each scanner stage to reduce the number of possible values.
 pub fn part2(input: &Input) -> u32 {
     let mut lcm = 1;
-    let mut current = Vec::new();
+    let mut current = vec![1];
     let mut next = Vec::new();
-
-    current.push(1);
 
     for &[depth, range] in input {
         // Find the least common multiple of the existing lcm and the new scanner period.

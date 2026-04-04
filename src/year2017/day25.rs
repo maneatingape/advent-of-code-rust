@@ -13,6 +13,9 @@ use crate::util::hash::*;
 use crate::util::parse::*;
 use std::iter::repeat_with;
 
+const UPPER: u128 = u128::MAX << 64;
+const LOWER: u128 = u128::MAX >> 64;
+
 pub struct Input {
     state: usize,
     steps: u32,
@@ -84,10 +87,10 @@ pub fn part1(input: &Input) -> u32 {
         // a few thousand steps in any direction, so this approach is as fast as a fixed-size
         // array, but much more robust.
         if advance {
-            left.push(tape & 0xffffffffffffffff0000000000000000);
+            left.push(tape & UPPER);
             tape = (tape << 64) | right.pop().unwrap_or(0);
         } else {
-            right.push(tape & 0x0000000000000000ffffffffffffffff);
+            right.push(tape & LOWER);
             tape = (tape >> 64) | left.pop().unwrap_or(0);
         }
     }

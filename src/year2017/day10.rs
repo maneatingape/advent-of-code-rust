@@ -17,7 +17,7 @@ pub fn parse(input: &str) -> &str {
 pub fn part1(input: &str) -> u32 {
     let lengths: Vec<_> = input.iter_unsigned().collect();
     let knot = hash(&lengths, 1);
-    (knot[0] as u32) * (knot[1] as u32)
+    knot[0] as u32 * knot[1] as u32
 }
 
 pub fn part2(input: &str) -> String {
@@ -25,14 +25,11 @@ pub fn part2(input: &str) -> String {
     lengths.extend([17, 31, 73, 47, 23]);
 
     let knot = hash(&lengths, 64);
-    let mut result = String::new();
-
-    for chunk in knot.chunks_exact(16) {
+    knot.chunks_exact(16).fold(String::new(), |mut result, chunk| {
         let reduced = chunk.iter().fold(0, |acc, n| acc ^ n);
         let _ = write!(&mut result, "{reduced:02x}");
-    }
-
-    result
+        result
+    })
 }
 
 /// Performs the knot hash algorithm using a fixed-size array for better performance.
