@@ -41,12 +41,7 @@ fn parse_node(iter: &mut impl Iterator<Item = usize>, stack: &mut Vec<usize>) ->
     for _ in 0..metadata_count {
         let n = iter.next().unwrap();
         metadata += n;
-
-        if child_count == 0 {
-            score += n;
-        } else if n > 0 && n <= child_count {
-            score += stack[stack_base + (n - 1)];
-        }
+        score += if child_count == 0 { n } else { *stack.get(stack_base + n - 1).unwrap_or(&0) };
     }
 
     // Pop child nodes from the stack.
