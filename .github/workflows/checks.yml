@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v6
-    - run: rustup default 1.94
+    - run: rustup default 1.95
     - run: cargo test
 
   test-nightly:
