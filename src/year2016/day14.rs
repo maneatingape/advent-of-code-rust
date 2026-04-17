@@ -4,6 +4,7 @@
 //! for part two is a quick method to convert `u32` to 8 ASCII digits.
 use crate::util::md5::*;
 use crate::util::thread::*;
+use implementation::*;
 use std::collections::{BTreeMap, BTreeSet};
 use std::sync::Mutex;
 
@@ -46,10 +47,7 @@ fn generate_pad(input: &str, part_two: bool) -> i32 {
         Shared { input, part_two, iter: AtomicIter::new(0, step), mutex: Mutex::new(exclusive) };
 
     // Use as many cores as possible to parallelize the search.
-    #[cfg(not(feature = "simd"))]
-    spawn(|| scalar::worker(&shared));
-    #[cfg(feature = "simd")]
-    spawn(|| simd::worker(&shared));
+    spawn(|| worker(&shared));
 
     let exclusive = shared.mutex.into_inner().unwrap();
     *exclusive.found.iter().nth(63).unwrap()
@@ -96,7 +94,7 @@ fn to_ascii(n: u32) -> [u8; 8] {
 }
 
 #[cfg(not(feature = "simd"))]
-mod scalar {
+mod implementation {
     use super::*;
 
     pub(super) fn worker(shared: &Shared<'_>) {
@@ -190,7 +188,7 @@ mod scalar {
 }
 
 #[cfg(feature = "simd")]
-mod simd {
+mod implementation {
     use super::*;
     use crate::util::bitset::*;
     use crate::util::md5::simd::hash_fixed;
@@ -198,7 +196,6 @@ mod simd {
     use std::simd::*;
 
     /// Use SIMD to compute hashes in parallel in blocks of 32.
-    #[cfg(feature = "simd")]
     #[expect(clippy::needless_range_loop)]
     pub(super) fn worker(shared: &Shared<'_>) {
         let mut result = [Simd::splat(0); 4];

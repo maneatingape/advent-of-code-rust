@@ -10,6 +10,7 @@
 //! The SIMD version speeds things up by calculating 32 lanes at a time.
 use crate::util::grid::*;
 use crate::util::point::*;
+use implementation::*;
 
 const SEAT: u8 = b'L';
 
@@ -18,27 +19,15 @@ pub fn parse(input: &str) -> Grid<u8> {
 }
 
 pub fn part1(input: &Grid<u8>) -> u32 {
-    #[cfg(not(feature = "simd"))]
-    let result = scalar::simulate(input, false, 4);
-
-    #[cfg(feature = "simd")]
-    let result = simd::simulate(input, false, 4);
-
-    result
+    simulate(input, false, 4)
 }
 
 pub fn part2(input: &Grid<u8>) -> u32 {
-    #[cfg(not(feature = "simd"))]
-    let result = scalar::simulate(input, true, 5);
-
-    #[cfg(feature = "simd")]
-    let result = simd::simulate(input, true, 5);
-
-    result
+    simulate(input, true, 5)
 }
 
 #[cfg(not(feature = "simd"))]
-mod scalar {
+mod implementation {
     use super::*;
 
     struct Seat {
@@ -111,7 +100,7 @@ mod scalar {
 }
 
 #[cfg(feature = "simd")]
-mod simd {
+mod implementation {
     use super::*;
     use std::simd::cmp::SimdPartialEq as _;
     use std::simd::cmp::SimdPartialOrd as _;

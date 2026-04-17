@@ -16,6 +16,7 @@
 //! A faster SIMD approach processes cells 16 at a time.
 use crate::util::grid::*;
 use crate::util::point::*;
+use implementation::*;
 
 type Input = (Vec<u8>, Grid<u8>);
 
@@ -29,27 +30,15 @@ pub fn parse(input: &str) -> Input {
 }
 
 pub fn part1(input: &Input) -> u32 {
-    #[cfg(not(feature = "simd"))]
-    let result = scalar::enhance(input, 2);
-
-    #[cfg(feature = "simd")]
-    let result = simd::enhance(input, 2);
-
-    result
+    enhance(input, 2)
 }
 
 pub fn part2(input: &Input) -> u32 {
-    #[cfg(not(feature = "simd"))]
-    let result = scalar::enhance(input, 50);
-
-    #[cfg(feature = "simd")]
-    let result = simd::enhance(input, 50);
-
-    result
+    enhance(input, 50)
 }
 
 #[cfg(not(feature = "simd"))]
-mod scalar {
+mod implementation {
     use super::*;
 
     pub(super) fn enhance(input: &Input, steps: i32) -> u32 {
@@ -120,7 +109,7 @@ mod scalar {
 }
 
 #[cfg(feature = "simd")]
-mod simd {
+mod implementation {
     use super::*;
     use std::simd::Simd;
     use std::simd::num::SimdUint as _;

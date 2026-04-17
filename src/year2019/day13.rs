@@ -76,12 +76,14 @@ pub fn part2(input: &[i64]) -> i64 {
             tiles[index] = t;
         }
 
-        // Non-essential but hilarious. Enable feature then run program in a command line
-        // console to observe an animated game of breakout.
-        #[cfg(feature = "frivolity")]
+        // Non-essential but hilarious. Enable "frivolity" feature then run program in a
+        // command line console to observe an animated game of breakout.
         draw(&tiles, stride, score, blocks);
     }
 }
+
+#[cfg(not(feature = "frivolity"))]
+fn draw(_tiles: &[i64], _stride: i64, _score: i64, _blocks: i64) {}
 
 #[cfg(feature = "frivolity")]
 fn draw(tiles: &[i64], stride: i64, score: i64, blocks: i64) {

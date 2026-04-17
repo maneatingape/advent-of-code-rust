@@ -17,6 +17,7 @@
 //! [`day 17`]: crate::year2020::day17
 //! [`day 11`]: crate::year2020::day11
 use crate::util::hash::*;
+use implementation::*;
 
 #[derive(PartialEq, Eq, Hash)]
 pub struct Hex {
@@ -66,17 +67,11 @@ pub fn part1(input: &FastSet<Hex>) -> usize {
 }
 
 pub fn part2(input: &FastSet<Hex>) -> usize {
-    #[cfg(not(feature = "simd"))]
-    let result = scalar::simulate(input);
-
-    #[cfg(feature = "simd")]
-    let result = simd::simulate(input);
-
-    result
+    simulate(input)
 }
 
 #[cfg(not(feature = "simd"))]
-mod scalar {
+mod implementation {
     use super::*;
 
     pub(super) fn simulate(input: &FastSet<Hex>) -> usize {
@@ -138,7 +133,7 @@ mod scalar {
 }
 
 #[cfg(feature = "simd")]
-mod simd {
+mod implementation {
     use super::*;
     use std::simd::cmp::SimdPartialEq as _;
     use std::simd::*;

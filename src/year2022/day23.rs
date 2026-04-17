@@ -3,11 +3,7 @@
 //! We represent elves as bits in an integer then use bitwise operations to efficiently figure
 //! out the movement for multiple elves at once.
 use Direction::*;
-
-#[cfg(not(feature = "simd"))]
-use scalar::U256;
-#[cfg(feature = "simd")]
-use simd::U256;
+use implementation::U256;
 
 /// The initial grid is 70 x 70. Elves stop moving when no other elf is adjacent so the grid
 /// will expand at most 70 in any direction, giving 70 + 70 + 70 = 210 total.
@@ -178,7 +174,7 @@ fn step(input: &mut Input, order: &mut [Direction]) -> bool {
 }
 
 #[cfg(not(feature = "simd"))]
-mod scalar {
+mod implementation {
     /// Duct tape two `u128`s together.
     #[derive(Clone, Copy, Default)]
     pub(super) struct U256 {
@@ -229,7 +225,7 @@ mod scalar {
 }
 
 #[cfg(feature = "simd")]
-mod simd {
+mod implementation {
     use std::simd::*;
 
     #[derive(Clone, Copy, Default)]

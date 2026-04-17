@@ -13,6 +13,7 @@
 //! in lookup speed.
 use crate::util::grid::*;
 use crate::util::point::*;
+use implementation::*;
 
 /// Use our utility [`Grid`] module to parse the input.
 ///
@@ -23,28 +24,16 @@ pub fn parse(input: &str) -> Grid<u8> {
 
 /// Part one cells form a cube.
 pub fn part1(input: &Grid<u8>) -> usize {
-    #[cfg(not(feature = "simd"))]
-    let result = scalar::three_dimensions(input);
-
-    #[cfg(feature = "simd")]
-    let result = simd::three_dimensions(input);
-
-    result
+    three_dimensions(input)
 }
 
 /// Part two forms a hypercube.
 pub fn part2(input: &Grid<u8>) -> usize {
-    #[cfg(not(feature = "simd"))]
-    let result = scalar::four_dimensions(input);
-
-    #[cfg(feature = "simd")]
-    let result = simd::four_dimensions(input);
-
-    result
+    four_dimensions(input)
 }
 
 #[cfg(not(feature = "simd"))]
-mod scalar {
+mod implementation {
     use super::*;
 
     /// x and y dimensions are in the plane of the input. Each dimension can expand by at most two
@@ -143,7 +132,7 @@ mod scalar {
 }
 
 #[cfg(feature = "simd")]
-mod simd {
+mod implementation {
     use super::*;
     use std::simd::cmp::SimdPartialEq as _;
     use std::simd::*;

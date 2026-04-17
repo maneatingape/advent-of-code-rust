@@ -23,15 +23,13 @@
 //! that can be parallelized.
 use crate::util::parse::*;
 use crate::util::thread::*;
+use implementation::*;
 
 type Input = (u64, u16);
 type Result = (u64, Vec<u16>);
 
 pub fn parse(input: &str) -> Input {
-    #[cfg(not(feature = "simd"))]
-    let result = scalar::parallel(input);
-    #[cfg(feature = "simd")]
-    let result = simd::parallel(input);
+    let result = parallel(input);
 
     // Merge results from different threads.
     let mut part_one = 0;
@@ -54,7 +52,7 @@ pub fn part2(input: &Input) -> u16 {
 }
 
 #[cfg(not(feature = "simd"))]
-mod scalar {
+mod implementation {
     use super::*;
 
     // Use as many cores as possible to parallelize the remaining search.
@@ -122,7 +120,7 @@ mod scalar {
 }
 
 #[cfg(feature = "simd")]
-mod simd {
+mod implementation {
     use super::*;
     use std::simd::Simd;
     use std::simd::num::SimdUint as _;

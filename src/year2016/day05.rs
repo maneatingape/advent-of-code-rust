@@ -6,6 +6,7 @@
 //! [`Year 2015 Day 4`]: crate::year2015::day04
 use crate::util::md5::*;
 use crate::util::thread::*;
+use implementation::*;
 use std::sync::Mutex;
 
 struct Shared {
@@ -33,12 +34,7 @@ pub fn parse(input: &str) -> Vec<u32> {
     }
 
     // Use as many cores as possible to parallelize the remaining search.
-    spawn(|| {
-        #[cfg(not(feature = "simd"))]
-        worker(&shared);
-        #[cfg(feature = "simd")]
-        simd::worker(&shared);
-    });
+    spawn(|| worker(&shared));
 
     let mut found = shared.mutex.into_inner().unwrap().found;
     found.sort_unstable();
@@ -99,23 +95,27 @@ fn check_hash(buffer: &mut [u8], size: usize, n: u32, shared: &Shared) {
 }
 
 #[cfg(not(feature = "simd"))]
-fn worker(shared: &Shared) {
-    while let Some(offset) = shared.iter.next() {
-        let (mut buffer, size) = format_string(&shared.prefix, offset);
+mod implementation {
+    use super::*;
 
-        for n in 0..1000 {
-            // Format macro is very slow, so update digits directly.
-            buffer[size - 3] = b'0' + (n / 100) as u8;
-            buffer[size - 2] = b'0' + ((n / 10) % 10) as u8;
-            buffer[size - 1] = b'0' + (n % 10) as u8;
+    pub(super) fn worker(shared: &Shared) {
+        while let Some(offset) = shared.iter.next() {
+            let (mut buffer, size) = format_string(&shared.prefix, offset);
 
-            check_hash(&mut buffer, size, offset + n, shared);
+            for n in 0..1000 {
+                // Format macro is very slow, so update digits directly.
+                buffer[size - 3] = b'0' + (n / 100) as u8;
+                buffer[size - 2] = b'0' + ((n / 10) % 10) as u8;
+                buffer[size - 1] = b'0' + (n % 10) as u8;
+
+                check_hash(&mut buffer, size, offset + n, shared);
+            }
         }
     }
 }
 
 #[cfg(feature = "simd")]
-mod simd {
+mod implementation {
     use super::*;
     use crate::util::bitset::*;
     use crate::util::md5::simd::hash_fixed;
