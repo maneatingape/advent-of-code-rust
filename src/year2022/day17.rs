@@ -35,7 +35,7 @@
 //! We choose an arbitrary length and generate a sequence of that size then search
 //! for repeating patterns. Once we find the length of the cycle then we can extrapolate for
 //! any `n` greater than the start of the cycle.
-use std::iter::{Copied, Cycle};
+use std::iter::{Copied, Cycle, once};
 use std::slice::Iter;
 
 /// Convenience alias to shorten type name.
@@ -135,14 +135,8 @@ pub fn part2(input: &[u8]) -> usize {
     let guess = 1000;
     let height: Vec<_> = State::new(input).take(5 * guess).collect();
     // We compare based on the *delta* between rows instead of absolute heights.
-    let deltas: Vec<_> = height
-        .iter()
-        .scan(0, |state, &height| {
-            let delta = height - *state;
-            *state = height;
-            Some(delta)
-        })
-        .collect();
+    let deltas: Vec<_> =
+        once(height[0]).chain(height.array_windows().map(|[a, b]| b - a)).collect();
 
     // Simple brute force check, instead of a
     // [cycle detection](https://en.wikipedia.org/wiki/Cycle_detection) algorithm.

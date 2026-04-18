@@ -74,13 +74,9 @@ pub fn part2(input: &Input) -> String {
 
 #[inline]
 fn apply_fold(fold: Fold, point: Point) -> Point {
-    let horizontal = |p: Point, x: i32| if p.x < x { p } else { Point::new(2 * x - p.x, p.y) };
-    let vertical = |p: Point, y: i32| if p.y < y { p } else { Point::new(p.x, 2 * y - p.y) };
-
     match fold {
-        // Fold point at `x` coordinate, doing nothing if the point is to the left of the fold line.
-        Fold::Horizontal(x) => horizontal(point, x),
-        // Fold point at `y` coordinate, doing nothing if the point is above the fold line.
-        Fold::Vertical(y) => vertical(point, y),
+        Fold::Horizontal(x) if point.x >= x => Point::new(2 * x - point.x, point.y),
+        Fold::Vertical(y) if point.y >= y => Point::new(point.x, 2 * y - point.y),
+        _ => point,
     }
 }

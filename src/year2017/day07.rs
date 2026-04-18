@@ -15,8 +15,7 @@ use std::collections::VecDeque;
 
 #[derive(Clone, Copy, Default)]
 struct Node {
-    has_parent: bool,
-    parent: usize,
+    parent: Option<usize>,
     children: usize,
     processed: usize,
     weight: i32,
@@ -49,8 +48,7 @@ pub fn parse(input: &str) -> Input<'_> {
         for edge in iter {
             nodes[i].children += 1;
             let child = indices[edge];
-            nodes[child].parent = i;
-            nodes[child].has_parent = true;
+            nodes[child].parent = Some(i);
         }
 
         // Start with leaf nodes.
@@ -62,14 +60,15 @@ pub fn parse(input: &str) -> Input<'_> {
     // The root is the only node without a parent. Start from any node, and walk up the
     // tree until finding the root.
     let mut candidate = 0;
-    while nodes[candidate].has_parent {
-        candidate = nodes[candidate].parent;
+    while let Some(parent) = nodes[candidate].parent {
+        candidate = parent;
     }
     let part_one = pairs[candidate].0;
     let mut part_two = 0;
 
     while let Some(index) = todo.pop_front() {
         let Node { parent, weight, total, .. } = nodes[index];
+        let parent = parent.unwrap();
         let node = &mut nodes[parent];
 
         if node.processed < 2 {

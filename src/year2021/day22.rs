@@ -38,9 +38,7 @@ pub struct RebootStep {
 
 impl RebootStep {
     fn from((command, points): (&str, [i32; 6])) -> RebootStep {
-        let on = command == "on";
-        let cube = Cube::from(points);
-        RebootStep { on, cube }
+        RebootStep { on: command == "on", cube: Cube::from(points) }
     }
 }
 

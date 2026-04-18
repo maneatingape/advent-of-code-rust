@@ -32,8 +32,10 @@ impl Segment {
 
     // Return the point of intersection between two orthogonal segments, if there is one.
     fn intersects(&self, other: &Segment) -> Option<Point> {
-        let overlap =
-            !(other.x2 < self.x1 || other.x1 > self.x2 || other.y2 < self.y1 || other.y1 > self.y2);
+        let overlap = other.x2 >= self.x1
+            && other.x1 <= self.x2
+            && other.y2 >= self.y1
+            && other.y1 <= self.y2;
         overlap.then_some(Point::new(self.x1.max(other.x1), self.y1.max(other.y1)))
     }
 }

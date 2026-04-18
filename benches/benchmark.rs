@@ -13,13 +13,9 @@ macro_rules! benchmark {
                 use test::Bencher;
 
                 static DATA: LazyLock<String> = LazyLock::new(|| {
-                    let year = stringify!($year);
-                    let day = stringify!($day);
-                    let path = format!("input/{year}/{day}.txt");
-
-                    read_to_string(&path).unwrap_or_else(|_| {
-                        panic!("Missing input file {BOLD}{WHITE}{path}{RESET}");
-                    })
+                    let path = format!("input/{}/{}.txt", stringify!($year), stringify!($day));
+                    read_to_string(&path)
+                        .unwrap_or_else(|_| panic!("Missing input file {BOLD}{WHITE}{path}{RESET}"))
                 });
 
                 #[bench]

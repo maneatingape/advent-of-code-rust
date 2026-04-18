@@ -33,7 +33,7 @@ pub fn parse(input: &str) -> Vec<Room<'_>> {
             if b != b'-' {
                 let index = to_index(b);
                 let current = freq[index];
-                let next = freq[index] + 1;
+                let next = current + 1;
 
                 freq[index] = next;
                 fof[current] -= 1;

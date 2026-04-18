@@ -64,9 +64,8 @@ impl<T: Copy + PartialEq> Grid<T> {
     #[must_use]
     pub fn find(&self, needle: T) -> Option<Point> {
         self.bytes.iter().position(|&h| h == needle).map(|index| {
-            let x = (index as i32) % self.width;
-            let y = (index as i32) / self.width;
-            Point::new(x, y)
+            let index = index as i32;
+            Point::new(index % self.width, index / self.width)
         })
     }
 }

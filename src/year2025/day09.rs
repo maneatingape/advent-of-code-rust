@@ -142,9 +142,7 @@ pub fn part2(tiles: &[Tile]) -> u64 {
     let mut intervals_from_descending_edges = vec![];
 
     // Invariants on the input data (defined by the puzzle) result in points arriving in pairs on the same y line:
-    let mut it = tiles.iter();
-
-    while let (Some(&[x0, y]), Some(&[x1, y1])) = (it.next(), it.next()) {
+    for [&[x0, y], &[x1, y1]] in tiles.iter().chunk::<2>() {
         debug_assert_eq!(y, y1);
 
         // Update the descending edges; since we are scanning from top to bottom, and within each line left to right,
