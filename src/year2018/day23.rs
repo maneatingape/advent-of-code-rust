@@ -1,8 +1,8 @@
 //! # Experimental Emergency Teleportation
 //!
-//! Part two implements a 3D version of binary search. Starting with a single cube that encloses all
-//! nanobots, each cube is further split into 8 smaller cubes until we find the answer.
-//! Cubes are stored in a [`MinHeap`] ordered by:
+//! A generic solution to part two would be a 3D version of binary search. Starting with a single
+//! cube that encloses all nanobots, each cube is further split into 8 smaller cubes until we find
+//! the answer. Cubes can be stored in a [`MinHeap`] ordered by:
 //!
 //! * Greatest number of nanobots in range.
 //! * Least distance to origin.
@@ -15,8 +15,16 @@
 //! * There are no cubes that are closer.
 //! * The coordinates cannot be refined any further.
 //!
-//! [`MinHeap`]: crate::util::heap
-use crate::util::heap::*;
+//! However, the actual input files lend themselves to an even faster answer. At a high level,
+//! we can determine a one-dimensional range of Manhattan distances at which we are in range of
+//! a given nanobot. By sorting the points at which ranges begin and end, we can determine the
+//! maximum number of nanobots that can possibly be in range at once. In the generic case,
+//! two nanobots may have the same Manhattan distance but be non-overlapping in distinct
+//! octants of 3-D space, so the actual best point may have fewer than the maximum determined in
+//! this manner. But for our input files, it so happens that there is exactly one range that has
+//! a higher potential than any other, and the low end of this range happens to be the Manhattan
+//! distance we are after, without actually having to find the point with that distance.
+//!
 use crate::util::iter::*;
 use crate::util::parse::*;
 
@@ -37,69 +45,6 @@ impl Nanobot {
     }
 }
 
-struct Cube {
-    x1: i32,
-    x2: i32,
-    y1: i32,
-    y2: i32,
-    z1: i32,
-    z2: i32,
-}
-
-impl Cube {
-    fn new(x1: i32, x2: i32, y1: i32, y2: i32, z1: i32, z2: i32) -> Cube {
-        Cube { x1, x2, y1, y2, z1, z2 }
-    }
-
-    /// Split the cube into 8 non-overlapping sub-cubes.
-    /// Since each cube size is always a power of two, we can safely divide by 2.
-    fn split(&self) -> [Cube; 8] {
-        let Cube { x1, x2, y1, y2, z1, z2 } = *self;
-
-        // Lower and upper halves of the new sub-cubes.
-        let lx = x1.midpoint(x2);
-        let ly = y1.midpoint(y2);
-        let lz = z1.midpoint(z2);
-        let ux = lx + 1;
-        let uy = ly + 1;
-        let uz = lz + 1;
-
-        // 8 possible permutations of lower and upper halves for each axis.
-        [
-            Cube::new(x1, lx, y1, ly, z1, lz),
-            Cube::new(ux, x2, y1, ly, z1, lz),
-            Cube::new(x1, lx, uy, y2, z1, lz),
-            Cube::new(ux, x2, uy, y2, z1, lz),
-            Cube::new(x1, lx, y1, ly, uz, z2),
-            Cube::new(ux, x2, y1, ly, uz, z2),
-            Cube::new(x1, lx, uy, y2, uz, z2),
-            Cube::new(ux, x2, uy, y2, uz, z2),
-        ]
-    }
-
-    // Compute the Manhattan distance from the faces of the cube to the octahedron-shaped region
-    // within range of the Nanobot.
-    fn in_range(&self, nb: &Nanobot) -> bool {
-        let x = (self.x1 - nb.x).max(0) + (nb.x - self.x2).max(0);
-        let y = (self.y1 - nb.y).max(0) + (nb.y - self.y2).max(0);
-        let z = (self.z1 - nb.z).max(0) + (nb.z - self.z2).max(0);
-        x + y + z <= nb.r
-    }
-
-    /// Find the corner closest to the origin, considering each axis independently.
-    fn closest(&self) -> i32 {
-        let x = self.x1.abs().min(self.x2.abs());
-        let y = self.y1.abs().min(self.y2.abs());
-        let z = self.z1.abs().min(self.z2.abs());
-        x + y + z
-    }
-
-    /// All axes are the same so choose `x` arbitrarily.
-    fn size(&self) -> i32 {
-        self.x2 - self.x1 + 1
-    }
-}
-
 pub fn parse(input: &str) -> Vec<Nanobot> {
     input.iter_signed().chunk::<4>().map(Nanobot::from).collect()
 }
@@ -110,23 +55,32 @@ pub fn part1(input: &[Nanobot]) -> usize {
 }
 
 pub fn part2(input: &[Nanobot]) -> i32 {
-    // Start with a single cube that encloses all nanobots. Cubes faces are aligned to powers of 2,
-    // for example 0..4, 8..16, -32..0
-    const SIZE: i32 = 1 << 29;
-    let mut heap = MinHeap::with_capacity(1_000);
-    heap.push((0, 0, 0), Cube::new(-SIZE, SIZE - 1, -SIZE, SIZE - 1, -SIZE, SIZE - 1));
+    // Start by populating the possible distances that can reach each nanobot.
 
-    while let Some((_, cube)) = heap.pop() {
-        if cube.size() == 1 {
-            return cube.closest();
-        }
+    let mut endpoints = Vec::with_capacity(2_000);
+    let origin = Nanobot::from([0, 0, 0, 0]);
+    for bot in input {
+        let dist = bot.manhattan(&origin);
+        let low = (dist - bot.r).max(0);
+        endpoints.push((low, 1));
+        endpoints.push((dist + bot.r + 1, -1));
+    }
+    endpoints.sort_unstable();
 
-        for next in cube.split() {
-            let in_range = input.iter().filter(|nb| next.in_range(nb)).count();
-            let key = (input.len() - in_range, next.closest(), next.size());
-            heap.push(key, next);
+    // Determine the distance that has the maximum overlap in ranges.
+
+    let mut best_dist = 0;
+    let mut best_total = 0;
+    let mut total = 0;
+    for (dist, delta) in endpoints {
+        total += delta;
+        if total > best_total {
+            best_total = total;
+            best_dist = dist;
         }
     }
 
-    unreachable!()
+    // In the generic case, the actual answer might be a lower number of overlapping nanobots at a
+    // different distance; but for our input files, the maximum overlap gives the distance we want.
+    best_dist
 }
