@@ -2,7 +2,8 @@
 //!
 //! A generic solution to part two would be a 3D version of binary search. Starting with a single
 //! cube that encloses all nanobots, each cube is further split into 8 smaller cubes until we find
-//! the answer. Cubes can be stored in a [`MinHeap`] ordered by:
+//! the answer. Cubes can be stored in a
+//! [min-heap](https://en.wikipedia.org/wiki/Heap_(data_structure)) ordered by:
 //!
 //! * Greatest number of nanobots in range.
 //! * Least distance to origin.
@@ -24,7 +25,6 @@
 //! this manner. But for our input files, it so happens that there is exactly one range that has
 //! a higher potential than any other, and the low end of this range happens to be the Manhattan
 //! distance we are after, without actually having to find the point with that distance.
-//!
 use crate::util::iter::*;
 use crate::util::parse::*;
 
@@ -56,22 +56,23 @@ pub fn part1(input: &[Nanobot]) -> usize {
 
 pub fn part2(input: &[Nanobot]) -> i32 {
     // Start by populating the possible distances that can reach each nanobot.
-
-    let mut endpoints = Vec::with_capacity(2_000);
     let origin = Nanobot::from([0, 0, 0, 0]);
+    let mut endpoints = Vec::with_capacity(2_000);
+
     for bot in input {
         let dist = bot.manhattan(&origin);
         let low = (dist - bot.r).max(0);
         endpoints.push((low, 1));
         endpoints.push((dist + bot.r + 1, -1));
     }
+
     endpoints.sort_unstable();
 
     // Determine the distance that has the maximum overlap in ranges.
-
     let mut best_dist = 0;
     let mut best_total = 0;
     let mut total = 0;
+
     for (dist, delta) in endpoints {
         total += delta;
         if total > best_total {
