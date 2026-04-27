@@ -21,8 +21,9 @@ pub fn parse(input: &str) -> Input {
     for (direction, amount) in directions.zip(amounts) {
         if direction == b'R' {
             // Right (or positive) turns use normal modulo.
-            part_two += (dial + amount) / 100;
-            dial = (dial + amount) % 100;
+            let total = dial + amount;
+            part_two += total / 100;
+            dial = total % 100;
         } else {
             // To avoid an [off by one error](https://en.wikipedia.org/wiki/Off-by-one_error)
             // when the dial is already at zero during a left (or negative) turn, we take the

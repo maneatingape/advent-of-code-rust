@@ -59,10 +59,12 @@ mod implementation {
 
         let mut next = pixels.clone();
         let mut default = 0;
-        let mut start = extra;
-        let mut end = extra + grid.width;
 
-        for _ in 0..steps {
+        for step in 0..steps {
+            // Boundaries expand by one each turn.
+            let start = extra - step;
+            let end = extra + grid.width + step;
+
             for y in (start - 1)..(end + 1) {
                 // If the pixel is within current bounds then return it, or else use the `default`
                 // edge value specified by the enhancement algorithm.
@@ -98,10 +100,6 @@ mod implementation {
             // Swap grids then calculate the next value for edge pixels beyond the boundary.
             (pixels, next) = (next, pixels);
             default = if default == 0 { algorithm[0] } else { algorithm[511] };
-
-            // Boundaries expand by one each turn.
-            start -= 1;
-            end += 1;
         }
 
         pixels.bytes.iter().map(|&b| b as u32).sum()
@@ -136,10 +134,12 @@ mod implementation {
 
         let mut next = pixels.clone();
         let mut default = 0;
-        let mut start = extra - 1;
-        let mut end = extra + grid.width + 1;
 
-        for _ in 0..steps {
+        for step in 0..steps {
+            // Boundaries expand by one each turn.
+            let start = extra - 1 - step;
+            let end = extra + grid.width + 1 + step;
+
             // Edge pixels on the infinite grid flip-flop between on and off.
             for y in (start - 1)..(end + 1) {
                 pixels[Point::new(start - 1, y)] = default;
@@ -170,13 +170,10 @@ mod implementation {
             // Swap grids then calculate the next value for edge pixels beyond the boundary.
             (pixels, next) = (next, pixels);
             default = if default == 0 { algorithm[0] } else { algorithm[511] };
-
-            // Boundaries expand by one each turn.
-            start -= 1;
-            end += 1;
         }
 
         // Only count pixels inside the boundary.
+        let end = extra + grid.width + 1 + steps;
         let mut result = 0;
 
         for y in 1..end - 1 {

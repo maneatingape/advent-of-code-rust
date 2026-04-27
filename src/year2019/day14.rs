@@ -23,15 +23,11 @@ pub struct Reaction {
 pub fn parse(input: &str) -> Vec<Reaction> {
     let lines: Vec<_> = input.lines().collect();
 
-    let mut reactions: Vec<_> = repeat_with(|| {
-        Reaction {
-            amount: 0,
-            chemical: 1, // Default to ORE, other chemicals will overwrite.
-            ingredients: Vec::new(),
-        }
-    })
-    .take(lines.len() + 1)
-    .collect();
+    // Default chemical is ORE, other chemicals will overwrite.
+    let mut reactions: Vec<_> =
+        repeat_with(|| Reaction { amount: 0, chemical: 1, ingredients: Vec::new() })
+            .take(lines.len() + 1)
+            .collect();
 
     // Assign FUEL and ORE known indices as we'll need to look them up later.
     let mut indices = FastMap::new();

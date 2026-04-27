@@ -14,13 +14,7 @@ pub struct Input {
 
 pub fn parse(input: &str) -> Input {
     // Don't include the left and right walls.
-    let raw: Vec<_> = input
-        .lines()
-        .map(|line| {
-            let bytes = line.as_bytes();
-            &bytes[1..(bytes.len() - 1)]
-        })
-        .collect();
+    let raw: Vec<_> = input.lines().map(|line| &line.as_bytes()[1..line.len() - 1]).collect();
 
     let width = raw[0].len();
     let height = raw.len() - 2;

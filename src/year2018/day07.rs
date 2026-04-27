@@ -23,7 +23,7 @@ pub fn parse(input: &str) -> Input {
         let from = to_index(line[5]);
         let to = to_index(line[36]);
 
-        // Track dependencies as bitmask.
+        // Track dependencies as bitmasks.
         steps[from].todo = true;
         steps[from].to |= 1 << to;
 
@@ -40,7 +40,7 @@ pub fn part1(input: &Input) -> String {
 
     // Find next available step in alphabetical order.
     while let Some(i) = next_ready(&steps) {
-        // Prevent this step being considered again.
+        // Prevent this step from being considered again.
         steps[i].todo = false;
 
         // Keep track of the order of completed tasks.
@@ -70,7 +70,7 @@ pub fn part2_testable(input: &Input, max_workers: usize, base_duration: usize) -
         while let Some(i) = next_ready(&steps)
             && workers.len() < max_workers
         {
-            // Prevent this step being considered again.
+            // Prevent this step from being considered again.
             steps[i].todo = false;
 
             // Add task duration based on step.
@@ -83,7 +83,7 @@ pub fn part2_testable(input: &Input, max_workers: usize, base_duration: usize) -
         }
 
         // Fast forward time until the earliest available worker finishes their step.
-        // This may not unblock a dependent step right away in which case the outer loop will
+        // This may not unblock a dependent step right away, in which case the outer loop will
         // bring things back here for another worker to complete.
         let (finish, i) = workers.pop().unwrap();
         time = finish;

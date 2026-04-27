@@ -157,9 +157,9 @@ pub fn part2(input: &Result) -> usize {
 fn step(current: &[usize], decays: &[Vec<usize>]) -> [usize; 92] {
     let mut next = [0; 92];
 
-    for (i, &count) in current.iter().enumerate() {
+    for (&count, decay) in current.iter().zip(decays) {
         if count > 0 {
-            for &element in &decays[i] {
+            for &element in decay {
                 next[element] += count;
             }
         }

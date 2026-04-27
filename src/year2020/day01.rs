@@ -27,17 +27,14 @@ pub fn part1(input: &[usize]) -> usize {
 pub fn part2(input: &[usize]) -> usize {
     let mut hash = [0; 2020];
 
-    for i in 0..(input.len() - 2) {
-        let first = input[i];
-        let round = i + 1;
-        let slice = &input[round..];
-        let target = 2020 - first;
-
-        if let Some(product) = two_sum(slice, target, &mut hash, round) {
-            return first * product;
-        }
-    }
-    unreachable!()
+    (0..input.len() - 2)
+        .find_map(|i| {
+            let first = input[i];
+            let round = i + 1;
+            let target = 2020 - first;
+            two_sum(&input[round..], target, &mut hash, round).map(|product| first * product)
+        })
+        .unwrap()
 }
 
 fn two_sum(slice: &[usize], target: usize, hash: &mut [usize], round: usize) -> Option<usize> {

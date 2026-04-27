@@ -22,13 +22,8 @@ pub fn parse(input: &str) -> Input {
 
         if step[size - 1] == b'-' {
             let label = &step[..size - 1];
-            let hash = hash(label);
-            let slot = &mut boxes[hash];
-
             // If the label exists then remove it.
-            if let Some(i) = slot.iter().position(|item| item.label == label) {
-                slot.remove(i);
-            }
+            boxes[hash(label)].retain(|item| item.label != label);
         } else {
             let label = &step[..size - 2];
             let hash = hash(label);

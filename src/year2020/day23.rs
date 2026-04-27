@@ -22,8 +22,8 @@ pub fn part1(input: &[u32]) -> u32 {
     let mut cups = vec![0; 10];
 
     // Link the 9 input cups, wrapping around to the start.
-    for w in input.windows(2) {
-        cups[w[0] as usize] = w[1];
+    for &[a, b] in input.array_windows() {
+        cups[a as usize] = b;
     }
     cups[*input.last().unwrap() as usize] = start as u32;
 
@@ -37,8 +37,8 @@ pub fn part2(input: &[u32]) -> usize {
     let mut cups: Vec<_> = (1..1_000_002).collect();
 
     // Link the 9 input cups, continuing to the extra elements.
-    for w in input.windows(2) {
-        cups[w[0] as usize] = w[1];
+    for &[a, b] in input.array_windows() {
+        cups[a as usize] = b;
     }
     cups[*input.last().unwrap() as usize] = 10;
 

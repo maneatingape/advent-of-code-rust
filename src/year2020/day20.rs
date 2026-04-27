@@ -131,10 +131,8 @@ pub fn part1(input: &[Tile]) -> u64 {
     let mut freq = [0; 1024];
     let mut result = 1;
 
-    for tile in input {
-        for edge in tile.top {
-            freq[edge] += 1;
-        }
+    for edge in input.iter().flat_map(|t| t.top) {
+        freq[edge] += 1;
     }
 
     for tile in input {

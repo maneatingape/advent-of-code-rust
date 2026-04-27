@@ -35,7 +35,7 @@ pub fn part2(input: &[i64]) -> i64 {
     let mut tiles = Vec::with_capacity(1_000);
     let mut stride = 0;
     let mut score = 0;
-    let mut blocks = score;
+    let mut blocks = 0;
     let mut ball: i64 = 0;
     let mut paddle: i64 = 0;
 

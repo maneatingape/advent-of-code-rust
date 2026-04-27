@@ -9,7 +9,7 @@
 //! * Least distance to origin.
 //! * Least size.
 //!
-//! This means that when we encounter a cube of size 1 we can return the coordinates,
+//! This means that when we encounter a cube of size 1, we can return the coordinates,
 //! since we know that:
 //!
 //! * There are no cubes within range of more nanobots.
@@ -21,7 +21,7 @@
 //! a given nanobot. By sorting the points at which ranges begin and end, we can determine the
 //! maximum number of nanobots that can possibly be in range at once. In the generic case,
 //! two nanobots may have the same Manhattan distance but be non-overlapping in distinct
-//! octants of 3-D space, so the actual best point may have fewer than the maximum determined in
+//! octants of 3D space, so the actual best point may have fewer than the maximum determined in
 //! this manner. But for our input files, it so happens that there is exactly one range that has
 //! a higher potential than any other, and the low end of this range happens to be the Manhattan
 //! distance we are after, without actually having to find the point with that distance.
@@ -82,6 +82,6 @@ pub fn part2(input: &[Nanobot]) -> i32 {
     }
 
     // In the generic case, the actual answer might be a lower number of overlapping nanobots at a
-    // different distance; but for our input files, the maximum overlap gives the distance we want.
+    // different distance, but for our input files, the maximum overlap gives the distance we want.
     best_dist
 }

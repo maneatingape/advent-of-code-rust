@@ -4,7 +4,7 @@
 //! This [fantastic blog](https://www.redblobgames.com/pathfinding/a-star/introduction.html)
 //! is a great introduction to this algorithm. The heuristic is the
 //! [Manhattan distance](https://en.wikipedia.org/wiki/Taxicab_geometry) to the target. This will
-//! never overestimate the actual distance which is an essential characteristic in the heuristic.
+//! never overestimate the actual distance, which is an essential characteristic of the heuristic.
 //! Interestingly, benchmarking showed that adding the time to switch tools if we don't have the
 //! torch to the heuristic slowed things down.
 //!
@@ -21,7 +21,7 @@
 //! Using A* instead of [Dijkstra](https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm) results
 //! in a 6x speedup on an unconstrained grid. This is because Dijkstra explores the grid evenly
 //! in both axes, so if the target is 700 deep, then we will explore an area roughly 700 x 700
-//! in size. In contrast A* prefers reducing the distance to the target, exploring a more narrow
+//! in size. In contrast, A* prefers reducing the distance to the target, exploring a narrower
 //! area approximately 130 x 700 in size. On the other hand, use of an unconstrained grid does
 //! unnecessary work; all known input files can be solved with a grid of width 80. The smaller
 //! grid benefits Dijkstra more than A*, although A* remains faster. The state is a tuple of
@@ -31,7 +31,7 @@
 //! can be implemented in Rust using a [`BinaryHeap`]. However, the total cost follows a strictly
 //! increasing order in a constrained range of values, so we can use a much faster
 //! [bucket queue](https://en.wikipedia.org/wiki/Bucket_queue). The range of the increase is from
-//! 0 (moving toward the target and not changing tools) to 7 (staying put and changing tools)
+//! 0 (moving toward the target and not changing tools) to 7 (staying put and changing tools),
 //! requiring 8 buckets total.
 //!
 //! [`BinaryHeap`]: std::collections::BinaryHeap
@@ -41,8 +41,8 @@ use crate::util::parse::*;
 use crate::util::point::*;
 use std::array::from_fn;
 
-/// The index of each tool is that tool that *cannot* be used in that region, for example
-/// Rocky => 0 => Neither, Wet => 1 => Torch and Narrow => 2 => Climbing Gear.
+/// The index of each tool is the tool that *cannot* be used in that region, for example
+/// Rocky => 0 => Neither, Wet => 1 => Torch, and Narrow => 2 => Climbing Gear.
 const TORCH: usize = 1;
 const BUCKETS: usize = 8;
 
@@ -76,9 +76,9 @@ pub fn parse(input: &str) -> Input {
         grid[Point::new(c as i32, 0)] = (row[c] % 3) as u8;
     }
 
-    // Remaining rows have the first column set by scale (puzzle Y), and other columns set by
-    // product of two neighboring erosion levels, except for the target point having a
-    // hard-coded geologic index of 0.
+    // Remaining rows have the first column (when puzzle Y is zero) set to a scaled geologic
+    // index, and other columns set by the product of two neighboring erosion levels, except
+    // for the target point having a hard-coded geologic index of 0.
     for r in 1..target_row + SLOP_HEIGHT {
         let mut prev = (16807 * r + depth) % 20183;
         row[0] = prev;

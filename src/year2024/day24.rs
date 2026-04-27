@@ -149,11 +149,9 @@ pub fn part2(input: &Input<'_>) -> String {
                     if left != "x00" && right != "x00" && !output.contains(&(to, "XOR")) {
                         swapped.insert(to);
                     }
-                } else {
+                } else if !to.starts_with('z') {
                     // Second level XOR must point to output.
-                    if !to.starts_with('z') {
-                        swapped.insert(to);
-                    }
+                    swapped.insert(to);
                 }
             }
             _ => unreachable!(),

@@ -79,9 +79,8 @@ pub fn parse(input: &str) -> Input {
                 let hero_turns = boss_health.div_ceil(hero_hit);
                 let boss_hit = boss_damage.saturating_sub(armor).max(1);
                 let boss_turns = 100_u32.div_ceil(boss_hit);
-                let win = hero_turns <= boss_turns;
 
-                if win {
+                if hero_turns <= boss_turns {
                     part_one = part_one.min(cost);
                 } else {
                     part_two = part_two.max(cost);

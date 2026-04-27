@@ -39,13 +39,13 @@ pub fn parse(input: &str) -> Input {
             continue;
         }
 
-        match direction {
-            UP => computer.input(1),
-            DOWN => computer.input(2),
-            LEFT => computer.input(3),
-            RIGHT => computer.input(4),
+        computer.input(match direction {
+            UP => 1,
+            DOWN => 2,
+            LEFT => 3,
+            RIGHT => 4,
             _ => unreachable!(),
-        }
+        });
 
         match computer.run() {
             State::Output(0) => {

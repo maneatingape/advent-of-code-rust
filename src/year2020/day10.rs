@@ -21,8 +21,7 @@ pub fn part1(input: &[usize]) -> usize {
     total[input[0]] += 1;
 
     for &[a, b] in input.array_windows() {
-        let diff = b - a;
-        total[diff] += 1;
+        total[b - a] += 1;
     }
 
     total[1] * total[3]
@@ -34,11 +33,11 @@ pub fn part2(input: &[usize]) -> usize {
     sum[0] = 1;
 
     for &i in input {
-        match i {
-            1 => sum[i] = sum[i - 1],
-            2 => sum[i] = sum[i - 1] + sum[i - 2],
-            _ => sum[i] = sum[i - 1] + sum[i - 2] + sum[i - 3],
-        }
+        sum[i] = match i {
+            1 => sum[i - 1],
+            2 => sum[i - 1] + sum[i - 2],
+            _ => sum[i - 1] + sum[i - 2] + sum[i - 3],
+        };
     }
 
     sum[last]
