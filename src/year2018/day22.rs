@@ -8,12 +8,24 @@
 //! Interestingly, benchmarking showed that adding the time to switch tools if we don't have the
 //! torch to the heuristic slowed things down.
 //!
+//! The various input files all have a target with a first coordinate less than 20, and a
+//! second coordinate between 700 and 800. It is slightly faster to swap the coordinate system
+//! to treat the first coordinate as the number of rows (height), and the second as the number of
+//! columns (width), since memory is more efficient with row-major iteration and cross-row motion
+//! when rows are short (the rest of this file generally avoids the terms `x` and `y` to minimize
+//! confusion in relation to the puzzle statement).
+//!
+//! Part two needs a larger grid than part one, but pre-populating the larger grid during the
+//! parse avoids repeated work for the portion of the grid used by both parts.
+//!
 //! Using A* instead of [Dijkstra](https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm) results
-//! in a 6x speedup. This is because Dijkstra explores the grid evenly in both axes, so if the
-//! target is 700 deep, then we will explore an area roughly 700 x 700 in size. In contrast A*
-//! prefers reducing the distance to the target, exploring a more narrow area
-//! approximately 130 x 700 in size. The state is a tuple of `(location, tool)` in order to track
-//! the time per tool separately.
+//! in a 6x speedup on an unconstrained grid. This is because Dijkstra explores the grid evenly
+//! in both axes, so if the target is 700 deep, then we will explore an area roughly 700 x 700
+//! in size. In contrast A* prefers reducing the distance to the target, exploring a more narrow
+//! area approximately 130 x 700 in size. On the other hand, use of an unconstrained grid does
+//! unnecessary work; all known input files can be solved with a grid of width 80. The smaller
+//! grid benefits Dijkstra more than A*, although A* remains faster. The state is a tuple of
+//! `(location, tool)` in order to track the time per tool separately.
 //!
 //! To speed things up even further we use a trick. Classic A* uses a generic priority queue that
 //! can be implemented in Rust using a [`BinaryHeap`]. However, the total cost follows a strictly
@@ -34,58 +46,94 @@ use std::array::from_fn;
 const TORCH: usize = 1;
 const BUCKETS: usize = 8;
 
-type Input = [i32; 3];
+/// Amount of slop beyond the target to include in the grid. Too little, and this will miss
+/// paths that can take a detour to avoid a tool swap. Too large, and this will waste time
+/// exploring additional points in the frontier that end up not affecting the shortest path. The
+/// values picked here match empirical testing against multiple known input files, although
+/// it is conceivable that an alternative cave depth may need a larger height.
+const SLOP_WIDTH: i32 = 3;
+const SLOP_HEIGHT: i32 = 65;
 
-#[derive(Clone, Copy)]
-struct Region {
-    erosion: i32,
-    minutes: [i32; 3],
-}
-
-impl Region {
-    fn update(&mut self, geologic: i32) -> i32 {
-        let erosion = geologic % 20183;
-        self.erosion = erosion;
-        // Subtle trick here. By setting the time to zero for the tool that cannot be used,
-        // we implicitly disallow it during the A* search as the time to reach the square will
-        // always be greater than zero.
-        self.minutes[(erosion % 3) as usize] = 0;
-        erosion
-    }
+pub struct Input {
+    cave: Grid<u8>, // region types for grid, (x + SLOP_HEIGHT) by (y + SLOP_WIDTH)
+    height: i32,    // x coordinate of the target, < 20
+    width: i32,     // y coordinate of the target, > 700
 }
 
 pub fn parse(input: &str) -> Input {
-    input.iter_signed::<i32>().chunk::<3>().next().unwrap()
+    // The puzzle describes the input as X,Y, but it is more efficient to use the numbers as
+    // row,column, rearranged to have row-major iteration.
+    let [depth, target_row, target_col] = input.iter_signed::<i32>().chunk::<3>().next().unwrap();
+
+    let target = Point::new(target_col, target_row);
+
+    let mut row = vec![0; (target_col + SLOP_WIDTH) as usize];
+    let mut grid = Grid::new(target_col + SLOP_WIDTH, target_row + SLOP_HEIGHT, 0_u8);
+
+    // Erosion levels in the first row (when puzzle X is zero) are set to a scaled geologic index.
+    for c in 0..row.len() {
+        row[c] = (48271 * c as i32 + depth) % 20183;
+        grid[Point::new(c as i32, 0)] = (row[c] % 3) as u8;
+    }
+
+    // Remaining rows have the first column set by scale (puzzle Y), and other columns set by
+    // product of two neighboring erosion levels, except for the target point having a
+    // hard-coded geologic index of 0.
+    for r in 1..target_row + SLOP_HEIGHT {
+        let mut prev = (16807 * r + depth) % 20183;
+        row[0] = prev;
+        grid[Point::new(0, r)] = (row[0] % 3) as u8;
+
+        for c in 1..target_col + SLOP_WIDTH {
+            let point = Point::new(c, r);
+            let c = c as usize;
+            let geologic = if point == target { 0 } else { prev * row[c] };
+            row[c] = (geologic + depth) % 20183;
+            prev = row[c];
+            grid[point] = (row[c] % 3) as u8;
+        }
+    }
+
+    Input { cave: grid, height: target_row, width: target_col }
 }
 
-/// Build the minimum grid to the target then calculate the risk level.
+/// Calculate the risk level of the relevant subset of the overall cave grid.
 pub fn part1(input: &Input) -> i32 {
-    let [_, height, width] = *input;
-    let cave = scan_cave(input, width + 1, height + 1);
-    cave.bytes.iter().map(|r| r.erosion % 3).sum()
+    let Input { cave, height, width } = input;
+    cave.bytes
+        .chunks(cave.width as usize)
+        .take(*height as usize + 1)
+        .map(|row| row.iter().take(*width as usize + 1).map(|point| *point as i32).sum::<i32>())
+        .sum()
 }
 
 /// A* search for the shortest path to the target.
 pub fn part2(input: &Input) -> i32 {
-    // Swap width and height.
-    let [_, height, width] = *input;
+    let &Input { height, width, cave: ref erosion } = input;
     let target = Point::new(width, height);
 
     // Initialize bucket queue with pre-allocated capacity to reduce reallocations needed.
     let mut base = 0;
     let mut todo: [_; BUCKETS] = from_fn(|_| Vec::with_capacity(1_000));
 
-    // Add extra width and height so the search does not exceed the bounds of the grid.
-    let mut cave = scan_cave(input, width + 10, height + 140);
+    // Populate times for the cave, which already has extra width and height so the search does
+    // not exceed the bounds of the grid.
+    // Subtle trick here. By setting the time to zero for the tool that cannot be used,
+    // we implicitly disallow it during the A* search as the time to reach the square will
+    // always be greater than zero.
+    let mut cave = Grid::new(erosion.width, erosion.height, [i32::MAX; 3]);
+    for (i, level) in erosion.bytes.iter().enumerate() {
+        cave.bytes[i][*level as usize] = 0;
+    }
 
     // Start at origin with the torch equipped.
     todo[0].push((ORIGIN, TORCH));
-    cave[ORIGIN].minutes[TORCH] = 0;
+    cave[ORIGIN][TORCH] = 0;
 
     loop {
         // All items in the same bucket have the same priority.
         while let Some((point, tool)) = todo[base % BUCKETS].pop() {
-            let time = cave[point].minutes[tool];
+            let time = cave[point][tool];
 
             // Check for completion.
             if point == target && tool == TORCH {
@@ -96,22 +144,22 @@ pub fn part2(input: &Input) -> i32 {
             for next in ORTHOGONAL.map(|o| point + o) {
                 // We don't need an additional check that the tool cannot be used in the
                 // destination region, as the time check will take care of that.
-                if next.x >= 0 && next.y >= 0 && time + 1 < cave[next].minutes[tool] {
+                if cave.contains(next) && time + 1 < cave[next][tool] {
                     let heuristic = next.manhattan(target);
                     let index = (time + 1 + heuristic) as usize;
 
-                    cave[next].minutes[tool] = time + 1;
+                    cave[next][tool] = time + 1;
                     todo[index % BUCKETS].push((next, tool));
                 }
             }
 
             // Stay put and change to the other possible tool.
             for other in 0..3 {
-                if time + 7 < cave[point].minutes[other] {
+                if time + 7 < cave[point][other] {
                     let heuristic = point.manhattan(target);
                     let index = (time + 7 + heuristic) as usize;
 
-                    cave[point].minutes[other] = time + 7;
+                    cave[point][other] = time + 7;
                     todo[index % BUCKETS].push((point, other));
                 }
             }
@@ -119,36 +167,4 @@ pub fn part2(input: &Input) -> i32 {
 
         base += 1;
     }
-}
-
-/// Calculate the erosion level for each region. We swap width and height for a small speed boost
-/// without affecting the outcome of the shortest path.
-fn scan_cave(input: &Input, width: i32, height: i32) -> Grid<Region> {
-    let [depth, target_y, target_x] = *input;
-    let target = Point::new(target_x, target_y);
-
-    let region = Region { erosion: 0, minutes: [i32::MAX; 3] };
-    let mut grid = Grid::new(width, height, region);
-
-    grid[ORIGIN].update(depth);
-
-    for x in 1..width {
-        grid[Point::new(x, 0)].update(48271 * x + depth);
-    }
-
-    for y in 1..height {
-        let mut prev = grid[Point::new(0, y)].update(16807 * y + depth);
-
-        for x in 1..width {
-            let point = Point::new(x, y);
-            if point == target {
-                grid[point].update(depth);
-            } else {
-                let up = grid[point + UP].erosion;
-                prev = grid[point].update(prev * up + depth);
-            }
-        }
-    }
-
-    grid
 }
