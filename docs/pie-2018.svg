@@ -2,10 +2,10 @@
 %%{init: {"themeVariables": {"pie1": "#7cb5ec",  "pie2": "#c6cdd5", "pie3": "#90ed7d", "pie4": "#f7a35c" }}}%%
 pie
     title Year 2018 benchmark time by % of total
-    "Day 14" : 24000
-    "Others" : 4664
-    "Day 22" : 3396
-    "Day 24" : 2056
+    "Day 14" : 25000
+    "Others" : 3718
+    "Day 22" : 2001
+    "Day 24" : 1934
 -->
 <svg viewBox="0 0 1350 450" preserveAspectRatio="xMidYMin" xmlns="http://www.w3.org/2000/svg">
     <style>
@@ -16,31 +16,31 @@ pie
         .pieTitleText {text-anchor:middle;font-size:25px;}
     </style>
     <g transform="translate(675,225)">
-        <circle class="pieOuterCircle" cx="0" cy="0" r="186"/>
-        <path class="pieCircle" d="M0,-185A185,185,0,1,1,-177.154,53.305L0,0Z" fill="#7cb5ec"/>
-        <path class="pieCircle" d="M-177.154,53.305A185,185,0,0,1,-156.081,-99.317L0,0Z" fill="#c6cdd5"/>
-        <path class="pieCircle" d="M-156.081,-99.317A185,185,0,0,1,-68.389,-171.895L0,0Z" fill="#90ed7d"/>
-        <path class="pieCircle" d="M-68.389,-171.895A185,185,0,0,1,0,-185L0,0Z" fill="#f7a35c"/>
-        <text class="slice" style="text-anchor: middle;" transform="translate(111.35221360142455,82.77830045406056)">70%</text>
-        <text class="slice" style="text-anchor: middle;" transform="translate(-137.44599989189965,-18.977871685621587)">14%</text>
-        <text class="slice" style="text-anchor: middle;" transform="translate(-88.46699126088909,-106.88851181135311)">10%</text>
-        <text class="slice" style="text-anchor: middle;" transform="translate(-26.11260548189122,-136.27066571697338)">6%</text>
-        <text class="pieTitleText" x="0" y="-200">Year 2018 benchmark time by % of total</text>
-        <g transform="translate(216,-44)">
-            <rect height="18" style="fill: rgb(124, 181, 236); stroke: rgb(124, 181, 236);" width="18"/>
-            <text x="22" y="14">Day 14</text>
-        </g>
-        <g transform="translate(216,-22)">
-            <rect height="18" style="fill: rgb(198, 205, 213); stroke: rgb(198, 205, 213);" width="18"/>
-            <text x="22" y="14">Others</text>
-        </g>
-        <g transform="translate(216,0)">
-            <rect height="18" style="fill: rgb(144, 237, 125); stroke: rgb(144, 237, 125);" width="18"/>
-            <text x="22" y="14">Day 22</text>
-        </g>
-        <g transform="translate(216,22)">
-            <rect height="18" style="fill: rgb(247, 163, 92); stroke: rgb(247, 163, 92);" width="18"/>
-            <text x="22" y="14">Day 24</text>
-        </g>
+            <circle class="pieOuterCircle" cx="0" cy="0" r="186"/>
+            <path class="pieCircle" d="M0,-185A185,185,0,1,1,-184.109,-18.135L0,0Z" fill="#7cb5ec"/>
+            <path class="pieCircle" d="M-184.109,-18.135A185,185,0,0,1,-127.072,-134.453L0,0Z" fill="#c6cdd5"/>
+            <path class="pieCircle" d="M-127.072,-134.453A185,185,0,0,1,-67.269,-172.337L0,0Z" fill="#90ed7d"/>
+            <path class="pieCircle" d="M-67.269,-172.337A185,185,0,0,1,0,-185L0,0Z" fill="#f7a35c"/>
+            <text class="slice" style="text-anchor: middle;" transform="translate(93.17834133369746,102.80738887016325)">77%</text>
+            <text class="slice" style="text-anchor: middle;" transform="translate(-124.5789126406985,-61.08729021049477)">11%</text>
+            <text class="slice" style="text-anchor: middle;" transform="translate(-74.24968649917676,-117.21154616663824)">6%</text>
+            <text class="slice" style="text-anchor: middle;" transform="translate(-25.66889895922233,-136.3549417007731)">6%</text>
+            <text class="pieTitleText" x="0" y="-200">Year 2018 benchmark time by % of total</text>
+            <g transform="translate(216,-44)">
+                <rect height="18" style="fill: rgb(124, 181, 236); stroke: rgb(124, 181, 236);" width="18"/>
+                <text x="22" y="14">Day 14</text>
+            </g>
+            <g transform="translate(216,-22)">
+                <rect height="18" style="fill: rgb(198, 205, 213); stroke: rgb(198, 205, 213);" width="18"/>
+                <text x="22" y="14">Others</text>
+            </g>
+            <g transform="translate(216,0)">
+                <rect height="18" style="fill: rgb(144, 237, 125); stroke: rgb(144, 237, 125);" width="18"/>
+                <text x="22" y="14">Day 22</text>
+            </g>
+            <g transform="translate(216,22)">
+                <rect height="18" style="fill: rgb(247, 163, 92); stroke: rgb(247, 163, 92);" width="18"/>
+                <text x="22" y="14">Day 24</text>
+            </g>
     </g>
 </svg>

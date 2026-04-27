@@ -1,7 +1,7 @@
 # Advent of Code [![checks-badge]][checks-link] [![docs-badge]][docs-link]
 
 Blazing fast Rust solutions for every [Advent of Code] puzzle from 2015 to 2025, taking
-**472 milliseconds** to solve all 524 stars. Each solution is carefully optimized for performance
+**467 milliseconds** to solve all 524 stars. Each solution is carefully optimized for performance
 while ensuring the code remains concise, readable, and idiomatic.
 
 ## Features
@@ -72,7 +72,7 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 
 | Year | [2024](#2024) | [2023](#2023) | [2022](#2022) | [2021](#2021) | [2020](#2020) | [2019](#2019) | [2018](#2018) | [2017](#2017) | [2016](#2016) | [2015](#2015) |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Benchmark (ms) | 4 | 5 | 5 | 8 | 220 | 13 | 35 | 57 | 109 | 14 |
+| Benchmark (ms) | 5 | 5 | 5 | 8 | 220 | 13 | 33 | 56 | 107 | 13 |
 
 ## 2025
 
