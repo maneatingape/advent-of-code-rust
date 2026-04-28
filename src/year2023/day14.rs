@@ -121,7 +121,7 @@ pub fn parse(input: &str) -> Input {
 
     // For each direction, store the next index that a ball will roll to in that direction.
 
-    // North; intentionally iterated in column-major order.
+    // North is intentionally iterated in column-major order.
     for x in 0..grid.width {
         for y in 0..grid.height {
             let point = Point::new(x, y);
@@ -143,7 +143,7 @@ pub fn parse(input: &str) -> Input {
         }
     }
 
-    // South; intentionally iterated in reverse column-major order.
+    // South is intentionally iterated in reverse column-major order.
     for x in 0..grid.width {
         for y in (0..grid.height).rev() {
             let point = Point::new(x, y);

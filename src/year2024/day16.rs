@@ -69,7 +69,7 @@ pub fn parse(input: &str) -> Input {
         (todo_first, todo_second) = (todo_second, todo_first);
     }
 
-    // Backwards BFS
+    // Backwards BFS.
     let mut todo = VecDeque::new();
     let mut path = grid.same_size_with(false);
 

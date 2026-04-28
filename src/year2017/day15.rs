@@ -7,8 +7,8 @@
 //! The sequence of numbers are [modular exponentiation](https://en.wikipedia.org/wiki/Modular_exponentiation)
 //! so we can jump to any location in the sequence, without needing to know the previous numbers.
 //!
-//! The generator is in the hot path, so anything we can do to make it run faster is worthwhile;
-//! start by observing that our divisor 0x7fffffff is of the form `2ᵏ - 1`, which lends itself
+//! The generator is in the hot path, so anything we can do to make it run faster is worthwhile.
+//! Start by observing that our divisor 0x7fffffff is of the form `2ᵏ - 1`, which lends itself
 //! well to computing a remainder with less work than a hardware division (the analysis here works
 //! for any number adjacent to a power of two, not just Mersenne primes). At a high level,
 //! computing `X % Y` is the same as repeatedly subtracting `Y` from a starting point of `X` until
@@ -17,9 +17,9 @@
 //! multiple clock cycles), what if we divide by `Y + 1` instead (dividing by 2ᵏ is just
 //! performing a bit mask). Conceptually, the remainder after each subtraction of `Y + 1`
 //! grows by an error of one until we reach a remainder of `X % (Y + 1)` - but we know the total
-//! error: it was the number of times we subtracted the denominator, or `X / (Y + 1)`; and
+//! error, which was the number of times we subtracted the denominator, or `X / (Y + 1)`, and
 //! that value is also available, with just a bit shift. Adding the 31-bit adjusted remainder
-//! with the 31-bit error can overflow to 32 bits; then a final comparison against `MOD` gets
+//! with the 31-bit error can overflow to 32 bits, so a final comparison against `MOD` gets
 //! the correct answer in `fast_mod` faster than hardware division. See also
 //! [this post](https://www.reddit.com/r/adventofcode/comments/7jxkiw/comment/drazokj/).
 use crate::util::hash::*;

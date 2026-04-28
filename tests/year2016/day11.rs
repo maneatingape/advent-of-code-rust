@@ -27,7 +27,7 @@ fn part1_test() {
 fn part2_test() {
     // Technically, EXAMPLE has no valid part2 solution. Even if you disregard the unprotected
     // chips on floor 1 when the two new pairs are added at step 0, the only viable move to step
-    // 1 would be moving both generators; but since there are no other chips on higher floors,
+    // 1 would be moving both generators, but since there are no other chips on higher floors,
     // there is nothing available that can be used to get the elevator back to the first floor
     // without frying the unprotected microchips.
     let input = parse(INTERLOCKED);

@@ -16,10 +16,10 @@
 //! Each parsing function returns a [`Result`] struct which has 3 fields:
 //! * `next` The index of the character *after* this object. For example, parsing "123," returns
 //!   a value of 3 for next.
-//! * `ignore`: Only true for strings that exactly equal "red", false otherwise and always
+//! * `ignore` is only true for strings that exactly equal "red", false otherwise and always
 //!   false for numbers, arrays and objects.
-//! * `value`: For numbers the literal value, for string zero, for arrays the sum of child
-//!   items, for objects the sum of child items if no "red" property is present, otherwise zero.
+//! * `value` is the literal value for numbers, zero for strings, the sum of child
+//!   items for arrays, and the sum of child items for objects if no "red" property is present, otherwise zero.
 //!
 //! [`iter_signed`]: crate::util::parse
 use crate::util::parse::*;

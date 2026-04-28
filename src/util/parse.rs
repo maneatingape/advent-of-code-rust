@@ -1,7 +1,7 @@
 //! Extracts and parses signed and unsigned integers from surrounding text and whitespace.
 //!
 //! A common pattern in Advent of Code is to parse and return `123`, `456` and `789` from input
-//! resembling:
+//! resembling the following form:
 //!
 //! ```none
 //!   Lorem ipsum 123 dolor 456 sit 789 amet

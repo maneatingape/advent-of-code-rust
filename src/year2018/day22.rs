@@ -23,7 +23,7 @@
 //! in both axes, so if the target is 700 deep, then we will explore an area roughly 700 x 700
 //! in size. In contrast, A* prefers reducing the distance to the target, exploring a narrower
 //! area approximately 130 x 700 in size. On the other hand, use of an unconstrained grid does
-//! unnecessary work; all known input files can be solved with a grid of width 80. The smaller
+//! unnecessary work, since all known input files can be solved with a grid of width 80. The smaller
 //! grid benefits Dijkstra more than A*, although A* remains faster. The state is a tuple of
 //! `(location, tool)` in order to track the time per tool separately.
 //!

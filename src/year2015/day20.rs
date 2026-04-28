@@ -27,7 +27,7 @@
 //! ## Part Two
 //!
 //! As with part one, an offline brute force search showed that for all house numbers between
-//! `540_540` and `1_201_200`, there are only 46 record-holders; just use another LUT.
+//! `540_540` and `1_201_200`, there are only 46 record-holders, so we just use another LUT.
 use crate::util::parse::*;
 
 struct Mapping {

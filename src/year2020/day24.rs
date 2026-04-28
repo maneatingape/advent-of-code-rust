@@ -75,14 +75,14 @@ mod implementation {
     use super::*;
 
     pub(super) fn simulate(input: &FastSet<Hex>) -> usize {
-        // Determine bounds
+        // Determine bounds.
         let (q1, q2, r1, r2) =
             input.iter().fold((i32::MAX, i32::MIN, i32::MAX, i32::MIN), |(q1, q2, r1, r2), hex| {
                 (q1.min(hex.q), q2.max(hex.q), r1.min(hex.r), r2.max(hex.r))
             });
 
         // Create array with enough space to allow expansion for 100 generations.
-        // 2 * (100 generations + 1 buffer) + Origin = 203 extra in each dimension
+        // 2 * (100 generations + 1 buffer) + Origin = 203 extra in each dimension.
         let width = (q2 - q1 + 203) as usize;
         let height = (r2 - r1 + 203) as usize;
 
@@ -142,14 +142,14 @@ mod implementation {
     type Vector = Simd<u8, LANE_WIDTH>;
 
     pub(super) fn simulate(input: &FastSet<Hex>) -> usize {
-        // Determine bounds
+        // Determine bounds.
         let (q1, q2, r1, r2) =
             input.iter().fold((i32::MAX, i32::MIN, i32::MAX, i32::MIN), |(q1, q2, r1, r2), hex| {
                 (q1.min(hex.q), q2.max(hex.q), r1.min(hex.r), r2.max(hex.r))
             });
 
         // Create array with enough space to allow expansion for 100 generations.
-        // 2 * (100 generations + 1 buffer) + Origin = 203 extra in each dimension
+        // 2 * (100 generations + 1 buffer) + Origin = 203 extra in each dimension.
         let width = 2 + ((q2 - q1 + 201) as usize).next_multiple_of(LANE_WIDTH);
         let height = (r2 - r1 + 203) as usize;
 

@@ -22,7 +22,7 @@ fn parse_node(iter: &mut impl Iterator<Item = usize>, stack: &mut Vec<usize>) ->
     // Save stack size.
     let stack_base = stack.len();
 
-    // Parse header
+    // Parse header.
     let child_count = iter.next().unwrap();
     let metadata_count = iter.next().unwrap();
 

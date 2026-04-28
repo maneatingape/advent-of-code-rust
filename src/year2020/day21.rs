@@ -18,7 +18,7 @@
 //! | 3    | Dairy, Fish | Dairy, Soy       |
 //! | 4    | Dairy, Fish | Dairy, Soy, Fish |
 //!
-//! Final result: Ø (the empty set)
+//! Final result is Ø (the empty set).
 //!
 //! ## Part Two
 //! This is a [constraint satisfaction problem](https://en.wikipedia.org/wiki/Constraint_satisfaction_problem),
@@ -31,7 +31,7 @@
 //! | 3    | Dairy, Soy | Dairy, Fish |
 //! | 4    | Dairy, Soy | Dairy, Fish |
 //!
-//! Final result: Soy
+//! Final result is Soy.
 //!
 //! To solve this, there must be at least one ingredient with only one allergen remaining.
 //! As this allergen can only belong to this ingredient, we eliminate it from other ingredients.

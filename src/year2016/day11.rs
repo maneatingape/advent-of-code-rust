@@ -10,14 +10,14 @@
 //! solve whether pair A or pair B is moved first (that is, the setup `[-;-;AG,AM;BG,BM]` while on
 //! floor 2 is indistinguishable from `[-;-;BG,BM;AG,AM]` on floor 2 in terms of the final result).
 //! However, the relative positions of pairs still matter (the setup `[AM;AG;BG;BM]` on floor two
-//! can move BG up or down; but the setup `[AM;BG;AG;BM]` on floor two can only move AG up). To
+//! can move BG up or down, but the setup `[AM;BG;AG;BM]` on floor two can only move AG up). To
 //! maximize state sharing, represent each pair's generator and microchip position as hex
 //! digits, but merge all permutations by sorting those hex digit pairs during the hash
 //! function. Including the elevator position, the hash value requires up to 30 useful bits
 //! (2 + 7*4) if densely packed, although this uses a 64-bit struct with one-hot encodings.
 //!
 //! Next, observe that adding a chip and generator pair on floor 1 adds 12 moves to the final
-//! solution; likewise, removing a pair from floor 1 (but only if there is still something
+//! solution. Likewise, removing a pair from floor 1 (but only if there is still something
 //! else left on the floor) can be solved in 12 fewer moves. Tracking a smaller number of
 //! chip and generator pairs, then adjusting by the 12 times the number of ignored pairs,
 //! is inherently faster.
@@ -43,7 +43,7 @@ use std::collections::VecDeque;
 
 // A one-hot encoding is more efficient than 0-3. For each byte, the generator is the
 // high nibble, and the microchip the low nibble. Only 5 bytes matter, because the part two
-// pairs contribute a constant input; the used bytes are stored in little-endian order;
+// pairs contribute a constant input. The used bytes are stored in little-endian order, and
 // unused lanes will be 0.
 const MASK: u64 = 0x0000000101010101;
 const FLOOR1: u64 = (MASK << 4) | MASK;
@@ -67,7 +67,7 @@ impl State {
     }
 
     // Critical optimization treating generators and microchips as fungible.
-    // Rearrange the pairs into canonical order; endianness matters for getting valid slice indices.
+    // Rearrange the pairs into canonical order. Endianness matters for getting valid slice indices.
     fn canon(mut self) -> State {
         let mut array = self.pairs.to_le_bytes();
         array[..5].sort_unstable();
@@ -164,7 +164,7 @@ fn bfs(start: State, steps: u32) -> u32 {
             }
         };
 
-        // When moving down, try one item first; try two only if one didn't work.
+        // When moving down, try one item first. Try two only if one didn't work.
         // Don't move down from bottom floor, or down into empty region.
         if !(state.elevator == 0
             || (state.elevator == 1 && (state.pairs & FLOOR1) == 0)
@@ -184,7 +184,7 @@ fn bfs(start: State, steps: u32) -> u32 {
             }
         }
 
-        // When moving up, try two items first; try one only if two didn't work.
+        // When moving up, try two items first. Try one only if two didn't work.
         // Don't move up from top floor.
         if state.elevator < 3 {
             let mut added = false;

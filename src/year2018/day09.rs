@@ -3,7 +3,7 @@
 //! Efficient solution using an append-only `vec` and generating only the minimum number of marbles
 //! needed to play the game.
 //!
-//! First let's consider some other slower approaches:
+//! First let's consider some other slower approaches.
 //!
 //! We could store marbles in a `vec`, inserting and removing elements to make room. Each of these
 //! operations takes `O(n)` complexity. For part two if number of marbles is 100,000 then the

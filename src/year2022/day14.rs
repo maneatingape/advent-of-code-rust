@@ -97,7 +97,7 @@ fn simulate(input: &Cave, floor: Kind) -> u32 {
     todo.push(height);
 
     'outer: while let Some(index) = todo.pop() {
-        // Check in order: center, left then right.
+        // Check in order of center, left then right.
         for next in [index + width, index + width - 1, index + width + 1] {
             // If we've reached the "floor" then return that.
             let tile = if next >= kind.len() { floor } else { kind[next] };

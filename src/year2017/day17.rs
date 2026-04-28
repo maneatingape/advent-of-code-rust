@@ -60,7 +60,7 @@ pub fn parse(input: &str) -> Input {
 
         let skip = (n - index).div_ceil(step - 1);
         n += skip;
-        // Here, n is larger than 2017, while step is on the order of 300 to 400; therefore, step
+        // Here, n is larger than 2017, while step is on the order of 300 to 400. Therefore, step
         // wraps only once, and subtraction works instead of modulus.
         index = index + skip * step - n;
     }

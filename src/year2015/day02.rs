@@ -19,7 +19,7 @@ pub fn parse(input: &str) -> Input {
         .iter_unsigned::<u32>()
         .chunk::<3>()
         .map(|[a, b, c]| {
-            // We only care which element is largest; it is faster to partially sort ourselves
+            // We only care which element is largest, so it is faster to partially sort ourselves
             // than to use sort_unstable.
             let (a, b) = a.minmax(b);
             let (b, c) = b.minmax(c);

@@ -72,7 +72,7 @@ pub fn parse(input: &str) -> Vec<Node> {
     input.iter_unsigned().chunk::<6>().map(|[x, y, _, used, _, _]| Node { x, y, used }).collect()
 }
 
-/// No need to actually check node pairs: only the empty node can receive data, and all but
+/// No need to actually check node pairs because only the empty node can receive data, and all but
 /// the wall nodes can pair with the empty node but not each other.
 pub fn part1(input: &[Node]) -> usize {
     // Skip the empty node and the large nodes bigger than 100T.

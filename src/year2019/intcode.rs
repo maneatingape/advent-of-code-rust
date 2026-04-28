@@ -1,7 +1,8 @@
 //! Implementation of the full Intcode computer specification.
 use std::collections::VecDeque;
 
-/// At least some day 17 inputs require more than 2000 extra slots; be safe with 3000.
+/// [SWAG](https://en.wikipedia.org/wiki/Scientific_wild-ass_guess)
+/// It's possible that some inputs will need more space than this.
 const EXTRA: usize = 3_000;
 
 pub enum State {

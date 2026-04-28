@@ -39,7 +39,7 @@ pub fn parse(input: &str) -> Input {
         // Parse first number.
         let first = parse_number(memory, &mut index);
 
-        // First delimiter
+        // First delimiter.
         if memory[index] != b',' {
             continue;
         }
@@ -48,13 +48,13 @@ pub fn parse(input: &str) -> Input {
         // Parse second number.
         let second = parse_number(memory, &mut index);
 
-        // Second delimiter
+        // Second delimiter.
         if memory[index] != b')' {
             continue;
         }
         index += 1;
 
-        // Multiply
+        // Multiply.
         let product = first * second;
         part_one += product;
         part_two += product * enabled as u32;

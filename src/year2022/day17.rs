@@ -103,7 +103,7 @@ impl Iterator for State<'_> {
             chunk = (chunk << 8) | WALLS | (self.tower[index] as u32);
 
             if shape & chunk == 0 {
-                // Keep falling
+                // Keep falling.
                 index -= 1;
             } else {
                 // Add the new piece to the tower.

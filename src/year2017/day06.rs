@@ -4,7 +4,7 @@
 //! 15 blocks, it is easy to see that no other bank will exceed 15 after reallocation.
 //! However, some input files have early scenarios where there are a couple of banks with
 //! 15, which can result in the next round or two needing to process 16 or even 17 blocks.
-//! The overflow issue only occurs early; in the long run, the banks settle into a pattern
+//! The overflow issue only occurs early. In the long run, the banks settle into a pattern
 //! where overflow does not interfere.
 //!
 //! With that in mind, it is possible to design a compact layout that stores each bank in
@@ -67,7 +67,7 @@ pub fn parse(input: &str) -> Input {
         let offset = mask.leading_zeros();
         let max = (memory.rotate_left(offset + 4) & 0xf) as usize;
 
-        // Common case: no overflow.
+        // Common case has no overflow.
         if max < 15 || mask.count_ones() == 1 {
             // Empty the largest memory bank and reallocate its contents to the following banks.
             memory = (memory & REMOVE.rotate_right(offset)) + SPREAD[max].rotate_right(offset);

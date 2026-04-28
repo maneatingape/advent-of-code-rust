@@ -7,15 +7,15 @@
 //! todo list. We then transitively determine the neighbors of those points, and so on until
 //! all sets have been found.
 //!
-//! The simplest way to check neighbors is to do a quadratic search: compute a distance for
+//! The simplest way to check neighbors is to do a quadratic search by computing a distance for
 //! every point compared against every other remaining point. But for our input files ranging
 //! from 1000 to 1300 points, (n²+n)/2 requires well over half a million distance computations.
-//! Inspecting the input file, there are no digits outside [-8,8] in any of the four dimensions;
+//! Inspecting the input file, there are no digits outside [-8,8] in any of the four dimensions,
 //! and even when you consider points looking at neighbors up to distance three away, that still
 //! means we are never probing any dimension outside the range [-11,11]. And 23⁴ is merely
 //! 279841 points, which is easy enough to express in memory as a flat 1D array or via a
 //! `FastSet`. What's more, there are exactly 128 points in a 3x3x3x3 hypersphere surrounding
-//! any given point; this is small enough to translate into a lookup table of 128 offsets to
+//! any given point, which is small enough to translate into a lookup table of 128 offsets to
 //! a 1D location to see if another point resides at that offset. With that in hand, we
 //! can now complete the nearest neighbor search with 128*n existence checks, which easily beats
 //! (n²+n)/2 Manhattan distance computations for inputs with more than 1000 points.

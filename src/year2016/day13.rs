@@ -17,7 +17,7 @@ type Input = (u32, u32);
 pub fn parse(input: &str) -> Input {
     let favorite: usize = input.unsigned();
 
-    // Lazy evaluation: set maze[x][y] to true once a point is visited.
+    // Lazy evaluation. Set maze[x][y] to true once a point is visited.
     let mut maze = [[false; 52]; 52];
     maze[1][1] = true;
     let mut at = |x: usize, y: usize| -> bool {

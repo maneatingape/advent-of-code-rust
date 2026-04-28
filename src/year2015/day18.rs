@@ -37,8 +37,8 @@
 //!
 //! 3. Taking the 3 two-bit column sums learned in the last step, perform two more full-adders to
 //!    form four new bits p, q, r, s, which we could add into a usual four-bit number, but which
-//!    are good enough for our needs as-is. Bit s is set if there were an odd number of neighbors;
-//!    bit p must be clear or we already know there are more than 3 neighbors; and exactly one of
+//!    are good enough for our needs as-is. Bit s is set if there were an odd number of neighbors,
+//!    bit p must be clear or we already know there are more than 3 neighbors, and exactly one of
 //!    bits q and r must be set for the final 4-bit sum to have the second bit set.
 //!
 //! ```none
@@ -109,7 +109,7 @@ fn game_of_life(input: &[Row], part_two: bool) -> u32 {
         let mut below = grid[0];
 
         for y in 0..100 {
-            // Advance row
+            // Advance row.
             (above, row, below) = (row, below, grid[y + 1]);
 
             // Even columns.

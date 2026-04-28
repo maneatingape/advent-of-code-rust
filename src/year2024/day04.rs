@@ -23,7 +23,7 @@ pub fn part1(grid: &Grid<u8>) -> u32 {
         result += scan_line(grid, Point::new(0, i), RIGHT, size);
     }
 
-    // Diagonals
+    // Diagonals.
     for i in 0..size - 3 {
         result += scan_line(grid, Point::new(i, 0), DOWN + RIGHT, size - i);
         result += scan_line(grid, Point::new(0, i + 1), DOWN + RIGHT, size - 1 - i);
