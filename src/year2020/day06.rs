@@ -14,7 +14,6 @@
 //!
 //! [`day 5`]: crate::year2020::day05
 //! [`count_ones`]: u32::count_ones
-
 pub fn parse(input: &str) -> Vec<u32> {
     input.lines().map(|line| line.bytes().fold(0, |acc, b| acc | (1 << (b - b'a')))).collect()
 }

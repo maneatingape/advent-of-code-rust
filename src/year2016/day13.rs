@@ -8,7 +8,6 @@
 //! part one requires more than 50 steps but should easily be reachable without exceeding bounds,
 //! we can bound the maze to 2 + 50 = 52 in each dimension and use a fixed-size array. Rather
 //! than filling the array up front, we can lazily populate it as the horizon expands.
-
 use crate::util::parse::*;
 use std::collections::VecDeque;
 

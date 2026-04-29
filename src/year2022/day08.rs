@@ -2,7 +2,6 @@
 //!
 //! Part one is solved with an efficient `O(n)` algorithm. Part two is also solved with an efficient `O(n)`
 //! algorithm, using a bit manipulation trick to make the complexity independent of the number of digits.
-
 const ONES: u64 = 0x0041041041041041;
 const MASK: u64 = 0x0fffffffffffffc0;
 

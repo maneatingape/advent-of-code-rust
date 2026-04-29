@@ -65,7 +65,6 @@
 //!
 //! Using the bits as labelled above, the next cell is `(e|s) & (q^r) & !p`, masked back
 //! to the 50 bits per integer.
-
 const MASK: u64 = (1 << 50) - 1;
 const LEFT_CORNER: u64 = 1 << 49;
 const RIGHT_CORNER: u64 = 1 << 0;
