@@ -14,10 +14,9 @@ type Input = [i32; 3];
 
 pub fn parse(input: &str) -> Input {
     let code: Vec<_> = input.iter_unsigned().collect();
-
-    let c = check(&code, 0, 0) as i32;
-    let a = check(&code, 1, 0) as i32;
-    let b = check(&code, 0, 1) as i32;
+    let a = check(&code, 1, 0);
+    let b = check(&code, 0, 1);
+    let c = check(&code, 0, 0);
 
     [a - c, b - c, c]
 }
@@ -35,22 +34,18 @@ pub fn part2([a, b, c]: &Input) -> i32 {
         .unwrap()
 }
 
-fn check(input: &[usize], first: usize, second: usize) -> usize {
-    let mut code = input.to_vec();
+fn check(code: &[usize], first: usize, second: usize) -> i32 {
+    let mut pc = 0;
+    let code = &mut code.to_vec()[..];
+
     code[1] = first;
     code[2] = second;
-
-    execute(&mut code)
-}
-
-fn execute(code: &mut [usize]) -> usize {
-    let mut pc = 0;
 
     loop {
         match code[pc] {
             1 => code[code[pc + 3]] = code[code[pc + 1]] + code[code[pc + 2]],
             2 => code[code[pc + 3]] = code[code[pc + 1]] * code[code[pc + 2]],
-            _ => break code[0],
+            _ => break code[0] as i32,
         }
         pc += 4;
     }

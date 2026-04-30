@@ -164,13 +164,11 @@ pub fn part2(input: &Maze) -> u32 {
     todo.push_back((0, input.start, 0));
 
     while let Some((steps, index, level)) = todo.pop_front() {
-        let key = (index, level);
-        if let Some(min) = cache.get(&key)
-            && *min <= steps
-        {
+        let best = cache.entry((index, level)).or_insert(u32::MAX);
+        if *best <= steps {
             continue;
         }
-        cache.insert(key, steps);
+        *best = steps;
 
         for &Edge { to, kind, distance } in &input.portals[index] {
             let next_steps = steps + distance + 1;

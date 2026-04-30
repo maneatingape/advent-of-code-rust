@@ -2,6 +2,7 @@
 //! [scoped](https://doc.rust-lang.org/stable/std/thread/fn.scope.html)
 //! threads equal to the number of cores on the machine. Unlike normal threads, scoped threads
 //! can borrow data from their environment.
+use std::iter::repeat_with;
 use std::sync::atomic::{AtomicBool, AtomicU32, AtomicUsize, Ordering::Relaxed};
 use std::thread::*;
 
@@ -17,13 +18,7 @@ where
     R: Send,
 {
     scope(|scope| {
-        let mut handles = Vec::new();
-
-        for _ in 0..threads() {
-            let handle = scope.spawn(f);
-            handles.push(handle);
-        }
-
+        let handles: Vec<_> = repeat_with(|| scope.spawn(f)).take(threads()).collect();
         handles.into_iter().flat_map(ScopedJoinHandle::join).collect()
     })
 }
@@ -54,13 +49,8 @@ where
     let workers = workers.as_slice();
 
     scope(|scope| {
-        let mut handles = Vec::new();
-
-        for id in 0..threads {
-            let handle = scope.spawn(move || f(ParIter { id, items, workers }));
-            handles.push(handle);
-        }
-
+        let handles: Vec<_> =
+            (0..threads).map(|id| scope.spawn(move || f(ParIter { id, items, workers }))).collect();
         handles.into_iter().flat_map(ScopedJoinHandle::join).collect()
     })
 }

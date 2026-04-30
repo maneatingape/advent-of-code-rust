@@ -31,17 +31,17 @@ pub fn parse(input: &str) -> Input {
 
 /// Find the guard with the greatest total minutes asleep.
 pub fn part1(input: &Input) -> usize {
-    choose(input, |(_, m)| m.iter().sum())
+    choose(input, |m| m.iter().sum())
 }
 
 /// Find the guard with the highest single minute asleep.
 pub fn part2(input: &Input) -> usize {
-    choose(input, |(_, m)| *m.iter().max().unwrap())
+    choose(input, |m| *m.iter().max().unwrap())
 }
 
-fn choose(input: &Input, strategy: fn(&(&usize, &[u32; 60])) -> u32) -> usize {
+fn choose(input: &Input, strategy: impl Fn(&[u32; 60]) -> u32) -> usize {
     // Find the guard using a specific strategy.
-    let (id, minutes) = input.iter().max_by_key(strategy).unwrap();
+    let (id, minutes) = input.iter().max_by_key(|(_, m)| strategy(m)).unwrap();
     // Find the minute spent asleep the most.
     let (minute, _) = minutes.iter().enumerate().max_by_key(|&(_, &m)| m).unwrap();
     // Return the result.

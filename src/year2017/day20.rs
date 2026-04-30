@@ -24,8 +24,8 @@ struct Vector {
 
 impl Vector {
     #[inline]
-    fn new(cs: [i32; 3]) -> Self {
-        Vector { x: cs[0], y: cs[1], z: cs[2] }
+    fn new([x, y, z]: [i32; 3]) -> Self {
+        Vector { x, y, z }
     }
 
     #[inline]
@@ -72,11 +72,11 @@ pub fn parse(input: &str) -> Vec<Particle> {
         .chunk::<3>()
         .chunk::<3>()
         .enumerate()
-        .map(|(id, cs)| Particle {
+        .map(|(id, [p, v, a])| Particle {
             id,
-            position: Vector::new(cs[0]),
-            velocity: Vector::new(cs[1]),
-            acceleration: Vector::new(cs[2]),
+            position: Vector::new(p),
+            velocity: Vector::new(v),
+            acceleration: Vector::new(a),
         })
         .collect()
 }

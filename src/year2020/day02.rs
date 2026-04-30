@@ -21,11 +21,12 @@ pub struct Rule<'a> {
 
 impl Rule<'_> {
     fn from([a, b, c, d]: [&str; 4]) -> Rule<'_> {
-        let start = a.unsigned();
-        let end = b.unsigned();
-        let letter = c.as_bytes()[0];
-        let password = d.as_bytes();
-        Rule { start, end, letter, password }
+        Rule {
+            start: a.unsigned(),
+            end: b.unsigned(),
+            letter: c.as_bytes()[0],
+            password: d.as_bytes(),
+        }
     }
 }
 

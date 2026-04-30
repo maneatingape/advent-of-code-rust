@@ -19,6 +19,7 @@ use crate::util::hash::*;
 use crate::util::parse::*;
 use crate::util::point::*;
 use std::fmt::Write as _;
+use std::iter::once;
 use std::ops::ControlFlow;
 
 pub struct Input {
@@ -88,14 +89,12 @@ pub fn part2(input: &Input) -> i64 {
 
     // Convert trailing comma ',' into a trailing newline '\n'
     let mut rules = String::new();
-    let mut newline_ending = |s: &str| {
+    let parts = once(movement.routine.as_str()).chain(movement.functions.into_iter().flatten());
+    for s in parts {
         rules.push_str(s);
         rules.pop();
         rules.push('\n');
-    };
-
-    newline_ending(&movement.routine);
-    movement.functions.into_iter().flatten().for_each(newline_ending);
+    }
 
     let mut modified = input.code.clone();
     modified[0] = 2;

@@ -34,6 +34,11 @@ pub fn parse(input: &str) -> Vec<Reaction> {
     indices.insert("FUEL", 0);
     indices.insert("ORE", 1);
 
+    let mut lookup = |s| {
+        let size = indices.len();
+        *indices.entry(s).or_insert(size)
+    };
+
     for line in lines {
         let mut tokens = line
             .split(|c: char| !c.is_ascii_alphanumeric())
@@ -43,18 +48,15 @@ pub fn parse(input: &str) -> Vec<Reaction> {
 
         // Assigns other indices in the arbitrary order that chemicals are encountered.
         let [kind, amount] = tokens.next().unwrap();
-        let size = indices.len();
-        let chemical = *indices.entry(kind).or_insert(size);
+        let chemical = lookup(kind);
 
         let reaction = &mut reactions[chemical];
         reaction.amount = amount.unsigned();
         reaction.chemical = chemical;
 
         for [kind, amount] in tokens {
-            let amount = amount.unsigned();
-            let size = indices.len();
-            let chemical = *indices.entry(kind).or_insert(size);
-            reaction.ingredients.push(Ingredient { amount, chemical });
+            let chemical = lookup(kind);
+            reaction.ingredients.push(Ingredient { amount: amount.unsigned(), chemical });
         }
     }
 

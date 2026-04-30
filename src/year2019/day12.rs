@@ -45,29 +45,20 @@ pub fn part2(input: &Input) -> usize {
     let [mut a, mut b, mut c] = [0, 0, 0];
     let mut count = 0;
 
+    let update = |axis: &mut Axis, period: &mut usize, count: usize| {
+        if *period == 0 {
+            *axis = step(*axis);
+            if stopped(*axis) {
+                *period = count;
+            }
+        }
+    };
+
     while a * b * c == 0 {
         count += 1;
-
-        if a == 0 {
-            x = step(x);
-            if stopped(x) {
-                a = count;
-            }
-        }
-
-        if b == 0 {
-            y = step(y);
-            if stopped(y) {
-                b = count;
-            }
-        }
-
-        if c == 0 {
-            z = step(z);
-            if stopped(z) {
-                c = count;
-            }
-        }
+        update(&mut x, &mut a, count);
+        update(&mut y, &mut b, count);
+        update(&mut z, &mut c, count);
     }
 
     // a, b and c are the half period, so multiply by 2 to get final result.

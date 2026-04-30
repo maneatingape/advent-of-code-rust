@@ -32,10 +32,8 @@ macro_rules! iterator {
 
             #[inline]
             fn next(&mut self) -> Option<Self::Item> {
-                Some([$({
-                    let $var = self.iter.next()?;
-                    $var
-                }),+])
+                $(let $var = self.iter.next()?;)+
+                Some([$($var),+])
             }
         }
     };

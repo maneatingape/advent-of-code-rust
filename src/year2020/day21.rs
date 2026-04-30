@@ -67,15 +67,13 @@ pub fn parse(input: &str) -> Input<'_> {
         let (prefix, suffix) = line.rsplit_once(" (contains ").unwrap();
 
         for ingredient in prefix.split_ascii_whitespace() {
-            let entry = ingredients.entry(ingredient).or_default();
-            entry.food |= 1 << i;
+            ingredients.entry(ingredient).or_default().food |= 1 << i;
         }
 
         let mut mask = 0;
         for allergen in suffix.split([' ', ',', ')']).filter(|a| !a.is_empty()) {
             let size = allergens.len();
-            let entry = allergens.entry(allergen).or_insert(size);
-            mask |= 1 << *entry;
+            mask |= 1 << *allergens.entry(allergen).or_insert(size);
         }
         allergens_per_food.push(mask);
     }
@@ -108,7 +106,7 @@ pub fn part1(input: &Input<'_>) -> u32 {
 
 pub fn part2(input: &Input<'_>) -> String {
     let inverse_allergens: FastMap<_, _> =
-        input.allergens.iter().map(|(k, v)| (1 << v, k)).collect();
+        input.allergens.iter().map(|(&k, &v)| (1 << v, k)).collect();
     let mut todo: Vec<_> = input
         .ingredients
         .iter()
@@ -123,9 +121,7 @@ pub fn part2(input: &Input<'_>) -> String {
         // There must be at least one ingredient with only one allergen.
         for (name, candidates) in &todo {
             if candidates.count_ones() == 1 {
-                let allergen = inverse_allergens[candidates];
-                done.insert(*allergen, *name);
-
+                done.insert(inverse_allergens[candidates], *name);
                 mask |= candidates;
             }
         }

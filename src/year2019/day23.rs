@@ -42,9 +42,7 @@ pub fn parse(input: &str) -> Input {
 
                     if address == 255 {
                         // Handle part one.
-                        if first_y.is_none() {
-                            first_y = Some(y);
-                        }
+                        first_y.get_or_insert(y);
                         nat_x = x;
                         nat_y = y;
                     } else {

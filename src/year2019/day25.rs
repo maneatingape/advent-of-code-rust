@@ -170,18 +170,14 @@ fn explore(
             return;
         } else if let Some(suffix) = line.strip_prefix("- ") {
             if opposite(suffix) == "none" {
-                let item = String::from(suffix);
-                if !dangerous(&item) {
-                    take_item(computer, &item);
-                    inventory.push(item);
+                if !dangerous(suffix) {
+                    take_item(computer, suffix);
+                    inventory.push(suffix.to_string());
                 }
-            } else {
-                let direction = String::from(suffix);
-                if direction != reverse {
-                    stack.push(direction);
-                    explore(computer, stack, path, inventory);
-                    stack.pop();
-                }
+            } else if suffix != reverse {
+                stack.push(suffix.to_string());
+                explore(computer, stack, path, inventory);
+                stack.pop();
             }
         }
     }

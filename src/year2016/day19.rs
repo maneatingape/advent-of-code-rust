@@ -91,15 +91,9 @@ pub fn parse(input: &str) -> u32 {
 }
 
 pub fn part1(input: &u32) -> u32 {
-    let mut elf = *input;
-
-    elf *= 2;
-    // Remove highest 1 bit.
-    elf -= 1 << elf.ilog2();
-    // Elves use 1-based indexing.
-    elf += 1;
-
-    elf
+    let n = *input * 2;
+    // Remove highest 1 bit, then add 1 for one-based indexing.
+    n - (1 << n.ilog2()) + 1
 }
 
 pub fn part2(input: &u32) -> u32 {

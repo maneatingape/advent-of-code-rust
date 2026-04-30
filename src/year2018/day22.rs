@@ -109,8 +109,8 @@ pub fn part1(input: &Input) -> i32 {
 
 /// A* search for the shortest path to the target.
 pub fn part2(input: &Input) -> i32 {
-    let &Input { height, width, cave: ref erosion } = input;
-    let target = Point::new(width, height);
+    let erosion = &input.cave;
+    let target = Point::new(input.width, input.height);
 
     // Initialize bucket queue with pre-allocated capacity to reduce reallocations needed.
     let mut base = 0;
@@ -122,8 +122,8 @@ pub fn part2(input: &Input) -> i32 {
     // we implicitly disallow it during the A* search as the time to reach the square will
     // always be greater than zero.
     let mut cave = Grid::new(erosion.width, erosion.height, [i32::MAX; 3]);
-    for (i, level) in erosion.bytes.iter().enumerate() {
-        cave.bytes[i][*level as usize] = 0;
+    for (i, &level) in erosion.bytes.iter().enumerate() {
+        cave.bytes[i][level as usize] = 0;
     }
 
     // Start at origin with the torch equipped.
