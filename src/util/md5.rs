@@ -6,7 +6,7 @@
 //! The slice is modified in place and must be a multiple of 64 bytes long with at least 9 bytes
 //! spare for the MD5 padding. The [`buffer_size`] method calculates the necessary size.
 //!
-//! To maximize speed the loop for each of the four rounds used to create the hash is unrolled and
+//! To maximize speed, the loop for each of the four rounds used to create the hash is unrolled and
 //! all internal utility functions marked as
 //! [`#[inline]`](https://doc.rust-lang.org/reference/attributes/codegen.html#the-inline-attribute).
 //!

@@ -38,7 +38,7 @@ where
     let threads = threads();
     let size = items.len().div_ceil(threads);
 
-    // Initially divide work as evenly as possible among each worker thread.
+    // Initially divide work as evenly as possible among the worker threads.
     let workers: Vec<_> = (0..threads)
         .map(|id| {
             let start = (id * size).min(items.len());
@@ -70,7 +70,7 @@ impl<'a, T> Iterator for ParIter<'a, T> {
         let current = worker.increment();
         let (start, end) = unpack(current);
 
-        // There's still items to process.
+        // There are still items to process.
         if start < end {
             return Some(&self.items[start]);
         }
@@ -157,7 +157,7 @@ fn unpack(both: usize) -> (usize, usize) {
     (both & 0xffffffff, both >> 32)
 }
 
-/// Shares monotonically increasing value between multiple threads.
+/// Shares a monotonically increasing value between multiple threads.
 pub struct AtomicIter {
     running: AtomicBool,
     index: AtomicU32,

@@ -28,8 +28,8 @@ Pull requests should meet the following baseline standards:
 * Pull request title and commit messages are clear and informative.
 * Documentation has been updated if necessary.
 * Code style matches the existing code. This one is somewhat subjective, but try to "fit in" by
-  using the same naming conventions. Code should be portable, avoiding any architecture
-  specific intrinsics.
+  using the same naming conventions. Code should be portable, avoiding any
+  architecture-specific intrinsics.
 * Tests pass `cargo test`
 * Code is formatted ``cargo fmt -- `find . -name "*.rs"` ``
 * Code is linted `cargo clippy --all-targets --all-features`

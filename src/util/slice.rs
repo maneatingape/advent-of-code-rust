@@ -11,7 +11,7 @@
 //!
 //! [`half_permutations`]
 //!
-//! Like `permutations`, but skip any permutation which is lexically reversed from an earlier
+//! Like `permutations`, but skips any permutation which is lexically reversed from an earlier
 //! callback. Only half the permutations are visited in total.
 //! Uses [Steinhaus-Johnson-Trotter's algorithm](https://en.wikipedia.org/wiki/Steinhaus-Johnson-Trotter_algorithm),
 //! modifying the slice in place.

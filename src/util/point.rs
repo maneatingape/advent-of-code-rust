@@ -2,7 +2,7 @@
 //!
 //! A common theme in Advent of Code is operations in 2 dimensions. This module provides a
 //! [`Point`] struct along with implementations of several of the [`std::ops`] traits to support
-//! operator overloading, that allows shorthand expressions such as:
+//! operator overloading, allowing shorthand expressions such as:
 //!
 //! ```
 //!   # use aoc::util::point::Point;
