@@ -71,8 +71,8 @@ pub fn parse(input: &str) -> Input {
     }
 
     // Find asteroid with the highest visibility.
-    let mut seen = Grid::new(2 * width, 2 * height, 0);
-    let mut cache = grid.same_size_with(0);
+    let mut seen = Grid::new(2 * width, height, 0);
+    let mut cache = seen.same_size_with(ORIGIN);
     let mut visible = vec![0; points.len()];
     let mut max_visible = 0;
     let mut max_index = 0;
@@ -80,19 +80,19 @@ pub fn parse(input: &str) -> Input {
     for i in 0..(points.len() - 1) {
         for j in (i + 1)..points.len() {
             let delta = points[j] - points[i];
-            let key = Point::new(delta.x.abs(), delta.y.abs());
+            // Because points was populated in order from left to right and top to bottom, delta.y will
+            // be non-negative; delta.x might be negative, but shifting it by width gives us a positive
+            // reference point that can then cache the mapping to a representative index.
+            let key = Point::new(width + delta.x, delta.y);
 
-            if cache[key] == 0 {
-                cache[key] = key.x.gcd(key.y);
+            if cache[key] == ORIGIN {
+                // Key insight is that points on the same line are integer multiples of each other.
+                let gcd = delta.x.abs().gcd(delta.y);
+                let adjusted = Point::new(delta.x / gcd + width, delta.y / gcd);
+
+                cache[key] = adjusted;
             }
-            let gcd = cache[key];
-
-            // Key insight is that points on the same line are integer multiples of each other.
-            let adjusted = Point::new(delta.x / gcd, delta.y / gcd);
-
-            // This works as the points are in order from left to right and top to bottom,
-            // so we process points from nearest to furthest.
-            let index = Point::new(width + adjusted.x, height + adjusted.y);
+            let index = cache[key];
 
             if seen[index] <= i {
                 seen[index] = i + 1;
