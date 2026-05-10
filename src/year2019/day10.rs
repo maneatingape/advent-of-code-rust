@@ -130,10 +130,9 @@ pub fn parse(input: &str) -> Input {
         groups.push((first, second, i));
     }
 
-    groups.sort_unstable();
-
-    // The 200th asteroid is at index 199.
-    let target = station + points[groups[199].2];
+    // The 200th asteroid is at index 199. Quickselect is faster than a full sort.
+    let index = groups.select_nth_unstable(199).1.2;
+    let target = station + points[index];
     let result = 100 * target.x + target.y;
 
     (max_visible, result)
