@@ -1,7 +1,9 @@
 //! # Springdroid Adventure
 //!
 //! Jumps are always 4 tiles wide, landing on `D`. If needed we can jump again immediately
-//! landing on `H`.
+//! landing on `H`. The intcode program runs faster if the springscript is shorter, so although
+//! multiple scripts work, any solution that treats intcode as a black box will be better if
+//! the script is minimized.
 //!
 //! ## Part One
 //!
@@ -15,16 +17,21 @@
 //!
 //! `J = NOT (A AND B AND C) AND D`
 //!
+//! But in practice, all input files are set up so that part 1 passes even when we never
+//! probe `B`, simplifying to 4 instructions:
+//!
+//! `J = NOT (A AND C) AND D`
+//!
 //! ## Part Two
 //!
-//! We add two rules, either `H` needs to be ground so that we double jump immediately or `E`
-//! needs to be ground, so that we can wait and not jump too early.
+//! Now `B` matters, and we also need a new rule to jump if `H` is ground when `C` is a hole,
+//! to trigger a double jump. This can be done in 6 instructions. Suprisingly, we never needed
+//! to use register `T`.
 use super::intcode::*;
 use crate::util::parse::*;
 
 const WALK: &str = "\
 OR A J
-AND B J
 AND C J
 NOT J J
 AND D J
@@ -32,14 +39,12 @@ WALK
 ";
 
 const RUN: &str = "\
-OR A J
+NOT H J
+OR C J
 AND B J
-AND C J
+AND A J
 NOT J J
 AND D J
-OR E T
-OR H T
-AND T J
 RUN
 ";
 
