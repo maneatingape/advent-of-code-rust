@@ -5,9 +5,12 @@
 //! keys and the edge weight is the distance between keys. Doors modify which edges
 //! are connected depending on the keys currently possessed.
 //!
-//! We first find the distance between every pair of keys then run
-//! [Dijkstra's algorithm](https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm) to find the
-//! shortest path that visits every node in the graph.
+//! We first find the distance between every pair of keys then run the
+//! [A* algorithm](https://en.wikipedia.org/wiki/A*_search_algorithm) to find the
+//! shortest path that visits every node in the graph. The heuristic is the sum of the minimum
+//! possible distances to reach every remaining key, which helps the search focus on the
+//! overall minimum rather than the nearest key, for fewer nodes explored. Since the heuristic
+//! is consistent, no node will ever ever have its score reduced after the first visit.
 //!
 //! The maze is also constructed in such a way to make our life easier:
 //! * There is only ever one possible path to each key. We do not need to consider
@@ -75,11 +78,13 @@ type Matrix = [[Door; 30]; 30];
 /// `11111111111111111111111111` for the real input but fewer for sample data.
 ///
 /// `masks` maps the set of keys in the same quadrant, for prefiltering in part 2.
+/// `minimum` is the smallest distance from a key to any of its neighbors, for the A* heuristic.
 /// `matrix` is the adjacency of distances and doors between each pair of keys and the robots'
 /// starting locations.
 struct Maze {
     initial: State,
     masks: [u32; 30],
+    minimum: [u32; 30],
     matrix: Matrix,
 }
 
@@ -132,6 +137,7 @@ fn parse_maze(width: usize, bytes: &[u8]) -> Maze {
     let mut seen = vec![usize::MAX; bytes.len()];
     let mut todo = VecDeque::new();
     let mut masks = [0; 30];
+    let mut minimum = [u32::MAX; 30];
 
     for (start, from) in found {
         todo.push_front((start, 0, 0));
@@ -150,6 +156,8 @@ fn parse_maze(width: usize, bytes: &[u8]) -> Maze {
                 matrix[to][from] = Door { distance, needed };
                 masks[from] |= 1 << to;
                 masks[to] |= 1 << from;
+                minimum[from] = minimum[from].min(distance);
+                minimum[to] = minimum[to].min(distance);
                 // Faster to stop here and use Floyd-Warshall later.
                 continue;
             }
@@ -185,19 +193,21 @@ fn parse_maze(width: usize, bytes: &[u8]) -> Maze {
         }
     }
 
-    Maze { initial, masks, matrix }
+    Maze { initial, masks, minimum, matrix }
 }
 
 fn explore(width: usize, bytes: &[u8]) -> u32 {
     let mut todo = MinHeap::with_capacity(5_000);
     let mut cache = FastMap::with_capacity(5_000);
 
-    let Maze { initial, masks, matrix } = parse_maze(width, bytes);
-    todo.push(0, initial);
+    let Maze { initial, masks, minimum, matrix } = parse_maze(width, bytes);
+    let heuristic: u32 = minimum.iter().filter(|&min| *min < u32::MAX).sum();
+    todo.push(heuristic, (initial, heuristic));
 
-    while let Some((total, State { position, remaining })) = todo.pop() {
+    while let Some((guess, (State { position, remaining }, heuristic))) = todo.pop() {
+        let total = guess - heuristic;
         // Finish immediately if no keys left.
-        // Since we're using Dijkstra this will always be the optimal solution.
+        // Since we're using A* with a consistent heuristic this will always be the optimal solution.
         if remaining == 0 {
             return total;
         }
@@ -230,7 +240,9 @@ fn explore(width: usize, bytes: &[u8]) -> u32 {
                     let best = cache.entry(next_state).or_insert(u32::MAX);
                     if next_total < *best {
                         *best = next_total;
-                        todo.push(next_total, next_state);
+                        let next_heuristic = heuristic - minimum[to];
+                        let next_guess = next_total + next_heuristic;
+                        todo.push(next_guess, (next_state, next_heuristic));
                     }
                 }
             }
