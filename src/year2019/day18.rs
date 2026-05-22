@@ -7,10 +7,15 @@
 //!
 //! We first find the distance between every pair of keys then run the
 //! [A* algorithm](https://en.wikipedia.org/wiki/A*_search_algorithm) to find the
-//! shortest path that visits every node in the graph. The heuristic is the sum of the minimum
-//! possible distances to reach every remaining key, which helps the search focus on the
-//! overall minimum rather than the nearest key, for fewer nodes explored. Since the heuristic
-//! is consistent, no node will ever ever have its score reduced after the first visit.
+//! shortest path that visits every node in the graph. One heuristic is a constant-time query
+//! of the sum of the minimum path length out of all remaining keys (updated by subtraction
+//! as a key is visited), which works well for part one when there is only one robot that must
+//! visit every remaining node, but underestimates for part two. Another heuristic is a linear-time
+//! query of the maximum distance each robot must travel to reach the furthest remaining key. This
+//! latter query is expensive enough that it penalizes part one, but its improved accuracy prunes
+//! more states in part two than the extra time spent on computing the heuristic. Both heuristics
+//! are consistent, in that they never overestimate, so no state will lower its score after
+//! the initial visit, and the heuristic reaches zero at the goal.
 //!
 //! The maze is also constructed in such a way to make our life easier:
 //! * There is only ever one possible path to each key. We do not need to consider
@@ -93,7 +98,8 @@ pub fn parse(input: &str) -> Grid<u8> {
 }
 
 pub fn part1(input: &Grid<u8>) -> u32 {
-    explore(input.width as usize, &input.bytes)
+    // Select the O(1) A* heuristic, since there is only one robot visiting all keys.
+    explore::<false>(input.width as usize, &input.bytes)
 }
 
 pub fn part2(input: &Grid<u8>) -> u32 {
@@ -108,7 +114,8 @@ pub fn part2(input: &Grid<u8>) -> u32 {
     patch("###", 0);
     patch("@#@", 1);
 
-    explore(input.width as usize, &modified)
+    // Select the O(n) A* heuristic, since each robot vists about one-fourth of the keys.
+    explore::<true>(input.width as usize, &modified)
 }
 
 fn parse_maze(width: usize, bytes: &[u8]) -> Maze {
@@ -219,16 +226,17 @@ fn parse_maze(width: usize, bytes: &[u8]) -> Maze {
     Maze { initial, masks, minimum, matrix }
 }
 
-fn explore(width: usize, bytes: &[u8]) -> u32 {
+// Same algorithm, but specialized on which heuristic to use.
+fn explore<const PART_TWO: bool>(width: usize, bytes: &[u8]) -> u32 {
     let mut todo = MinHeap::with_capacity(5_000);
     let mut cache = FastMap::with_capacity(5_000);
 
     let Maze { initial, masks, minimum, matrix } = parse_maze(width, bytes);
-    let heuristic: u32 = minimum.iter().sum();
-    todo.push(heuristic, (initial, heuristic));
+    let heur = if PART_TWO { heuristic(initial, &masks, &matrix) } else { minimum.iter().sum() };
+    todo.push(heur, (initial, heur));
 
-    while let Some((guess, (State { position, remaining }, heuristic))) = todo.pop() {
-        let total = guess - heuristic;
+    while let Some((guess, (State { position, remaining }, heur))) = todo.pop() {
+        let total = guess - heur;
         // Finish immediately if no keys left.
         // Since we're using A* with a consistent heuristic this will always be the optimal solution.
         if remaining == 0 {
@@ -263,9 +271,13 @@ fn explore(width: usize, bytes: &[u8]) -> u32 {
                     let best = cache.entry(next_state).or_insert(u32::MAX);
                     if next_total < *best {
                         *best = next_total;
-                        let next_heuristic = heuristic - minimum[to];
-                        let next_guess = next_total + next_heuristic;
-                        todo.push(next_guess, (next_state, next_heuristic));
+                        let next_heur = if PART_TWO {
+                            heuristic(next_state, &masks, &matrix)
+                        } else {
+                            heur - minimum[to]
+                        };
+                        let next_guess = next_total + next_heur;
+                        todo.push(next_guess, (next_state, next_heur));
                     }
                 }
             }
@@ -282,4 +294,19 @@ fn is_key(b: u8) -> Option<usize> {
 
 fn is_door(b: u8) -> Option<usize> {
     b.is_ascii_uppercase().then(|| (b - b'A') as usize)
+}
+
+// Compute part two heuristic of the sum of the furthest key remaining per robot. For part one,
+// rely on the faster but weaker O(1) tracking of the sum of all minimum legs.
+fn heuristic(state: State, masks: &[u32], matrix: &Matrix) -> u32 {
+    let mut heur = 0;
+
+    for bot in state.position.biterator() {
+        let mut dist = 0;
+        for key in (state.remaining & masks[bot]).biterator() {
+            dist = dist.max(matrix[bot][key].distance);
+        }
+        heur += dist;
+    }
+    heur
 }
