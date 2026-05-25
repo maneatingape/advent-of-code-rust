@@ -22,29 +22,33 @@ pub fn parse(input: &str) -> Input {
     let mut part1 = 0;
 
     ranges.sort_unstable();
-    ranges.push([u64::MAX,u64::MAX]);  // Guard!
+    ranges.push([u64::MAX, u64::MAX]); // Guard!
 
     let mut start = ranges[0][0];
-    let mut end = ranges[0][1]+1;
+    let mut end = ranges[0][1] + 1;
 
     // Merge ranges together.
-    for r in 1..ranges.len() {
-        if ranges[r][0] < end {
-            end = end.max(ranges[r][1] + 1);
+    for [from, to] in ranges.iter().skip(1) {
+        if *from < end {
+            end = end.max(*to + 1);
         } else {
-            part2 += end-start;
-            merged.push([start,end]);
-            start = ranges[r][0];
-            end = ranges[r][1];
+            part2 += end - start;
+            merged.push([start, end]);
+            start = *from;
+            end = *to+1;
         }
     }
-    merged.push([start,end]); // This is the zero length guard range greater than any id
+    merged.push([u64::MAX, u64::MAX]); // This is the zero length guard range greater than any id
 
     ids.sort_unstable();
     let mut r = 0;
     for ii in ids {
-        while ii >= merged[r][1] {r += 1;}
-        if ii >= merged[r][0] { part1 += 1;}
+        while ii >= merged[r][1] {
+            r += 1;
+        }
+        if ii >= merged[r][0] {
+            part1 += 1;
+        }
     }
     (part1, part2)
 }
