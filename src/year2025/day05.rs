@@ -35,7 +35,7 @@ pub fn parse(input: &str) -> Input {
             part2 += end - start;
             merged.push([start, end]);
             start = *from;
-            end = *to+1;
+            end = *to + 1;
         }
     }
     merged.push([u64::MAX, u64::MAX]); // This is the zero length guard range greater than any id
