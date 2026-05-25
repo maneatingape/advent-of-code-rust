@@ -22,7 +22,7 @@ pub fn parse(input: &str) -> Input {
     let mut part1 = 0;
 
     ranges.sort_unstable();
-    ranges.push([u64::MAX, u64::MAX]); // Guard!
+    ranges.push([u64::MAX, u64::MAX-1]); // Guard!
 
     let mut start = ranges[0][0];
     let mut end = ranges[0][1] + 1;
