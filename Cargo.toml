@@ -2,7 +2,7 @@
 name = "aoc"
 version = "2025.12.25"
 edition = "2024"
-rust-version = "1.95"
+rust-version = "1.96"
 
 # Speed up benchmarking by not recompiling everything when only a single file changes.
 [profile.bench]
