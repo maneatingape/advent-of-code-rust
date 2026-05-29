@@ -6,8 +6,8 @@
 //!
 //! We can isolate the value of the constants a, b, c in order to speed up subsequent calculations.
 //!
-//! Since the equation is linear in noun and verb, we can efficiently solve part two by iterating
-//! over possible noun values and computing the corresponding verb directly.
+//! Since the equation is linear in noun and verb, and since a is much larger than b, we can
+//! efficiently solve part two by directly reversing the algebra.
 use crate::util::parse::*;
 
 type Input = [i32; 3];
@@ -26,12 +26,10 @@ pub fn part1([a, b, c]: &Input) -> i32 {
 }
 
 pub fn part2([a, b, c]: &Input) -> i32 {
-    (0..100)
-        .find_map(|x| {
-            let y = (19690720 - a * x - c) / b;
-            (a * x + b * y + c == 19690720 && (0..100).contains(&y)).then_some(100 * x + y)
-        })
-        .unwrap()
+    let goal = 19690720 - c;
+    let x = goal / a;
+    let y = (goal % a) / b;
+    x * 100 + y
 }
 
 fn check(code: &[usize], first: usize, second: usize) -> i32 {
