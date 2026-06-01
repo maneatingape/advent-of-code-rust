@@ -3,7 +3,8 @@ use std::collections::VecDeque;
 
 /// [SWAG](https://en.wikipedia.org/wiki/Scientific_wild-ass_guess)
 /// It's possible that some inputs will need more space than this.
-const EXTRA: usize = 3_000;
+/// At least one input for day 17 is known to produce a grid size of 85x61 in this region.
+const EXTRA: usize = 6_000;
 
 pub enum State {
     Input,
