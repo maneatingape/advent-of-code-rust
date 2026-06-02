@@ -14,6 +14,10 @@
 //! Then we look for three patterns that can be repeated in any order to form the whole path.
 //! Without loss of generality the first pattern anchored at the start is always `A`,
 //! the next `B` and the last `C`.
+//!
+//! A good chunk of the Intcode runtime is spent on unpacking compressed memory into the grid
+//! that is first displayed to the user; this effort is the same between both parts. Running the
+//! entire solution in parse thus reduces the overall runtime.
 use super::intcode::*;
 use crate::util::hash::*;
 use crate::util::parse::*;
@@ -23,10 +27,10 @@ use std::iter::once;
 use std::ops::ControlFlow;
 
 pub struct Input {
-    code: Vec<i64>,
     scaffold: FastSet<Point>,
     position: Point,
     direction: Point,
+    score: i64,
 }
 
 struct Movement<'a> {
@@ -36,7 +40,9 @@ struct Movement<'a> {
 
 /// The camera output points from left to right, top to bottom.
 pub fn parse(input: &str) -> Input {
-    let code: Vec<_> = input.iter_signed().collect();
+    // Only run the part two program; its initial output matches part one, and avoiding the
+    // startup costs of a second machine results in a faster solution.
+    let code: Vec<_> = once(2).chain(input.iter_signed().skip(1)).collect();
     let mut computer = Computer::new(&code);
 
     let mut x = 0;
@@ -69,20 +75,10 @@ pub fn parse(input: &str) -> Input {
         x += 1;
     }
 
-    Input { code, scaffold, position, direction }
-}
+    let mut input = Input { scaffold, position, direction, score: 0 };
 
-pub fn part1(input: &Input) -> i32 {
-    input
-        .scaffold
-        .iter()
-        .filter(|&point| ORTHOGONAL.iter().all(|&delta| input.scaffold.contains(&(*point + delta))))
-        .map(|point| point.x * point.y)
-        .sum()
-}
-
-pub fn part2(input: &Input) -> i64 {
-    let path = build_path(input);
+    // With the scaffold now available, construct the compressed path.
+    let path = build_path(&input);
     let mut movement = Movement { routine: String::new(), functions: [None; 3] };
 
     let _unused = compress(&path, &mut movement);
@@ -96,13 +92,23 @@ pub fn part2(input: &Input) -> i64 {
         rules.push('\n');
     }
 
-    let mut modified = input.code.clone();
-    modified[0] = 2;
-
-    let mut computer = Computer::new(&modified);
     computer.input_ascii(&rules);
+    input.score = visit(computer);
 
-    visit(computer)
+    input
+}
+
+pub fn part1(input: &Input) -> i32 {
+    input
+        .scaffold
+        .iter()
+        .filter(|&point| ORTHOGONAL.iter().all(|&delta| input.scaffold.contains(&(*point + delta))))
+        .map(|point| point.x * point.y)
+        .sum()
+}
+
+pub fn part2(input: &Input) -> i64 {
+    input.score
 }
 
 /// Use a simple heuristic to build a path that visits every part of the scaffold at least once.
