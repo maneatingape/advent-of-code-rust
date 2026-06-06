@@ -15,7 +15,8 @@ a
 a
 a
 
-b";
+b
+";
 
 #[test]
 fn part1_test() {
