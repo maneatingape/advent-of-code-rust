@@ -279,7 +279,7 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 | 18 | [Many-Worlds Interpretation](https://adventofcode.com/2019/day/18) | [Source](src/year2019/day18.rs) | 1039 |
 | 19 | [Tractor Beam](https://adventofcode.com/2019/day/19) | [Source](src/year2019/day19.rs) | 688 |
 | 20 | [Donut Maze](https://adventofcode.com/2019/day/20) | [Source](src/year2019/day20.rs) | 189 |
-| 21 | [Springdroid Adventure](https://adventofcode.com/2019/day/21) | [Source](src/year2019/day21.rs) | 1785 |
+| 21 | [Springdroid Adventure](https://adventofcode.com/2019/day/21) | [Source](src/year2019/day21.rs) | 1360 |
 | 22 | [Slam Shuffle](https://adventofcode.com/2019/day/22) | [Source](src/year2019/day22.rs) | 12 |
 | 23 | [Category Six](https://adventofcode.com/2019/day/23) | [Source](src/year2019/day23.rs) | 670 |
 | 24 | [Planet of Discord](https://adventofcode.com/2019/day/24) | [Source](src/year2019/day24.rs) | 232 |
