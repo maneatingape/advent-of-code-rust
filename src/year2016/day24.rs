@@ -1,29 +1,28 @@
 //! # Air Duct Spelunking
 //!
-//! This is a variant of the classic
-//! [Travelling Salesman Problem](https://en.wikipedia.org/wiki/Travelling_salesman_problem) and
-//! is similar to [`Year 2015 Day 13`].
+//! This is a variant of the classic [Travelling Salesman Problem] and is similar to
+//! [`Year 2015 Day 13`].
 //!
 //! We first simplify the problem by finding the distance between all locations using multiple
 //! [BFS](https://en.wikipedia.org/wiki/Breadth-first_search)
 //! searches starting from each location.
 //!
-//! For speed we convert each location into an index, then store the distances between
-//! every pair of locations in a vec for fast lookup. Our utility [`half_permutations`] method uses
-//! [Steinhaus-Johnson-Trotter's algorithm](https://en.wikipedia.org/wiki/Steinhaus-Johnson-Trotter_algorithm) for efficiency,
-//! modifying the slice in place.
+//! Then we can use [Held-Karp's dynamic programming][Held-Karp] algorithm to determine the
+//! shortest cycle. The problem asks us to start from node 0, which conveniently means that the
+//! value g(127, k) is the shortest path to k, and adding the distance from k back to 0 for part 2
+//! is also trivial. Thus, this day completes with only `7*6/2*128/2` or 1,344 comparisons, quite a
+//! bit better than the 2,520 comparisons needed for an approach with 7!/2 permutations. A
+//! slight complication is that set bit 0 maps to node 1.
 //!
-//! There are 8 locations, however since we always start at `0` this requires checking only
-//! 7!/2 = 2,520 permutations. We find the answer to both part one and two simultaneously.
-//!
-//! [`half_permutations`]: crate::util::slice
 //! [`Year 2015 Day 13`]: crate::year2015::day13
+//! [Travelling Salesman Problem]: https://en.wikipedia.org/wiki/Travelling_salesman_problem
+//! [Held-Karp]: https://en.wikipedia.org/wiki/Held%E2%80%93Karp_algorithm
+use crate::util::bitset::*;
 use crate::util::grid::*;
 use crate::util::parse::*;
-use crate::util::slice::*;
 use std::collections::VecDeque;
 
-type Input = (u32, u32);
+type Input = (u16, u16);
 
 pub fn parse(input: &str) -> Input {
     let grid = Grid::parse(input);
@@ -77,26 +76,52 @@ pub fn parse(input: &str) -> Input {
     }
 
     // Solve both parts simultaneously.
-    let mut part_one = u32::MAX;
-    let mut part_two = u32::MAX;
-    let mut indices: Vec<_> = (1..found.len()).collect();
+    // Initialize a table for each part: 2ⁿ⁻¹ sets with n-1 distances per set. Default each g({k},k)
+    // singleton to distance[0][k+1] (since bit 0 maps to node 1), while the initial value of other
+    // sets does not matter.
+    let mut table = [[0_u16; 7]; 1 << 7];
+    for k in 0..found.len() - 1 {
+        table[1 << k][k] = distance[0][k + 1];
+    }
 
-    indices.half_permutations(|slice| {
-        let first = distance[0][slice[0]];
-        let middle = slice.array_windows().map(|&[from, to]| distance[from][to]).sum::<u32>();
-        let last = distance[slice[slice.len() - 1]][0];
+    // Visit each non-empty set in order, with no work to do for singleton sets.
+    for set in 3_usize..(1 << (found.len() - 1)) {
+        if set & !(set - 1) == set {
+            continue;
+        }
 
-        part_one = part_one.min(first + middle).min(middle + last);
-        part_two = part_two.min(first + middle + last);
-    });
+        // For a given set, compute each g(set,k) for all k in the set.
+        for k in set.biterator() {
+            let subset = set ^ (1 << k);
+            let mut shortest = u16::MAX;
+
+            // For a given destination k, find which other bit m gives the best path from the
+            // subset to m, and then m to k. All table[subset] references were filled in prior
+            // iterations of the outer loop or the singleton base cases.
+            for m in subset.biterator() {
+                shortest = shortest.min(table[subset][m] + distance[m + 1][k + 1]);
+            }
+            table[set][k] = shortest;
+        }
+    }
+
+    // With the sets now built, we have 7 candidates for each answer.
+    let mut part_one = u16::MAX;
+    let mut part_two = u16::MAX;
+    for (k, &path_len) in
+        table[(1 << (found.len() - 1)) - 1].iter().take(found.len() - 1).enumerate()
+    {
+        part_one = part_one.min(path_len);
+        part_two = part_two.min(path_len + distance[k + 1][0]);
+    }
 
     (part_one, part_two)
 }
 
-pub fn part1(input: &Input) -> u32 {
+pub fn part1(input: &Input) -> u16 {
     input.0
 }
 
-pub fn part2(input: &Input) -> u32 {
+pub fn part2(input: &Input) -> u16 {
     input.1
 }
