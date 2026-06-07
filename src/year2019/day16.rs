@@ -66,8 +66,8 @@
 //! is the [tetrahedral number] sequence. More generally the `i`th coefficient of the 100th phase
 //! is the [binomial coefficient] `(i + 99, i)`.
 //!
-//! We could compute the coefficient using the formula `nᵏ/k!` however this [grows rather large]
-//! and quickly will overflow even a `u128`.
+//! We could compute the coefficient using the formula `n!/(k!(n-k)!)` however this
+//! [grows rather large] and quickly will overflow even a `u128`.
 //!
 //! However, we only need the coefficient modulo 10. [Lucas's theorem] allows us to compute binomial
 //! coefficients modulo some prime number. If we compute the coefficients modulo 2 and modulo 5
@@ -151,7 +151,7 @@ pub fn part1(input: &[i32]) -> i32 {
             let phase = i + 1;
             let start = phase - 1;
             let end = (start + phase).min(size);
-            *digit = (prefix_sum[end] - prefix_sum[start]).abs() % 10;
+            *digit = (prefix_sum[end] - prefix_sum[start]) % 10;
         }
     }
 
@@ -165,7 +165,7 @@ pub fn part2(input: &[i32]) -> i32 {
 
     // This approach will only work if the index is in the second half of the input.
     let start = fold_decimal(&input[..7]) as usize;
-    assert!(lower <= start && start < upper);
+    assert!(lower <= start && start < upper - 8);
 
     let first = compute(input, start, upper, BINOMIAL_MOD_2.iter().copied().cycle(), 128);
     let second = compute(input, start, upper, BINOMIAL_MOD_5.iter().copied().cycle(), 125);
