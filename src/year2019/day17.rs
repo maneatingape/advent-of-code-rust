@@ -26,12 +26,7 @@ use std::fmt::Write as _;
 use std::iter::once;
 use std::ops::ControlFlow;
 
-pub struct Input {
-    scaffold: FastSet<Point>,
-    position: Point,
-    direction: Point,
-    score: i64,
-}
+type Input = (FastSet<Point>, i64);
 
 struct Movement<'a> {
     routine: String,
@@ -75,10 +70,8 @@ pub fn parse(input: &str) -> Input {
         x += 1;
     }
 
-    let mut input = Input { scaffold, position, direction, score: 0 };
-
     // With the scaffold now available, construct the compressed path.
-    let path = build_path(&input);
+    let path = build_path(&scaffold, position, direction);
     let mut movement = Movement { routine: String::new(), functions: [None; 3] };
 
     let _unused = compress(&path, &mut movement);
@@ -93,31 +86,28 @@ pub fn parse(input: &str) -> Input {
     }
 
     computer.input_ascii(&rules);
-    input.score = visit(computer);
+    let score = visit(computer);
 
-    input
+    (scaffold, score)
 }
 
 pub fn part1(input: &Input) -> i32 {
-    input
-        .scaffold
+    let (scaffold, _) = input;
+    scaffold
         .iter()
-        .filter(|&point| ORTHOGONAL.iter().all(|&delta| input.scaffold.contains(&(*point + delta))))
+        .filter(|&point| ORTHOGONAL.iter().all(|&delta| scaffold.contains(&(*point + delta))))
         .map(|point| point.x * point.y)
         .sum()
 }
 
 pub fn part2(input: &Input) -> i64 {
-    input.score
+    input.1
 }
 
 /// Use a simple heuristic to build a path that visits every part of the scaffold at least once.
 /// This string will be too long to use directly in the robot's movement functions, so we'll
 /// need to compress it first.
-fn build_path(input: &Input) -> String {
-    let scaffold = &input.scaffold;
-    let mut position = input.position;
-    let mut direction = input.direction;
+fn build_path(scaffold: &FastSet<Point>, mut position: Point, mut direction: Point) -> String {
     let mut path = String::new();
 
     loop {
