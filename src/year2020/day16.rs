@@ -82,8 +82,7 @@ fn solve_part_one(rules: &[Rule], tickets: &[Ticket]) -> (u32, Vec<bool>) {
 
     for column in tickets {
         for (i, n) in column.iter().enumerate() {
-            let check = ranges.iter().any(|range| range.contains(n));
-            if !check {
+            if !ranges.iter().any(|range| range.contains(n)) {
                 total += n;
                 valid[i] = false;
             }

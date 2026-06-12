@@ -129,22 +129,17 @@ pub fn parse(input: &str) -> Vec<Tile> {
 
 pub fn part1(input: &[Tile]) -> u64 {
     let mut freq = [0; 1024];
-    let mut result = 1;
 
     for edge in input.iter().flat_map(|t| t.top) {
         freq[edge] += 1;
     }
 
-    for tile in input {
-        // Any orientation will do, pick the first.
-        let total =
-            freq[tile.top[0]] + freq[tile.left[0]] + freq[tile.bottom[0]] + freq[tile.right[0]];
-        if total == 6 {
-            result *= tile.id;
-        }
-    }
-
-    result
+    // Corner tiles have two edges matching no other tile. Any orientation will do, pick the first.
+    input
+        .iter()
+        .filter(|t| freq[t.top[0]] + freq[t.left[0]] + freq[t.bottom[0]] + freq[t.right[0]] == 6)
+        .map(|t| t.id)
+        .product()
 }
 
 pub fn part2(input: &[Tile]) -> u32 {
