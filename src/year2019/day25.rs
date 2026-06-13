@@ -17,6 +17,7 @@
 //! Just for fun this solution can be played interactively on the command line if
 //! "--features frivolity" is enabled.
 use super::intcode::*;
+use crate::util::bitset::*;
 use crate::util::hash::*;
 use crate::util::parse::*;
 use std::fmt::Write as _;
@@ -108,6 +109,8 @@ fn play_automatically(input: &[i64]) -> String {
     // If we are adding an item to a collection that is already too heavy or vice-versa,
     // then we can skip the pressure plate check.
     let combinations: u32 = 1 << inventory.len();
+    let mut have = combinations - 1;
+    let mut want = have;
     let mut output = String::new();
     let mut too_light = FastSet::new();
     let mut too_heavy = FastSet::new();
@@ -116,34 +119,43 @@ fn play_automatically(input: &[i64]) -> String {
         let current = gray_code(i);
         let previous = gray_code(i - 1);
         let changed = current ^ previous;
-        let index = changed.trailing_zeros() as usize;
 
         // Since we start with all items in our possession, the meaning of bits in the gray code is
-        // reversed. 0 is take an item and 1 is drop an item.
-        if current & changed == 0 {
-            take_item(&mut computer, &inventory[index]);
-
-            if too_heavy.contains(&previous) {
-                too_heavy.insert(current);
-                continue;
-            }
-        } else {
-            drop_item(&mut computer, &inventory[index]);
-
-            if too_light.contains(&previous) {
-                too_light.insert(current);
-                continue;
+        // reversed. 0 is take an item and 1 is drop an item. Checking all items of too_heavy and
+        // too_light is still cheaper than the cost to emulate another take or drop, so it is worth
+        // seeing if we can skip altering inventory to a given configuration.
+        want ^= changed;
+        let mut skip = false;
+        for heavy in &too_heavy {
+            if (want & heavy) == *heavy {
+                // Want is a superset of a known heavy configuration.
+                skip = true;
+                break;
             }
         }
+        if !skip {
+            for light in &too_light {
+                if (want & light) == want {
+                    // Want is a subset of a known light configuration.
+                    skip = true;
+                    break;
+                }
+            }
+        }
+        if skip {
+            continue;
+        }
 
+        sync_items(&mut computer, have, want, &inventory);
+        have = want;
         if matches!(movement_noisy(&mut computer, &last, &mut output), State::Halted) {
             // Keep only the password digits from Santa's response.
             output.retain(|b| b.is_ascii_digit());
             break;
         } else if output.contains("heavier") {
-            too_light.insert(current);
+            too_light.insert(want);
         } else {
-            too_heavy.insert(current);
+            too_heavy.insert(want);
         }
 
         output.clear();
@@ -232,6 +244,16 @@ fn take_item(computer: &mut Computer, item: &str) {
 fn drop_item(computer: &mut Computer, item: &str) {
     computer.input_ascii(&format!("drop {item}\n"));
     drain_output(computer);
+}
+
+fn sync_items(computer: &mut Computer, have: u32, want: u32, inventory: &[String]) {
+    for i in (want ^ have).biterator() {
+        if have & (1 << i) != 0 {
+            drop_item(computer, &inventory[i]);
+        } else {
+            take_item(computer, &inventory[i]);
+        }
+    }
 }
 
 // A quirk of the intcode program is that commands can't be stacked. We must first read all the
