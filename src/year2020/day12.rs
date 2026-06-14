@@ -80,7 +80,7 @@ pub fn parse(input: &str) -> Input {
     }
     let part1 = x.abs() + y.abs();
     let part2 = x2.abs() + y2.abs();
-    (part1,part2)
+    (part1, part2)
 }
 
 pub fn part1(input: &Input) -> i32 {
@@ -90,4 +90,3 @@ pub fn part1(input: &Input) -> i32 {
 pub fn part2(input: &Input) -> i32 {
     input.1
 }
-
