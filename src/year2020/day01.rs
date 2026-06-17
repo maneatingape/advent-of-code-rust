@@ -16,7 +16,12 @@
 use crate::util::parse::*;
 
 pub fn parse(input: &str) -> Vec<usize> {
-    input.iter_unsigned().collect()
+    let mut numbers: Vec<usize> = input.iter_unsigned().collect();
+    // Assume that, after sorting, the solutions are closer to the middle of the vector than the
+    // extremes. It's not necessary for correctness but improves the average running time for
+    // most (all?) inputs.
+    numbers.sort_unstable();
+    numbers
 }
 
 pub fn part1(input: &[usize]) -> usize {
