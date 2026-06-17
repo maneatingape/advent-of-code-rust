@@ -66,10 +66,10 @@ impl Group {
     }
 }
 
-pub fn parse<'a>(input: &'a str) -> Input {
+pub fn parse(input: &str) -> Input {
     // Use a bitmask to store each possible attack type.
     let mut elements = FastMap::new();
-    let mut mask = |key: &'a str| {
+    let mut mask = |key| {
         let next = 1 << elements.len();
         *elements.entry(key).or_insert(next)
     };
