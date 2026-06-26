@@ -8,50 +8,49 @@
 //! For part one we use an implicit hash table in an array, since values are constrained to between
 //! 0 and 2020 and each value is already perfectly hashed. For each entry we check the index
 //! at its value. If this is marked then we have seen the reciprocal `2020 - value` before
-//! so we can return the product. If not then we mark the reciprocal value in the array.
+//! so we have found the answer. Creating this array also performs a radix sort that will
+//! be used in part two.
 //!
-//! Part two reuses the pair finding logic, finding the third element by stepping through the slice
-//! one by one and adjusting the target total. To reuse the array without reallocating
-//! (which is slow) we use a `round` value instead of `bool`.
+//! Part two adds a second array, this time containing the product of any two numbers that
+//! sum to that point. Since the problem only has one correct answer, it does not matter if
+//! other array slots get written more than once. Because the list is already sorted, we can short
+//! circuit iterations as soon as a sum is not possible.
 use crate::util::parse::*;
 
-pub fn parse(input: &str) -> Vec<usize> {
-    let mut numbers: Vec<usize> = input.iter_unsigned().collect();
-    // Assume that, after sorting, the solutions are closer to the middle of the vector than the
-    // extremes. It's not necessary for correctness but improves the average running time for
-    // most (all?) inputs.
-    numbers.sort_unstable();
-    numbers
+type Input = (usize, [bool; 2020]);
+
+pub fn parse(input: &str) -> Input {
+    let mut numbers = [false; 2020];
+    let mut part_one = 0;
+
+    // Part one is determined as a side effect of the parse. Assume the input has no duplicates.
+    for number in input.iter_unsigned::<usize>() {
+        if numbers[2020 - number] {
+            part_one = number * (2020 - number);
+        }
+        numbers[number] = true;
+    }
+
+    // The parse performed a radix sort; numbers can now be used as an ordered sparse array.
+    (part_one, numbers)
 }
 
-pub fn part1(input: &[usize]) -> usize {
-    let mut hash = [0; 2020];
-    two_sum(input, 2020, &mut hash, 1).unwrap()
+pub fn part1(input: &Input) -> usize {
+    input.0
 }
 
-pub fn part2(input: &[usize]) -> usize {
-    let mut hash = [0; 2020];
+pub fn part2(input: &Input) -> usize {
+    let (_, numbers) = input;
 
-    (0..input.len() - 2)
-        .find_map(|i| {
-            let first = input[i];
-            let round = i + 1;
-            let target = 2020 - first;
-            two_sum(&input[round..], target, &mut hash, round).map(|product| first * product)
-        })
-        .unwrap()
-}
-
-fn two_sum(slice: &[usize], target: usize, hash: &mut [usize], round: usize) -> Option<usize> {
-    for &i in slice {
-        if i < target {
-            let complement = target - i;
-            if hash[i] == round {
-                return Some(i * complement);
+    // We know at least one of the three numbers is at least 2020/3.
+    for i in 674..2020 {
+        for j in 1..i {
+            let k = 2020 - i - j;
+            if numbers[i] && numbers[j] && numbers[k] {
+                return i * j * k;
             }
-            hash[complement] = round;
         }
     }
 
-    None
+    unreachable!()
 }
