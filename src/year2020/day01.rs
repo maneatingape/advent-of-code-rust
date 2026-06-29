@@ -10,11 +10,6 @@
 //! at its value. If this is marked then we have seen the reciprocal `2020 - value` before
 //! so we have found the answer. Creating this array also performs a radix sort that will
 //! be used in part two.
-//!
-//! Part two adds a second array, this time containing the product of any two numbers that
-//! sum to that point. Since the problem only has one correct answer, it does not matter if
-//! other array slots get written more than once. Because the list is already sorted, we can short
-//! circuit iterations as soon as a sum is not possible.
 use crate::util::parse::*;
 
 type Input = (usize, [bool; 2020]);
