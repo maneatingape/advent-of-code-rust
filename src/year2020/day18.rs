@@ -11,14 +11,75 @@
 //! * 1 + 2 * 3 + 4 => 1 + 2 * (3 + 4)
 //! * 1 + (2 * 3 * 4) + 5 => 1 + (2 * (3 * (4))) + 5
 use crate::util::parse::*;
-use std::str::Bytes;
+use std::slice::Iter;
 
-pub fn parse(input: &str) -> Vec<&str> {
-    input.lines().collect()
+/// A custom iterator treats each line of input as a parenthesized expression to add, so that
+/// the solver operates over the entire buffer without breaking it into lines.
+struct FlatIter<'a> {
+    bytes: Iter<'a, u8>,
+    state: State,
 }
 
-pub fn part1(input: &[&str]) -> u64 {
-    fn helper(bytes: &mut Bytes<'_>) -> u64 {
+#[derive(Clone, Copy)]
+enum State {
+    Start, // Need opening '(' for start of line.
+    Body,  // Emitting normal bytes from within a line.
+    End,   // Just supplied closing ')' at end of line.
+    Plus,  // Emitting '+' between lines.
+}
+
+impl<'a> FlatIter<'a> {
+    fn new(input: &'a [u8]) -> Self {
+        Self { bytes: input.iter(), state: State::Start }
+    }
+}
+
+impl Iterator for FlatIter<'_> {
+    type Item = u8;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        match self.state {
+            State::Start => {
+                if self.bytes.len() == 0 {
+                    return None;
+                }
+                self.state = State::Body;
+                Some(b'(')
+            }
+            State::Body => {
+                match self.bytes.next() {
+                    // The expressions are consistently formatted so encountering a space just means
+                    // skip and return the next character that will always be present.
+                    Some(&b' ') => self.bytes.next().copied(),
+                    Some(&b'\n') | None => {
+                        self.state = State::End;
+                        Some(b')')
+                    }
+                    other => other.copied(),
+                }
+            }
+            State::End => {
+                if self.bytes.len() == 0 {
+                    None
+                } else {
+                    self.state = State::Plus;
+                    Some(b'+')
+                }
+            }
+            State::Plus => {
+                self.state = State::Body;
+                Some(b'(')
+            }
+        }
+    }
+}
+
+pub fn parse(input: &str) -> &str {
+    input
+}
+
+pub fn part1(input: &str) -> u64 {
+    fn helper(bytes: &mut FlatIter<'_>) -> u64 {
         let mut total = value(bytes, helper);
 
         while let Some(operation) = next(bytes) {
@@ -33,11 +94,12 @@ pub fn part1(input: &[&str]) -> u64 {
         total
     }
 
-    input.iter().map(|line| helper(&mut line.bytes())).sum()
+    let mut flat_iter = FlatIter::new(input.as_bytes());
+    helper(&mut flat_iter)
 }
 
-pub fn part2(input: &[&str]) -> u64 {
-    fn helper(bytes: &mut Bytes<'_>) -> u64 {
+pub fn part2(input: &str) -> u64 {
+    fn helper(bytes: &mut FlatIter<'_>) -> u64 {
         let mut total = value(bytes, helper);
 
         while let Some(operation) = next(bytes) {
@@ -54,23 +116,22 @@ pub fn part2(input: &[&str]) -> u64 {
         total
     }
 
-    input.iter().map(|line| helper(&mut line.bytes())).sum()
+    let mut flat_iter = FlatIter::new(input.as_bytes());
+    helper(&mut flat_iter)
 }
 
-/// Convenience wrapper around [`Bytes`] iterator. Encountering a `)` is also considered end of
-/// sequence. The expressions are consistently formatted so encountering a space just means
-/// skip and return the next character that will always be present.
-fn next(bytes: &mut Bytes<'_>) -> Option<u8> {
+/// Convenience wrapper around [`FlatIter`] iterator. Encountering a `)` is also considered end of
+/// sequence.
+fn next(bytes: &mut FlatIter<'_>) -> Option<u8> {
     match bytes.next() {
         None | Some(b')') => None,
-        Some(b' ') => bytes.next(),
         other => other,
     }
 }
 
 /// Convenience wrapper to return the value of either the next raw digit literal or a
 /// sub-expression nested in parentheses.
-fn value(bytes: &mut Bytes<'_>, helper: fn(&mut Bytes<'_>) -> u64) -> u64 {
+fn value(bytes: &mut FlatIter<'_>, helper: fn(&mut FlatIter<'_>) -> u64) -> u64 {
     match next(bytes).unwrap() {
         b'(' => helper(bytes),
         b => b.to_decimal() as u64,
