@@ -12,7 +12,8 @@ const EXAMPLE: &str = "\
 10000
 11001
 00010
-01010";
+01010
+";
 
 #[test]
 fn part1_test() {

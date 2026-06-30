@@ -1,22 +1,64 @@
 //! # Binary Diagnostic
 //!
-//! Part one uses bit manipulation to build up the binary numbers directly one digit at a time.
+//! Part one collects 12 frequency counters, one for each digit lane. Each line of input increments
+//! the corresponding counters for each `1`. The number of `0` in the lane can be recovered by
+//! subtraction, making it easy to construct both the gamma and epsilon rate.
 //!
-//! Part two clones the input `vec` then uses [`retain`] to efficiently discard numbers that
-//! don't meet the criteria.
-//!
-//! [`retain`]: Vec::retain
-pub fn parse(input: &str) -> Vec<&[u8]> {
-    input.lines().map(str::as_bytes).collect()
+//! Part two constructs a binary tree, stored as an array. Using an array of 2*4096 bins is enough
+//! to treat each of the 1000 unique inputs as a leaf in the second half of the array, and then
+//! each node in the first half is computed as the sum of its two children from the right half. The
+//! array can be built in linear time, at which point finding the oxygen generator rating and
+//! CO2 scrubber rating are each a binary search in the tree.
+pub struct Input {
+    entries: u16,    // Number of entries in the file.
+    lanes: Vec<u16>, // Contains size counters, one for each digit lane.
+    tree: Vec<u16>,  // Contains a balanced binary tree with 2**(width+1) nodes.
 }
 
-pub fn part1(input: &[&[u8]]) -> u32 {
+pub fn parse(input: &str) -> Input {
+    let size = input.lines().next().unwrap().len();
+
+    // Allocate frequency counters based on size of each input.
+    let mut lanes = vec![0_u16; size];
+    let mut tree = vec![0_u16; 1 << (size + 1)];
+    let mut offset = 1 << size;
+
+    // Update frequency counters and leaf nodes for each number in the input.
+    for chunk in input.as_bytes().chunks(size + 1) {
+        let mut binary = 0;
+
+        for (i, b) in chunk[..size].iter().enumerate() {
+            let bit = (b & 1) as u16;
+            lanes[i] += bit;
+            binary = (binary << 1) | bit as usize;
+        }
+
+        tree[offset + binary] = 1;
+    }
+
+    // Finish populating children counts in the tree.
+    while offset > 2 {
+        let half = offset / 2;
+
+        for i in half..offset {
+            tree[i] = tree[2 * i] + tree[2 * i + 1];
+        }
+
+        offset = half;
+    }
+
+    let entries = (input.len() / (size + 1)) as u16;
+
+    Input { entries, lanes, tree }
+}
+
+pub fn part1(input: &Input) -> u32 {
     let mut gamma = 0;
     let mut epsilon = 0;
 
-    for column in 0..input[0].len() {
-        let ones = ones(input, column);
-        let zeros = input.len() - ones;
+    for count in &input.lanes {
+        let ones = *count;
+        let zeros = input.entries - ones;
 
         gamma = (gamma << 1) | u32::from(ones > zeros);
         epsilon = (epsilon << 1) | u32::from(zeros > ones);
@@ -25,28 +67,21 @@ pub fn part1(input: &[&[u8]]) -> u32 {
     gamma * epsilon
 }
 
-pub fn part2(input: &[&[u8]]) -> u32 {
-    let gamma = rating(input, |a, b| a >= b);
-    let epsilon = rating(input, |a, b| a < b);
-    gamma * epsilon
-}
+pub fn part2(input: &Input) -> usize {
+    let mut ogr = 2; // Oxygen generator rating.
+    let mut csr = 2; // CO2 scrubber rating.
+    let size = input.lanes.len();
+    let tree = &input.tree;
 
-fn ones(numbers: &[&[u8]], i: usize) -> usize {
-    numbers.iter().filter(|b| b[i] == b'1').count()
-}
-
-fn rating(input: &[&[u8]], cmp: fn(usize, usize) -> bool) -> u32 {
-    let mut numbers = input.to_vec();
-    let mut column = 0;
-
-    while numbers.len() > 1 {
-        let ones = ones(&numbers, column);
-        let zeros = numbers.len() - ones;
-        let keep = if cmp(ones, zeros) { b'1' } else { b'0' };
-
-        numbers.retain(|n| n[column] == keep);
-        column += 1;
+    // Perform a binary search over the tree.
+    for _ in 0..size {
+        ogr = 2 * ogr + if tree[ogr + 1] >= tree[ogr] { 2 } else { 0 };
+        csr =
+            2 * csr + if tree[csr + 1].wrapping_sub(1) < tree[csr].wrapping_sub(1) { 2 } else { 0 };
     }
 
-    numbers[0].iter().fold(0, |acc, &n| (acc << 1) | u32::from(n == b'1'))
+    ogr = ogr / 2 - (1 << size);
+    csr = csr / 2 - (1 << size);
+
+    ogr * csr
 }
