@@ -29,10 +29,13 @@ pub fn part2(input: &[i32]) -> i32 {
 
 fn median(input: &[i32]) -> i32 {
     let mut crabs = input.to_vec();
-    crabs.sort_unstable();
+    let mid = crabs.len() / 2;
+    assert!(crabs.len().is_multiple_of(2));
 
-    let half = input.len() / 2;
-    if crabs.len().is_multiple_of(2) { crabs[half - 1].midpoint(crabs[half]) } else { crabs[half] }
+    crabs.select_nth_unstable(mid);
+    let upper = crabs[mid];
+    let lower = crabs[..mid].iter().max().unwrap();
+    (lower + upper) / 2
 }
 
 fn mean(input: &[i32]) -> i32 {
