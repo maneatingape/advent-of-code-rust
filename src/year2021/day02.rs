@@ -1,52 +1,35 @@
 //! # Dive!
 //!
-//! Both part one and part two rely on the [`fold`] method. This method comes in useful for a lot
-//! of Advent of Code problems so is handy to know about. The input is parsed into a tuple enum
-//! [`Sub`] for convenience.
-//!
-//! [`fold`]: Iterator::fold
-use crate::util::iter::*;
+//! Solves both parts at once, relying on the regular nature of the input.
+//! Each number is always a single digit.
 use crate::util::parse::*;
 
-#[derive(Clone, Copy)]
-pub enum Sub {
-    Up(i32),
-    Down(i32),
-    Forward(i32),
+type Input = (i32, i32);
+
+pub fn parse(input: &str) -> Input {
+    let mut slice = input.as_bytes();
+    let mut position = 0;
+    let mut depth = 0;
+    let mut aim = 0;
+
+    while !slice.is_empty() {
+        let amount = |index: usize| slice[index].to_decimal() as i32;
+
+        (slice, position, depth, aim) = match slice[0] {
+            b'u' => (&slice[5..], position, depth, aim - amount(3)),
+            b'd' => (&slice[7..], position, depth, aim + amount(5)),
+            b'f' => (&slice[10..], position + amount(8), depth + aim * amount(8), aim),
+            _ => unreachable!(),
+        }
+    }
+
+    (position * aim, position * depth)
 }
 
-pub fn parse(input: &str) -> Vec<Sub> {
-    input
-        .split_ascii_whitespace()
-        .chunk::<2>()
-        .map(|[first, second]| {
-            let amount = second.signed();
-            match first {
-                "up" => Sub::Up(amount),
-                "down" => Sub::Down(amount),
-                "forward" => Sub::Forward(amount),
-                _ => unreachable!(),
-            }
-        })
-        .collect()
+pub fn part1(input: &Input) -> i32 {
+    input.0
 }
 
-pub fn part1(input: &[Sub]) -> i32 {
-    let (position, depth) =
-        input.iter().copied().fold((0, 0), |(position, depth), next| match next {
-            Sub::Up(n) => (position, depth - n),
-            Sub::Down(n) => (position, depth + n),
-            Sub::Forward(n) => (position + n, depth),
-        });
-    position * depth
-}
-
-pub fn part2(input: &[Sub]) -> i32 {
-    let (position, depth, _) =
-        input.iter().copied().fold((0, 0, 0), |(position, depth, aim), next| match next {
-            Sub::Up(n) => (position, depth, aim - n),
-            Sub::Down(n) => (position, depth, aim + n),
-            Sub::Forward(n) => (position + n, depth + aim * n, aim),
-        });
-    position * depth
+pub fn part2(input: &Input) -> i32 {
+    input.1
 }
