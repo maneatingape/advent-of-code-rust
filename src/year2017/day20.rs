@@ -82,21 +82,10 @@ pub fn parse(input: &str) -> Vec<Particle> {
 }
 
 pub fn part1(input: &[Particle]) -> usize {
-    let mut candidates = Vec::new();
-    let mut min = i32::MAX;
-
     // Find particles with the lowest acceleration.
-    for particle in input {
-        let next = particle.acceleration.manhattan();
-
-        if next < min {
-            candidates.clear();
-            min = next;
-        }
-        if next == min {
-            candidates.push(*particle);
-        }
-    }
+    let min = input.iter().map(|p| p.acceleration.manhattan()).min().unwrap();
+    let mut candidates: Vec<_> =
+        input.iter().copied().filter(|p| p.acceleration.manhattan() == min).collect();
 
     // Ensure all acceleration, velocity and position vectors are "aligned", that is, the
     // particles are moving away from the origin.

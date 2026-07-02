@@ -79,28 +79,29 @@ pub fn parse(input: &str) -> Input<'_> {
 
 pub fn part1(input: &Input<'_>) -> u32 {
     let Input { workflows, parts } = input;
-    let mut result = 0;
 
     // We only care about the numbers and can ignore all delimiters and whitespace.
-    for part in parts.iter_unsigned::<u32>().chunk::<4>() {
-        let mut key = "in";
+    parts
+        .iter_unsigned::<u32>()
+        .chunk::<4>()
+        .filter(|part| {
+            let mut key = "in";
 
-        while key.len() > 1 {
-            // Find the first matching rule.
-            for &Rule { start, end, category, next } in &workflows[key] {
-                if start <= part[category] && part[category] < end {
-                    key = next;
-                    break;
-                }
+            while key.len() > 1 {
+                // Find the first matching rule.
+                key = workflows[key]
+                    .iter()
+                    .find(|rule| {
+                        rule.start <= part[rule.category] && part[rule.category] < rule.end
+                    })
+                    .unwrap()
+                    .next;
             }
-        }
 
-        if key == "A" {
-            result += part.iter().sum::<u32>();
-        }
-    }
-
-    result
+            key == "A"
+        })
+        .map(|part| part.iter().sum::<u32>())
+        .sum()
 }
 
 pub fn part2(input: &Input<'_>) -> u64 {

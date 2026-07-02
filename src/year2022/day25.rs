@@ -8,7 +8,7 @@ pub fn parse(input: &str) -> Vec<&str> {
 }
 
 pub fn part1(input: &[&str]) -> String {
-    to_snafu(input.iter().map(from_snafu).sum())
+    to_snafu(input.iter().copied().map(from_snafu).sum())
 }
 
 pub fn part2(_input: &[&str]) -> &'static str {
@@ -16,7 +16,7 @@ pub fn part2(_input: &[&str]) -> &'static str {
 }
 
 /// Converting from SNAFU to decimal is straightforward.
-fn from_snafu(snafu: &&str) -> i64 {
+fn from_snafu(snafu: &str) -> i64 {
     snafu.bytes().fold(0, |acc, c| {
         let digit = match c {
             b'=' => -2,

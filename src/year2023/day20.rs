@@ -51,12 +51,8 @@ pub fn parse(input: &str) -> Input {
     }
 
     // Follow the nodes from the broadcaster node building each binary number.
-    let mut todo = Vec::new();
+    let mut todo: Vec<_> = node["broadcaster"].iter().map(|&start| (start, 0, 1)).collect();
     let mut numbers = Vec::new();
-
-    for &start in &node["broadcaster"] {
-        todo.push((start, 0, 1));
-    }
 
     while let Some((key, mut value, bit)) = todo.pop() {
         let children = &node[key];

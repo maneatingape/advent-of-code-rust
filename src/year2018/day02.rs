@@ -6,10 +6,7 @@ pub fn parse(input: &str) -> Vec<&str> {
 }
 
 pub fn part1(input: &[&str]) -> u32 {
-    let mut twos = 0;
-    let mut threes = 0;
-
-    for &id in input {
+    let (twos, threes) = input.iter().fold((0, 0), |(twos, threes), id| {
         // Ids are lowercase ASCII only with cardinality of 26.
         let mut freq = [0; 26];
 
@@ -17,9 +14,8 @@ pub fn part1(input: &[&str]) -> u32 {
             freq[(b - b'a') as usize] += 1;
         }
 
-        twos += freq.contains(&2) as u32;
-        threes += freq.contains(&3) as u32;
-    }
+        (twos + freq.contains(&2) as u32, threes + freq.contains(&3) as u32)
+    });
 
     twos * threes
 }

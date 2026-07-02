@@ -31,7 +31,7 @@ pub fn part1(input: &Input<'_>) -> usize {
         groups.entry(extra).or_insert_with(Vec::new).push((from, to));
     }
 
-    for (_, group) in groups {
+    for group in groups.into_values() {
         // Build list of all possible modified strings.
         for (from, to) in group {
             for (start, _) in molecule.match_indices(from) {

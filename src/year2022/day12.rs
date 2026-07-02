@@ -28,8 +28,8 @@ type Input = (Grid<u8>, Point);
 /// [`Grid`]: crate::util::grid
 pub fn parse(input: &str) -> Input {
     let grid = Grid::parse(input);
-    let start = grid.find(b'E');
-    (grid, start.unwrap())
+    let start = grid.find(b'E').unwrap();
+    (grid, start)
 }
 
 /// Find the shortest path from `E` to `S`.

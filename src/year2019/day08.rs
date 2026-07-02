@@ -13,13 +13,9 @@ pub fn part1(input: &[u8]) -> u32 {
     let mut result = 0;
 
     for layer in input.chunks_exact(LAYER_SIZE) {
-        let mut ones = 0;
-        let mut twos = 0;
-
-        for &b in layer {
-            ones += u32::from(b & 1);
-            twos += u32::from((b >> 1) & 1);
-        }
+        let (ones, twos) = layer.iter().fold((0, 0), |(ones, twos), &b| {
+            (ones + u32::from(b & 1), twos + u32::from((b >> 1) & 1))
+        });
 
         if ones + twos > most {
             most = ones + twos;

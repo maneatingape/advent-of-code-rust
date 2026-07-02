@@ -75,11 +75,9 @@ pub fn part1(input: &Input) -> usize {
 pub fn part2(input: &Input) -> u32 {
     let mut input = *input;
     let mut order = [North, South, West, East];
-    let mut moved = true;
-    let mut count = 0;
+    let mut count = 1;
 
-    while moved {
-        moved = step(&mut input, &mut order);
+    while step(&mut input, &mut order) {
         count += 1;
     }
 

@@ -53,13 +53,8 @@ fn reflect(input: &Input, target: u32) -> usize {
     input
         .iter()
         .map(|(rows, columns)| {
-            if let Some(x) = reflect_axis(columns, target) {
-                x
-            } else if let Some(y) = reflect_axis(rows, target) {
-                100 * y
-            } else {
-                unreachable!()
-            }
+            reflect_axis(columns, target)
+                .unwrap_or_else(|| 100 * reflect_axis(rows, target).unwrap())
         })
         .sum()
 }

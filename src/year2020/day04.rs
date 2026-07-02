@@ -12,21 +12,18 @@ type Input = (u32, u32);
 
 pub fn parse(input: &str) -> Input {
     let mut passport = Vec::new();
-    let mut part_one = 0;
-    let mut part_two = 0;
 
-    for block in input.split("\n\n") {
-        parse_block(&mut passport, block);
+    input.split("\n\n").fold((0, 0), |(part_one, part_two), block| {
+        passport.clear();
+        passport
+            .extend(block.split([':', ' ', '\n']).chunk::<2>().filter(|&[key, _]| key != "cid"));
 
         if passport.len() == 7 {
-            part_one += 1;
-            part_two += passport.iter().all(validate_field) as u32;
+            (part_one + 1, part_two + passport.iter().all(validate_field) as u32)
+        } else {
+            (part_one, part_two)
         }
-
-        passport.clear();
-    }
-
-    (part_one, part_two)
+    })
 }
 
 pub fn part1(input: &Input) -> u32 {
@@ -35,10 +32,6 @@ pub fn part1(input: &Input) -> u32 {
 
 pub fn part2(input: &Input) -> u32 {
     input.1
-}
-
-fn parse_block<'a>(passport: &mut Vec<[&'a str; 2]>, block: &'a str) {
-    passport.extend(block.split([':', ' ', '\n']).chunk::<2>().filter(|&[key, _]| key != "cid"));
 }
 
 fn validate_field(&[key, value]: &[&str; 2]) -> bool {

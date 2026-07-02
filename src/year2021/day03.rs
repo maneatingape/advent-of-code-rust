@@ -47,14 +47,10 @@ pub fn parse(input: &str) -> Input {
 }
 
 pub fn part1(input: &Input) -> u32 {
-    let mut gamma = 0;
-    let mut epsilon = 0;
-
-    for &ones in &input.lanes {
+    let (gamma, epsilon) = input.lanes.iter().fold((0, 0), |(gamma, epsilon), &ones| {
         let zeros = input.entries - ones;
-        gamma = (gamma << 1) | u32::from(ones > zeros);
-        epsilon = (epsilon << 1) | u32::from(zeros > ones);
-    }
+        ((gamma << 1) | u32::from(ones > zeros), (epsilon << 1) | u32::from(zeros > ones))
+    });
 
     gamma * epsilon
 }

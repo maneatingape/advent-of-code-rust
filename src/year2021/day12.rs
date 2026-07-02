@@ -73,12 +73,10 @@ pub fn parse(input: &str) -> Input {
     let not_start = !(1 << START);
     edges.iter_mut().for_each(|edge| *edge &= not_start);
 
-    let mut small = 0;
-    for (key, value) in &indices {
-        if key.as_bytes()[0].is_ascii_lowercase() {
-            small |= 1 << value;
-        }
-    }
+    let small = indices
+        .iter()
+        .filter(|(key, _)| key.as_bytes()[0].is_ascii_lowercase())
+        .fold(0, |small, (_, index)| small | (1 << index));
 
     Input { small, edges }
 }

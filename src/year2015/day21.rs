@@ -60,10 +60,10 @@ pub fn parse(input: &str) -> Input {
     let mut combinations = Vec::with_capacity(22);
     combinations.push(Item { cost: 0, damage: 0, armor: 0 });
 
-    for i in 0..6 {
-        combinations.push(ring[i]);
-        for j in (i + 1)..6 {
-            combinations.push(ring[i] + ring[j]);
+    for (i, &first) in ring.iter().enumerate() {
+        combinations.push(first);
+        for &second in &ring[i + 1..] {
+            combinations.push(first + second);
         }
     }
 

@@ -27,7 +27,7 @@ type Input = (Stack, Vec<Move>);
 pub fn parse(input: &str) -> Input {
     let (prefix, suffix) = input.split_once("\n\n").unwrap();
     let lines: Vec<_> = prefix.lines().collect();
-    let width = (lines[0].len() + 1) / 4;
+    let width = lines[0].len().div_ceil(4);
 
     let mut stack: Stack = vec![Vec::new(); width];
     for row in lines.iter().rev().skip(1) {

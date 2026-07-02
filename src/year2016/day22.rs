@@ -80,29 +80,15 @@ pub fn part1(input: &[Node]) -> usize {
 }
 
 pub fn part2(input: &[Node]) -> u32 {
-    let mut width = 0;
-    let mut empty_x = 0;
-    let mut empty_y = 0;
-    let mut wall_x = u32::MAX;
-
-    for &Node { x, y, used } in input {
-        width = width.max(x + 1);
-
-        if used == 0 {
-            empty_x = x;
-            empty_y = y;
-        }
-
-        // Large nodes are bigger than 100T.
-        if used >= 100 {
-            wall_x = wall_x.min(x - 1);
-        }
-    }
+    let width = input.iter().map(|node| node.x).max().unwrap() + 1;
+    let empty = input.iter().find(|node| node.used == 0).unwrap();
+    // Large nodes are bigger than 100T.
+    let wall_x = input.iter().filter(|node| node.used >= 100).map(|node| node.x).min().unwrap() - 1;
 
     // Move left to avoid wall.
-    let a = empty_x - wall_x;
+    let a = empty.x - wall_x;
     // Move up to first row.
-    let b = empty_y;
+    let b = empty.y;
     // Move right to spot in front of data.
     let c = width - 2 - wall_x;
     // Move data into empty spot.

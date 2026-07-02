@@ -154,13 +154,12 @@ fn fight(input: &Input, boost: i32) -> (Kind, i32) {
         let mut killed = 0;
 
         for next in &mut attacks {
-            if let Some((kind, from, to)) = *next {
+            if let Some((kind, from, to)) = next.take() {
                 if kind == Kind::Immune {
                     killed += immune[from].attack(&mut infection[to]);
                 } else {
                     killed += infection[from].attack(&mut immune[to]);
                 }
-                *next = None;
             }
         }
 

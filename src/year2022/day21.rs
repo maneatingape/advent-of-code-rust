@@ -100,13 +100,11 @@ pub fn parse(input: &str) -> Input {
 }
 
 pub fn part1(input: &Input) -> i64 {
-    let Input { yell, root, .. } = input;
-    yell[*root]
+    input.yell[input.root]
 }
 
 pub fn part2(input: &Input) -> i64 {
-    let Input { root, .. } = input;
-    inverse(input, *root, -1)
+    inverse(input, input.root, -1)
 }
 
 /// Recursively compute the total following the tree structure all the way to the leaves.
