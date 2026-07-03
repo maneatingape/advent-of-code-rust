@@ -1,59 +1,68 @@
 //! # Rain Risk
 //!
-//! Our [`Point`] utility module comes in handy for this problem.
-//!
-//! [`Point`]: crate::util::point
+//! On this problem parsing takes almost all the time, so for maximum speed
+//! a custom parser solves both parts during a single pass over the input bytes
 use crate::util::parse::*;
 use crate::util::point::*;
 
-type Command = (u8, i32);
+type Input = (i32, i32);
 
-pub fn parse(input: &str) -> Vec<Command> {
-    input.lines().map(|line| (line.as_bytes()[0], (&line[1..]).signed())).collect()
-}
+pub fn parse(input: &str) -> Input {
+    let first = input.bytes().filter(u8::is_ascii_uppercase);
+    let second = input.iter_signed();
 
-pub fn part1(input: &[Command]) -> i32 {
-    let mut position = ORIGIN;
-    let mut direction = Point::new(1, 0);
-
-    for &(command, amount) in input {
-        match command {
-            b'N' => position.y -= amount,
-            b'S' => position.y += amount,
-            b'E' => position.x += amount,
-            b'W' => position.x -= amount,
-            b'L' => direction = rotate(direction, -amount),
-            b'R' => direction = rotate(direction, amount),
-            b'F' => position += direction * amount,
-            _ => unreachable!(),
-        }
-    }
-
-    position.manhattan(ORIGIN)
-}
-
-pub fn part2(input: &[Command]) -> i32 {
-    let mut position = ORIGIN;
+    let mut part_one = ORIGIN;
+    let mut part_two = ORIGIN;
+    let mut direction = RIGHT;
     let mut waypoint = Point::new(10, -1);
 
-    for &(command, amount) in input {
+    for (command, amount) in first.zip(second) {
         match command {
-            b'N' => waypoint.y -= amount,
-            b'S' => waypoint.y += amount,
-            b'E' => waypoint.x += amount,
-            b'W' => waypoint.x -= amount,
-            b'L' => waypoint = rotate(waypoint, -amount),
-            b'R' => waypoint = rotate(waypoint, amount),
-            b'F' => position += waypoint * amount,
+            b'N' => {
+                part_one.y -= amount;
+                waypoint.y -= amount;
+            }
+            b'S' => {
+                part_one.y += amount;
+                waypoint.y += amount;
+            }
+            b'E' => {
+                part_one.x += amount;
+                waypoint.x += amount;
+            }
+            b'W' => {
+                part_one.x -= amount;
+                waypoint.x -= amount;
+            }
+            b'L' => {
+                direction = rotate(direction, 360 - amount);
+                waypoint = rotate(waypoint, 360 - amount);
+            }
+            b'R' => {
+                direction = rotate(direction, amount);
+                waypoint = rotate(waypoint, amount);
+            }
+            b'F' => {
+                part_one += direction * amount;
+                part_two += waypoint * amount;
+            }
             _ => unreachable!(),
         }
     }
 
-    position.manhattan(ORIGIN)
+    (part_one.manhattan(ORIGIN), part_two.manhattan(ORIGIN))
+}
+
+pub fn part1(input: &Input) -> i32 {
+    input.0
+}
+
+pub fn part2(input: &Input) -> i32 {
+    input.1
 }
 
 fn rotate(point: Point, amount: i32) -> Point {
-    match amount.rem_euclid(360) {
+    match amount {
         90 => point.clockwise(),
         180 => point * -1,
         270 => point.counter_clockwise(),
