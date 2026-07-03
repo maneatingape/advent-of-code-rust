@@ -2,85 +2,55 @@
 //!
 //! On this problem parsing takes almost all the time, so for maximum speed
 //! a custom parser solves both parts during a single pass over the input bytes
-//!
+use crate::util::parse::*;
+use crate::util::point::*;
 
 type Input = (i32, i32);
 
-const DX: [i32; 4] = [1, 0, -1, 0];
-const DY: [i32; 4] = [0, 1, 0, -1];
-
 pub fn parse(input: &str) -> Input {
-    let mut inp = input.to_string();
-    if inp.as_bytes()[inp.len() - 1] != b'\n' {
-        inp.push('\n');
-    }
-    let bytes = inp.as_bytes();
-    let mut i = 0;
-    let mut x: i32 = 0;
-    let mut y: i32 = 0;
-    let mut direction: usize = 0;
-    let mut x2: i32 = 0;
-    let mut y2: i32 = 0;
-    let mut wx: i32 = 10; // Waypoint starts at E10, N1
-    let mut wy: i32 = -1;
+    let first = input.bytes().filter(u8::is_ascii_uppercase);
+    let second = input.iter_signed();
 
-    while i < bytes.len() {
-        let cmd = bytes[i];
-        i += 1;
-        let mut n: i32 = (bytes[i] - b'0') as i32;
-        i += 1;
-        while bytes[i] != b'\n' {
-            n = n * 10 + (bytes[i] - b'0') as i32;
-            i += 1;
-        }
-        i += 1; // skip the newline
-        match cmd {
+    let mut part_one = ORIGIN;
+    let mut part_two = ORIGIN;
+    let mut direction = RIGHT;
+    let mut waypoint = Point::new(10, -1);
+
+    for (command, amount) in first.zip(second) {
+        match command {
             b'N' => {
-                y -= n;
-                wy -= n;
+                part_one.y -= amount;
+                waypoint.y -= amount;
             }
             b'S' => {
-                y += n;
-                wy += n;
+                part_one.y += amount;
+                waypoint.y += amount;
             }
             b'E' => {
-                x += n;
-                wx += n;
+                part_one.x += amount;
+                waypoint.x += amount;
             }
             b'W' => {
-                x -= n;
-                wx -= n;
+                part_one.x -= amount;
+                waypoint.x -= amount;
             }
             b'L' => {
-                let mut ddir = n / 90;
-                direction = (direction + 4 - ddir as usize) & 3;
-                while ddir > 0 {
-                    (wx, wy) = (wy, -wx);
-                    ddir -= 1;
-                }
+                direction = rotate(direction, 360 - amount);
+                waypoint = rotate(waypoint, 360 - amount);
             }
             b'R' => {
-                let mut ddir = n / 90;
-                direction = (direction + ddir as usize) & 3;
-                while ddir > 0 {
-                    (wx, wy) = (-wy, wx);
-                    ddir -= 1;
-                }
+                direction = rotate(direction, amount);
+                waypoint = rotate(waypoint, amount);
             }
             b'F' => {
-                x += DX[direction] * n;
-                y += DY[direction] * n;
-                x2 += wx * n;
-                y2 += wy * n;
+                part_one += direction * amount;
+                part_two += waypoint * amount;
             }
-            _ => {
-                panic!("Bad command {cmd}")
-            }
+            _ => unreachable!(),
         }
     }
-    let part1 = x.abs() + y.abs();
-    let part2 = x2.abs() + y2.abs();
-    (part1, part2)
+
+    (part_one.manhattan(ORIGIN), part_two.manhattan(ORIGIN))
 }
 
 pub fn part1(input: &Input) -> i32 {
@@ -89,4 +59,13 @@ pub fn part1(input: &Input) -> i32 {
 
 pub fn part2(input: &Input) -> i32 {
     input.1
+}
+
+fn rotate(point: Point, amount: i32) -> Point {
+    match amount {
+        90 => point.clockwise(),
+        180 => point * -1,
+        270 => point.counter_clockwise(),
+        _ => unreachable!(),
+    }
 }
