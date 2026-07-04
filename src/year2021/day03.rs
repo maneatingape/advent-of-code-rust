@@ -64,13 +64,9 @@ pub fn part2(input: &Input) -> usize {
 
     // Perform a binary search over the tree.
     for _ in 0..*size {
-        ogr = 2 * ogr + if tree[ogr + 1] >= tree[ogr] { 2 } else { 0 };
-        csr =
-            2 * csr + if tree[csr + 1].wrapping_sub(1) < tree[csr].wrapping_sub(1) { 2 } else { 0 };
+        ogr = 2 * (ogr + usize::from(tree[ogr + 1] >= tree[ogr]));
+        csr = 2 * (csr + usize::from(tree[csr + 1].wrapping_sub(1) < tree[csr].wrapping_sub(1)));
     }
 
-    ogr = ogr / 2 - offset;
-    csr = csr / 2 - offset;
-
-    ogr * csr
+    (ogr / 2 - offset) * (csr / 2 - offset)
 }
