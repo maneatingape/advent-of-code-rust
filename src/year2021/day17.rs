@@ -98,9 +98,8 @@ pub fn part2(input: &Input) -> usize {
     let mut continuing = vec![0; max_t];
     let mut total = 0;
 
-    for dx in min_dx..max_dx {
+    for mut dx in min_dx..max_dx {
         let mut x = 0;
-        let mut dx = dx;
         let mut first = true;
 
         for t in 0..max_t {

@@ -260,17 +260,17 @@ fn detailed_check(known: &Located, scanner: &Scanner, points: [Point3D; 4]) -> O
             continue;
         };
 
-        let mut count = 0;
+        let count = scanner
+            .beacons
+            .iter()
+            .filter(|beacon| {
+                known.oriented.contains(&(beacon.transform(orientation) + translation))
+            })
+            .take(12)
+            .count();
 
-        for candidate in &scanner.beacons {
-            let point = candidate.transform(orientation) + translation;
-
-            if known.oriented.contains(&point) {
-                count += 1;
-                if count == 12 {
-                    return Some(Found { orientation, translation });
-                }
-            }
+        if count == 12 {
+            return Some(Found { orientation, translation });
         }
     }
 

@@ -45,7 +45,7 @@ pub fn part2(input: &Input) -> u32 {
 fn descramble(line: &str) -> [u32; 4] {
     let mut freq = [0_u8; 104];
     let bytes = line.as_bytes();
-    bytes[0..58].iter().for_each(|&b| freq[b as usize] += 1);
+    bytes[..58].iter().for_each(|&b| freq[b as usize] += 1);
     bytes[61..]
         .split(|&b| b == b' ')
         .map(|scrambled| to_digit(scrambled.iter().map(|&b| freq[b as usize]).sum()))

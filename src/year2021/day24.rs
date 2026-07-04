@@ -135,14 +135,12 @@ pub fn parse(input: &str) -> Vec<Constraint> {
             Push(value) => stack.push(Constraint { index, value }),
             Pop(second_value) => {
                 // Find the matching "push" instruction at the top of the stack.
-                let mut first = stack.pop().unwrap();
+                let first = stack.pop().unwrap();
                 // delta = k₁ + k₂
                 let delta = first.value + second_value;
                 // w₁ + delta = w₂ <=> w₁ = w₂ - delta
-                first.value = -delta;
-                let second = Constraint { index, value: delta };
-                constraints.push(first);
-                constraints.push(second);
+                constraints.push(Constraint { index: first.index, value: -delta });
+                constraints.push(Constraint { index, value: delta });
             }
         }
     }

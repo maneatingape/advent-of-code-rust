@@ -44,9 +44,7 @@ fn vents(input: &[[usize; 4]], grid: &mut [u8]) -> usize {
         let mut index = y1 * 1000 + x1;
 
         for _ in 0..count + 1 {
-            if grid[index as usize] == 1 {
-                result += 1;
-            }
+            result += usize::from(grid[index as usize] == 1);
             grid[index as usize] += 1;
             index += delta;
         }

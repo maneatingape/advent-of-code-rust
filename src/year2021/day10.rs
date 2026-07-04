@@ -27,8 +27,8 @@ pub fn parse(input: &str) -> Input {
         stack.clear();
     }
 
-    scores.sort_unstable();
-    let part_two = scores[scores.len() / 2];
+    let middle = scores.len() / 2;
+    let part_two = *scores.select_nth_unstable(middle).1;
 
     (part_one, part_two)
 }

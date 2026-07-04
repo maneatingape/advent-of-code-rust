@@ -22,11 +22,7 @@ pub struct Rule {
 
 impl Rule {
     fn parse([a, b, c]: [u8; 3]) -> Rule {
-        let from = pair(a, b);
-        let to_left = pair(a, c);
-        let to_right = pair(c, b);
-        let element = element(c);
-        Rule { from, to_left, to_right, element }
+        Rule { from: pair(a, b), to_left: pair(a, c), to_right: pair(c, b), element: element(c) }
     }
 }
 
