@@ -7,8 +7,10 @@
 //! We will use both approaches for speed, the first in part one and the second in part two.
 //!
 //! For part two we can determine the final size of the paper by taking the *last* x and y
-//! coordinates from the fold instructions. It's then faster and more convenient to process
-//! each point completely and update the final location, than to step through intermediate folds.
+//! coordinates from the fold instructions. Because each fold cuts the remaining paper in
+//! half, the layout of points that map to the same condensed positions is periodic. It's faster
+//! and more convenient to process each point completely using modular math to go straight to
+//! the condensed position without worrying about any intermediate folds.
 use crate::util::grid::*;
 use crate::util::hash::*;
 use crate::util::iter::*;
@@ -61,10 +63,17 @@ pub fn part2(input: &Input) -> String {
         Fold::Vertical(y) => (width, y),
     });
 
+    // All larger folds repeat a periodic mapping pattern given by the final fold.
     let mut grid = Grid::new(width + 1, height, '.');
+    let period_x = 2 * (width + 1);
+    let period_y = 2 * (height + 1);
 
     for &start in &input.points {
-        let end = input.folds.iter().fold(start, |point, &fold| apply_fold(fold, point));
+        let x = start.x % period_x;
+        let x = if x > width { period_x - x - 2 } else { x };
+        let y = start.y % period_y;
+        let y = if y > height { period_y - y - 2 } else { y };
+        let end = Point::new(x, y);
         grid[end + RIGHT] = '#';
     }
 
