@@ -22,7 +22,7 @@ pub trait Integer<T>:
     const ONE: T;
     const TEN: T;
 
-    fn trailing_zeros(self) -> u32;
+    fn lowest_one(self) -> Option<u32>;
     fn minmax(self, other: T) -> (T, T);
 }
 
@@ -38,8 +38,8 @@ macro_rules! integer {
             const TEN: $t = 10;
 
             #[inline]
-            fn trailing_zeros(self) -> u32 {
-                self.trailing_zeros()
+            fn lowest_one(self) -> Option<u32> {
+                self.lowest_one()
             }
 
             #[inline]

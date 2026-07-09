@@ -70,7 +70,7 @@ pub fn part2(input: &[usize]) -> String {
 /// ones in each interval to give the checksum.
 pub fn checksum(input: &[usize], disk_size: usize) -> String {
     // Determine how many blocks and how big each one is, by lowest 1-bit in disk_size.
-    let step_size = 1 << disk_size.trailing_zeros();
+    let step_size = disk_size.isolate_lowest_one();
     let blocks = disk_size / step_size;
 
     let counts: Vec<_> = (0..blocks + 1).map(|i| count(input, i * step_size)).collect();

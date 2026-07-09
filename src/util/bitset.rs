@@ -22,12 +22,8 @@ impl<T: Integer<T>> Iterator for Bitset<T> {
 
     #[inline]
     fn next(&mut self) -> Option<Self::Item> {
-        if self.t == T::ZERO {
-            None
-        } else {
-            let tz = self.t.trailing_zeros();
-            self.t = self.t ^ (T::ONE << tz);
-            Some(tz as usize)
-        }
+        let low = self.t.lowest_one()?;
+        self.t = self.t ^ (T::ONE << low);
+        Some(low as usize)
     }
 }

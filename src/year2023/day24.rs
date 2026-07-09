@@ -172,7 +172,7 @@ pub fn part2(input: &[[i64; 6]]) -> i128 {
     // If the times are different then we can extrapolate the original position of the rock.
     let t = (p3.y * s.x - p3.x * s.y) / (v3.x * s.y - v3.y * s.x);
     let u = (p4.y * s.x - p4.x * s.y) / (v4.x * s.y - v4.y * s.x);
-    assert!(t != u);
+    assert_ne!(t, u);
 
     // Calculate the original position of the rock, remembering to add the first hailstone's
     // position to convert back to absolute coordinates.

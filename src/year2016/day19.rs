@@ -49,8 +49,8 @@
 //!     n plus one = 011 = 3
 //! ```
 //!
-//! The [`ilog2`] function will return the number of zeroes before the highest one bit, for example
-//! `10.ilog2() = 3`. We can then shift a bit by that amount and subtract to get the result in
+//! The [`isolate_highest_one`] method returns just the highest one bit, for example
+//! `10.isolate_highest_one() = 8`. We can then subtract to get the result in
 //! constant `O(1)` time.
 //!
 //!
@@ -83,7 +83,7 @@
 //! There is also a closed form `O(1)` mathematical solution,
 //! called the n-cowboy shootout problem, described in [OEIS A334473](https://oeis.org/A334473).
 //!
-//! [`ilog2`]: u32::ilog2
+//! [`isolate_highest_one`]: u32::isolate_highest_one
 use crate::util::parse::*;
 
 pub fn parse(input: &str) -> u32 {
@@ -93,7 +93,7 @@ pub fn parse(input: &str) -> u32 {
 pub fn part1(input: &u32) -> u32 {
     let n = *input * 2;
     // Remove highest 1 bit, then add 1 for one-based indexing.
-    n - (1 << n.ilog2()) + 1
+    n - n.isolate_highest_one() + 1
 }
 
 pub fn part2(input: &u32) -> u32 {

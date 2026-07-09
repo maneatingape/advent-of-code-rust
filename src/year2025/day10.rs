@@ -94,7 +94,7 @@ fn configure_lights(machine: &Machine) -> u32 {
 
     let nullity = height - rank;
     let particular_solution = (0..rank).fold(0, |particular_solution, row| {
-        let mask = 1 << h[row].trailing_zeros();
+        let mask = h[row].isolate_lowest_one();
         particular_solution ^ if lights & mask == 0 { 0 } else { u[row] }
     });
 
