@@ -35,7 +35,6 @@ pub struct Grid<T> {
 }
 
 impl Grid<u8> {
-    #[inline]
     #[must_use]
     pub fn parse(input: &str) -> Self {
         let raw: Vec<_> = input.lines().map(str::as_bytes).collect();
@@ -60,13 +59,12 @@ impl Grid<u8> {
 }
 
 impl<T: Copy + PartialEq> Grid<T> {
-    #[inline]
     #[must_use]
     pub fn find(&self, needle: T) -> Option<Point> {
-        self.bytes.iter().position(|&h| h == needle).map(|index| {
-            let index = index as i32;
-            Point::new(index % self.width, index / self.width)
-        })
+        self.bytes
+            .iter()
+            .position(|&h| h == needle)
+            .map(|index| Point::new(index as i32 % self.width, index as i32 / self.width))
     }
 }
 
@@ -75,19 +73,14 @@ impl<T: Copy> Grid<T> {
     pub fn new(width: i32, height: i32, value: T) -> Grid<T> {
         Grid { width, height, bytes: vec![value; (width * height) as usize] }
     }
+
+    #[must_use]
+    pub fn same_size_with<U: Copy>(&self, value: U) -> Grid<U> {
+        Grid::new(self.width, self.height, value)
+    }
 }
 
 impl<T> Grid<T> {
-    #[inline]
-    #[must_use]
-    pub fn same_size_with<U: Copy>(&self, value: U) -> Grid<U> {
-        Grid {
-            width: self.width,
-            height: self.height,
-            bytes: vec![value; (self.width * self.height) as usize],
-        }
-    }
-
     #[inline]
     #[must_use]
     pub fn contains(&self, point: Point) -> bool {
