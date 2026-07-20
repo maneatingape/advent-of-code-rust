@@ -25,7 +25,7 @@
 //! This means that we can store each snailfish number as an implicit data structure in a fixed-size
 //! array. This is faster, smaller and more convenient than using a traditional struct with pointers.
 //! The root node is stored at index 0. For a node at index `i` its left child is at index
-//! `2i + 1`, right child at index `2i + 2` and parent at index `i / 2`. As leaf nodes are
+//! `2i + 1`, right child at index `2i + 2` and parent at index `(i - 1) / 2`. As leaf nodes are
 //! always greater than or equal to zero, `-1` is used as a special sentinel value for non-leaf nodes.
 use crate::util::parse::*;
 use crate::util::thread::*;
