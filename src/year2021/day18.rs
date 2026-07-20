@@ -24,19 +24,19 @@
 //!
 //! This means that we can store each snailfish number as an implicit data structure in a fixed-size
 //! array. This is faster, smaller and more convenient than using a traditional struct with pointers.
-//! The root node is stored at index 0. For a node at index `i` its left child is at index
-//! `2i + 1`, right child at index `2i + 2` and parent at index `i / 2`. As leaf nodes are
+//! The root node is stored at index 1 (index 0 is unused). For a node at index `i` its left child
+//! is at index `2i`, right child at index `2i + 1` and parent at index `i / 2`. As leaf nodes are
 //! always greater than or equal to zero, `-1` is used as a special sentinel value for non-leaf nodes.
 use crate::util::parse::*;
 use crate::util::thread::*;
 
-type Snailfish = [i32; 63];
+type Snailfish = [i32; 64];
 
 /// The indices for [in-order traversal](https://en.wikipedia.org/wiki/Tree_traversal) of the first
 /// 4 levels of the implicit binary tree stored in an array.
 const IN_ORDER: [usize; 30] = [
-    1, 3, 7, 15, 16, 8, 17, 18, 4, 9, 19, 20, 10, 21, 22, 2, 5, 11, 23, 24, 12, 25, 26, 6, 13, 27,
-    28, 14, 29, 30,
+    2, 4, 8, 16, 17, 9, 18, 19, 5, 10, 20, 21, 11, 22, 23, 3, 6, 12, 24, 25, 13, 26, 27, 7, 14, 28,
+    29, 15, 30, 31,
 ];
 
 /// Parse a snailfish number into an implicit binary tree stored in an array.
@@ -47,14 +47,14 @@ const IN_ORDER: [usize; 30] = [
 /// with that value.
 pub fn parse(input: &str) -> Vec<Snailfish> {
     fn helper(bytes: &[u8]) -> Snailfish {
-        let mut tree = [-1; 63];
-        let mut i = 0;
+        let mut tree = [-1; 64];
+        let mut i = 1;
 
         for &b in bytes {
             match b {
-                b'[' => i = 2 * i + 1,
+                b'[' => i *= 2,
                 b',' => i += 1,
-                b']' => i = (i - 1) / 2,
+                b']' => i /= 2,
                 b => tree[i] = b.to_decimal() as i32,
             }
         }
@@ -102,19 +102,19 @@ fn worker(iter: ParIter<'_, (&Snailfish, &Snailfish)>) -> i32 {
 /// pair will be 4 levels deep simultaneously, so we can sweep from left to right on all possible
 /// leaf nodes in one pass.
 fn add(left: &Snailfish, right: &Snailfish) -> Snailfish {
-    let mut tree = [-1; 63];
+    let mut tree = [-1; 64];
 
-    tree[3..5].copy_from_slice(&left[1..3]);
-    tree[7..11].copy_from_slice(&left[3..7]);
-    tree[15..23].copy_from_slice(&left[7..15]);
-    tree[31..47].copy_from_slice(&left[15..31]);
+    tree[4..6].copy_from_slice(&left[2..4]);
+    tree[8..12].copy_from_slice(&left[4..8]);
+    tree[16..24].copy_from_slice(&left[8..16]);
+    tree[32..48].copy_from_slice(&left[16..32]);
 
-    tree[5..7].copy_from_slice(&right[1..3]);
-    tree[11..15].copy_from_slice(&right[3..7]);
-    tree[23..31].copy_from_slice(&right[7..15]);
-    tree[47..63].copy_from_slice(&right[15..31]);
+    tree[6..8].copy_from_slice(&right[2..4]);
+    tree[12..16].copy_from_slice(&right[4..8]);
+    tree[24..32].copy_from_slice(&right[8..16]);
+    tree[48..64].copy_from_slice(&right[16..32]);
 
-    for pair in (31..63).step_by(2) {
+    for pair in (32..64).step_by(2) {
         if tree[pair] >= 0 {
             explode(&mut tree, pair);
         }
@@ -131,34 +131,34 @@ fn add(left: &Snailfish, right: &Snailfish) -> Snailfish {
 /// subtracting one from the index. If this node is empty then we move to the parent node until we
 /// find a leaf node.
 ///
-/// The leaf node at index 31 has no possible nodes to the left and similarly the leaf node at
-/// index 62 has no possible nodes to the right.
+/// The leaf node at index 32 has no possible nodes to the left and similarly the leaf node at
+/// index 63 has no possible nodes to the right.
 fn explode(tree: &mut Snailfish, pair: usize) {
-    if pair > 31 {
+    if pair > 32 {
         let mut i = pair - 1;
         loop {
             if tree[i] >= 0 {
                 tree[i] += tree[pair];
                 break;
             }
-            i = (i - 1) / 2;
+            i /= 2;
         }
     }
 
-    if pair < 61 {
+    if pair < 62 {
         let mut i = pair + 2;
         loop {
             if tree[i] >= 0 {
                 tree[i] += tree[pair + 1];
                 break;
             }
-            i = (i - 1) / 2;
+            i /= 2;
         }
     }
 
     tree[pair] = -1;
     tree[pair + 1] = -1;
-    tree[(pair - 1) / 2] = 0;
+    tree[pair / 2] = 0;
 }
 
 /// Split a node into two child nodes.
@@ -170,12 +170,12 @@ fn explode(tree: &mut Snailfish, pair: usize) {
 fn split(tree: &mut Snailfish) -> bool {
     for &i in &IN_ORDER {
         if tree[i] >= 10 {
-            tree[2 * i + 1] = tree[i] / 2;
-            tree[2 * i + 2] = (tree[i] + 1) / 2;
+            tree[2 * i] = tree[i] / 2;
+            tree[2 * i + 1] = (tree[i] + 1) / 2;
             tree[i] = -1;
 
-            if i >= 15 {
-                explode(tree, 2 * i + 1);
+            if i >= 16 {
+                explode(tree, 2 * i);
             }
             return true;
         }
@@ -188,10 +188,10 @@ fn split(tree: &mut Snailfish) -> bool {
 /// This operation is destructive but much faster than using a recursive approach and acceptable
 /// as we no longer need the original snailfish number afterward.
 fn magnitude(tree: &mut Snailfish) -> i32 {
-    for i in (0..31).rev() {
+    for i in (1..32).rev() {
         if tree[i] == -1 {
-            tree[i] = 3 * tree[2 * i + 1] + 2 * tree[2 * i + 2];
+            tree[i] = 3 * tree[2 * i] + 2 * tree[2 * i + 1];
         }
     }
-    tree[0]
+    tree[1]
 }
