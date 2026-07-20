@@ -40,7 +40,7 @@ pub fn parse(input: &str) -> Vec<Basin> {
         }
     }
 
-    // Note that select_nth_unstable will partition the array faster than a full sort; with the
+    // Note that select_nth_unstable will partition the array faster than a full sort, with the
     // partition in place, the final three elements are the largest.
     let pivot = basins.len() - 3;
     basins.select_nth_unstable_by_key(pivot, |b| b.size);
