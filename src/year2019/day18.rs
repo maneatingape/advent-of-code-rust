@@ -5,9 +5,17 @@
 //! keys and the edge weight is the distance between keys. Doors modify which edges
 //! are connected depending on the keys currently possessed.
 //!
-//! We first find the distance between every pair of keys then run
-//! [Dijkstra's algorithm](https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm) to find the
-//! shortest path that visits every node in the graph.
+//! We first find the distance between every pair of keys then run the
+//! [A* algorithm](https://en.wikipedia.org/wiki/A*_search_algorithm) to find the
+//! shortest path that visits every node in the graph. One heuristic is a constant-time query
+//! of the sum of the minimum path length out of all remaining keys (updated by subtraction
+//! as a key is visited), which works well for part one when there is only one robot that must
+//! visit every remaining node, but underestimates for part two. Another heuristic is a linear-time
+//! query of the maximum distance each robot must travel to reach the furthest remaining key. This
+//! latter query is expensive enough that it penalizes part one, but its improved accuracy prunes
+//! more states in part two than the extra time spent on computing the heuristic. Both heuristics
+//! are consistent, in that they never overestimate, so no state will lower its score after
+//! the initial visit, and the heuristic reaches zero at the goal.
 //!
 //! The maze is also constructed in such a way to make our life easier:
 //! * There is only ever one possible path to each key. We do not need to consider
@@ -69,14 +77,20 @@ struct Door {
     needed: u32,
 }
 
+type Matrix = [[Door; 30]; 30];
+
 /// `initial` is the complete set of keys that we need to collect. Will always be binary
 /// `11111111111111111111111111` for the real input but fewer for sample data.
 ///
-/// `maze` is the adjacency of distances and doors between each pair of keys and the robots
+/// `masks` maps the set of keys in the same quadrant, for prefiltering in part 2.
+/// `minimum` is the smallest distance from a key to any of its neighbors, for the A* heuristic.
+/// `matrix` is the adjacency of distances and doors between each pair of keys and the robots'
 /// starting locations.
 struct Maze {
     initial: State,
-    maze: [[Door; 30]; 30],
+    masks: [u32; 30],
+    minimum: [u32; 26],
+    matrix: Matrix,
 }
 
 pub fn parse(input: &str) -> Grid<u8> {
@@ -84,7 +98,8 @@ pub fn parse(input: &str) -> Grid<u8> {
 }
 
 pub fn part1(input: &Grid<u8>) -> u32 {
-    explore(input.width as usize, &input.bytes)
+    // Select the O(1) A* heuristic, since there is only one robot visiting all keys.
+    explore::<false>(input.width as usize, &input.bytes)
 }
 
 pub fn part2(input: &Grid<u8>) -> u32 {
@@ -99,34 +114,50 @@ pub fn part2(input: &Grid<u8>) -> u32 {
     patch("###", 0);
     patch("@#@", 1);
 
-    explore(input.width as usize, &modified)
+    // Select the O(n) A* heuristic, since each robot vists about one-fourth of the keys.
+    explore::<true>(input.width as usize, &modified)
 }
 
 fn parse_maze(width: usize, bytes: &[u8]) -> Maze {
     let mut initial = State::default();
     let mut found = Vec::new();
     let mut robots = 26;
+    let mut quadrants = [0_u32; 4];
 
     // Find the location of every key and robot in the maze.
+    // Sort keys into quadrants based on location compared to the midpoint.
+    assert_eq!(width % 2, 1);
+    assert_eq!((bytes.len() / width) % 2, 1);
     for (i, &b) in bytes.iter().enumerate() {
+        let quad =
+            2 * (i / width < bytes.len() / width / 2) as usize + (i % width < width / 2) as usize;
         if let Some(key) = is_key(b) {
             initial.remaining |= 1 << key;
+            quadrants[quad] |= 1 << key;
             found.push((i, key));
         }
         if b == b'@' {
             initial.position |= 1 << robots;
+            quadrants[quad] |= 1 << robots;
             found.push((i, robots));
             robots += 1;
         }
+    }
+    if robots == 27 {
+        quadrants[0] |= quadrants[1] | quadrants[2] | quadrants[3];
+        quadrants[1] = 0;
+        quadrants[2] = 0;
+        quadrants[3] = 0;
     }
 
     // Start a BFS from each key and robot's location stopping at the nearest neighbor.
     // As a minor optimization we reuse the same `todo` and `seen` between each search.
     let default = Door { distance: u32::MAX, needed: 0 };
 
-    let mut maze = [[default; 30]; 30];
+    let mut matrix = [[default; 30]; 30];
     let mut seen = vec![usize::MAX; bytes.len()];
     let mut todo = VecDeque::new();
+    let mut masks = [0; 30];
 
     for (start, from) in found {
         todo.push_front((start, 0, 0));
@@ -141,8 +172,8 @@ fn parse_maze(width: usize, bytes: &[u8]) -> Maze {
                 && distance > 0
             {
                 // Store the reciprocal edge weight and doors in the adjacency matrix.
-                maze[from][to] = Door { distance, needed };
-                maze[to][from] = Door { distance, needed };
+                matrix[from][to] = Door { distance, needed };
+                matrix[to][from] = Door { distance, needed };
                 // Faster to stop here and use Floyd-Warshall later.
                 continue;
             }
@@ -159,48 +190,75 @@ fn parse_maze(width: usize, bytes: &[u8]) -> Maze {
     // Fill in the rest of the graph using the Floyd-Warshall algorithm.
     // As a slight twist we also build the list of intervening doors at the same time.
     for i in RANGE {
-        maze[i][i].distance = 0;
+        matrix[i][i].distance = 0;
+        for mask in quadrants {
+            if mask & (1 << i) != 0 {
+                masks[i] = mask;
+            }
+        }
     }
 
     for k in RANGE {
         for i in RANGE {
             for j in RANGE {
-                let candidate = maze[i][k].distance.saturating_add(maze[k][j].distance);
-                if maze[i][j].distance > candidate {
-                    maze[i][j].distance = candidate;
+                let candidate = matrix[i][k].distance.saturating_add(matrix[k][j].distance);
+                if matrix[i][j].distance > candidate {
+                    matrix[i][j].distance = candidate;
                     // `(1 << k)` is a crucial optimization. By treating intermediate keys like
                     // doors we speed things up by a factor of 30.
-                    maze[i][j].needed = maze[i][k].needed | (1 << k) | maze[k][j].needed;
+                    matrix[i][j].needed = matrix[i][k].needed | (1 << k) | matrix[k][j].needed;
                 }
             }
         }
     }
 
-    Maze { initial, maze }
+    let mut minimum = [0; 26];
+    for i in initial.remaining.biterator() {
+        minimum[i] = matrix[i]
+            .iter()
+            .take(initial.remaining.count_ones() as usize)
+            .map(|d| d.distance)
+            .filter(|&dist| dist > 0)
+            .min()
+            .unwrap_or(0);
+    }
+
+    Maze { initial, masks, minimum, matrix }
 }
 
-fn explore(width: usize, bytes: &[u8]) -> u32 {
+// Same algorithm, but specialized on which heuristic to use.
+fn explore<const PART_TWO: bool>(width: usize, bytes: &[u8]) -> u32 {
     let mut todo = MinHeap::with_capacity(5_000);
     let mut cache = FastMap::with_capacity(5_000);
 
-    let Maze { initial, maze } = parse_maze(width, bytes);
-    todo.push(0, initial);
+    let Maze { initial, masks, minimum, matrix } = parse_maze(width, bytes);
+    let heur = if PART_TWO { heuristic(initial, &masks, &matrix) } else { minimum.iter().sum() };
+    todo.push(heur, (initial, heur));
 
-    while let Some((total, State { position, remaining })) = todo.pop() {
+    while let Some((guess, (State { position, remaining }, heur))) = todo.pop() {
+        let total = guess - heur;
         // Finish immediately if no keys left.
-        // Since we're using Dijkstra this will always be the optimal solution.
+        // Since we're using A* with a consistent heuristic this will always be the optimal solution.
         if remaining == 0 {
             return total;
+        }
+
+        // Avoid next-neighbor checks if this state was visited in the meantime by a better path.
+        if let Some(&best) = cache.get(&State { position, remaining })
+            && total > best
+        {
+            continue;
         }
 
         // The set of robots is stored as bits in a `u32` shifted by the index of the location.
         for from in position.biterator() {
             // The set of keys still needed is also stored as bits in a `u32` similarly to robots.
-            for to in remaining.biterator() {
-                let Door { distance, needed } = maze[from][to];
+            // Filter the list of destinations to keys in the same quadrant.
+            for to in (remaining & masks[from]).biterator() {
+                let Door { distance, needed } = matrix[from][to];
 
-                // u32::MAX indicates that two nodes are not connected. Only possible in part two.
-                if distance != u32::MAX && remaining & needed == 0 {
+                // Don't move to a key that still has unmet dependencies.
+                if remaining & needed == 0 {
                     let next_total = total + distance;
                     let from_mask = 1 << from;
                     let to_mask = 1 << to;
@@ -213,7 +271,13 @@ fn explore(width: usize, bytes: &[u8]) -> u32 {
                     let best = cache.entry(next_state).or_insert(u32::MAX);
                     if next_total < *best {
                         *best = next_total;
-                        todo.push(next_total, next_state);
+                        let next_heur = if PART_TWO {
+                            heuristic(next_state, &masks, &matrix)
+                        } else {
+                            heur - minimum[to]
+                        };
+                        let next_guess = next_total + next_heur;
+                        todo.push(next_guess, (next_state, next_heur));
                     }
                 }
             }
@@ -230,4 +294,19 @@ fn is_key(b: u8) -> Option<usize> {
 
 fn is_door(b: u8) -> Option<usize> {
     b.is_ascii_uppercase().then(|| (b - b'A') as usize)
+}
+
+// Compute part two heuristic of the sum of the furthest key remaining per robot. For part one,
+// rely on the faster but weaker O(1) tracking of the sum of all minimum legs.
+fn heuristic(state: State, masks: &[u32], matrix: &Matrix) -> u32 {
+    let mut heur = 0;
+
+    for bot in state.position.biterator() {
+        let mut dist = 0;
+        for key in (state.remaining & masks[bot]).biterator() {
+            dist = dist.max(matrix[bot][key].distance);
+        }
+        heur += dist;
+    }
+    heur
 }
