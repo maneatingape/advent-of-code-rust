@@ -29,12 +29,16 @@ pub fn part1(input: &Input) -> u64 {
 }
 
 /// Split the route into 3 segments. The answer is the number of paths in each segment
-/// *multiplied* by each other. In the actual input, one of these paths will not be possible and will
-/// have zero total count.
+/// *multiplied* by each other. Since the input is an acyclic directed graph (DAG),
+/// only one of these paths will be possible
 pub fn part2(input: &Input) -> u64 {
-    let one = paths(input, "svr", "fft") * paths(input, "fft", "dac") * paths(input, "dac", "out");
-    let two = paths(input, "svr", "dac") * paths(input, "dac", "fft") * paths(input, "fft", "out");
-    one + two
+    let fft_to_dac =  paths(input, "fft", "dac");
+    // if 'fft' can reach 'dac', then 'dac' cannot reach 'fft'
+    if fft_to_dac == 0 {
+        paths(input, "svr", "dac") * paths(input, "dac", "fft") * paths(input, "fft", "out")
+    } else {
+        paths(input, "svr", "fft") * fft_to_dac * paths(input, "dac", "out")
+    }
 }
 
 fn paths(input: &Input, from: &str, to: &str) -> u64 {
