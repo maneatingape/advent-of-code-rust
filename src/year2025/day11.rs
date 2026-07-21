@@ -32,7 +32,7 @@ pub fn part1(input: &Input) -> u64 {
 /// *multiplied* by each other. Since the input is an acyclic directed graph (DAG),
 /// only one of these paths will be possible
 pub fn part2(input: &Input) -> u64 {
-    let fft_to_dac =  paths(input, "fft", "dac");
+    let fft_to_dac = paths(input, "fft", "dac");
     // if 'fft' can reach 'dac', then 'dac' cannot reach 'fft'
     if fft_to_dac == 0 {
         paths(input, "svr", "dac") * paths(input, "dac", "fft") * paths(input, "fft", "out")
