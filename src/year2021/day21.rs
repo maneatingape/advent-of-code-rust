@@ -19,11 +19,24 @@ pub fn parse(input: &str) -> State {
 
 /// The initial deterministic dice roll total is 6 (1 + 2 + 3) and increases by 9 each turn.
 /// An interesting observation is that since the player's position is always modulo 10, we can
-/// also increase the dice total modulo 10, as (a + b) % 10 = (a % 10) + (b % 10).
+/// also increase the dice total modulo 10, as (a + b) % 10 = (a % 10) + (b % 10). Additionally,
+/// both players end up back in the same position every 10 moves, so we can compute the score per
+/// batch of 10 moves before simulating only the remainder.
 pub fn part1(input: &State) -> usize {
     let mut state = *input;
     let mut dice = 6;
-    let mut rolls = 0;
+    let ((player_position, _), (other_position, _)) = state;
+
+    // Utilize the periodic visitation pattern to compute the 10-turn score increase per player.
+    let batch_score = |position, offsets: &[usize]| -> usize {
+        offsets.iter().map(|offset| (position + offset) % 10 + 1).sum()
+    };
+    let player_batch = batch_score(player_position, &[6, 0, 2, 2, 0, 6, 0, 2, 2, 0]);
+    let other_batch = batch_score(other_position, &[5, 8, 9, 8, 5, 0, 3, 4, 3, 0]);
+
+    let batches = 999 / player_batch.max(other_batch);
+    let mut rolls = batches * 60; // 2 players * 3 dice * 10 turns per batch.
+    state = ((player_position, player_batch * batches), (other_position, other_batch * batches));
 
     loop {
         // Player position is 0 based from 0 to 9, but score is 1 based from 1 to 10.
@@ -67,7 +80,8 @@ fn dirac(state: State, cache: &mut [Option<Pair>]) -> Pair {
     }
 
     let helper = |(win, lose), &(dice, frequency)| {
-        let next_position = (player_position + dice) % 10;
+        let advance = player_position + dice;
+        let next_position = if advance >= 10 { advance - 10 } else { advance };
         let next_score = player_score + next_position + 1;
 
         if next_score >= 21 {
