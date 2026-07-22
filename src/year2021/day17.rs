@@ -122,6 +122,11 @@ pub fn part2(input: &Input) -> usize {
     for mut dy in min_dy..max_dy {
         let mut y = 0;
         let mut t = 0;
+        // Skip the positive arc, assuming top is negative.
+        if dy > 0 {
+            t = 2 * dy as usize + 1;
+            dy = -dy - 1;
+        }
         let mut first = true;
 
         while y >= bottom {
