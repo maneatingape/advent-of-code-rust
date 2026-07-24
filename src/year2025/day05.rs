@@ -7,9 +7,10 @@
 //! however this is slow. It's much faster instead to first sort IDs in ascending order,
 //! then for each range use a [binary search](https://en.wikipedia.org/wiki/Binary_search) to count
 //! the number of IDs that it contains. Rust even provides a handy built-in
-//! [`binary_search`] method on slices.
+//! [`partition_point`] method on slices that returns the index of the first ID not less than
+//! a given value.
 //!
-//! [`binary_search`]: https://doc.rust-lang.org/std/primitive.slice.html#method.binary_search
+//! [`partition_point`]: https://doc.rust-lang.org/std/primitive.slice.html#method.partition_point
 use crate::util::iter::*;
 use crate::util::parse::*;
 use std::ops::Range;
@@ -42,7 +43,7 @@ pub fn parse(input: &str) -> Input {
 
 pub fn part1(input: &Input) -> usize {
     let (merged, ids) = input;
-    let position = |id: u64| ids.binary_search(&id).unwrap_or_else(|e| e);
+    let position = |id| ids.partition_point(|&next| next < id);
     merged.iter().map(|range| position(range.end) - position(range.start)).sum()
 }
 

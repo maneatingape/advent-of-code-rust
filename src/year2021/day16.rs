@@ -91,37 +91,29 @@ pub fn parse(input: &str) -> Packet {
 }
 
 pub fn part1(packet: &Packet) -> u64 {
-    fn helper(packet: &Packet) -> u64 {
-        match packet {
-            Packet::Literal { version, .. } => *version,
-            Packet::Operator { version, packets, .. } => {
-                *version + packets.iter().map(helper).sum::<u64>()
-            }
+    match packet {
+        Packet::Literal { version, .. } => *version,
+        Packet::Operator { version, packets, .. } => {
+            *version + packets.iter().map(part1).sum::<u64>()
         }
     }
-
-    helper(packet)
 }
 
 pub fn part2(packet: &Packet) -> u64 {
-    fn helper(packet: &Packet) -> u64 {
-        match packet {
-            Packet::Literal { value, .. } => *value,
-            Packet::Operator { type_id, packets, .. } => {
-                let mut iter = packets.iter().map(helper);
-                match type_id {
-                    0 => iter.sum(),
-                    1 => iter.product(),
-                    2 => iter.min().unwrap(),
-                    3 => iter.max().unwrap(),
-                    5 => u64::from(iter.next().unwrap() > iter.next().unwrap()),
-                    6 => u64::from(iter.next().unwrap() < iter.next().unwrap()),
-                    7 => u64::from(iter.next().unwrap() == iter.next().unwrap()),
-                    _ => unreachable!(),
-                }
+    match packet {
+        Packet::Literal { value, .. } => *value,
+        Packet::Operator { type_id, packets, .. } => {
+            let mut iter = packets.iter().map(part2);
+            match type_id {
+                0 => iter.sum(),
+                1 => iter.product(),
+                2 => iter.min().unwrap(),
+                3 => iter.max().unwrap(),
+                5 => u64::from(iter.next().unwrap() > iter.next().unwrap()),
+                6 => u64::from(iter.next().unwrap() < iter.next().unwrap()),
+                7 => u64::from(iter.next().unwrap() == iter.next().unwrap()),
+                _ => unreachable!(),
             }
         }
     }
-
-    helper(packet)
 }

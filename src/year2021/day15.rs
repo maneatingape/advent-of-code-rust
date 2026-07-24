@@ -104,28 +104,29 @@ fn build_estimates(square: &Square) -> Vec<u32> {
     // Visit the grid by diagonals, starting closest to the target.
     for diag in (1..edge * 2).rev() {
         let mut best_diag = u32::MAX - 18;
-        let range: Vec<usize> = (diag.saturating_sub(edge)..edge.min(diag) + 1).collect();
+        let start = diag.saturating_sub(edge);
+        let end = edge.min(diag) + 1;
 
         // For each tile crawling up and right, select the minimum between its lower neighbor,
         // its right neighbor, or the minimum Manhattan distance to any earlier node on the diagonal.
-        for &col in &range {
+        for col in start..end {
             let row = diag - col;
             let value =
                 estimate[coord(col + 1, row)].min(estimate[coord(col, row + 1)]).min(best_diag + 2)
                     + bytes[coord(col, row)] as u32;
             estimate[coord(col, row)] = value;
-            best_diag = if best_diag + 2 < value { best_diag + 2 } else { value };
+            best_diag = (best_diag + 2).min(value);
         }
 
         // For each tile crawling down and left, also check for the minimum Manhattan distance from
         // any better node earlier on the diagonal.
         best_diag = u32::MAX - 18;
-        for &col in range.iter().rev() {
+        for col in (start..end).rev() {
             let row = diag - col;
             let value =
                 estimate[coord(col, row)].min(best_diag + 2 + bytes[coord(col, row)] as u32);
             estimate[coord(col, row)] = value;
-            best_diag = if best_diag + 2 < value { best_diag + 2 } else { value };
+            best_diag = (best_diag + 2).min(value);
         }
     }
 

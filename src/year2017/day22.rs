@@ -136,12 +136,9 @@ pub fn part2(input: &Grid<u8>) -> usize {
 
     // Handle up to 8 remaining steps individually to prevent overcounting.
     for _ in 0..remaining {
-        let [next_index, next_quadrant, next_direction, next_infected] =
-            step(&mut grid, index, quadrant, direction);
-        index = next_index;
-        quadrant = next_quadrant;
-        direction = next_direction;
-        infected += next_infected;
+        let delta;
+        [index, quadrant, direction, delta] = step(&mut grid, index, quadrant, direction);
+        infected += delta;
     }
 
     infected
@@ -159,12 +156,9 @@ fn compute_block(grid: &mut [u8], mut quadrant: usize, mut direction: usize, sta
 
     // Count steps and infected nodes until we leave this cell.
     while index == CENTER {
-        let [next_index, next_quadrant, next_direction, next_infected] =
-            step(grid, index, quadrant, direction);
-        index = next_index;
-        quadrant = next_quadrant;
-        direction = next_direction;
-        infected += next_infected;
+        let delta;
+        [index, quadrant, direction, delta] = step(grid, index, quadrant, direction);
+        infected += delta;
         steps += 1;
     }
 

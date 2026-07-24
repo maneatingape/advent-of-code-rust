@@ -21,13 +21,18 @@ pub fn part1(input: &[i32]) -> i32 {
 }
 
 pub fn part2(input: &[i32]) -> i32 {
-    let mean = mean(input);
-    let triangle = |x: i32, mean: i32| {
-        let n = (x - mean).abs();
-        (n * (n + 1)) / 2
+    let fuel = |target: i32| -> i32 {
+        input
+            .iter()
+            .map(|x| {
+                let n = (x - target).abs();
+                (n * (n + 1)) / 2
+            })
+            .sum()
     };
 
-    (0..=1).map(|delta| input.iter().map(|&x| triangle(x, mean + delta)).sum()).min().unwrap()
+    let mean = mean(input);
+    fuel(mean).min(fuel(mean + 1))
 }
 
 fn median(input: &[i32]) -> i32 {
@@ -39,6 +44,5 @@ fn median(input: &[i32]) -> i32 {
 }
 
 fn mean(input: &[i32]) -> i32 {
-    let sum: i32 = input.iter().sum();
-    sum / (input.len() as i32)
+    input.iter().sum::<i32>() / (input.len() as i32)
 }

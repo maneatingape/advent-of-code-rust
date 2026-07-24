@@ -82,13 +82,6 @@
 //!     add z y     | z = z                 | z = (26 * z) + (w + 4)    |
 //! ```
 use crate::util::parse::*;
-use Block::*;
-
-/// Blocks are either "push" or "pop".
-enum Block {
-    Push(i32),
-    Pop(i32),
-}
 
 /// Convert matching pairs of blocks into constraints.
 /// For the first digit `value` is `-(k₁ + k₂)` and second digit value is `k₁ + k₂`.
@@ -110,38 +103,26 @@ impl Constraint {
 
 pub fn parse(input: &str) -> Vec<Constraint> {
     let lines: Vec<_> = input.lines().collect();
-    let blocks: Vec<_> = lines
-        .chunks(18)
-        .map(|chunk| {
-            // Parse the last token on the specified line within a block.
-            let helper = |i: usize| chunk[i].split_ascii_whitespace().last().unwrap().signed();
-            // The 5th instruction in "push" blocks is always a `div z 1`
-            // that we can use to figure out what type of block we're dealing with.
-            if helper(4) == 1 {
-                // `k₁` is always located at the 16th instruction.
-                Push(helper(15))
-            } else {
-                // `k₂` is always located at the 6th instruction.
-                Pop(helper(5))
-            }
-        })
-        .collect();
-
     let mut stack = Vec::new();
     let mut constraints = Vec::new();
 
-    for (index, block) in blocks.into_iter().enumerate() {
-        match block {
-            Push(value) => stack.push(Constraint { index, value }),
-            Pop(second_value) => {
-                // Find the matching "push" instruction at the top of the stack.
-                let first = stack.pop().unwrap();
-                // delta = k₁ + k₂
-                let delta = first.value + second_value;
-                // w₁ + delta = w₂ <=> w₁ = w₂ - delta
-                constraints.push(Constraint { index: first.index, value: -delta });
-                constraints.push(Constraint { index, value: delta });
-            }
+    for (index, block) in lines.chunks(18).enumerate() {
+        // Parse the last token on the specified line within a block.
+        let helper = |i: usize| block[i].split_ascii_whitespace().last().unwrap().signed();
+
+        // The 5th instruction in "push" blocks is always a `div z 1`
+        // that we can use to figure out what type of block we're dealing with.
+        if helper(4) == 1 {
+            // `k₁` is always located at the 16th instruction.
+            stack.push(Constraint { index, value: helper(15) });
+        } else {
+            // Find the matching "push" instruction at the top of the stack.
+            let first = stack.pop().unwrap();
+            // `k₂` is always located at the 6th instruction, so delta = k₁ + k₂.
+            let delta = first.value + helper(5);
+            // w₁ + delta = w₂ <=> w₁ = w₂ - delta
+            constraints.push(Constraint { index: first.index, value: -delta });
+            constraints.push(Constraint { index, value: delta });
         }
     }
 

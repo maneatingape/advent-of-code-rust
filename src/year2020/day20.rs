@@ -158,10 +158,10 @@ pub fn part2(input: &[Tile]) -> u32 {
 
     let mut find_arbitrary_corner = || {
         for tile in input {
-            for j in 0..8 {
-                if freq[tile.top[j]] == 1 && freq[tile.left[j]] == 1 {
-                    freq[tile.top[j]] += 1;
-                    return tile.top[j];
+            for (&top, &left) in tile.top.iter().zip(&tile.left) {
+                if freq[top] == 1 && freq[left] == 1 {
+                    freq[top] += 1;
+                    return top;
                 }
             }
         }
@@ -181,7 +181,7 @@ pub fn part2(input: &[Tile]) -> u32 {
 
     while freq[next_top] == 2 {
         let tile = find_matching_tile(next_top);
-        let permutation = (0..8).position(|i| tile.top[i] == next_top).unwrap();
+        let permutation = tile.top.iter().position(|&top| top == next_top).unwrap();
         tile.transform(&mut image[index..], permutation);
         next_top = tile.bottom[permutation];
 
@@ -189,7 +189,7 @@ pub fn part2(input: &[Tile]) -> u32 {
 
         while freq[next_left] == 2 {
             let tile = find_matching_tile(next_left);
-            let permutation = (0..8).position(|i| tile.left[i] == next_left).unwrap();
+            let permutation = tile.left.iter().position(|&left| left == next_left).unwrap();
             tile.transform(&mut image[index..], permutation);
             next_left = tile.right[permutation];
         }

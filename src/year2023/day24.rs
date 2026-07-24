@@ -110,8 +110,8 @@ pub fn parse(input: &str) -> Vec<[i64; 6]> {
 pub fn part1(input: &[[i64; 6]]) -> u32 {
     let mut result = 0;
 
-    for (index, &[a, b, _, c, d, _]) in input[1..].iter().enumerate() {
-        for &[e, f, _, g, h, _] in &input[..index + 1] {
+    for (index, &[a, b, _, c, d, _]) in input.iter().enumerate() {
+        for &[e, f, _, g, h, _] in &input[..index] {
             // If the determinant is zero there is no solution possible
             // which implies the trajectories are parallel.
             let determinant = d * g - c * h;
@@ -140,10 +140,8 @@ pub fn part1(input: &[[i64; 6]]) -> u32 {
 pub fn part2(input: &[[i64; 6]]) -> i128 {
     // Calculations need the range of `i128`.
     let widen = |i: usize| {
-        let [px, py, pz, vx, vy, vz] = input[i].map(|n| n as i128);
-        let p = Vector { x: px, y: py, z: pz };
-        let v = Vector { x: vx, y: vy, z: vz };
-        (p, v)
+        let [x, y, z, dx, dy, dz] = input[i].map(|n| n as i128);
+        (Vector { x, y, z }, Vector { x: dx, y: dy, z: dz })
     };
 
     // Take 3 arbitrary hailstones.

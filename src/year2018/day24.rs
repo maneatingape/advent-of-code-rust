@@ -209,15 +209,13 @@ fn parse_group<'a>(input: &'a str, mask: &mut impl FnMut(&'a str) -> u32) -> Vec
 /// There can be any amount of weaknesses or immunities.
 fn parse_list<'a>(tokens: &[&'a str], start: &str, mask: &mut impl FnMut(&'a str) -> u32) -> u32 {
     let end = ["weak", "immune", "with"];
-    let mut elements = 0;
-
     if let Some(index) = tokens.iter().position(|&t| t == start) {
-        let mut index = index + 2;
-        while !end.contains(&tokens[index]) {
-            elements |= mask(tokens[index]);
-            index += 1;
-        }
+        // Skip over the "to" that follows, then take element names until the next section starts.
+        tokens[index + 2..]
+            .iter()
+            .take_while(|&&t| !end.contains(&t))
+            .fold(0, |elements, &t| elements | mask(t))
+    } else {
+        0
     }
-
-    elements
 }

@@ -23,9 +23,8 @@ pub fn parse(input: &str) -> State {
 /// both players end up back in the same position every 10 moves, so we can compute the score per
 /// batch of 10 moves before simulating only the remainder.
 pub fn part1(input: &State) -> usize {
-    let mut state = *input;
     let mut dice = 6;
-    let ((player_position, _), (other_position, _)) = state;
+    let ((player_position, _), (other_position, _)) = *input;
 
     // Utilize the periodic visitation pattern to compute the 10-turn score increase per player.
     let batch_score = |position, offsets: &[usize]| -> usize {
@@ -36,7 +35,8 @@ pub fn part1(input: &State) -> usize {
 
     let batches = 999 / player_batch.max(other_batch);
     let mut rolls = batches * 60; // 2 players * 3 dice * 10 turns per batch.
-    state = ((player_position, player_batch * batches), (other_position, other_batch * batches));
+    let mut state =
+        ((player_position, player_batch * batches), (other_position, other_batch * batches));
 
     loop {
         // Player position is 0 based from 0 to 9, but score is 1 based from 1 to 10.

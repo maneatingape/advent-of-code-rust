@@ -27,6 +27,7 @@
 //!
 //! The complexity of this approach depends on how many cubes overlap. In my input most
 //! cubes overlapped with zero others, a few with one and rarely with more than one.
+use crate::util::integer::*;
 use crate::util::iter::*;
 use crate::util::parse::*;
 
@@ -57,14 +58,10 @@ pub struct Cube {
 impl Cube {
     /// Keeping the coordinates in ascending order per axis makes calculating intersections
     /// and volume easier.
-    fn from(points: [i32; 6]) -> Cube {
-        let [a, b, c, d, e, f] = points;
-        let x1 = a.min(b);
-        let x2 = a.max(b);
-        let y1 = c.min(d);
-        let y2 = c.max(d);
-        let z1 = e.min(f);
-        let z2 = e.max(f);
+    fn from([a, b, c, d, e, f]: [i32; 6]) -> Cube {
+        let (x1, x2) = a.minmax(b);
+        let (y1, y2) = c.minmax(d);
+        let (z1, z2) = e.minmax(f);
         Cube { x1, x2, y1, y2, z1, z2 }
     }
 

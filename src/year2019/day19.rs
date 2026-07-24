@@ -28,16 +28,15 @@ pub fn parse(input: &str) -> Input {
 }
 
 pub fn part1(input: &Input) -> i64 {
-    let code = &input.code;
-    // Handle origin specially.
-    let mut result = test(code, 0, 0) as i64;
+    // Handle origin specially as the slope check excludes it.
+    let mut result = test(&input.code, 0, 0) as i64;
 
     // The beam is continuous so we only need to find the left and right edges.
     for y in 0..50 {
-        let left = (0..50).find(|&x| precheck(input, x, y) && test(code, x, y));
-        let right = (0..50).rfind(|&x| precheck(input, x, y) && test(code, x, y));
-        if let (Some(l), Some(r)) = (left, right) {
-            result += r - l + 1;
+        let left = (0..50).find(|&x| inside(input, x, y));
+        let right = (0..50).rfind(|&x| inside(input, x, y));
+        if let Some((left, right)) = left.zip(right) {
+            result += right - left + 1;
         }
     }
 
@@ -45,7 +44,6 @@ pub fn part1(input: &Input) -> i64 {
 }
 
 pub fn part2(input: &Input) -> i64 {
-    let code = &input.code;
     let mut x = 0;
     let mut y = 0;
     let mut moved = true;
@@ -54,12 +52,12 @@ pub fn part2(input: &Input) -> i64 {
     while moved {
         moved = false;
 
-        while !precheck(input, x, y + 99) || !test(code, x, y + 99) {
+        while !inside(input, x, y + 99) {
             x += 1;
             moved = true;
         }
 
-        while !precheck(input, x + 99, y) || !test(code, x + 99, y) {
+        while !inside(input, x + 99, y) {
             y += 1;
             moved = true;
         }
@@ -68,9 +66,10 @@ pub fn part2(input: &Input) -> i64 {
     10000 * x + y
 }
 
-/// Quick check with some false positives but no false negatives.
-fn precheck(input: &Input, x: i64, y: i64) -> bool {
-    50 * y > input.upper * x && 50 * x > input.lower * y
+/// Skip the relatively expensive intcode test if the point lies outside the beam's slopes.
+/// The slope check has some false positives but no false negatives.
+fn inside(input: &Input, x: i64, y: i64) -> bool {
+    50 * y > input.upper * x && 50 * x > input.lower * y && test(&input.code, x, y)
 }
 
 /// Definitive but slower check.

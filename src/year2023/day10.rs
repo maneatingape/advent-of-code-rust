@@ -31,7 +31,7 @@ pub fn parse(input: &str) -> Input {
 
     loop {
         // Follow straight paths.
-        while grid[position] == b'-' || grid[position] == b'|' {
+        while matches!(grid[position], b'-' | b'|') {
             position += direction;
             steps += 1;
         }

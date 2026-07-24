@@ -41,12 +41,12 @@ pub fn part1(input: &[u64]) -> String {
     let mut out = String::new();
 
     while let Some(n) = computer.run() {
-        if !out.is_empty() {
-            out.push(',');
-        }
         out.push(char::from(n as u8 + b'0'));
+        out.push(',');
     }
 
+    // Remove the trailing comma.
+    out.pop();
     out
 }
 

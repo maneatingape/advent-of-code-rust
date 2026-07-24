@@ -159,46 +159,32 @@ impl Shortcut {
         let mut left = grid.same_size_with(ORIGIN);
         let mut right = grid.same_size_with(ORIGIN);
 
+        // Scan each row or column *against* the direction of travel, remembering the square just
+        // before the most recent obstacle. Starting one square off the grid means that
+        // coordinates outside the grid are used when nothing is in the way.
+        let scan = |dst: &mut Grid<Point>, start: Point, step: Point, count: i32| {
+            let mut last = start - step;
+            let mut point = start;
+
+            for _ in 0..count {
+                if grid[point] == b'#' {
+                    last = point + step;
+                }
+                dst[point] = last;
+                point += step;
+            }
+        };
+
         // Process columns for up/down.
         for x in 0..grid.width {
-            let mut last = Point::new(x, -1);
-            for y in 0..grid.height {
-                let point = Point::new(x, y);
-                if grid[point] == b'#' {
-                    last = Point::new(x, y + 1);
-                }
-                up[point] = last;
-            }
-
-            let mut last = Point::new(x, grid.height);
-            for y in (0..grid.height).rev() {
-                let point = Point::new(x, y);
-                if grid[point] == b'#' {
-                    last = Point::new(x, y - 1);
-                }
-                down[point] = last;
-            }
+            scan(&mut up, Point::new(x, 0), DOWN, grid.height);
+            scan(&mut down, Point::new(x, grid.height - 1), UP, grid.height);
         }
 
         // Process rows for left/right.
         for y in 0..grid.height {
-            let mut last = Point::new(-1, y);
-            for x in 0..grid.width {
-                let point = Point::new(x, y);
-                if grid[point] == b'#' {
-                    last = Point::new(x + 1, y);
-                }
-                left[point] = last;
-            }
-
-            let mut last = Point::new(grid.width, y);
-            for x in (0..grid.width).rev() {
-                let point = Point::new(x, y);
-                if grid[point] == b'#' {
-                    last = Point::new(x - 1, y);
-                }
-                right[point] = last;
-            }
+            scan(&mut left, Point::new(0, y), RIGHT, grid.width);
+            scan(&mut right, Point::new(grid.width - 1, y), LEFT, grid.width);
         }
 
         Shortcut { up, down, left, right }

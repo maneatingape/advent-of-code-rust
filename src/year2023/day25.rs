@@ -63,7 +63,7 @@ pub struct Input {
 impl Input {
     /// Convenience function to return an iterator of `(edge, node)` pairs.
     #[inline]
-    fn neighbors(&self, node: usize) -> impl Iterator<Item = (usize, usize)> + '_ {
+    fn neighbors(&self, node: usize) -> impl Iterator<Item = (usize, usize)> {
         let (start, end) = self.nodes[node];
         (start..end).map(|edge| (edge, self.edges[edge]))
     }

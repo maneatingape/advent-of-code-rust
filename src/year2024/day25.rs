@@ -22,7 +22,6 @@ pub fn parse(input: &str) -> &str {
 pub fn part1(input: &str) -> u32 {
     let mut locks = Vec::with_capacity(250);
     let mut keys = Vec::with_capacity(250);
-    let mut result = 0;
 
     for slice in input.as_bytes().chunks(43) {
         let bits = slice[6..35].iter().fold(0, |bits, &n| (bits << 1) | (n & 1) as u32);
@@ -34,13 +33,7 @@ pub fn part1(input: &str) -> u32 {
         }
     }
 
-    for lock in &locks {
-        for key in &keys {
-            result += (lock & key == 0) as u32;
-        }
-    }
-
-    result
+    locks.iter().map(|lock| keys.iter().map(|key| u32::from(lock & key == 0)).sum::<u32>()).sum()
 }
 
 pub fn part2(_input: &str) -> &'static str {

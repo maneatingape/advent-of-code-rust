@@ -17,18 +17,16 @@ pub fn parse(input: &str) -> Input {
     let mut boxes: [Vec<Item<'_>>; 256] = from_fn(|_| Vec::new());
 
     for step in input.trim().as_bytes().split(|&b| b == b',') {
-        let size = step.len();
         part_one += hash(step);
+        let (&last, rest) = step.split_last().unwrap();
 
-        if step[size - 1] == b'-' {
-            let label = &step[..size - 1];
+        if last == b'-' {
             // If the label exists then remove it.
-            boxes[hash(label)].retain(|item| item.label != label);
+            boxes[hash(rest)].retain(|item| item.label != rest);
         } else {
-            let label = &step[..size - 2];
-            let hash = hash(label);
-            let slot = &mut boxes[hash];
-            let lens = step[size - 1].to_decimal() as usize;
+            let label = &rest[..rest.len() - 1];
+            let slot = &mut boxes[hash(label)];
+            let lens = last.to_decimal() as usize;
 
             // Replace or append new lens.
             if let Some(i) = slot.iter().position(|item| item.label == label) {

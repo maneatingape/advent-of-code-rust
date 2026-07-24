@@ -70,22 +70,22 @@ impl Point3D {
 
     /// No need to take the square root as it's faster and easier to just use the integer
     /// value of the distance squared directly.
-    fn euclidean(&self, other: &Point3D) -> i32 {
-        let Point3D(dx, dy, dz) = *self - *other;
+    fn euclidean(self, other: Self) -> i32 {
+        let Point3D(dx, dy, dz) = self - other;
         dx * dx + dy * dy + dz * dz
     }
 
-    fn manhattan(&self, other: &Point3D) -> i32 {
-        let Point3D(dx, dy, dz) = *self - *other;
+    fn manhattan(self, other: Self) -> i32 {
+        let Point3D(dx, dy, dz) = self - other;
         dx.abs() + dy.abs() + dz.abs()
     }
 }
 
 /// Implement operators for points so that we can write `a + b` or `a - b`.
 impl Add for Point3D {
-    type Output = Point3D;
+    type Output = Self;
 
-    fn add(self, rhs: Point3D) -> Point3D {
+    fn add(self, rhs: Self) -> Self {
         let Point3D(x1, y1, z1) = self;
         let Point3D(x2, y2, z2) = rhs;
         Point3D(x1 + x2, y1 + y2, z1 + z2)
@@ -93,9 +93,9 @@ impl Add for Point3D {
 }
 
 impl Sub for Point3D {
-    type Output = Point3D;
+    type Output = Self;
 
-    fn sub(self, rhs: Point3D) -> Point3D {
+    fn sub(self, rhs: Self) -> Self {
         let Point3D(x1, y1, z1) = self;
         let Point3D(x2, y2, z2) = rhs;
         Point3D(x1 - x2, y1 - y2, z1 - z2)
@@ -123,9 +123,7 @@ impl Scanner {
         let mut signature = FastMap::with_capacity(1_000);
         for i in 0..(beacons.len() - 1) {
             for j in (i + 1)..beacons.len() {
-                let key = beacons[i].euclidean(&beacons[j]);
-                let value = [i, j];
-                signature.insert(key, value);
+                signature.insert(beacons[i].euclidean(beacons[j]), [i, j]);
             }
         }
 
@@ -217,7 +215,7 @@ pub fn part2(input: &[Located]) -> i32 {
     // https://www.reddit.com/r/adventofcode/comments/rygnl8/2021_day_19_part_2pseudocode_speeding_up/
     input
         .iter()
-        .flat_map(|a| input.iter().map(|b| a.translation.manhattan(&b.translation)))
+        .flat_map(|a| input.iter().map(|b| a.translation.manhattan(b.translation)))
         .max()
         .unwrap()
 }

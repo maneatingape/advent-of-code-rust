@@ -44,13 +44,6 @@ pub fn part1_testable(input: &[Input], row: i32) -> i32 {
         (extra >= 0).then(|| (sensor.x - extra)..(sensor.x + extra))
     }
 
-    // Returns the x position of all beacons that are located on the specified row
-    // or `None`.
-    fn build_beacons(input: &Input, row: i32) -> Option<i32> {
-        let Input { beacon, .. } = input;
-        (beacon.y == row).then_some(beacon.x)
-    }
-
     // Sort the ranges first.
     let mut ranges: Vec<_> = input.iter().filter_map(|i| build_range(i, row)).collect();
     ranges.sort_unstable_by_key(|r| r.start);
@@ -72,7 +65,9 @@ pub fn part1_testable(input: &[Input], row: i32) -> i32 {
         }
     }
 
-    let beacons: FastSet<_> = input.iter().filter_map(|i| build_beacons(i, row)).collect();
+    // Returns the x position of all beacons that are located on the specified row.
+    let beacons: FastSet<_> =
+        input.iter().filter_map(|i| (i.beacon.y == row).then_some(i.beacon.x)).collect();
     total - (beacons.len() as i32)
 }
 

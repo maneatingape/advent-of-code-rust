@@ -29,13 +29,12 @@ pub struct Input {
 pub fn parse(input: &str) -> Input {
     // Enough buffer so that elves won't overflow the edges of the grid.
     let offset = 70;
-    let raw: Vec<_> = input.lines().map(str::as_bytes).collect();
     let default = [U256::default(); HEIGHT];
     let mut grid = default;
 
-    for (y, row) in raw.iter().enumerate() {
-        for (x, col) in row.iter().enumerate() {
-            if *col == b'#' {
+    for (y, row) in input.lines().enumerate() {
+        for (x, col) in row.bytes().enumerate() {
+            if col == b'#' {
                 grid[offset + y].set_bit(offset + x);
             }
         }

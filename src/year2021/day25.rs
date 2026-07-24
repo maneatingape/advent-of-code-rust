@@ -99,27 +99,27 @@ pub struct State {
 
 /// Parse the sea cucumbers as individual bits into separate `across` and `down` arrays.
 pub fn parse(input: &str) -> State {
-    let raw: Vec<&[u8]> = input.lines().map(str::as_bytes).collect();
+    let raw: Vec<_> = input.lines().collect();
     let width = raw[0].len();
     let height = raw.len();
-    let mut across = Vec::new();
-    let mut down = Vec::new();
 
-    for row in raw {
-        let mut next_across = U256::default();
-        let mut next_down = U256::default();
+    let (across, down) = raw
+        .iter()
+        .map(|row| {
+            let mut across = U256::default();
+            let mut down = U256::default();
 
-        for (offset, &col) in row.iter().enumerate() {
-            match col {
-                b'>' => next_across.bit_set(offset),
-                b'v' => next_down.bit_set(offset),
-                _ => (),
+            for (offset, col) in row.bytes().enumerate() {
+                match col {
+                    b'>' => across.bit_set(offset),
+                    b'v' => down.bit_set(offset),
+                    _ => (),
+                }
             }
-        }
 
-        across.push(next_across);
-        down.push(next_down);
-    }
+            (across, down)
+        })
+        .unzip();
 
     State { width, height, across, down }
 }

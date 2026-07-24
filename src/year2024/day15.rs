@@ -68,12 +68,11 @@ pub fn part2(input: &Input<'_>) -> i32 {
     // Reuse to minimize allocations.
     let mut todo = Vec::with_capacity(50);
 
+    // Horizontal moves reuse the part one logic, vertical moves need to cascade.
     for b in moves.bytes() {
         match b {
-            b'<' => narrow(&mut grid, &mut position, LEFT),
-            b'>' => narrow(&mut grid, &mut position, RIGHT),
-            b'^' => wide(&mut grid, &mut position, UP, &mut todo),
-            b'v' => wide(&mut grid, &mut position, DOWN, &mut todo),
+            b'<' | b'>' => narrow(&mut grid, &mut position, Point::from(b)),
+            b'^' | b'v' => wide(&mut grid, &mut position, Point::from(b), &mut todo),
             _ => (),
         }
     }

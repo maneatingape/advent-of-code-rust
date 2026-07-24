@@ -90,13 +90,10 @@ pub struct Grid {
 /// Return [`Tile::None`] for any point out of bounds.
 impl Grid {
     fn tile(&self, point: Point) -> Tile {
+        // Negative coordinates wrap to a huge value, so a single comparison covers both bounds.
         let x = point.x as usize;
         let y = point.y as usize;
-        if (0..self.width).contains(&x) && (0..self.height).contains(&y) {
-            self.tiles[y * self.width + x]
-        } else {
-            Tile::None
-        }
+        if x < self.width && y < self.height { self.tiles[y * self.width + x] } else { Tile::None }
     }
 }
 
@@ -299,7 +296,7 @@ fn parse_moves(input: &str) -> Vec<Move> {
 fn password(input: &Input, handle_none: impl Fn(Point, Point) -> (Point, Point)) -> i32 {
     let Input { grid, moves } = input;
     let mut position = Point::new(grid.start, 0);
-    let mut direction = Point::new(1, 0);
+    let mut direction = RIGHT;
 
     for command in moves {
         match command {

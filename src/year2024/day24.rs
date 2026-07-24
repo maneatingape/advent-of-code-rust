@@ -69,7 +69,6 @@ pub fn part1(input: &Input<'_>) -> u64 {
     // Using an array to store already computed values is much faster than a `HashMap`.
     let mut todo: VecDeque<_> = gates.iter().copied().collect();
     let mut cache = vec![u8::MAX; 1 << 15];
-    let mut result = 0;
 
     // Convert each character to a 5 bit number from 0..31
     // then each group of 3 to a 15 bit index from 0..32768.
@@ -104,13 +103,10 @@ pub fn part1(input: &Input<'_>) -> u64 {
     }
 
     // Output 46 bit result.
-    for i in (to_index("z00")..to_index("z46")).rev() {
-        if cache[i] != u8::MAX {
-            result = (result << 1) | (cache[i] as u64);
-        }
-    }
-
-    result
+    (to_index("z00")..to_index("z46"))
+        .rev()
+        .filter(|&i| cache[i] != u8::MAX)
+        .fold(0, |result, i| (result << 1) | (cache[i] as u64))
 }
 
 pub fn part2(input: &Input<'_>) -> String {

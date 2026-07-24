@@ -44,15 +44,17 @@ pub fn parse(input: &str) -> [usize; 64] {
     let mut indices = Vec::new();
 
     for n in 1..64 {
+        indices.clear();
+
         for (index, component) in components.iter().enumerate() {
             if component.left == n || component.right == n {
                 indices.push(index);
             }
         }
 
-        if indices.len() == 2 {
-            let second = components.swap_remove(indices[1]);
-            let first = components.swap_remove(indices[0]);
+        if let [a, b] = indices[..] {
+            let second = components.swap_remove(b);
+            let first = components.swap_remove(a);
 
             let left = if first.left == n { first.right } else { first.left };
             let right = if second.left == n { second.right } else { second.left };
@@ -61,8 +63,6 @@ pub fn parse(input: &str) -> [usize; 64] {
 
             components.push(Component { left, right, weight, length });
         }
-
-        indices.clear();
     }
 
     // Second optimization. Sort components with both ports the same before other components,

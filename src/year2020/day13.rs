@@ -28,14 +28,14 @@ pub fn parse(input: &str) -> Input {
 }
 
 pub fn part1(input: &Input) -> usize {
-    let (id, next) = input
+    let (id, wait) = input
         .buses
         .iter()
-        .map(|(_, id)| (id, id - input.timestamp % id))
-        .min_by_key(|&(_, next)| next)
+        .map(|&(_, id)| (id, id - input.timestamp % id))
+        .min_by_key(|&(_, wait)| wait)
         .unwrap();
 
-    id * next
+    id * wait
 }
 
 pub fn part2(input: &Input) -> usize {

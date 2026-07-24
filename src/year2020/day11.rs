@@ -36,13 +36,6 @@ mod implementation {
         neighbors: [Point; 8],
     }
 
-    impl Seat {
-        fn push(&mut self, index: Point) {
-            self.neighbors[self.size] = index;
-            self.size += 1;
-        }
-    }
-
     pub(super) fn simulate(input: &Grid<u8>, part_two: bool, limit: u8) -> u32 {
         let mut seats = Vec::new();
 
@@ -53,27 +46,25 @@ mod implementation {
                     continue;
                 }
 
-                let mut seat = Seat { point, size: 0, neighbors: [ORIGIN; 8] };
+                let mut size = 0;
+                let mut neighbors = [ORIGIN; 8];
 
                 for direction in DIAGONAL {
-                    if part_two {
-                        let mut next = point + direction;
-                        while input.contains(next) {
-                            if input[next] == SEAT {
-                                seat.push(next);
-                                break;
-                            }
-                            next += direction;
-                        }
-                    } else {
-                        let next = point + direction;
-                        if input.contains(next) && input[next] == SEAT {
-                            seat.push(next);
-                        }
+                    let mut next = point + direction;
+
+                    // Part one considers only the adjacent square. Part two skips over any
+                    // floor until reaching the first visible seat or the edge of the grid.
+                    while part_two && input.contains(next) && input[next] != SEAT {
+                        next += direction;
+                    }
+
+                    if input.contains(next) && input[next] == SEAT {
+                        neighbors[size] = next;
+                        size += 1;
                     }
                 }
 
-                seats.push(seat);
+                seats.push(Seat { point, size, neighbors });
             }
         }
 
@@ -82,7 +73,7 @@ mod implementation {
 
         loop {
             for seat in &seats {
-                let total: u8 = seat.neighbors[0..seat.size].iter().map(|&i| current[i]).sum();
+                let total: u8 = seat.neighbors[..seat.size].iter().map(|&i| current[i]).sum();
 
                 next[seat.point] = if current[seat.point] == 0 {
                     u8::from(total == 0)

@@ -145,10 +145,7 @@ pub fn part2(input: &[Spring<'_>]) -> u64 {
     result.into_iter().sum()
 }
 
-pub fn solve<'a, I>(iter: I, repeat: usize) -> u64
-where
-    I: Iterator<Item = &'a Spring<'a>>,
-{
+fn solve<'a>(iter: impl Iterator<Item = &'a Spring<'a>>, repeat: usize) -> u64 {
     let mut result = 0;
     let mut pattern = Vec::new();
     let mut springs = Vec::new();
