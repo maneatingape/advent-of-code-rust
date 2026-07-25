@@ -8,7 +8,7 @@
 //! behave the same as Dijkstra's algorithm. With that heuristic, the search frontier visits
 //! nearly every tile, since only a few tiles near the target might have a total risk higher
 //! than the target itself. Slightly better is a heuristic of the Manhattan distance to the
-//! target; although this still underestimates and prunes no more than 5% of the total search
+//! target, although this still underestimates and prunes no more than 5% of the total search
 //! space. Logically this makes sense: Manhattan distance only changes by 1 per tile, but with risks
 //! between 1-9, the average risk is closer to 5, and our best path averages closer to 3 risk per
 //! tile. But we can do much better with a heuristic that prunes about 75% of the search space,

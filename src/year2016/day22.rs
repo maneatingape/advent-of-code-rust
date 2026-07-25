@@ -11,8 +11,8 @@
 //!     .....-..
 //! ```
 //!
-//! * `O` is our destination
-//! * `G` is the data
+//! * `O` is our destination.
+//! * `G` is the data.
 //! * `#` are large nodes that can't be moved to neighbors, effectively acting as walls.
 //! * `-` is the empty node.
 //!

@@ -130,7 +130,7 @@ pub fn part2(input: &[RebootStep]) -> i64 {
 }
 
 // Apply inclusion/exclusion principle. The sign of the result alternates with each level,
-// so that we subtract single overlaps, then add double, subtract triple, and so on...
+// so that we subtract single overlaps, then add double, subtract triple, and so on.
 fn subsets(cube: &Cube, sign: i64, candidates: &[Cube]) -> i64 {
     let mut total = 0;
 

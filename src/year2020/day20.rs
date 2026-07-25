@@ -3,7 +3,7 @@
 //! At first this seems like a daunting problem. However, a little analysis shows that the input
 //! has some nice properties that make solving this more tractable.
 //!
-//! * Tile edges match with at most one other tile
+//! * Tile edges match with at most one other tile.
 //! * The forward and reverse tile edges form two distinct sets of 312 values with no overlap.
 //!
 //! Tiles can be flipped and rotated for a total of 8 possible permutations each. When parsing
@@ -36,7 +36,7 @@
 //!
 //! When finding the monsters we make some further assumptions about the input:
 //!
-//! * The monsters will all be oriented the same way
+//! * The monsters will all be oriented the same way.
 //! * Monsters will not overlap with each other.
 //!
 //! For speed the monster bit patterns are rotated and flipped instead of the image, then stored

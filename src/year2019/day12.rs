@@ -2,7 +2,7 @@
 //!
 //! There are two insights needed to solve part two:
 //!
-//! * Each axis is independent
+//! * Each axis is independent.
 //! * Each axis is periodic somewhat like
 //!   [simple harmonic motion](https://en.wikipedia.org/wiki/Simple_harmonic_motion).
 //!   The velocity returns to zero twice per period.
@@ -61,7 +61,7 @@ pub fn part2(input: &Input) -> usize {
         update(&mut z, &mut c, count);
     }
 
-    // a, b and c are the half period, so multiply by 2 to get final result.
+    // a, b and c are the half periods, so multiply by 2 to get final result.
     2 * a.lcm(b.lcm(c))
 }
 

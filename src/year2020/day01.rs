@@ -26,7 +26,7 @@ pub fn parse(input: &str) -> Input {
         numbers[number] = true;
     }
 
-    // The parse performed a radix sort; numbers can now be used as an ordered sparse array.
+    // The parse performed a radix sort. Numbers can now be used as an ordered sparse array.
     (part_one, numbers)
 }
 

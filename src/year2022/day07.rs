@@ -2,7 +2,7 @@
 //!
 //! Some up-front analysis of the input data helps us develop an efficient solving algorithm (this
 //! is a regular theme in Advent of Code!). Looking at the directory commands shows 2 key insights:
-//! * We never return to a previously visited directory
+//! * We never return to a previously visited directory.
 //! * Directory traversal is only up or down in steps of one.
 //!
 //! This allows us to infer:

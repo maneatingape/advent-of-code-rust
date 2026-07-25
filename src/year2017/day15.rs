@@ -4,7 +4,7 @@
 //! Part one can be checked in parallel, but part two must be sent to a single thread as the
 //! indices must be checked in order.
 //!
-//! The sequence of numbers are [modular exponentiation](https://en.wikipedia.org/wiki/Modular_exponentiation)
+//! The sequence of numbers is [modular exponentiation](https://en.wikipedia.org/wiki/Modular_exponentiation)
 //! so we can jump to any location in the sequence, without needing to know the previous numbers.
 //!
 //! The generator is in the hot path, so anything we can do to make it run faster is worthwhile.

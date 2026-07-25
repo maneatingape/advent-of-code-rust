@@ -6,7 +6,7 @@
 //! two constants multiplied by each other to create a seed.
 //!
 //! This seed is then repeatedly bit shifted right by dividing by 2 using an inefficient linear
-//! time loop. The remainder (the bit that drops off) is the output. This means that output
+//! time loop. The remainder (the bit that drops off) is the output. This means that the output
 //! sequence is simply the binary digits of `a + offset` in reverse repeated over and over.
 //!
 //! To obtain the desired pattern we need the next highest binary number that has the

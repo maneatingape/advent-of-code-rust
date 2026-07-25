@@ -15,7 +15,7 @@
 //!
 //! The set of Euclidean distance squared between all beacons is a good choice, as it's invariant
 //! under rotation and translation, quick to calculate and a good discriminant. To check for an
-//! overlap of 12 beacons, we look for an overlap of a least 12 × 11 / 2 = 66 distances.
+//! overlap of 12 beacons, we look for an overlap of at least 12 × 11 / 2 = 66 distances.
 //! (12 beacons gives 12 × 11 = 132 pairs of distances but divided by 2 since the distance from
 //! a -> b is the same as b -> a).
 //!
@@ -207,7 +207,7 @@ pub fn part1(input: &[Located]) -> usize {
     input.iter().flat_map(|located| &located.beacons).collect::<FastSet<_>>().len()
 }
 
-/// Calculate the maximum manhattan distance between any two scanners.
+/// Calculate the maximum Manhattan distance between any two scanners.
 pub fn part2(input: &[Located]) -> i32 {
     // This solution uses the usual quadratic pairing of every point. This is okay because
     // the set is not terribly large, and the runtime here is dwarfed by the earlier runtime

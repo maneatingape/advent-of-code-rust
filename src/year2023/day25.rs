@@ -29,7 +29,7 @@
 //!     ```
 //!
 //! Our high-level approach is as follows:
-//! * Pick any arbitrary node
+//! * Pick any arbitrary node.
 //! * Find a start node furthest from it.
 //! * Find an end node furthest from the start node.
 //!

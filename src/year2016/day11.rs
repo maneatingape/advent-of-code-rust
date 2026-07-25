@@ -19,12 +19,12 @@
 //! Next, observe that adding a chip and generator pair on floor 1 adds 12 moves to the final
 //! solution. Likewise, removing a pair from floor 1 (but only if there is still something
 //! else left on the floor) can be solved in 12 fewer moves. Tracking a smaller number of
-//! chip and generator pairs, then adjusting by the 12 times the number of ignored pairs,
+//! chip and generator pairs, then adjusting by 12 times the number of ignored pairs,
 //! is inherently faster.
 //!
 //! The rules for a valid floor are either:
 //!
-//! * Any amount of microchips only with no generators.
+//! * Any number of microchips only with no generators.
 //! * Any microchip on a floor with at least one generator must have its own generator on that floor.
 //!
 //! This allows us to efficiently memoize previously seen states and reject any that we've seen

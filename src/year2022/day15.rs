@@ -105,11 +105,11 @@ pub fn part2_testable(input: &[Input], size: i32) -> u64 {
 
     for &x in &vertical {
         for &y in &horizontal {
-            // Rotate intersection point counter clockwise and scale by 1 / √2
+            // Rotate intersection point counter-clockwise and scale by 1 / √2
             // to return to original coordinates.
             #[expect(clippy::manual_midpoint)]
             let point = Point::new((x + y) / 2, (y - x) / 2);
-            // As we're mixing overlaps from different boxes there may some spurious false
+            // As we're mixing overlaps from different boxes there may be some spurious false
             // positives, so double check all points are within the specified area
             // and outside the range of all scanners.
             if range.contains(&point.x)

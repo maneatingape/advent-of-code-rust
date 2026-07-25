@@ -43,9 +43,9 @@
 //!     0: 8 11
 //! ```
 //! gives a pattern that matches:
-//! 1. A sequence of two or more rule `42`
-//! 2. Followed by a sequence of one or more rule `31`
-//! 3. As long as the number of `42` matches are at least one greater than the number of `31` matches.
+//! 1. A sequence of two or more rule `42`.
+//! 2. Followed by a sequence of one or more rule `31`.
+//! 3. As long as the number of `42` matches is at least one greater than the number of `31` matches.
 //!
 //! For example `42 42 31` or `42 42 42 31` or `42 42 42 31 31` matches but *not* `42 42 31 31`.
 //!

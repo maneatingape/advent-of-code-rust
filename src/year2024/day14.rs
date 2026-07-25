@@ -48,7 +48,7 @@ pub fn part1(input: &[Robot]) -> i32 {
 }
 
 pub fn part2(robots: &[Robot]) -> usize {
-    // Search for times mod 101 when the tree could possibly exist using x coordinates only.
+    // Search for times mod 101 when the tree could possibly exist using x coordinates only,
     // and times mod 103 when the tree could possibly exist using y coordinates only.
     let mut rows = Vec::new();
     let mut columns = Vec::new();

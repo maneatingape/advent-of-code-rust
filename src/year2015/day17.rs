@@ -16,7 +16,7 @@
 //! Each `table[row, col]` is computed row by row from the sum of:
 //!
 //! * Not taking the current item, using just the existing number of ways to make the target
-//!   `table[row - 1, col]`
+//!   `table[row - 1, col]`.
 //! * Taking the current item, using the existing number of ways to make the target weight less
 //!   the weight of the current item `table[row - 1, col - item]`.
 //!
@@ -43,7 +43,7 @@
 //!
 //! If taking the item results in fewer containers then we add that number of combinations.
 //! Vice-versa if not taking the item results in fewer containers then we don't include it. If both
-//! taking and not taking the item results in the same number of containers then we add both.
+//! taking and not taking the item result in the same number of containers then we add both.
 //!
 //! The new minima table for the example using `u32::MAX` to represent `∞` is:
 //!

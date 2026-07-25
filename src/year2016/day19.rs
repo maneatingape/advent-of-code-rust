@@ -16,7 +16,7 @@
 //!
 //! 1 ~~2~~ ~~3~~ ~~4~~ 5 ~~6~~ ~~7~~ ~~8~~
 //!
-//! In the special case that the number of elves is power of two then the starting elf will always
+//! In the special case that the number of elves is a power of two then the starting elf will always
 //! win.
 //!
 //! If the number of elves is odd then the last elf will also eliminate the starting elf,
@@ -52,7 +52,6 @@
 //! The [`isolate_highest_one`] method returns just the highest one bit, for example
 //! `10.isolate_highest_one() = 8`. We can then subtract to get the result in
 //! constant `O(1)` time.
-//!
 //!
 //! ## Part Two
 //!

@@ -1,9 +1,9 @@
 //! # Rucksack Reorganization
 //!
 //! The core idea of this puzzle is computing set intersection. We could use the built-in `HashSet`
-//! but as the cardinality of the set is so small (52 maximum including both lowercase and upper
-//! case letters) we can instead use a much faster approach of storing each set in a single `u128`
-//! integer and using bit manipulation.
+//! but as the cardinality of the set is so small (52 maximum including both lowercase and
+//! uppercase letters) we can instead use a much faster approach of storing each set in a single
+//! `u128` integer and using bit manipulation.
 //!
 //! If a letter is present in the set then the corresponding bit will be `1` otherwise `0`.
 //! For example, to add the letter "a", logical OR the set with 1 shifted left by 97.

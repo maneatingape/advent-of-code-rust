@@ -20,7 +20,7 @@
 //!     ..#.#..
 //! ```
 //!
-//! is represented in `fixed_west` as (noticing the extra 0 for the left edge)
+//! is represented in `fixed_west` as (noticing the extra 0 for the left edge):
 //!
 //! ```none
 //!     0 0 0 1 1 2 2 2
@@ -53,7 +53,7 @@
 //!   and then update the new location of this ball.
 //!
 //! For example, tilting a single row west, processing each ball from left to right where each line
-//! represent the new state would look like:
+//! represents the new state would look like:
 //!
 //! ```none
 //!    grid              rounded         fixed_west                       roll_west

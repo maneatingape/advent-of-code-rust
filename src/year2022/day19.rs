@@ -20,11 +20,11 @@
 //!
 //! As we can only build one bot per turn, we will never need to generate more resources than
 //! that bot can use. For example, if ore robots need 2 ore, clay robots 3 ore, obsidian robots
-//! 4 ore and geode robots 5 ore, then the most possible ore robots that we need to build is 5.
+//! 4 ore and geode robots 5 ore, then the most possible ore robots that we need to build are 5.
 //! Any more would go to waste. The same applies for clay and obsidian.
 //!
 //! The third helpful heuristic is:
-//! * Don't build any robot during the last minute
+//! * Don't build any robot during the last minute.
 //! * Don't build ore or obsidian robots during the last 3 minutes.
 //! * Don't build clay robots during the last 5 minutes.
 //!

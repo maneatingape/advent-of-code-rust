@@ -3,7 +3,7 @@
 //! No subtlety with this solution, we create a 1-dimensional array of 1 million `u8` elements
 //! to store all possible points then increment values for each line. This assumes that no lines
 //! cross more than 255 times. This approach is much faster but less flexible than using a
-//! `HashMap` to store mappings of point to values.
+//! `HashMap` to store mappings of points to values.
 //!
 //! To avoid the overhead of a nested 2-dimensional array, each point `(x, y)` is mapped to
 //! an index `y * 1000 + x`. For each line direction the index delta is calculated using

@@ -56,7 +56,7 @@ pub fn part2(_input: &[u64; 2]) -> &'static str {
 
 /// Baby-step giant-step algorithm to compute discrete logarithm.
 /// Constants are hardcoded to this specific problem.
-/// * 4495 is the ceiling of √20201227
+/// * 4495 is the ceiling of √20201227.
 /// * 680915 is 7⁻⁴⁴⁹⁵, or the
 ///   [multiplicative modular inverse](https://en.wikipedia.org/wiki/Modular_multiplicative_inverse)
 ///   of 7 to modular exponent 4495.

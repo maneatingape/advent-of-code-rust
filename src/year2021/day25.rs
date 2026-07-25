@@ -14,7 +14,7 @@
 //!   `00011110000 | 00000000100 = 00011110100`
 //!
 //! In the actual implementation `across` and `down` are stored separately so that we know
-//! which cucumbers turn it is to move. We bitwise OR both together to calculate any blockers.
+//! which cucumber's turn it is to move. We bitwise OR both together to calculate any blockers.
 use std::ops::{BitAnd, BitOr, Not};
 
 /// Duct tape two `u128` together to make a 256 bit wide integer.

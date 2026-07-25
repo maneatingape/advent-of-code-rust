@@ -206,7 +206,7 @@ fn parse_group<'a>(input: &'a str, mask: &mut impl FnMut(&'a str) -> u32) -> Vec
         .collect()
 }
 
-/// There can be any amount of weaknesses or immunities.
+/// There can be any number of weaknesses or immunities.
 fn parse_list<'a>(tokens: &[&'a str], start: &str, mask: &mut impl FnMut(&'a str) -> u32) -> u32 {
     let end = ["weak", "immune", "with"];
     if let Some(index) = tokens.iter().position(|&t| t == start) {

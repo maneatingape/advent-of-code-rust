@@ -43,7 +43,7 @@
 //! ```
 //!
 //! Lastly, we can only partially reach some tiles on the edges. Solid triangles represent corners
-//! that can be reached and hollow triangle represents corners that are too far away.
+//! that can be reached and hollow triangles represent corners that are too far away.
 //!
 //! ```none
 //!          ┌--┐

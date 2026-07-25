@@ -118,7 +118,7 @@ fn play_automatically(input: &[i64]) -> String {
         let changed = current ^ previous;
         let index = changed.trailing_zeros() as usize;
 
-        // Since we start with all items in our possession, the meaning of bits in the gray code is
+        // Since we start with all items in our possession, the meaning of bits in the Gray code is
         // reversed. 0 is take an item and 1 is drop an item.
         if current & changed == 0 {
             take_item(&mut computer, &inventory[index]);

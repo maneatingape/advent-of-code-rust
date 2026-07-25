@@ -3,7 +3,7 @@
 //! ## Part One
 //!
 //! The particle that remains closest to the origin as time goes to infinity has the lowest
-//! acceleration, measured via its manhattan value. If more than one particle shares the same
+//! acceleration, measured via its Manhattan value. If more than one particle shares the same
 //! lowest acceleration then ties are broken by velocity then by position.
 //!
 //! ## Part Two

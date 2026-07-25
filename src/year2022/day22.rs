@@ -40,7 +40,7 @@
 //! * `j` (0, 0, -1) Minus previous `k`
 //! * `k` (0, 1, 0) Previous `j`
 //!
-//! If face B and C are connected then the vectors for face C are:
+//! If faces B and C are connected then the vectors for face C are:
 //!
 //! * `i` (0, 1, 0)
 //! * `j` (0, 0, -1)

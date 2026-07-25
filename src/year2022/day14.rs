@@ -26,7 +26,7 @@
 //!     ###    ###    ###    ###    ###    ###    ###    ###
 //! ```
 //!
-//! We model the cave as a grid in the possible states:
+//! We model the cave as a grid with the possible states:
 //! * `Air` Empty blocks, treated as unknown status when checking underneath neighbors.
 //! * `Falling` Grains of sand that will continue to fall continuously forever.
 //! * `Stopped` Both original rock walls and any grains of sand that have come to rest.

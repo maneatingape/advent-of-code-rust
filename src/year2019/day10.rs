@@ -81,8 +81,8 @@ pub fn parse(input: &str) -> Input {
         for j in (i + 1)..points.len() {
             let delta = points[j] - points[i];
             // Because points was populated in order from left to right and top to bottom, delta.y will
-            // be non-negative; delta.x might be negative, but shifting it by width gives us a positive
-            // reference point that can then cache the mapping to a representative index.
+            // be non-negative. Although delta.x might be negative, shifting it by width gives us
+            // a positive reference point that can then cache the mapping to a representative index.
             let key = Point::new(width + delta.x, delta.y);
 
             if cache[key] == ORIGIN {

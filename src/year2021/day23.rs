@@ -392,7 +392,7 @@ fn expand(
 ///       #########
 /// ```
 ///
-/// The top two `A`s can move into the left hallways spaces but the `B` will then be stuck
+/// The top two `A`s can move into the left hallway spaces but the `B` will then be stuck
 /// and we'll never be able to organize the burrow completely.
 fn deadlock_left(burrow: &Burrow) -> bool {
     let room = &burrow.rooms[0];

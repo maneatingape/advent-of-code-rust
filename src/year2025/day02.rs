@@ -21,7 +21,7 @@
 //! All sets `(n, k)` contain `(n, 1)`, for example 22222222 could be split into four, two or one.
 //!
 //! Our high level approach is then:
-//! * Count ids in part one
+//! * Count ids in part one.
 //! * Count the extra ids in part two, subtracting those that overlap.
 //!
 //! ## Generating ranges
@@ -43,7 +43,7 @@
 //!
 //! * `44 + 55 + 66 + 77`
 //! * `(4 * 44) + 11 + 22 + 33`
-//! * `(4 * 44) + 11 * (1 + 2 + 3)`,
+//! * `(4 * 44) + 11 * (1 + 2 + 3)`
 //! * Replace `1 + 2 + 3` with the formula.
 use crate::util::iter::*;
 use crate::util::parse::*;

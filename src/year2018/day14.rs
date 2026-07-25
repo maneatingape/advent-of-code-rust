@@ -1,7 +1,7 @@
 //! # Chocolate Charts
 //!
 //! This solution is heavily inspired by [Askalski's](https://www.reddit.com/user/askalski/)
-//! excellent post [Breaking the 1 billion recipes per second barrier](https://www.reddit.com/r/adventofcode/comments/a6wpwa/2018_day_14_breaking_the_1_billion_recipes_per/)
+//! excellent post [Breaking the 1 billion recipes per second barrier](https://www.reddit.com/r/adventofcode/comments/a6wpwa/2018_day_14_breaking_the_1_billion_recipes_per/).
 //!
 //! The key insight is that after 23 recipes the elves converge into using the *same subset* of
 //! recipes. This subset can be stored compactly in about 20% of the space and read sequentially

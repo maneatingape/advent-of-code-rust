@@ -47,10 +47,10 @@ use std::cmp::Ordering;
 /// index 0 has the highest flow, valve at index 1 the second highest and so on.
 /// This descending order is used by the heuristic to prune branches.
 ///
-/// * `size` Number of non-zero valves plus 1 for `AA`
+/// * `size` Number of non-zero valves plus 1 for `AA`.
 /// * `todo` Bitmask with a `1` for each initial unopened non-zero valve. For example, if there
 ///   are 5 valves this would be binary `11111`.
-/// * `flow` Stores the flow for each valve
+/// * `flow` Stores the flow for each valve.
 /// * `distance` Adjacency matrix of distances between each pair of valves.
 pub struct Input {
     size: usize,
@@ -217,7 +217,7 @@ pub fn part2(input: &Input) -> u32 {
 
     // Step 3
     // Explore a third time allowing only scores that are higher than the previous minimum.
-    // Instead of a single score, store the high score for each possible `2ⁱ` combinations
+    // Instead of a single score, store the high score for each of the `2ⁱ` possible combinations
     // of valves. The index of the score is the bitmask of the *opened* valves.
     let mut score = vec![0; input.all_valves + 1];
     let mut high_score = |todo: usize, pressure: u32| {

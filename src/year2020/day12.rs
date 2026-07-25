@@ -1,7 +1,7 @@
 //! # Rain Risk
 //!
 //! On this problem parsing takes almost all the time, so for maximum speed
-//! a custom parser solves both parts during a single pass over the input bytes
+//! a custom parser solves both parts during a single pass over the input bytes.
 use crate::util::parse::*;
 use crate::util::point::*;
 

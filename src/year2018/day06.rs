@@ -177,9 +177,9 @@ pub fn part2(input: &Input) -> i32 {
 /// of the other half of the points.
 ///
 /// The algorithm is:
-/// * Find center
+/// * Find center.
 /// * Go upwards from center until top edge of circle reached.
-/// * For each row of circle, find left and right extents
+/// * For each row of circle, find left and right extents.
 /// * Add area of row to total, then advance to row below.
 pub fn part2_testable(input: &Input, max_distance: i32) -> i32 {
     // Sort points in ascending order in order to find median.

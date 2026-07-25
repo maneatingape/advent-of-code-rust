@@ -19,7 +19,7 @@
 //! Part two uses an incremental flood fill, getting a little further each time and removing
 //! blocking bytes in descending order of time until we reach the exit.
 //!
-//! * Start with `t = i32::MAX - 1`
+//! * Start with `t = i32::MAX - 1`.
 //! * Start flood fill from top-left origin.
 //! * If we encounter a blocking byte with a time less than `t`
 //!   then push `(time, position)` onto a max heap keyed by time.

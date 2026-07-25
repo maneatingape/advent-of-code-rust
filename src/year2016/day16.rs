@@ -83,7 +83,7 @@ fn count(ones: &[usize], mut length: usize) -> usize {
     let mut full = 2 * half + 1;
 
     // Find the smallest pattern size such that the index is on the right hand side
-    // (greater than or to) the middle `0` character.
+    // (greater than or equal to) the middle `0` character.
     while full < length {
         half = full;
         full = 2 * half + 1;

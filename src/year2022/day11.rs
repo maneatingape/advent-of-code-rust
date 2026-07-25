@@ -18,7 +18,7 @@
 //! ```
 //!
 //! To keep the worry level manageable we need to find a number such that each monkey's test is a
-//! factor of that number. The smallest number that meets this criteria is the
+//! factor of that number. The smallest number that meets this criterion is the
 //! [least common multiple](https://en.wikipedia.org/wiki/Least_common_multiple).
 //!
 //! However, before you rush off to implement the LCM algorithm, it's worth examining the input. Each

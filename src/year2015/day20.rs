@@ -2,7 +2,7 @@
 //!
 //! ## Part One
 //!
-//! The amount of presents that each house receives is 10 times the
+//! The number of presents that each house receives is 10 times the
 //! [divisor function](https://en.wikipedia.org/wiki/Divisor_function) `σ`.
 //! For example, the divisors of 6 are 1, 2, 3 and 6, so house 6 receives
 //! 10 + 20 + 30 + 60 = 120 presents. The answer will be a

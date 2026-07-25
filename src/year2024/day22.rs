@@ -2,7 +2,7 @@
 //!
 //! Solves both parts simultaneously, parallelizing the work over multiple threads since
 //! each secret number is independent. The process of generating the next secret number is a
-//! [linear feedback shift register](https://en.wikipedia.org/wiki/Linear-feedback_shift_register).
+//! [linear feedback shift register](https://en.wikipedia.org/wiki/Linear-feedback_shift_register),
 //! with a cycle of 2²⁴.
 //!
 //! Interestingly, this means that with some clever math it's possible to generate the `n`th number

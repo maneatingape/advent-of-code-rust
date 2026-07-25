@@ -6,15 +6,15 @@
 //! First let's consider some other slower approaches.
 //!
 //! We could store marbles in a `vec`, inserting and removing elements to make room. Each of these
-//! operations takes `O(n)` complexity. For part two if number of marbles is 100,000 then the
+//! operations takes `O(n)` complexity. For part two if the number of marbles is 100,000 then the
 //! total complexity is `100,000 * 100 * 100,000 = 10¹²` which is infeasible.
 //!
 //! A better approach is a linked list. Insert and remove operations are now `O(1)` for a total
 //! part two complexity of `100,000 * 1 * 100  = 10⁷`. This is slow but practical. However, linked
 //! lists have a number of drawbacks:
 //!
-//! 1. Poor cache locality
-//! 2. Allocation per element
+//! 1. Poor cache locality.
+//! 2. Allocation per element.
 //! 3. Ownership issues complex enough to inspire an entire
 //!    [blog post series](https://rust-unofficial.github.io/too-many-lists/).
 //!
@@ -34,7 +34,7 @@
 //! ```
 //!
 //! Things start to get interesting at the 19th marble. When we pick the 23rd marble this will
-//! be 7 places counter clockwise, so we can optimize by not adding it at all to the circle.
+//! be 7 places counter-clockwise, so we can optimize by not adding it at all to the circle.
 //! Instead we save the value for later.
 //!
 //! ```none

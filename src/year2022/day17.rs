@@ -131,7 +131,7 @@ pub fn part1(input: &[u8]) -> usize {
 pub fn part2(input: &[u8]) -> usize {
     // We make two complete [SWAGs](https://en.wikipedia.org/wiki/Scientific_wild-ass_guess):
     // * 1000 row deltas are enough to form a unique prefix
-    // * The tower pattern will repeat in a cycle in first 5000 rows.
+    // * The tower pattern will repeat in a cycle in the first 5000 rows.
     let guess = 1000;
     let height: Vec<_> = State::new(input).take(5 * guess).collect();
     // We compare based on the *delta* between rows instead of absolute heights.

@@ -106,7 +106,7 @@ pub fn part2(disk: &[usize]) -> usize {
             }
         }
 
-        // We can make smaller free block from bigger blocks but not the other way around.
+        // We can make smaller free blocks from bigger blocks but not the other way around.
         // As an optimization if all blocks of the biggest size are after our position then
         // we can ignore them.
         if free.last().is_some_and(|h| *h.last().unwrap() > block) {

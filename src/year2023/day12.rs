@@ -3,7 +3,7 @@
 //! A [dynamic programming](https://en.wikipedia.org/wiki/Dynamic_programming) approach calculates
 //! the possible arrangements for each entry in `O(n * w)` complexity where:
 //!
-//! * `n` Number of springs
+//! * `n` Number of springs.
 //! * `w` "Wiggle" is the amount of extra free space the springs can slide around in the pattern.
 //!
 //! We build a table for each entry with a row for each spring and a column for every character

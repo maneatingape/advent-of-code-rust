@@ -16,7 +16,7 @@
 //! the next `B` and the last `C`.
 //!
 //! A good chunk of the Intcode runtime is spent on unpacking compressed memory into the grid
-//! that is first displayed to the user; this effort is the same between both parts. Running the
+//! that is first displayed to the user. This effort is the same between both parts. Running the
 //! entire solution in parse thus reduces the overall runtime.
 use super::intcode::*;
 use crate::util::hash::*;
@@ -35,7 +35,7 @@ struct Movement<'a> {
 
 /// The camera output points from left to right, top to bottom.
 pub fn parse(input: &str) -> Input {
-    // Only run the part two program; its initial output matches part one, and avoiding the
+    // Only run the part two program. Its initial output matches part one, and avoiding the
     // startup costs of a second machine results in a faster solution.
     let code: Vec<_> = once(2).chain(input.iter_signed().skip(1)).collect();
     let mut computer = Computer::new(&code);

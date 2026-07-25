@@ -18,7 +18,7 @@
 //! `J = NOT (A AND B AND C) AND D`
 //!
 //! But in practice, all input files are set up so that part 1 is just the 7 possible sets of
-//! 4 positions with a leading hole but not 4 consecutive holes; this can be solved without ever
+//! 4 positions with a leading hole but not 4 consecutive holes. This can be solved without ever
 //! probing position `B`, simplifying to 4 instructions:
 //!
 //! `J = NOT (A AND C) AND D`

@@ -156,7 +156,7 @@ pub fn part2(input: &[[i64; 6]]) -> i128 {
     let v3 = v1 - v0;
     let v4 = v2 - v0;
 
-    // Find the normal to the plane that the second and third hailstones velocity lies in.
+    // Find the normal to the plane that the second and third hailstones' velocities lie in.
     // This is the cross product of their respective position and velocity.
     // The cross product `s` of these two vectors is the same direction but not necessarily the
     // same magnitude of the desired velocity of the rock.

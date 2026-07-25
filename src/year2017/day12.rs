@@ -36,7 +36,7 @@ fn dfs(lines: &[&str], seen: &mut [bool], index: usize) -> u32 {
         0
     } else {
         seen[index] = true;
-        // Skip the first 6 characters of each line as it contains the index that we already know.
+        // Skip the first 6 characters of each line as they contain the index that we already know.
         1 + (&lines[index][6..]).iter_unsigned::<usize>().map(|i| dfs(lines, seen, i)).sum::<u32>()
     }
 }

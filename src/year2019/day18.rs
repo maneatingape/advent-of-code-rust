@@ -62,7 +62,7 @@ struct State {
     remaining: u32,
 }
 
-/// `distance` in the edge weight between nodes. `needed` stores any doors in between as a bitfield.
+/// `distance` is the edge weight between nodes. `needed` stores any doors in between as a bitfield.
 #[derive(Clone, Copy)]
 struct Door {
     distance: u32,
@@ -72,8 +72,8 @@ struct Door {
 /// `initial` is the complete set of keys that we need to collect. Will always be binary
 /// `11111111111111111111111111` for the real input but fewer for sample data.
 ///
-/// `maze` is the adjacency of distances and doors between each pair of keys and the robots
-/// starting locations.
+/// `maze` is the adjacency matrix of distances and doors between each pair of keys and the
+/// robots' starting locations.
 struct Maze {
     initial: State,
     maze: [[Door; 30]; 30],

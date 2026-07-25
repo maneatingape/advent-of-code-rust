@@ -1,8 +1,8 @@
 //! # Beverage Bandits
 //!
 //! This problem is notoriously tricky due to the finicky rules that must be followed precisely and
-//! that not all inputs trigger all edge cases. However, from a performance aspect most of the time
-//! is consumed finding the nearest target whenever a unit needs to move.
+//! the fact that not all inputs trigger all edge cases. However, from a performance aspect most
+//! of the time is consumed finding the nearest target whenever a unit needs to move.
 //!
 //! For each move we perform two [BFS](https://en.wikipedia.org/wiki/Breadth-first_search).
 //! The first search from the current unit finds the nearest target in reading order.
@@ -21,7 +21,7 @@
 //! First example:
 //!
 //! * Goblin's turn.
-//! * We should choose the first target square in reading order (to the right of the nearest elf)
+//! * We should choose the first target square in reading order (to the right of the nearest elf).
 //! * There are two equal shortest paths to that square, so we should choose the first *step* in
 //!   reading order (up).
 //!

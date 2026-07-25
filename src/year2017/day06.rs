@@ -13,7 +13,7 @@
 //!
 //! For all but the few manual overflow cases, it is very fast to find the highest nibble
 //! using bitwise logic. To detect the cycle a [`FastMap`] stores each previously seen
-//! memory layout along with the cycle that it first appeared.
+//! memory layout along with the cycle in which it first appeared.
 use crate::util::hash::*;
 use crate::util::parse::*;
 

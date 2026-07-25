@@ -45,7 +45,7 @@
 //! 1. **XOR** If inputs are `x` and `y` then output must be another XOR gate
 //!    (except for inputs `x00` and `y00`) otherwise output must be `z`.
 //! 2. **AND** Output must be an OR gate (except for inputs `x00` and `y00`).
-//! 3. **OR** Output must be both AND and XOR gate, except for final carry
+//! 3. **OR** Output must be both AND and XOR gates, except for final carry
 //!    which must output to `z45`.
 //!
 //! We only need to find swapped outputs (not fix them) so the result is the labels of gates

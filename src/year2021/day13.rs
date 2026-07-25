@@ -1,7 +1,7 @@
 //! # Transparent Origami
 //!
 //! There are 2 possible approaches to tracking the position of dots after each fold:
-//! * A `HashSet` that will collapse duplicate entries
+//! * A `HashSet` that will collapse duplicate entries.
 //! * An array of sufficient dimensions to track every possible coordinate.
 //!
 //! We will use both approaches for speed, the first in part one and the second in part two.

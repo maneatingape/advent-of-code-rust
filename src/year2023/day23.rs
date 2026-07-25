@@ -64,7 +64,7 @@
 //! we calculate all possible next rows. Interestingly, it turns out that there are only 76 possible
 //! different rows. Then at each y coordinate we **deduplicate** rows to find the maximum value.
 //! This is the most important optimization as it means that each row is at most 76 elements
-//! instead of growing exponentially (76², 76³, ...)
+//! instead of growing exponentially (76², 76³, ...).
 //!
 //! ## Example paths
 //!
@@ -155,7 +155,7 @@
 //! (`E`, `S`) is allowed.
 //!
 //! Finally, there are two special rules when joining two nested line segments.
-//! When joining (`S`, `S`) the next `E` convert to an `S` to maintain balance.
+//! When joining (`S`, `S`) the next `E` converts to an `S` to maintain balance.
 //!
 //! ```none
 //!     Previous S..E ┌──┐
@@ -163,7 +163,7 @@
 //!     Current  ..SE └┘||
 //! ```
 //!
-//! When joining (`E`, `E`) the previous `S` convert to an `E` to maintain balance.
+//! When joining (`E`, `E`) the previous `S` converts to an `E` to maintain balance.
 //!
 //! ```none
 //!     Previous S..E ┌──┐
