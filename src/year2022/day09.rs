@@ -50,13 +50,13 @@ pub fn part2(input: &Input) -> u32 {
 /// Using const generics for the rope length allows the compiler to optimize the loop and speeds
 /// things up by about 40%.
 fn simulate<const N: usize>(input: &Input) -> u32 {
-    let (width, height, start, ..) = *input;
+    let (width, height, start, pairs) = input;
 
     let mut distinct = 0;
-    let mut rope = [start; N];
+    let mut rope = [*start; N];
     let mut grid = vec![false; (width * height) as usize];
 
-    for &(step, amount) in &input.3 {
+    for &(step, amount) in pairs {
         for _ in 0..amount {
             rope[0] += step;
             for i in 1..N {

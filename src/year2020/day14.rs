@@ -70,7 +70,7 @@ pub enum Instruction {
 }
 
 impl Instruction {
-    fn mask(pattern: &str) -> Instruction {
+    fn mask(pattern: &str) -> Self {
         let (ones, xs) = pattern.bytes().fold((0, 0), |(ones, xs), b| {
             ((ones << 1) | (b == b'1') as u64, (xs << 1) | (b == b'X') as u64)
         });
@@ -87,8 +87,8 @@ struct Set {
 impl Set {
     /// The one bits are from the original address, plus any from the mask, less any that
     /// overlap with Xs.
-    fn new(address: u64, value: u64, ones: u64, floating: u64) -> Set {
-        Set { ones: (address | ones) & !floating, floating, weight: value }
+    fn new(address: u64, value: u64, ones: u64, floating: u64) -> Self {
+        Self { ones: (address | ones) & !floating, floating, weight: value }
     }
 
     /// Sets are disjoint if any 2 one bits are different and there is no X in either set.
@@ -99,10 +99,10 @@ impl Set {
     ///     Second: 0X1X01X
     ///     Result: 001101X
     /// ```
-    fn intersect(&self, other: &Set) -> Option<Set> {
+    fn intersect(&self, other: &Self) -> Option<Self> {
         let disjoint = (self.ones ^ other.ones) & !(self.floating | other.floating);
 
-        (disjoint == 0).then_some(Set {
+        (disjoint == 0).then_some(Self {
             ones: self.ones | other.ones,
             floating: self.floating & other.floating,
             weight: 0,

@@ -42,7 +42,7 @@ impl Group {
     }
 
     /// Attack types are stored as a bitmask for quick comparison.
-    fn actual_damage(&self, other: &Group) -> i32 {
+    fn actual_damage(&self, other: &Self) -> i32 {
         if self.attack & other.weak != 0 {
             2 * self.effective_power()
         } else if self.attack & other.immune == 0 {

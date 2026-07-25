@@ -33,7 +33,7 @@ impl Rule {
         let next_tape = block[0][22] == b'1';
         let advance = block[1][27] == b'r';
         let next_state = (block[2][26] - b'A') as usize;
-        Rule { next_state, next_tape, advance }
+        Self { next_state, next_tape, advance }
     }
 }
 

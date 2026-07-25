@@ -33,59 +33,59 @@ impl U256 {
         }
     }
 
-    fn non_zero(&self) -> bool {
+    fn non_zero(self) -> bool {
         self.left != 0 || self.right != 0
     }
 
     /// Perform a `rotate_left` where the width can be different from 256 bits.
-    fn left_roll(&self, width: usize) -> U256 {
+    fn left_roll(self, width: usize) -> Self {
         if width <= 128 {
             let mask = !(1 << width);
             let right = ((self.right << 1) & mask) | (self.right >> (width - 1));
-            U256 { left: self.left, right }
+            Self { left: self.left, right }
         } else {
             let mask = !(1 << (width - 128));
             let left = ((self.left << 1) & mask) | (self.right >> 127);
             let right = (self.right << 1) | (self.left >> (width - 129));
-            U256 { left, right }
+            Self { left, right }
         }
     }
 
     /// Perform a `rotate_right` where the width can be different from 256 bits.
-    fn right_roll(&self, width: usize) -> U256 {
+    fn right_roll(self, width: usize) -> Self {
         if width <= 128 {
             let right = (self.right >> 1) | ((self.right & 1) << (width - 1));
-            U256 { left: self.left, right }
+            Self { left: self.left, right }
         } else {
             let left = (self.left >> 1) | ((self.right & 1) << (width - 129));
             let right = (self.right >> 1) | ((self.left & 1) << 127);
-            U256 { left, right }
+            Self { left, right }
         }
     }
 }
 
 /// Implement operator bitwise logic so that we can use the regular `&`, `|` and `!` notation.
 impl BitAnd for U256 {
-    type Output = U256;
+    type Output = Self;
 
-    fn bitand(self, rhs: U256) -> U256 {
-        U256 { left: self.left & rhs.left, right: self.right & rhs.right }
+    fn bitand(self, rhs: Self) -> Self {
+        Self { left: self.left & rhs.left, right: self.right & rhs.right }
     }
 }
 
 impl BitOr for U256 {
-    type Output = U256;
+    type Output = Self;
 
-    fn bitor(self, rhs: U256) -> U256 {
-        U256 { left: self.left | rhs.left, right: self.right | rhs.right }
+    fn bitor(self, rhs: Self) -> Self {
+        Self { left: self.left | rhs.left, right: self.right | rhs.right }
     }
 }
 
 impl Not for U256 {
-    type Output = U256;
+    type Output = Self;
 
-    fn not(self) -> U256 {
-        U256 { left: !self.left, right: !self.right }
+    fn not(self) -> Self {
+        Self { left: !self.left, right: !self.right }
     }
 }
 

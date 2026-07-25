@@ -45,7 +45,7 @@ pub fn parse(input: &str) -> Vec<Room<'_>> {
 
         // Filter real rooms vs decoys.
         if freq[to_index(checksum[0])] == highest && rules(checksum, &freq, &mut fof) {
-            let sector_id = (&line[size - 10..size - 7]).unsigned();
+            let sector_id = line[size - 10..size - 7].unsigned();
             valid.push(Room { name, sector_id });
         }
     }

@@ -32,38 +32,38 @@ use std::ops::{Add, Sub};
 struct Point3D(i32, i32, i32);
 
 impl Point3D {
-    fn parse([x, y, z]: [i32; 3]) -> Point3D {
-        Point3D(x, y, z)
+    fn parse([x, y, z]: [i32; 3]) -> Self {
+        Self(x, y, z)
     }
 
     /// There are 24 possible 3D rotations of each point in increments of 90 degrees.
-    fn transform(&self, index: usize) -> Point3D {
-        let Point3D(x, y, z) = *self;
+    fn transform(self, index: usize) -> Self {
+        let Self(x, y, z) = self;
         match index {
-            0 => Point3D(x, y, z),
-            1 => Point3D(x, z, -y),
-            2 => Point3D(x, -z, y),
-            3 => Point3D(x, -y, -z),
-            4 => Point3D(-x, -z, -y),
-            5 => Point3D(-x, y, -z),
-            6 => Point3D(-x, -y, z),
-            7 => Point3D(-x, z, y),
-            8 => Point3D(y, z, x),
-            9 => Point3D(y, -x, z),
-            10 => Point3D(y, x, -z),
-            11 => Point3D(y, -z, -x),
-            12 => Point3D(-y, x, z),
-            13 => Point3D(-y, z, -x),
-            14 => Point3D(-y, -z, x),
-            15 => Point3D(-y, -x, -z),
-            16 => Point3D(z, x, y),
-            17 => Point3D(z, y, -x),
-            18 => Point3D(z, -y, x),
-            19 => Point3D(z, -x, -y),
-            20 => Point3D(-z, y, x),
-            21 => Point3D(-z, -x, y),
-            22 => Point3D(-z, x, -y),
-            23 => Point3D(-z, -y, -x),
+            0 => Self(x, y, z),
+            1 => Self(x, z, -y),
+            2 => Self(x, -z, y),
+            3 => Self(x, -y, -z),
+            4 => Self(-x, -z, -y),
+            5 => Self(-x, y, -z),
+            6 => Self(-x, -y, z),
+            7 => Self(-x, z, y),
+            8 => Self(y, z, x),
+            9 => Self(y, -x, z),
+            10 => Self(y, x, -z),
+            11 => Self(y, -z, -x),
+            12 => Self(-y, x, z),
+            13 => Self(-y, z, -x),
+            14 => Self(-y, -z, x),
+            15 => Self(-y, -x, -z),
+            16 => Self(z, x, y),
+            17 => Self(z, y, -x),
+            18 => Self(z, -y, x),
+            19 => Self(z, -x, -y),
+            20 => Self(-z, y, x),
+            21 => Self(-z, -x, y),
+            22 => Self(-z, x, -y),
+            23 => Self(-z, -y, -x),
             _ => unreachable!(),
         }
     }
@@ -71,12 +71,12 @@ impl Point3D {
     /// No need to take the square root as it's faster and easier to just use the integer
     /// value of the distance squared directly.
     fn euclidean(self, other: Self) -> i32 {
-        let Point3D(dx, dy, dz) = self - other;
+        let Self(dx, dy, dz) = self - other;
         dx * dx + dy * dy + dz * dz
     }
 
     fn manhattan(self, other: Self) -> i32 {
-        let Point3D(dx, dy, dz) = self - other;
+        let Self(dx, dy, dz) = self - other;
         dx.abs() + dy.abs() + dz.abs()
     }
 }
@@ -86,9 +86,9 @@ impl Add for Point3D {
     type Output = Self;
 
     fn add(self, rhs: Self) -> Self {
-        let Point3D(x1, y1, z1) = self;
-        let Point3D(x2, y2, z2) = rhs;
-        Point3D(x1 + x2, y1 + y2, z1 + z2)
+        let Self(x1, y1, z1) = self;
+        let Self(x2, y2, z2) = rhs;
+        Self(x1 + x2, y1 + y2, z1 + z2)
     }
 }
 
@@ -96,9 +96,9 @@ impl Sub for Point3D {
     type Output = Self;
 
     fn sub(self, rhs: Self) -> Self {
-        let Point3D(x1, y1, z1) = self;
-        let Point3D(x2, y2, z2) = rhs;
-        Point3D(x1 - x2, y1 - y2, z1 - z2)
+        let Self(x1, y1, z1) = self;
+        let Self(x2, y2, z2) = rhs;
+        Self(x1 - x2, y1 - y2, z1 - z2)
     }
 }
 
@@ -112,7 +112,7 @@ struct Scanner {
 impl Scanner {
     /// Calculate the signature as the set of Euclidean distance squared between every possible
     /// pair of beacons.
-    fn parse(block: &str) -> Scanner {
+    fn parse(block: &str) -> Self {
         // Each beacon header results in 5 mangled numbers at the start that should be skipped.
         let beacons: Vec<_> =
             block.iter_signed().skip(5).chunk::<3>().map(Point3D::parse).collect();
@@ -127,7 +127,7 @@ impl Scanner {
             }
         }
 
-        Scanner { beacons, signature }
+        Self { beacons, signature }
     }
 }
 
@@ -160,7 +160,7 @@ impl Located {
             beacons.iter().map(|b| b.transform(orientation) + translation).collect();
         let oriented = beacons.iter().copied().collect();
 
-        Located { beacons, signature, oriented, translation }
+        Self { beacons, signature, oriented, translation }
     }
 }
 

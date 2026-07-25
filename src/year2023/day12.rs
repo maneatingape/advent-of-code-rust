@@ -128,9 +128,7 @@ pub fn parse(input: &str) -> Vec<Spring<'_>> {
         .lines()
         .map(|line| {
             let (prefix, suffix) = line.split_once(' ').unwrap();
-            let first = prefix.as_bytes();
-            let second = suffix.iter_unsigned().collect();
-            (first, second)
+            (prefix.as_bytes(), suffix.iter_unsigned().collect())
         })
         .collect()
 }

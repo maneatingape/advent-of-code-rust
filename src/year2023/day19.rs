@@ -57,7 +57,7 @@ pub fn parse(input: &str) -> Input<'_> {
                     _ => unreachable!(),
                 };
 
-                let value: u32 = (&first[2..]).unsigned();
+                let value: u32 = first[2..].unsigned();
                 let next = second;
 
                 // Convert each rule into a half open range.

@@ -16,13 +16,13 @@ pub fn parse(input: &str) -> Input {
 
     for record in records {
         match record.len() {
-            31 => start = (&record[15..17]).unsigned(),
+            31 => start = record[15..17].unsigned(),
             27 => {
-                let end = (&record[15..17]).unsigned();
+                let end = record[15..17].unsigned();
                 let minutes = guards.entry(id).or_insert_with(|| [0; 60]);
                 (start..end).for_each(|i| minutes[i] += 1);
             }
-            _ => id = (&record[26..record.len() - 13]).unsigned(),
+            _ => id = record[26..record.len() - 13].unsigned(),
         }
     }
 

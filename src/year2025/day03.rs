@@ -33,11 +33,11 @@ fn solve<const N: usize>(input: &[&str]) -> u64 {
         .iter()
         .map(|&bank| {
             // Start with enough batteries to make the bank, taken from the right of the input.
-            let end = bank.len() - N;
-            batteries.copy_from_slice(&bank.as_bytes()[end..]);
+            let (head, tail) = bank.split_at(bank.len() - N);
+            batteries.copy_from_slice(tail.as_bytes());
 
             // Scan from right to left, bubbling up any battery greater than the start of the bank.
-            for mut next in bank[..end].bytes().rev() {
+            for mut next in head.bytes().rev() {
                 for battery in &mut batteries {
                     if next < *battery {
                         break;

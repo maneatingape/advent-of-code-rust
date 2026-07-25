@@ -14,6 +14,7 @@
 use crate::util::hash::*;
 use crate::util::iter::*;
 use crate::util::parse::*;
+use std::ops::AddAssign;
 
 #[derive(Copy, Clone, PartialEq, Eq, Hash)]
 struct Vector {
@@ -25,19 +26,21 @@ struct Vector {
 impl Vector {
     #[inline]
     fn new([x, y, z]: [i32; 3]) -> Self {
-        Vector { x, y, z }
+        Self { x, y, z }
     }
 
     #[inline]
     fn manhattan(self) -> i32 {
         self.x.abs() + self.y.abs() + self.z.abs()
     }
+}
 
+impl AddAssign for Vector {
     #[inline]
-    fn tick(&mut self, other: Vector) {
-        self.x += other.x;
-        self.y += other.y;
-        self.z += other.z;
+    fn add_assign(&mut self, rhs: Self) {
+        self.x += rhs.x;
+        self.y += rhs.y;
+        self.z += rhs.z;
     }
 }
 
@@ -52,8 +55,8 @@ pub struct Particle {
 impl Particle {
     #[inline]
     fn tick(&mut self) {
-        self.velocity.tick(self.acceleration);
-        self.position.tick(self.velocity);
+        self.velocity += self.acceleration;
+        self.position += self.velocity;
     }
 
     // Perform a tick on particle, and return true if it is aligned.

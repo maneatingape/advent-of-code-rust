@@ -22,7 +22,7 @@ pub struct Cart {
 
 impl Cart {
     fn new(position: Point, direction: Point) -> Self {
-        Cart { position, direction, turns: 0, active: true }
+        Self { position, direction, turns: 0, active: true }
     }
 
     fn tick(&mut self, grid: &Grid<u8>) {

@@ -36,7 +36,7 @@ struct Node {
 
 impl Node {
     fn new() -> Self {
-        Node { tiles: BitSet::new(), from: FastSet::new(), to: FastSet::new() }
+        Self { tiles: BitSet::new(), from: FastSet::new(), to: FastSet::new() }
     }
 }
 
@@ -47,7 +47,7 @@ struct BitSet {
 
 impl BitSet {
     fn new() -> Self {
-        BitSet { bits: [0; 190] }
+        Self { bits: [0; 190] }
     }
 
     fn insert(&mut self, position: Point) {
@@ -57,7 +57,7 @@ impl BitSet {
         self.bits[base] |= 1 << offset;
     }
 
-    fn union(&mut self, other: &BitSet) {
+    fn union(&mut self, other: &Self) {
         self.bits.iter_mut().zip(&other.bits).for_each(|(a, b)| *a |= b);
     }
 

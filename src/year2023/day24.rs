@@ -71,7 +71,7 @@ impl Add for Vector {
     type Output = Self;
 
     fn add(self, rhs: Self) -> Self {
-        Vector { x: self.x + rhs.x, y: self.y + rhs.y, z: self.z + rhs.z }
+        Self { x: self.x + rhs.x, y: self.y + rhs.y, z: self.z + rhs.z }
     }
 }
 
@@ -79,7 +79,7 @@ impl Sub for Vector {
     type Output = Self;
 
     fn sub(self, rhs: Self) -> Self {
-        Vector { x: self.x - rhs.x, y: self.y - rhs.y, z: self.z - rhs.z }
+        Self { x: self.x - rhs.x, y: self.y - rhs.y, z: self.z - rhs.z }
     }
 }
 
@@ -88,14 +88,14 @@ impl Vector {
         let x = self.y * other.z - self.z * other.y;
         let y = self.z * other.x - self.x * other.z;
         let z = self.x * other.y - self.y * other.x;
-        Vector { x, y, z }
+        Self { x, y, z }
     }
 
     // Changes the magnitude (but not direction) of the vector.
     // Prevents numeric overflow.
     fn gcd(self) -> Self {
         let gcd = self.x.gcd(self.y).gcd(self.z);
-        Vector { x: self.x / gcd, y: self.y / gcd, z: self.z / gcd }
+        Self { x: self.x / gcd, y: self.y / gcd, z: self.z / gcd }
     }
 
     fn sum(self) -> i128 {

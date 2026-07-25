@@ -17,7 +17,7 @@ impl Add for Item {
     type Output = Self;
 
     fn add(self, rhs: Self) -> Self {
-        Item {
+        Self {
             cost: self.cost + rhs.cost,
             damage: self.damage + rhs.damage,
             armor: self.armor + rhs.armor,

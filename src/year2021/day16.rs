@@ -47,11 +47,11 @@ impl BitStream<'_> {
 
 pub enum Packet {
     Literal { version: u64, value: u64 },
-    Operator { version: u64, type_id: u64, packets: Vec<Packet> },
+    Operator { version: u64, type_id: u64, packets: Vec<Self> },
 }
 
 impl Packet {
-    fn from(bit_stream: &mut BitStream<'_>) -> Packet {
+    fn from(bit_stream: &mut BitStream<'_>) -> Self {
         let version = bit_stream.next(3);
         let type_id = bit_stream.next(3);
 
@@ -64,7 +64,7 @@ impl Packet {
                 value = (value << 4) | bit_stream.next(4);
             }
 
-            Packet::Literal { version, value }
+            Self::Literal { version, value }
         } else {
             let mut packets = Vec::new();
 
@@ -80,7 +80,7 @@ impl Packet {
                 }
             }
 
-            Packet::Operator { version, type_id, packets }
+            Self::Operator { version, type_id, packets }
         }
     }
 }

@@ -123,7 +123,7 @@ pub struct CachePadding {
 impl CachePadding {
     #[inline]
     fn new(n: usize) -> Self {
-        CachePadding { atomic: AtomicUsize::new(n) }
+        Self { atomic: AtomicUsize::new(n) }
     }
 
     #[inline]
@@ -166,7 +166,7 @@ pub struct AtomicIter {
 
 impl AtomicIter {
     pub fn new(start: u32, step: u32) -> Self {
-        AtomicIter { running: AtomicBool::new(true), index: AtomicU32::from(start), step }
+        Self { running: AtomicBool::new(true), index: AtomicU32::from(start), step }
     }
 
     pub fn next(&self) -> Option<u32> {

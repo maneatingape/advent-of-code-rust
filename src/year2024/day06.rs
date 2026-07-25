@@ -187,6 +187,6 @@ impl Shortcut {
             scan(&mut right, Point::new(grid.width - 1, y), LEFT, grid.width);
         }
 
-        Shortcut { up, down, left, right }
+        Self { up, down, left, right }
     }
 }

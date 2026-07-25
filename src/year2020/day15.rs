@@ -33,11 +33,11 @@ fn play(input: &[usize], rounds: usize) -> usize {
     let mut spoken = vec![0; rounds];
     let mut seen = vec![0_u64; rounds / 64];
 
-    for i in 0..size {
-        if input[i] == 0 {
+    for (i, &n) in input[..size].iter().enumerate() {
+        if n == 0 {
             zeroth = i + 1;
         } else {
-            spoken[input[i]] = (i + 1) as u32;
+            spoken[n] = (i + 1) as u32;
         }
     }
 

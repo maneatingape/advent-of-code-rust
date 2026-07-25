@@ -54,9 +54,9 @@ enum Monkey {
 }
 
 impl Monkey {
-    fn parse(str: &str, indices: &FastMap<&str, usize>) -> Monkey {
+    fn parse(str: &str, indices: &FastMap<&str, usize>) -> Self {
         if str.len() < 11 {
-            Monkey::Number(str.signed())
+            Self::Number(str.signed())
         } else {
             let left = indices[&str[0..4]];
             let right = indices[&str[7..11]];
@@ -67,7 +67,7 @@ impl Monkey {
                 b'/' => Operation::Div,
                 _ => unreachable!(),
             };
-            Monkey::Result(left, operation, right)
+            Self::Result(left, operation, right)
         }
     }
 }

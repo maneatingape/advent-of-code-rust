@@ -63,29 +63,29 @@ pub fn part2(input: &Input) -> String {
         Fold::Vertical(y) => (width, y),
     });
 
-    // All larger folds repeat a periodic mapping pattern given by the final fold.
+    // The first column is reserved for newlines, so shift each point one to the right.
     let mut grid = Grid::new(width + 1, height, '.');
-    let period_x = 2 * (width + 1);
-    let period_y = 2 * (height + 1);
 
-    for &start in &input.points {
-        let x = start.x % period_x;
-        let x = if x > width { period_x - x - 2 } else { x };
-        let y = start.y % period_y;
-        let y = if y > height { period_y - y - 2 } else { y };
-        let end = Point::new(x, y);
-        grid[end + RIGHT] = '#';
+    for &Point { x, y } in &input.points {
+        grid[Point::new(reflect(x, width), reflect(y, height)) + RIGHT] = '#';
     }
 
     (0..height).for_each(|y| grid[Point::new(0, y)] = '\n');
     grid.bytes.iter().collect()
 }
 
-#[inline]
 fn apply_fold(fold: Fold, point: Point) -> Point {
     match fold {
         Fold::Horizontal(x) if point.x >= x => Point::new(2 * x - point.x, point.y),
         Fold::Vertical(y) if point.y >= y => Point::new(point.x, 2 * y - point.y),
         _ => point,
     }
+}
+
+/// All larger folds repeat a periodic mapping pattern given by the final fold, so a single
+/// modulo followed by a reflection back into range replaces every intermediate fold.
+fn reflect(value: i32, max: i32) -> i32 {
+    let period = 2 * (max + 1);
+    let value = value % period;
+    if value > max { period - value - 2 } else { value }
 }

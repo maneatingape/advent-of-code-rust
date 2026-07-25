@@ -16,29 +16,27 @@ type Move = (Point, i32);
 type Input = (Vec<Move>, Vec<Move>);
 
 pub fn parse(input: &str) -> Input {
-    let mut first = Vec::with_capacity(1_000);
-    let mut second = Vec::with_capacity(1_000);
+    input
+        .split_ascii_whitespace()
+        .chunk::<3>()
+        .map(|[a, b, c]| {
+            // Parse part one.
+            let first = (Point::from(a.as_bytes()[0]), b.signed());
 
-    for [a, b, c] in input.split_ascii_whitespace().chunk::<3>() {
-        // Parse part one.
-        let direction = Point::from(a.as_bytes()[0]);
-        let amount = b.signed();
-        first.push((direction, amount));
+            // Parse part two.
+            let direction = match c.as_bytes()[7] {
+                b'0' => RIGHT,
+                b'1' => DOWN,
+                b'2' => LEFT,
+                b'3' => UP,
+                _ => unreachable!(),
+            };
+            let hex = &c[2..c.len() - 2];
+            let second = (direction, i32::from_str_radix(hex, 16).unwrap());
 
-        // Parse part two.
-        let direction = match c.as_bytes()[7] {
-            b'0' => RIGHT,
-            b'1' => DOWN,
-            b'2' => LEFT,
-            b'3' => UP,
-            _ => unreachable!(),
-        };
-        let hex = &c[2..c.len() - 2];
-        let amount = i32::from_str_radix(hex, 16).unwrap();
-        second.push((direction, amount));
-    }
-
-    (first, second)
+            (first, second)
+        })
+        .unzip()
 }
 
 pub fn part1(input: &Input) -> i64 {

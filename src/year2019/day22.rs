@@ -109,25 +109,25 @@ struct Technique {
 }
 
 impl Technique {
-    fn compose(&self, other: &Technique) -> Technique {
+    fn compose(&self, other: &Self) -> Self {
         let m = self.m;
         let a = (self.a * other.a) % m;
         let c = (self.c * other.a + other.c) % m;
-        Technique { a, c, m }
+        Self { a, c, m }
     }
 
-    fn inverse(&self) -> Technique {
+    fn inverse(&self) -> Self {
         let m = self.m;
         let a = self.a.mod_inv(m).unwrap();
         let c = m - (a * self.c) % m;
-        Technique { a, c, m }
+        Self { a, c, m }
     }
 
-    fn power(&self, e: i128) -> Technique {
+    fn power(&self, e: i128) -> Self {
         let m = self.m;
         let a = self.a.mod_pow(e, m);
         let c = (((a - 1) * (self.a - 1).mod_inv(m).unwrap() % m) * self.c) % m;
-        Technique { a, c, m }
+        Self { a, c, m }
     }
 
     fn shuffle(&self, index: i128) -> i128 {

@@ -48,9 +48,8 @@ pub struct Square {
 }
 
 pub fn parse(input: &str) -> Square {
-    let raw: Vec<_> = input.lines().map(str::as_bytes).collect();
-    let size = raw.len();
-    let bytes = raw.into_iter().flatten().map(|b| b.to_decimal()).collect();
+    let size = input.lines().next().unwrap().len();
+    let bytes = input.bytes().filter(u8::is_ascii_digit).map(u8::to_decimal).collect();
     Square { size, bytes }
 }
 

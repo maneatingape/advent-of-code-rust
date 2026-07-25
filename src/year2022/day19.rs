@@ -62,7 +62,7 @@ struct Mineral {
 
 impl Mineral {
     const fn from(ore: u32, clay: u32, obsidian: u32, geode: u32) -> Self {
-        Mineral { ore, clay, obsidian, geode }
+        Self { ore, clay, obsidian, geode }
     }
 
     /// This is used to compare robot costs so we don't need to check geodes.
@@ -76,7 +76,7 @@ impl Add for Mineral {
     type Output = Self;
 
     fn add(self, rhs: Self) -> Self {
-        Mineral {
+        Self {
             ore: self.ore + rhs.ore,
             clay: self.clay + rhs.clay,
             obsidian: self.obsidian + rhs.obsidian,
@@ -89,7 +89,7 @@ impl Sub for Mineral {
     type Output = Self;
 
     fn sub(self, rhs: Self) -> Self {
-        Mineral {
+        Self {
             ore: self.ore - rhs.ore,
             clay: self.clay - rhs.clay,
             obsidian: self.obsidian - rhs.obsidian,
@@ -112,7 +112,7 @@ pub struct Blueprint {
 impl Blueprint {
     fn from(chunk: [u32; 7]) -> Self {
         let [id, ore1, ore2, ore3, clay, ore4, obsidian] = chunk;
-        Blueprint {
+        Self {
             id,
             max_ore: ore1.max(ore2).max(ore3).max(ore4),
             max_clay: clay,

@@ -46,6 +46,7 @@
 use crate::util::hash::*;
 use crate::util::parse::*;
 use crate::util::thread::*;
+use std::ops::{Add, Mul, Sub};
 
 type Input = (Vec<Monkey>, Vec<Pair>);
 type Pair = (usize, usize);
@@ -58,20 +59,32 @@ pub struct Monkey {
     no: usize,
 }
 
+impl Monkey {
+    /// Inspecting an item raises its worry level.
+    fn inspect(&self, item: usize) -> usize {
+        match self.operation {
+            Operation::Square => item * item,
+            Operation::Multiply(y) => item * y,
+            Operation::Add(y) => item + y,
+        }
+    }
+
+    /// The divisibility test decides which monkey receives the item next.
+    fn throw(&self, item: usize) -> usize {
+        if item.is_multiple_of(self.test) { self.yes } else { self.no }
+    }
+}
+
 enum Operation {
     Square,
     Multiply(usize),
     Add(usize),
 }
 
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, Default)]
 struct Business([usize; 8]);
 
 impl Business {
-    fn zero() -> Self {
-        Business([0; 8])
-    }
-
     fn inc(&mut self, from: usize) {
         self.0[from] += 1;
     }
@@ -80,17 +93,33 @@ impl Business {
         self.0.sort_unstable();
         self.0.iter().rev().take(2).product()
     }
+}
 
+/// Implement operators so that we can use `+`, `-` and `*` notation to combine partial results.
+impl Add for Business {
+    type Output = Self;
+
+    #[inline]
     fn add(mut self, rhs: Self) -> Self {
         self.0.iter_mut().zip(rhs.0).for_each(|(a, b)| *a += b);
         self
     }
+}
 
+impl Sub for Business {
+    type Output = Self;
+
+    #[inline]
     fn sub(mut self, rhs: Self) -> Self {
         self.0.iter_mut().zip(rhs.0).for_each(|(a, b)| *a -= b);
         self
     }
+}
 
+impl Mul<usize> for Business {
+    type Output = Self;
+
+    #[inline]
     fn mul(mut self, rhs: usize) -> Self {
         self.0.iter_mut().for_each(|a| *a *= rhs);
         self
@@ -131,24 +160,14 @@ pub fn parse(input: &str) -> Input {
 
 pub fn part1(input: &Input) -> usize {
     let (monkeys, pairs) = input;
-    let mut business = Business::zero();
+    let mut business = Business::default();
 
     for &(mut from, mut item) in pairs {
         let mut rounds = 0;
 
         while rounds < 20 {
-            let worry = match monkeys[from].operation {
-                Operation::Square => item * item,
-                Operation::Multiply(y) => item * y,
-                Operation::Add(y) => item + y,
-            };
-            item = worry / 3;
-
-            let to = if item.is_multiple_of(monkeys[from].test) {
-                monkeys[from].yes
-            } else {
-                monkeys[from].no
-            };
+            item = monkeys[from].inspect(item) / 3;
+            let to = monkeys[from].throw(item);
 
             business.inc(from);
 
@@ -171,7 +190,7 @@ pub fn part2(input: &Input) -> usize {
     });
 
     // Merge results.
-    result.into_iter().flatten().fold(Business::zero(), Business::add).level()
+    result.into_iter().flatten().fold(Business::default(), Business::add).level()
 }
 
 /// Play 10,000 rounds adjusting the worry level modulo the product of all the monkey's test values.
@@ -180,7 +199,7 @@ fn play(monkeys: &[Monkey], mut from: usize, mut item: usize) -> Business {
     let product: usize = monkeys.iter().map(|m| m.test).product();
 
     let mut round = 0;
-    let mut business = Business::zero();
+    let mut business = Business::default();
 
     let mut path = Vec::new();
     let mut seen = FastMap::new();
@@ -189,18 +208,8 @@ fn play(monkeys: &[Monkey], mut from: usize, mut item: usize) -> Business {
     seen.insert((from, item), path.len() - 1);
 
     while round < 10_000 {
-        let worry = match monkeys[from].operation {
-            Operation::Square => item * item,
-            Operation::Multiply(y) => item * y,
-            Operation::Add(y) => item + y,
-        };
-        item = worry % product;
-
-        let to = if item.is_multiple_of(monkeys[from].test) {
-            monkeys[from].yes
-        } else {
-            monkeys[from].no
-        };
+        item = monkeys[from].inspect(item) % product;
+        let to = monkeys[from].throw(item);
 
         business.inc(from);
 
@@ -218,9 +227,9 @@ fn play(monkeys: &[Monkey], mut from: usize, mut item: usize) -> Business {
                 let quotient = offset / cycle_width;
                 let remainder = offset % cycle_width;
 
-                let full = business.sub(path[previous]).mul(quotient);
-                let partial = path[previous + remainder].sub(path[previous]);
-                return business.add(full).add(partial);
+                let full = (business - path[previous]) * quotient;
+                let partial = path[previous + remainder] - path[previous];
+                return business + full + partial;
             }
         }
 

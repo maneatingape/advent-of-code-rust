@@ -28,16 +28,7 @@ pub fn decrypt<const N: usize>(input: &str) -> Input {
 
     let invalid = numbers
         .windows(N + 1)
-        .find(|w| {
-            for i in 0..(N - 1) {
-                for j in (i + 1)..N {
-                    if w[i] + w[j] == w[N] {
-                        return false;
-                    }
-                }
-            }
-            true
-        })
+        .find(|w| (0..N - 1).all(|i| (i + 1..N).all(|j| w[i] + w[j] != w[N])))
         .map(|w| w[N])
         .unwrap();
 

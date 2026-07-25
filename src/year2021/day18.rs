@@ -46,22 +46,24 @@ const IN_ORDER: [usize; 30] = [
 /// `]` means move up a level to return to parent and a digit from 0-9 creates a leaf node
 /// with that value.
 pub fn parse(input: &str) -> Vec<Snailfish> {
-    fn helper(bytes: &[u8]) -> Snailfish {
-        let mut tree = [-1; 64];
-        let mut i = 1;
+    input
+        .lines()
+        .map(|line: &str| {
+            let mut tree = [-1; 64];
+            let mut i = 1;
 
-        for &b in bytes {
-            match b {
-                b'[' => i *= 2,
-                b',' => i += 1,
-                b']' => i /= 2,
-                b => tree[i] = b.to_decimal() as i32,
+            for b in line.bytes() {
+                match b {
+                    b'[' => i *= 2,
+                    b',' => i += 1,
+                    b']' => i /= 2,
+                    b => tree[i] = b.to_decimal() as i32,
+                }
             }
-        }
 
-        tree
-    }
-    input.lines().map(|line| helper(line.as_bytes())).collect()
+            tree
+        })
+        .collect()
 }
 
 /// Add all snailfish numbers, reducing to a single magnitude.
@@ -85,12 +87,12 @@ pub fn part2(input: &[Snailfish]) -> i32 {
 
     // Use as many cores as possible to parallelize the calculation.
     let result = spawn_parallel_iterator(&pairs, worker);
-    result.into_iter().max().unwrap()
+    result.into_iter().flatten().max().unwrap()
 }
 
 /// Pair addition is independent so we can parallelize across multiple threads.
-fn worker(iter: ParIter<'_, (&Snailfish, &Snailfish)>) -> i32 {
-    iter.map(|&(a, b)| magnitude(&mut add(a, b))).max().unwrap()
+fn worker(iter: ParIter<'_, (&Snailfish, &Snailfish)>) -> Option<i32> {
+    iter.map(|&(a, b)| magnitude(&mut add(a, b))).max()
 }
 
 /// Add two snailfish numbers.

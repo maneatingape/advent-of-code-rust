@@ -16,8 +16,12 @@ use crate::util::parse::*;
 type Input = (usize, usize);
 
 pub fn parse(input: &str) -> Input {
-    let (orthogonal, diagonal): (Vec<_>, Vec<_>) =
-        input.iter_unsigned().chunk::<4>().partition(|&[x1, y1, x2, y2]| x1 == x2 || y1 == y2);
+    // The `->` separator rules out `iter_signed`, so convert to `i32` after parsing instead.
+    let (orthogonal, diagonal): (Vec<[i32; 4]>, Vec<_>) = input
+        .iter_unsigned::<u32>()
+        .map(|n| n as i32)
+        .chunk::<4>()
+        .partition(|&[x1, y1, x2, y2]| x1 == x2 || y1 == y2);
 
     let mut grid = vec![0_u8; 1_000_000];
     let first = vents(&orthogonal, &mut grid);
@@ -34,11 +38,10 @@ pub fn part2(input: &Input) -> usize {
     input.1
 }
 
-fn vents(input: &[[usize; 4]], grid: &mut [u8]) -> usize {
+fn vents(input: &[[i32; 4]], grid: &mut [u8]) -> usize {
     let mut result = 0;
 
     for &[x1, y1, x2, y2] in input {
-        let (x1, y1, x2, y2) = (x1 as i32, y1 as i32, x2 as i32, y2 as i32);
         let count = (y2 - y1).abs().max((x2 - x1).abs());
         let delta = (y2 - y1).signum() * 1000 + (x2 - x1).signum();
         let mut index = y1 * 1000 + x1;

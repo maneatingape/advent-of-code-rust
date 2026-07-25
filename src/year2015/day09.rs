@@ -31,11 +31,10 @@ pub fn parse(input: &str) -> Result {
     let mut indices = FastMap::new();
 
     for [start, _, end, ..] in &tokens {
-        let size = indices.len();
-        indices.entry(start).or_insert(size);
-
-        let size = indices.len();
-        indices.entry(end).or_insert(size);
+        for key in [start, end] {
+            let size = indices.len();
+            indices.entry(key).or_insert(size);
+        }
     }
 
     let stride = indices.len();

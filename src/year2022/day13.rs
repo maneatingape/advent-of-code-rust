@@ -18,6 +18,8 @@
 //! * Do a similar push if the second character is an opening `[` and the first is anything else.
 //! * Finally, compare the 2 characters by value. Since we've already covered the equal case, one
 //!   is guaranteed to be greater than or less than the other.
+use crate::util::iter::*;
+
 struct Packet<'a> {
     slice: &'a [u8],
     index: usize,
@@ -37,9 +39,10 @@ pub fn parse(input: &str) -> Vec<&str> {
 /// Count adjacent pairs of packets that are in order.
 pub fn part1(input: &[&str]) -> usize {
     input
-        .chunks_exact(2)
+        .iter()
+        .chunk::<2>()
         .enumerate()
-        .filter_map(|(i, chunk)| compare(chunk[0], chunk[1]).then_some(i + 1))
+        .filter_map(|(i, [a, b])| compare(a, b).then_some(i + 1))
         .sum()
 }
 

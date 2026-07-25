@@ -26,10 +26,7 @@ use crate::util::parse::*;
 
 /// Extract the constant offset from the assembunny code.
 pub fn parse(input: &str) -> u32 {
-    let lines: Vec<_> = input.lines().collect();
-    let first: u32 = lines[19].unsigned();
-    let second: u32 = lines[20].unsigned();
-    first * second
+    input.lines().skip(19).take(2).map(str::unsigned::<u32>).product()
 }
 
 /// 7! plus some constant.

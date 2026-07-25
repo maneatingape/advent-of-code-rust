@@ -46,7 +46,7 @@ pub fn parse(input: &str) -> Input {
     for time in 0..height {
         for i in 0..height {
             let up = up[(i + time) % height];
-            let down = down[(height + i - time % height) % height];
+            let down = down[(height + i - time) % height];
             vertical.push(up & down);
         }
     }

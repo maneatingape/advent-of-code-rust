@@ -44,12 +44,12 @@ pub struct MinHeap<K: Ord, V> {
 impl<K: Ord, V> MinHeap<K, V> {
     #[must_use]
     pub fn new() -> Self {
-        MinHeap { heap: BinaryHeap::new() }
+        Self { heap: BinaryHeap::new() }
     }
 
     #[must_use]
     pub fn with_capacity(capacity: usize) -> Self {
-        MinHeap { heap: BinaryHeap::with_capacity(capacity) }
+        Self { heap: BinaryHeap::with_capacity(capacity) }
     }
 
     #[inline]

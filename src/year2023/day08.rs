@@ -22,15 +22,15 @@ use std::collections::VecDeque;
 type Input = (usize, usize);
 
 pub fn parse(input: &str) -> Input {
-    let lines: Vec<_> = input.lines().collect();
-    let mut nodes = FastMap::with_capacity(lines.len());
+    let (prefix, suffix) = input.split_once("\n\n").unwrap();
+    let mut nodes = FastMap::with_capacity(1_000);
 
-    for line in &lines[2..] {
+    for line in suffix.lines() {
         nodes.insert(&line[0..3], [&line[7..10], &line[12..15]]);
     }
 
-    let mut part_one = lines[0].len();
-    let mut part_two = lines[0].len();
+    let mut part_one = prefix.len();
+    let mut part_two = prefix.len();
     let mut todo = VecDeque::new();
     let mut seen = FastSet::new();
 

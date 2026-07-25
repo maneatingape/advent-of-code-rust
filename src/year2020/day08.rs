@@ -21,12 +21,12 @@ pub enum Instruction {
 }
 
 impl Instruction {
-    fn from([a, b]: [&str; 2]) -> Instruction {
+    fn from([a, b]: [&str; 2]) -> Self {
         let amount = b.signed();
         match a {
-            "acc" => Instruction::Acc(amount),
-            "jmp" => Instruction::Jmp(amount),
-            "nop" => Instruction::Nop(amount),
+            "acc" => Self::Acc(amount),
+            "jmp" => Self::Jmp(amount),
+            "nop" => Self::Nop(amount),
             _ => unreachable!(),
         }
     }

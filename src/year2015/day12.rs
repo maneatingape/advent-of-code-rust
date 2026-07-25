@@ -88,25 +88,16 @@ fn parse_object(input: &[u8], start: usize) -> Result {
 /// Parse a string evaluating only if it equals "red".
 fn parse_string(input: &[u8], start: usize) -> Result {
     let start = start + 1;
-    let mut end = start;
-
-    while input[end] != b'"' {
-        end += 1;
-    }
+    let end = start + input[start..].iter().position(|&b| b == b'"').unwrap();
 
     Result { next: end + 1, ignore: &input[start..end] == RED, value: 0 }
 }
 
 /// Parse an integer value.
 fn parse_number(input: &[u8], start: usize) -> Result {
-    let mut end = start;
-    let mut neg = false;
+    let neg = input[start] == b'-';
+    let mut end = start + usize::from(neg);
     let mut acc = 0;
-
-    if input[end] == b'-' {
-        neg = true;
-        end += 1;
-    }
 
     while input[end].is_ascii_digit() {
         acc = 10 * acc + (input[end] - b'0') as i32;

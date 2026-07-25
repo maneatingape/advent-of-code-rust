@@ -30,10 +30,10 @@ struct Rule {
 }
 
 impl Rule {
-    fn from(line: &str) -> Rule {
+    fn from(line: &str) -> Self {
         let departure = line.starts_with("departure");
         let [a, b, c, d] = line.iter_unsigned().chunk::<4>().next().unwrap();
-        Rule { departure, a, b, c, d }
+        Self { departure, a, b, c, d }
     }
 
     fn check(&self, n: u32) -> bool {

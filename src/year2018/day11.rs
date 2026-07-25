@@ -24,12 +24,7 @@ pub fn parse(input: &str) -> Vec<Result> {
     for y in 1..301 {
         for x in 1..301 {
             let rack_id = x + 10;
-
-            let mut power_level = rack_id * y;
-            power_level += grid_serial_number;
-            power_level *= rack_id;
-            power_level = (power_level / 100) % 10;
-            power_level -= 5;
+            let power_level = ((rack_id * y + grid_serial_number) * rack_id / 100) % 10 - 5;
 
             let index = (301 * y + x) as usize;
             sat[index] = power_level + sat[index - 1] + sat[index - 301] - sat[index - 302];

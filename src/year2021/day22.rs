@@ -38,8 +38,8 @@ pub struct RebootStep {
 }
 
 impl RebootStep {
-    fn from((command, points): (&str, [i32; 6])) -> RebootStep {
-        RebootStep { on: command == "on", cube: Cube::from(points) }
+    fn from((command, points): (&str, [i32; 6])) -> Self {
+        Self { on: command == "on", cube: Cube::from(points) }
     }
 }
 
@@ -58,22 +58,22 @@ pub struct Cube {
 impl Cube {
     /// Keeping the coordinates in ascending order per axis makes calculating intersections
     /// and volume easier.
-    fn from([a, b, c, d, e, f]: [i32; 6]) -> Cube {
+    fn from([a, b, c, d, e, f]: [i32; 6]) -> Self {
         let (x1, x2) = a.minmax(b);
         let (y1, y2) = c.minmax(d);
         let (z1, z2) = e.minmax(f);
-        Cube { x1, x2, y1, y2, z1, z2 }
+        Self { x1, x2, y1, y2, z1, z2 }
     }
 
     /// Returns a `Some` of the intersection if two cubes overlap or `None` if they don't.
-    fn intersect(&self, other: &Cube) -> Option<Cube> {
+    fn intersect(&self, other: &Self) -> Option<Self> {
         let x1 = self.x1.max(other.x1);
         let x2 = self.x2.min(other.x2);
         let y1 = self.y1.max(other.y1);
         let y2 = self.y2.min(other.y2);
         let z1 = self.z1.max(other.z1);
         let z2 = self.z2.min(other.z2);
-        (x1 <= x2 && y1 <= y2 && z1 <= z2).then_some(Cube { x1, x2, y1, y2, z1, z2 })
+        (x1 <= x2 && y1 <= y2 && z1 <= z2).then_some(Self { x1, x2, y1, y2, z1, z2 })
     }
 
     /// Returns the volume of a cube, converting to `i64` to prevent overflow.

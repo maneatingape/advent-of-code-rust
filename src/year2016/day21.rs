@@ -25,20 +25,20 @@ pub enum Op {
 }
 
 impl Op {
-    fn from(line: &str) -> Op {
+    fn from(line: &str) -> Self {
         let tokens: Vec<_> = line.split_ascii_whitespace().collect();
         let digit = |i: usize| tokens[i].unsigned();
         let letter = |i: usize| tokens[i].chars().next().unwrap();
 
         match tokens[0] {
-            "reverse" => Op::Reverse(digit(2), digit(4)),
-            "move" => Op::Move(digit(2), digit(5)),
+            "reverse" => Self::Reverse(digit(2), digit(4)),
+            "move" => Self::Move(digit(2), digit(5)),
             _ => match tokens[1] {
-                "position" => Op::SwapPosition(digit(2), digit(5)),
-                "letter" => Op::SwapLetter(letter(2), letter(5)),
-                "left" => Op::RotateLeft(digit(2)),
-                "right" => Op::RotateRight(digit(2)),
-                "based" => Op::RotateLetterRight(letter(6)),
+                "position" => Self::SwapPosition(digit(2), digit(5)),
+                "letter" => Self::SwapLetter(letter(2), letter(5)),
+                "left" => Self::RotateLeft(digit(2)),
+                "right" => Self::RotateRight(digit(2)),
+                "based" => Self::RotateLetterRight(letter(6)),
                 _ => unreachable!(),
             },
         }
@@ -48,39 +48,39 @@ impl Op {
         let position = |a: char| password.iter().position(|&b| a == b).unwrap();
 
         match self {
-            Op::SwapPosition(first, second) => password.swap(first, second),
-            Op::SwapLetter(first, second) => {
+            Self::SwapPosition(first, second) => password.swap(first, second),
+            Self::SwapLetter(first, second) => {
                 let first = position(first);
                 let second = position(second);
                 password.swap(first, second);
             }
-            Op::RotateLeft(first) => password.rotate_left(first),
-            Op::RotateRight(first) => password.rotate_right(first),
-            Op::RotateLetterLeft(first) => {
+            Self::RotateLeft(first) => password.rotate_left(first),
+            Self::RotateRight(first) => password.rotate_right(first),
+            Self::RotateLetterLeft(first) => {
                 let first = position(first);
                 let second = ROTATE_LETTER_LEFT[first] % password.len();
                 password.rotate_left(second);
             }
-            Op::RotateLetterRight(first) => {
+            Self::RotateLetterRight(first) => {
                 let first = position(first);
                 let second = ROTATE_LETTER_RIGHT[first] % password.len();
                 password.rotate_right(second);
             }
-            Op::Reverse(first, second) => password[first..=second].reverse(),
-            Op::Move(first, second) => {
+            Self::Reverse(first, second) => password[first..=second].reverse(),
+            Self::Move(first, second) => {
                 let letter = password.remove(first);
                 password.insert(second, letter);
             }
         }
     }
 
-    fn inverse(self) -> Op {
+    fn inverse(self) -> Self {
         match self {
-            Op::RotateLeft(first) => Op::RotateRight(first),
-            Op::RotateRight(first) => Op::RotateLeft(first),
-            Op::RotateLetterLeft(first) => Op::RotateLetterRight(first),
-            Op::RotateLetterRight(first) => Op::RotateLetterLeft(first),
-            Op::Move(first, second) => Op::Move(second, first),
+            Self::RotateLeft(first) => Self::RotateRight(first),
+            Self::RotateRight(first) => Self::RotateLeft(first),
+            Self::RotateLetterLeft(first) => Self::RotateLetterRight(first),
+            Self::RotateLetterRight(first) => Self::RotateLetterLeft(first),
+            Self::Move(first, second) => Self::Move(second, first),
             // Other operations are their own inverse.
             other => other,
         }

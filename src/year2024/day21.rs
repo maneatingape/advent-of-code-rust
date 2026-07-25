@@ -114,15 +114,14 @@ fn pad_routes(combinations: &mut Combinations, pad: &[(char, Point)], gap: Point
         for &(second, to) in pad {
             let horizontal = || move_sequence(from.x, to.x, '>', '<');
             let vertical = || move_sequence(from.y, to.y, 'v', '^');
+            let routes = combinations.entry((first, second)).or_default();
 
             if Point::new(from.x, to.y) != gap {
-                let path = vertical().chain(horizontal()).chain(once('A')).collect();
-                combinations.entry((first, second)).or_default().push(path);
+                routes.push(vertical().chain(horizontal()).chain(once('A')).collect());
             }
 
             if from.x != to.x && from.y != to.y && Point::new(to.x, from.y) != gap {
-                let path = horizontal().chain(vertical()).chain(once('A')).collect();
-                combinations.entry((first, second)).or_default().push(path);
+                routes.push(horizontal().chain(vertical()).chain(once('A')).collect());
             }
         }
     }

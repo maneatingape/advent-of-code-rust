@@ -20,12 +20,12 @@ pub struct Computer {
 }
 
 impl Computer {
-    pub fn new(input: &[i64]) -> Computer {
+    pub fn new(input: &[i64]) -> Self {
         let mut code = Vec::with_capacity(input.len() + EXTRA);
         code.extend(input.iter().map(|&i| i as usize));
         code.resize(code.len() + EXTRA, 0);
 
-        Computer { pc: 0, base: 0, code, input: VecDeque::new() }
+        Self { pc: 0, base: 0, code, input: VecDeque::new() }
     }
 
     pub fn input(&mut self, value: i64) {
@@ -86,15 +86,15 @@ impl Computer {
                 5 => {
                     let first = self.address(op / 100, 1);
                     let second = self.address(op / 1000, 2);
-                    let value = self.code[first] == 0;
-                    self.pc = if value { self.pc + 3 } else { self.code[second] };
+                    let zero = self.code[first] == 0;
+                    self.pc = if zero { self.pc + 3 } else { self.code[second] };
                 }
                 // Jump if false.
                 6 => {
                     let first = self.address(op / 100, 1);
                     let second = self.address(op / 1000, 2);
-                    let value = self.code[first] == 0;
-                    self.pc = if value { self.code[second] } else { self.pc + 3 };
+                    let zero = self.code[first] == 0;
+                    self.pc = if zero { self.code[second] } else { self.pc + 3 };
                 }
                 // Less than
                 7 => {

@@ -84,10 +84,7 @@ fn next_password(mut password: Password) -> Password {
 
 /// Creates a sequence of form `aabcc` from an arbitrary starting character.
 fn fill(mut password: Password, start: u8) -> Password {
-    password[3] = start;
-    password[4] = start;
-    password[5] = start + 1;
-    password[6] = start + 2;
-    password[7] = start + 2;
+    let (a, b, c) = (start, start + 1, start + 2);
+    password[3..].copy_from_slice(&[a, a, b, c, c]);
     password
 }

@@ -55,19 +55,19 @@ impl Point {
     #[inline]
     #[must_use]
     pub const fn new(x: i32, y: i32) -> Self {
-        Point { x, y }
+        Self { x, y }
     }
 
     #[inline]
     #[must_use]
     pub fn clockwise(self) -> Self {
-        Point::new(-self.y, self.x)
+        Self::new(-self.y, self.x)
     }
 
     #[inline]
     #[must_use]
     pub fn counter_clockwise(self) -> Self {
-        Point::new(self.y, -self.x)
+        Self::new(self.y, -self.x)
     }
 
     #[inline]
@@ -79,7 +79,7 @@ impl Point {
     #[inline]
     #[must_use]
     pub fn signum(self, other: Self) -> Self {
-        Point::new((self.x - other.x).signum(), (self.y - other.y).signum())
+        Self::new((self.x - other.x).signum(), (self.y - other.y).signum())
     }
 }
 
@@ -109,7 +109,7 @@ impl Add for Point {
 
     #[inline]
     fn add(self, rhs: Self) -> Self {
-        Point::new(self.x + rhs.x, self.y + rhs.y)
+        Self::new(self.x + rhs.x, self.y + rhs.y)
     }
 }
 
@@ -126,7 +126,7 @@ impl Mul<i32> for Point {
 
     #[inline]
     fn mul(self, rhs: i32) -> Self {
-        Point::new(self.x * rhs, self.y * rhs)
+        Self::new(self.x * rhs, self.y * rhs)
     }
 }
 
@@ -135,7 +135,7 @@ impl Sub for Point {
 
     #[inline]
     fn sub(self, rhs: Self) -> Self {
-        Point::new(self.x - rhs.x, self.y - rhs.y)
+        Self::new(self.x - rhs.x, self.y - rhs.y)
     }
 }
 

@@ -49,7 +49,7 @@ pub fn parse(input: &str) -> Vec<Basin> {
 }
 
 pub fn part1(basins: &[Basin]) -> u32 {
-    basins.iter().map(|b| b.lowest + 1).sum::<u32>()
+    basins.iter().map(|b| b.lowest + 1).sum()
 }
 
 pub fn part2(basins: &[Basin]) -> u32 {

@@ -70,8 +70,8 @@ impl Tile {
         [0, -1, 8, 1, 0, 1],
     ];
 
-    fn from(chunk: &[&str]) -> Tile {
-        let id = (&chunk[0][5..9]).unsigned();
+    fn from(chunk: &[&str]) -> Self {
+        let id = chunk[0][5..9].unsigned();
 
         let pixels: [[u8; 10]; 10] = from_fn(|i| chunk[i + 1].as_bytes().try_into().unwrap());
 
@@ -100,7 +100,7 @@ impl Tile {
         let bottom = [b, rb, t, rt, rr, r, rl, l];
         let right = [r, l, rr, rl, t, b, rt, rb];
 
-        Tile { id, top, left, bottom, right, pixels }
+        Self { id, top, left, bottom, right, pixels }
     }
 
     // Coefficients allow us to reuse the loop logic for each of the 8 possible permutations.

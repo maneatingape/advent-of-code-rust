@@ -21,7 +21,7 @@ impl Interval {
     fn new(l: u32, r: u32) -> Self {
         debug_assert!(l <= r);
 
-        Interval { l, r }
+        Self { l, r }
     }
 
     fn intersects(self, other: Self) -> bool {
@@ -31,7 +31,7 @@ impl Interval {
     fn intersection(self, other: Self) -> Self {
         debug_assert!(self.intersects(other));
 
-        Interval::new(self.l.max(other.l), self.r.min(other.r))
+        Self::new(self.l.max(other.l), self.r.min(other.r))
     }
 
     fn contains(self, x: u32) -> bool {

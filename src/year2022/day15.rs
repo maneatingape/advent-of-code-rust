@@ -12,13 +12,15 @@ pub struct Input {
 }
 
 pub fn parse(input: &str) -> Vec<Input> {
-    fn helper([x1, y1, x2, y2]: [i32; 4]) -> Input {
-        let sensor = Point::new(x1, y1);
-        let beacon = Point::new(x2, y2);
-        let manhattan = sensor.manhattan(beacon);
-        Input { sensor, beacon, manhattan }
-    }
-    input.iter_signed().chunk::<4>().map(helper).collect()
+    input
+        .iter_signed()
+        .chunk::<4>()
+        .map(|[x1, y1, x2, y2]| {
+            let sensor = Point::new(x1, y1);
+            let beacon = Point::new(x2, y2);
+            Input { sensor, beacon, manhattan: sensor.manhattan(beacon) }
+        })
+        .collect()
 }
 
 /// The example uses y=10 but the real data uses y=2000000, so break out the logic

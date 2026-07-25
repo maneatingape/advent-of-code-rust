@@ -25,11 +25,10 @@ pub fn parse(input: &str) -> Input {
     let mut passenger = 0;
     let mut part_one = 0;
     let mut part_two = 0;
-    let iter = input.bytes();
     let mut check_group = false;
 
     // End the input with a double newline, to include last group in the total.
-    for ch in iter.chain(once(b'\n')) {
+    for ch in input.bytes().chain(once(b'\n')) {
         match ch {
             b'\n' if check_group => {
                 // A second newline ends one group and prepares for the next.

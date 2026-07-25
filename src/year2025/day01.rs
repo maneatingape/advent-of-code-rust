@@ -10,7 +10,7 @@ use crate::util::parse::*;
 type Input = (i32, i32);
 
 pub fn parse(input: &str) -> Input {
-    let directions = input.bytes().filter(|&b| b.is_ascii_uppercase());
+    let directions = input.bytes().filter(u8::is_ascii_uppercase);
     let amounts = input.iter_signed::<i32>();
 
     // Dial starts at fifty, not zero.

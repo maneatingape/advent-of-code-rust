@@ -27,11 +27,11 @@ impl Segment {
     fn new(first: Point, second: Point) -> Self {
         let (x1, x2) = first.x.minmax(second.x);
         let (y1, y2) = first.y.minmax(second.y);
-        Segment { x1, x2, y1, y2 }
+        Self { x1, x2, y1, y2 }
     }
 
     // Return the point of intersection between two orthogonal segments, if there is one.
-    fn intersects(&self, other: &Segment) -> Option<Point> {
+    fn intersects(&self, other: &Self) -> Option<Point> {
         let overlap = other.x2 >= self.x1
             && other.x1 <= self.x2
             && other.y2 >= self.y1

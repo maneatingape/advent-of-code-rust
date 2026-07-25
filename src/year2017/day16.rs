@@ -23,21 +23,16 @@ pub struct Dance {
 }
 
 impl Dance {
-    /// Creates a new Dance that represents the identity transformation.
-    fn new() -> Dance {
-        Dance { position: from_fn(|i| i), exchange: from_fn(|i| i) }
-    }
-
     /// Converts a Dance into a string representation.
     fn apply(self) -> String {
         self.position.iter().map(|&i| to_char(self.exchange[i])).collect()
     }
 
     /// Combines two Dances into a new Dance.
-    fn compose(self, other: Dance) -> Dance {
+    fn compose(self, other: Self) -> Self {
         let position = self.position.map(|i| other.position[i]);
         let exchange = self.exchange.map(|i| other.exchange[i]);
-        Dance { position, exchange }
+        Self { position, exchange }
     }
 }
 
@@ -47,9 +42,11 @@ pub fn parse(input: &str) -> Dance {
     let mut letters = input.bytes().filter(u8::is_ascii_lowercase);
     let mut numbers = input.iter_unsigned::<usize>();
 
+    // Start from the identity transformation.
     let mut offset = 0;
     let mut lookup: [usize; 16] = from_fn(|i| i);
-    let Dance { mut position, mut exchange } = Dance::new();
+    let mut position: [usize; 16] = from_fn(|i| i);
+    let mut exchange: [usize; 16] = from_fn(|i| i);
 
     while let Some(op) = letters.next() {
         match op {

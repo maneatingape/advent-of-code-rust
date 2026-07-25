@@ -27,9 +27,7 @@ pub fn parse(input: &str) -> Input {
                 groups += depth;
                 depth += 1;
             }
-            b'}' => {
-                depth -= 1;
-            }
+            b'}' => depth -= 1,
             _ => (),
         }
     }

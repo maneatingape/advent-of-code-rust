@@ -243,24 +243,24 @@ mod implementation {
             self.v != Simd::splat(0)
         }
 
-        pub(super) fn shl(self) -> U256 {
-            U256 { v: (self.v << 1) | (self.v.shift_elements_left::<1>(0) >> 7) }
+        pub(super) fn shl(self) -> Self {
+            Self { v: (self.v << 1) | (self.v.shift_elements_left::<1>(0) >> 7) }
         }
 
-        pub(super) fn shr(self) -> U256 {
-            U256 { v: (self.v >> 1) | (self.v.shift_elements_right::<1>(0) << 7) }
+        pub(super) fn shr(self) -> Self {
+            Self { v: (self.v >> 1) | (self.v.shift_elements_right::<1>(0) << 7) }
         }
 
-        pub(super) fn and(self, rhs: U256) -> U256 {
-            U256 { v: self.v & rhs.v }
+        pub(super) fn and(self, rhs: Self) -> Self {
+            Self { v: self.v & rhs.v }
         }
 
-        pub(super) fn or(self, rhs: U256) -> U256 {
-            U256 { v: self.v | rhs.v }
+        pub(super) fn or(self, rhs: Self) -> Self {
+            Self { v: self.v | rhs.v }
         }
 
-        pub(super) fn not(self) -> U256 {
-            U256 { v: !self.v }
+        pub(super) fn not(self) -> Self {
+            Self { v: !self.v }
         }
     }
 }

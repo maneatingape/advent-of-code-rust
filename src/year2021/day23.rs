@@ -49,9 +49,9 @@ struct Room {
 
 impl Room {
     /// Pack state into a compact `u16` representation.
-    fn new(spaces: [usize; 4]) -> Room {
+    fn new(spaces: [usize; 4]) -> Self {
         let packed = (1 << 12) | (spaces[0] << 9) | (spaces[1] << 6) | (spaces[2] << 3) | spaces[3];
-        Room { packed: packed as u16 }
+        Self { packed: packed as u16 }
     }
 
     /// The marker bit is always in the most significant position, so can be used to find out the
@@ -108,8 +108,8 @@ struct Hallway {
 
 impl Hallway {
     /// The initial hallway is empty. Room entrances are marked as type 4.
-    fn new() -> Hallway {
-        Hallway { packed: 0x55454545455 }
+    fn new() -> Self {
+        Self { packed: 0x55454545455 }
     }
 
     /// Find the amphipod at a specific location.
@@ -134,8 +134,8 @@ struct Burrow {
 }
 
 impl Burrow {
-    fn new(rooms: [[usize; 4]; 4]) -> Burrow {
-        Burrow { hallway: Hallway::new(), rooms: from_fn(|i| Room::new(rooms[i])) }
+    fn new(rooms: [[usize; 4]; 4]) -> Self {
+        Self { hallway: Hallway::new(), rooms: from_fn(|i| Room::new(rooms[i])) }
     }
 }
 

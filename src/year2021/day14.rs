@@ -11,7 +11,6 @@ use crate::util::iter::*;
 
 type Elements = [u64; 26];
 type Pairs = [u64; 26 * 26];
-type Rules = Vec<Rule>;
 
 pub struct Rule {
     from: usize,
@@ -21,15 +20,15 @@ pub struct Rule {
 }
 
 impl Rule {
-    fn parse([a, b, c]: [u8; 3]) -> Rule {
-        Rule { from: pair(a, b), to_left: pair(a, c), to_right: pair(c, b), element: element(c) }
+    fn parse([a, b, c]: [u8; 3]) -> Self {
+        Self { from: pair(a, b), to_left: pair(a, c), to_right: pair(c, b), element: element(c) }
     }
 }
 
 pub struct Input {
     elements: Elements,
     pairs: Pairs,
-    rules: Rules,
+    rules: Vec<Rule>,
 }
 
 /// Count the initial pairs and elements and parse each instruction into a [`Rule`] struct.
@@ -66,12 +65,11 @@ pub fn part2(input: &Input) -> u64 {
 fn steps(input: &Input, rounds: usize) -> u64 {
     let mut elements = input.elements;
     let mut pairs = input.pairs;
-    let rules = &input.rules;
 
     for _ in 0..rounds {
         let mut next: Pairs = [0; 26 * 26];
 
-        for rule in rules {
+        for rule in &input.rules {
             let n = pairs[rule.from];
             next[rule.to_left] += n;
             next[rule.to_right] += n;

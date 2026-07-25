@@ -158,7 +158,7 @@ fn explore(
     path: &mut Vec<String>,
     inventory: &mut Vec<String>,
 ) {
-    let direction = stack.last().map_or("none", |d| d.as_str());
+    let direction = stack.last().map_or("none", String::as_str);
     let reverse = opposite(direction);
 
     let mut output = String::new();

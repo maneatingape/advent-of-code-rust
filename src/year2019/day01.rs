@@ -3,6 +3,7 @@
 //! The title of the problem is a reference to the
 //! [real-life equation](https://en.wikipedia.org/wiki/Tsiolkovsky_rocket_equation).
 use crate::util::parse::*;
+use std::iter::successors;
 
 /// The [`iter_unsigned`] utility method extracts and parses numbers from surrounding text.
 ///
@@ -21,14 +22,6 @@ pub fn part1(input: &[u32]) -> u32 {
 pub fn part2(input: &[u32]) -> u32 {
     input
         .iter()
-        .copied()
-        .map(|mut mass| {
-            let mut fuel = 0;
-            while mass > 8 {
-                mass = mass / 3 - 2;
-                fuel += mass;
-            }
-            fuel
-        })
+        .flat_map(|&mass| successors(Some(mass), |&m| (m > 8).then(|| m / 3 - 2)).skip(1))
         .sum()
 }

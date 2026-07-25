@@ -26,11 +26,10 @@ type Input = (Stack, Vec<Move>);
 /// [`chunk`]: ChunkOps::chunk
 pub fn parse(input: &str) -> Input {
     let (prefix, suffix) = input.split_once("\n\n").unwrap();
-    let lines: Vec<_> = prefix.lines().collect();
-    let width = lines[0].len().div_ceil(4);
+    let width = prefix.lines().next().unwrap().len().div_ceil(4);
 
     let mut stack: Stack = vec![Vec::new(); width];
-    for row in lines.iter().rev().skip(1) {
+    for row in prefix.lines().rev().skip(1) {
         for (i, c) in row.chars().skip(1).step_by(4).enumerate() {
             if c.is_ascii_alphabetic() {
                 stack[i].push(c);

@@ -26,11 +26,10 @@ pub fn parse(input: &str) -> Input {
     let mut indices = FastMap::new();
 
     for &[from, .., to, _] in &tokens {
-        let size = indices.len();
-        indices.entry(from).or_insert(size);
-
-        let size = indices.len();
-        indices.entry(to).or_insert(size);
+        for key in [from, to] {
+            let size = indices.len();
+            indices.entry(key).or_insert(size);
+        }
     }
 
     // Calculate the happiness values. Note that the values are not reciprocal a => b != b => a.

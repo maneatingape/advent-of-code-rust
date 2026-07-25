@@ -36,11 +36,11 @@ pub struct Nanobot {
 }
 
 impl Nanobot {
-    fn from([x, y, z, r]: [i32; 4]) -> Nanobot {
-        Nanobot { x, y, z, r }
+    fn from([x, y, z, r]: [i32; 4]) -> Self {
+        Self { x, y, z, r }
     }
 
-    fn manhattan(&self, other: &Nanobot) -> i32 {
+    fn manhattan(&self, other: &Self) -> i32 {
         (self.x - other.x).abs() + (self.y - other.y).abs() + (self.z - other.z).abs()
     }
 }
@@ -56,11 +56,10 @@ pub fn part1(input: &[Nanobot]) -> usize {
 
 pub fn part2(input: &[Nanobot]) -> i32 {
     // Start by populating the possible distances that can reach each nanobot.
-    let origin = Nanobot::from([0, 0, 0, 0]);
     let mut endpoints = Vec::with_capacity(2_000);
 
     for bot in input {
-        let dist = bot.manhattan(&origin);
+        let dist = bot.x.abs() + bot.y.abs() + bot.z.abs();
         let low = (dist - bot.r).max(0);
         endpoints.push((low, 1));
         endpoints.push((dist + bot.r + 1, -1));

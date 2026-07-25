@@ -85,8 +85,8 @@ pub fn parse(input: &str) -> Input {
             // okay to not cache these states in seen.
             let mut array = [0; 16];
 
-            for i in (0..16).rev() {
-                array[i] = memory & 0xf;
+            for slot in array.iter_mut().rev() {
+                *slot = memory & 0xf;
                 memory >>= 4;
             }
 

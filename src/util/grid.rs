@@ -43,7 +43,7 @@ impl Grid<u8> {
         let height = raw.len() as i32;
         let bytes = raw.concat();
 
-        Grid { width, height, bytes }
+        Self { width, height, bytes }
     }
 
     pub fn print(&self) {
@@ -70,8 +70,8 @@ impl<T: Copy + PartialEq> Grid<T> {
 
 impl<T: Copy> Grid<T> {
     #[must_use]
-    pub fn new(width: i32, height: i32, value: T) -> Grid<T> {
-        Grid { width, height, bytes: vec![value; (width * height) as usize] }
+    pub fn new(width: i32, height: i32, value: T) -> Self {
+        Self { width, height, bytes: vec![value; (width * height) as usize] }
     }
 
     #[must_use]

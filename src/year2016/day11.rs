@@ -68,7 +68,7 @@ impl State {
 
     // Critical optimization treating generators and microchips as fungible.
     // Rearrange the pairs into canonical order. Endianness matters for getting valid slice indices.
-    fn canon(mut self) -> State {
+    fn canon(mut self) -> Self {
         let mut array = self.pairs.to_le_bytes();
         array[..5].sort_unstable();
         self.pairs = u64::from_le_bytes(array);
@@ -76,7 +76,7 @@ impl State {
     }
 
     // Attempt to adjust state by moving one or two items up or down.
-    fn move_floor(self, up: bool, item_mask: u64) -> Option<State> {
+    fn move_floor(self, up: bool, item_mask: u64) -> Option<Self> {
         // Build the new state.
         let mut state = self;
 

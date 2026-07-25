@@ -20,21 +20,20 @@ pub fn parse(input: &str) -> Input {
 
     // Build Trie from all towels.
     let mut trie = Vec::with_capacity(1_000);
-    trie.push(Node::new());
+    trie.push(Node::default());
 
     for towel in prefix.split(", ") {
         let mut i = 0;
 
         for j in towel.bytes().map(perfect_hash) {
+            // This is a new prefix, so point the link at a freshly pushed node.
             if trie[i].next[j] == 0 {
-                // This is a new prefix, so update the index to point to it then push new node.
                 trie[i].next[j] = trie.len();
-                i = trie.len();
-                trie.push(Node::new());
-            } else {
-                // Follow existing prefix.
-                i = trie[i].next[j];
+                trie.push(Node::default());
             }
+
+            // Follow the link.
+            i = trie[i].next[j];
         }
 
         trie[i].set_towel();
@@ -95,15 +94,12 @@ fn perfect_hash(b: u8) -> usize {
 }
 
 /// Simple Node object that uses indices to link to other nodes.
+#[derive(Default)]
 struct Node {
     next: [usize; 6],
 }
 
 impl Node {
-    fn new() -> Self {
-        Node { next: [0; 6] }
-    }
-
     // Index 3 is not used by the hash, so we cheekily repurpose for the number of towels.
     fn set_towel(&mut self) {
         self.next[3] = 1;

@@ -76,8 +76,8 @@ pub struct Deck {
 }
 
 impl Deck {
-    fn new() -> Deck {
-        Deck { sum: 0, score: 0, start: 0, end: 0, cards: [0; 64] }
+    fn new() -> Self {
+        Self { sum: 0, score: 0, start: 0, end: 0, cards: [0; 64] }
     }
 
     // To make things easier, `start` and `end` never wrap around, so that `end` is always
@@ -109,8 +109,8 @@ impl Deck {
         self.end - self.start
     }
 
-    fn copy(&self, amount: usize) -> Deck {
-        let mut copy = Deck::new();
+    fn copy(&self, amount: usize) -> Self {
+        let mut copy = Self::new();
         copy.end = amount;
 
         for i in 0..amount {

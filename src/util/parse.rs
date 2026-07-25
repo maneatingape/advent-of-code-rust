@@ -47,7 +47,7 @@ pub trait ParseOps {
     fn iter_signed<T: Signed<T>>(&self) -> ParseSigned<'_, T>;
 }
 
-impl<S: AsRef<str>> ParseOps for S {
+impl<S: AsRef<str> + ?Sized> ParseOps for S {
     fn unsigned<T: Unsigned<T>>(&self) -> T {
         let str = self.as_ref();
         try_unsigned(&mut str.bytes()).unwrap_or_else(|| panic!("Unable to parse \"{str}\""))
