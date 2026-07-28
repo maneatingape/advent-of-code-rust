@@ -283,7 +283,7 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 | 22 | [Slam Shuffle](https://adventofcode.com/2019/day/22) | [Source](src/year2019/day22.rs) | 12 |
 | 23 | [Category Six](https://adventofcode.com/2019/day/23) | [Source](src/year2019/day23.rs) | 670 |
 | 24 | [Planet of Discord](https://adventofcode.com/2019/day/24) | [Source](src/year2019/day24.rs) | 232 |
-| 25 | [Cryostasis](https://adventofcode.com/2019/day/25) | [Source](src/year2019/day25.rs) | 2047 |
+| 25 | [Cryostasis](https://adventofcode.com/2019/day/25) | [Source](src/year2019/day25.rs) | 1196 |
 
 ## 2018
 
