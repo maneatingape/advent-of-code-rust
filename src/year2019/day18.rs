@@ -69,14 +69,18 @@ struct Door {
     needed: u32,
 }
 
+type Matrix = [[Door; 30]; 30];
+
 /// `initial` is the complete set of keys that we need to collect. Will always be binary
 /// `11111111111111111111111111` for the real input but fewer for sample data.
 ///
-/// `maze` is the adjacency matrix of distances and doors between each pair of keys and the
-/// robots' starting locations.
+/// `masks` maps the set of keys in the same quadrant, for prefiltering in part 2.
+/// `matrix` is the adjacency of distances and doors between each pair of keys and the robots'
+/// starting locations.
 struct Maze {
     initial: State,
-    maze: [[Door; 30]; 30],
+    masks: [u32; 30],
+    matrix: Matrix,
 }
 
 pub fn parse(input: &str) -> Grid<u8> {
@@ -124,9 +128,10 @@ fn parse_maze(width: usize, bytes: &[u8]) -> Maze {
     // As a minor optimization we reuse the same `todo` and `seen` between each search.
     let default = Door { distance: u32::MAX, needed: 0 };
 
-    let mut maze = [[default; 30]; 30];
+    let mut matrix = [[default; 30]; 30];
     let mut seen = vec![usize::MAX; bytes.len()];
     let mut todo = VecDeque::new();
+    let mut masks = [0; 30];
 
     for (start, from) in found {
         todo.push_front((start, 0, 0));
@@ -141,8 +146,10 @@ fn parse_maze(width: usize, bytes: &[u8]) -> Maze {
                 && distance > 0
             {
                 // Store the reciprocal edge weight and doors in the adjacency matrix.
-                maze[from][to] = Door { distance, needed };
-                maze[to][from] = Door { distance, needed };
+                matrix[from][to] = Door { distance, needed };
+                matrix[to][from] = Door { distance, needed };
+                masks[from] |= 1 << to;
+                masks[to] |= 1 << from;
                 // Faster to stop here and use Floyd-Warshall later.
                 continue;
             }
@@ -159,31 +166,33 @@ fn parse_maze(width: usize, bytes: &[u8]) -> Maze {
     // Fill in the rest of the graph using the Floyd-Warshall algorithm.
     // As a slight twist we also build the list of intervening doors at the same time.
     for i in RANGE {
-        maze[i][i].distance = 0;
+        matrix[i][i].distance = 0;
     }
 
     for k in RANGE {
         for i in RANGE {
             for j in RANGE {
-                let candidate = maze[i][k].distance.saturating_add(maze[k][j].distance);
-                if maze[i][j].distance > candidate {
-                    maze[i][j].distance = candidate;
+                let candidate = matrix[i][k].distance.saturating_add(matrix[k][j].distance);
+                if matrix[i][j].distance > candidate {
+                    matrix[i][j].distance = candidate;
                     // `(1 << k)` is a crucial optimization. By treating intermediate keys like
                     // doors we speed things up by a factor of 30.
-                    maze[i][j].needed = maze[i][k].needed | (1 << k) | maze[k][j].needed;
+                    matrix[i][j].needed = matrix[i][k].needed | (1 << k) | matrix[k][j].needed;
+                    masks[i] |= 1 << j;
+                    masks[j] |= 1 << i;
                 }
             }
         }
     }
 
-    Maze { initial, maze }
+    Maze { initial, masks, matrix }
 }
 
 fn explore(width: usize, bytes: &[u8]) -> u32 {
     let mut todo = MinHeap::with_capacity(5_000);
     let mut cache = FastMap::with_capacity(5_000);
 
-    let Maze { initial, maze } = parse_maze(width, bytes);
+    let Maze { initial, masks, matrix } = parse_maze(width, bytes);
     todo.push(0, initial);
 
     while let Some((total, State { position, remaining })) = todo.pop() {
@@ -193,14 +202,22 @@ fn explore(width: usize, bytes: &[u8]) -> u32 {
             return total;
         }
 
+        // Avoid next-neighbor checks if this state was visited in the meantime by a better path.
+        if let Some(&best) = cache.get(&State { position, remaining })
+            && total > best
+        {
+            continue;
+        }
+
         // The set of robots is stored as bits in a `u32` shifted by the index of the location.
         for from in position.biterator() {
             // The set of keys still needed is also stored as bits in a `u32` similarly to robots.
-            for to in remaining.biterator() {
-                let Door { distance, needed } = maze[from][to];
+            // Filter the list of destinations to keys in the same quadrant.
+            for to in (remaining & masks[from]).biterator() {
+                let Door { distance, needed } = matrix[from][to];
 
-                // u32::MAX indicates that two nodes are not connected. Only possible in part two.
-                if distance != u32::MAX && remaining & needed == 0 {
+                // Don't move to a key that still has unmet dependencies.
+                if remaining & needed == 0 {
                     let next_total = total + distance;
                     let from_mask = 1 << from;
                     let to_mask = 1 << to;
