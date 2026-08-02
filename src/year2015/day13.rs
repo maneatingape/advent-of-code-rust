@@ -4,7 +4,7 @@
 //! computing an adjacency matrix of happiness then running [Held-Karp] to find the longest
 //! cycle. If part one were the only problem at hand, the answer would be possible by iterating
 //! over 127 sets and then selecting among seven candidates to close the loop back to whichever
-//! abritrary point we pinned as the start.
+//! arbitrary point we pinned as the start.
 //!
 //! However, we are more interested in solving part two at the same time. Do this by noticing that
 //! when you insert yourself between two diners, you set the value of their mutual link to zero.

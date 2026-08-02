@@ -13,7 +13,7 @@
 //! However, since the graph is complete (every node has a distance to every other node), this
 //! particular problem can be solved even faster, by avoiding the overhead of permutations and
 //! instead using [Held-Karp's dynamic programming][Held-Karp] solution. This algorithm is
-//! O(n²*2ⁿ); for our puzzle with 8 nodes, this gives `8*7/2*256/2` or 3,584 comparisons needed.
+//! O(n²*2ⁿ). For our puzzle with 8 nodes, this gives `8*7/2*256/2` or 3,584 comparisons needed.
 //! On the surface, this is more comparisons than the 2,520 sequences visited by the O(n!)
 //! permutation solution, but set manipulation is less expensive than computation of permutations
 //! followed by casting out the longest or shortest edge, so it is an overall win.

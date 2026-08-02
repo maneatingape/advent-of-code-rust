@@ -214,7 +214,7 @@ fn flow(input: &Input, start: usize, end: usize) -> usize {
             }
         }
 
-        // Re-use for each iteration as a minor optimization.
+        // Reuse for each iteration as a minor optimization.
         todo.clear();
         path.clear();
     }

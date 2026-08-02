@@ -37,8 +37,6 @@
 //! jump in the estimate table of another 9. A circular array of 32 buckets (for bitwise math
 //! windowing) can handle our empirical range of -1 to 18 in the set of active buckets, and we
 //! avoid having to allocate memory as the search gradually shifts the active window of buckets.
-//!
-//! [`BinaryHeap`]: std::collections::BinaryHeap
 use crate::util::parse::*;
 use std::array::from_fn;
 
@@ -161,11 +159,7 @@ fn astar(square: &Square, mut grid_data: Vec<u32>) -> usize {
     grid_data[0] = 0;
 
     loop {
-        while todo[i & 31].is_empty() {
-            i += 1;
-        }
-
-        if let Some(current) = todo[i & 31].pop() {
+        while let Some(current) = todo[i & 31].pop() {
             let current = current as usize;
             let risk = (grid_data[current] & 0xffff) as usize;
             if current == end {
@@ -198,5 +192,7 @@ fn astar(square: &Square, mut grid_data: Vec<u32>) -> usize {
                 check(current + size);
             }
         }
+
+        i += 1;
     }
 }

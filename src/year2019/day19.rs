@@ -64,7 +64,7 @@ pub fn part1(input: &Input) -> i64 {
     // The origin is always set, but no other point occurs on that row or column.
     let mut result = 1;
 
-    // Scan all remaining points; this works even on lines with no integer hits.
+    // Scan all remaining points. This works even on lines with no integer hits.
     for y in 1..50 {
         let left = (1..50).find(|&x| inside(input, x, y));
         let right = (left.unwrap_or(50)..50).rfind(|&x| inside(input, x, y));

@@ -49,7 +49,7 @@ pub fn parse(input: &str) -> Input {
 ///
 /// A tree is visible if it can be seen from any direction. As a minor optimization, rather
 /// than have 4 separate loop pairs, the left, right, up and down loops are all rolled into
-/// one pair, to amortise the cost of loop logic.
+/// one pair, to amortize the cost of loop logic.
 ///
 /// The 4 corner trees don't need to be checked since they're always visible
 /// so they're added directly to the total.
