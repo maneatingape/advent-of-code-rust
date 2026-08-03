@@ -35,7 +35,7 @@ const THIRTEENS: u64 = 0x0d0d0d0d0d0d0d0d;
 const FIFTEENS: u64 = 0x0f0f0f0f0f0f0f0f;
 
 /// New type wrapper so that we can use a custom hash function.
-#[derive(PartialEq, Eq)]
+#[derive(Eq, PartialEq)]
 pub struct Key {
     area: [u64; 350],
 }

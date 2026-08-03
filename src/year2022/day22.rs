@@ -66,7 +66,7 @@ use crate::util::point::*;
 use std::collections::VecDeque;
 use std::ops::Neg;
 
-#[derive(Clone, Copy, PartialEq, Eq)]
+#[derive(Clone, Copy, Eq, PartialEq)]
 enum Tile {
     None,
     Open,
@@ -98,7 +98,7 @@ impl Grid {
 }
 
 /// Minimal 3D vector implementation.
-#[derive(Copy, Clone, Hash, PartialEq, Eq)]
+#[derive(Clone, Copy, Eq, Hash, PartialEq)]
 struct Vector {
     x: i32,
     y: i32,

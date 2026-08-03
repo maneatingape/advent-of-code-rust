@@ -20,7 +20,7 @@ use std::ops::ControlFlow;
 
 type Input = [i16; 2];
 
-#[derive(Clone, Copy, PartialEq, Eq, Hash)]
+#[derive(Clone, Copy, Eq, Hash, PartialEq)]
 struct State {
     boss_hp: i16,
     player_hp: i16,

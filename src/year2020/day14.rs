@@ -63,7 +63,7 @@
 use crate::util::hash::*;
 use crate::util::parse::*;
 
-#[derive(Copy, Clone)]
+#[derive(Clone, Copy)]
 pub enum Instruction {
     Mask { ones: u64, xs: u64 },
     Mem { address: u64, value: u64 },

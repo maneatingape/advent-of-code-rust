@@ -16,7 +16,7 @@ use crate::util::iter::*;
 use crate::util::parse::*;
 use std::ops::AddAssign;
 
-#[derive(Copy, Clone, PartialEq, Eq, Hash)]
+#[derive(Clone, Copy, Eq, Hash, PartialEq)]
 struct Vector {
     x: i32,
     y: i32,
@@ -44,7 +44,7 @@ impl AddAssign for Vector {
     }
 }
 
-#[derive(Copy, Clone)]
+#[derive(Clone, Copy)]
 pub struct Particle {
     id: usize,
     position: Vector,

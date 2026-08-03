@@ -12,7 +12,7 @@
 use crate::util::parse::*;
 use std::array::from_fn;
 
-#[derive(Copy, Clone)]
+#[derive(Clone, Copy)]
 pub struct Dance {
     /// The letter in each position from left to right
     /// with `a` represented by 0, `b` by 1 and so on.

@@ -20,7 +20,7 @@ use crate::util::parse::*;
 type Input = (u32, u64);
 type Ticket = Vec<u32>;
 
-#[derive(Clone, Copy, PartialEq, Eq)]
+#[derive(Clone, Copy, Eq, PartialEq)]
 struct Rule {
     departure: bool,
     a: u32,

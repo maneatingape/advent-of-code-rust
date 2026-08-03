@@ -28,7 +28,7 @@ use crate::util::parse::*;
 use std::ops::{Add, Sub};
 
 /// Stores coordinates in x, y, z order.
-#[derive(Copy, Clone, Hash, PartialEq, Eq)]
+#[derive(Clone, Copy, Eq, Hash, PartialEq)]
 struct Point3D(i32, i32, i32);
 
 impl Point3D {

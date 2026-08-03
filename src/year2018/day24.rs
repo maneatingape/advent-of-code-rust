@@ -16,7 +16,7 @@ pub struct Input {
     infection: Vec<Group>,
 }
 
-#[derive(Clone, Copy, PartialEq, Eq)]
+#[derive(Clone, Copy, Eq, PartialEq)]
 enum Kind {
     Immune,
     Infection,

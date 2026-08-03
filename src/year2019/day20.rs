@@ -19,7 +19,7 @@ use std::collections::VecDeque;
 
 type Key = ((u8, u8), Kind);
 
-#[derive(Clone, Copy, PartialEq, Eq, Hash)]
+#[derive(Clone, Copy, Eq, Hash, PartialEq)]
 pub enum Kind {
     Inner,
     Outer,

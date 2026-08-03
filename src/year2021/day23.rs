@@ -42,7 +42,7 @@ const COST: [usize; 4] = [1, 10, 100, 1000];
 /// * Empty room `0000000000000001`
 /// * Room with two `A`s `0000000001000000`
 /// * Room with `ABCD` where `A` is closest to hallway `0001011010001000`
-#[derive(Copy, Clone, PartialEq, Eq, Hash)]
+#[derive(Clone, Copy, Eq, Hash, PartialEq)]
 struct Room {
     packed: u16,
 }
@@ -101,7 +101,7 @@ impl Room {
 
 /// Pack the state of the hallway into a `usize`. Each hallway position is represented by a nibble
 /// with the pod type (plus additionally empty or room entrance markers) for a total of 44 bits.
-#[derive(Copy, Clone, PartialEq, Eq, Hash)]
+#[derive(Clone, Copy, Eq, Hash, PartialEq)]
 struct Hallway {
     packed: usize,
 }
@@ -127,7 +127,7 @@ impl Hallway {
 
 /// Combine hallway and four rooms into a complete burrow representation in only
 /// 8 + 4 × 2 = 16 bytes.
-#[derive(Copy, Clone, PartialEq, Eq, Hash)]
+#[derive(Clone, Copy, Eq, Hash, PartialEq)]
 struct Burrow {
     hallway: Hallway,
     rooms: [Room; 4],

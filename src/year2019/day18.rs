@@ -56,7 +56,7 @@ const RANGE: Range<usize> = 0..30;
 
 /// `position` and `remaining` are both bitfields. For example, a robot at key `d` that needs
 /// `b` and `c` would be stored as `position = 1000` and `remaining = 110`.
-#[derive(Clone, Copy, Default, PartialEq, Eq, Hash)]
+#[derive(Clone, Copy, Default, Eq, Hash, PartialEq)]
 struct State {
     position: u32,
     remaining: u32,

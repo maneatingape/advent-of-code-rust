@@ -14,7 +14,7 @@ use crate::util::iter::*;
 use crate::util::parse::*;
 use Kind::*;
 
-#[derive(Clone, Copy, PartialEq, Eq)]
+#[derive(Clone, Copy, Eq, PartialEq)]
 enum Kind {
     Sand,
     Moving,

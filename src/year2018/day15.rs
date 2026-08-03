@@ -88,7 +88,7 @@ pub struct Input {
     goblins: Vec<Point>,
 }
 
-#[derive(Clone, Copy, PartialEq, Eq)]
+#[derive(Clone, Copy, Eq, PartialEq)]
 enum Kind {
     Elf,
     Goblin,

@@ -19,7 +19,7 @@
 use crate::util::hash::*;
 use implementation::*;
 
-#[derive(PartialEq, Eq, Hash)]
+#[derive(Eq, Hash, PartialEq)]
 pub struct Hex {
     q: i32,
     r: i32,

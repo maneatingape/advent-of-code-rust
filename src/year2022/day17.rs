@@ -52,7 +52,7 @@ const ROCKS: [Rock; 5] = [
     Rock { size: 2, shape: 0x00003030 },
 ];
 
-#[derive(Copy, Clone)]
+#[derive(Clone, Copy)]
 struct Rock {
     size: usize,
     shape: u32,
