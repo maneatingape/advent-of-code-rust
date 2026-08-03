@@ -6,7 +6,6 @@
 //! [`permutations`]: crate::util::slice
 use super::intcode::*;
 use crate::util::parse::*;
-use crate::util::slice::*;
 use std::array::from_fn;
 
 pub fn parse(input: &str) -> Vec<i64> {
@@ -32,7 +31,7 @@ pub fn part1(input: &[i64]) -> i64 {
         result = result.max(signal);
     };
 
-    [0, 1, 2, 3, 4].permutations(sequence);
+    permutations(&mut [0, 1, 2, 3, 4], sequence);
     result
 }
 
@@ -63,6 +62,31 @@ pub fn part2(input: &[i64]) -> i64 {
         result = result.max(signal);
     };
 
-    [5, 6, 7, 8, 9].permutations(feedback);
+    permutations(&mut [5, 6, 7, 8, 9], feedback);
     result
+}
+
+/// Generates all possible permutations of a mutable slice, passing them one at a time to a
+/// callback function.
+/// Uses [Heap's algorithm](https://en.wikipedia.org/wiki/Heap%27s_algorithm) for efficiency,
+/// modifying the slice in place.
+fn permutations(slice: &mut [i64], mut callback: impl FnMut(&[i64])) {
+    callback(slice);
+
+    let n = slice.len();
+    let mut c = vec![0; n];
+    let mut i = 1;
+
+    while i < n {
+        if c[i] < i {
+            let swap_index = if i.is_multiple_of(2) { 0 } else { c[i] };
+            slice.swap(swap_index, i);
+            callback(slice);
+            c[i] += 1;
+            i = 1;
+        } else {
+            c[i] = 0;
+            i += 1;
+        }
+    }
 }

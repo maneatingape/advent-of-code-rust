@@ -20,7 +20,7 @@ macro_rules! library {
 }
 
 library!(util "Utility modules to handle common recurring Advent of Code patterns."
-    ansi, bitset, grid, hash, heap, integer, iter, math, md5, parse, point, slice, thread
+    ansi, bitset, grid, hash, heap, integer, iter, math, md5, parse, point, thread
 );
 
 library!(year2015 "Help Santa by solving puzzles to fix the weather machine's snow function."
