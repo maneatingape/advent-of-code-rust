@@ -118,7 +118,7 @@ impl Technique {
 
     fn inverse(&self) -> Self {
         let m = self.m;
-        let a = self.a.mod_inv(m).unwrap();
+        let a = mod_inv(self.a, m);
         let c = m - (a * self.c) % m;
         Self { a, c, m }
     }
@@ -126,7 +126,7 @@ impl Technique {
     fn power(&self, e: i128) -> Self {
         let m = self.m;
         let a = self.a.mod_pow(e, m);
-        let c = (((a - 1) * (self.a - 1).mod_inv(m).unwrap() % m) * self.c) % m;
+        let c = (((a - 1) * mod_inv(self.a - 1, m) % m) * self.c) % m;
         Self { a, c, m }
     }
 
@@ -165,4 +165,22 @@ fn deck(input: &str, m: i128) -> Technique {
         })
         .reduce(|a, b| a.compose(&b))
         .unwrap()
+}
+
+/// [Modular multiplicative inverse](https://en.wikipedia.org/wiki/Modular_multiplicative_inverse)
+/// calculated using the [extended Euclidean algorithm](https://en.wikipedia.org/wiki/Extended_Euclidean_algorithm).
+fn mod_inv(n: i128, m: i128) -> i128 {
+    let mut t = 0;
+    let mut new_t = 1;
+    let mut r = m;
+    let mut new_r = n;
+
+    while new_r != 0 {
+        let quotient = r / new_r;
+        (t, new_t) = (new_t, t - quotient * new_t);
+        (r, new_r) = (new_r, r - quotient * new_r);
+    }
+
+    assert!(r <= 1);
+    if t < 0 { t + m } else { t }
 }
