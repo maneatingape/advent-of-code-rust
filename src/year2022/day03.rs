@@ -3,12 +3,12 @@
 //! The core idea of this puzzle is computing set intersection. We could use the built-in `HashSet`
 //! but as the cardinality of the set is so small (52 maximum including both lowercase and
 //! uppercase letters) we can instead use a much faster approach of storing each set in a single
-//! `u128` integer and using bit manipulation.
+//! `u64` integer and using bit manipulation.
 //!
 //! If a letter is present in the set then the corresponding bit will be `1` otherwise `0`.
-//! For example, to add the letter "a", logical OR the set with 1 shifted left by 97.
+//! For example, to add the letter "a", logical OR the set with 1 shifted left by 33.
 //!
-//! `set | (1 << 97)`
+//! `set | (1 << (b'a' & 63))`
 //!
 //! Set intersection is the logical AND of two integers which compiles to a single machine instruction.
 //!
@@ -19,10 +19,11 @@
 //! that is blazing fast.
 //!
 //! Notes:
-//! * We could get away with a `u64` for the set, but by using a `u128` we can shift directly by the
-//!   raw ASCII codes and not bother computing offsets until the very end.
+//! * We could use a `u128` to use raw ASCII codes, but it performs less efficiently than
+//!   a `u64` combined with masked ASCII bytes. We can still not bother with computing offsets
+//!   until the very end.
 //!
-//! [`trailing_zeros`]: u128::trailing_zeros
+//! [`trailing_zeros`]: u64::trailing_zeros
 use crate::util::iter::*;
 
 /// Collect each line into a `vec` of string slices.
@@ -48,13 +49,13 @@ pub fn part2(input: &[&str]) -> u32 {
 
 /// Build a set from a slice of ASCII characters, using the `fold` function to repeatedly OR
 /// bit offsets into an accumulator.
-fn mask(s: &str) -> u128 {
-    s.bytes().fold(0, |acc, b| acc | (1 << b))
+fn mask(s: &str) -> u64 {
+    s.bytes().fold(0, |acc, b| acc | (1 << (b & 63)))
 }
 
 /// Find the lowest set bit (there should only be one) then convert to priority using the
 /// given rules.
-fn priority(mask: u128) -> u32 {
+fn priority(mask: u64) -> u32 {
     let bit = mask.trailing_zeros();
-    if bit > 96 { bit - 96 } else { bit - 38 }
+    if bit > 32 { bit - 32 } else { bit + 26 }
 }
