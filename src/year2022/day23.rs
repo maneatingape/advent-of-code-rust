@@ -2,8 +2,8 @@
 //!
 //! We represent elves as bits in an integer then use bitwise operations to efficiently figure
 //! out the movement for multiple elves at once.
-use Direction::*;
-use implementation::U256;
+use self::Direction::*;
+use self::implementation::U256;
 
 /// The initial grid is 70 x 70. Elves stop moving when no other elf is adjacent so the grid
 /// will expand at most 70 in any direction, giving 70 + 70 + 70 = 210 total.

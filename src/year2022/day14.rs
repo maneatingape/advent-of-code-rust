@@ -30,8 +30,8 @@
 //! * `Air` Empty blocks, treated as unknown status when checking underneath neighbors.
 //! * `Falling` Grains of sand that will continue to fall continuously forever.
 //! * `Stopped` Both original rock walls and any grains of sand that have come to rest.
+use self::Kind::*;
 use crate::util::parse::*;
-use Kind::*;
 
 #[derive(Clone, Copy, Eq, PartialEq)]
 enum Kind {

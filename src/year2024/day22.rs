@@ -21,9 +21,9 @@
 //! A SIMD variant processes 8 hashes at a time, taking about 60% of the time of the scalar version.
 //! The bottleneck is that disjoint indices must be written in sequence reducing the amount of work
 //! that can be parallelized.
+use self::implementation::*;
 use crate::util::parse::*;
 use crate::util::thread::*;
-use implementation::*;
 
 type Input = (u64, u16);
 type Result = (u64, Vec<u16>);

@@ -6,8 +6,8 @@
 //!
 //! For part two we pre-seed the value of `b` in the cache with the result from part one then
 //! re-run the same process.
+use self::Gate::*;
 use crate::util::parse::*;
-use Gate::*;
 
 type Input = (u32, u32);
 

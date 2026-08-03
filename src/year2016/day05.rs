@@ -4,9 +4,9 @@
 //! possible in parallel in blocks of 1000 at a time.
 //!
 //! [`Year 2015 Day 4`]: crate::year2015::day04
+use self::implementation::*;
 use crate::util::md5::*;
 use crate::util::thread::*;
-use implementation::*;
 use std::sync::Mutex;
 
 struct Shared {

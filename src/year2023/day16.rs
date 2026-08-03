@@ -13,10 +13,10 @@
 //! A specialized bit set is used to cache the energized tiles. Each input is 110 x 110 tiles,
 //! needing 12,100 bits or 190 `u64`s to store the grid. Bitwise logic allows merging bitsets
 //! and counting the number of elements very quickly.
+use self::State::*;
 use crate::util::grid::*;
 use crate::util::hash::*;
 use crate::util::point::*;
-use State::*;
 
 type Input = (u32, u32);
 

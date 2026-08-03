@@ -14,9 +14,9 @@
 //! that in the example case is always zero, but in the real data toggles between zero and one.
 //!
 //! A faster SIMD approach processes cells 16 at a time.
+use self::implementation::*;
 use crate::util::grid::*;
 use crate::util::point::*;
-use implementation::*;
 
 type Input = (Vec<u8>, Grid<u8>);
 

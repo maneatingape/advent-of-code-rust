@@ -16,8 +16,8 @@
 //!
 //! [`day 17`]: crate::year2020::day17
 //! [`day 11`]: crate::year2020::day11
+use self::implementation::*;
 use crate::util::hash::*;
-use implementation::*;
 
 #[derive(Eq, Hash, PartialEq)]
 pub struct Hex {

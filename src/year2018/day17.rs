@@ -10,9 +10,9 @@
 //! This problem is similar to [Year 2022 Day 14].
 //!
 //! [Year 2022 Day 14]: crate::year2022::day14
+use self::Kind::*;
 use crate::util::iter::*;
 use crate::util::parse::*;
-use Kind::*;
 
 #[derive(Clone, Copy, Eq, PartialEq)]
 enum Kind {

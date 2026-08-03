@@ -51,8 +51,8 @@
 //!
 //! Since we don't need to handle the general input case (a common pattern in Advent of Code) we can
 //! implement this rule directly in code.
+use self::Rule::*;
 use crate::util::parse::*;
-use Rule::*;
 
 #[derive(Clone, Copy)]
 pub enum Rule {

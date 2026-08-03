@@ -8,9 +8,9 @@
 //! seats only once then reusing that information for each step.
 //!
 //! The SIMD version speeds things up by calculating 32 lanes at a time.
+use self::implementation::*;
 use crate::util::grid::*;
 use crate::util::point::*;
-use implementation::*;
 
 const SEAT: u8 = b'L';
 

@@ -11,9 +11,9 @@
 //! A `HashSet` is generally a good choice for very sparse infinite grids, however for this
 //! problem we'll pack all dimensions into a single `vec` to achieve a five times increase
 //! in lookup speed.
+use self::implementation::*;
 use crate::util::grid::*;
 use crate::util::point::*;
-use implementation::*;
 
 /// Use our utility [`Grid`] module to parse the input.
 ///

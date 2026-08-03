@@ -17,9 +17,9 @@
 //!
 //! [`MD5`]: crate::util::md5
 //! [`format!`]: std::format
+use self::implementation::*;
 use crate::util::md5::*;
 use crate::util::thread::*;
-use implementation::*;
 use std::sync::atomic::{AtomicU32, Ordering};
 
 pub struct Shared {
