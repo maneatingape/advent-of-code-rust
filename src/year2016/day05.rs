@@ -25,7 +25,7 @@ pub fn parse(input: &str) -> Vec<u32> {
     let shared = Shared {
         prefix: input.trim().to_owned(),
         iter: AtomicIter::new(1000, 1000),
-        mutex: Mutex::new(Exclusive { found: vec![], mask: 0 }),
+        mutex: Mutex::new(Exclusive { found: Vec::new(), mask: 0 }),
     };
 
     // Handle the first 999 numbers specially as the number of digits varies.

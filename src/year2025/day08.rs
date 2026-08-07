@@ -20,7 +20,7 @@ const SIZE: usize = 10_000 * 10_000;
 pub fn parse(input: &str) -> Input {
     let boxes: Vec<_> = input.iter_unsigned::<usize>().chunk::<3>().collect();
     let items: Vec<_> = (0..boxes.len()).collect();
-    let mut buckets = vec![vec![]; BUCKETS];
+    let mut buckets = vec![Vec::new(); BUCKETS];
 
     for result in spawn_parallel_iterator(&items, |iter| worker(&boxes, iter)) {
         for (bucket, pairs) in buckets.iter_mut().zip(result) {
@@ -63,7 +63,7 @@ pub fn part2(input: &Input) -> usize {
 }
 
 fn worker(boxes: &[Box], iter: ParIter<'_, usize>) -> Vec<Vec<Pair>> {
-    let mut buckets = vec![vec![]; BUCKETS];
+    let mut buckets = vec![Vec::new(); BUCKETS];
 
     for &i in iter {
         let v1 = boxes[i];

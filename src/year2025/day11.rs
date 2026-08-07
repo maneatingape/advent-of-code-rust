@@ -13,7 +13,7 @@ type Input = Vec<Vec<usize>>;
 
 /// Build the graph.
 pub fn parse(input: &str) -> Input {
-    let mut graph = vec![vec![]; 26 * 26 * 26];
+    let mut graph = vec![Vec::new(); 26 * 26 * 26];
 
     for line in input.lines() {
         let mut edges = line.split_ascii_whitespace();

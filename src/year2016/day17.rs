@@ -39,7 +39,7 @@ pub fn parse(input: &str) -> Input {
     let start = (0, 0, prefix, extend(input, prefix, 0));
 
     // State shared between threads.
-    let state = State { todo: vec![start], min: vec![], max: 0, inflight: threads() };
+    let state = State { todo: vec![start], min: Vec::new(), max: 0, inflight: threads() };
     let shared = Shared { prefix, mutex: Mutex::new(state), not_empty: Condvar::new() };
 
     // Search paths in parallel.
@@ -60,7 +60,7 @@ pub fn part2(input: &Input) -> usize {
 /// Process local work items, stopping every now and then to redistribute items back to global pool.
 /// This prevents threads idling or hotspotting.
 fn worker(shared: &Shared) {
-    let mut local = State { todo: vec![], min: vec![], max: 0, inflight: 0 };
+    let mut local = State { todo: Vec::new(), min: Vec::new(), max: 0, inflight: 0 };
 
     loop {
         // Process local work items.

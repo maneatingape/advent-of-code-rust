@@ -1,7 +1,7 @@
 // Templates
 
 // pub fn parse(_input: &str) -> Vec<u32> {
-//     vec![]
+//     Vec::new()
 // }
 //
 // pub fn part1(_input: &[u32]) -> u32 {
