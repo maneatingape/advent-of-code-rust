@@ -2,8 +2,6 @@
 //!
 //! Brute force solution for both parts using the utility [`permutations`] method to test each of
 //! the possible 5! or 120 permutations of the phase settings.
-//!
-//! [`permutations`]: crate::util::slice
 use super::intcode::*;
 use crate::util::parse::*;
 use std::array::from_fn;

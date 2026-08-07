@@ -41,7 +41,6 @@
 //! requires 8 bits for the set and 3 bits for the city, for a total table size of 2¹¹ distances.
 //!
 //! [Travelling Salesman Problem]: https://en.wikipedia.org/wiki/Travelling_salesman_problem
-//! [`half_permutations`]: crate::util::slice
 //! [Steinhaus-Johnson-Trotter]: https://en.wikipedia.org/wiki/Steinhaus-Johnson-Trotter_algorithm
 //! [Held-Karp]: https://en.wikipedia.org/wiki/Held%E2%80%93Karp_algorithm
 use crate::util::bitset::*;
