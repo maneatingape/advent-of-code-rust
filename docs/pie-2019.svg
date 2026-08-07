@@ -2,10 +2,10 @@
 %%{init: {"themeVariables": { "pie1": "#c6cdd5", "pie2": "#7cb5ec", "pie3": "#90ed7d", "pie4": "#f7a35c"}}}%%
 pie
     title Year 2019 benchmark time by % of total
-    "Others" : 6206
+    "Others" : 5099
     "Day 13" : 2460
-    "Day 25" : 1890
-    "Day 21" : 1674
+    "Day 21" : 1373
+    "Day 25" : 1195
 -->
 <svg viewBox="0 0 1350 450" preserveAspectRatio="xMidYMin" xmlns="http://www.w3.org/2000/svg">
     <style>
@@ -16,15 +16,17 @@ pie
         .pieTitleText {text-anchor:middle;font-size:25px;}
     </style>
     <g transform="translate(675,225)">
-        <circle class="pieOuterCircle" cx="0" cy="0" r="186"/>
-        <path class="pieCircle" d="M0,-185A185,185,0,1,1,-8.646,184.798L0,0Z" fill="#c6cdd5"/>
-        <path class="pieCircle" d="M-8.646,184.798A185,185,0,0,1,-178.772,47.598L0,0Z" fill="#7cb5ec"/>
-        <path class="pieCircle" d="M-178.772,47.598A185,185,0,0,1,-140.203,-120.698L0,0Z" fill="#90ed7d"/>
-        <path class="pieCircle" d="M-140.203,-120.698A185,185,0,0,1,0,-185L0,0Z" fill="#f7a35c"/>
-        <text class="slice" style="text-anchor: middle;" transform="translate(138.7120935742378,3.2430843732309658)">51%</text>
-        <text class="slice" style="text-anchor: middle;" transform="translate(-87.10105467423168,108.00448497463661)">20%</text>
-        <text class="slice" style="text-anchor: middle;" transform="translate(-135.24400339812308,-30.993903349666564)">15%</text>
-        <text class="slice" style="text-anchor: middle;" transform="translate(-57.84212423231397,-126.11840137067055)">14%</text>
+        <g>
+            <circle class="pieOuterCircle" cx="0" cy="0" r="186"/>
+            <path class="pieCircle" d="M0,-185A185,185,0,1,1,-4.074,184.955L0,0Z" fill="#c6cdd5"/>
+            <path class="pieCircle" d="M-4.074,184.955A185,185,0,0,1,-184.953,4.16L0,0Z" fill="#7cb5ec"/>
+            <path class="pieCircle" d="M-184.953,4.16A185,185,0,0,1,-124.938,-136.439L0,0Z" fill="#90ed7d"/>
+            <path class="pieCircle" d="M-124.938,-136.439A185,185,0,0,1,0,-185L0,0Z" fill="#f7a35c"/>
+            <text class="slice" style="text-anchor: middle;" transform="translate(138.74158617570714,1.5279939295782388)">50%</text>
+            <text class="slice" style="text-anchor: middle;" transform="translate(-98.0882362615912,98.1338902066471)">24%</text>
+            <text class="slice" style="text-anchor: middle;" transform="translate(-127.61056427608322,-54.471151861693095)">14%</text>
+            <text class="slice" style="text-anchor: middle;" transform="translate(-50.26626879707926,-129.32464854473713)">12%</text>
+        </g>
         <text class="pieTitleText" x="0" y="-200">Year 2019 benchmark time by % of total</text>
         <g transform="translate(216,-44)">
             <rect height="18" style="fill: rgb(198, 205, 213); stroke: rgb(198, 205, 213);" width="18"/>
@@ -36,11 +38,11 @@ pie
         </g>
         <g transform="translate(216,0)">
             <rect height="18" style="fill: rgb(144, 237, 125); stroke: rgb(144, 237, 125);" width="18"/>
-            <text x="22" y="14">Day 25</text>
+            <text x="22" y="14">Day 21</text>
         </g>
         <g transform="translate(216,22)">
             <rect height="18" style="fill: rgb(247, 163, 92); stroke: rgb(247, 163, 92);" width="18"/>
-            <text x="22" y="14">Day 21</text>
+            <text x="22" y="14">Day 25</text>
         </g>
     </g>
 </svg>
