@@ -56,6 +56,8 @@
 use self::Rule::*;
 use crate::util::parse::*;
 
+type Input<'a> = (Vec<Rule>, Vec<&'a [u8]>);
+
 #[derive(Clone, Copy)]
 pub enum Rule {
     Letter(u8),
@@ -64,8 +66,6 @@ pub enum Rule {
     Sequence(usize, usize),
     Compound(usize, usize, usize, usize),
 }
-
-type Input<'a> = (Vec<Rule>, Vec<&'a [u8]>);
 
 pub fn parse(input: &str) -> Input<'_> {
     let (prefix, suffix) = input.split_once("\n\n").unwrap();

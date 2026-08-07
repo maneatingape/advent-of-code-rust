@@ -62,6 +62,8 @@ use crate::util::heap::*;
 
 const RANGE: Range<usize> = 0..30;
 
+type Matrix = [[Door; 30]; 30];
+
 /// `position` and `remaining` are both bitfields. For example, a robot at key `d` that needs
 /// `b` and `c` would be stored as `position = 1000` and `remaining = 110`.
 #[derive(Clone, Copy, Default, Eq, Hash, PartialEq)]
@@ -76,8 +78,6 @@ struct Door {
     distance: u32,
     needed: u32,
 }
-
-type Matrix = [[Door; 30]; 30];
 
 /// `initial` is the complete set of keys that we need to collect. Will always be binary
 /// `11111111111111111111111111` for the real input but fewer for sample data.

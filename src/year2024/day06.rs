@@ -19,6 +19,52 @@ use crate::util::hash::*;
 use crate::util::point::*;
 use crate::util::thread::*;
 
+struct Shortcut {
+    up: Grid<Point>,
+    down: Grid<Point>,
+    left: Grid<Point>,
+    right: Grid<Point>,
+}
+
+impl Shortcut {
+    fn from(grid: &Grid<u8>) -> Self {
+        let mut up = grid.same_size_with(ORIGIN);
+        let mut down = grid.same_size_with(ORIGIN);
+        let mut left = grid.same_size_with(ORIGIN);
+        let mut right = grid.same_size_with(ORIGIN);
+
+        // Scan each row or column *against* the direction of travel, remembering the square just
+        // before the most recent obstacle. Starting one square off the grid means that
+        // coordinates outside the grid are used when nothing is in the way.
+        let scan = |dst: &mut Grid<Point>, start: Point, step: Point, count: i32| {
+            let mut last = start - step;
+            let mut point = start;
+
+            for _ in 0..count {
+                if grid[point] == b'#' {
+                    last = point + step;
+                }
+                dst[point] = last;
+                point += step;
+            }
+        };
+
+        // Process columns for up/down.
+        for x in 0..grid.width {
+            scan(&mut up, Point::new(x, 0), DOWN, grid.height);
+            scan(&mut down, Point::new(x, grid.height - 1), UP, grid.height);
+        }
+
+        // Process rows for left/right.
+        for y in 0..grid.height {
+            scan(&mut left, Point::new(0, y), RIGHT, grid.width);
+            scan(&mut right, Point::new(grid.width - 1, y), LEFT, grid.width);
+        }
+
+        Self { up, down, left, right }
+    }
+}
+
 pub fn parse(input: &str) -> Grid<u8> {
     Grid::parse(input)
 }
@@ -143,50 +189,4 @@ fn is_cycle(
     }
 
     false
-}
-
-struct Shortcut {
-    up: Grid<Point>,
-    down: Grid<Point>,
-    left: Grid<Point>,
-    right: Grid<Point>,
-}
-
-impl Shortcut {
-    fn from(grid: &Grid<u8>) -> Self {
-        let mut up = grid.same_size_with(ORIGIN);
-        let mut down = grid.same_size_with(ORIGIN);
-        let mut left = grid.same_size_with(ORIGIN);
-        let mut right = grid.same_size_with(ORIGIN);
-
-        // Scan each row or column *against* the direction of travel, remembering the square just
-        // before the most recent obstacle. Starting one square off the grid means that
-        // coordinates outside the grid are used when nothing is in the way.
-        let scan = |dst: &mut Grid<Point>, start: Point, step: Point, count: i32| {
-            let mut last = start - step;
-            let mut point = start;
-
-            for _ in 0..count {
-                if grid[point] == b'#' {
-                    last = point + step;
-                }
-                dst[point] = last;
-                point += step;
-            }
-        };
-
-        // Process columns for up/down.
-        for x in 0..grid.width {
-            scan(&mut up, Point::new(x, 0), DOWN, grid.height);
-            scan(&mut down, Point::new(x, grid.height - 1), UP, grid.height);
-        }
-
-        // Process rows for left/right.
-        for y in 0..grid.height {
-            scan(&mut left, Point::new(0, y), RIGHT, grid.width);
-            scan(&mut right, Point::new(grid.width - 1, y), LEFT, grid.width);
-        }
-
-        Self { up, down, left, right }
-    }
 }

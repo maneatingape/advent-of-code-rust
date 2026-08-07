@@ -38,9 +38,6 @@
 use std::iter::{Copied, Cycle, once};
 use std::slice::Iter;
 
-/// Convenience alias to shorten type name.
-type Wrapper<'a, T> = Cycle<Copied<Iter<'a, T>>>;
-
 /// Encode pieces one row per byte, highest row in the most significant position.
 const FLOOR: u8 = 0xff;
 const WALLS: u32 = 0x01010101;
@@ -51,6 +48,9 @@ const ROCKS: [Rock; 5] = [
     Rock { size: 4, shape: 0x20202020 },
     Rock { size: 2, shape: 0x00003030 },
 ];
+
+/// Convenience alias to shorten type name.
+type Wrapper<'a, T> = Cycle<Copied<Iter<'a, T>>>;
 
 #[derive(Clone, Copy)]
 struct Rock {

@@ -13,10 +13,10 @@ use std::collections::VecDeque;
 use crate::util::grid::*;
 use crate::util::point::*;
 
-type Input = (i32, usize);
-
 /// Clockwise order starting with facing right.
 const DIRECTIONS: [Point; 4] = [RIGHT, DOWN, LEFT, UP];
+
+type Input = (i32, usize);
 
 pub fn parse(input: &str) -> Input {
     let grid = Grid::parse(input);

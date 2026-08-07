@@ -7,55 +7,6 @@ use std::sync::atomic::Ordering::Relaxed;
 use std::sync::atomic::{AtomicBool, AtomicU32, AtomicUsize};
 use std::thread::*;
 
-/// Usually the number of physical cores.
-pub fn threads() -> usize {
-    available_parallelism().unwrap().get()
-}
-
-/// Spawn `n` scoped threads, where `n` is the available parallelism.
-pub fn spawn<F, R>(f: F) -> Vec<R>
-where
-    F: Fn() -> R + Copy + Send,
-    R: Send,
-{
-    scope(|scope| {
-        let handles: Vec<_> = repeat_with(|| scope.spawn(f)).take(threads()).collect();
-        handles.into_iter().flat_map(ScopedJoinHandle::join).collect()
-    })
-}
-
-/// Spawns `n` scoped threads that each receive a
-/// [work stealing](https://en.wikipedia.org/wiki/Work_stealing) iterator.
-/// Work stealing is an efficient strategy that keeps each CPU core busy when some items take longer
-/// than others to process, used by popular libraries such as [rayon](https://github.com/rayon-rs/rayon).
-/// Processing at different rates also happens on many modern CPUs with
-/// [heterogeneous performance and efficiency cores](https://en.wikipedia.org/wiki/ARM_big.LITTLE).
-pub fn spawn_parallel_iterator<F, R, T>(items: &[T], f: F) -> Vec<R>
-where
-    F: Fn(ParIter<'_, T>) -> R + Copy + Send,
-    R: Send,
-    T: Sync,
-{
-    let threads = threads();
-    let size = items.len().div_ceil(threads);
-
-    // Initially divide work as evenly as possible among the worker threads.
-    let workers: Vec<_> = (0..threads)
-        .map(|id| {
-            let start = (id * size).min(items.len());
-            let end = (start + size).min(items.len());
-            CachePadding::new(pack(start, end))
-        })
-        .collect();
-    let workers = workers.as_slice();
-
-    scope(|scope| {
-        let handles: Vec<_> =
-            (0..threads).map(|id| scope.spawn(move || f(ParIter { id, items, workers }))).collect();
-        handles.into_iter().flat_map(ScopedJoinHandle::join).collect()
-    })
-}
-
 pub struct ParIter<'a, T> {
     id: usize,
     items: &'a [T],
@@ -148,16 +99,6 @@ impl CachePadding {
     }
 }
 
-#[inline]
-fn pack(start: usize, end: usize) -> usize {
-    (end << 32) | start
-}
-
-#[inline]
-fn unpack(both: usize) -> (usize, usize) {
-    (both & 0xffffffff, both >> 32)
-}
-
 /// Shares a monotonically increasing value between multiple threads.
 pub struct AtomicIter {
     running: AtomicBool,
@@ -177,4 +118,63 @@ impl AtomicIter {
     pub fn stop(&self) {
         self.running.store(false, Relaxed);
     }
+}
+
+/// Usually the number of physical cores.
+pub fn threads() -> usize {
+    available_parallelism().unwrap().get()
+}
+
+/// Spawn `n` scoped threads, where `n` is the available parallelism.
+pub fn spawn<F, R>(f: F) -> Vec<R>
+where
+    F: Fn() -> R + Copy + Send,
+    R: Send,
+{
+    scope(|scope| {
+        let handles: Vec<_> = repeat_with(|| scope.spawn(f)).take(threads()).collect();
+        handles.into_iter().flat_map(ScopedJoinHandle::join).collect()
+    })
+}
+
+/// Spawns `n` scoped threads that each receive a
+/// [work stealing](https://en.wikipedia.org/wiki/Work_stealing) iterator.
+/// Work stealing is an efficient strategy that keeps each CPU core busy when some items take longer
+/// than others to process, used by popular libraries such as [rayon](https://github.com/rayon-rs/rayon).
+/// Processing at different rates also happens on many modern CPUs with
+/// [heterogeneous performance and efficiency cores](https://en.wikipedia.org/wiki/ARM_big.LITTLE).
+pub fn spawn_parallel_iterator<F, R, T>(items: &[T], f: F) -> Vec<R>
+where
+    F: Fn(ParIter<'_, T>) -> R + Copy + Send,
+    R: Send,
+    T: Sync,
+{
+    let threads = threads();
+    let size = items.len().div_ceil(threads);
+
+    // Initially divide work as evenly as possible among the worker threads.
+    let workers: Vec<_> = (0..threads)
+        .map(|id| {
+            let start = (id * size).min(items.len());
+            let end = (start + size).min(items.len());
+            CachePadding::new(pack(start, end))
+        })
+        .collect();
+    let workers = workers.as_slice();
+
+    scope(|scope| {
+        let handles: Vec<_> =
+            (0..threads).map(|id| scope.spawn(move || f(ParIter { id, items, workers }))).collect();
+        handles.into_iter().flat_map(ScopedJoinHandle::join).collect()
+    })
+}
+
+#[inline]
+fn pack(start: usize, end: usize) -> usize {
+    (end << 32) | start
+}
+
+#[inline]
+fn unpack(both: usize) -> (usize, usize) {
+    (both & 0xffffffff, both >> 32)
 }

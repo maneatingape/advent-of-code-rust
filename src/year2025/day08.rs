@@ -3,6 +3,11 @@ use crate::util::iter::*;
 use crate::util::parse::*;
 use crate::util::thread::*;
 
+/// Since the input is rather uniformly spaced, we assume that any two points further apart
+/// than 4*size will eventually be connected by some point in between.
+const BUCKETS: usize = 4;
+const SIZE: usize = 10_000 * 10_000;
+
 type Box = [usize; 3];
 type Pair = (u16, u16, usize);
 type Input = (Vec<Box>, Vec<Vec<Vec<Pair>>>);
@@ -11,11 +16,6 @@ struct Node {
     parent: usize,
     size: usize,
 }
-
-/// Since the input is rather uniformly spaced, we assume that any two points further apart
-/// than 4*size will eventually be connected by some point in between.
-const BUCKETS: usize = 4;
-const SIZE: usize = 10_000 * 10_000;
 
 pub fn parse(input: &str) -> Input {
     let boxes: Vec<_> = input.iter_unsigned::<usize>().chunk::<3>().collect();

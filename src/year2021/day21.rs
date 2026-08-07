@@ -2,14 +2,14 @@
 use crate::util::iter::*;
 use crate::util::parse::*;
 
-type Pair = (usize, usize);
-type State = (Pair, Pair);
-
 /// Rolling the Dirac dice 3 times results in 27 quantum universes. However, the dice total is
 /// one of only 7 possible values. Instead of handling 27 values, we encode the possible dice
 /// totals with the number of times that they occur. For example, a score of 3 (1 + 1 + 1) only
 /// happens once in the 27 rolls, but a score of 6 happens a total of 7 times.
 const DIRAC: [Pair; 7] = [(3, 1), (4, 3), (5, 6), (6, 7), (7, 6), (8, 3), (9, 1)];
+
+type Pair = (usize, usize);
+type State = (Pair, Pair);
 
 /// Extract the starting position for both players converting to zero-based indices.
 pub fn parse(input: &str) -> State {

@@ -16,10 +16,10 @@ use std::thread;
 
 use crate::util::parse::*;
 
-type Input = (String, usize);
-
 /// Pre-calculate the first 23 recipes.
 const PREFIX: [u8; 23] = [3, 7, 1, 0, 1, 0, 1, 2, 4, 5, 1, 5, 8, 9, 1, 6, 7, 7, 9, 2, 5, 1, 0];
+
+type Input = (String, usize);
 
 pub fn parse(input: &str) -> Input {
     // Send batches of recipes from the writer to the reader for checking.

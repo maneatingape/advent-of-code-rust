@@ -5,12 +5,12 @@
 use crate::util::iter::*;
 use crate::util::parse::*;
 
-type Input = (u32, usize);
-
 /// Each square inch of fabric is stored in a single bit.
 /// The fabric is 1000 inches wide requiring sixteen `u64`.
 const WIDTH: usize = 16;
 const HEIGHT: usize = 1000;
+
+type Input = (u32, usize);
 
 pub fn parse(input: &str) -> Input {
     let claims: Vec<_> = input

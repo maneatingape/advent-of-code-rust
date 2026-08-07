@@ -32,6 +32,26 @@ impl Packet<'_> {
     }
 }
 
+impl Iterator for Packet<'_> {
+    type Item = u8;
+
+    // Rely on the fact that all input is valid to avoid bounds checks.
+    fn next(&mut self) -> Option<Self::Item> {
+        self.extra.pop().or_else(|| {
+            let (index, slice) = (self.index, self.slice);
+
+            // Replace occurrences of "10" with "A"
+            if slice[index] == b'1' && slice[index + 1] == b'0' {
+                self.index += 2;
+                Some(b'A')
+            } else {
+                self.index += 1;
+                Some(slice[index])
+            }
+        })
+    }
+}
+
 pub fn parse(input: &str) -> Vec<&str> {
     input.lines().filter(|line| !line.is_empty()).collect()
 }
@@ -106,24 +126,4 @@ fn compare(left: &str, right: &str) -> bool {
     }
 
     unreachable!()
-}
-
-impl Iterator for Packet<'_> {
-    type Item = u8;
-
-    // Rely on the fact that all input is valid to avoid bounds checks.
-    fn next(&mut self) -> Option<Self::Item> {
-        self.extra.pop().or_else(|| {
-            let (index, slice) = (self.index, self.slice);
-
-            // Replace occurrences of "10" with "A"
-            if slice[index] == b'1' && slice[index + 1] == b'0' {
-                self.index += 2;
-                Some(b'A')
-            } else {
-                self.index += 1;
-                Some(slice[index])
-            }
-        })
-    }
 }

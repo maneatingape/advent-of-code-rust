@@ -7,6 +7,8 @@ use std::ops::Add;
 use crate::util::iter::*;
 use crate::util::parse::*;
 
+type Input = (u32, u32);
+
 #[derive(Clone, Copy)]
 struct Item {
     cost: u32,
@@ -25,8 +27,6 @@ impl Add for Item {
         }
     }
 }
-
-type Input = (u32, u32);
 
 pub fn parse(input: &str) -> Input {
     let [boss_health, boss_damage, boss_armor]: [u32; 3] =

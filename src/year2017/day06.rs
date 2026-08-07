@@ -17,8 +17,6 @@
 use crate::util::hash::*;
 use crate::util::parse::*;
 
-type Input = (u32, u32);
-
 /// Reallocate a bank and set to zero by rotating this mask the correct number of bits.
 const REMOVE: u64 = 0x0fffffffffffffff;
 /// The highest number of banks when overflow is not a concern is 15, so each bank will
@@ -41,6 +39,8 @@ const SPREAD: [u64; 16] = [
     0x0111111111111110,
     0x0111111111111111,
 ];
+
+type Input = (u32, u32);
 
 pub fn parse(input: &str) -> Input {
     // Accumulate the input into a single `u64`.

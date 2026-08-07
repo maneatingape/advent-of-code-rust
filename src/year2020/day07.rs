@@ -36,13 +36,13 @@ const SECOND_HASH: [usize; 33] = [
     401, 410, 447, 468, 476, 495, 498, 508, 515, 554, 580, 628,
 ];
 
+type Bag = [Option<Rule>; 4];
+
 #[derive(Clone, Copy)]
 pub struct Rule {
     amount: u32,
     next: usize,
 }
-
-type Bag = [Option<Rule>; 4];
 
 pub struct Haversack {
     shiny_gold: usize,

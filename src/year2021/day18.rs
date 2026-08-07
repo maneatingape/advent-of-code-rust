@@ -31,14 +31,14 @@
 use crate::util::parse::*;
 use crate::util::thread::*;
 
-type Snailfish = [i32; 64];
-
 /// The indices for [in-order traversal](https://en.wikipedia.org/wiki/Tree_traversal) of the first
 /// 4 levels of the implicit binary tree stored in an array.
 const IN_ORDER: [usize; 30] = [
     2, 4, 8, 16, 17, 9, 18, 19, 5, 10, 20, 21, 11, 22, 23, 3, 6, 12, 24, 25, 13, 26, 27, 7, 14, 28,
     29, 15, 30, 31,
 ];
+
+type Snailfish = [i32; 64];
 
 /// Parse a snailfish number into an implicit binary tree stored in an array.
 ///

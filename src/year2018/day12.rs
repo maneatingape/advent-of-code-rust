@@ -16,49 +16,6 @@ use std::mem::swap;
 
 type Input = (i64, i64);
 
-pub fn parse(input: &str) -> Input {
-    // Parse initial state.
-    let (prefix, suffix) = input.split_once("\n\n").unwrap();
-    let mut pots = Pots::from(&prefix.as_bytes()[15..]);
-
-    // Parse rules into a table with all possible 2⁵=32 patterns.
-    let mut rules = [0; 32];
-    for line in suffix.lines().map(str::as_bytes) {
-        if line[9] == b'#' {
-            let binary = (0..5).fold(0, |acc, i| (acc << 1) | usize::from(line[i] == b'#'));
-            rules[binary] = 1;
-        }
-    }
-
-    // Part one - Simulate the first 20 steps.
-    for _ in 0..20 {
-        pots.step(&rules);
-    }
-    let part_one = pots.sum();
-
-    // Part two - Only simulate until the generation repeats.
-    for steps in 20.. {
-        let prev_pos = pots.pos;
-        pots.step(&rules);
-        if pots.state == pots.prev_state {
-            // Generation has repeated - extrapolate to 50 billion steps.
-            pots.pos += (pots.pos - prev_pos) * (50_000_000_000 - steps - 1);
-            break;
-        }
-    }
-
-    let part_two = pots.sum();
-    (part_one, part_two)
-}
-
-pub fn part1(input: &Input) -> i64 {
-    input.0
-}
-
-pub fn part2(input: &Input) -> i64 {
-    input.1
-}
-
 struct Pots {
     /// Vector representing the pots. 1 means there is a plant in the pot, 0 means there isn't.
     state: Vec<u8>,
@@ -101,4 +58,47 @@ impl Pots {
     fn sum(&self) -> i64 {
         self.state.iter().enumerate().map(|(i, &s)| (self.pos + i as i64) * s as i64).sum()
     }
+}
+
+pub fn parse(input: &str) -> Input {
+    // Parse initial state.
+    let (prefix, suffix) = input.split_once("\n\n").unwrap();
+    let mut pots = Pots::from(&prefix.as_bytes()[15..]);
+
+    // Parse rules into a table with all possible 2⁵=32 patterns.
+    let mut rules = [0; 32];
+    for line in suffix.lines().map(str::as_bytes) {
+        if line[9] == b'#' {
+            let binary = (0..5).fold(0, |acc, i| (acc << 1) | usize::from(line[i] == b'#'));
+            rules[binary] = 1;
+        }
+    }
+
+    // Part one - Simulate the first 20 steps.
+    for _ in 0..20 {
+        pots.step(&rules);
+    }
+    let part_one = pots.sum();
+
+    // Part two - Only simulate until the generation repeats.
+    for steps in 20.. {
+        let prev_pos = pots.pos;
+        pots.step(&rules);
+        if pots.state == pots.prev_state {
+            // Generation has repeated - extrapolate to 50 billion steps.
+            pots.pos += (pots.pos - prev_pos) * (50_000_000_000 - steps - 1);
+            break;
+        }
+    }
+
+    let part_two = pots.sum();
+    (part_one, part_two)
+}
+
+pub fn part1(input: &Input) -> i64 {
+    input.0
+}
+
+pub fn part2(input: &Input) -> i64 {
+    input.1
 }

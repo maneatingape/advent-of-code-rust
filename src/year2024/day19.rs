@@ -15,6 +15,23 @@
 //! objects on the heap using [`Box`].
 type Input = (usize, usize);
 
+/// Simple Node object that uses indices to link to other nodes.
+#[derive(Default)]
+struct Node {
+    next: [usize; 6],
+}
+
+impl Node {
+    // Index 3 is not used by the hash, so we cheekily repurpose for the number of towels.
+    fn set_towel(&mut self) {
+        self.next[3] = 1;
+    }
+
+    fn towels(&self) -> usize {
+        self.next[3]
+    }
+}
+
 pub fn parse(input: &str) -> Input {
     let (prefix, suffix) = input.split_once("\n\n").unwrap();
 
@@ -91,21 +108,4 @@ pub fn part2(input: &Input) -> usize {
 fn perfect_hash(b: u8) -> usize {
     let n = b as usize;
     (n ^ (n >> 4)) % 8
-}
-
-/// Simple Node object that uses indices to link to other nodes.
-#[derive(Default)]
-struct Node {
-    next: [usize; 6],
-}
-
-impl Node {
-    // Index 3 is not used by the hash, so we cheekily repurpose for the number of towels.
-    fn set_towel(&mut self) {
-        self.next[3] = 1;
-    }
-
-    fn towels(&self) -> usize {
-        self.next[3]
-    }
 }

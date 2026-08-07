@@ -63,6 +63,14 @@ pub fn parse(input: &str) -> Input {
     (part_one, part_two)
 }
 
+pub fn part1(input: &Input) -> u32 {
+    input.0
+}
+
+pub fn part2(input: &Input) -> u32 {
+    input.1
+}
+
 fn parse_number(memory: &[u8], index: &mut usize) -> u32 {
     let mut number = 0;
     while memory[*index].is_ascii_digit() {
@@ -70,12 +78,4 @@ fn parse_number(memory: &[u8], index: &mut usize) -> u32 {
         *index += 1;
     }
     number
-}
-
-pub fn part1(input: &Input) -> u32 {
-    input.0
-}
-
-pub fn part2(input: &Input) -> u32 {
-    input.1
 }

@@ -14,6 +14,8 @@ use std::collections::VecDeque;
 use crate::util::hash::*;
 use crate::util::parse::*;
 
+type Input<'a> = (&'a str, i32);
+
 #[derive(Clone, Copy, Default)]
 struct Node {
     parent: Option<usize>,
@@ -24,8 +26,6 @@ struct Node {
     sub_weights: [i32; 2],
     sub_totals: [i32; 2],
 }
-
-type Input<'a> = (&'a str, i32);
 
 pub fn parse(input: &str) -> Input<'_> {
     // Split each line into the program name then the rest of the information.

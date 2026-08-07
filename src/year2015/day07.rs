@@ -65,6 +65,14 @@ pub fn parse(input: &str) -> Input {
     (part_one, part_two)
 }
 
+pub fn part1(input: &Input) -> u32 {
+    input.0
+}
+
+pub fn part2(input: &Input) -> u32 {
+    input.1
+}
+
 fn signal(key: usize, circuit: &[Gate], cache: &mut [u32]) -> u32 {
     if cache[key] != u32::MAX {
         return cache[key];
@@ -83,14 +91,6 @@ fn signal(key: usize, circuit: &[Gate], cache: &mut [u32]) -> u32 {
 
     cache[key] = result;
     result
-}
-
-pub fn part1(input: &Input) -> u32 {
-    input.0
-}
-
-pub fn part2(input: &Input) -> u32 {
-    input.1
 }
 
 /// Convert one or two character string to an index.

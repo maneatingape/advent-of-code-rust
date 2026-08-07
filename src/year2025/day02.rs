@@ -48,15 +48,15 @@
 use crate::util::iter::*;
 use crate::util::parse::*;
 
-type Range = [u32; 2];
-type Pair = [u64; 2];
-
 /// Sets in part one.
 const FIRST: [Range; 5] = [[2, 1], [4, 2], [6, 3], [8, 4], [10, 5]];
 /// Sets in part two.
 const SECOND: [Range; 6] = [[3, 1], [5, 1], [6, 2], [7, 1], [9, 3], [10, 2]];
 /// Overlap between sets in part one and part two.
 const THIRD: [Range; 2] = [[6, 1], [10, 1]];
+
+type Range = [u32; 2];
+type Pair = [u64; 2];
 
 pub fn parse(input: &str) -> Vec<Pair> {
     input.iter_unsigned::<u64>().chunk::<2>().collect()

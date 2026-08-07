@@ -8,8 +8,17 @@
 use std::collections::{HashMap, HashSet};
 use std::hash::{BuildHasher, Hash, Hasher};
 
+/// Simplified implementation. In particular, running on a system with 64-bit `usize` is assumed.
+///
+/// Check out the [Firefox code](https://searchfox.org/mozilla-central/rev/633345116df55e2d37be9be6555aa739656c5a7d/mfbt/HashFunctions.h#109-153)
+/// for a full description.
+const K: u64 = 0x517cc1b727220a95;
+
 /// Type alias for [`HashSet`] using [`FxHasher`].
 pub type FastSet<T> = HashSet<T, BuildFxHasher>;
+
+/// Type alias for [`HashMap`] using [`FxHasher`].
+pub type FastMap<K, V> = HashMap<K, V, BuildFxHasher>;
 
 /// Convenience methods to construct a [`FastSet`].
 pub trait FastSetBuilder<T> {
@@ -36,9 +45,6 @@ impl<T: Eq + Hash> FastSetBuilder<T> for FastSet<T> {
         set
     }
 }
-
-/// Type alias for [`HashMap`] using [`FxHasher`].
-pub type FastMap<K, V> = HashMap<K, V, BuildFxHasher>;
 
 /// Convenience methods to construct a [`FastMap`].
 pub trait FastMapBuilder<K, V> {
@@ -78,12 +84,6 @@ impl BuildHasher for BuildFxHasher {
         FxHasher { hash: 0 }
     }
 }
-
-/// Simplified implementation. In particular, running on a system with 64-bit `usize` is assumed.
-///
-/// Check out the [Firefox code](https://searchfox.org/mozilla-central/rev/633345116df55e2d37be9be6555aa739656c5a7d/mfbt/HashFunctions.h#109-153)
-/// for a full description.
-const K: u64 = 0x517cc1b727220a95;
 
 pub struct FxHasher {
     hash: u64,

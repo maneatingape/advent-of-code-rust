@@ -32,48 +32,6 @@ use std::ops::ControlFlow;
 
 use crate::util::parse::*;
 
-pub fn parse(input: &str) -> Vec<u64> {
-    input.iter_unsigned().collect()
-}
-
-pub fn part1(input: &[u64]) -> String {
-    // We only care about the value of `a`.
-    let mut computer = Computer::new(input, input[0]);
-    let mut out = String::new();
-
-    while let Some(n) = computer.run() {
-        out.push(char::from(n as u8 + b'0'));
-        out.push(',');
-    }
-
-    // Remove the trailing comma.
-    out.pop();
-    out
-}
-
-pub fn part2(input: &[u64]) -> u64 {
-    // Start with known final value of `a`.
-    helper(input, input.len() - 1, 0).break_value().unwrap()
-}
-
-fn helper(program: &[u64], index: usize, a: u64) -> ControlFlow<u64> {
-    if index == 2 {
-        return ControlFlow::Break(a);
-    }
-
-    // Try all 8 combinations of lower 3 bits.
-    for i in 0..8 {
-        let next_a = (a << 3) | i;
-        let out = Computer::new(program, next_a).run().unwrap();
-
-        if out == program[index] {
-            helper(program, index - 1, next_a)?;
-        }
-    }
-
-    ControlFlow::Continue(())
-}
-
 struct Computer<'a> {
     program: &'a [u64],
     a: u64,
@@ -127,4 +85,46 @@ impl Computer<'_> {
 
         None
     }
+}
+
+pub fn parse(input: &str) -> Vec<u64> {
+    input.iter_unsigned().collect()
+}
+
+pub fn part1(input: &[u64]) -> String {
+    // We only care about the value of `a`.
+    let mut computer = Computer::new(input, input[0]);
+    let mut out = String::new();
+
+    while let Some(n) = computer.run() {
+        out.push(char::from(n as u8 + b'0'));
+        out.push(',');
+    }
+
+    // Remove the trailing comma.
+    out.pop();
+    out
+}
+
+pub fn part2(input: &[u64]) -> u64 {
+    // Start with known final value of `a`.
+    helper(input, input.len() - 1, 0).break_value().unwrap()
+}
+
+fn helper(program: &[u64], index: usize, a: u64) -> ControlFlow<u64> {
+    if index == 2 {
+        return ControlFlow::Break(a);
+    }
+
+    // Try all 8 combinations of lower 3 bits.
+    for i in 0..8 {
+        let next_a = (a << 3) | i;
+        let out = Computer::new(program, next_a).run().unwrap();
+
+        if out == program[index] {
+            helper(program, index - 1, next_a)?;
+        }
+    }
+
+    ControlFlow::Continue(())
 }
