@@ -14,8 +14,9 @@
 //! jokers!).
 //!
 //! * `QQQJA` => `0x41000ccc1a`
-use crate::util::parse::*;
 use std::cmp::Reverse;
+
+use crate::util::parse::*;
 
 pub struct Hand {
     cards: [u8; 5],

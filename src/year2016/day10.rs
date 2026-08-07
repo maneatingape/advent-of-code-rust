@@ -7,10 +7,11 @@
 //! Once each robot receives 2 chips then its low and high outputs are added to the queue.
 //!
 //! As a minor optimization we only need to store the product of outputs 0, 1 and 2.
+use std::collections::VecDeque;
+
 use crate::util::hash::*;
 use crate::util::integer::*;
 use crate::util::parse::*;
-use std::collections::VecDeque;
 
 type Input = (u32, u32);
 type Dest = (bool, u32);

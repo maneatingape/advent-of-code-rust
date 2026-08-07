@@ -17,8 +17,8 @@
 //!
 //! * Not taking the current item, using just the existing number of ways to make the target
 //!   `table[row - 1, col]`.
-//! * Taking the current item, using the existing number of ways to make the target weight less
-//!   the weight of the current item `table[row - 1, col - item]`.
+//! * Taking the current item, using the existing number of ways to make the target weight less the
+//!   weight of the current item `table[row - 1, col - item]`.
 //!
 //! The table for the example looks like:
 //!

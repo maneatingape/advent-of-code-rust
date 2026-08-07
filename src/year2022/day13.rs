@@ -8,16 +8,16 @@
 //!
 //! The rules to compare 2 packets become:
 //! * If both characters are the same then it's a draw, move onto the next character in each packet.
-//! * If the first packet is `]` and the second packet is anything else, then the first list is shorter
-//!   so the packets are in order.
-//! * Conversely, if the second packet is `]` and the first packet is anything else, the packets are not
-//!   in order.
+//! * If the first packet is `]` and the second packet is anything else, then the first list is
+//!   shorter so the packets are in order.
+//! * Conversely, if the second packet is `]` and the first packet is anything else, the packets are
+//!   not in order.
 //! * If the first packet is an opening `[` and the second character is anything else, then we're
 //!   comparing a number with a list, so *push* the second character back onto the list to check
 //!   again along with a closing `]` character.
 //! * Do a similar push if the second character is an opening `[` and the first is anything else.
-//! * Finally, compare the 2 characters by value. Since we've already covered the equal case, one
-//!   is guaranteed to be greater than or less than the other.
+//! * Finally, compare the 2 characters by value. Since we've already covered the equal case, one is
+//!   guaranteed to be greater than or less than the other.
 use crate::util::iter::*;
 
 struct Packet<'a> {
@@ -58,7 +58,8 @@ pub fn part1(input: &[&str]) -> usize {
 /// If the packet and `[[2]]` are not in order, then also check against `[[6]]`, incrementing only
 /// the second index if the 2 packets are in order.
 ///
-/// This obtains the relative indices of `[[2]]` and `[[6]]` efficiently in fewer than `2n` comparisons.
+/// This obtains the relative indices of `[[2]]` and `[[6]]` efficiently in fewer than `2n`
+/// comparisons.
 pub fn part2(input: &[&str]) -> u32 {
     let mut first = 1;
     let mut second = 2;

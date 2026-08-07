@@ -13,9 +13,10 @@
 //!
 //! [`iter_unsigned`]: ParseOps::iter_unsigned
 //! [`iter_signed`]: ParseOps::iter_signed
-use crate::util::integer::*;
 use std::marker::PhantomData;
 use std::str::Bytes;
+
+use crate::util::integer::*;
 
 const MINUS: u8 = b'-'.wrapping_sub(b'0');
 

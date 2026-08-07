@@ -15,8 +15,9 @@
 //!
 //! We then precompute all possible combinations for blocks of width 16,
 //! using this to accelerate part two.
-use crate::util::parse::*;
 use std::array::from_fn;
+
+use crate::util::parse::*;
 
 pub fn parse(input: &str) -> Vec<i32> {
     input.iter_signed().collect()

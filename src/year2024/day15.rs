@@ -24,9 +24,10 @@
 //!
 //! If any next space is a wall then we cancel the entire move and return right away. Otherwise
 //! all boxes are moved in the *reverse* order that they were found by the search.
+use std::mem::swap;
+
 use crate::util::grid::*;
 use crate::util::point::*;
-use std::mem::swap;
 
 type Input<'a> = (Grid<u8>, &'a str);
 

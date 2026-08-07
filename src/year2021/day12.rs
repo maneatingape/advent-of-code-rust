@@ -6,12 +6,12 @@
 //!
 //! To speed things up, 2 strategies are used, one high-level and one low-level:
 //! * [Memoization](https://en.wikipedia.org/wiki/Memoization) (or caching) of the possible paths
-//!   from each position, taking into account previously visited caves is the high-level strategy
-//!   to reuse work and save time.
-//! * [Bit Manipulation](https://en.wikipedia.org/wiki/Bit_manipulation) to store both the graph of
-//!   cave connections as an [adjacency matrix](https://en.wikipedia.org/wiki/Adjacency_matrix)
-//!   and the list of visited caves compressed into a single `u32` is the low-level strategy to
-//!   quickly and efficiently store the small cardinality set of caves.
+//!   from each position, taking into account previously visited caves is the high-level strategy to
+//!   reuse work and save time.
+//! * [Bit Manipulation](https://en.wikipedia.org/wiki/Bit_manipulation) to store both the graph of cave
+//!   connections as an [adjacency matrix](https://en.wikipedia.org/wiki/Adjacency_matrix) and the
+//!   list of visited caves compressed into a single `u32` is the low-level strategy to quickly and
+//!   efficiently store the small cardinality set of caves.
 use crate::util::bitset::*;
 use crate::util::hash::*;
 use crate::util::iter::*;
@@ -107,8 +107,8 @@ fn explore(input: &Input, twice: bool) -> u32 {
 /// a single machine code instruction on x86 and ARM and is blazing fast. We remove visited caves
 /// using a `^` XOR instruction.
 ///
-/// The nuance is reusing the same code for both part one and part two. First we check if we can visit
-/// a cave using the rules for part one. If not, then we also check if the `twice` variable is
+/// The nuance is reusing the same code for both part one and part two. First we check if we can
+/// visit a cave using the rules for part one. If not, then we also check if the `twice` variable is
 /// still `true`. This variable allows a single second visit to a small cave. The expression
 /// `once && twice` sets this value to `false` whenever we need to use it to visit a small cave.
 ///

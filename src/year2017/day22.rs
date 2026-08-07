@@ -35,10 +35,11 @@
 //! ```none
 //!     [0][2][01111001] => (2, 5, 10001111)
 //! ```
-use crate::util::grid::*;
-use crate::util::point::*;
 use std::array::from_fn;
 use std::mem::take;
+
+use crate::util::grid::*;
+use crate::util::point::*;
 
 const SIZE: usize = 250;
 const HALF: usize = SIZE / 2;

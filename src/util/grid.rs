@@ -6,14 +6,14 @@
 //!   # use aoc::util::grid::Grid;
 //!   # use aoc::util::point::Point;
 //!
-//!   let mut grid = Grid::parse("1");
-//!   let point = Point::new(0, 0);
+//! let mut grid = Grid::parse("1");
+//! let point = Point::new(0, 0);
 //!
-//!   let foo = grid[point];
-//!   assert_eq!(foo, b'1');
+//! let foo = grid[point];
+//! assert_eq!(foo, b'1');
 //!
-//!   grid[point] = foo + 1;
-//!   assert_eq!(grid[point], b'2');
+//! grid[point] = foo + 1;
+//! assert_eq!(grid[point], b'2');
 //! ```
 //!
 //! A convenience [`parse`] method creates a `Grid` directly from a 2-dimensional set of
@@ -24,8 +24,9 @@
 //! [`Point`]: crate::util::point
 //! [`parse`]: Grid::parse
 //! [`same_size_with`]: Grid::same_size_with
-use crate::util::point::*;
 use std::ops::{Index, IndexMut};
+
+use crate::util::point::*;
 
 #[derive(Clone, Eq, Hash, PartialEq)]
 pub struct Grid<T> {

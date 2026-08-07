@@ -3,8 +3,9 @@
 //! Part one is a [topological sort](https://en.wikipedia.org/wiki/Topological_sorting)
 //! of the steps based on the dependencies between them. As there are only 26 possible different
 //! steps, we can use bitmasks to store the dependency graph, enabling extremely quick lookup.
-use crate::util::bitset::*;
 use std::cmp::Reverse;
+
+use crate::util::bitset::*;
 
 type Input = [Step; 26];
 

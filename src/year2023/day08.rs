@@ -15,9 +15,10 @@
 //! To combine the list of LCMs from each path we use the identity:
 //!
 //! `lcm(a, b, c) = lcm(lcm(a, b), c)`
+use std::collections::VecDeque;
+
 use crate::util::hash::*;
 use crate::util::math::*;
-use std::collections::VecDeque;
 
 type Input = (usize, usize);
 

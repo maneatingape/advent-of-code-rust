@@ -18,13 +18,13 @@
 //! state will lower its score after the initial visit.
 //!
 //! The maze is also constructed in such a way to make our life easier:
-//! * There is only ever one possible path to each key. We do not need to consider
-//!   paths of different lengths that need different keys.
-//! * As a corollary, if key `b` lies between `a` and `c` then `|ac| = |ab| + |bc|`. This
-//!   enables a huge optimization that we only need to consider immediate neighbors.
-//!   If we do not possess key `b` then it never makes sense to skip from `a` to `c` since `b` is
-//!   along the way. We can model this by treating keys the same as doors. This optimization
-//!   sped up my solution by a factor of 30.
+//! * There is only ever one possible path to each key. We do not need to consider paths of
+//!   different lengths that need different keys.
+//! * As a corollary, if key `b` lies between `a` and `c` then `|ac| = |ab| + |bc|`. This enables a
+//!   huge optimization that we only need to consider immediate neighbors. If we do not possess key
+//!   `b` then it never makes sense to skip from `a` to `c` since `b` is along the way. We can model
+//!   this by treating keys the same as doors. This optimization sped up my solution by a factor of
+//!   30.
 //!
 //! On top of this approach we apply some high-level tricks to go faster:
 //! * We store previously seen pairs of `(location, keys collected)` to `total distance` in a map.
@@ -38,27 +38,27 @@
 //!   for my input.
 //!
 //! We also apply some low-level tricks to go even faster:
-//! * The set of remaining keys needed is stored as bits in a `u32`. We can have at most 26 keys
-//!   so this will always fit. For example, needing `a`, `b` and `e` is represented as `10011`.
+//! * The set of remaining keys needed is stored as bits in a `u32`. We can have at most 26 keys so
+//!   this will always fit. For example, needing `a`, `b` and `e` is represented as `10011`.
 //! * Robot location is also stored the same way. Robots can only ever be in their initial location
-//!   or at a key, so this gives a max of 26 + 4 = 30 locations. As a nice bonus this allows
-//!   part one and part two to share the same code.
-//! * For fast lookup of distance between keys, the maze is stored as
-//!   [adjacency matrix](https://en.wikipedia.org/wiki/Adjacency_matrix). `a` is index 0, `b` is
-//!   index 1 and robots' initial positions are from 26 to 29 inclusive.
-//!   For example (simplifying by moving robot from index 26 to 2):
+//!   or at a key, so this gives a max of 26 + 4 = 30 locations. As a nice bonus this allows part
+//!   one and part two to share the same code.
+//! * For fast lookup of distance between keys, the maze is stored as [adjacency matrix](https://en.wikipedia.org/wiki/Adjacency_matrix).
+//!   `a` is index 0, `b` is index 1 and robots' initial positions are from 26 to 29 inclusive. For
+//!   example (simplifying by moving robot from index 26 to 2):
 //!
 //!   ```none
 //!       #########    [0 6 2]
 //!       #b.A.@.a# => [6 0 4]
 //!       #########    [2 4 0]
 //!   ```
+use std::collections::VecDeque;
+use std::ops::Range;
+
 use crate::util::bitset::*;
 use crate::util::grid::*;
 use crate::util::hash::*;
 use crate::util::heap::*;
-use std::collections::VecDeque;
-use std::ops::Range;
 
 const RANGE: Range<usize> = 0..30;
 
@@ -219,7 +219,8 @@ fn explore<const PART_TWO: bool>(width: usize, bytes: &[u8]) -> u32 {
 
     while let Some((guess, (State { position, remaining }, total))) = todo.pop() {
         // Finish immediately if no keys left.
-        // Since we're using A* with a consistent heuristic this will always be the optimal solution.
+        // Since we're using A* with a consistent heuristic this will always be the optimal
+        // solution.
         if remaining == 0 {
             return total;
         }

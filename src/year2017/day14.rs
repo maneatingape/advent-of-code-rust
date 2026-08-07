@@ -5,8 +5,9 @@
 //!
 //! [`Day 10`]: crate::year2017::day10
 //! [`Day 12`]: crate::year2017::day12
-use crate::util::thread::*;
 use std::array::from_fn;
+
+use crate::util::thread::*;
 
 /// Parallelize the hashing as each row is independent.
 pub fn parse(input: &str) -> Vec<u8> {

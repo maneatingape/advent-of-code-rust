@@ -10,10 +10,11 @@
 //! Tricks used to speed things up:
 //! * Separate writer and reader threads to generate recipes and check them in parallel.
 //! * Vector processing of recipes using techniques similar to SIMD.
-use crate::util::parse::*;
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::mpsc::{Receiver, Sender, channel};
 use std::thread;
+
+use crate::util::parse::*;
 
 type Input = (String, usize);
 

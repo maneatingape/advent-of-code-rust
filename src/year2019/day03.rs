@@ -16,10 +16,11 @@
 //! from the starting point of each line.
 //!
 //! [`range`]: BTreeMap::range
+use std::collections::BTreeMap;
+
 use crate::util::integer::*;
 use crate::util::parse::*;
 use crate::util::point::*;
-use std::collections::BTreeMap;
 
 type Input = (i32, i32);
 

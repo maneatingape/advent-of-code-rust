@@ -42,18 +42,19 @@
 //!
 //! Then we can deduce some rules for the output of each gate type:
 //!
-//! 1. **XOR** If inputs are `x` and `y` then output must be another XOR gate
-//!    (except for inputs `x00` and `y00`) otherwise output must be `z`.
+//! 1. **XOR** If inputs are `x` and `y` then output must be another XOR gate (except for inputs
+//!    `x00` and `y00`) otherwise output must be `z`.
 //! 2. **AND** Output must be an OR gate (except for inputs `x00` and `y00`).
-//! 3. **OR** Output must be both AND and XOR gates, except for final carry
-//!    which must output to `z45`.
+//! 3. **OR** Output must be both AND and XOR gates, except for final carry which must output to
+//!    `z45`.
 //!
 //! We only need to find swapped outputs (not fix them) so the result is the labels of gates
 //! that break the rules in alphabetical order.
+use std::collections::VecDeque;
+
 use crate::util::hash::*;
 use crate::util::iter::*;
 use crate::util::parse::*;
-use std::collections::VecDeque;
 
 type Input<'a> = (&'a str, Vec<[&'a str; 5]>);
 

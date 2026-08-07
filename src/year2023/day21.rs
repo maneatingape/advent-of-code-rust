@@ -66,15 +66,15 @@
 //!
 //! The total area is adjusted by:
 //! * Adding `n` extra even corners.
-//!     ```none
-//!         ◤◥
-//!         ◣◢
-//!     ```
+//! ```none
+//!     ◤◥
+//!     ◣◢
+//! ```
 //! * Subtracting `n + 1` odd corners.
-//!     ```none
-//!         ◸◹
-//!         ◺◿
-//!     ```
+//! ```none
+//!     ◸◹
+//!     ◺◿
+//! ```
 //!
 //! To find the values for the total number of odd, even plots and the unreachable odd corners
 //! we BFS from the center tile, counting odd and even plots separately. Any plots more than
@@ -85,9 +85,10 @@
 //! reachable at the edges of the diamond. For some inputs this happens to be the same as the number
 //! of tiles greater than 65 steps from the center by coincidence, however this is not guaranteed so
 //! a second BFS is a more reliable solution.
+use std::collections::VecDeque;
+
 use crate::util::grid::*;
 use crate::util::point::*;
-use std::collections::VecDeque;
 
 const CENTER: Point = Point::new(65, 65);
 const CORNERS: [Point; 4] =

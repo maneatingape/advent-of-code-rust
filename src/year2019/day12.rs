@@ -3,8 +3,7 @@
 //! There are two insights needed to solve part two:
 //!
 //! * Each axis is independent.
-//! * Each axis is periodic somewhat like
-//!   [simple harmonic motion](https://en.wikipedia.org/wiki/Simple_harmonic_motion).
+//! * Each axis is periodic somewhat like [simple harmonic motion](https://en.wikipedia.org/wiki/Simple_harmonic_motion).
 //!   The velocity returns to zero twice per period.
 //!
 //! First find the period of each axis, then the answer is the
@@ -14,9 +13,10 @@
 //! The [`signum`] function comes in handy when updating the velocity.
 //!
 //! [`signum`]: i32::signum
+use std::array::from_fn;
+
 use crate::util::math::*;
 use crate::util::parse::*;
-use std::array::from_fn;
 
 type Axis = [i32; 8];
 type Input = [Axis; 3];

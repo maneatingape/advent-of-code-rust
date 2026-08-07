@@ -17,10 +17,11 @@
 //! [`Year 2015 Day 13`]: crate::year2015::day13
 //! [Travelling Salesman Problem]: https://en.wikipedia.org/wiki/Travelling_salesman_problem
 //! [Held-Karp]: https://en.wikipedia.org/wiki/Held%E2%80%93Karp_algorithm
+use std::collections::VecDeque;
+
 use crate::util::bitset::*;
 use crate::util::grid::*;
 use crate::util::parse::*;
-use std::collections::VecDeque;
 
 type Input = (u16, u16);
 

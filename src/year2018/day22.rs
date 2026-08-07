@@ -35,11 +35,12 @@
 //! requiring 8 buckets total.
 //!
 //! [`BinaryHeap`]: std::collections::BinaryHeap
+use std::array::from_fn;
+
 use crate::util::grid::*;
 use crate::util::iter::*;
 use crate::util::parse::*;
 use crate::util::point::*;
-use std::array::from_fn;
 
 /// The index of each tool is the tool that *cannot* be used in that region, for example
 /// Rocky => 0 => Neither, Wet => 1 => Torch, and Narrow => 2 => Climbing Gear.

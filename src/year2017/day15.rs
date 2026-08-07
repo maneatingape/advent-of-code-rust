@@ -22,13 +22,14 @@
 //! with the 31-bit error can overflow to 32 bits, so a final comparison against `MOD` gets
 //! the correct answer in `fast_mod` faster than hardware division. See also
 //! [this post](https://www.reddit.com/r/adventofcode/comments/7jxkiw/comment/drazokj/).
+use std::sync::mpsc::{Receiver, Sender, channel};
+use std::thread;
+
 use crate::util::hash::*;
 use crate::util::iter::*;
 use crate::util::math::*;
 use crate::util::parse::*;
 use crate::util::thread::*;
-use std::sync::mpsc::{Receiver, Sender, channel};
-use std::thread;
 
 const MOD: usize = 0x7fffffff;
 const PART_ONE: usize = 40_000_000;

@@ -8,9 +8,10 @@
 //! Part two is a BFS *backward* from the end to the start, tracing the cost exactly
 //! to find all possible paths. This reuses the cost information from the Dijkstra without
 //! requiring any extra state keeping for the paths.
+use std::collections::VecDeque;
+
 use crate::util::grid::*;
 use crate::util::point::*;
-use std::collections::VecDeque;
 
 type Input = (i32, usize);
 

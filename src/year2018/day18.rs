@@ -21,8 +21,9 @@
 //! Then the vertical sum of 3 horizontal sums gives the total.
 //!
 //! Bitwise logic then computes the next generation in batches of 8 acres at a time.
-use crate::util::hash::*;
 use std::hash::{Hash, Hasher};
+
+use crate::util::hash::*;
 
 /// Bitwise logic galore.
 const OPEN: u64 = 0x00;
@@ -108,8 +109,8 @@ pub fn part2(input: &Key) -> u32 {
 fn step(area: &mut [u64], rows: &mut [u64]) {
     // Compute the horizontal sum of each column with its immediate neighbors.
     for y in 0..50 {
-        // Shadow slices at the correct starting offset for convenience. We pad `rows` on the top and
-        // bottom then shift index by 7 to avoid having to check for edge conditions.
+        // Shadow slices at the correct starting offset for convenience. We pad `rows` on the top
+        // and bottom then shift index by 7 to avoid having to check for edge conditions.
         let area = &area[7 * y..];
         let rows = &mut rows[7 * (y + 1)..];
 

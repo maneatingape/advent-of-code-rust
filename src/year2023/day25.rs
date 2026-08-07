@@ -20,13 +20,13 @@
 //! * All edge weights (or flow capacity) are 1.
 //! * The 3 edges to be cut are in the "middle" of the graph, that is the graph looks something
 //!   like:
-//!     ```none
+//!  ```none
 //!           * *       * *
 //!         * * * * - * * * *
 //!       * * * * * - * * * * *
 //!         * * * * - * * * *
 //!           * *       * *
-//!     ```
+//!  ```
 //!
 //! Our high-level approach is as follows:
 //! * Pick any arbitrary node.
@@ -45,8 +45,8 @@
 //! The complexity of each BFS is `O(V + E)` and we perform a total of 6. To speed things up even
 //! further some low-level optimizations are used:
 //!
-//! * Numeric node and edge identifiers to allow `vec` to store previously seen values instead
-//!   of `HashMap`.
+//! * Numeric node and edge identifiers to allow `vec` to store previously seen values instead of
+//!   `HashMap`.
 //! * Linked list of path from start to end, stored in a `vec` using indices for simplicity and
 //!   cache locality. This [blog post series](https://rust-unofficial.github.io/too-many-lists/)
 //!   describes the complexity of using actual references.

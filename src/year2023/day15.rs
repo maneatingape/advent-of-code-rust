@@ -1,8 +1,9 @@
 //! # Lens Library
 //!
 //! Calculates part one and two at the same time as a speed optimization.
-use crate::util::parse::*;
 use std::array::from_fn;
+
+use crate::util::parse::*;
 
 type Input = (usize, usize);
 

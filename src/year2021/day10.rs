@@ -5,9 +5,9 @@
 //! whenever we encounter a closing delimiter. If there is a mismatch between opening and closing
 //! delimiters then we return the specified error value immediately.
 //!
-//! For part two the completion score is the remaining items on the stack, reversed and converted from
-//! corresponding closing delimiters. For example, the completion string `])}>` would have a stack
-//! that looks like `<{([`, where the right hand side is the top of the stack.
+//! For part two the completion score is the remaining items on the stack, reversed and converted
+//! from corresponding closing delimiters. For example, the completion string `])}>` would have a
+//! stack that looks like `<{([`, where the right hand side is the top of the stack.
 type Input = (u64, u64);
 
 pub fn parse(input: &str) -> Input {

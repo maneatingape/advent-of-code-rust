@@ -1,8 +1,9 @@
 //! # Tuning Trouble
 //!
-//! One solution to this problem is to use the [`windows`] method to slide over groups of the desired
-//! size, then construct a [`HashSet`] from the characters. If the [`HashSet`] is the same size
-//! as the window then we know that all characters are unique, as sets contain no duplicate elements.
+//! One solution to this problem is to use the [`windows`] method to slide over groups of the
+//! desired size, then construct a [`HashSet`] from the characters. If the [`HashSet`] is the same
+//! size as the window then we know that all characters are unique, as sets contain no duplicate
+//! elements.
 //!
 //! We'll use a faster approach that minimizes the work needed. Instead of creating a set for each
 //! window, we'll maintain the last position seen of each character. As we advance character by

@@ -15,8 +15,7 @@
 //!
 //! 1. Poor cache locality.
 //! 2. Allocation per element.
-//! 3. Ownership issues complex enough to inspire an entire
-//!    [blog post series](https://rust-unofficial.github.io/too-many-lists/).
+//! 3. Ownership issues complex enough to inspire an entire [blog post series](https://rust-unofficial.github.io/too-many-lists/).
 //!
 //! ## First optimization
 //!

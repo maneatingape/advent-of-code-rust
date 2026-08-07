@@ -53,10 +53,11 @@
 //! Given the rock direction we can calculate the times that the two hailstones are intercepted
 //! then use this to determine the original position of the rock, as long as the two times
 //! are different.
+use std::ops::{Add, RangeInclusive, Sub};
+
 use crate::util::iter::*;
 use crate::util::math::*;
 use crate::util::parse::*;
-use std::ops::{Add, RangeInclusive, Sub};
 
 const RANGE: RangeInclusive<i64> = 200_000_000_000_000..=400_000_000_000_000;
 

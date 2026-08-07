@@ -18,13 +18,14 @@
 //! A good chunk of the Intcode runtime is spent on unpacking compressed memory into the grid
 //! that is first displayed to the user. This effort is the same between both parts. Running the
 //! entire solution in parse thus reduces the overall runtime.
+use std::fmt::Write as _;
+use std::iter::once;
+use std::ops::ControlFlow;
+
 use super::intcode::*;
 use crate::util::hash::*;
 use crate::util::parse::*;
 use crate::util::point::*;
-use std::fmt::Write as _;
-use std::iter::once;
-use std::ops::ControlFlow;
 
 type Input = (FastSet<Point>, i64);
 
@@ -206,9 +207,10 @@ fn visit(mut computer: Computer) -> i64 {
 /// Non essential but fun. Animates the robot traversing the scaffold.
 #[cfg(feature = "frivolity")]
 fn visit(mut computer: Computer) -> i64 {
-    use crate::util::ansi::*;
     use std::thread::sleep;
     use std::time::Duration;
+
+    use crate::util::ansi::*;
 
     let mut result = 0;
     let mut previous = ' ';

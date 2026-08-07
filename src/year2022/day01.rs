@@ -2,7 +2,8 @@
 //! Sums groups of numbers separated by blank lines into a `vec` sorted in ascending order.
 //!
 //! Since we don't care what order the highest values are returned in [`select_nth_unstable`] would
-//! also work, and in theory is a little faster, however the difference was negligible when benchmarking.
+//! also work, and in theory is a little faster, however the difference was negligible when
+//! benchmarking.
 //!
 //! [`select_nth_unstable`]: slice::select_nth_unstable
 use crate::util::parse::*;

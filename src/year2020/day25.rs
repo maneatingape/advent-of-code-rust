@@ -19,12 +19,12 @@
 //! root of that number, since all the larger divisors will pair with a smaller one.
 //!
 //! See also [this alternative patch](https://github.com/maneatingape/advent-of-code-rust/pull/88)
-//! that can further speed things up to less than one-tenth of the work by using the [Pohlig-Hellman]
-//! algorithm (yes, the same Hellman that described secure key exchange also described how to speed
-//! up the factoring of that key). However, the complexity required to exploit properties from
-//! [Fermat's Little Theorem] and the [Chinese Remainder Theorem] to reduce the work to √116099 = 341
-//! table entries (as one of the factors of `20201227-1`) is harder to maintain, when this
-//! solution is already fast enough.
+//! that can further speed things up to less than one-tenth of the work by using the
+//! [Pohlig-Hellman] algorithm (yes, the same Hellman that described secure key exchange also
+//! described how to speed up the factoring of that key). However, the complexity required to
+//! exploit properties from [Fermat's Little Theorem] and the [Chinese Remainder Theorem] to reduce
+//! the work to √116099 = 341 table entries (as one of the factors of `20201227-1`) is harder to
+//! maintain, when this solution is already fast enough.
 //!
 //! [Diffie-Hellman-Merkle](https://en.wikipedia.org/wiki/Diffie%E2%80%93Hellman_key_exchange)
 //! [modular exponentiation](https://en.wikipedia.org/wiki/Modular_exponentiation)
@@ -57,8 +57,7 @@ pub fn part2(_input: &[u64; 2]) -> &'static str {
 /// Baby-step giant-step algorithm to compute discrete logarithm.
 /// Constants are hardcoded to this specific problem.
 /// * 4495 is the ceiling of √20201227.
-/// * 680915 is 7⁻⁴⁴⁹⁵, or the
-///   [multiplicative modular inverse](https://en.wikipedia.org/wiki/Modular_multiplicative_inverse)
+/// * 680915 is 7⁻⁴⁴⁹⁵, or the [multiplicative modular inverse](https://en.wikipedia.org/wiki/Modular_multiplicative_inverse)
 ///   of 7 to modular exponent 4495.
 fn discrete_logarithm(public_key: u64) -> u64 {
     let m = 4495;

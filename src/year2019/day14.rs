@@ -2,10 +2,11 @@
 //!
 //! Sorting the reactions in [topological order](https://en.wikipedia.org/wiki/Topological_sorting)
 //! from `FUEL` at the start to `ORE` at the end, allows us to process each reaction only once.
+use std::iter::repeat_with;
+
 use crate::util::hash::*;
 use crate::util::iter::*;
 use crate::util::parse::*;
-use std::iter::repeat_with;
 
 struct Ingredient {
     amount: u64,

@@ -11,9 +11,10 @@
 //! a given value.
 //!
 //! [`partition_point`]: https://doc.rust-lang.org/std/primitive.slice.html#method.partition_point
+use std::ops::Range;
+
 use crate::util::iter::*;
 use crate::util::parse::*;
-use std::ops::Range;
 
 type Input = (Vec<Range<u64>>, Vec<u64>);
 

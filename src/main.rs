@@ -1,8 +1,9 @@
-use aoc::util::ansi::*;
-use aoc::util::parse::*;
 use std::env::args;
 use std::fs::read_to_string;
 use std::time::{Duration, Instant};
+
+use aoc::util::ansi::*;
+use aoc::util::parse::*;
 
 struct Solution {
     year: u32,

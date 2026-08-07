@@ -8,15 +8,15 @@
 //! The most important heuristic is:
 //! * Assume ore is infinite.
 //! * Always build a clay robot.
-//! * Check if we can do better than the highest score so far in the remaining time, building
-//!   only geode or obsidian bots.
+//! * Check if we can do better than the highest score so far in the remaining time, building only
+//!   geode or obsidian bots.
 //!
 //! As these simplified rules will always score higher than the real rules, we can immediately
 //! prune any branch that can't possibly exceed the current high score.
 //!
 //! The second helpful heuristic is:
-//! * Don't build more bots for a particular mineral than the maximum possible consumption in
-//!   a single turn.
+//! * Don't build more bots for a particular mineral than the maximum possible consumption in a
+//!   single turn.
 //!
 //! As we can only build one bot per turn, we will never need to generate more resources than
 //! that bot can use. For example, if ore robots need 2 ore, clay robots 3 ore, obsidian robots
@@ -41,9 +41,10 @@
 //! The final important optimization is that we don't increment minute by minute. Instead once
 //! we decide to build a robot of a particular type, we "fast forward" in time until there are
 //! enough resources to build that robot. This cuts down on a lot of duplicate intermediate states.
+use std::ops::{Add, Sub};
+
 use crate::util::iter::*;
 use crate::util::parse::*;
-use std::ops::{Add, Sub};
 
 /// Each robot generates 1 mineral of a particular type.
 const ZERO: Mineral = Mineral::from(0, 0, 0, 0);

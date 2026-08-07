@@ -11,12 +11,11 @@
 //! make several optimizations:
 //!
 //! * First the sequence of 4 prices is converted from -9..9 to a base 19 index of 0..19.
-//! * Whether a monkey has seen a sequence before and the total bananas for each sequence are
-//!   stored in an array. This is much faster than a `HashMap`. Using base 19 gives much better
-//!   cache locality needing only 130,321 elements, for example compared to shifting each new cost
-//!   by 5 bits and storing in an array of 2²⁰ = 1,048,576 elements. Multiplication on modern
-//!   processors is cheap (and several instructions can issue at once) but random memory access
-//!   is expensive.
+//! * Whether a monkey has seen a sequence before and the total bananas for each sequence are stored
+//!   in an array. This is much faster than a `HashMap`. Using base 19 gives much better cache
+//!   locality needing only 130,321 elements, for example compared to shifting each new cost by 5
+//!   bits and storing in an array of 2²⁰ = 1,048,576 elements. Multiplication on modern processors
+//!   is cheap (and several instructions can issue at once) but random memory access is expensive.
 //!
 //! A SIMD variant processes 8 hashes at a time, taking about 60% of the time of the scalar version.
 //! The bottleneck is that disjoint indices must be written in sequence reducing the amount of work
@@ -92,7 +91,8 @@ mod implementation {
                 previous = price;
 
                 // Only sell the first time we see a sequence.
-                // By storing the id in the array we don't need to zero every iteration which is faster.
+                // By storing the id in the array we don't need to zero every iteration which is
+                // faster.
                 if seen[index] != id {
                     part_two[index] += price as u16;
                     seen[index] = id;
@@ -121,9 +121,10 @@ mod implementation {
 
 #[cfg(feature = "simd")]
 mod implementation {
-    use super::*;
     use std::simd::Simd;
     use std::simd::num::SimdUint as _;
+
+    use super::*;
 
     type Vector = Simd<u32, 8>;
 

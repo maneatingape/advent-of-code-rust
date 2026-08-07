@@ -46,10 +46,11 @@
 //! sorting a second time in this order.
 //!
 //! [`atan2`]: f64::atan2
+use std::cmp::Ordering;
+
 use crate::util::grid::*;
 use crate::util::math::*;
 use crate::util::point::*;
-use std::cmp::Ordering;
 
 type Input = (i32, i32);
 
@@ -80,9 +81,10 @@ pub fn parse(input: &str) -> Input {
     for i in 0..(points.len() - 1) {
         for j in (i + 1)..points.len() {
             let delta = points[j] - points[i];
-            // Because points was populated in order from left to right and top to bottom, delta.y will
-            // be non-negative. Although delta.x might be negative, shifting it by width gives us
-            // a positive reference point that can then cache the mapping to a representative index.
+            // Because points was populated in order from left to right and top to bottom, delta.y
+            // will be non-negative. Although delta.x might be negative, shifting it by
+            // width gives us a positive reference point that can then cache the mapping
+            // to a representative index.
             let key = Point::new(width + delta.x, delta.y);
 
             if cache[key] == ORIGIN {

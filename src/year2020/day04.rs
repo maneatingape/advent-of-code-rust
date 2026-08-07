@@ -4,9 +4,10 @@
 //! problem. However, as the principles of this crate are to avoid external dependencies and
 //! maximize speed we'll instead hand code validation functions for each of the
 //! passport field criteria.
+use std::ops::RangeInclusive;
+
 use crate::util::iter::*;
 use crate::util::parse::*;
-use std::ops::RangeInclusive;
 
 type Input = (u32, u32);
 

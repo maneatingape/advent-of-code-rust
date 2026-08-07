@@ -1,7 +1,8 @@
 //! # Treetop Tree House
 //!
-//! Part one is solved with an efficient `O(n)` algorithm. Part two is also solved with an efficient `O(n)`
-//! algorithm, using a bit manipulation trick to make the complexity independent of the number of digits.
+//! Part one is solved with an efficient `O(n)` algorithm. Part two is also solved with an efficient
+//! `O(n)` algorithm, using a bit manipulation trick to make the complexity independent of the
+//! number of digits.
 const ONES: u64 = 0x0041041041041041;
 const MASK: u64 = 0x0fffffffffffffc0;
 
@@ -9,8 +10,8 @@ type Input = (usize, Vec<i8>);
 
 /// Convert a 2D grid of ASCII digits into a 1D `vec` of heights.
 ///
-/// Each height is multiplied by 6. For part one this makes no difference, but for part two this helps
-/// with the bit manipulation.
+/// Each height is multiplied by 6. For part one this makes no difference, but for part two this
+/// helps with the bit manipulation.
 ///
 /// To convert from 2D coordinates to an index, the formula is `y * width + x`. For the sample grid
 /// of width 5, the top middle point at `(2, 0)` is at index `0 * 5 + 2 = 2` and the point directly
@@ -18,8 +19,8 @@ type Input = (usize, Vec<i8>);
 ///
 /// Using a 1D `vec` instead of a `vec` of `vec`s is faster for 2 reasons:
 /// * Avoids an intermediate pointer lookup for each access.
-/// * Better cache locality as the memory locations are adjacent and not potentially
-///   scattered all over the heap.
+/// * Better cache locality as the memory locations are adjacent and not potentially scattered all
+///   over the heap.
 pub fn parse(input: &str) -> Input {
     let raw: Vec<_> = input.lines().collect();
     let width = raw[0].len();

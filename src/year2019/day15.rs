@@ -9,11 +9,12 @@
 //! corridors of width one and has no loops or rooms, then we can use the simple
 //! [wall follower](https://en.wikipedia.org/wiki/Maze-solving_algorithm#Wall_follower)
 //! algorithm to eventually trace our way through the entire maze back to the starting point.
+use std::collections::VecDeque;
+
 use super::intcode::*;
 use crate::util::hash::*;
 use crate::util::parse::*;
 use crate::util::point::*;
-use std::collections::VecDeque;
 
 type Input = (FastSet<Point>, Point);
 

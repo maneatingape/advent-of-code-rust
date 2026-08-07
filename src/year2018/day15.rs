@@ -24,7 +24,6 @@
 //! * We should choose the first target square in reading order (to the right of the nearest elf).
 //! * There are two equal shortest paths to that square, so we should choose the first *step* in
 //!   reading order (up).
-//!
 //! ```none
 //!     Map        Walls      In Range
 //!     #######    1111111    0000000
@@ -54,7 +53,6 @@
 //! * Elf's turn.
 //! * There are two equal shortest paths.
 //! * We should choose the first *unit* in reading order (left).
-//!
 //! ```none
 //!     Map             Walls           In Range
 //!     ###########    11111111111    00000000000

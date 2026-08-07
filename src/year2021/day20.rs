@@ -45,7 +45,8 @@ mod implementation {
         let (algorithm, grid) = input;
 
         // Offset the initial square by `steps` + 1 buffer cells in both dimensions.
-        // The square expands by at most one in each step so this is enough room to stay within bounds.
+        // The square expands by at most one in each step so this is enough room to stay within
+        // bounds.
         let extra = steps + 1;
         let offset = Point::new(extra, extra);
         let mut pixels = Grid::new(grid.width + 2 * extra, grid.height + 2 * extra, 0);
@@ -86,8 +87,8 @@ mod implementation {
 
                 for x in (start - 1)..(end + 1) {
                     // Keeps a sliding window of the index, updated as we evaluate the row from
-                    // left to right. Shift the index left by one each turn, updating the values from
-                    // the three new rightmost pixels entering the window.
+                    // left to right. Shift the index left by one each turn, updating the values
+                    // from the three new rightmost pixels entering the window.
                     index = ((index << 1) & 0b110110110)
                         + helper(x + 1, y - 1, 6)
                         + helper(x + 1, y, 3)
@@ -108,9 +109,10 @@ mod implementation {
 
 #[cfg(feature = "simd")]
 mod implementation {
-    use super::*;
     use std::simd::Simd;
     use std::simd::num::SimdUint as _;
+
+    use super::*;
 
     const LANE_WIDTH: usize = 16;
     type Vector = Simd<u16, LANE_WIDTH>;
@@ -119,7 +121,8 @@ mod implementation {
         let (algorithm, grid) = input;
 
         // Offset the initial square by `steps` + 1 buffer cells in both dimensions.
-        // The square expands by at most one in each step so this is enough room to stay within bounds.
+        // The square expands by at most one in each step so this is enough room to stay within
+        // bounds.
         let extra = steps + 1;
         let offset = Point::new(extra, extra);
         let mut pixels =

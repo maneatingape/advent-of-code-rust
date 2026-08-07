@@ -5,8 +5,8 @@
 //! to the algorithm, plus some others that come in handy for Advent of Code.
 //!
 //! Implementation notes:
-//! * A [`VecDeque`] of [`Point`] is used to store the frontier as it gives better performance
-//!   than [`vec`] when used as a FIFO queue.
+//! * A [`VecDeque`] of [`Point`] is used to store the frontier as it gives better performance than
+//!   [`vec`] when used as a FIFO queue.
 //! * [`Grid`] is used to store both the height information and seen nodes.
 //!
 //! For part two we could search for all `a` locations and repeatedly start a BFS search from there,
@@ -17,9 +17,10 @@
 //!
 //! [`Grid`]: crate::util::grid
 //! [`Point`]: crate::util::point
+use std::collections::VecDeque;
+
 use crate::util::grid::*;
 use crate::util::point::*;
-use std::collections::VecDeque;
 
 type Input = (Grid<u8>, Point);
 

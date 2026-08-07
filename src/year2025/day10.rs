@@ -1,8 +1,9 @@
 //! # Factory
+use std::array::from_fn;
+
 use crate::util::bitset::*;
 use crate::util::math::*;
 use crate::util::parse::*;
-use std::array::from_fn;
 
 const MAX_BUTTONS: usize = 14;
 const MAX_JOLTAGES: usize = 11;

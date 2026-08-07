@@ -9,8 +9,9 @@
 //!
 //! This allows us to compute part two with a similar approach to
 //! [exponentiation by squaring](https://en.wikipedia.org/wiki/Exponentiation_by_squaring).
-use crate::util::parse::*;
 use std::array::from_fn;
+
+use crate::util::parse::*;
 
 #[derive(Clone, Copy)]
 pub struct Dance {

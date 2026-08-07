@@ -26,9 +26,10 @@
 //! heuristic is 10 × 9 from heat plus 10 for the distance change for a total of 100 buckets.
 //!
 //! [`BinaryHeap`]: std::collections::BinaryHeap
+use std::iter::repeat_with;
+
 use crate::util::grid::*;
 use crate::util::parse::*;
-use std::iter::repeat_with;
 
 /// Parse the input into a 2D grid of `u8` then convert to `u32` for convenience.
 pub fn parse(input: &str) -> Grid<i32> {

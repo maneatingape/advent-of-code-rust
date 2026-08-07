@@ -37,8 +37,9 @@
 //! jump in the estimate table of another 9. A circular array of 32 buckets (for bitwise math
 //! windowing) can handle our empirical range of -1 to 18 in the set of active buckets, and we
 //! avoid having to allocate memory as the search gradually shifts the active window of buckets.
-use crate::util::parse::*;
 use std::array::from_fn;
+
+use crate::util::parse::*;
 
 pub struct Square {
     size: usize,
@@ -105,7 +106,8 @@ fn build_estimates(square: &Square) -> Vec<u32> {
         let end = edge.min(diag) + 1;
 
         // For each tile crawling up and right, select the minimum between its lower neighbor,
-        // its right neighbor, or the minimum Manhattan distance to any earlier node on the diagonal.
+        // its right neighbor, or the minimum Manhattan distance to any earlier node on the
+        // diagonal.
         for col in start..end {
             let row = diag - col;
             let value =

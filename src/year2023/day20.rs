@@ -12,8 +12,8 @@
 //! ```
 //!
 //! The penultimate conjunction in each row, for example `ax`, both takes input and delivers output
-//! to the flip-flops. This follows a pattern, for example, using `v` above to indicate input from the
-//! conjunction and `v` below to indicate output:
+//! to the flip-flops. This follows a pattern, for example, using `v` above to indicate input from
+//! the conjunction and `v` below to indicate output:
 //!
 //! ```none
 //!     v     v        v              v

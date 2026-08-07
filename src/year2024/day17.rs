@@ -28,8 +28,9 @@
 //! in practice filtering by correct digit keeps the total less than 50.
 //!
 //! [`Intcode`]: crate::year2019::intcode
-use crate::util::parse::*;
 use std::ops::ControlFlow;
+
+use crate::util::parse::*;
 
 pub fn parse(input: &str) -> Vec<u64> {
     input.iter_unsigned().collect()

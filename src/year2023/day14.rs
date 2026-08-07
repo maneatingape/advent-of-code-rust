@@ -40,17 +40,18 @@
 //!
 //! This approach has two huge advantages:
 //!
-//! First, the number of balls resting against each fixed point completely represents the state of the
-//! grid in a very compact format. For example, my input has ~1600 fixed points. Using 2 bytes per
-//! point needs 3.2K total to represent the grid, compared to 100 × 100 = 10K for the simple approach.
-//! 3x less data is 3x faster to hash when storing states in a `HashMap` looking for duplicates.
+//! First, the number of balls resting against each fixed point completely represents the state of
+//! the grid in a very compact format. For example, my input has ~1600 fixed points. Using 2 bytes
+//! per point needs 3.2K total to represent the grid, compared to 100 × 100 = 10K for the simple
+//! approach. 3x less data is 3x faster to hash when storing states in a `HashMap` looking for
+//! duplicates.
 //!
 //! Second, calculating the new position of a ball is very fast. For each ball:
 //!
 //! * Use `fixed_*` to lookup the index in the corresponding `roll_*` vec.
 //! * This stores the current index of the last ball resting against that fixed point.
-//! * Increment this value by ±1 for horizontal movement or ±width for vertical movement
-//!   and then update the new location of this ball.
+//! * Increment this value by ±1 for horizontal movement or ±width for vertical movement and then
+//!   update the new location of this ball.
 //!
 //! For example, tilting a single row west, processing each ball from left to right where each line
 //! represents the new state would look like:

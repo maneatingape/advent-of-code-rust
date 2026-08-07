@@ -38,18 +38,19 @@
 //! Then we check every possible pair formed by those values, considering only the pairs
 //! where the sets of valves are [disjoint](https://en.wikipedia.org/wiki/Disjoint_sets),
 //! which is when you and the elephant have visited different sets of valves.
+use std::cmp::Ordering;
+
 use crate::util::bitset::*;
 use crate::util::hash::*;
 use crate::util::parse::*;
-use std::cmp::Ordering;
 
 /// Simplified graph of valves. Valves are stored in descending order of flow so the valve at
 /// index 0 has the highest flow, valve at index 1 the second highest and so on.
 /// This descending order is used by the heuristic to prune branches.
 ///
 /// * `size` Number of non-zero valves plus 1 for `AA`.
-/// * `todo` Bitmask with a `1` for each initial unopened non-zero valve. For example, if there
-///   are 5 valves this would be binary `11111`.
+/// * `todo` Bitmask with a `1` for each initial unopened non-zero valve. For example, if there are
+///   5 valves this would be binary `11111`.
 /// * `flow` Stores the flow for each valve.
 /// * `distance` Adjacency matrix of distances between each pair of valves.
 pub struct Input {

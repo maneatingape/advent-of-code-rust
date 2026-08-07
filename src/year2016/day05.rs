@@ -4,10 +4,11 @@
 //! possible in parallel in blocks of 1000 at a time.
 //!
 //! [`Year 2015 Day 4`]: crate::year2015::day04
+use std::sync::Mutex;
+
 use self::implementation::*;
 use crate::util::md5::*;
 use crate::util::thread::*;
-use std::sync::Mutex;
 
 struct Shared {
     prefix: String,
@@ -116,11 +117,12 @@ mod implementation {
 
 #[cfg(feature = "simd")]
 mod implementation {
+    use std::simd::cmp::SimdPartialEq as _;
+    use std::simd::*;
+
     use super::*;
     use crate::util::bitset::*;
     use crate::util::md5::simd::hash_fixed;
-    use std::simd::cmp::SimdPartialEq as _;
-    use std::simd::*;
 
     #[expect(clippy::needless_range_loop)]
     fn check_hash_simd<const N: usize>(

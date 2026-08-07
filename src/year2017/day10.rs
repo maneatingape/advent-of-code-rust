@@ -6,9 +6,10 @@
 //!
 //! [`rotate_left`]: slice::rotate_left
 //! [`reverse`]: slice::reverse
-use crate::util::parse::*;
 use std::array::from_fn;
 use std::fmt::Write as _;
+
+use crate::util::parse::*;
 
 pub fn parse(input: &str) -> &str {
     input.trim()

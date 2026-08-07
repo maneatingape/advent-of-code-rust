@@ -3,10 +3,11 @@
 //! Each key sequence always ends in `A`. This means that we can consider each group of button
 //! presses between `A`s independently using a recursive approach with memoization to efficiently
 //! compute the minimum presses needed for any depth of chained robots.
+use std::iter::{once, repeat_n};
+
 use crate::util::hash::*;
 use crate::util::parse::*;
 use crate::util::point::*;
-use std::iter::{once, repeat_n};
 
 type Input<'a> = (Vec<(&'a str, usize)>, Combinations);
 type Combinations = FastMap<(char, char), Vec<String>>;

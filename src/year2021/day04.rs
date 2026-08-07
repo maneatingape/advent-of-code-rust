@@ -12,8 +12,9 @@
 //! Filtering the board numbers by turn and a reverse lookup from turn to number gives the
 //! score for each board. Sort each result by turn and the answers for part one and two are the
 //! first and last values respectively.
-use crate::util::parse::*;
 use std::array::from_fn;
+
+use crate::util::parse::*;
 
 const BOARD_SIZE: usize = 25;
 const ROWS_AND_COLS: [(usize, usize); 10] =

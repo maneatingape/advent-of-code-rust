@@ -170,11 +170,12 @@
 //!     Previous SSEE |┌┐|
 //!     Current  SE.. ||└┘
 //! ```
+use std::collections::VecDeque;
+
 use crate::util::bitset::*;
 use crate::util::grid::*;
 use crate::util::hash::*;
 use crate::util::point::*;
-use std::collections::VecDeque;
 
 /// We only use 6 elements but 8 is faster to hash.
 type Row = [u8; 8];

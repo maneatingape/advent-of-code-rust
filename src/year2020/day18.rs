@@ -10,8 +10,9 @@
 //! * 1 * 2 * 3 * 4 => 1 * (2 * (3 * (4)))
 //! * 1 + 2 * 3 + 4 => 1 + 2 * (3 + 4)
 //! * 1 + (2 * 3 * 4) + 5 => 1 + (2 * (3 * (4))) + 5
-use crate::util::parse::*;
 use std::str::Bytes;
+
+use crate::util::parse::*;
 
 pub fn parse(input: &str) -> Vec<&str> {
     input.lines().collect()

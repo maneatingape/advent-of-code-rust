@@ -5,9 +5,10 @@
 //!
 //! As an optimization we check halfway through the loops to see if any ingredient will never be
 //! greater than zero to skip large numbers of combinations.
+use std::array::from_fn;
+
 use crate::util::iter::*;
 use crate::util::parse::*;
-use std::array::from_fn;
 
 type Ingredient = [i32; 5];
 type Input = (i32, i32);

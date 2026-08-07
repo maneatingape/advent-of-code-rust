@@ -2,8 +2,9 @@
 //!
 //! The title of the problem is a reference to the
 //! [real-life equation](https://en.wikipedia.org/wiki/Tsiolkovsky_rocket_equation).
-use crate::util::parse::*;
 use std::iter::successors;
+
+use crate::util::parse::*;
 
 /// The [`iter_unsigned`] utility method extracts and parses numbers from surrounding text.
 ///

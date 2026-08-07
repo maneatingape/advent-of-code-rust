@@ -3,7 +3,8 @@
 //! threads equal to the number of cores on the machine. Unlike normal threads, scoped threads
 //! can borrow data from their environment.
 use std::iter::repeat_with;
-use std::sync::atomic::{AtomicBool, AtomicU32, AtomicUsize, Ordering::Relaxed};
+use std::sync::atomic::Ordering::Relaxed;
+use std::sync::atomic::{AtomicBool, AtomicU32, AtomicUsize};
 use std::thread::*;
 
 /// Usually the number of physical cores.

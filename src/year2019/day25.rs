@@ -5,8 +5,8 @@
 //! by swapping only one item at a time.
 //!
 //! Makes some assumptions:
-//! * The ship's layout contains no loops, so a depth-first search will explore every room
-//!   then return to the starting point.
+//! * The ship's layout contains no loops, so a depth-first search will explore every room then
+//!   return to the starting point.
 //! * The 5 dangerous items are common across all inputs.
 //! * No items are called "north", "south", "west" or "east".
 //! * The final room is called "Pressure-Sensitive Floor".
@@ -16,10 +16,11 @@
 //!
 //! Just for fun this solution can be played interactively on the command line if
 //! "--features frivolity" is enabled.
+use std::fmt::Write as _;
+
 use super::intcode::*;
 use crate::util::bitset::*;
 use crate::util::parse::*;
-use std::fmt::Write as _;
 
 pub fn parse(input: &str) -> Vec<i64> {
     input.iter_signed().collect()

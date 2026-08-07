@@ -44,8 +44,9 @@
 //!
 //! [`Day 16`]: crate::year2020::day16
 //! [`count_ones`]: u32::count_ones
-use crate::util::hash::*;
 use std::collections::BTreeMap;
+
+use crate::util::hash::*;
 
 pub struct Input<'a> {
     ingredients: FastMap<&'a str, Ingredient>,

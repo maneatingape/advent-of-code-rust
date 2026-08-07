@@ -6,8 +6,8 @@
 //!
 //! For simplicity we use the "search by sieving" method. We start at zero with a step the size of
 //! the first integer. Then we search for each subsequent integer located at the correct offset of
-//! minutes and multiply the step by the new integer. This preserves the relative offset at each step
-//! in the next search.
+//! minutes and multiply the step by the new integer. This preserves the relative offset at each
+//! step in the next search.
 use crate::util::parse::*;
 
 pub struct Input {

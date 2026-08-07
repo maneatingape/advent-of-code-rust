@@ -12,9 +12,10 @@
 //!
 //! Using the [Chinese Remainder Theorem](https://en.wikipedia.org/wiki/Chinese_remainder_theorem)
 //! we combine the two times into a single time mod 10,403 that is the answer.
+use std::cmp::Ordering::*;
+
 use crate::util::iter::*;
 use crate::util::parse::*;
-use std::cmp::Ordering::*;
 
 type Robot = [usize; 4];
 

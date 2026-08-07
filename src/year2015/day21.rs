@@ -2,9 +2,10 @@
 //!
 //! The trick to get the outcome of each battle quickly is to divide the hero's health by the
 //! boss's damage and vice-versa then find out how many turns each takes to win.
+use std::ops::Add;
+
 use crate::util::iter::*;
 use crate::util::parse::*;
-use std::ops::Add;
 
 #[derive(Clone, Copy)]
 struct Item {

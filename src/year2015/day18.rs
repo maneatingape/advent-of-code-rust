@@ -24,8 +24,8 @@
 //! 2. Perform half-adder and full-adder computation of each bit with its vertical neighbors, using
 //!    only bitwise logic. Just two bit-wise additions provide data for three 2-bit column sums,
 //!    since the left and right neighbors are one bit apart in the opposite parity integer and
-//!    already added in parallel. Visually, for cell e, we are computing a+b+c, d+f, and g+h+i
-//!    of its neighbors.
+//!    already added in parallel. Visually, for cell e, we are computing a+b+c, d+f, and g+h+i of
+//!    its neighbors.
 //!
 //! ```none
 //!                   .odd   .even
@@ -36,10 +36,10 @@
 //! ```
 //!
 //! 3. Taking the 3 two-bit column sums learned in the last step, perform two more full-adders to
-//!    form four new bits p, q, r, s, which we could add into a usual four-bit number, but which
-//!    are good enough for our needs as-is. Bit s is set if there are an odd number of neighbors,
-//!    bit p must be clear or we already know there are more than 3 neighbors, and exactly one of
-//!    bits q and r must be set for the final 4-bit sum to have the second bit set.
+//!    form four new bits p, q, r, s, which we could add into a usual four-bit number, but which are
+//!    good enough for our needs as-is. Bit s is set if there are an odd number of neighbors, bit p
+//!    must be clear or we already know there are more than 3 neighbors, and exactly one of bits q
+//!    and r must be set for the final 4-bit sum to have the second bit set.
 //!
 //! ```none
 //!     a d g

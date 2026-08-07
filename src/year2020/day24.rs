@@ -134,9 +134,10 @@ mod implementation {
 
 #[cfg(feature = "simd")]
 mod implementation {
-    use super::*;
     use std::simd::cmp::SimdPartialEq as _;
     use std::simd::*;
+
+    use super::*;
 
     const LANE_WIDTH: usize = 32;
     type Vector = Simd<u8, LANE_WIDTH>;

@@ -12,10 +12,11 @@
 //!
 //! [`Day 18`]: crate::year2019::day18
 //! [breadth-first search]: https://en.wikipedia.org/wiki/Breadth-first_search
+use std::collections::VecDeque;
+
 use crate::util::grid::*;
 use crate::util::hash::*;
 use crate::util::point::*;
-use std::collections::VecDeque;
 
 type Key = ((u8, u8), Kind);
 

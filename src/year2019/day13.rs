@@ -87,10 +87,11 @@ fn draw(_tiles: &[i64], _stride: i64, _score: i64, _blocks: i64) {}
 
 #[cfg(feature = "frivolity")]
 fn draw(tiles: &[i64], stride: i64, score: i64, blocks: i64) {
-    use crate::util::ansi::*;
     use std::fmt::Write as _;
     use std::thread::sleep;
     use std::time::Duration;
+
+    use crate::util::ansi::*;
 
     // Wait until the initial screen is complete.
     let paddle = tiles.iter().rposition(|&t| t == 3).unwrap_or(tiles.len());

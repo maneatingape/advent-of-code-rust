@@ -52,7 +52,8 @@ pub fn part2(input: &Input) -> usize {
     let (mut todo, mut padded) = input.clone();
     let mut removed = 0;
 
-    // Update neighbors as rolls are removed. If they drop below the threshold, then add to the list.
+    // Update neighbors as rolls are removed. If they drop below the threshold, then add to the
+    // list.
     while let Some(point) = todo.pop() {
         removed += 1;
 

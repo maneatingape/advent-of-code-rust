@@ -1,6 +1,7 @@
 //! # Password Philosophy
 //!
-//! Parsing the rules upfront allows both part one and part two to be solved in a straightforward manner.
+//! Parsing the rules upfront allows both part one and part two to be solved in a straightforward
+//! manner.
 //!
 //! There's no need to first convert the input into lines since we know that each rule has 4 parts.
 //! Instead we use the [`split`] method with a slice of delimiters to break the input into

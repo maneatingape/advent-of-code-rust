@@ -12,11 +12,12 @@
 //! does not take into account the fact that maximum damage is only possible while Poison is
 //! still active, where re-casting Poison costs more mana but can end the game faster. That's
 //! okay because as long as the heuristic is consistent, underestimating is fine.
+use std::ops::ControlFlow;
+
 use crate::util::hash::*;
 use crate::util::heap::*;
 use crate::util::iter::*;
 use crate::util::parse::*;
-use std::ops::ControlFlow;
 
 type Input = [i16; 2];
 

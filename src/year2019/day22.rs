@@ -9,8 +9,8 @@
 //! Some basic modular identities:
 //! * (a + b) mod m = (a mod m) + (b mod m)
 //! * (a × b) mod m = (a mod m) × (b mod m)
-//! * The [modular inverse](https://en.wikipedia.org/wiki/Modular_multiplicative_inverse)
-//!   is used instead of division.
+//! * The [modular inverse](https://en.wikipedia.org/wiki/Modular_multiplicative_inverse) is used
+//!   instead of division.
 //!
 //! ## Linear Congruences
 //!

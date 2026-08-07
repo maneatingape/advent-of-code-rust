@@ -7,8 +7,8 @@
 //! numbers, compared to storing all numbers in a single flat `vec`. Some further optimizations:
 //! * The first and second level indices of a number change only when it moves, so these can be
 //!   stored in a lookup array for fast access.
-//! * The size of each first level `vec` is the sum of the second level `vec`s contained
-//!   inside. This is stored in the `skip` array to prevent recomputing on each move.
+//! * The size of each first level `vec` is the sum of the second level `vec`s contained inside.
+//!   This is stored in the `skip` array to prevent recomputing on each move.
 //!
 //! This implementation is both faster and simpler than the previous version (preserved in the
 //! commit history) that used an [order statistic tree](https://en.wikipedia.org/wiki/Order_statistic_tree),
@@ -17,9 +17,10 @@
 //!
 //! Leaf `vec`s are padded to a size modulo 64 to speed up searching for numbers. A SIMD variant
 //! can search for 64 numbers simultaneously.
-use crate::util::parse::*;
 use std::array::from_fn;
 use std::iter::repeat_n;
+
+use crate::util::parse::*;
 
 struct PaddedVec {
     size: usize,
@@ -41,7 +42,8 @@ pub fn part2(input: &[i64]) -> i64 {
 fn decrypt(input: &[i64], key: i64, rounds: usize) -> i64 {
     // Important nuance, size is one less because we don't consider the moving number.
     let size = input.len() - 1;
-    // Another nuance, input contains duplicate numbers, so use index to refer to each number uniquely.
+    // Another nuance, input contains duplicate numbers, so use index to refer to each number
+    // uniquely.
     let indices: Vec<_> = (0..input.len() as u16).collect();
     // Pre-process the numbers, converting any negative indices to positive indices that will wrap.
     // For example, -1 becomes 4998.

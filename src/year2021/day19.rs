@@ -2,8 +2,8 @@
 //!
 //! A brute force approach is:
 //! * Choose an arbitrary starting scanner, then add its beacons to a "known" set.
-//! * For each remaining scanner, then for each of its possible 24 rotations, check its beacons
-//!   by translating against every other beacon in the known set.
+//! * For each remaining scanner, then for each of its possible 24 rotations, check its beacons by
+//!   translating against every other beacon in the known set.
 //! * If we find a match of 12 or more overlapping beacons, then merge the beacons into the known
 //!   set.
 //!
@@ -22,10 +22,11 @@
 //! An overlap indicates a potential match, but we need to confirm by checking the beacons against
 //! each other in two steps. First confirming orientation by matching the deltas between
 //! points, then by translating the beacons until 12 overlap.
+use std::ops::{Add, Sub};
+
 use crate::util::hash::*;
 use crate::util::iter::*;
 use crate::util::parse::*;
-use std::ops::{Add, Sub};
 
 /// Stores coordinates in x, y, z order.
 #[derive(Clone, Copy, Eq, Hash, PartialEq)]

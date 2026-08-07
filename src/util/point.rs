@@ -7,13 +7,13 @@
 //! ```
 //!   # use aoc::util::point::Point;
 //!
-//!   let a = Point::new(1, 2);
-//!   let b = Point::new(3, 4);
-//!   let k = 2;
+//! let a = Point::new(1, 2);
+//! let b = Point::new(3, 4);
+//! let k = 2;
 //!
-//!   assert_eq!(a + b, Point::new(4, 6));
-//!   assert_eq!(a - b, Point::new(-2, -2));
-//!   assert_eq!(a * k, Point::new(2, 4));
+//! assert_eq!(a + b, Point::new(4, 6));
+//! assert_eq!(a - b, Point::new(-2, -2));
+//! assert_eq!(a * k, Point::new(2, 4));
 //! ```
 //!
 //! Additionally, there are [`clockwise`] and [`counter_clockwise`]

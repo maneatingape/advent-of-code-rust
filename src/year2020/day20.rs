@@ -14,8 +14,8 @@
 //! ## Part One
 //!
 //! First we calculate the frequency of each edge, both forward and backward as tiles can be in
-//! any orientation. As there are only 2¹⁰ or 1024 possible edge values we can use an array instead of a
-//! hash table for speed, converting the edges into a binary number to index the array.
+//! any orientation. As there are only 2¹⁰ or 1024 possible edge values we can use an array instead
+//! of a hash table for speed, converting the edges into a binary number to index the array.
 //!
 //! This results in 96 values that occur once and 528 values that occur twice. Then for every tile
 //! we sum the frequency of each edge. Corner tiles will have two edges that only occur once, not
@@ -41,8 +41,9 @@
 //!
 //! For speed the monster bit patterns are rotated and flipped instead of the image, then stored
 //! in hardcoded arrays. The search ends as soon as we find monsters in any orientation.
-use crate::util::parse::*;
 use std::array::from_fn;
+
+use crate::util::parse::*;
 
 pub struct Tile {
     id: u64,

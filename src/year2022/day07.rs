@@ -14,14 +14,14 @@
 //!
 //! For my input data this meant that 58% of it was unnecessary! Our algorithm will be:
 //! * If we encounter a file listing then add its size to the current running total.
-//! * Create a `vec` to function as a stack of incomplete directories. Anytime we encounter a
-//!   `cd foo` command, then we push the size of the current directory to this stack to save for
-//!   later, then reset our running total to 0.
-//! * Create a second `vec` to store the sizes of completed directories. Anytime we encounter
-//!   a `cd ..` then we can "complete" the current directory and add its size to this list. To find
-//!   our new running total we then pop the previous unfinished directory off the stack
-//!   (and this is the neat part) *add* the size of the just completed directory, since we know
-//!   that it must have been a child of the directory at the top of the stack.
+//! * Create a `vec` to function as a stack of incomplete directories. Anytime we encounter a `cd
+//!   foo` command, then we push the size of the current directory to this stack to save for later,
+//!   then reset our running total to 0.
+//! * Create a second `vec` to store the sizes of completed directories. Anytime we encounter a `cd
+//!   ..` then we can "complete" the current directory and add its size to this list. To find our
+//!   new running total we then pop the previous unfinished directory off the stack (and this is the
+//!   neat part) *add* the size of the just completed directory, since we know that it must have
+//!   been a child of the directory at the top of the stack.
 //!
 //!   Note that the end of the file is essentially a sequence of implicit `cd ..` commands
 //!   all the way to the root. Another nice side effect is that the root directory is always the
@@ -29,7 +29,8 @@
 //!
 //! For example, the sample input reduces to essentially only:
 //!
-//! `down 14848514 8504156 down 29116 2557 62596 down 584 up up down 4060174 8033020 5626152 7214296 [implicit up up]`
+//! `down 14848514 8504156 down 29116 2557 62596 down 584 up up down 4060174 8033020 5626152 7214296
+//! [implicit up up]`
 //!
 //! This means that the algorithm is extremely efficient and the data structures are very
 //! straightforward. For example, there's no need to store the current path names, or to recursively

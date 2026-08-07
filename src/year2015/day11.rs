@@ -7,8 +7,8 @@
 //! next lowest valid sequence will end in a string of the form `aabcc`,
 //! compressing 2 pairs and a straight into 5 digits.
 //!
-//! * If the current string ends with `xxyzz` then increment the third digit and wrap around
-//!   to `aabcc`.
+//! * If the current string ends with `xxyzz` then increment the third digit and wrap around to
+//!   `aabcc`.
 //! * The 5 digit sequence cannot start with any letter from `g` to `o` inclusive or it would
 //!   contain an invalid character somewhere in the sequence.
 //!

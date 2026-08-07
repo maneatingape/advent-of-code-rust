@@ -11,9 +11,10 @@
 //! The approach from "Waiting: Parking and Condition Variables" in the excellent book
 //! [Rust Atomics and Locks](https://marabos.nl/atomics/) prevents idle threads from busy
 //! looping on the mutex.
+use std::sync::{Condvar, Mutex};
+
 use crate::util::md5::*;
 use crate::util::thread::*;
-use std::sync::{Condvar, Mutex};
 
 type Input = (Vec<u8>, usize);
 type Item = (u8, u8, usize, Vec<u8>);

@@ -2,11 +2,12 @@
 //!
 //! Brute force slog through all possible keys, parallelized as much as possible. An optimization
 //! for part two is a quick method to convert `u32` to 8 ASCII digits.
+use std::collections::{BTreeMap, BTreeSet};
+use std::sync::Mutex;
+
 use self::implementation::*;
 use crate::util::md5::*;
 use crate::util::thread::*;
-use std::collections::{BTreeMap, BTreeSet};
-use std::sync::Mutex;
 
 /// Atomics can be safely shared between threads.
 struct Shared<'a> {
@@ -189,11 +190,12 @@ mod implementation {
 
 #[cfg(feature = "simd")]
 mod implementation {
+    use std::simd::cmp::SimdPartialEq as _;
+    use std::simd::*;
+
     use super::*;
     use crate::util::bitset::*;
     use crate::util::md5::simd::hash_fixed;
-    use std::simd::cmp::SimdPartialEq as _;
-    use std::simd::*;
 
     /// Use SIMD to compute hashes in parallel in blocks of 32.
     #[expect(clippy::needless_range_loop)]

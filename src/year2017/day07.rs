@@ -9,9 +9,10 @@
 //! so that we can disambiguate.
 //!
 //! [`Rc`]: std::rc::Rc
+use std::collections::VecDeque;
+
 use crate::util::hash::*;
 use crate::util::parse::*;
-use std::collections::VecDeque;
 
 #[derive(Clone, Copy, Default)]
 struct Node {

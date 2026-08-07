@@ -88,8 +88,8 @@ mod implementation {
         let mut next_active = Vec::with_capacity(5_000);
 
         // To prevent negative array indices offset the starting cells by seven units in each
-        // dimension. This allows six for growth, plus one for padding to prevent needing edge checks.
-        // Iteration is intentionally column-major, instead of the usual row-major.
+        // dimension. This allows six for growth, plus one for padding to prevent needing edge
+        // checks. Iteration is intentionally column-major, instead of the usual row-major.
         for x in 0..input.width {
             for y in 0..input.height {
                 if input[Point::new(x, y)] == b'#' {
@@ -105,8 +105,8 @@ mod implementation {
             for &cube in &active {
                 for &offset in &neighbors {
                     // Earlier we converted the offsets from signed `i32` to unsigned `usize`. To
-                    // achieve subtraction for negative indices, we use a `wrapping_add` that performs
-                    // [two's complement](https://en.wikipedia.org/wiki/Two%27s_complement) arithmetic.
+                    // achieve subtraction for negative indices, we use a `wrapping_add` that
+                    // performs [two's complement](https://en.wikipedia.org/wiki/Two%27s_complement) arithmetic.
                     let index = cube.wrapping_add(offset);
                     state[index] += 1;
 
@@ -133,9 +133,10 @@ mod implementation {
 
 #[cfg(feature = "simd")]
 mod implementation {
-    use super::*;
     use std::simd::cmp::SimdPartialEq as _;
     use std::simd::*;
+
+    use super::*;
 
     const LANE_WIDTH: usize = 32;
     type Vector = Simd<u8, LANE_WIDTH>;

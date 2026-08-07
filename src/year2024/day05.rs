@@ -3,9 +3,10 @@
 //! The input is constructed so that each possible pair that occurs in a row has a defined
 //! ordering that enables sorting with a custom `Ordering` definition. Numbers are always
 //! 2 digits so storing ordering in a fixed-size 100 × 100 array is faster than using a `HashMap`.
+use std::cmp::Ordering::*;
+
 use crate::util::iter::*;
 use crate::util::parse::*;
-use std::cmp::Ordering::*;
 
 type Input = (usize, usize);
 

@@ -21,18 +21,19 @@
 //!
 //! * Start with `t = i32::MAX - 1`.
 //! * Start flood fill from top-left origin.
-//! * If we encounter a blocking byte with a time less than `t`
-//!   then push `(time, position)` onto a max heap keyed by time.
-//! * If we exhaust the flood fill `VecDeque` then pop the heap's top item.
-//!   This is the oldest byte that we encountered blocking the way.
-//!   Set `t` to the byte's time and push position to the deque.
+//! * If we encounter a blocking byte with a time less than `t` then push `(time, position)` onto a
+//!   max heap keyed by time.
+//! * If we exhaust the flood fill `VecDeque` then pop the heap's top item. This is the oldest byte
+//!   that we encountered blocking the way. Set `t` to the byte's time and push position to the
+//!   deque.
 //! * Restart flood fill from new position until we reach the exit.
+use std::collections::VecDeque;
+
 use crate::util::grid::*;
 use crate::util::heap::*;
 use crate::util::iter::*;
 use crate::util::parse::*;
 use crate::util::point::*;
-use std::collections::VecDeque;
 
 pub fn parse(input: &str) -> Grid<i32> {
     let mut grid = Grid::new(71, 71, i32::MAX);

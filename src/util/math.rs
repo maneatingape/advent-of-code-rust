@@ -1,14 +1,12 @@
 //! Extended mathematical operations.
 //!
-//! * [Greatest common divisor](https://en.wikipedia.org/wiki/Greatest_common_divisor)
-//!   of 2 numbers using the
-//!   [Euclidean algorithm](https://en.wikipedia.org/wiki/Euclidean_algorithm).
+//! * [Greatest common divisor](https://en.wikipedia.org/wiki/Greatest_common_divisor) of 2 numbers using
+//!   the [Euclidean algorithm](https://en.wikipedia.org/wiki/Euclidean_algorithm).
 //!
 //! * [Least common multiple](https://en.wikipedia.org/wiki/Least_common_multiple)
 //!
-//! * [Modular exponentiation](https://en.wikipedia.org/wiki/Modular_exponentiation).
-//!   Calculates bᵉ mod m efficiently using
-//!   [exponentiation by squaring](https://en.wikipedia.org/wiki/Exponentiation_by_squaring).
+//! * [Modular exponentiation](https://en.wikipedia.org/wiki/Modular_exponentiation). Calculates bᵉ mod
+//!   m efficiently using [exponentiation by squaring](https://en.wikipedia.org/wiki/Exponentiation_by_squaring).
 use crate::util::integer::*;
 
 pub trait IntegerMathOps<T: Integer<T>> {

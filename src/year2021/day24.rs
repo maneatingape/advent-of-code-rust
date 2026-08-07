@@ -9,11 +9,11 @@
 //! The code consists of 14 blocks of 18 instructions, each block starting with `inp w`.
 //!
 //! There are 7 "push" blocks and 7 "pop" blocks.
-//! * Push blocks use `z` as a stack, multiplying by 26 and adding `w` plus some constant `k₁`.
-//!   Push blocks always add to the stack.
+//! * Push blocks use `z` as a stack, multiplying by 26 and adding `w` plus some constant `k₁`. Push
+//!   blocks always add to the stack.
 //! * Pop blocks compare the top element of `z` plus some constant `k₂` to `w`. If the values are
-//!   equal then `z` is "popped" by dividing by 26. Otherwise `z` is pushed again with `w`
-//!   plus some constant.
+//!   equal then `z` is "popped" by dividing by 26. Otherwise `z` is pushed again with `w` plus some
+//!   constant.
 //!
 //! Since the push/pop blocks are equally numbered and we want `z` to be zero (empty stack) at the
 //! end of the program, the condition:

@@ -1,9 +1,10 @@
 //! # Beacon Exclusion Zone
+use std::ops::Range;
+
 use crate::util::hash::*;
 use crate::util::iter::*;
 use crate::util::parse::*;
 use crate::util::point::*;
-use std::ops::Range;
 
 pub struct Input {
     sensor: Point,

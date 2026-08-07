@@ -10,7 +10,8 @@
 //!
 //! `set | (1 << (b'a' & 63))`
 //!
-//! Set intersection is the logical AND of two integers which compiles to a single machine instruction.
+//! Set intersection is the logical AND of two integers which compiles to a single machine
+//! instruction.
 //!
 //! `a & b`
 //!
@@ -19,9 +20,9 @@
 //! that is blazing fast.
 //!
 //! Notes:
-//! * We could use a `u128` to use raw ASCII codes, but it performs less efficiently than
-//!   a `u64` combined with masked ASCII bytes. We can still not bother with computing offsets
-//!   until the very end.
+//! * We could use a `u128` to use raw ASCII codes, but it performs less efficiently than a `u64`
+//!   combined with masked ASCII bytes. We can still not bother with computing offsets until the
+//!   very end.
 //!
 //! [`trailing_zeros`]: u64::trailing_zeros
 use crate::util::iter::*;

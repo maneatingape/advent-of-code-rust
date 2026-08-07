@@ -93,7 +93,8 @@ pub fn part2(input: &[Node]) -> u32 {
     let c = width - 2 - wall_x;
     // Move data into empty spot.
     let d = 1;
-    // Repeatedly move the empty spot 4 places around from behind the data then move the data one spot left.
+    // Repeatedly move the empty spot 4 places around from behind the data then move the data one
+    // spot left.
     let e = 5 * (width - 2);
 
     a + b + c + d + e

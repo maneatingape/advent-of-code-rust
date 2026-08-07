@@ -95,9 +95,10 @@
 //! [grows rather large]: https://oeis.org/A017763/b017763.txt
 //! [Lucas's theorem]: https://en.wikipedia.org/wiki/Lucas%27s_theorem
 //! [Chinese remainder theorem]: https://en.wikipedia.org/wiki/Chinese_remainder_theorem
+use std::array::from_fn;
+
 use crate::util::math::*;
 use crate::util::parse::*;
-use std::array::from_fn;
 
 /// `C(n, k) % 2` This collapses to a special case of a product of only 4 possible values
 /// which are cyclic with a length of 128.

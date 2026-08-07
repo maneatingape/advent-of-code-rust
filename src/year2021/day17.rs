@@ -1,10 +1,11 @@
 //! # Trick Shot
 //!
-//! Although this problem is easy to brute force, we can apply some reasoning and simplify both parts.
+//! Although this problem is easy to brute force, we can apply some reasoning and simplify both
+//! parts.
 //!
 //! ## Part One
-//! Part one can be solved analytically. Movement upwards in the positive y direction is symmetrical.
-//! For example, launching a probe at a y-velocity of 5 initially,
+//! Part one can be solved analytically. Movement upwards in the positive y direction is
+//! symmetrical. For example, launching a probe at a y-velocity of 5 initially,
 //! would result in a speed and y-position:
 //!
 //! ```text

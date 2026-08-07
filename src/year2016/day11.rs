@@ -25,21 +25,23 @@
 //! The rules for a valid floor are either:
 //!
 //! * Any number of microchips only with no generators.
-//! * Any microchip on a floor with at least one generator must have its own generator on that floor.
+//! * Any microchip on a floor with at least one generator must have its own generator on that
+//!   floor.
 //!
 //! This allows us to efficiently memoize previously seen states and reject any that we've seen
 //! before extremely quickly. Other optimizations:
 //!
 //! * If we can move 2 items up, then skip only moving 1 item up.
 //! * If we can move 1 item down, then skip moving 2 items down.
-//! * Moving a microchip and generator together is only safe if they are the same type (if they
-//!   are not of the same type, then the old floor will necessarily have the generator that
-//!   pairs with the chip being moved, leaving that chip to be fried on its new floor).
-//! * If floor 1 is empty then don't move items back down to it, similarly if both floor 1 and
-//!   floor 2 are empty then don't move items to them.
+//! * Moving a microchip and generator together is only safe if they are the same type (if they are
+//!   not of the same type, then the old floor will necessarily have the generator that pairs with
+//!   the chip being moved, leaving that chip to be fried on its new floor).
+//! * If floor 1 is empty then don't move items back down to it, similarly if both floor 1 and floor
+//!   2 are empty then don't move items to them.
+use std::collections::VecDeque;
+
 use crate::util::bitset::*;
 use crate::util::hash::*;
-use std::collections::VecDeque;
 
 // A one-hot encoding is more efficient than 0-3. For each byte, the generator is the
 // high nibble, and the microchip the low nibble. Only 5 bytes matter, because the part two

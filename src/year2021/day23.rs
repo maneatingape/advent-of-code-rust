@@ -16,10 +16,11 @@
 //!
 //! Thirdly low-level bit manipulation is used to represent the burrow state size compactly
 //! in only 16 bytes for faster copying and hashing.
-use crate::util::hash::*;
-use crate::util::heap::*;
 use std::array::from_fn;
 use std::hash::*;
+
+use crate::util::hash::*;
+use crate::util::heap::*;
 
 /// The values of `A`, `B`, `C` and `D` are used heavily to calculate room indices.
 const A: usize = 0;

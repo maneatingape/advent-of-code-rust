@@ -11,10 +11,11 @@
 //! The input is constructed so that all collisions happen within 40 ticks so a simple brute force
 //! solution is much faster than more elegant alternatives, for example solving the quadratic
 //! equation describing each particle's position.
+use std::ops::AddAssign;
+
 use crate::util::hash::*;
 use crate::util::iter::*;
 use crate::util::parse::*;
-use std::ops::AddAssign;
 
 #[derive(Clone, Copy, Eq, Hash, PartialEq)]
 struct Vector {

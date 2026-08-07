@@ -54,29 +54,31 @@ pub fn part1(tiles: &[Tile]) -> u64 {
         .max(find_largest_from_all_corners(&bottom_left_tiles, &top_right_tiles, false))
 }
 
-/// This function filters `sorted_tiles` into two lists, one containing all tiles that could be the top left
-/// corner of the largest rectangle (assuming the largest rectangle has a top left corner), and the second
-/// containing all tiles that could be the top right corner.
+/// This function filters `sorted_tiles` into two lists, one containing all tiles that could be the
+/// top left corner of the largest rectangle (assuming the largest rectangle has a top left corner),
+/// and the second containing all tiles that could be the top right corner.
 ///
-/// It assumes `sorted_tiles` is sorted in ascending "y" values, or, to get the top right and bottom right corners,
-/// that `sorted_tiles` is sorted in descending "y" order.
+/// It assumes `sorted_tiles` is sorted in ascending "y" values, or, to get the top right and bottom
+/// right corners, that `sorted_tiles` is sorted in descending "y" order.
 ///
-/// It works (for the top left corners, for illustration) by only returning tiles (from the set of all tiles, "T") within
-/// the region:
+/// It works (for the top left corners, for illustration) by only returning tiles (from the set of
+/// all tiles, "T") within the region:
 ///
 ///   R = { (x, y) ∈ ℝ² : ∀ (tx, ty) ∈ T, tx ≤ x ⇒ ty ≥ y }
 ///
-/// Tiles outside of this region cannot possibly be a corner of the largest rectangle. Assume, for proof by contradiction,
-/// that the top left corner of the largest rectangle is in the complement of the set "R":
+/// Tiles outside of this region cannot possibly be a corner of the largest rectangle. Assume, for
+/// proof by contradiction, that the top left corner of the largest rectangle is in the complement
+/// of the set "R":
 ///
 ///   R' = { (x, y) ∈ ℝ² : ¬ (∀ (tx, ty) ∈ T, tx ≤ x ⇒ ty ≥ y) }
 ///      = { (x, y) ∈ ℝ² : ∃ (tx, ty) ∈ T, tx ≤ x ∧ ty < y }
 ///
-/// That is, for the corner (x, y), there exists another tile (tx, ty) that is to the left and above the corner tile, which
-/// means the tile isn't the corner of the largest possible rectangle, completing the proof by contradiction.
+/// That is, for the corner (x, y), there exists another tile (tx, ty) that is to the left and above
+/// the corner tile, which means the tile isn't the corner of the largest possible rectangle,
+/// completing the proof by contradiction.
 ///
-/// The `top_tiles` and `bottom_tiles` are the corner points of this region `R`, built up by scanning through tiles
-/// in either left to right or right to left order.
+/// The `top_tiles` and `bottom_tiles` are the corner points of this region `R`, built up by
+/// scanning through tiles in either left to right or right to left order.
 ///
 /// With just this selection of candidate edge points, the number of points that have to be
 /// compared is already reduced compared to a naive quadratic pairing of all original points.
@@ -189,41 +191,47 @@ pub fn part2(tiles: &[Tile]) -> u64 {
     // Track the largest area so far during scanning.
     let mut largest_area: u64 = 0;
 
-    // Each red tile (`x`, `y`) becomes a candidate for being a top corner of the largest area, and during the
-    // scan, the `interval` containing the maximum possible width is updated.
+    // Each red tile (`x`, `y`) becomes a candidate for being a top corner of the largest area, and
+    // during the scan, the `interval` containing the maximum possible width is updated.
     let mut candidates: Vec<Candidate> = Vec::with_capacity(512);
 
-    // Maintain an ordered list of descending edges, i.e. [begin_interval_0, end_interval_0, begin_interval_1, end_interval_1, ...].
+    // Maintain an ordered list of descending edges, i.e. [begin_interval_0, end_interval_0,
+    // begin_interval_1, end_interval_1, ...].
     let mut descending_edges: Vec<u32> = Vec::new();
     let mut intervals_from_descending_edges = Vec::new();
 
-    // Invariants on the input data (defined by the puzzle) result in points arriving in pairs on the same y line.
+    // Invariants on the input data (defined by the puzzle) result in points arriving in pairs on
+    // the same y line.
     for [&[x0, y], &[x1, y1]] in tiles.iter().chunk::<2>() {
         debug_assert_eq!(y, y1);
 
-        // Update the descending edges. Since we are scanning from top to bottom, and within each line left to right,
-        // when we, starting from outside of the region, hit a corner tile it is either:
+        // Update the descending edges. Since we are scanning from top to bottom, and within each
+        // line left to right, when we, starting from outside of the region, hit a corner
+        // tile it is either:
         //
-        // - The corner of two edges, one going right and one going down. In this case, the `descending_edges` won't contain
-        //   the `x` coordinate, and we should "toggle" it on to denote that there is a new descending edge.
-        // - The corner of two edges, one going right and one going up. The `descending_edges` will contain an `x` coordinate
-        //   that should be "toggled" off.
+        // - The corner of two edges, one going right and one going down. In this case, the
+        //   `descending_edges` won't contain the `x` coordinate, and we should "toggle" it on to
+        //   denote that there is a new descending edge.
+        // - The corner of two edges, one going right and one going up. The `descending_edges` will
+        //   contain an `x` coordinate that should be "toggled" off.
         //
-        // Similar arguments work for when we are scanning inside the edge and we hit the corner that ends the edge. This is also
-        // why corners always arrive in pairs.
+        // Similar arguments work for when we are scanning inside the edge and we hit the corner
+        // that ends the edge. This is also why corners always arrive in pairs.
         //
         // Do the update.
         for x in [x0, x1] {
             toggle_value_membership_in_ordered_list(&mut descending_edges, x);
         }
 
-        // Every pair of descending edges in the ordered list defines a region. Find the resulting intervals on this line.
+        // Every pair of descending edges in the ordered list defines a region. Find the resulting
+        // intervals on this line.
         update_intervals_from_descending_edges(
             &descending_edges,
             &mut intervals_from_descending_edges,
         );
 
-        // Check the rectangles this red tile could be a bottom tile for, with the current candidates.
+        // Check the rectangles this red tile could be a bottom tile for, with the current
+        // candidates.
         for candidate in &candidates {
             for x in [x0, x1] {
                 if candidate.interval.contains(x) {
@@ -234,7 +242,8 @@ pub fn part2(tiles: &[Tile]) -> u64 {
             }
         }
 
-        // Update candidates when their interval shrinks due to descending edge changes, and drop them when their interval becomes empty.
+        // Update candidates when their interval shrinks due to descending edge changes, and drop
+        // them when their interval becomes empty.
         candidates.retain_mut(|candidate| {
             if let Some(intersection_containing_x) =
                 intervals_from_descending_edges.iter().find(|i| i.contains(candidate.x))
@@ -272,8 +281,8 @@ fn toggle_value_membership_in_ordered_list(ordered_list: &mut Vec<u32>, value: u
     }
 }
 
-// Changes the list of descending edges, [begin_interval_0, end_interval_0, begin_interval_1, end_interval_1, ...],
-// into a vector containing the intervals.
+// Changes the list of descending edges, [begin_interval_0, end_interval_0, begin_interval_1,
+// end_interval_1, ...], into a vector containing the intervals.
 #[inline]
 fn update_intervals_from_descending_edges(descending_edges: &[u32], to_update: &mut Vec<Interval>) {
     to_update.clear();

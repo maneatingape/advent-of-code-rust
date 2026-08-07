@@ -21,9 +21,9 @@
 //! factor of that number. The smallest number that meets this criterion is the
 //! [least common multiple](https://en.wikipedia.org/wiki/Least_common_multiple).
 //!
-//! However, before you rush off to implement the LCM algorithm, it's worth examining the input. Each
-//! monkey's test number is prime, so in this specific case the LCM is simply the product of all
-//! monkey's test numbers.
+//! However, before you rush off to implement the LCM algorithm, it's worth examining the input.
+//! Each monkey's test number is prime, so in this specific case the LCM is simply the product of
+//! all monkey's test numbers.
 //!
 //! For example, if we also need to test modulo 5 then the previous factor of 15 will work for both
 //! 3 and 5.
@@ -43,10 +43,11 @@
 //! circuit the calculation early without having to calculate the entire 10,000 rounds.
 //!
 //! [`iter_unsigned`]: ParseOps::iter_unsigned
+use std::ops::{Add, Mul, Sub};
+
 use crate::util::hash::*;
 use crate::util::parse::*;
 use crate::util::thread::*;
-use std::ops::{Add, Mul, Sub};
 
 type Input = (Vec<Monkey>, Vec<Pair>);
 type Pair = (usize, usize);

@@ -17,22 +17,21 @@
 //! * If the requested length is within the known sequence (in this example from 0 to 5 inclusive)
 //!   then we're done, return the number of ones directly.
 //! * Else after one repetition this becomes `abcde0EDCBA`.
-//! * If the length is at or to the right of the middle `0`,
-//!   for example `length` is 8 then the number of ones is:
+//! * If the length is at or to the right of the middle `0`, for example `length` is 8 then the
+//!   number of ones is:
 //!    * Let `half` = 5 the length of the left hand known sequence.
 //!    * Let `full` = 11 the length of the entire sequence.
 //!    * Ones in `abcde` => x
-//!    * Ones in `EDCBA` => the number of zeroes in `abcde`
-//!      => 5 - x => half - x
+//!    * Ones in `EDCBA` => the number of zeroes in `abcde` => 5 - x => half - x
 //!    * Ones in `abc` => y
-//!    * Ones in `CBA` => the number of zeroes in `abc`
-//!      => 3 - y => 11 - 8 - y => full - length - y => next - y
-//!    * The total number of ones in `abcde0ED` is
-//!      x + (half - x) - (next - y) => half - next + y
+//!    * Ones in `CBA` => the number of zeroes in `abc` => 3 - y => 11 - 8 - y => full - length - y
+//!      => next - y
+//!    * The total number of ones in `abcde0ED` is x + (half - x) - (next - y) => half - next + y
 //!
 //! Now for the really neat part. We can recursively find the number of ones in `y` by repeating
 //! the same process by setting the new `length` to `next`. We keep recursing until the length
-//! is less than the size of the initial input and we can lookup the final count from the prefix sum.
+//! is less than the size of the initial input and we can lookup the final count from the prefix
+//! sum.
 //!
 //! Note that it is also possible to compute the parity of any prefix of the Dragon Curve in
 //! O(1) time. The formula is available on [OEIS A255070](https://oeis.org/A255070), and there

@@ -9,9 +9,10 @@
 //!
 //! Interestingly, the total number of distinct cached blocks is very low, approximately 200.
 //! The cursor also doesn't move too far, only covering a range of about 6,000 steps.
+use std::iter::repeat_with;
+
 use crate::util::hash::*;
 use crate::util::parse::*;
-use std::iter::repeat_with;
 
 const UPPER: u128 = u128::MAX << 64;
 const LOWER: u128 = u128::MAX >> 64;
