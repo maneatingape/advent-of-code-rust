@@ -13,7 +13,7 @@ struct Solution {
 
 fn main() {
     // Parse command line options.
-    let mut iter = args().flat_map(|arg| arg.iter_unsigned().collect::<Vec<u32>>());
+    let mut iter = args().skip(1).flat_map(|arg| arg.iter_unsigned().collect::<Vec<u32>>());
     let (year, day) = (iter.next(), iter.next());
 
     // Build list of all solutions.
