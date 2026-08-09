@@ -5,9 +5,9 @@
 //! One dimensional example:
 //!
 //! ```none
-//!     .#...
-//!     Left: (-1, 2, 2, 2, 2)
-//!     Right: (1, 1, 5, 5, 5)
+//! .#...
+//! Left: (-1, 2, 2, 2, 2)
+//! Right: (1, 1, 5, 5, 5)
 //! ```
 //!
 //! This allows us to "shortcut" to each obstacle when looking for cycles. The remaining tricky

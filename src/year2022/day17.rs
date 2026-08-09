@@ -6,18 +6,18 @@
 //! for collisions. Each rock is encoded top to bottom and left to right. For example:
 //!
 //! ```none
-//!    #     00010000    0x10
-//!   ### => 00111000 => 0x38 => 0x00103810
-//!    #     00010000    0x10
+//!  #     00010000    0x10
+//! ### => 00111000 => 0x38 => 0x00103810
+//!  #     00010000    0x10
 //! ```
 //!
 //! The bits are shifted 2 away from the left wall. Walls are also encoded in binary, overlapping
 //! the left and right walls (no rock will ever collide first with a wall and its top row):
 //!
 //! ```none
-//!   100000001
-//!   100000001 => 0x01010101
-//!   100000001
+//! 100000001
+//! 100000001 => 0x01010101
+//! 100000001
 //! ```
 //!
 //! We store the accumulated tower efficiently as a vec of `u8` including the floor at index

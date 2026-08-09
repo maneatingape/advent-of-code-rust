@@ -6,32 +6,32 @@
 //! For example, consider a sequence of 3 arbitrary values:
 //!
 //! ```none
-//!    1st:  a        b         c
-//!    2nd:    b - a     c - b
-//!    3rd:      c - 2b + a
+//! 1st:  a        b         c
+//! 2nd:    b - a     c - b
+//! 3rd:      c - 2b + a
 //!
-//!    Part 1: (c - 2b + a) + (c - b) + (c) = a - 3b + 3c
-//!    Part 2: a - (b - a) + (c - 2b + a) = 3a - 3b + c
+//! Part 1: (c - 2b + a) + (c - b) + (c) = a - 3b + 3c
+//! Part 2: a - (b - a) + (c - 2b + a) = 3a - 3b + c
 //! ```
 //!
 //! Looking at the coefficient of each value:
 //!
 //! ```none
-//!     Part 1: [1, -3, 3]
-//!     Part 2: [3, -3, 1]
+//! Part 1: [1, -3, 3]
+//! Part 2: [3, -3, 1]
 //! ```
 //!
 //! Doing this for values of a few different lengths:
 //!
 //! ```none
-//!    Part 1: [-1, 4, -6, 4]
-//!    Part 2: [4, -6, 4, -1]
+//! Part 1: [-1, 4, -6, 4]
+//! Part 2: [4, -6, 4, -1]
 //!
-//!    Part 1: [1, -5, 10, -10, 5]
-//!    Part 2: [5, -10, 10, -5, 1]
+//! Part 1: [1, -5, 10, -10, 5]
+//! Part 2: [5, -10, 10, -5, 1]
 //!
-//!    Part 1: [-1, 6, -15, 20, -15, 6]
-//!    Part 2: [6, -15, 20, -15, 6, -1]
+//! Part 1: [-1, 6, -15, 20, -15, 6]
+//! Part 2: [6, -15, 20, -15, 6, -1]
 //! ```
 //!
 //! Let `n` be the number of values and `k` the index of each value. The coefficient for each value

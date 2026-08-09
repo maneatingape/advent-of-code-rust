@@ -8,9 +8,9 @@
 //! amount (the sum of all deltas) each time the list of numbers is processed. For example:
 //!
 //! ```none
-//!    Deltas: +1, -2, +3, +1 =>
-//!    0    1   -1    2
-//!    3    4    2    5
+//! Deltas: +1, -2, +3, +1 =>
+//! 0    1   -1    2
+//! 3    4    2    5
 //! ```
 //!
 //! Two frequencies that are a multiple of the sum will eventually repeat. First we group each

@@ -20,15 +20,15 @@
 //! In matrix form:
 //!
 //! ```none
-//!     | d  -j ||u| = | g - a |
-//!     | e  -k ||t|   | h - b |
+//! | d  -j ||u| = | g - a |
+//! | e  -k ||t|   | h - b |
 //! ```
 //!
 //! Solve by finding the inverse of the 2x2 matrix and premultiplying both sides. The inverse is:
 //!
 //! ```none
-//!    ______1______ | -k  j |
-//!    d(-k) - (-j)e | -e  d |
+//! ______1______ | -k  j |
+//! d(-k) - (-j)e | -e  d |
 //! ```
 //!
 //! Then we check that both times are non-negative and that the intersection point is inside the

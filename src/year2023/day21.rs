@@ -13,18 +13,18 @@
 //! reached in 26501365 steps.
 //!
 //! ```none
-//!     26501365 => 65 + 131 * n => n = 202300
+//! 26501365 => 65 + 131 * n => n = 202300
 //! ```
 //!
 //! The number of tiles that we can reach forms a rough diamond 202300 tiles wide.
 //! For example `n = 2` looks like:
 //!
 //! ```none
-//!       #
-//!      ###
-//!     #####
-//!      ###
-//!       #
+//!   #
+//!  ###
+//! #####
+//!  ###
+//!   #
 //! ```
 //!
 //! The next insight is that if we can reach a plot in `x` steps then we can also reach it in
@@ -35,45 +35,45 @@
 //! whole tile. There are `n²` even plots and `(n + 1)²` odd plots in the diamond.
 //!
 //! ```none
-//!       O
-//!      OEO
-//!     OEOEO
-//!      OEO
-//!       O
+//!   O
+//!  OEO
+//! OEOEO
+//!  OEO
+//!   O
 //! ```
 //!
 //! Lastly, we can only partially reach some tiles on the edges. Solid triangles represent corners
 //! that can be reached and hollow triangles represent corners that are too far away.
 //!
 //! ```none
-//!          ┌--┐
-//!          |◸◹|
-//!         ◢|  |◣
-//!       ┌--┼--┼--┐
-//!       |◸ |  | ◹|
-//!      ◢|  |  |  |◣
-//!    ┌--┼--┼--┼--┼--┐
-//!    |◸ |  |  |  | ◹|
-//!    |◺ |  |  |  | ◿|
-//!    └--┼--┼--┼--┼--┘
-//!      ◥|  |  |  |◤
-//!       |◺ |  | ◿|
-//!       └--┼--┼--┘
-//!         ◥|  |◤
-//!          |◺◿|
-//!          └--┘
+//!       ┌--┐
+//!       |◸◹|
+//!      ◢|  |◣
+//!    ┌--┼--┼--┐
+//!    |◸ |  | ◹|
+//!   ◢|  |  |  |◣
+//! ┌--┼--┼--┼--┼--┐
+//! |◸ |  |  |  | ◹|
+//! |◺ |  |  |  | ◿|
+//! └--┼--┼--┼--┼--┘
+//!   ◥|  |  |  |◤
+//!    |◺ |  | ◿|
+//!    └--┼--┼--┘
+//!      ◥|  |◤
+//!       |◺◿|
+//!       └--┘
 //! ```
 //!
 //! The total area is adjusted by:
 //! * Adding `n` extra even corners.
 //! ```none
-//!     ◤◥
-//!     ◣◢
+//! ◤◥
+//! ◣◢
 //! ```
 //! * Subtracting `n + 1` odd corners.
 //! ```none
-//!     ◸◹
-//!     ◺◿
+//! ◸◹
+//! ◺◿
 //! ```
 //!
 //! To find the values for the total number of odd, even plots and the unreachable odd corners

@@ -9,12 +9,12 @@
 //!
 //! For example:
 //! ```none
-//!   a = 23
-//!   m = 3
-//!   n = 15
-//!   23 % 3 = 2
-//!   23 % 15 = 8
-//!   8 % 3 = 2
+//! a = 23
+//! m = 3
+//! n = 15
+//! 23 % 3 = 2
+//! 23 % 15 = 8
+//! 8 % 3 = 2
 //! ```
 //!
 //! To keep the worry level manageable we need to find a number such that each monkey's test is a
@@ -29,12 +29,12 @@
 //! 3 and 5.
 //!
 //! ```none
-//!   a = 23
-//!   m = 5
-//!   n = 15
-//!   23 % 5 = 3
-//!   23 % 15 = 8
-//!   8 % 5 = 3
+//! a = 23
+//! m = 5
+//! n = 15
+//! 23 % 5 = 3
+//! 23 % 15 = 8
+//! 8 % 5 = 3
 //! ```
 //!
 //! A neat trick is that each item can be treated individually. This allows the processing to be

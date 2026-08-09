@@ -9,11 +9,11 @@
 //! letters is enough to discriminate. For example, the hash value for "shiny" is:
 //!
 //! ```none
-//!     "sh" =>
-//!     26 * 's' + 'h' =>
-//!     26 * (115 - 97) + (104 - 97) =>
-//!     26 * 115 + 104 - 2619 =>
-//!     475
+//! "sh" =>
+//! 26 * 's' + 'h' =>
+//! 26 * (115 - 97) + (104 - 97) =>
+//! 26 * 115 + 104 - 2619 =>
+//! 475
 //! ```
 //!
 //! There are 33 different colors, for example white, gold, blue. The first two letters

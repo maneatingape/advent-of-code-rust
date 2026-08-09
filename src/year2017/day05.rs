@@ -4,13 +4,13 @@
 //! will eventually flip-flop between 2 and 3 starting from the beginning, for example:
 //!
 //! ```none
-//!     2 3 2 3 -1
+//! 2 3 2 3 -1
 //! ```
 //!
 //! The twos and threes can be represented in binary compact form, using 0 for 2 and 1 for 3:
 //!
 //! ```none
-//!     0101
+//! 0101
 //! ```
 //!
 //! We then precompute all possible combinations for blocks of width 16,

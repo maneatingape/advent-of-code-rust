@@ -27,26 +27,26 @@
 //! We can represent this as a loop:
 //!
 //! ```none
-//!    let mut n = <starting number of elves>
-//!    let mut step = 1;
-//!    let mut winner = 1;
-//!    while n > 1 {
-//!        if n % 2 == 1 {
-//!            winner += step * 2;
-//!        }
-//!        n /= 2;
-//!        step *= 2;
-//!    }
+//! let mut n = <starting number of elves>
+//! let mut step = 1;
+//! let mut winner = 1;
+//! while n > 1 {
+//!     if n % 2 == 1 {
+//!         winner += step * 2;
+//!     }
+//!     n /= 2;
+//!     step *= 2;
+//! }
 //! ```
 //!
 //! If we examine the loop we can see that the winner is simply the binary digits of `n` multiplied
 //! by two, excluding the highest bit, with one added. For example, for 5 elves:
 //!
 //! ```none
-//!     n = 5 = 101
-//!     n * 2 = 10 = 1010
-//!     n minus high bit = 010
-//!     n plus one = 011 = 3
+//! n = 5 = 101
+//! n * 2 = 10 = 1010
+//! n minus high bit = 010
+//! n plus one = 011 = 3
 //! ```
 //!
 //! The [`isolate_highest_one`] method returns just the highest one bit, for example

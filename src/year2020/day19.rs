@@ -28,20 +28,20 @@
 //!
 //! First we do some detective work analyzing the new rules. Rule 8 is:
 //! ```none
-//!     8: 42 | 42 8
+//! 8: 42 | 42 8
 //! ```
 //! This matches one or more repeated rule `42`s (in regex format this would be something like
 //! `42+`).
 //!
 //! Rule 11 is:
 //! ```none
-//!     11: 42 31 | 42 11 31
+//! 11: 42 31 | 42 11 31
 //! ```
 //! This matches one or more nested pairs of rule 42 and 31, for example `42 31` or `42 42 31 31`.
 //!
 //! Assuming rule 0 is the same for all inputs:
 //! ```none
-//!     0: 8 11
+//! 0: 8 11
 //! ```
 //! gives a pattern that matches:
 //! 1. A sequence of two or more rule `42`.

@@ -11,47 +11,47 @@
 //! sorted order. Assembly code annotated with Rust pseudocode:
 //!
 //! ```none
-//!     set i 31
-//!     set a 1
-//!     mul p 17
-//!     jgz p p         if p == 0 {
-//!     mul a 2             let a = 2³¹ - 1 = 0x7fffffff;
-//!     add i -1
-//!     jgz i -2
-//!     add a -1
-//!     set i 127
-//!     set p SEED          let mut p = SEED;
-//!     mul p 8505          for _ in 0..127 {
-//!     mod p a                 p = (p * 8505) % a;
-//!     mul p 129749
-//!     add p 12345
-//!     mod p a                 p = (p * 129749 + 12345) % a;
-//!     set b p
-//!     mod b 10000
-//!     snd b                   send(p % 10000)
-//!     add i -1
-//!     jgz i -9            }
-//!     jgz a 3         }
-//!     rcv b           // These two lines deadlock the program
-//!     jgz b -1        // once the list is sorted.
-//!     set f 0         while swapped { // f is 0 when list is sorted
-//!     set i 126           a = receive();
-//!     rcv a               for _ in 0..126 {
-//!     rcv b                   b = receive();
-//!     set p a
-//!     mul p -1
-//!     add p b
-//!     jgz p 4                 if b <= a {
-//!     snd a                       send(a);
-//!     set a b                     a = b;
-//!     jgz 1 3                 } else {
-//!     snd b                       send(b);
-//!     set f 1                     swapped = true;
-//!     add i -1                }
-//!     jgz i -11           }
-//!     snd a
-//!     jgz f -16       }
-//!     jgz a -19       // Jump to deadlock section.
+//! set i 31
+//! set a 1
+//! mul p 17
+//! jgz p p         if p == 0 {
+//! mul a 2             let a = 2³¹ - 1 = 0x7fffffff;
+//! add i -1
+//! jgz i -2
+//! add a -1
+//! set i 127
+//! set p SEED          let mut p = SEED;
+//! mul p 8505          for _ in 0..127 {
+//! mod p a                 p = (p * 8505) % a;
+//! mul p 129749
+//! add p 12345
+//! mod p a                 p = (p * 129749 + 12345) % a;
+//! set b p
+//! mod b 10000
+//! snd b                   send(p % 10000)
+//! add i -1
+//! jgz i -9            }
+//! jgz a 3         }
+//! rcv b           // These two lines deadlock the program
+//! jgz b -1        // once the list is sorted.
+//! set f 0         while swapped { // f is 0 when list is sorted
+//! set i 126           a = receive();
+//! rcv a               for _ in 0..126 {
+//! rcv b                   b = receive();
+//! set p a
+//! mul p -1
+//! add p b
+//! jgz p 4                 if b <= a {
+//! snd a                       send(a);
+//! set a b                     a = b;
+//! jgz 1 3                 } else {
+//! snd b                       send(b);
+//! set f 1                     swapped = true;
+//! add i -1                }
+//! jgz i -11           }
+//! snd a
+//! jgz f -16       }
+//! jgz a -19       // Jump to deadlock section.
 //! ```
 use crate::util::parse::*;
 

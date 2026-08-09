@@ -8,9 +8,9 @@
 //! For example:
 //!
 //! ```none
-//!  AAABBBCCC
-//!  A....B.C.
-//!  AAABBBCCC
+//! AAABBBCCC
+//! A....B.C.
+//! AAABBBCCC
 //! ```
 //!
 //! ## Worst case
@@ -21,9 +21,9 @@
 //! into the 6x3 region with 18 tiles below.
 //!
 //! ```none
-//!   ......
-//!   ......
-//!   ......
+//! ......
+//! ......
+//! ......
 //! ```
 //!
 //! ## Mixed case

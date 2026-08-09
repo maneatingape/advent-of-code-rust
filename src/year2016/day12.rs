@@ -8,25 +8,25 @@
 //! The first thing we notice is that the following idiom is repeated several times:
 //!
 //! ```none
-//!     inc x
-//!     dec y
-//!     jnz y -2
+//! inc x
+//! dec y
+//! jnz y -2
 //! ```
 //!
 //! This is equivalent to `x += y` only much less efficient. Replacing this in the code then
 //! rewriting the remainder in Rust the program becomes:
 //!
 //! ```none
-//!     let mut a = 1;
-//!     let mut b = 1;
-//!     let mut c = 0; // 1 in part two
-//!     let d = if c == 0 { 26 } else { 33 };
-//!     for _ in 0..d {
-//!         c = a;
-//!         a += b;
-//!         b = c;
-//!     }
-//!     a += q * r // q and r are the constants on lines 17 and 18.
+//! let mut a = 1;
+//! let mut b = 1;
+//! let mut c = 0; // 1 in part two
+//! let d = if c == 0 { 26 } else { 33 };
+//! for _ in 0..d {
+//!     c = a;
+//!     a += b;
+//!     b = c;
+//! }
+//! a += q * r // q and r are the constants on lines 17 and 18.
 //! ```
 //!
 //! We can see that the code is calculating the 28th and 35th numbers in the Fibonacci sequence

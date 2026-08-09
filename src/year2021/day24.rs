@@ -32,54 +32,54 @@
 //! ## Detailed Push block analysis
 //!
 //! ```none
-//!     inp w       // w = 1 to 9 inclusive
-//!     mul x 0     // x = 0
-//!     add x z     // x = z
-//!     mod x 26    // x = z % 26
-//!     div z 1     // nop
-//!     add x 13    // x = z % 26 + 13
-//!     eql x w     // if (z % 26 + 13) == w { x = 1 } else { x = 0 }
-//!                 // However since w is restricted to 1 to 9 this condition is always false
-//!                 // so x is always 0. Other blocks have different constants but always > 9.
-//!     eql x 0     // x = 1 (as 0 == 0)
-//!     mul y 0     // y = 0
-//!     add y 25    // y = 25
-//!     mul y x     // y = 25 * 1 = 25
-//!     add y 1     // y = 25 + 1 = 26
-//!     mul z y     // z = 26 * z
-//!     mul y 0     // y = 0
-//!     add y w     // y = w
-//!     add y 14    // y = w + 14 (k₁ = 14)
-//!     mul y x     // y = (w + 14) * 1 = (w + 14)
-//!     add z y     // z = (26 * z) + (w + 14)
+//! inp w       // w = 1 to 9 inclusive
+//! mul x 0     // x = 0
+//! add x z     // x = z
+//! mod x 26    // x = z % 26
+//! div z 1     // nop
+//! add x 13    // x = z % 26 + 13
+//! eql x w     // if (z % 26 + 13) == w { x = 1 } else { x = 0 }
+//!             // However since w is restricted to 1 to 9 this condition is always false
+//!             // so x is always 0. Other blocks have different constants but always > 9.
+//! eql x 0     // x = 1 (as 0 == 0)
+//! mul y 0     // y = 0
+//! add y 25    // y = 25
+//! mul y x     // y = 25 * 1 = 25
+//! add y 1     // y = 25 + 1 = 26
+//! mul z y     // z = 26 * z
+//! mul y 0     // y = 0
+//! add y w     // y = w
+//! add y 14    // y = w + 14 (k₁ = 14)
+//! mul y x     // y = (w + 14) * 1 = (w + 14)
+//! add z y     // z = (26 * z) + (w + 14)
 //! ```
 //!
 //! ## Detailed Pop block analysis
 //!
 //! ```none
-//!     inp w       // w = 1 to 9 inclusive
-//!     mul x 0     // x = 0
-//!     add x z     // x = z
-//!     mod x 26    // x = z % 26
-//!     div z 26    // z /= 26 (pop)
-//!     add x -13   // x = z % 26 - 13 (k₂ = -13)
-//!     eql x w     // if (z % 26 - 13) == w { x = 1 } else { x = 0 }
-//!     eql x 0     // if (z % 26 - 13) == w { x = 0 } else { x = 1 }
-//!                 // Inverts the previous conditional.
-//!                 // Unlike the push blocks, this may be true or false
-//!                 // We'll split into 2 paths, depending on equals (x = 0) or
-//!                 // not equal (x = 1).
-//!                 | Equals (x = 0)        | Not Equals (x = 1)        |
-//!     mul y 0     | y = 0                 | y = 0                     |
-//!     add y 25    | y = 25                | y = 25                    |
-//!     mul y x     | y = 25 * 0 = 0        | y = 25 * 1 = 25           |
-//!     add y 1     | y = 0 + 1 = 1         | y = 25 + 1 = 26           |
-//!     mul z y     | z = z (nop)           | z = 26 * z                |
-//!     mul y 0     | y = 0                 | y = 0                     |
-//!     add y w     | y = w                 | y = w                     |
-//!     add y 4     | y = w + 4             | y = w + 4                 |
-//!     mul y x     | y = (w + 4) * 0       | y = (w + 4) * 1           |
-//!     add z y     | z = z                 | z = (26 * z) + (w + 4)    |
+//! inp w       // w = 1 to 9 inclusive
+//! mul x 0     // x = 0
+//! add x z     // x = z
+//! mod x 26    // x = z % 26
+//! div z 26    // z /= 26 (pop)
+//! add x -13   // x = z % 26 - 13 (k₂ = -13)
+//! eql x w     // if (z % 26 - 13) == w { x = 1 } else { x = 0 }
+//! eql x 0     // if (z % 26 - 13) == w { x = 0 } else { x = 1 }
+//!             // Inverts the previous conditional.
+//!             // Unlike the push blocks, this may be true or false
+//!             // We'll split into 2 paths, depending on equals (x = 0) or
+//!             // not equal (x = 1).
+//!             | Equals (x = 0)        | Not Equals (x = 1)        |
+//! mul y 0     | y = 0                 | y = 0                     |
+//! add y 25    | y = 25                | y = 25                    |
+//! mul y x     | y = 25 * 0 = 0        | y = 25 * 1 = 25           |
+//! add y 1     | y = 0 + 1 = 1         | y = 25 + 1 = 26           |
+//! mul z y     | z = z (nop)           | z = 26 * z                |
+//! mul y 0     | y = 0                 | y = 0                     |
+//! add y w     | y = w                 | y = w                     |
+//! add y 4     | y = w + 4             | y = w + 4                 |
+//! mul y x     | y = (w + 4) * 0       | y = (w + 4) * 1           |
+//! add z y     | z = z                 | z = (26 * z) + (w + 4)    |
 //! ```
 use crate::util::parse::*;
 

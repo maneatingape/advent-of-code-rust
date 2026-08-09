@@ -7,9 +7,9 @@
 //! 5 to 8 is `36 - 10 = 26`.
 //!
 //! ```none
-//!                               -----------
-//!     Digits:     1  2  3   4   5  6  7   8   9
-//!     Prefix sum: 1  3  6 [10] 15 21 28 [36] 45
+//!                           -----------
+//! Digits:     1  2  3   4   5  6  7   8   9
+//! Prefix sum: 1  3  6 [10] 15 21 28 [36] 45
 //! ```
 //!
 //! The complexity of each phase is the [harmonic series](https://en.wikipedia.org/wiki/Harmonic_series_(mathematics))
@@ -20,7 +20,7 @@
 //! simplifies to a sum of a single range. For example, with 11 digits on phase 4 the pattern is:
 //!
 //! ```none
-//!   0 0 0 1 1 1 1 0 0 0 0
+//! 0 0 0 1 1 1 1 0 0 0 0
 //! ```
 //!
 //! ## Part Two
@@ -29,37 +29,37 @@
 //! consider coefficients that form an [upper triangular matrix], for example:
 //!
 //! ```none
-//!   1  1  1  1
-//!   0  1  1  1
-//!   0  0  1  1
-//!   0  0  0  1
+//! 1  1  1  1
+//! 0  1  1  1
+//! 0  0  1  1
+//! 0  0  0  1
 //! ```
 //!
 //! After the first phase:
 //!
 //! ```none
-//!   1  2  3  4
-//!   0  1  2  3
-//!   0  0  1  2
-//!   0  0  0  1
+//! 1  2  3  4
+//! 0  1  2  3
+//! 0  0  1  2
+//! 0  0  0  1
 //! ```
 //!
 //! After the second phase:
 //!
 //! ```none
-//!   1  3  6 10
-//!   0  1  3  6
-//!   0  0  1  3
-//!   0  0  0  1
+//! 1  3  6 10
+//! 0  1  3  6
+//! 0  0  1  3
+//! 0  0  0  1
 //! ```
 //!
 //! After the third phase:
 //!
 //! ```none
-//!   1  4 10 20
-//!   0  1  4 10
-//!   0  0  1  6
-//!   0  0  0  1
+//! 1  4 10 20
+//! 0  1  4 10
+//! 0  0  1  6
+//! 0  0  0  1
 //! ```
 //!
 //! We can see that the third phase is the [triangular number] sequence and that the fourth phase

@@ -8,29 +8,29 @@
 //! as possible by checking which operations are possible. For example:
 //!
 //! ```none
-//!     Test Value: 123456
-//!     Equation: 2 617 56
-//!     Addition is possible as 123456 >= 56
-//!     Multiplication is not possible as 56 is not a factor of 123456
-//!     Concatenation is possible as 1234 || 56 = 123456
+//! Test Value: 123456
+//! Equation: 2 617 56
+//! Addition is possible as 123456 >= 56
+//! Multiplication is not possible as 56 is not a factor of 123456
+//! Concatenation is possible as 1234 || 56 = 123456
 //! ```
 //!
 //! Following the concatenation branch and applying an inverse concatenation
 //! (the full solution would also follow the addition branch):
 //!
 //! ```none
-//!     Test Value: 1234
-//!     Equation: 2 617
-//!     Addition is possible as 1234 >= 617
-//!     Multiplication is possible as 2 * 617 = 1234
-//!     Concatenation is not possible as 1234 does not end in 617
+//! Test Value: 1234
+//! Equation: 2 617
+//! Addition is possible as 1234 >= 617
+//! Multiplication is possible as 2 * 617 = 1234
+//! Concatenation is not possible as 1234 does not end in 617
 //! ```
 //!
 //! Following the multiplication branch:
 //!
 //! ```none
-//!     Test Value: 2
-//!     Equation: 2
+//! Test Value: 2
+//! Equation: 2
 //! ```
 //!
 //! The test value is equal to the last term which means that the equation is valid.

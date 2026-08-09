@@ -14,22 +14,22 @@
 //!   have checked points above and to the left when we reach an empty square.
 //!
 //! ```none
-//!       #         .
-//!      ###       ...
-//!     ##P## =>  ....#
-//!      ###       ...
-//!       #         #
+//!   #         .
+//!  ###       ...
+//! ##P## =>  ....#
+//!  ###       ...
+//!   #         #
 //! ```
 //!
 //! For part two the distance is increased to 20 and the shape now resembles a wonky diamond.
 //! This shape ensures complete coverage without duplicating checks.
 //!
 //! ```none
-//!      #        .
-//!     ###      ...
-//!    ##P## => ..P##
-//!     ###      ###
-//!      #        #
+//!   #        .
+//!  ###      ...
+//! ##P## => ..P##
+//!  ###      ###
+//!   #        #
 //! ```
 use crate::util::grid::*;
 use crate::util::point::*;

@@ -11,9 +11,9 @@
 //! and trees in the low nibble. For example:
 //!
 //! ```none
-//!     .#.#...|
-//!     .....#|# => 11 11 21 11 21 02 21 02 => 0x1111211121022102
-//!     .|..|...
+//! .#.#...|
+//! .....#|# => 11 11 21 11 21 02 21 02 => 0x1111211121022102
+//! .|..|...
 //! ```
 //!
 //! The total number of adjacent trees or lumberyards is then calculated in two passes.

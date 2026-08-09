@@ -7,12 +7,12 @@
 //! with a `1` for each potential instruction. For example:
 //!
 //! ```none
-//!     Before: [3, 2, 1, 1]
-//!     9 2 1 2
-//!     After:  [3, 2, 2, 1]
+//! Before: [3, 2, 1, 1]
+//! 9 2 1 2
+//! After:  [3, 2, 2, 1]
 //!
-//!     Possible instructions: mulr, addi, seti
-//!     Binary Mask: 0000001000000110
+//! Possible instructions: mulr, addi, seti
+//! Binary Mask: 0000001000000110
 //! ```
 //!
 //! For part one the [`count_ones`] intrinsic computes the size of each set.

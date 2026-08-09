@@ -384,13 +384,13 @@ fn expand(
 ///
 /// For example:
 /// ```none
-///     #############
-///     #...A.......#
-///     ### #.#.#.###
-///       #A#.#.#.#
-///       #A#.#.#.#
-///       #B#.#.#.#
-///       #########
+/// #############
+/// #...A.......#
+/// ### #.#.#.###
+///   #A#.#.#.#
+///   #A#.#.#.#
+///   #B#.#.#.#
+///   #########
 /// ```
 ///
 /// The top two `A`s can move into the left hallway spaces but the `B` will then be stuck
@@ -405,13 +405,13 @@ fn deadlock_left(burrow: &Burrow) -> bool {
 ///
 /// For example:
 /// ```none
-///     #############
-///     #.......D...#
-///     ###.#.#.#A###
-///       #.#.#.#B#
-///       #.#.#.#C#
-///       #.#.#.#D#
-///       #########
+/// #############
+/// #.......D...#
+/// ###.#.#.#A###
+///   #.#.#.#B#
+///   #.#.#.#C#
+///   #.#.#.#D#
+///   #########
 /// ```
 ///
 /// The hallway has room for the top two amphipods but the `D` prevents the bottom two
@@ -427,13 +427,13 @@ fn deadlock_right(burrow: &Burrow) -> bool {
 ///
 /// For example:
 /// ```none
-///     #############
-///     #.....D.A...#
-///     ###.#.#.#.###
-///       #.#.#.#.#
-///       #.#.#C#.#
-///       #.#.#C#.#
-///       #########
+/// #############
+/// #.....D.A...#
+/// ###.#.#.#.###
+///   #.#.#.#.#
+///   #.#.#C#.#
+///   #.#.#C#.#
+///   #########
 /// ```
 ///
 /// In this situation, neither `A` nor `D` can move into `C`'s room but also block each other
@@ -441,13 +441,13 @@ fn deadlock_right(burrow: &Burrow) -> bool {
 ///
 /// Another example:
 /// ```none
-///     #############
-///     #.....C.A...#
-///     ###.#.#.#.###
-///       #.#.#.#.#
-///       #.#.#B#.#
-///       #.#.#C#.#
-///       #########
+/// #############
+/// #.....C.A...#
+/// ###.#.#.#.###
+///   #.#.#.#.#
+///   #.#.#B#.#
+///   #.#.#C#.#
+///   #########
 /// ```
 /// In this situation `C` blocks `A` from returning to its home burrow and `B` is also blocked
 /// from moving out of the way.

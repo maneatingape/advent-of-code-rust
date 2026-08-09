@@ -7,46 +7,46 @@
 //! ## Reverse Engineering
 //!
 //! ```none
-//!     Raw              | Pseudo-Assembly                  | Pseudo-Rust
-//!     -----------------+----------------------------------+-----------------------------------
-//!     #ip 1            | # a = 0 b = 2 c = 3 d = 4 e = 5  |
-//!     addi 1 16 1      |           goto hotel             |
-//!     seti 1 8 2       | alfa:     b = 1                  | for b in 1..=e {
-//!     seti 1 5 4       | bravo:    d = 1                  |     for d in 1..=e {
-//!     mulr 2 4 3       | charlie:  c = b * d              |
-//!     eqrr 3 5 3       |           c = (c == e) ? 1: 0    |
-//!     addr 3 1 1       |           if c == 1 goto delta   |         if b * d == e {
-//!     addi 1 1 1       |           goto echo              |
-//!     addr 2 0 0       | delta:    a += b                 |             a += b
-//!     addi 4 1 4       | echo:     d += 1                 |
-//!     gtrr 4 5 3       |           c = (d > e) ? 1: 0     |         }
-//!     addr 1 3 1       |           if c == 1 goto foxtrot |
-//!     seti 2 8 1       |           goto charlie           |     }
-//!     addi 2 1 2       | foxtrot:  b += 1                 |
-//!     gtrr 2 5 3       |           c = (b > e) ? 1: 0     |
-//!     addr 3 1 1       |           if c == 1 goto golf    |
-//!     seti 1 8 1       |           goto bravo             | }
-//!     mulr 1 1 1       | golf:     goto end               |
-//!     addi 5 2 5       | hotel:    e = 2                  |
-//!     mulr 5 5 5       |           e = e * e              |
-//!     mulr 1 5 5       |           e *= 19                |
-//!     muli 5 11 5      |           e *= 11                |
-//!     addi 3 $FIRST 3  |           c = $FIRST             |
-//!     mulr 3 1 3       |           c *= 22                |
-//!     addi 3 $SECOND 3 |           c += $SECOND           |
-//!     addr 5 3 5       |           e += c                 | e = (22 * $FIRST + $SECOND) + 836
-//!     addr 1 0 1       |           if a == 1 goto india   |
-//!     seti 0 7 1       |           goto alfa              |
-//!     setr 1 1 3       | india:    c = 27                 |
-//!     mulr 3 1 3       |           c *= 28                |
-//!     addr 1 3 3       |           c += 29                |
-//!     mulr 1 3 3       |           c *= 30                |
-//!     muli 3 14 3      |           c *= 14                |
-//!     mulr 3 1 3       |           c *= 32                |
-//!     addr 5 3 5       |           e += c                 | if a == 1 { e += 10550400 }
-//!     seti 0 9 0       |           a = 0                  |
-//!     seti 0 0 1       |           goto alfa              |
-//!                      | end:                             |
+//! Raw              | Pseudo-Assembly                  | Pseudo-Rust
+//! -----------------+----------------------------------+-----------------------------------
+//! #ip 1            | # a = 0 b = 2 c = 3 d = 4 e = 5  |
+//! addi 1 16 1      |           goto hotel             |
+//! seti 1 8 2       | alfa:     b = 1                  | for b in 1..=e {
+//! seti 1 5 4       | bravo:    d = 1                  |     for d in 1..=e {
+//! mulr 2 4 3       | charlie:  c = b * d              |
+//! eqrr 3 5 3       |           c = (c == e) ? 1: 0    |
+//! addr 3 1 1       |           if c == 1 goto delta   |         if b * d == e {
+//! addi 1 1 1       |           goto echo              |
+//! addr 2 0 0       | delta:    a += b                 |             a += b
+//! addi 4 1 4       | echo:     d += 1                 |
+//! gtrr 4 5 3       |           c = (d > e) ? 1: 0     |         }
+//! addr 1 3 1       |           if c == 1 goto foxtrot |
+//! seti 2 8 1       |           goto charlie           |     }
+//! addi 2 1 2       | foxtrot:  b += 1                 |
+//! gtrr 2 5 3       |           c = (b > e) ? 1: 0     |
+//! addr 3 1 1       |           if c == 1 goto golf    |
+//! seti 1 8 1       |           goto bravo             | }
+//! mulr 1 1 1       | golf:     goto end               |
+//! addi 5 2 5       | hotel:    e = 2                  |
+//! mulr 5 5 5       |           e = e * e              |
+//! mulr 1 5 5       |           e *= 19                |
+//! muli 5 11 5      |           e *= 11                |
+//! addi 3 $FIRST 3  |           c = $FIRST             |
+//! mulr 3 1 3       |           c *= 22                |
+//! addi 3 $SECOND 3 |           c += $SECOND           |
+//! addr 5 3 5       |           e += c                 | e = (22 * $FIRST + $SECOND) + 836
+//! addr 1 0 1       |           if a == 1 goto india   |
+//! seti 0 7 1       |           goto alfa              |
+//! setr 1 1 3       | india:    c = 27                 |
+//! mulr 3 1 3       |           c *= 28                |
+//! addr 1 3 3       |           c += 29                |
+//! mulr 1 3 3       |           c *= 30                |
+//! muli 3 14 3      |           c *= 14                |
+//! mulr 3 1 3       |           c *= 32                |
+//! addr 5 3 5       |           e += c                 | if a == 1 { e += 10550400 }
+//! seti 0 9 0       |           a = 0                  |
+//! seti 0 0 1       |           goto alfa              |
+//!                  | end:                             |
 //! ```
 //!
 //! The decoded assembly shows that the program is computing the

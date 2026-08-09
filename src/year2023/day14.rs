@@ -17,25 +17,25 @@
 //! each direction (one for each edge) to handle the edges. For example, using west (left):
 //!
 //! ```none
-//!     ..#.#..
+//! ..#.#..
 //! ```
 //!
 //! is represented in `fixed_west` as (noticing the extra 0 for the left edge):
 //!
 //! ```none
-//!     0 0 0 1 1 2 2 2
+//! 0 0 0 1 1 2 2 2
 //! ```
 //!
 //! The number of balls that come to rest against each fixed point is counted, for example:
 //!
 //! ```none
-//!     OO#.#OO
+//! OO#.#OO
 //! ```
 //!
 //! is stored in `roll_west` similar to:
 //!
 //! ```none
-//!    2 0 2
+//! 2 0 2
 //! ```
 //!
 //! This approach has two huge advantages:
@@ -57,13 +57,13 @@
 //! represents the new state would look like:
 //!
 //! ```none
-//!    grid              rounded         fixed_west                       roll_west
-//!    .O#..O.OO.#..O    [1 5 7 8 13]    [0 0 1 1 1 1 1 1 1 1 2 2 2 2]    [-1 2 10]
-//!    O.#..O.OO.#..O    [0 5 7 8 13]    [0 0 1 1 1 1 1 1 1 1 2 2 2 2]    [0 2 10]
-//!    O.#O...OO.#..O    [0 3 7 8 13]    [0 0 1 1 1 1 1 1 1 1 2 2 2 2]    [0 3 10]
-//!    O.#OO...O.#..O    [0 3 4 8 13]    [0 0 1 1 1 1 1 1 1 1 2 2 2 2]    [0 4 10]
-//!    O.#OOO....#..O    [0 3 4 5 13]    [0 0 1 1 1 1 1 1 1 1 2 2 2 2]    [0 5 10]
-//!    O.#OOO....#O..    [0 3 4 5 11]    [0 0 1 1 1 1 1 1 1 1 2 2 2 2]    [0 5 11]
+//! grid              rounded         fixed_west                       roll_west
+//! .O#..O.OO.#..O    [1 5 7 8 13]    [0 0 1 1 1 1 1 1 1 1 2 2 2 2]    [-1 2 10]
+//! O.#..O.OO.#..O    [0 5 7 8 13]    [0 0 1 1 1 1 1 1 1 1 2 2 2 2]    [0 2 10]
+//! O.#O...OO.#..O    [0 3 7 8 13]    [0 0 1 1 1 1 1 1 1 1 2 2 2 2]    [0 3 10]
+//! O.#OO...O.#..O    [0 3 4 8 13]    [0 0 1 1 1 1 1 1 1 1 2 2 2 2]    [0 4 10]
+//! O.#OOO....#..O    [0 3 4 5 13]    [0 0 1 1 1 1 1 1 1 1 2 2 2 2]    [0 5 10]
+//! O.#OOO....#O..    [0 3 4 5 11]    [0 0 1 1 1 1 1 1 1 1 2 2 2 2]    [0 5 11]
 //! ```
 use crate::util::grid::*;
 use crate::util::hash::*;

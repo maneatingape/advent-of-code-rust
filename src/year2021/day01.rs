@@ -7,8 +7,8 @@
 //! each:
 //!
 //! ```none
-//!   A1 A2 A3
-//!      B1 B2 B3
+//! A1 A2 A3
+//!    B1 B2 B3
 //! ```
 //!
 //! then the middle 2 elements are always in common, so the subsequent window is greater only

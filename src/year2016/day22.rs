@@ -4,11 +4,11 @@
 //! Printing the actual node layout shows a structure similar to:
 //!
 //! ```none
-//!     O......G
-//!     ........
-//!     ..######
-//!     ........
-//!     .....-..
+//! O......G
+//! ........
+//! ..######
+//! ........
+//! .....-..
 //! ```
 //!
 //! * `O` is our destination.
@@ -19,42 +19,42 @@
 //! First we move the empty spot in front of the data:
 //!
 //! ```none
-//!     O>>>>>>G
-//!     .^......
-//!     .^######
-//!     .^......
-//!     .<<<<-..
+//! O>>>>>>G
+//! .^......
+//! .^######
+//! .^......
+//! .<<<<-..
 //! ```
 //!
 //! Then we move the data into the empty spot.
 //!
 //! ```none
-//!     O.....G_
-//!     ........
-//!     ..######
-//!     ........
-//!     ........
+//! O.....G_
+//! ........
+//! ..######
+//! ........
+//! ........
 //! ```
 //!
 //! Finally, we move the data to the origin by repeating the same sequence of 5 moves.
 //! First moving the empty spot back around to in front of the data in 4 moves.
 //!
 //! ```none
-//!     O....^G_
-//!     .....^<v
-//!     ..######
-//!     ........
-//!     ........
+//! O....^G_
+//! .....^<v
+//! ..######
+//! ........
+//! ........
 //! ```
 //!
 //! Then moving the data another spot to the left.
 //!
 //! ```none
-//!     O....G_.
-//!     ........
-//!     ..######
-//!     ........
-//!     ........
+//! O....G_.
+//! ........
+//! ..######
+//! ........
+//! ........
 //! ```
 //!
 //! To find the minimum number of steps we only need to find the `(x, y)` coordinates of the empty

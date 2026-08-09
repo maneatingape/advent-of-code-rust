@@ -11,29 +11,29 @@
 //! For example, say the root's children are `a` and `b`:
 //!
 //! ```none
-//!     yell[a] = 6
-//!     unknown[a] = false
-//!     yell[b] = 5
-//!     unknown[b] = true
+//! yell[a] = 6
+//! unknown[a] = false
+//! yell[b] = 5
+//! unknown[b] = true
 //! ```
 //!
 //! So this implies `b` is a parent of `humn` and must equal `6` to pass (the current value is
 //! irrelevant). We then recursively look at the children of `b`:
 //!
 //! ```none
-//!     yell[c] = 4
-//!     unknown[a] = true
-//!     operation = "+"
-//!     yell[d] = 4
-//!     unknown[b] = false
+//! yell[c] = 4
+//! unknown[a] = true
+//! operation = "+"
+//! yell[d] = 4
+//! unknown[b] = false
 //! ```
 //!
 //! We know that `c + d` must equal 6 so this implies `c = 2`. We then recursively look at the
 //! children of `c`
 //!
 //! ```none
-//!     yell[humn] = 123
-//!     unknown[a] = true
+//! yell[humn] = 123
+//! unknown[a] = true
 //! ```
 //!
 //! Once we finally reach the `humn` node the value that we currently have `2` is the answer.

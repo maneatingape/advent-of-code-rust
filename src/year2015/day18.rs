@@ -14,11 +14,11 @@
 //!    into odd and even lanes. An extra empty row at the bottom reduces later special-casing.
 //!
 //! ```none
-//!                    .even .odd
-//!             column: 024   135
-//!     #...#.          101   000
-//!     .#.##. =>       001   110
-//!     ###.#.          111   100
+//!                .even .odd
+//!         column: 024   135
+//! #...#.          101   000
+//! .#.##. =>       001   110
+//! ###.#.          111   100
 //! ```
 //!
 //! 2. Perform half-adder and full-adder computation of each bit with its vertical neighbors, using
@@ -28,11 +28,11 @@
 //!    its neighbors.
 //!
 //! ```none
-//!                   .odd   .even
-//!     ..adg..       ..d..  ..ag..
-//!     ..beh..  =>   ..e..  ..bh..
-//!     ..cfi..       ..f..  ..ci..
-//!                 l,m=d+f  j,k=a+b+c  n,o=g+h+i
+//!               .odd   .even
+//! ..adg..       ..d..  ..ag..
+//! ..beh..  =>   ..e..  ..bh..
+//! ..cfi..       ..f..  ..ci..
+//!             l,m=d+f  j,k=a+b+c  n,o=g+h+i
 //! ```
 //!
 //! 3. Taking the 3 two-bit column sums learned in the last step, perform two more full-adders to
@@ -42,16 +42,16 @@
 //!    and r must be set for the final 4-bit sum to have the second bit set.
 //!
 //! ```none
-//!     a d g
-//!     b - h
-//!   + c f i
-//!   -------
-//!       j k
-//!       l m
-//!   +   n o
-//!   -------
-//!     p q -
-//!       r s
+//!   a d g
+//!   b - h
+//! + c f i
+//! -------
+//!     j k
+//!     l m
+//! +   n o
+//! -------
+//!   p q -
+//!     r s
 //! ```
 //!
 //! 4. Apply the rules using only bitwise logic.

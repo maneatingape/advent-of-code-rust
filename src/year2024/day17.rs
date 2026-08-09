@@ -9,11 +9,11 @@
 //! algorithm:
 //!
 //! ```none
-//!     while a != 0 {
-//!         b = // Some hash based on value of a
-//!         out b
-//!         a >>= 3
-//!     }
+//! while a != 0 {
+//!     b = // Some hash based on value of a
+//!     out b
+//!     a >>= 3
+//! }
 //! ```
 //!
 //! This means that the final value of `a` must be zero. Starting with this knowledge we work

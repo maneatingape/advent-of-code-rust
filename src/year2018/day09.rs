@@ -25,11 +25,11 @@
 //! For example, the first 4 marbles look like:
 //!
 //! ```none
-//!    <0>
-//!     0  <0> (1)
-//!     0   0  <1>  0  (2)
-//!     0   0   1  <0>  2  1  (3)
-//!     0   0   1   0  <2>  1  3  0  (4)
+//! <0>
+//!  0  <0> (1)
+//!  0   0  <1>  0  (2)
+//!  0   0   1  <0>  2  1  (3)
+//!  0   0   1   0  <2>  1  3  0  (4)
 //! ```
 //!
 //! Things start to get interesting at the 19th marble. When we pick the 23rd marble this will
@@ -37,27 +37,27 @@
 //! Instead we save the value for later.
 //!
 //! ```none
-//!     18th marble
-//!     ...<9>  2  10   5  11   1  12   6  13   3  14   7  15   0  16   8  17   4  (18)
+//! 18th marble
+//! ...<9>  2  10   5  11   1  12   6  13   3  14   7  15   0  16   8  17   4  (18)
 //!
-//!     19th marble, saving value of previous tail 9.
-//!     ...<2> 10   5  11   1  12   6  13   3  14   7  15   0  16   8  17   4  18  (19)
+//! 19th marble, saving value of previous tail 9.
+//! ...<2> 10   5  11   1  12   6  13   3  14   7  15   0  16   8  17   4  18  (19)
 //! ```
 //!
 //! For the 20th, 21st and 22nd marbles we re-write the history of the tail then move it backward.
 //!
 //! ```none
-//!     20th marble
-//!     ... 2  20   9  <2> 10   5  11   1  12   6  13   3  14   7  15   0  16   8  17   4  18  (19)
-//!         ^  ^^
+//! 20th marble
+//! ... 2  20   9  <2> 10   5  11   1  12   6  13   3  14   7  15   0  16   8  17   4  18  (19)
+//!     ^  ^^
 //!
-//!     21st marble
-//!     ... 2  20  10 <21> 10   5  11   1  12   6  13   3  14   7  15   0  16   8  17   4  18  (19)
-//!                ^^  ^^
+//! 21st marble
+//! ... 2  20  10 <21> 10   5  11   1  12   6  13   3  14   7  15   0  16   8  17   4  18  (19)
+//!            ^^  ^^
 //!
-//!     22nd marble (move tail)
-//!     ...<2> 20  10  21   5  22  11   1  12   6  13   3  14   7  15   0  16   8  17   4  18  (19)
-//!                         ^  ^^
+//! 22nd marble (move tail)
+//! ...<2> 20  10  21   5  22  11   1  12   6  13   3  14   7  15   0  16   8  17   4  18  (19)
+//!                     ^  ^^
 //! ```
 //!
 //! The 23rd marble is never added to the circle instead increasing the current player's score.

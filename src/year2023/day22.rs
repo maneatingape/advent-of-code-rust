@@ -12,19 +12,19 @@
 //! calculated immediately. For example, taking the first 3 example bricks:
 //!
 //! ```none
-//!     Brick               Heights    Indices
+//! Brick               Heights    Indices
 //!
-//!     1,0,1~1,2,1 <- A    0 1 0      X 0 X    Already in final position
-//!                         0 1 0      X 0 X
-//!                         0 1 0      X 0 X
+//! 1,0,1~1,2,1 <- A    0 1 0      X 0 X    Already in final position
+//!                     0 1 0      X 0 X
+//!                     0 1 0      X 0 X
 //!
-//!     0,0,2~2,0,2 <- B    2 2 2      1 1 1    Already in final position
-//!                         0 1 0      X 0 X
-//!                         0 1 0      X 0 X
+//! 0,0,2~2,0,2 <- B    2 2 2      1 1 1    Already in final position
+//!                     0 1 0      X 0 X
+//!                     0 1 0      X 0 X
 //!
-//!     0,2,3~2,2,3 <- C    2 2 2      1 1 1    Moves downwards by 1
-//!                         0 1 0      X 0 X
-//!                         2 2 2      2 2 2
+//! 0,2,3~2,2,3 <- C    2 2 2      1 1 1    Moves downwards by 1
+//!                     0 1 0      X 0 X
+//!                     2 2 2      2 2 2
 //! ```
 //!
 //! ## Part One
@@ -44,12 +44,11 @@
 //! which is the number of unsafe "dominator" nodes that connect it to the root. For example:
 //!
 //! ```none
-//!
-//!     Depth   0     1     2     1     0
-//!           | A ┬-> B --> C ┬-> D ┬-> E
-//!           |   |           |     |
-//!     Floor |   └-> F ------┘     |
-//!           | G ------------------┘
+//! Depth   0     1     2     1     0
+//!       | A ┬-> B --> C ┬-> D ┬-> E
+//!       |   |           |     |
+//! Floor |   └-> F ------┘     |
+//!       | G ------------------┘
 //! ```
 //!
 //! * `A` and `G` rest on the floor so their depth is 0 as they can never fall.

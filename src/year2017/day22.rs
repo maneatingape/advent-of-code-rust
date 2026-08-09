@@ -6,34 +6,34 @@
 //! This allows us to skip forward up to 8 steps at a time. For example:
 //!
 //! ```none
-//!    . = Clean   # = Infected   F = Flagged   W = Weakened
+//! . = Clean   # = Infected   F = Flagged   W = Weakened
 //!
-//!    State    Direction    Steps    Infected
-//!    [W] #    Down         0        0
-//!     F  W
+//! State    Direction    Steps    Infected
+//! [W] #    Down         0        0
+//!  F  W
 //!
-//!     #  #    Down         1        1
-//!    [F] W
+//!  #  #    Down         1        1
+//! [F] W
 //!
-//!    [#] #    Up           2        1
-//!     .  W
+//! [#] #    Up           2        1
+//!  .  W
 //!
-//!     F [#]   Right        3        1
-//!     .  W
+//!  F [#]   Right        3        1
+//!  .  W
 //!
-//!     F  F    Down         4        1
-//!     . [W]
+//!  F  F    Down         4        1
+//!  . [W]
 //!
-//!     F  F    Down         5        2
-//!     .  #
-//!       [ ]
+//!  F  F    Down         5        2
+//!  .  #
+//!    [ ]
 //! ```
 //!
 //! Starting in the top-left corner facing down, after 5 steps the virus carrier leaves the 2x2
 //! block having infected 2 nodes. This is memoized as:
 //!
 //! ```none
-//!     [0][2][01111001] => (2, 5, 10001111)
+//! [0][2][01111001] => (2, 5, 10001111)
 //! ```
 use std::array::from_fn;
 use std::mem::take;

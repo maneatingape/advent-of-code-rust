@@ -13,10 +13,10 @@
 //! item at `index - 2` is different. For example:
 //!
 //! ```none
-//!     @          Indices:
-//!     []         23
-//!    [][]       4567
-//!     []         89
+//!  @          Indices:
+//!  []         23
+//! [][]       4567
+//!  []         89
 //! ```
 //!
 //! When processing 6 we try to add 8, however 8 and 9 have already been added when processing 4

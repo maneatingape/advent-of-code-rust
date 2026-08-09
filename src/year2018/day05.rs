@@ -9,9 +9,9 @@
 //! bitwise XOR. For example:
 //!
 //! ```none
-//!         A = 65 = 01000001
-//!         a = 97 = 01100001
-//!     A ^ a = 32 = 00100000
+//!     A = 65 = 01000001
+//!     a = 97 = 01100001
+//! A ^ a = 32 = 00100000
 //! ```
 //!
 //! If two units are the same type but opposite polarity then they are popped from the stack.

@@ -3,8 +3,8 @@
 //! The traits [`Index`] and [`IndexMut`] are implemented for [`Point`] to allow usage like:
 //!
 //! ```
-//!   # use aoc::util::grid::Grid;
-//!   # use aoc::util::point::Point;
+//! # use aoc::util::grid::Grid;
+//! # use aoc::util::point::Point;
 //!
 //! let mut grid = Grid::parse("1");
 //! let point = Point::new(0, 0);

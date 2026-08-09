@@ -4,38 +4,38 @@
 //! to only the very first number.
 //!
 //! ```none
-//!     set b $NUMBER       if a == 0 {
-//!     set c b                 b = $NUMBER;
-//!     jnz a 2                 c = b;
-//!     jnz 1 5             } else {
-//!     mul b 100               b = 100000 + 100 * $NUMBER;
-//!     sub b -100000           c = b + 17000;
-//!     set c b             }
-//!     sub c -17000
-//!     set f 1             for b in (b..=c).step_by(17) {
-//!     set d 2                 f = 1;
-//!     set e 2                 for d in 2..b {
-//!     set g d                     for e in 2..b {
-//!     mul g e                         if d * e == b {
-//!     sub g b                             f = 0;
-//!     jnz g 2                         }
-//!     set f 0
-//!     sub e -1
-//!     set g e
-//!     sub g b
-//!     jnz g -8                    }
-//!     sub d -1
-//!     set g d
-//!     sub g b
-//!     jnz g -13               }
-//!     jnz f 2
-//!     sub h -1                if f == 0 {
-//!     set g b                     h += 1;
-//!     sub g c                 }
-//!     jnz g 2
-//!     jnz 1 3
-//!     sub b -17
-//!     jnz 1 -23           }
+//! set b $NUMBER       if a == 0 {
+//! set c b                 b = $NUMBER;
+//! jnz a 2                 c = b;
+//! jnz 1 5             } else {
+//! mul b 100               b = 100000 + 100 * $NUMBER;
+//! sub b -100000           c = b + 17000;
+//! set c b             }
+//! sub c -17000
+//! set f 1             for b in (b..=c).step_by(17) {
+//! set d 2                 f = 1;
+//! set e 2                 for d in 2..b {
+//! set g d                     for e in 2..b {
+//! mul g e                         if d * e == b {
+//! sub g b                             f = 0;
+//! jnz g 2                         }
+//! set f 0
+//! sub e -1
+//! set g e
+//! sub g b
+//! jnz g -8                    }
+//! sub d -1
+//! set g d
+//! sub g b
+//! jnz g -13               }
+//! jnz f 2
+//! sub h -1                if f == 0 {
+//! set g b                     h += 1;
+//! sub g c                 }
+//! jnz g 2
+//! jnz 1 3
+//! sub b -17
+//! jnz 1 -23           }
 //!  ```
 //!
 //! ## Part One

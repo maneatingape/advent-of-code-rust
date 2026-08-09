@@ -269,10 +269,10 @@ fn lsb(u: usize) -> usize {
 /// significant to least significant and `Σx..y` denote the sum from `x` to `y` inclusive.
 ///
 /// ```none
-///     s               |   a   |   b   |   c   |   d   |   e   |   f   |   g   |   h   |
-///     s += (s >> 8)   |   a   | Σa..b | Σb..c | Σc..d | Σd..e | Σe..f | Σf..g | Σg..h |
-///     s += (s >> 16)  |   a   | Σa..b | Σa..c | Σa..d | Σb..e | Σc..f | Σd..g | Σe..h |
-///     s += (s >> 32)  |   a   | Σa..b | Σa..c | Σa..d | Σa..e | Σa..f | Σa..g | Σa..h |
+/// s               |   a   |   b   |   c   |   d   |   e   |   f   |   g   |   h   |
+/// s += (s >> 8)   |   a   | Σa..b | Σb..c | Σc..d | Σd..e | Σe..f | Σf..g | Σg..h |
+/// s += (s >> 16)  |   a   | Σa..b | Σa..c | Σa..d | Σb..e | Σc..f | Σd..g | Σe..h |
+/// s += (s >> 32)  |   a   | Σa..b | Σa..c | Σa..d | Σa..e | Σa..f | Σa..g | Σa..h |
 /// ```
 #[inline]
 fn prefix_sum(u: usize) -> usize {

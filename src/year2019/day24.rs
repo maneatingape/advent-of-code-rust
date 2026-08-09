@@ -6,11 +6,11 @@
 //! To make calculating the rating a no-op, we store the grid:
 //!
 //! ```none
-//!     abcde
-//!     fghij
-//!     klmno
-//!     pqrst
-//!     uvwxy
+//! abcde
+//! fghij
+//! klmno
+//! pqrst
+//! uvwxy
 //! ```
 //!
 //! packed into a `u32` as `yxwvutsrqponmlkjihgfedcba`.

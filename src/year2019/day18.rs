@@ -47,11 +47,11 @@
 //!   `a` is index 0, `b` is index 1 and robots' initial positions are from 26 to 29 inclusive. For
 //!   example (simplifying by moving robot from index 26 to 2):
 //!
-//!   ```none
-//!       #########    [0 6 2]
-//!       #b.A.@.a# => [6 0 4]
-//!       #########    [2 4 0]
-//!   ```
+//! ```none
+//! #########    [0 6 2]
+//! #b.A.@.a# => [6 0 4]
+//! #########    [2 4 0]
+//! ```
 use std::collections::VecDeque;
 use std::ops::Range;
 

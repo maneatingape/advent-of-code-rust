@@ -10,28 +10,28 @@
 //! converts into an undirected weighted graph.
 //!
 //! ```none
-//!     #.#####
-//!     #....##    Start - A - B
-//!     ##.#.## =>         |   |
-//!     ##....#            C - D - End   (edge weights are 2)
-//!     #####.#
+//! #.#####
+//! #....##    Start - A - B
+//! ##.#.## =>         |   |
+//! ##....#            C - D - End   (edge weights are 2)
+//! #####.#
 //! ```
 //!
 //! Each actual input forms a graph of the same shape but with different edge weights that
 //! looks like:
 //!
 //! ```none
-//!     Start -  a - b - c - d - e
-//!              |   |   |   |   | \
-//!              f - A - B - C - D - g
-//!              |   |   |   |   |   |
-//!              h - E - F - G - H - k
-//!              |   |   |   |   |   |
-//!              m - K - M - N - P - n
-//!              |   |   |   |   |   |
-//!              p - Q - R - S - T - q
-//!                \ |   |   |   |   |
-//!                  r - s - t - u - v - End
+//! Start -  a - b - c - d - e
+//!          |   |   |   |   | \
+//!          f - A - B - C - D - g
+//!          |   |   |   |   |   |
+//!          h - E - F - G - H - k
+//!          |   |   |   |   |   |
+//!          m - K - M - N - P - n
+//!          |   |   |   |   |   |
+//!          p - Q - R - S - T - q
+//!            \ |   |   |   |   |
+//!              r - s - t - u - v - End
 //! ```
 //!
 //! ## Conversion to grid
@@ -40,17 +40,17 @@
 //! start and end are moved to the corners and extra nodes added to the other corners.
 //!
 //! ```none
-//!     Start - b - c - d - e - e`
-//!         |   |   |   |   |   |
-//!         f - A - B - C - D - g
-//!         |   |   |   |   |   |
-//!         h - E - F - G - H - k
-//!         |   |   |   |   |   |
-//!         m - K - M - N - P - n
-//!         |   |   |   |   |   |
-//!         p - Q - R - S - T - q
-//!         |   |   |   |   |   |
-//!         p`- r - s - t - u - End
+//! Start - b - c - d - e - e`
+//!     |   |   |   |   |   |
+//!     f - A - B - C - D - g
+//!     |   |   |   |   |   |
+//!     h - E - F - G - H - k
+//!     |   |   |   |   |   |
+//!     m - K - M - N - P - n
+//!     |   |   |   |   |   |
+//!     p - Q - R - S - T - q
+//!     |   |   |   |   |   |
+//!     p`- r - s - t - u - End
 //! ```
 //!
 //! ## Dynamic programming
@@ -72,27 +72,27 @@
 //! state looks like `S.....` and the end state `.....S`. One example:
 //!
 //! ```none
-//!    Start    S..... |
-//!    Row 0    ..SS.E └─┐┌─┐
-//!    Row 1    S..S.E ┌─┘|.|
-//!    Row 2    ..SSE. └─┐|┌┘
-//!    Row 3    SE...S ┌┐└┘└┐
-//!    Row 4    S..... |└───┘
-//!    Row 5    .....S └────┐
-//!    End      .....S      |
+//! Start    S..... |
+//! Row 0    ..SS.E └─┐┌─┐
+//! Row 1    S..S.E ┌─┘|.|
+//! Row 2    ..SSE. └─┐|┌┘
+//! Row 3    SE...S ┌┐└┘└┐
+//! Row 4    S..... |└───┘
+//! Row 5    .....S └────┐
+//! End      .....S      |
 //! ```
 //!
 //! Another example:
 //!
 //! ```none
-//!    Start    S..... |
-//!    Row 0    .SSESE └┐┌┐┌┐
-//!    Row 1    S.SESE ┌┘||||
-//!    Row 2    ...SSE └─┘|||
-//!    Row 3    S.E..S ┌─┐└┘|
-//!    Row 4    S..... |.└──┘
-//!    Row 5    .....S └────┐
-//!    End      .....S      |
+//! Start    S..... |
+//! Row 0    .SSESE └┐┌┐┌┐
+//! Row 1    S.SESE ┌┘||||
+//! Row 2    ...SSE └─┘|||
+//! Row 3    S.E..S ┌─┐└┘|
+//! Row 4    S..... |.└──┘
+//! Row 5    .....S └────┐
+//! End      .....S      |
 //! ```
 //!
 //! ## Next row generation
@@ -104,9 +104,9 @@
 //! We do this at most once per row. For example:
 //!
 //! ```none
-//!     Previous .SSESE └┐┌┐┌┐
-//!     Current  .....S .└┘└┘|
-//!                     ^ Blank space
+//! Previous .SSESE └┐┌┐┌┐
+//! Current  .....S .└┘└┘|
+//!                 ^ Blank space
 //! ```
 //!
 //! ### Start a new (start, end) pair of lines.
@@ -114,10 +114,10 @@
 //! All lines must eventually connect so we must create lines in pairs. For example:
 //!
 //! ```none
-//!     Previous .....S └────┐
-//!     Current  S...ES ┌───┐|
-//!                     ^   ^
-//!                     New pair
+//! Previous .....S └────┐
+//! Current  S...ES ┌───┐|
+//!                 ^   ^
+//!                 New pair
 //! ```
 //!
 //! ### Continue a straight line down from the previous row.
@@ -125,9 +125,9 @@
 //! The line stays the same kind (`S` or `E`).
 //!
 //! ```none
-//!     Previous .....S └────┐
-//!     Current  S...ES ┌───┐|
-//!                          ^ Continuation
+//! Previous .....S └────┐
+//! Current  S...ES ┌───┐|
+//!                      ^ Continuation
 //! ```
 //!
 //! ### Move a previous downwards line to the left or right into a different column.
@@ -135,9 +135,9 @@
 //! The line stays the same kind (`S` or `E`).
 //!
 //! ```none
-//!     Previous .....S └────┐
-//!     Current  S..... ┌────┘
-//!                     ^ Move
+//! Previous .....S └────┐
+//! Current  S..... ┌────┘
+//!                 ^ Move
 //! ```
 //!
 //! ### Join two open segments from a previous row.
@@ -146,9 +146,9 @@
 //! as this would skip several nodes. For example, this is not allowed:
 //!
 //! ```none
-//!     Previous .....S |┌───┐
-//!     Current  S..... |└───┘
-//!                      ^ Closed cycles not allowed
+//! Previous .....S |┌───┐
+//! Current  S..... |└───┘
+//!                  ^ Closed cycles not allowed
 //! ```
 //!
 //! We implement this by not joining any (`S`, `E`) pairs in that order. Joining the reverse order
@@ -158,17 +158,17 @@
 //! When joining (`S`, `S`) the next `E` converts to an `S` to maintain balance.
 //!
 //! ```none
-//!     Previous S..E ┌──┐
-//!     Previous SSEE |┌┐|
-//!     Current  ..SE └┘||
+//! Previous S..E ┌──┐
+//! Previous SSEE |┌┐|
+//! Current  ..SE └┘||
 //! ```
 //!
 //! When joining (`E`, `E`) the previous `S` converts to an `E` to maintain balance.
 //!
 //! ```none
-//!     Previous S..E ┌──┐
-//!     Previous SSEE |┌┐|
-//!     Current  SE.. ||└┘
+//! Previous S..E ┌──┐
+//! Previous SSEE |┌┐|
+//! Current  SE.. ||└┘
 //! ```
 use std::collections::VecDeque;
 

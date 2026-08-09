@@ -12,19 +12,19 @@
 //! For part 2, we can further speed up the process by using geometry to hone in on a viable
 //! target to start searching at. Our target point `(x,y)` is related to our two slopes as:
 //! ```none
-//!   scale*y = upper*(x+99)
-//!   scale*x = lower*(y+99)
+//! scale*y = upper*(x+99)
+//! scale*x = lower*(y+99)
 //! ```
 //! Those two equations can be represented in matrix form:
 //! ```none
-//!   [upper-scale][x] = [-99*upper]
-//!   [scale-lower][y] = [ 99*lower]
+//! [upper-scale][x] = [-99*upper]
+//! [scale-lower][y] = [ 99*lower]
 //! ```
 //! where inverting the matrix gives a solution:
 //! ```none
-//!   determinant = scale * scale - lower * upper
-//!   x = 99 * (lower * upper + lower * scale) / determinant
-//!   y = 99 * (lower * upper + upper * scale) / determinant
+//! determinant = scale * scale - lower * upper
+//! x = 99 * (lower * upper + lower * scale) / determinant
+//! y = 99 * (lower * upper + upper * scale) / determinant
 //! ```
 use super::intcode::*;
 use crate::util::parse::*;

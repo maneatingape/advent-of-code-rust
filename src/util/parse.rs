@@ -4,7 +4,7 @@
 //! resembling the following form:
 //!
 //! ```none
-//!   Lorem ipsum 123 dolor 456 sit 789 amet
+//! Lorem ipsum 123 dolor 456 sit 789 amet
 //! ```
 //!
 //! This module provides two [`&str`] extension methods [`iter_signed`] and [`iter_unsigned`]. The

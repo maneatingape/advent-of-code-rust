@@ -20,13 +20,13 @@
 //! * All edge weights (or flow capacity) are 1.
 //! * The 3 edges to be cut are in the "middle" of the graph, that is the graph looks something
 //!   like:
-//!  ```none
-//!           * *       * *
-//!         * * * * - * * * *
-//!       * * * * * - * * * * *
-//!         * * * * - * * * *
-//!           * *       * *
-//!  ```
+//! ```none
+//!     * *       * *
+//!   * * * * - * * * *
+//! * * * * * - * * * * *
+//!   * * * * - * * * *
+//!     * *       * *
+//! ```
 //!
 //! Our high-level approach is as follows:
 //! * Pick any arbitrary node.

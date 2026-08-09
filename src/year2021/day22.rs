@@ -6,15 +6,15 @@
 //! Looking at a two-dimensional example:
 //!
 //! ```none
-//!    ┌──────────────┐A            Volume of A: 144
-//!    │              │             Volume of B: 66
-//!    │ ┌─────────┐B │             Volume of C: 18
-//!    │ │         │  │
-//!    │ │ ┌────┐C │  │
-//!    │ │ │    │  │  │
-//!    │ │ └────┘  │  │
-//!    │ └─────────┘  │
-//!    └──────────────┘
+//! ┌──────────────┐A            Volume of A: 144
+//! │              │             Volume of B: 66
+//! │ ┌─────────┐B │             Volume of C: 18
+//! │ │         │  │
+//! │ │ ┌────┐C │  │
+//! │ │ │    │  │  │
+//! │ │ └────┘  │  │
+//! │ └─────────┘  │
+//! └──────────────┘
 //! ```
 //!
 //! Using the inclusion-exclusion principle the remaining size of A is:

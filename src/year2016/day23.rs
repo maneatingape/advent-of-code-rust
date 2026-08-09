@@ -8,9 +8,9 @@
 //! The first thing we notice is that the following idiom is repeated several times:
 //!
 //! ```none
-//!     inc x
-//!     dec y
-//!     jnz y -2
+//! inc x
+//! dec y
+//! jnz y -2
 //! ```
 //!
 //! This is equivalent to `x += y` only much less efficient. The `tgl` instruction eventually

@@ -3,15 +3,15 @@
 //! Each claw machine is a system of two linear equations:
 //!
 //! ```none
-//!     (Button A X) * (A presses) + (Button B X) * (B presses) = Prize X
-//!     (Button A Y) * (A presses) + (Button B Y) * (B presses) = Prize Y
+//! (Button A X) * (A presses) + (Button B X) * (B presses) = Prize X
+//! (Button A Y) * (A presses) + (Button B Y) * (B presses) = Prize Y
 //! ```
 //!
 //! Shortening the names and representing as a matrix:
 //!
 //! ```none
-//!     [ ax bx ][ a ] = [ px ]
-//!     [ ay by ][ b ] = [ py ]
+//! [ ax bx ][ a ] = [ px ]
+//! [ ay by ][ b ] = [ py ]
 //! ```
 //!
 //! To solve we invert the 2 x 2 matrix then premultiply the right column.

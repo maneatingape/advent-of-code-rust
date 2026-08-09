@@ -4,11 +4,11 @@
 //! of 12 columns, followed by 2 conjunctions (in square brackets):
 //!
 //! ```none
-//!            / aa ab ac ad ae af ag ah ai aj ak al [ax] [ay] \
-//!           /  ba bb bc bd be bf bg bh bi bj bk bl [bx] [by]  \
-//!     () - ()                                                 [zz] -> [rx]
-//!           \  ca cb cc cd ce cf cg ch ci cj ck cl [cx] [cy]  /
-//!            \ da db dc dd de df dg dh di dj dk dl [dx] [dy] /
+//!        / aa ab ac ad ae af ag ah ai aj ak al [ax] [ay] \
+//!       /  ba bb bc bd be bf bg bh bi bj bk bl [bx] [by]  \
+//! () - ()                                                 [zz] -> [rx]
+//!       \  ca cb cc cd ce cf cg ch ci cj ck cl [cx] [cy]  /
+//!        \ da db dc dd de df dg dh di dj dk dl [dx] [dy] /
 //! ```
 //!
 //! The penultimate conjunction in each row, for example `ax`, both takes input and delivers output
@@ -16,9 +16,9 @@
 //! the conjunction and `v` below to indicate output:
 //!
 //! ```none
-//!     v     v        v              v
-//!     aa ab ac ad ae af ag ah ai aj ak al
-//!     v  v     v  v     v  v  v   v     v
+//! v     v        v              v
+//! aa ab ac ad ae af ag ah ai aj ak al
+//! v  v     v  v     v  v  v   v     v
 //! ```
 //!
 //! The flip-flops form a binary counter. When the counter reaches a specific value the conjunction

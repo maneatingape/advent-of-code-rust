@@ -12,9 +12,9 @@
 //! For example, considering the right edge:
 //!
 //! ```none
-//!     ...        ...        .#. > 1
-//!     .#. > 2    .#. > 1    .#. > 0
-//!     ...        .#. > 1    .#. > 1
+//! ...        ...        .#. > 1
+//! .#. > 2    .#. > 1    .#. > 0
+//! ...        .#. > 1    .#. > 1
 //! ```
 use crate::util::grid::*;
 use crate::util::point::*;
