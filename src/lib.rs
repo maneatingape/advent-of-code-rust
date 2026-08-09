@@ -10,6 +10,7 @@
 // Configure rustdoc.
 #![doc(html_logo_url = "https://maneatingape.github.io/advent-of-code-rust/logo.png")]
 
+#[doc(hidden)]
 macro_rules! library {
     ($year:tt $description:literal $($day:tt),*) => {
         #[doc = concat!("# ", $description)]

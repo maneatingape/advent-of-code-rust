@@ -9,7 +9,7 @@
 //!   m efficiently using [exponentiation by squaring](https://en.wikipedia.org/wiki/Exponentiation_by_squaring).
 use crate::util::integer::*;
 
-pub trait IntegerMathOps<T: Integer<T>> {
+pub trait MathOps<T: Integer<T>> {
     #[must_use]
     fn gcd(self, b: T) -> T;
     #[must_use]
@@ -18,12 +18,7 @@ pub trait IntegerMathOps<T: Integer<T>> {
     fn mod_pow(self, e: T, m: T) -> T;
 }
 
-pub trait SignedMathOps<T: Signed<T>> {
-    #[must_use]
-    fn mod_inv(self, m: T) -> Option<T>;
-}
-
-impl<T: Integer<T>> IntegerMathOps<T> for T {
+impl<T: Integer<T>> MathOps<T> for T {
     /// Greatest common divisor.
     #[inline]
     fn gcd(self, mut b: T) -> T {
