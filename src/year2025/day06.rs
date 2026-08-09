@@ -11,6 +11,7 @@
 //! For performance, we avoid storing the numbers in an intermediate `vec` and just use the
 //! iterators directly.
 use crate::util::grid::*;
+use crate::util::parse::*;
 use crate::util::point::*;
 
 type Input = (u64, u64);
@@ -51,5 +52,5 @@ pub fn part2(input: &Input) -> u64 {
 /// Ignore spaces when parsing a number.
 fn acc(grid: &Grid<u8>, number: u64, x: i32, y: i32) -> u64 {
     let digit = grid[Point::new(x, y)];
-    if digit == b' ' { number } else { 10 * number + u64::from(digit - b'0') }
+    if digit == b' ' { number } else { 10 * number + digit.to_decimal::<u64>() }
 }

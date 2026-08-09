@@ -74,6 +74,6 @@ fn next(bytes: &mut Bytes<'_>) -> Option<u8> {
 fn value(bytes: &mut Bytes<'_>, helper: fn(&mut Bytes<'_>) -> u64) -> u64 {
     match next(bytes).unwrap() {
         b'(' => helper(bytes),
-        b => b.to_decimal() as u64,
+        b => b.to_decimal(),
     }
 }

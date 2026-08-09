@@ -13,7 +13,7 @@ pub fn parse(input: &str) -> Input {
     let mut aim = 0;
 
     while !slice.is_empty() {
-        let amount = |index: usize| slice[index].to_decimal() as i32;
+        let amount = |index: usize| slice[index].to_decimal::<i32>();
 
         (slice, position, depth, aim) = match slice[0] {
             b'u' => (&slice[5..], position, depth, aim - amount(3)),

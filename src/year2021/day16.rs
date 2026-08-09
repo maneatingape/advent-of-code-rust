@@ -14,6 +14,8 @@
 //! and part two to reuse the same decoded input.
 use std::str::Bytes;
 
+use crate::util::parse::*;
+
 struct BitStream<'a> {
     available: u64,
     bits: u64,
@@ -41,7 +43,7 @@ impl BitStream<'_> {
 
     fn hex_to_binary(&mut self) -> u64 {
         let b = self.iter.next().unwrap();
-        u64::from(if b.is_ascii_digit() { b - b'0' } else { b - b'A' + 10 })
+        if b.is_ascii_digit() { b.to_decimal() } else { u64::from(b - b'A' + 10) }
     }
 }
 

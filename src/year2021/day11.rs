@@ -8,6 +8,8 @@
 //! [`Day 9`]: crate::year2021::day09
 
 /// Pad the 10x10 grid by 1 on either side so that we can avoid boundary checks.
+use crate::util::parse::*;
+
 type Input = [u8; 144];
 
 pub fn parse(input: &str) -> Input {
@@ -15,7 +17,7 @@ pub fn parse(input: &str) -> Input {
 
     for (y, row) in input.lines().enumerate() {
         for (x, b) in row.bytes().enumerate() {
-            grid[12 * (y + 1) + (x + 1)] = b - b'0';
+            grid[12 * (y + 1) + (x + 1)] = b.to_decimal();
         }
     }
 

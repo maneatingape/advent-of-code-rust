@@ -27,7 +27,7 @@ pub fn parse(input: &str) -> Input {
             if b.is_ascii_digit() {
                 // Parse contiguous groups of digits.
                 seen[p] = parts.len();
-                number = 10 * number + (b.to_decimal() as u32);
+                number = 10 * number + b.to_decimal::<u32>();
             } else if number > 0 {
                 // If not a digit then finish the current number.
                 parts.push(number);

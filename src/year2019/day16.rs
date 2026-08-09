@@ -113,7 +113,7 @@ const BINOMIAL_MOD_2: [(i32, usize); 8] =
 const BINOMIAL_MOD_5: [(i32, usize); 2] = [(1, 25), (4, 100)];
 
 pub fn parse(input: &str) -> Vec<i32> {
-    input.trim().bytes().map(|b| b.to_decimal() as i32).collect()
+    input.trim().bytes().map(u8::to_decimal).collect()
 }
 
 pub fn part1(input: &[i32]) -> i32 {

@@ -34,7 +34,7 @@ use crate::util::parse::*;
 /// Parse the input into a 2D grid of `u8` then convert to `u32` for convenience.
 pub fn parse(input: &str) -> Grid<i32> {
     let Grid { width, height, bytes } = Grid::parse(input);
-    let bytes = bytes.iter().map(|b| b.to_decimal() as i32).collect();
+    let bytes = bytes.into_iter().map(u8::to_decimal).collect();
     Grid { width, height, bytes }
 }
 

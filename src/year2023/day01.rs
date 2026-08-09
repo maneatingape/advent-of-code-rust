@@ -16,9 +16,9 @@ pub fn part1(input: &[&[u8]]) -> u32 {
     input
         .iter()
         .map(|line| {
-            let first = line.iter().find(|b| b.is_ascii_digit()).unwrap().to_decimal();
-            let last = line.iter().rfind(|b| b.is_ascii_digit()).unwrap().to_decimal();
-            (10 * first + last) as u32
+            let first: u32 = line.iter().find(|b| b.is_ascii_digit()).unwrap().to_decimal();
+            let last: u32 = line.iter().rfind(|b| b.is_ascii_digit()).unwrap().to_decimal();
+            10 * first + last
         })
         .sum()
 }
@@ -29,7 +29,7 @@ pub fn part2(input: &[&[u8]]) -> u32 {
         .map(|line| {
             let digit = |i: usize| -> Option<u32> {
                 if line[i].is_ascii_digit() {
-                    return Some(line[i].to_decimal() as u32);
+                    return Some(line[i].to_decimal());
                 }
                 DIGITS
                     .iter()

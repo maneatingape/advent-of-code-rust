@@ -100,7 +100,7 @@ fn parse_number(input: &[u8], start: usize) -> Result {
     let mut acc = 0;
 
     while input[end].is_ascii_digit() {
-        acc = 10 * acc + (input[end] - b'0') as i32;
+        acc = 10 * acc + input[end].to_decimal::<i32>();
         end += 1;
     }
 

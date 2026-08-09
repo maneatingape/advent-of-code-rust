@@ -14,6 +14,8 @@
 //!
 //! While the worst case complexity of bubble sort is `O(n²)`, in practice this approach is much
 //! faster due to the randomized nature of the inputs.
+use crate::util::parse::*;
+
 pub fn parse(input: &str) -> Vec<&str> {
     input.lines().collect()
 }
@@ -46,7 +48,7 @@ fn solve<const N: usize>(input: &[&str]) -> u64 {
                 }
             }
 
-            batteries.iter().fold(0, |joltage, &b| 10 * joltage + u64::from(b - b'0'))
+            batteries.iter().fold(0, |joltage, &b| 10 * joltage + b.to_decimal::<u64>())
         })
         .sum()
 }

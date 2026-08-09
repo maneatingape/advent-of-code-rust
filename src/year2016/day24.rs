@@ -40,7 +40,7 @@ pub fn parse(input: &str) -> Input {
     let mut seen = vec![0; grid.bytes.len()];
 
     for (rank, &start) in found.iter().skip(1).enumerate() {
-        let from = grid.bytes[start].to_decimal() as usize;
+        let from: usize = grid.bytes[start].to_decimal();
         let mut need = found.len() - rank;
 
         todo.clear();
@@ -49,7 +49,7 @@ pub fn parse(input: &str) -> Input {
 
         while let Some((index, steps)) = todo.pop_front() {
             if grid.bytes[index].is_ascii_digit() {
-                let to = grid.bytes[index].to_decimal() as usize;
+                let to: usize = grid.bytes[index].to_decimal();
                 if distance[from][to] == 0 {
                     distance[from][to] = steps;
                     distance[to][from] = steps;

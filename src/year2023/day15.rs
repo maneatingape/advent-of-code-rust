@@ -27,7 +27,7 @@ pub fn parse(input: &str) -> Input {
         } else {
             let label = &rest[..rest.len() - 1];
             let slot = &mut boxes[hash(label)];
-            let lens = last.to_decimal() as usize;
+            let lens = last.to_decimal();
 
             // Replace or append new lens.
             if let Some(i) = slot.iter().position(|item| item.label == label) {

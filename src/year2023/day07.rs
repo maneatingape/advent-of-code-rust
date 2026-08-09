@@ -53,7 +53,7 @@ fn sort(input: &[Hand], j: usize) -> usize {
                 b'Q' => 12,
                 b'J' => j,
                 b'T' => 10,
-                _ => b.to_decimal() as usize,
+                _ => b.to_decimal(),
             });
 
             let mut freq = [0; 15];

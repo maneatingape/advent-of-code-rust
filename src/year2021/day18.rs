@@ -58,7 +58,7 @@ pub fn parse(input: &str) -> Vec<Snailfish> {
                     b'[' => i *= 2,
                     b',' => i += 1,
                     b']' => i /= 2,
-                    b => tree[i] = b.to_decimal() as i32,
+                    b => tree[i] = b.to_decimal(),
                 }
             }
 

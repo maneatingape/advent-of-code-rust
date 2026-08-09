@@ -20,11 +20,13 @@ use std::iter::repeat_with;
 /// [Triangular numbers](https://en.wikipedia.org/wiki/Triangular_number) offset by two.
 /// Files can be a max size of 9 so we only need the first 10 values, including zero to make
 /// indexing easier.
+use crate::util::parse::*;
+
 const TRIANGLE: [usize; 10] = [0, 0, 1, 3, 6, 10, 15, 21, 28, 36];
 
 /// Remove any trailing newlines and convert to `usize`.
 pub fn parse(input: &str) -> Vec<usize> {
-    input.trim().bytes().map(|b| (b - b'0') as usize).collect()
+    input.trim().bytes().map(u8::to_decimal).collect()
 }
 
 /// Block by block checksum comparison that doesn't allocate any memory.

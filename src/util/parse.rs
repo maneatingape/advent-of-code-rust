@@ -21,13 +21,13 @@ use crate::util::integer::*;
 const MINUS: u8 = b'-'.wrapping_sub(b'0');
 
 pub trait ParseByte {
-    fn to_decimal(self) -> u8;
+    fn to_decimal<T: From<u8>>(self) -> T;
 }
 
 impl ParseByte for u8 {
     #[inline]
-    fn to_decimal(self) -> u8 {
-        self.wrapping_sub(b'0')
+    fn to_decimal<T: From<u8>>(self) -> T {
+        T::from(self.wrapping_sub(b'0'))
     }
 }
 

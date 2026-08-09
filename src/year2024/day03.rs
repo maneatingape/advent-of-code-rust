@@ -74,7 +74,7 @@ pub fn part2(input: &Input) -> u32 {
 fn parse_number(memory: &[u8], index: &mut usize) -> u32 {
     let mut number = 0;
     while memory[*index].is_ascii_digit() {
-        number = 10 * number + memory[*index].to_decimal() as u32;
+        number = 10 * number + memory[*index].to_decimal::<u32>();
         *index += 1;
     }
     number

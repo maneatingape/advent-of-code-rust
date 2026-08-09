@@ -16,5 +16,5 @@ pub fn part2(input: &[u8]) -> u32 {
 }
 
 fn sum(a: &[u8], b: &[u8]) -> u32 {
-    a.iter().zip(b).filter_map(|(a, b)| (a == b).then_some(a.to_decimal() as u32)).sum()
+    a.iter().zip(b).filter_map(|(a, b)| (a == b).then_some(a.to_decimal::<u32>())).sum()
 }

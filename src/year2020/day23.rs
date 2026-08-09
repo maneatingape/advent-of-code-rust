@@ -14,7 +14,7 @@
 use crate::util::parse::*;
 
 pub fn parse(input: &str) -> Vec<u32> {
-    input.trim().bytes().map(|b| b.to_decimal() as u32).collect()
+    input.trim().bytes().map(u8::to_decimal).collect()
 }
 
 pub fn part1(input: &[u32]) -> u32 {
