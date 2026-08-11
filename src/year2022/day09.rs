@@ -63,7 +63,7 @@ fn simulate<const N: usize>(input: &Input) -> u32 {
                 if !apart(rope[i - 1], rope[i]) {
                     break;
                 }
-                rope[i] += rope[i - 1].signum(rope[i]);
+                rope[i] += signum(rope[i - 1], rope[i]);
             }
 
             let tail = rope[N - 1];
@@ -81,7 +81,10 @@ fn simulate<const N: usize>(input: &Input) -> u32 {
 
 /// Two knots are considered "apart" if they are not diagonally adjacent, that is the absolute
 /// distance in either x or y axes is greater than 1.
-#[inline]
 fn apart(a: Point, b: Point) -> bool {
     (a.x - b.x).abs() > 1 || (a.y - b.y).abs() > 1
+}
+
+fn signum(a: Point, b: Point) -> Point {
+    Point::new((a.x - b.x).signum(), (a.y - b.y).signum())
 }

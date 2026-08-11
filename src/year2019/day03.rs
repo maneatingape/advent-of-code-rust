@@ -73,7 +73,7 @@ pub fn parse(input: &str) -> Input {
         // Checks for intersections, ignoring the initial intersection at the origin.
         let mut update = |line: &Line, candidate: Point| {
             if candidate.manhattan(line.start) < line.end.manhattan(line.start)
-                && candidate.signum(line.start) == line.end.signum(line.start)
+                && signum(candidate, line.start) == signum(line.end, line.start)
                 && candidate.manhattan(ORIGIN) > 0
             {
                 manhattan = manhattan.min(candidate.manhattan(ORIGIN));
@@ -112,4 +112,8 @@ pub fn part1(input: &Input) -> i32 {
 
 pub fn part2(input: &Input) -> i32 {
     input.1
+}
+
+fn signum(a: Point, b: Point) -> Point {
+    Point::new((a.x - b.x).signum(), (a.y - b.y).signum())
 }

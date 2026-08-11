@@ -75,12 +75,6 @@ impl Point {
     pub fn manhattan(self, other: Self) -> i32 {
         (self.x - other.x).abs() + (self.y - other.y).abs()
     }
-
-    #[inline]
-    #[must_use]
-    pub fn signum(self, other: Self) -> Self {
-        Self::new((self.x - other.x).signum(), (self.y - other.y).signum())
-    }
 }
 
 impl From<u8> for Point {
