@@ -49,7 +49,7 @@ pub fn parse(input: &str) -> Input {
                 // A letter sets the next bit for the given passenger.
                 // Masking to bits 1-26 is more efficient than subtracting to bits 0-25.
                 check_group = false;
-                passenger |= 1 << (ch & 31);
+                passenger |= 1 << (ch & 0x1f);
             }
         }
     }

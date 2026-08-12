@@ -8,7 +8,7 @@
 //! If a letter is present in the set then the corresponding bit will be `1` otherwise `0`.
 //! For example, to add the letter "a", logical OR the set with 1 shifted left by 33.
 //!
-//! `set | (1 << (b'a' & 63))`
+//! `set | (1 << (b'a' & 0x3f))`
 //!
 //! Set intersection is the logical AND of two integers which compiles to a single machine
 //! instruction.
@@ -51,7 +51,7 @@ pub fn part2(input: &[&str]) -> u32 {
 /// Build a set from a slice of ASCII characters, using the `fold` function to repeatedly OR
 /// bit offsets into an accumulator.
 fn mask(s: &str) -> u64 {
-    s.bytes().fold(0, |acc, b| acc | (1 << (b & 63)))
+    s.bytes().fold(0, |acc, b| acc | (1 << (b & 0x3f)))
 }
 
 /// Find the lowest set bit (there should only be one) then convert to priority using the

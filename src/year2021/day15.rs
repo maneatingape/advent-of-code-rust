@@ -157,11 +157,11 @@ fn astar(square: &Square, mut grid_data: Vec<u32>) -> usize {
 
     // Start location and risk are both zero.
     let mut i = (grid_data[0] >> 16) as usize;
-    todo[i & 31].push(0);
+    todo[i & 0x1f].push(0);
     grid_data[0] = 0;
 
     loop {
-        while let Some(current) = todo[i & 31].pop() {
+        while let Some(current) = todo[i & 0x1f].pop() {
             let current = current as usize;
             let risk = (grid_data[current] & 0xffff) as usize;
             if current == end {
@@ -174,7 +174,7 @@ fn astar(square: &Square, mut grid_data: Vec<u32>) -> usize {
                     let next_f = risk + (grid_data[next] >> 16) as usize;
                     // Cope if this resulted in the rare backward jump.
                     i = i.min(next_f);
-                    todo[next_f & 31].push(next as u32);
+                    todo[next_f & 0x1f].push(next as u32);
                     grid_data[next] = (grid_data[next] & !0xffff) | next_cost as u32;
                 }
             };

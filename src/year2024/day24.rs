@@ -75,7 +75,7 @@ pub fn part1(input: &Input<'_>) -> u64 {
     // then each group of 3 to a 15 bit index from 0..32768.
     let to_index = |s: &str| {
         let b = s.as_bytes();
-        ((b[0] as usize & 31) << 10) + ((b[1] as usize & 31) << 5) + (b[2] as usize & 31)
+        ((b[0] as usize & 0x1f) << 10) + ((b[1] as usize & 0x1f) << 5) + (b[2] as usize & 0x1f)
     };
 
     // Add input signals to cache.

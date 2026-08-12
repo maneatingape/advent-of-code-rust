@@ -35,7 +35,7 @@ pub fn parse(input: &str) -> Vec<Basin> {
     // value, and '\n' into 10, so that we can use newline as a second barrier character.
     let mut basins = Vec::with_capacity(256);
     for idx in width..width + input.len() {
-        if grid[idx] & 15 < 9 {
+        if grid[idx] & 0xf < 9 {
             basins.push(flood_fill(&mut grid, idx, width as isize));
         }
     }
@@ -58,13 +58,13 @@ pub fn part2(basins: &[Basin]) -> u32 {
 }
 
 fn flood_fill(grid: &mut [u8], idx: usize, width: isize) -> Basin {
-    let mut lowest = (grid[idx] & 15) as u32;
+    let mut lowest = (grid[idx] & 0xf) as u32;
     let mut size = 1;
     grid[idx] = b'9';
 
     for delta in [1, -1, width, -width] {
         let other = idx.wrapping_add(delta as usize);
-        if grid[other] & 15 < 9 {
+        if grid[other] & 0xf < 9 {
             let basin = flood_fill(grid, other, width);
             lowest = lowest.min(basin.lowest);
             size += basin.size;
