@@ -5,7 +5,8 @@ Sabqponm
 abcryxxl
 accszExk
 acctuvwj
-abdefghi";
+abdefghi
+";
 
 #[test]
 fn part1_test() {

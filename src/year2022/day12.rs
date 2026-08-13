@@ -12,8 +12,8 @@
 //! For part two we could search for all `a` locations and repeatedly start a BFS search from there,
 //! then find the lowest value. However, a much faster approach is to search *backwards* from the
 //! end location. Due to the fact that BFS always explores closest nodes first this will find the
-//! closest `a` location in a single search. For part one it will have the same result, so we
-//! can reuse the same code.
+//! closest `a` location in a single search. In fact, we can just run one single search, finding
+//! the part two answer first, then continuing on to the `S` location for part one.
 //!
 //! [`Grid`]: crate::util::grid
 //! [`Point`]: crate::util::point
@@ -22,42 +22,35 @@ use std::collections::VecDeque;
 use crate::util::grid::*;
 use crate::util::point::*;
 
-type Input = (Grid<u8>, Point);
+type Input = (u32, u32);
 
 /// Uses the utility [`Grid`] module to parse a 2D array of ASCII characters.
 ///
 /// [`Grid`]: crate::util::grid
 pub fn parse(input: &str) -> Input {
-    let grid = Grid::parse(input);
+    let mut grid = Grid::parse(input);
+
+    // Run the BFS algorithm implementation with the reversed height transition rules baked in.
+    // In fact, we don't need a separate seen grid; we can modify the original grid in place.
     let start = grid.find(b'E').unwrap();
-    (grid, start)
-}
+    let mut todo = VecDeque::from([(start, b'z' - 1, 1)]);
+    grid[start] = 0;
+    let mut part_two = None;
 
-/// Find the shortest path from `E` to `S`.
-pub fn part1(input: &Input) -> u32 {
-    bfs(input, b'S')
-}
-
-/// Find the shortest path from `E` to closest `a`.
-pub fn part2(input: &Input) -> u32 {
-    bfs(input, b'a')
-}
-
-/// BFS algorithm implementation with the reversed height transition rules baked in.
-fn bfs(input: &Input, end: u8) -> u32 {
-    let (grid, start) = input;
-    let mut todo = VecDeque::from([(*start, 0)]);
-    let mut seen = grid.same_size_with(false);
-    seen[*start] = true;
-
-    while let Some((point, cost)) = todo.pop_front() {
-        if grid[point] == end {
-            return cost;
-        }
+    while let Some((point, height, cost)) = todo.pop_front() {
         for next in ORTHOGONAL.map(|d| d + point) {
-            if grid.contains(next) && !seen[next] && height(grid, point) - height(grid, next) <= 1 {
-                todo.push_back((next, cost + 1));
-                seen[next] = true;
+            if !grid.contains(next) {
+                continue;
+            }
+            if grid[next] == b'S' {
+                return (cost, part_two.unwrap());
+            }
+            if grid[next] >= height {
+                if grid[next] == b'a' {
+                    part_two = part_two.or(Some(cost));
+                }
+                todo.push_back((next, grid[next] - 1, cost + 1));
+                grid[next] = 0;
             }
         }
     }
@@ -65,11 +58,12 @@ fn bfs(input: &Input, end: u8) -> u32 {
     unreachable!()
 }
 
-/// Map `S` to `a` and `E` to `z`, otherwise use the value unchanged.
-fn height(grid: &Grid<u8>, point: Point) -> i32 {
-    match grid[point] {
-        b'S' => b'a' as i32,
-        b'E' => b'z' as i32,
-        b => b as i32,
-    }
+/// Find the shortest path from `E` to `S`.
+pub fn part1(input: &Input) -> u32 {
+    input.0
+}
+
+/// Find the shortest path from `E` to closest `a`.
+pub fn part2(input: &Input) -> u32 {
+    input.1
 }
