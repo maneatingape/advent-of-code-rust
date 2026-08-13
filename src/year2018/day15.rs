@@ -233,17 +233,11 @@ fn fight(input: &Input, elf_attack_power: i32, part_two: bool) -> Option<i32> {
 
 /// Search for weakest neighboring enemy. Equal health ties are broken in reading order.
 fn attack(grid: &Grid<Option<usize>>, units: &[Unit], point: Point, kind: Kind) -> Option<usize> {
-    let mut enemy_health = i32::MAX;
-    let mut enemy_index = None;
-
-    for next in READING_ORDER.iter().filter_map(|&o| grid[point + o]) {
-        if units[next].kind != kind && units[next].health < enemy_health {
-            enemy_health = units[next].health;
-            enemy_index = Some(next);
-        }
-    }
-
-    enemy_index
+    READING_ORDER
+        .iter()
+        .filter_map(|&o| grid[point + o])
+        .filter(|&next| units[next].kind != kind)
+        .min_by_key(|&next| units[next].health)
 }
 
 /// Performs two BFS searches. The first search from the current unit finds the nearest target
@@ -315,17 +309,10 @@ fn expand(walls: &[u32], frontier: &mut [u32]) -> bool {
 
 /// Check if we have reached a target, returning the first target in reading order.
 fn intersect(in_range: &[u32], frontier: &[u32]) -> Option<Point> {
-    for i in 1..31 {
+    (1..31).find_map(|i| {
         let both = in_range[i] & frontier[i];
-
-        if both != 0 {
-            let x = both.trailing_zeros() as i32;
-            let y = i as i32;
-            return Some(Point::new(x, y));
-        }
-    }
-
-    None
+        (both != 0).then(|| Point::new(both.trailing_zeros() as i32, i as i32))
+    })
 }
 
 /// Convenience function to set a single bit from a point's location.

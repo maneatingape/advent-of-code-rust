@@ -112,15 +112,11 @@ pub fn part2(tiles: &[Tile]) -> u64 {
         // Update candidates when their interval shrinks due to descending edge changes, and drop
         // them when their interval becomes empty.
         candidates.retain_mut(|candidate| {
-            if let Some(intersection_containing_x) =
-                intervals_from_descending_edges.iter().find(|i| i.contains(candidate.x))
-            {
-                candidate.interval = intersection_containing_x.intersection(candidate.interval);
-
-                true
-            } else {
-                false
-            }
+            intervals_from_descending_edges
+                .iter()
+                .find(|i| i.contains(candidate.x))
+                .inspect(|i| candidate.interval = i.intersection(candidate.interval))
+                .is_some()
         });
 
         // Add any new candidates.
