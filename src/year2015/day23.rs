@@ -28,7 +28,7 @@ pub fn parse(input: &str) -> Vec<Op> {
             "inc a" => Op::IncA,
             "inc b" => Op::IncB,
             _ => {
-                let index = i.wrapping_add(s.signed::<i32>() as usize);
+                let index = i.wrapping_add_signed(s.signed());
                 match &s[..3] {
                     "jmp" => Op::Jmp(index),
                     "jie" => Op::Jie(index),

@@ -56,6 +56,6 @@ macro_rules! empty_trait {
     )*)
 }
 
-integer!(u8 u16 u32 u64 u128 usize i16 i32 i64 i128);
+integer!(u8 u16 u32 u64 u128 usize i16 i32 i64 i128 isize);
 empty_trait!(Unsigned for u8 u16 u32 u64 u128 usize);
-empty_trait!(Signed for i16 i32 i64 i128);
+empty_trait!(Signed for i16 i32 i64 i128 isize);

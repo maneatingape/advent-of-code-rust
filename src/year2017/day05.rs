@@ -19,18 +19,18 @@ use std::array::from_fn;
 
 use crate::util::parse::*;
 
-pub fn parse(input: &str) -> Vec<i32> {
+pub fn parse(input: &str) -> Vec<isize> {
     input.iter_signed().collect()
 }
 
 /// Brute force implementation.
-pub fn part1(input: &[i32]) -> usize {
+pub fn part1(input: &[isize]) -> usize {
     let mut jump = input.to_vec();
     let mut total = 0;
     let mut index = 0;
 
     while index < jump.len() {
-        let next = index.wrapping_add(jump[index] as usize);
+        let next = index.wrapping_add_signed(jump[index]);
         jump[index] += 1;
         total += 1;
         index = next;
@@ -39,7 +39,7 @@ pub fn part1(input: &[i32]) -> usize {
     total
 }
 
-pub fn part2(input: &[i32]) -> usize {
+pub fn part2(input: &[isize]) -> usize {
     let mut jump = input.to_vec();
     let mut total = 0;
     let mut index = 0;
@@ -74,7 +74,7 @@ pub fn part2(input: &[i32]) -> usize {
             }
         } else {
             // Fall back to part one approach.
-            let next = index.wrapping_add(jump[index] as usize);
+            let next = index.wrapping_add_signed(jump[index]);
             jump[index] += if jump[index] == 3 { -1 } else { 1 };
             total += 1;
 

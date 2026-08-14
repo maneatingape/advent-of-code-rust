@@ -15,9 +15,9 @@ use crate::util::iter::*;
 use crate::util::parse::*;
 
 pub enum Instruction {
-    Acc(i16),
-    Jmp(i16),
-    Nop(i16),
+    Acc(isize),
+    Jmp(isize),
+    Nop(isize),
 }
 
 impl Instruction {
@@ -33,15 +33,15 @@ impl Instruction {
 }
 
 enum State {
-    Infinite(i32),
-    Halted(i32),
+    Infinite(isize),
+    Halted(isize),
 }
 
 pub fn parse(input: &str) -> Vec<Instruction> {
     input.split_ascii_whitespace().chunk::<2>().map(Instruction::from).collect()
 }
 
-pub fn part1(input: &[Instruction]) -> i32 {
+pub fn part1(input: &[Instruction]) -> isize {
     let mut seen = vec![false; input.len()];
 
     match execute(input, 0, 0, &mut seen) {
@@ -50,7 +50,7 @@ pub fn part1(input: &[Instruction]) -> i32 {
     }
 }
 
-pub fn part2(input: &[Instruction]) -> i32 {
+pub fn part2(input: &[Instruction]) -> isize {
     let mut pc = 0;
     let mut acc = 0;
     let mut seen = vec![false; input.len()];
@@ -59,17 +59,17 @@ pub fn part2(input: &[Instruction]) -> i32 {
         match input[pc] {
             Instruction::Acc(arg) => {
                 pc += 1;
-                acc += arg as i32;
+                acc += arg;
             }
             Instruction::Jmp(arg) => {
                 let speculative = pc + 1;
                 match execute(input, speculative, acc, &mut seen) {
-                    State::Infinite(_) => pc = pc.wrapping_add(arg as usize),
+                    State::Infinite(_) => pc = pc.wrapping_add_signed(arg),
                     State::Halted(acc) => break acc,
                 }
             }
             Instruction::Nop(arg) => {
-                let speculative = pc.wrapping_add(arg as usize);
+                let speculative = pc.wrapping_add_signed(arg);
                 match execute(input, speculative, acc, &mut seen) {
                     State::Infinite(_) => pc += 1,
                     State::Halted(acc) => break acc,
@@ -79,7 +79,7 @@ pub fn part2(input: &[Instruction]) -> i32 {
     }
 }
 
-fn execute(input: &[Instruction], mut pc: usize, mut acc: i32, seen: &mut [bool]) -> State {
+fn execute(input: &[Instruction], mut pc: usize, mut acc: isize, seen: &mut [bool]) -> State {
     loop {
         if pc >= input.len() {
             break State::Halted(acc);
@@ -92,10 +92,10 @@ fn execute(input: &[Instruction], mut pc: usize, mut acc: i32, seen: &mut [bool]
         match input[pc] {
             Instruction::Acc(arg) => {
                 pc += 1;
-                acc += arg as i32;
+                acc += arg;
             }
             Instruction::Jmp(arg) => {
-                pc = pc.wrapping_add(arg as usize);
+                pc = pc.wrapping_add_signed(arg);
             }
             Instruction::Nop(_) => {
                 pc += 1;

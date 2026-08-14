@@ -63,7 +63,7 @@ fn flood_fill(grid: &mut [u8], idx: usize, width: isize) -> Basin {
     grid[idx] = b'9';
 
     for delta in [1, -1, width, -width] {
-        let other = idx.wrapping_add(delta as usize);
+        let other = idx.wrapping_add_signed(delta);
         if grid[other] & 0xf < 9 {
             let basin = flood_fill(grid, other, width);
             lowest = lowest.min(basin.lowest);

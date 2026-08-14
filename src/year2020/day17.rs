@@ -76,7 +76,7 @@ mod implementation {
                     for w in fourth_dimension {
                         let offset = x * STRIDE_X + y * STRIDE_Y + z * STRIDE_Z + w * STRIDE_W;
                         if offset != 0 {
-                            neighbors.push(offset as usize);
+                            neighbors.push(offset as isize);
                         }
                     }
                 }
@@ -107,7 +107,7 @@ mod implementation {
                     // Earlier we converted the offsets from signed `i32` to unsigned `usize`. To
                     // achieve subtraction for negative indices, we use a `wrapping_add` that
                     // performs [two's complement](https://en.wikipedia.org/wiki/Two%27s_complement) arithmetic.
-                    let index = cube.wrapping_add(offset);
+                    let index = cube.wrapping_add_signed(offset);
                     state[index] += 1;
 
                     if state[index] == 3 {
