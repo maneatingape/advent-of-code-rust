@@ -39,18 +39,17 @@ pub fn parse(input: &str) -> Input {
 
     while let Some((point, height, cost)) = todo.pop_front() {
         for next in ORTHOGONAL.map(|d| d + point) {
-            if !grid.contains(next) {
-                continue;
-            }
-            if grid[next] == b'S' {
-                return (cost, part_two.unwrap());
-            }
-            if grid[next] >= height {
-                if grid[next] == b'a' {
-                    part_two = part_two.or(Some(cost));
+            if grid.contains(next) {
+                if grid[next] == b'S' {
+                    return (cost, part_two.unwrap());
                 }
-                todo.push_back((next, grid[next] - 1, cost + 1));
-                grid[next] = 0;
+                if grid[next] >= height {
+                    if grid[next] == b'a' {
+                        part_two = part_two.or(Some(cost));
+                    }
+                    todo.push_back((next, grid[next] - 1, cost + 1));
+                    grid[next] = 0;
+                }
             }
         }
     }
