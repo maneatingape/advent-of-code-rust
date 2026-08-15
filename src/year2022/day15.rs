@@ -86,10 +86,11 @@ pub fn part2(input: &[Input]) -> u64 {
 /// Of the entire 4000000 by 4000000 area the missing beacon must be located in the only
 /// square area not covered by a scanner.
 pub fn part2_testable(input: &[Input], size: i32) -> u64 {
-    let mut top = FastSet::new();
-    let mut left = FastSet::new();
-    let mut bottom = FastSet::new();
-    let mut right = FastSet::new();
+    let capacity = input.len();
+    let mut top = FastSet::with_capacity(capacity);
+    let mut left = FastSet::with_capacity(capacity);
+    let mut bottom = FastSet::with_capacity(capacity);
+    let mut right = FastSet::with_capacity(capacity);
 
     // Rotate points clockwise by 45 degrees, scale by √2 and extend edge by 1.
     // This transforms each sensor into an axis aligned bounding box.
@@ -106,6 +107,8 @@ pub fn part2_testable(input: &[Input], size: i32) -> u64 {
     let vertical: Vec<_> = left.intersection(&right).copied().collect();
     let range = 0..=size;
 
+    // Many input files have vertical.len() == 1 and horizontal.len() == 1, which implies exactly
+    // one answer, but this check covers more situations and is not too expensive.
     for &x in &vertical {
         for &y in &horizontal {
             // Rotate intersection point counter-clockwise and scale by 1 / √2
