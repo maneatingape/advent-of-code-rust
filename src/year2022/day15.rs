@@ -108,7 +108,7 @@ pub fn part2_testable(input: &[Input], size: i32) -> u64 {
     let range = 0..=size;
 
     // Many input files have vertical.len() == 1 and horizontal.len() == 1, which implies exactly
-    // one answer; but this check covers more situations and is not too expensive.
+    // one answer, but this check covers more situations and is not too expensive.
     for &x in &vertical {
         for &y in &horizontal {
             // Rotate intersection point counter-clockwise and scale by 1 / √2
