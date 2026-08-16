@@ -5,18 +5,15 @@ use std::ops::*;
 pub trait Integer<T>:
     Copy
     + From<u8>
-    + PartialEq
     + PartialOrd
     + Add<Output = T>
     + BitAnd<Output = T>
-    + BitOr<Output = T>
     + BitXor<Output = T>
     + Div<Output = T>
     + Mul<Output = T>
     + Rem<Output = T>
     + Shl<u32, Output = T>
     + Shr<u32, Output = T>
-    + Sub<Output = T>
 {
     const ZERO: T;
     const ONE: T;
@@ -50,12 +47,12 @@ macro_rules! integer {
     )*)
 }
 
-macro_rules! empty_trait {
+macro_rules! marker_trait {
     ($name:ident for $($t:ty)*) => ($(
         impl $name<$t> for $t {}
     )*)
 }
 
 integer!(u8 u16 u32 u64 u128 usize i16 i32 i64 i128 isize);
-empty_trait!(Unsigned for u8 u16 u32 u64 u128 usize);
-empty_trait!(Signed for i16 i32 i64 i128 isize);
+marker_trait!(Unsigned for u8 u16 u32 u64 u128 usize);
+marker_trait!(Signed for i16 i32 i64 i128 isize);
