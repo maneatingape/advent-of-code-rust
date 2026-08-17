@@ -7,7 +7,7 @@ on:
     branches: main
 
 jobs:
-  lint:
+  clippy:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v7
@@ -15,6 +15,15 @@ jobs:
     - run: rustup default nightly
     - run: cargo fmt --check -- `find . -name "*.rs"`
     - run: cargo clippy --all-targets --all-features -- --deny warnings
+
+  rustdoc:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v7
+    - run: rustup default 1.97
+    - run: cargo doc
+      env:
+        RUSTDOCFLAGS: "--document-private-items --deny warnings"
 
   test-stable:
     runs-on: ubuntu-latest
