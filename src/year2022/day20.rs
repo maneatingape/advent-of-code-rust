@@ -144,8 +144,7 @@ fn position(haystack: &PaddedVec, needle: u16) -> usize {
 #[cfg(feature = "simd")]
 #[inline]
 fn position(haystack: &PaddedVec, needle: u16) -> usize {
-    use std::simd::cmp::SimdPartialEq as _;
-    use std::simd::*;
+    use std::simd::prelude::*;
 
     for (base, slice) in haystack.vec.chunks_exact(64).enumerate() {
         if let Some(offset) =

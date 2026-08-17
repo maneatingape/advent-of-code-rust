@@ -109,8 +109,7 @@ mod implementation {
 
 #[cfg(feature = "simd")]
 mod implementation {
-    use std::simd::Simd;
-    use std::simd::num::SimdUint as _;
+    use std::simd::prelude::*;
 
     use super::*;
 

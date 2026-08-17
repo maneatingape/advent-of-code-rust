@@ -117,8 +117,7 @@ mod implementation {
 
 #[cfg(feature = "simd")]
 mod implementation {
-    use std::simd::cmp::SimdPartialEq as _;
-    use std::simd::*;
+    use std::simd::prelude::*;
 
     use super::*;
     use crate::util::bitset::*;

@@ -78,8 +78,7 @@ fn square(sat: &[i32], size: usize) -> Result {
 /// Same as the scalar version but processing 16 lanes simultaneously.
 #[cfg(feature = "simd")]
 fn square(sat: &[i32], size: usize) -> Result {
-    use std::simd::cmp::SimdPartialOrd as _;
-    use std::simd::*;
+    use std::simd::prelude::*;
 
     const LANE_WIDTH: usize = 16;
     type Vector = Simd<i32, LANE_WIDTH>;

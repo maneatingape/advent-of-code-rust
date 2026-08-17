@@ -223,7 +223,7 @@ mod implementation {
 
 #[cfg(feature = "simd")]
 mod implementation {
-    use std::simd::*;
+    use std::simd::prelude::*;
 
     #[derive(Clone, Copy, Default)]
     pub(super) struct U256 {

@@ -140,8 +140,7 @@ fn common(f: u32, a: u32, b: u32, m: u32, s: u32, k: u32) -> u32 {
 #[cfg(feature = "simd")]
 pub mod simd {
     use std::array::from_fn;
-    use std::simd::num::SimdUint as _;
-    use std::simd::*;
+    use std::simd::prelude::*;
 
     #[inline]
     pub fn hash_fixed<const N: usize>(
