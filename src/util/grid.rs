@@ -16,13 +16,18 @@
 //! assert_eq!(grid[point], b'2');
 //! ```
 //!
-//! A convenience [`parse`] method creates a `Grid` directly from a 2-dimensional set of
-//! ASCII characters, a common occurrence in Advent of Code inputs. The [`same_size_with`] function
-//! creates a grid of the same size that can be used in BFS algorithms for tracking visited
-//! locations or for tracking cost in Dijkstra.
+//! Two convenience methods, [`parse`] and [`parse_with_border`], create a `Grid` directly from a
+//! 2-dimensional set of ASCII characters, a common occurrence in Advent of Code inputs. The former
+//! strips all newlines, and [`contains`] is then useful to prevent accidental wraparound between
+//! lines. The latter not only preserves newlines in the input, but adds a row of newlines above and
+//! below, for algorithms where newline serves as a natural barrier without needing to use
+//! [`contains`]. The [`same_size_with`] function creates a grid of the same size that can be used
+//! in BFS algorithms for tracking visited locations or for tracking cost in Dijkstra.
 //!
 //! [`Point`]: crate::util::point
 //! [`parse`]: Grid::parse
+//! [`parse_with_border`]: Grid::parse_with_border
+//! [`contains`]: Grid::contains
 //! [`same_size_with`]: Grid::same_size_with
 use std::ops::{Index, IndexMut};
 
@@ -45,6 +50,25 @@ impl Grid<u8> {
         let bytes = raw.concat();
 
         Self { width, height, bytes }
+    }
+
+    #[must_use]
+    pub fn parse_with_border(input: &str) -> Self {
+        // Size things large enough so that both orthogonal and diagonal access hits a newline.
+        // This shifts 0,0 to 1,1. Non-newline iteration would be `1..height-1` and `1..width`,
+        // although it still often faster to iterate `0..height` and `0..width` when visiting
+        // newline is harmless. For convenience, the allocation is oversized to compensate for unit
+        // tests that omit a trailing newline.
+        let width = input.lines().next().unwrap().len() + 1;
+        let height = input.len().div_ceil(width) + 2;
+        let size = width * height + 1;
+        let mut bytes = Vec::with_capacity(size);
+
+        bytes.resize(width + 1, b'\n');
+        bytes.extend_from_slice(input.as_bytes());
+        bytes.resize(size, b'\n');
+
+        Self { width: width as i32, height: height as i32, bytes }
     }
 
     pub fn print(&self) {

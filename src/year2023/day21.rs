@@ -90,14 +90,15 @@ use std::collections::VecDeque;
 use crate::util::grid::*;
 use crate::util::point::*;
 
-const CENTER: Point = Point::new(65, 65);
+const CENTER: Point = Point::new(66, 66);
 const CORNERS: [Point; 4] =
-    [Point::new(0, 0), Point::new(130, 0), Point::new(0, 130), Point::new(130, 130)];
+    [Point::new(1, 1), Point::new(131, 1), Point::new(1, 131), Point::new(131, 131)];
 
 type Input = (u64, u64);
 
 pub fn parse(input: &str) -> Input {
-    let grid = Grid::parse(input);
+    // A newline border allows us to avoid boundary checks.
+    let grid = Grid::parse_with_border(input);
 
     // Search from the center tile outwards.
     let (even_inner, even_outer, odd_inner, odd_outer) = bfs(&grid, &[CENTER], 130);
@@ -160,7 +161,7 @@ fn bfs(grid: &Grid<u8>, starts: &[Point], limit: u32) -> (u64, u64, u64, u64) {
 
         if cost < limit {
             for next in ORTHOGONAL.map(|o| position + o) {
-                if grid.contains(next) && grid[next] != b'#' {
+                if grid[next] == b'.' {
                     grid[next] = b'#';
                     todo.push_back((next, cost + 1));
                 }

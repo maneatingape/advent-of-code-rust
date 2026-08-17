@@ -40,14 +40,14 @@ impl Node {
     }
 }
 
-/// Fixed size bitset large enough to store the entire 110 x 110 grid.
+/// Fixed size bitset large enough to store the entire 110 x 110 grid plus border.
 struct BitSet {
-    bits: [u64; 190],
+    bits: [u64; 196],
 }
 
 impl BitSet {
     fn new() -> Self {
-        Self { bits: [0; 190] }
+        Self { bits: [0; 196] }
     }
 
     fn insert(&mut self, position: Point) {
@@ -76,7 +76,8 @@ enum State {
 
 /// Computes both parts together in order to reuse cached results.
 pub fn parse(input: &str) -> Input {
-    let grid = Grid::parse(input);
+    // A newline border allows us to avoid boundary checks.
+    let grid = Grid::parse_with_border(input);
     let width = grid.width;
     let height = grid.height;
 
@@ -88,16 +89,17 @@ pub fn parse(input: &str) -> Input {
         nodes: Vec::new(),
     };
 
-    let part_one = follow(graph, ORIGIN, RIGHT);
+    let part_one = follow(graph, Point::new(1, 1), RIGHT);
     let mut part_two = part_one;
 
-    for x in 0..width {
-        part_two = part_two.max(follow(graph, Point::new(x, 0), DOWN));
-        part_two = part_two.max(follow(graph, Point::new(x, height - 1), UP));
+    // The newline border is asymmetric: the right border is implicit thanks to wraparound.
+    for x in 1..width {
+        part_two = part_two.max(follow(graph, Point::new(x, 1), DOWN));
+        part_two = part_two.max(follow(graph, Point::new(x, height - 2), UP));
     }
 
-    for y in 0..height {
-        part_two = part_two.max(follow(graph, Point::new(0, y), RIGHT));
+    for y in 1..height - 1 {
+        part_two = part_two.max(follow(graph, Point::new(1, y), RIGHT));
         part_two = part_two.max(follow(graph, Point::new(width - 1, y), LEFT));
     }
 
@@ -120,8 +122,10 @@ pub fn part2(input: &Input) -> u32 {
 fn follow(graph: &mut Graph, mut position: Point, mut direction: Point) -> u32 {
     let mut node = Node::new();
 
-    while graph.grid.contains(position) {
+    loop {
         match graph.grid[position] {
+            // A newline border ends the path.
+            b'\n' => break,
             // Retrieve cached value or compute recursively.
             b'|' | b'-' => {
                 let index = match graph.state[position] {
@@ -154,8 +158,10 @@ fn follow(graph: &mut Graph, mut position: Point, mut direction: Point) -> u32 {
 
 /// Traces the path of a beam until we hit the flat side of another splitter or exit the grid.
 fn beam(graph: &mut Graph, node: &mut Node, mut position: Point, mut direction: Point) {
-    while graph.grid.contains(position) {
+    loop {
         match graph.grid[position] {
+            // A newline border ends the path.
+            b'\n' => break,
             b'|' => {
                 // If we encounter the pointy edge of a splitter then this additional splitter is
                 // also part of this node. Nodes can contain multiple splitters in the same path.
