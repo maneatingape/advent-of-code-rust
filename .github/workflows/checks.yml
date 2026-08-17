@@ -7,34 +7,30 @@ on:
     branches: main
 
 jobs:
-  clippy:
+  check:
+    name: ${{ matrix.name }}
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+        - name: clippy
+          toolchain: nightly
+          command: cargo clippy --all-targets --all-features -- --deny warnings            
+        - name: rustdoc
+          toolchain: "1.97"
+          command: RUSTDOCFLAGS="--document-private-items --deny warnings" cargo doc
+        - name: rustfmt
+          toolchain: "1.97"
+          command: cargo fmt --check -- `find . -name "*.rs"`
+        - name: test-stable
+          toolchain: "1.97"
+          command: cargo test
+        - name: test-nightly
+          toolchain: nightly
+          command: cargo test --features simd
     steps:
     - uses: actions/checkout@v7
-    - run: rustup install nightly --profile default
-    - run: rustup default nightly
-    - run: cargo fmt --check -- `find . -name "*.rs"`
-    - run: cargo clippy --all-targets --all-features -- --deny warnings
-
-  rustdoc:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v7
-    - run: rustup default 1.97
-    - run: cargo doc
-      env:
-        RUSTDOCFLAGS: "--document-private-items --deny warnings"
-
-  test-stable:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v7
-    - run: rustup default 1.97
-    - run: cargo test
-
-  test-nightly:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v7
-    - run: rustup default nightly
-    - run: cargo test --features simd
+    - run: rustup install ${{ matrix.toolchain }} --profile default
+    - run: rustup default ${{ matrix.toolchain }}
+    - run: ${{ matrix.command }}
