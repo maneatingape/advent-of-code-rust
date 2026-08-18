@@ -17,10 +17,11 @@
 //!
 //! The addition rules have an important consequence. Exploding removes two leaf nodes at depth 5
 //! and moves them to neighboring nodes. Since exploding repeatedly happens before splitting until
-//! there are no more values at depth 5 this means that the tree will never exceed a depth of 5.
+//! there are no more values at depth 5 this means that the tree will never exceed a depth of 5,
+//! and even then a depth of 5 is transient.
 //!
-//! Each level of a tree can contain up to 2ⁿ nodes, so the maximum size of a snailfish tree is
-//! 1 + 2 + 4 + 8 + 16 + 32 = 2⁶ - 1 = 63 nodes.
+//! Each level of a tree can contain up to 2ⁿ nodes, so the maximum size of a non-transient
+//! snailfish tree is 1 + 2 + 4 + 8 + 16 = 2⁵ - 1 = 31 nodes.
 //!
 //! This means that we can store each snailfish number as an implicit data structure in a fixed-size
 //! array. This is faster, smaller and more convenient than using a traditional struct with
@@ -28,6 +29,14 @@
 //! left child is at index `2i`, right child at index `2i + 1` and parent at index `i / 2`. As leaf
 //! nodes are always greater than or equal to zero, `-1` is used as a special sentinel value for
 //! non-leaf nodes.
+//!
+//! Another optimization is realizing that all of the explode actions before the first split can
+//! be pre-computed. Instead of passing two depth-4 numbers to `add()`, we can simplify any depth-4
+//! number into depth-3 via explode actions, and track what values it would have spilled left or
+//! right had it been part of a larger `add()`. The resulting `Compressed` object is then ready to
+//! slide into the left or right half of a new depth-4 tree at the start of `add()`, and all further
+//! reduce actions on the sum will be just splits of leaf nodes larger than 9, followed by an
+//! explode if the split happened at depth 4.
 use crate::util::parse::*;
 use crate::util::thread::*;
 
@@ -38,7 +47,17 @@ const IN_ORDER: [usize; 30] = [
     29, 15, 30, 31,
 ];
 
-type Snailfish = [i32; 64];
+#[derive(Clone, Copy, Default)]
+struct Snailfish {
+    tree: [i32; 32],
+}
+
+#[derive(Clone, Copy)]
+pub struct Compressed {
+    left_spill: i32,
+    right_spill: i32,
+    nodes: [i32; 14],
+}
 
 /// Parse a snailfish number into an implicit binary tree stored in an array.
 ///
@@ -46,11 +65,11 @@ type Snailfish = [i32; 64];
 /// `[` means move down a level to parse children, `,` means move from left to right node,
 /// `]` means move up a level to return to parent and a digit from 0-9 creates a leaf node
 /// with that value.
-pub fn parse(input: &str) -> Vec<Snailfish> {
+pub fn parse(input: &str) -> Vec<Compressed> {
     input
         .lines()
         .map(|line: &str| {
-            let mut tree = [-1; 64];
+            let mut tree = [-1; 32];
             let mut i = 1;
 
             for b in line.bytes() {
@@ -61,39 +80,42 @@ pub fn parse(input: &str) -> Vec<Snailfish> {
                     b => tree[i] = b.to_decimal(),
                 }
             }
-
-            tree
+            compress(Snailfish { tree })
         })
         .collect()
 }
 
 /// Add all snailfish numbers, reducing to a single magnitude.
-pub fn part1(input: &[Snailfish]) -> i32 {
-    let mut sum = input.iter().copied().reduce(|acc, n| add(&acc, &n)).unwrap();
-    magnitude(&mut sum)
+pub fn part1(input: &[Compressed]) -> i32 {
+    let mut sum = Snailfish::default();
+
+    input
+        .iter()
+        .copied()
+        .reduce(|a, b| {
+            sum = add(&a, &b);
+            compress(sum)
+        })
+        .unwrap();
+
+    magnitude(sum)
 }
 
 /// Find the largest magnitude of any two snailfish numbers, remembering that snailfish addition
 /// is *not* commutative.
-pub fn part2(input: &[Snailfish]) -> i32 {
-    let mut pairs = Vec::new();
-
-    for (i, a) in input.iter().enumerate() {
-        for (j, b) in input.iter().enumerate() {
-            if i != j {
-                pairs.push((a, b));
-            }
-        }
-    }
+pub fn part2(input: &[Compressed]) -> i32 {
+    // Build a master list to share among threads.
+    let items: Vec<_> = input.iter().enumerate().collect();
 
     // Use as many cores as possible to parallelize the calculation.
-    let result = spawn_parallel_iterator(&pairs, worker);
-    result.into_iter().flatten().max().unwrap()
-}
+    let result = spawn_parallel_iterator(&items, |iter| {
+        iter.flat_map(|(i, a)| {
+            items.iter().filter(move |&(j, _)| i != j).map(|(_, b)| magnitude(add(a, b)))
+        })
+        .max()
+    });
 
-/// Pair addition is independent so we can parallelize across multiple threads.
-fn worker(iter: ParIter<'_, (&Snailfish, &Snailfish)>) -> Option<i32> {
-    iter.map(|&(a, b)| magnitude(&mut add(a, b))).max()
+    result.into_iter().flatten().max().unwrap()
 }
 
 /// Add two snailfish numbers.
@@ -101,84 +123,90 @@ fn worker(iter: ParIter<'_, (&Snailfish, &Snailfish)>) -> Option<i32> {
 /// The initial step creates a new root node then makes the numbers the left and right children
 /// of this new root node, by copying the respective ranges of the implicit trees.
 ///
-/// We can optimize the rules a little. This initial combination is the only time that more than one
-/// pair will be 4 levels deep simultaneously, so we can sweep from left to right on all possible
-/// leaf nodes in one pass.
-fn add(left: &Snailfish, right: &Snailfish) -> Snailfish {
-    let mut tree = [-1; 64];
+/// We can optimize the rules a little; the first round of explode was already done in creating
+/// compressed arguments, and a split runs its own inline explode.
+fn add(left: &Compressed, right: &Compressed) -> Snailfish {
+    let mut tree = [-1; 32];
 
-    tree[4..6].copy_from_slice(&left[2..4]);
-    tree[8..12].copy_from_slice(&left[4..8]);
-    tree[16..24].copy_from_slice(&left[8..16]);
-    tree[32..48].copy_from_slice(&left[16..32]);
+    // Copy left into place.
+    tree[4..6].copy_from_slice(&left.nodes[0..2]);
+    tree[8..12].copy_from_slice(&left.nodes[2..6]);
+    tree[16..24].copy_from_slice(&left.nodes[6..14]);
 
-    tree[6..8].copy_from_slice(&right[2..4]);
-    tree[12..16].copy_from_slice(&right[4..8]);
-    tree[24..32].copy_from_slice(&right[8..16]);
-    tree[48..64].copy_from_slice(&right[16..32]);
+    // Copy right into place.
+    tree[6..8].copy_from_slice(&right.nodes[0..2]);
+    tree[12..16].copy_from_slice(&right.nodes[2..6]);
+    tree[24..32].copy_from_slice(&right.nodes[6..14]);
 
-    for pair in (32..64).step_by(2) {
-        if tree[pair] >= 0 {
-            explode(&mut tree, pair);
-        }
+    // Adjust by the explode spillover between sides.
+    match (right.left_spill, left.right_spill) {
+        (-1, -1) => (),
+        (left_spill, -1) => augment_leaf(&mut tree, left_spill, 23),
+        (-1, right_spill) => augment_leaf(&mut tree, right_spill, 24),
+        (left_spill, right_spill) => tree[23] += left_spill + right_spill,
     }
 
-    while split(&mut tree) {}
-    tree
+    // Now we process all split operations; any further explode actions are done during any split
+    // that creates a temporary depth 5.
+    let mut full = Snailfish { tree };
+    while split(&mut full) {}
+
+    full
 }
 
-/// Explode a specific pair identified by an index.
-///
-/// Storing the tree as an implicit structure has a nice benefit that finding the next left or right
-/// node is straightforward. We first move to the next left or right leaf node by adding or
-/// subtracting one from the index. If this node is empty then we move to the parent node until we
-/// find a leaf node.
-///
-/// The leaf node at index 32 has no possible nodes to the left and similarly the leaf node at
-/// index 63 has no possible nodes to the right.
-fn explode(tree: &mut Snailfish, pair: usize) {
-    if pair > 32 {
-        let mut i = pair - 1;
-        loop {
-            if tree[i] >= 0 {
-                tree[i] += tree[pair];
-                break;
-            }
-            i /= 2;
+/// Perform all initial explodes to create a compressed number from a snailfish number.
+/// This is a destructive operation, as no caller needs the original afterwards.
+fn compress(mut full: Snailfish) -> Compressed {
+    let left_spill = full.tree[16];
+    for from in 17..31 {
+        let to = if from % 2 == 0 { from / 2 - 1 } else { from + 1 };
+        let value = full.tree[from];
+        if value >= 0 {
+            full.tree[from / 2] = 0;
+            augment_leaf(&mut full.tree, value, to);
         }
     }
+    let right_spill = full.tree[31];
+    let mut nodes = [-1; 14];
+    nodes.copy_from_slice(&full.tree[2..16]);
 
-    if pair < 62 {
-        let mut i = pair + 2;
-        loop {
-            if tree[i] >= 0 {
-                tree[i] += tree[pair + 1];
-                break;
-            }
-            i /= 2;
-        }
+    Compressed { left_spill, right_spill, nodes }
+}
+
+/// Augment the correct leaf by the given non-negative value. Walks up the tree starting at the
+/// given index until finding a leaf node. Storing the tree as an implicit structure has a nice
+/// benefit that finding the next left or right node is straightforward.
+fn augment_leaf(tree: &mut [i32], value: i32, mut to: usize) {
+    while tree[to] == -1 {
+        to /= 2;
     }
-
-    tree[pair] = -1;
-    tree[pair + 1] = -1;
-    tree[pair / 2] = 0;
+    tree[to] += value;
 }
 
 /// Split a node into two child nodes.
 ///
 /// Search the tree in an *in-order* traversal, splitting the first node over `10` found (if any).
-/// We can optimize the rules by immediately exploding if this results in a node 4 levels deep,
-/// as we know that the prior optimization in the [`add`] function means that this is the only
-/// explosion possible.
-fn split(tree: &mut Snailfish) -> bool {
+/// We can optimize the rules by immediately exploding if this happens in a node 4 levels deep.
+fn split(full: &mut Snailfish) -> bool {
+    let tree = &mut full.tree;
     for &i in &IN_ORDER {
         if tree[i] >= 10 {
-            tree[2 * i] = tree[i] / 2;
-            tree[2 * i + 1] = (tree[i] + 1) / 2;
-            tree[i] = -1;
-
-            if i >= 16 {
-                explode(tree, 2 * i);
+            if i < 16 {
+                // Still room to add another layer of depth.
+                tree[2 * i] = tree[i] / 2;
+                tree[2 * i + 1] = (tree[i] + 1) / 2;
+                tree[i] = -1;
+            } else {
+                // Avoid going too deep by performing the followup explode now.
+                if i > 16 {
+                    let value = tree[i] / 2;
+                    augment_leaf(tree, value, i - 1);
+                }
+                if i < 31 {
+                    let value = (tree[i] + 1) / 2;
+                    augment_leaf(tree, value, i + 1);
+                }
+                tree[i] = 0;
             }
             return true;
         }
@@ -190,8 +218,9 @@ fn split(tree: &mut Snailfish) -> bool {
 ///
 /// This operation is destructive but much faster than using a recursive approach and acceptable
 /// as we no longer need the original snailfish number afterward.
-fn magnitude(tree: &mut Snailfish) -> i32 {
-    for i in (1..32).rev() {
+fn magnitude(full: Snailfish) -> i32 {
+    let mut tree = full.tree;
+    for i in (1..16).rev() {
         if tree[i] == -1 {
             tree[i] = 3 * tree[2 * i] + 2 * tree[2 * i + 1];
         }
