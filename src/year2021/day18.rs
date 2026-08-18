@@ -180,7 +180,6 @@ fn augment_leaf(tree: &mut [i32], value: i32, mut to: usize) {
     while tree[to] == -1 {
         to /= 2;
     }
-    assert!(to != 0);
     tree[to] += value;
 }
 
