@@ -7,16 +7,16 @@
 //! such as a [`VecDeque`].
 //!
 //! This solution uses a DFS approach as it's faster and Rust's stack size limit seems enough
-//! to accommodate the maximum basin size. While we could use the [`Grid`] and [`Point`] modules
-//! to take in the original grid one line at a time with 2D coordinates, it turns out to be
-//! somewhat faster to instead just operate on a 1D array with an explicit border, where newline
-//! is treated the same as `'9'`, in order to eliminate bounds checking. We can also tweak the
-//! flood fill to track the lowest value seen along the way, to share the work between part
-//! one and part two.
+//! to accommodate the maximum basin size. Note that when masked, newline can be treated
+//! the same as `'9'` for a natural barrier that eliminates bounds checking. The [`Grid`] and
+//! [`Point`] modules make it easy to perform a flood fill that tracks the lowest value seen along
+//! the way, to share the work between part one and part two.
 //!
 //! [`VecDeque`]: std::collections::VecDeque
 //! [`Grid`]: crate::util::grid
 //! [`Point`]: crate::util::point
+use crate::util::grid::*;
+use crate::util::point::*;
 
 pub struct Basin {
     lowest: u32, // Lowest integer seen within basin so far.
@@ -24,19 +24,18 @@ pub struct Basin {
 }
 
 pub fn parse(input: &str) -> Vec<Basin> {
-    // Create a larger grid with all borders already filled with 9.
-    let width = input.lines().next().unwrap().len() + 1;
-    let mut grid = Vec::with_capacity(input.len() + 2 * width);
-    grid.resize(width, b'9');
-    grid.extend_from_slice(input.as_bytes());
-    grid.resize(grid.len() + width, b'9');
+    // A newline border allows us to avoid boundary checks.
+    let mut grid = Grid::parse_with_border(input);
 
     // Collect all basins in the grid. Masking with 15 turns '0' through '9' into their numeric
     // value, and '\n' into 10, so that we can use newline as a second barrier character.
     let mut basins = Vec::with_capacity(256);
-    for idx in width..width + input.len() {
-        if grid[idx] & 0xf < 9 {
-            basins.push(flood_fill(&mut grid, idx, width as isize));
+    for y in 0..grid.height {
+        for x in 0..grid.width {
+            let point = Point::new(x, y);
+            if grid[point] & 0xf < 9 {
+                basins.push(flood_fill(&mut grid, point));
+            }
         }
     }
 
@@ -57,15 +56,14 @@ pub fn part2(basins: &[Basin]) -> u32 {
     basins[basins.len() - 3..].iter().map(|b| b.size).product()
 }
 
-fn flood_fill(grid: &mut [u8], idx: usize, width: isize) -> Basin {
-    let mut lowest = (grid[idx] & 0xf) as u32;
+fn flood_fill(grid: &mut Grid<u8>, point: Point) -> Basin {
+    let mut lowest = (grid[point] & 0xf) as u32;
     let mut size = 1;
-    grid[idx] = b'9';
+    grid[point] = b'9';
 
-    for delta in [1, -1, width, -width] {
-        let other = idx.wrapping_add_signed(delta);
-        if grid[other] & 0xf < 9 {
-            let basin = flood_fill(grid, other, width);
+    for next in ORTHOGONAL.map(|d| point + d) {
+        if grid[next] & 0xf < 9 {
+            let basin = flood_fill(grid, next);
             lowest = lowest.min(basin.lowest);
             size += basin.size;
         }

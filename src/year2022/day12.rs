@@ -28,7 +28,8 @@ type Input = (u32, u32);
 ///
 /// [`Grid`]: crate::util::grid
 pub fn parse(input: &str) -> Input {
-    let mut grid = Grid::parse(input);
+    // A newline border allows us to avoid boundary checks.
+    let mut grid = Grid::parse_with_border(input);
 
     // Run the BFS algorithm implementation with the reversed height transition rules baked in.
     // In fact, we don't need a separate seen grid; we can modify the original grid in place.
@@ -39,17 +40,15 @@ pub fn parse(input: &str) -> Input {
 
     while let Some((point, height, cost)) = todo.pop_front() {
         for next in ORTHOGONAL.map(|d| d + point) {
-            if grid.contains(next) {
-                if grid[next] == b'S' {
-                    return (cost, part_two.unwrap());
+            if grid[next] == b'S' {
+                return (cost, part_two.unwrap());
+            }
+            if grid[next] >= height {
+                if grid[next] == b'a' {
+                    part_two = part_two.or(Some(cost));
                 }
-                if grid[next] >= height {
-                    if grid[next] == b'a' {
-                        part_two = part_two.or(Some(cost));
-                    }
-                    todo.push_back((next, grid[next] - 1, cost + 1));
-                    grid[next] = 0;
-                }
+                todo.push_back((next, grid[next] - 1, cost + 1));
+                grid[next] = 0;
             }
         }
     }

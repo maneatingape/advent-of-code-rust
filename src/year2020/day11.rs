@@ -15,7 +15,8 @@ use crate::util::point::*;
 const SEAT: u8 = b'L';
 
 pub fn parse(input: &str) -> Grid<u8> {
-    Grid::parse(input)
+    // A newline border allows us to avoid boundary checks.
+    Grid::parse_with_border(input)
 }
 
 pub fn part1(input: &Grid<u8>) -> u32 {
@@ -29,6 +30,8 @@ pub fn part2(input: &Grid<u8>) -> u32 {
 #[cfg(not(feature = "simd"))]
 mod implementation {
     use super::*;
+
+    const FLOOR: u8 = b'.';
 
     struct Seat {
         point: Point,
@@ -54,11 +57,11 @@ mod implementation {
 
                     // Part one considers only the adjacent square. Part two skips over any
                     // floor until reaching the first visible seat or the edge of the grid.
-                    while part_two && input.contains(next) && input[next] != SEAT {
+                    while part_two && input[next] == FLOOR {
                         next += direction;
                     }
 
-                    if input.contains(next) && input[next] == SEAT {
+                    if input[next] == SEAT {
                         neighbors[size] = next;
                         size += 1;
                     }
@@ -101,17 +104,17 @@ mod implementation {
 
     pub(super) fn simulate(input: &Grid<u8>, part_two: bool, limit: u8) -> u32 {
         // Input grid is taller than it is wide. To make efficient use of the wide SIMD operations:
-        // * Add an empty border to eliminate bounds checking.
+        // * Change the existing newline border to empty, but keep it to eliminate bounds checking.
         // * Transpose the input grid to make it wider than it is tall.
         // * Round width up to next multiple of LANE_WIDTH.
-        let width = 2 + (input.height as usize).next_multiple_of(LANE_WIDTH) as i32;
-        let height = 2 + input.width;
+        let width = 2 + (input.height as usize - 2).next_multiple_of(LANE_WIDTH) as i32;
+        let height = 1 + input.width;
         let mut grid = Grid::new(width, height, 0);
 
         for y in 0..input.height {
             for x in 0..input.width {
                 let from = Point::new(x, y);
-                let to = Point::new(y + 1, x + 1);
+                let to = Point::new(y, x);
                 grid[to] = u8::from(input[from] == SEAT);
             }
         }
