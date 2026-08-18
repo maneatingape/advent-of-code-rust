@@ -4,15 +4,12 @@ on:
   push:
     branches: docs
 
-# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -21,9 +18,7 @@ jobs:
     - run: |
         rustup default 1.97
         RUSTDOCFLAGS="--document-private-items --default-theme=ayu --deny warnings" cargo doc
-        rm target/doc/.lock
         cp docs/* target/doc
-    - uses: actions/configure-pages@v6
     - uses: actions/upload-pages-artifact@v5
       with:
         path: 'target/doc'
