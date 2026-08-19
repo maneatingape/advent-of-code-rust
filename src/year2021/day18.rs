@@ -89,13 +89,12 @@ pub fn part1(input: &[Compressed]) -> i32 {
 /// Find the largest magnitude of any two snailfish numbers, remembering that snailfish addition
 /// is *not* commutative.
 pub fn part2(input: &[Compressed]) -> i32 {
-    // Build a master list to share among threads.
-    let items: Vec<_> = input.iter().enumerate().collect();
-
     // Use as many cores as possible to parallelize the calculation.
-    let result = spawn_parallel_iterator(&items, |iter| {
-        iter.flat_map(|(i, a)| {
-            items.iter().filter(move |&(j, _)| i != j).map(|(_, b)| magnitude(add(a, b)))
+    let result = spawn_parallel_iterator(input, |iter| {
+        iter.flat_map(|a| {
+            // Avoid pairing `a` with itself.
+            let index = input.element_offset(a).unwrap();
+            input[..index].iter().chain(&input[index + 1..]).map(|b| magnitude(add(a, b)))
         })
         .max()
     });

@@ -4,6 +4,7 @@
 //! possible in parallel in blocks of 1000 at a time.
 //!
 //! [`Year 2015 Day 4`]: crate::year2015::day04
+use core::fmt::NumBuffer;
 use std::sync::Mutex;
 
 use self::implementation::*;
@@ -64,18 +65,14 @@ pub fn part2(input: &[u32]) -> String {
     format!("{password:08x}")
 }
 
-fn format_string(prefix: &str, mut n: u32) -> ([u8; 64], usize) {
-    let prefix_len = prefix.len();
-    let digits = n.max(1).ilog10() as usize + 1;
-    let size = prefix_len + digits;
+fn format_string(prefix: &str, n: u32) -> ([u8; 64], usize) {
+    let mut number = NumBuffer::new();
+    let digits = n.format_into(&mut number).as_bytes();
+    let size = prefix.len() + digits.len();
 
     let mut buffer = [0; 64];
-    buffer[..prefix_len].copy_from_slice(prefix.as_bytes());
-
-    for i in (prefix_len..size).rev() {
-        buffer[i] = b'0' + (n % 10) as u8;
-        n /= 10;
-    }
+    buffer[..prefix.len()].copy_from_slice(prefix.as_bytes());
+    buffer[prefix.len()..size].copy_from_slice(digits);
 
     (buffer, size)
 }

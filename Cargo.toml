@@ -2,7 +2,7 @@
 name = "aoc"
 version = "2025.12.25"
 edition = "2024"
-rust-version = "1.97"
+rust-version = "1.98"
 
 # Speed up benchmarking by not recompiling everything when only a single file changes.
 [profile.bench]
@@ -312,6 +312,7 @@ unreadable_literal = "allow"
 unsafe_derive_deserialize = "warn"
 unseparated_literal_suffix = "warn"
 unused_async = "warn"
+unused_async_trait_impl = "warn"
 unused_result_ok = "warn"
 unused_self = "warn"
 unused_trait_names = "warn"
@@ -324,4 +325,5 @@ verbose_bit_mask = "warn"
 verbose_file_reads = "warn"
 wildcard_enum_match_arm = "allow"
 wildcard_imports = "allow"
+with_capacity_zero = "warn"
 zero_sized_map_values = "warn"

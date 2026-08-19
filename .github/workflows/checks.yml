@@ -18,13 +18,13 @@ jobs:
           toolchain: nightly
           command: cargo clippy --all-targets --all-features -- --deny warnings            
         - name: rustdoc
-          toolchain: "1.97"
+          toolchain: "1.98"
           command: RUSTDOCFLAGS="--document-private-items --deny warnings" cargo doc
         - name: rustfmt
-          toolchain: "1.97"
+          toolchain: "1.98"
           command: cargo fmt --check -- `find . -name "*.rs"`
         - name: test-stable
-          toolchain: "1.97"
+          toolchain: "1.98"
           command: cargo test
         - name: test-nightly
           toolchain: nightly

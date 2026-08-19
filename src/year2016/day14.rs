@@ -2,6 +2,7 @@
 //!
 //! Brute force slog through all possible keys, parallelized as much as possible. An optimization
 //! for part two is a quick method to convert `u32` to 8 ASCII digits.
+use core::fmt::NumBuffer;
 use std::collections::{BTreeMap, BTreeSet};
 use std::sync::Mutex;
 
@@ -55,18 +56,14 @@ fn generate_pad(input: &str, part_two: bool) -> i32 {
 }
 
 /// Write the salt and integer index as ASCII characters.
-fn format_string(prefix: &str, mut n: i32) -> ([u8; 64], usize) {
-    let prefix_len = prefix.len();
-    let digits = n.max(1).ilog10() as usize + 1;
-    let size = prefix_len + digits;
+fn format_string(prefix: &str, n: i32) -> ([u8; 64], usize) {
+    let mut number = NumBuffer::new();
+    let digits = n.format_into(&mut number).as_bytes();
+    let size = prefix.len() + digits.len();
 
     let mut buffer = [0; 64];
-    buffer[..prefix_len].copy_from_slice(prefix.as_bytes());
-
-    for i in (prefix_len..size).rev() {
-        buffer[i] = b'0' + (n % 10) as u8;
-        n /= 10;
-    }
+    buffer[..prefix.len()].copy_from_slice(prefix.as_bytes());
+    buffer[prefix.len()..size].copy_from_slice(digits);
 
     (buffer, size)
 }

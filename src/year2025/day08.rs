@@ -19,10 +19,9 @@ struct Node {
 
 pub fn parse(input: &str) -> Input {
     let boxes: Vec<_> = input.iter_unsigned::<usize>().chunk::<3>().collect();
-    let items: Vec<_> = (0..boxes.len()).collect();
     let mut buckets = vec![Vec::new(); BUCKETS];
 
-    for result in spawn_parallel_iterator(&items, |iter| worker(&boxes, iter)) {
+    for result in spawn_parallel_iterator(&boxes, |iter| worker(&boxes, iter)) {
         for (bucket, pairs) in buckets.iter_mut().zip(result) {
             bucket.push(pairs);
         }
@@ -62,11 +61,11 @@ pub fn part2(input: &Input) -> usize {
     unreachable!()
 }
 
-fn worker(boxes: &[Box], iter: ParIter<'_, usize>) -> Vec<Vec<Pair>> {
+fn worker(boxes: &[Box], iter: ParIter<'_, Box>) -> Vec<Vec<Pair>> {
     let mut buckets = vec![Vec::new(); BUCKETS];
 
-    for &i in iter {
-        let v1 = boxes[i];
+    for v1 in iter {
+        let i = boxes.element_offset(v1).unwrap();
 
         for (j, &v2) in boxes.iter().enumerate().skip(i + 1) {
             let dx = v1[0].abs_diff(v2[0]);
