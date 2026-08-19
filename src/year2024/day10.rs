@@ -7,7 +7,8 @@ use crate::util::grid::*;
 use crate::util::point::*;
 
 pub fn parse(input: &str) -> Grid<u8> {
-    Grid::parse(input)
+    // A newline border allows us to avoid boundary checks.
+    Grid::parse_with_border(input)
 }
 
 pub fn part1(grid: &Grid<u8>) -> u32 {
@@ -22,8 +23,9 @@ fn solve(grid: &Grid<u8>, distinct: bool) -> u32 {
     let mut result = 0;
     let mut seen = grid.same_size_with(-1);
 
-    for y in 0..grid.height {
-        for x in 0..grid.width {
+    // Iterate over every point, skipping the border.
+    for y in 1..grid.height - 1 {
+        for x in 1..grid.width {
             let point = Point::new(x, y);
             if grid[point] == b'9' {
                 let id = y * grid.width + x;
@@ -39,7 +41,7 @@ fn dfs(grid: &Grid<u8>, distinct: bool, seen: &mut Grid<i32>, id: i32, point: Po
     let mut result = 0;
 
     for next in ORTHOGONAL.map(|o| point + o) {
-        if grid.contains(next) && grid[next] + 1 == grid[point] && (distinct || seen[next] != id) {
+        if grid[next] + 1 == grid[point] && (distinct || seen[next] != id) {
             seen[next] = id;
 
             if grid[next] == b'0' {

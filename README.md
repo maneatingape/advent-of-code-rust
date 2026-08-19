@@ -108,9 +108,9 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 | 7 | [Bridge Repair](https://adventofcode.com/2024/day/7) | [Source](src/year2024/day07.rs) | 136 |
 | 8 | [Resonant Collinearity](https://adventofcode.com/2024/day/8) | [Source](src/year2024/day08.rs) | 8 |
 | 9 | [Disk Fragmenter](https://adventofcode.com/2024/day/9) | [Source](src/year2024/day09.rs) | 106 |
-| 10 | [Hoof It](https://adventofcode.com/2024/day/10) | [Source](src/year2024/day10.rs) | 38 |
+| 10 | [Hoof It](https://adventofcode.com/2024/day/10) | [Source](src/year2024/day10.rs) | 31 |
 | 11 | [Plutonian Pebbles](https://adventofcode.com/2024/day/11) | [Source](src/year2024/day11.rs) | 227 |
-| 12 | [Garden Groups](https://adventofcode.com/2024/day/12) | [Source](src/year2024/day12.rs) | 289 |
+| 12 | [Garden Groups](https://adventofcode.com/2024/day/12) | [Source](src/year2024/day12.rs) | 248 |
 | 13 | [Claw Contraption](https://adventofcode.com/2024/day/13) | [Source](src/year2024/day13.rs) | 14 |
 | 14 | [Restroom Redoubt](https://adventofcode.com/2024/day/14) | [Source](src/year2024/day14.rs) | 74 |
 | 15 | [Warehouse Woes](https://adventofcode.com/2024/day/15) | [Source](src/year2024/day15.rs) | 303 |
@@ -146,12 +146,12 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 | 13 | [Point of Incidence](https://adventofcode.com/2023/day/13) | [Source](src/year2023/day13.rs) | 66 |
 | 14 | [Parabolic Reflector Dish](https://adventofcode.com/2023/day/14) | [Source](src/year2023/day14.rs) | 632 |
 | 15 | [Lens Library](https://adventofcode.com/2023/day/15) | [Source](src/year2023/day15.rs) | 84 |
-| 16 | [The Floor Will Be Lava](https://adventofcode.com/2023/day/16) | [Source](src/year2023/day16.rs) | 160 |
+| 16 | [The Floor Will Be Lava](https://adventofcode.com/2023/day/16) | [Source](src/year2023/day16.rs) | 153 |
 | 17 | [Clumsy Crucible](https://adventofcode.com/2023/day/17) | [Source](src/year2023/day17.rs) | 2379 |
 | 18 | [Lavaduct Lagoon](https://adventofcode.com/2023/day/18) | [Source](src/year2023/day18.rs) | 11 |
 | 19 | [Aplenty](https://adventofcode.com/2023/day/19) | [Source](src/year2023/day19.rs) | 100 |
 | 20 | [Pulse Propagation](https://adventofcode.com/2023/day/20) | [Source](src/year2023/day20.rs) | 6 |
-| 21 | [Step Counter](https://adventofcode.com/2023/day/21) | [Source](src/year2023/day21.rs) | 182 |
+| 21 | [Step Counter](https://adventofcode.com/2023/day/21) | [Source](src/year2023/day21.rs) | 176 |
 | 22 | [Sand Slabs](https://adventofcode.com/2023/day/22) | [Source](src/year2023/day22.rs) | 40 |
 | 23 | [A Long Walk](https://adventofcode.com/2023/day/23) | [Source](src/year2023/day23.rs) | 68 |
 | 24 | [Never Tell Me The Odds](https://adventofcode.com/2023/day/24) | [Source](src/year2023/day24.rs) | 95 |
@@ -174,7 +174,7 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 | 9 | [Rope Bridge](https://adventofcode.com/2022/day/9) | [Source](src/year2022/day09.rs) | 99 |
 | 10 | [Cathode-Ray Tube](https://adventofcode.com/2022/day/10) | [Source](src/year2022/day10.rs) | 2 |
 | 11 | [Monkey in the Middle](https://adventofcode.com/2022/day/11) | [Source](src/year2022/day11.rs) | 244 |
-| 12 | [Hill Climbing Algorithm](https://adventofcode.com/2022/day/12) | [Source](src/year2022/day12.rs) | 25 |
+| 12 | [Hill Climbing Algorithm](https://adventofcode.com/2022/day/12) | [Source](src/year2022/day12.rs) | 22 |
 | 13 | [Distress Signal](https://adventofcode.com/2022/day/13) | [Source](src/year2022/day13.rs) | 15 |
 | 14 | [Regolith Reservoir](https://adventofcode.com/2022/day/14) | [Source](src/year2022/day14.rs) | 146 |
 | 15 | [Beacon Exclusion Zone](https://adventofcode.com/2022/day/15) | [Source](src/year2022/day15.rs) | 2 |
@@ -203,7 +203,7 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 | 6 | [Lanternfish](https://adventofcode.com/2021/day/6) | [Source](src/year2021/day06.rs) | 1 |
 | 7 | [The Treachery of Whales](https://adventofcode.com/2021/day/7) | [Source](src/year2021/day07.rs) | 4 |
 | 8 | [Seven Segment Search](https://adventofcode.com/2021/day/8) | [Source](src/year2021/day08.rs) | 14 |
-| 9 | [Smoke Basin](https://adventofcode.com/2021/day/9) | [Source](src/year2021/day09.rs) | 33 |
+| 9 | [Smoke Basin](https://adventofcode.com/2021/day/9) | [Source](src/year2021/day09.rs) | 32 |
 | 10 | [Syntax Scoring](https://adventofcode.com/2021/day/10) | [Source](src/year2021/day10.rs) | 14 |
 | 11 | [Dumbo Octopus](https://adventofcode.com/2021/day/11) | [Source](src/year2021/day11.rs) | 55 |
 | 12 | [Passage Pathing](https://adventofcode.com/2021/day/12) | [Source](src/year2021/day12.rs) | 25 |

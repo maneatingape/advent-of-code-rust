@@ -22,7 +22,8 @@ use crate::util::point::*;
 type Input = (usize, usize);
 
 pub fn parse(input: &str) -> Input {
-    let grid = Grid::parse(input);
+    // A newline border allows us to avoid boundary checks.
+    let grid = Grid::parse_with_border(input);
 
     let mut todo = Vec::new();
     let mut edge = Vec::new();
@@ -31,8 +32,9 @@ pub fn parse(input: &str) -> Input {
     let mut part_one = 0;
     let mut part_two = 0;
 
-    for y in 0..grid.height {
-        for x in 0..grid.width {
+    // Iterate over every point, skipping the border.
+    for y in 1..grid.height - 1 {
+        for x in 1..grid.width {
             // Skip already filled points.
             let point = Point::new(x, y);
             if seen[point] {
@@ -41,7 +43,7 @@ pub fn parse(input: &str) -> Input {
 
             // Flood fill, using area as an index.
             let kind = grid[point];
-            let check = |point| grid.contains(point) && grid[point] == kind;
+            let check = |point| grid[point] == kind;
 
             let mut area = 0;
             let mut perimeter = 0;
