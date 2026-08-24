@@ -4,7 +4,9 @@
 //! integer in order to efficiently compute the next minute. The grid is much wider than it is tall,
 //! so we transpose it and store each column as bits in a `u64`, one bit per row. We further
 //! optimize by memoizing the position of vertical blizzards as they repeat every `height` minutes.
-pub struct Input {
+type Input = (usize, usize);
+
+struct Basin {
     width: usize,
     height: usize,
     left: Vec<u64>,
@@ -13,16 +15,16 @@ pub struct Input {
 }
 
 pub fn parse(input: &str) -> Input {
-    // Don't include the left and right walls.
-    let raw: Vec<_> = input.lines().map(|line| &line.as_bytes()[1..line.len() - 1]).collect();
-    let width = raw[0].len();
+    // Exclude the boundary walls.
+    let raw: Vec<_> = input.lines().map(str::as_bytes).collect();
+    let width = raw[0].len() - 2;
     let height = raw.len() - 2;
 
     // For each blizzard type set a `0` bit in the corresponding integer. Later on we can AND this
     // with elves to eliminate possible positions.
     let build = |kind| -> Vec<_> {
         let fold = |x| (1..=height).fold(0, |acc, y| (acc << 1) | u64::from(raw[y][x] != kind));
-        (0..width).map(fold).collect()
+        (1..=width).map(fold).collect()
     };
 
     // Horizontal blizzards repeat every `width` minutes. Storing two copies of the pattern turns
@@ -43,28 +45,28 @@ pub fn parse(input: &str) -> Input {
         }
     }
 
-    Input { width, height, left, right, vertical }
+    let basin = Basin { width, height, left, right, vertical };
+    let first = expedition(&basin, 0, true);
+    let second = expedition(&basin, first, false);
+    let third = expedition(&basin, second, true);
+
+    (first, third)
 }
 
 pub fn part1(input: &Input) -> usize {
-    expedition(input, 0, true)
+    input.0
 }
 
 pub fn part2(input: &Input) -> usize {
-    let first = expedition(input, 0, true);
-    let second = expedition(input, first, false);
-    expedition(input, second, true)
+    input.1
 }
 
-fn expedition(input: &Input, start: usize, forward: bool) -> usize {
-    let Input { width, height, left, right, vertical } = input;
-    let mut time = start;
+fn expedition(basin: &Basin, start: usize, forward: bool) -> usize {
+    let Basin { width, height, left, right, vertical } = basin;
     let mut state = vec![0; width + 1];
 
-    loop {
-        time += 1;
-        // Blizzards blowing left drag the pattern towards the start, those blowing right away
-        // from it. Both offsets stay within the doubled arrays.
+    for time in start + 1.. {
+        // Left and right offsets stay within the doubled arrays.
         let left = &left[time % width..];
         let right = &right[width - time % width..];
         let vertical = &vertical[width * (time % height)..];
@@ -91,15 +93,17 @@ fn expedition(input: &Input, start: usize, forward: bool) -> usize {
             state[0] |= 1 << (height - 1);
             // If we reached the end then stop.
             if state[width - 1] & 1 != 0 {
-                break time + 1;
+                return time + 1;
             }
         } else {
             // End position.
             state[width - 1] |= 1;
             // If we've reached the start then stop.
             if state[0] & (1 << (height - 1)) != 0 {
-                break time + 1;
+                return time + 1;
             }
         }
     }
+
+    unreachable!()
 }
