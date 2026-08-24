@@ -1,57 +1,49 @@
 //! # Blizzard Basin
 //!
 //! Similar to the previous day we represent the position of elves and blizzards as bits in an
-//! integer in order to efficiently compute the next minute.
-//!
-//! We further optimize by memoizing the position of blizzards as they repeat
-//! every `width` minutes for horizontal and every `height` minutes for vertical.
+//! integer in order to efficiently compute the next minute. The grid is much wider than it is tall,
+//! so we transpose it and store each column as bits in a `u64`, one bit per row. We further
+//! optimize by memoizing the position of vertical blizzards as they repeat every `height` minutes.
 pub struct Input {
     width: usize,
     height: usize,
-    horizontal: Vec<u128>,
-    vertical: Vec<u128>,
+    left: Vec<u64>,
+    right: Vec<u64>,
+    vertical: Vec<u64>,
 }
 
 pub fn parse(input: &str) -> Input {
     // Don't include the left and right walls.
     let raw: Vec<_> = input.lines().map(|line| &line.as_bytes()[1..line.len() - 1]).collect();
-
     let width = raw[0].len();
     let height = raw.len() - 2;
+
     // For each blizzard type set a `0` bit in the corresponding integer. Later on we can AND this
     // with elves to eliminate possible positions.
     let build = |kind| -> Vec<_> {
-        let fold = |row: &&[u8]| row.iter().fold(0, |acc, &b| (acc << 1) | (b != kind) as u128);
-        raw[1..=height].iter().map(fold).collect()
+        let fold = |x| (1..=height).fold(0, |acc, y| (acc << 1) | u64::from(raw[y][x] != kind));
+        (0..width).map(fold).collect()
     };
-    // Process each row.
-    let left = build(b'<');
-    let right = build(b'>');
+
+    // Horizontal blizzards repeat every `width` minutes. Storing two copies of the pattern turns
+    // the rotation into a simple offset.
+    let left = build(b'<').repeat(2);
+    let right = build(b'>').repeat(2);
+
+    // Vertical blizzards repeat every `height` minutes so precompute to save time later.
     let up = build(b'^');
     let down = build(b'v');
+    let mut vertical = Vec::with_capacity(height * width);
 
-    // Blizzard patterns repeat every `width` minutes, so we can precompute all possible
-    // horizontal patterns.
-    let mut horizontal = Vec::with_capacity(width * height);
-    for time in 0..width {
-        for i in 0..height {
-            let left = (left[i] << time) | (left[i] >> (width - time));
-            let right = (right[i] >> time) | (right[i] << (width - time));
-            horizontal.push(left & right);
-        }
-    }
-
-    // Similarly, vertical blizzards repeat every `height` minutes so precompute to save time later.
-    let mut vertical = Vec::with_capacity(height * height);
     for time in 0..height {
-        for i in 0..height {
-            let up = up[(i + time) % height];
-            let down = down[(height + i - time) % height];
+        for i in 0..width {
+            let up = (up[i] << time) | (up[i] >> (height - time));
+            let down = (down[i] >> time) | (down[i] << (height - time));
             vertical.push(up & down);
         }
     }
 
-    Input { width, height, horizontal, vertical }
+    Input { width, height, left, right, vertical }
 }
 
 pub fn part1(input: &Input) -> usize {
@@ -65,42 +57,47 @@ pub fn part2(input: &Input) -> usize {
 }
 
 fn expedition(input: &Input, start: usize, forward: bool) -> usize {
-    let Input { width, height, horizontal, vertical } = input;
+    let Input { width, height, left, right, vertical } = input;
     let mut time = start;
-    let mut state = vec![0; height + 1];
+    let mut state = vec![0; width + 1];
 
     loop {
         time += 1;
-        // We modify the state in-place as we process each row, so preserve the previous state
+        // Blizzards blowing left drag the pattern towards the start, those blowing right away
+        // from it. Both offsets stay within the doubled arrays.
+        let left = &left[time % width..];
+        let right = &right[width - time % width..];
+        let vertical = &vertical[width * (time % height)..];
+
+        // We modify the state in-place as we process each column, so preserve the previous state
         // for subsequent calculations.
         let mut prev;
         let mut cur = 0;
         let mut next = state[0];
 
-        for i in 0..*height {
+        for i in 0..*width {
             prev = cur;
             cur = next;
             next = state[i + 1];
             // The Elves frontier can spread out 1 in each orthogonal direction unless there
             // is a blizzard present.
-            state[i] = (cur | (cur >> 1) | (cur << 1) | prev | next)
-                & horizontal[height * (time % width) + i]
-                & vertical[height * (time % height) + i];
+            state[i] =
+                (cur | (cur >> 1) | (cur << 1) | prev | next) & left[i] & right[i] & vertical[i];
         }
 
         // Depending on the direction elves can wait indefinitely in the start or end positions.
         if forward {
             // Start position.
-            state[0] |= 1 << (width - 1);
+            state[0] |= 1 << (height - 1);
             // If we reached the end then stop.
-            if state[height - 1] & 1 != 0 {
+            if state[width - 1] & 1 != 0 {
                 break time + 1;
             }
         } else {
             // End position.
-            state[height - 1] |= 1;
+            state[width - 1] |= 1;
             // If we've reached the start then stop.
-            if state[0] & (1 << (width - 1)) != 0 {
+            if state[0] & (1 << (height - 1)) != 0 {
                 break time + 1;
             }
         }
