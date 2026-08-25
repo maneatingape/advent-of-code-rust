@@ -7,7 +7,7 @@ pub trait BitOps<T> {
     fn biterator(self) -> Bitset<T>;
 }
 
-impl<T: Integer<T>> BitOps<T> for T {
+impl<T: Integer> BitOps<T> for T {
     fn biterator(self) -> Bitset<T> {
         Bitset { t: self }
     }
@@ -17,7 +17,7 @@ pub struct Bitset<T> {
     t: T,
 }
 
-impl<T: Integer<T>> Iterator for Bitset<T> {
+impl<T: Integer> Iterator for Bitset<T> {
     type Item = usize;
 
     #[inline]

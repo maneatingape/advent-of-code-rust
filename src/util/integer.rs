@@ -2,37 +2,37 @@
 //! and constants `0`, `1` and `10` to enable generic methods on integer types.
 use std::ops::*;
 
-pub trait Integer<T>:
+pub trait Integer:
     Copy
     + From<u8>
     + PartialOrd
-    + Add<Output = T>
-    + BitAnd<Output = T>
-    + BitXor<Output = T>
-    + Div<Output = T>
-    + Mul<Output = T>
-    + Rem<Output = T>
-    + Shl<u32, Output = T>
-    + Shr<u32, Output = T>
+    + Add<Output = Self>
+    + BitAnd<Output = Self>
+    + BitXor<Output = Self>
+    + Div<Output = Self>
+    + Mul<Output = Self>
+    + Rem<Output = Self>
+    + Shl<u32, Output = Self>
+    + Shr<u32, Output = Self>
 {
-    const ZERO: T;
-    const ONE: T;
-    const TEN: T;
+    const ZERO: Self;
+    const ONE: Self;
+    const TEN: Self;
 
     fn lowest_one(self) -> Option<u32>;
-    fn minmax(self, other: T) -> (T, T);
+    fn minmax(self, rhs: Self) -> (Self, Self);
 }
 
-pub trait Unsigned<T>: Integer<T> {}
+pub trait Unsigned: Integer {}
 
-pub trait Signed<T>: Integer<T> + Neg<Output = T> {}
+pub trait Signed: Integer + Neg<Output = Self> {}
 
 macro_rules! integer {
     ($($t:ty)*) => ($(
-        impl Integer<$t> for $t {
-            const ZERO: $t = 0;
-            const ONE: $t = 1;
-            const TEN: $t = 10;
+        impl Integer for $t {
+            const ZERO: Self = 0;
+            const ONE: Self = 1;
+            const TEN: Self = 10;
 
             #[inline]
             fn lowest_one(self) -> Option<u32> {
@@ -40,8 +40,8 @@ macro_rules! integer {
             }
 
             #[inline]
-            fn minmax(self, other: $t) -> ($t, $t) {
-                if self < other { (self, other) } else { (other, self) }
+            fn minmax(self, rhs: Self) -> (Self, Self) {
+                if self < rhs { (self, rhs) } else { (rhs, self) }
             }
         }
     )*)
@@ -49,7 +49,7 @@ macro_rules! integer {
 
 macro_rules! marker_trait {
     ($name:ident for $($t:ty)*) => ($(
-        impl $name<$t> for $t {}
+        impl $name for $t {}
     )*)
 }
 

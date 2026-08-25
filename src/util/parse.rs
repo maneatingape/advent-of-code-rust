@@ -21,12 +21,12 @@ use crate::util::integer::*;
 const MINUS: u8 = b'-'.wrapping_sub(b'0');
 
 pub trait ParseByte {
-    fn to_decimal<T: Integer<T>>(self) -> T;
+    fn to_decimal<T: Integer>(self) -> T;
 }
 
 impl ParseByte for u8 {
     #[inline]
-    fn to_decimal<T: Integer<T>>(self) -> T {
+    fn to_decimal<T: Integer>(self) -> T {
         T::from(self.wrapping_sub(b'0'))
     }
 }
@@ -42,33 +42,33 @@ pub struct ParseSigned<'a, T> {
 }
 
 pub trait ParseOps {
-    fn unsigned<T: Unsigned<T>>(&self) -> T;
-    fn signed<T: Signed<T>>(&self) -> T;
-    fn iter_unsigned<T: Unsigned<T>>(&self) -> ParseUnsigned<'_, T>;
-    fn iter_signed<T: Signed<T>>(&self) -> ParseSigned<'_, T>;
+    fn unsigned<T: Unsigned>(&self) -> T;
+    fn signed<T: Signed>(&self) -> T;
+    fn iter_unsigned<T: Unsigned>(&self) -> ParseUnsigned<'_, T>;
+    fn iter_signed<T: Signed>(&self) -> ParseSigned<'_, T>;
 }
 
 impl<S: AsRef<str> + ?Sized> ParseOps for S {
-    fn unsigned<T: Unsigned<T>>(&self) -> T {
+    fn unsigned<T: Unsigned>(&self) -> T {
         let str = self.as_ref();
         try_unsigned(&mut str.bytes()).unwrap_or_else(|| panic!("Unable to parse \"{str}\""))
     }
 
-    fn signed<T: Signed<T>>(&self) -> T {
+    fn signed<T: Signed>(&self) -> T {
         let str = self.as_ref();
         try_signed(&mut str.bytes()).unwrap_or_else(|| panic!("Unable to parse \"{str}\""))
     }
 
-    fn iter_unsigned<T: Unsigned<T>>(&self) -> ParseUnsigned<'_, T> {
+    fn iter_unsigned<T: Unsigned>(&self) -> ParseUnsigned<'_, T> {
         ParseUnsigned { bytes: self.as_ref().bytes(), phantom: PhantomData }
     }
 
-    fn iter_signed<T: Signed<T>>(&self) -> ParseSigned<'_, T> {
+    fn iter_signed<T: Signed>(&self) -> ParseSigned<'_, T> {
         ParseSigned { bytes: self.as_ref().bytes(), phantom: PhantomData }
     }
 }
 
-impl<T: Unsigned<T>> Iterator for ParseUnsigned<'_, T> {
+impl<T: Unsigned> Iterator for ParseUnsigned<'_, T> {
     type Item = T;
 
     #[inline]
@@ -83,7 +83,7 @@ impl<T: Unsigned<T>> Iterator for ParseUnsigned<'_, T> {
     }
 }
 
-impl<T: Signed<T>> Iterator for ParseSigned<'_, T> {
+impl<T: Signed> Iterator for ParseSigned<'_, T> {
     type Item = T;
 
     #[inline]
@@ -98,7 +98,7 @@ impl<T: Signed<T>> Iterator for ParseSigned<'_, T> {
     }
 }
 
-fn try_unsigned<T: Unsigned<T>>(bytes: &mut Bytes<'_>) -> Option<T> {
+fn try_unsigned<T: Unsigned>(bytes: &mut Bytes<'_>) -> Option<T> {
     let mut n = loop {
         let digit = bytes.next()?.to_decimal();
         if digit < 10 {
@@ -117,7 +117,7 @@ fn try_unsigned<T: Unsigned<T>>(bytes: &mut Bytes<'_>) -> Option<T> {
     Some(n)
 }
 
-fn try_signed<T: Signed<T>>(bytes: &mut Bytes<'_>) -> Option<T> {
+fn try_signed<T: Signed>(bytes: &mut Bytes<'_>) -> Option<T> {
     let (mut n, negative) = loop {
         let digit = bytes.next()?.to_decimal();
         if digit == MINUS {
