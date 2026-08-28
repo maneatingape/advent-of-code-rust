@@ -72,14 +72,9 @@ impl Grid<u8> {
     }
 
     pub fn print(&self) {
-        for y in 0..self.height {
-            for x in 0..self.width {
-                let point = Point::new(x, y);
-                print!("{}", self[point] as char);
-            }
-            println!();
+        for row in self.bytes.chunks(self.width as usize) {
+            println!("{}", str::from_utf8(row).unwrap());
         }
-        println!();
     }
 }
 

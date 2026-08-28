@@ -155,12 +155,12 @@ pub fn part2(input: &Input) -> i32 {
             }
 
             // Stay put and change to the other possible tool.
-            for other in 0..3 {
-                if time + 7 < cave[point][other] {
+            for (other, elapsed) in cave[point].iter_mut().enumerate() {
+                if time + 7 < *elapsed {
                     let heuristic = point.manhattan(target);
                     let index = (time + 7 + heuristic) as usize;
 
-                    cave[point][other] = time + 7;
+                    *elapsed = time + 7;
                     todo[index % BUCKETS].push((point, other));
                 }
             }

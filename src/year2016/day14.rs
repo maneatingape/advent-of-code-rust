@@ -194,7 +194,6 @@ mod implementation {
     use crate::util::md5::simd::hash_fixed;
 
     /// Use SIMD to compute hashes in parallel in blocks of 32.
-    #[expect(clippy::needless_range_loop)]
     pub(super) fn worker(shared: &Shared<'_>) {
         let mut result = [Simd::splat(0); 4];
         let mut buffers = [[0; 64]; 32];

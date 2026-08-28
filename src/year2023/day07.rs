@@ -75,5 +75,5 @@ fn sort(input: &[Hand], j: usize) -> usize {
         .collect();
 
     hands.sort_unstable();
-    hands.iter().enumerate().map(|(i, (_, bid))| (i + 1) * bid).sum()
+    hands.iter().zip(1..).map(|((_, bid), rank)| bid * rank).sum()
 }
