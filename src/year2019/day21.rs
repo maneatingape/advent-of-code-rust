@@ -29,7 +29,7 @@
 //! consecutive holes. Checking `B` now matters, and we also need a new rule to jump if `H` is
 //! ground when `C` is a hole, to trigger a double jump. But overall, this can be done in six
 //! instructions. Surprisingly, we never needed to use register `T`.
-use super::intcode::*;
+use crate::util::intcode::*;
 use crate::util::parse::*;
 
 const WALK: &str = "\

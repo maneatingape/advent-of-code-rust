@@ -22,8 +22,8 @@ use std::fmt::Write as _;
 use std::iter::once;
 use std::ops::ControlFlow;
 
-use super::intcode::*;
 use crate::util::hash::*;
+use crate::util::intcode::*;
 use crate::util::parse::*;
 use crate::util::point::*;
 

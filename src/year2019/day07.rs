@@ -4,7 +4,7 @@
 //! the possible 5! or 120 permutations of the phase settings.
 use std::array::from_fn;
 
-use super::intcode::*;
+use crate::util::intcode::*;
 use crate::util::parse::*;
 
 pub fn parse(input: &str) -> Vec<i64> {

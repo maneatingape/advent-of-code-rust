@@ -26,7 +26,7 @@
 //! x = 99 * (lower * upper + lower * scale) / determinant
 //! y = 99 * (lower * upper + upper * scale) / determinant
 //! ```
-use super::intcode::*;
+use crate::util::intcode::*;
 use crate::util::parse::*;
 
 pub struct Input {

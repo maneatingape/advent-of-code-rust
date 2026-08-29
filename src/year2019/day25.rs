@@ -18,8 +18,8 @@
 //! "--features frivolity" is enabled.
 use std::fmt::Write as _;
 
-use super::intcode::*;
 use crate::util::bitset::*;
+use crate::util::intcode::*;
 use crate::util::parse::*;
 
 pub fn parse(input: &str) -> Vec<i64> {

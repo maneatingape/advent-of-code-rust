@@ -3,9 +3,9 @@
 extern crate test;
 
 macro_rules! benchmark {
-    ($year:tt $($day:tt),*) => {
-        mod $year {$(
-            mod $day {
+    ($($year:ident $description:literal $($day:ident)*),*) => {
+        $(mod $year {
+            $(mod $day {
                 use aoc::$year::$day::*;
                 use aoc::util::ansi::*;
                 use std::fs::read_to_string;
@@ -35,61 +35,9 @@ macro_rules! benchmark {
                     let input = parse(&DATA);
                     b.iter(|| part2(&input));
                 }
-            }
-        )*}
+            })*
+        })*
     }
 }
 
-benchmark!(year2015
-    day01, day02, day03, day04, day05, day06, day07, day08, day09, day10, day11, day12, day13,
-    day14, day15, day16, day17, day18, day19, day20, day21, day22, day23, day24, day25
-);
-
-benchmark!(year2016
-    day01, day02, day03, day04, day05, day06, day07, day08, day09, day10, day11, day12, day13,
-    day14, day15, day16, day17, day18, day19, day20, day21, day22, day23, day24, day25
-);
-
-benchmark!(year2017
-    day01, day02, day03, day04, day05, day06, day07, day08, day09, day10, day11, day12, day13,
-    day14, day15, day16, day17, day18, day19, day20, day21, day22, day23, day24, day25
-);
-
-benchmark!(year2018
-    day01, day02, day03, day04, day05, day06, day07, day08, day09, day10, day11, day12, day13,
-    day14, day15, day16, day17, day18, day19, day20, day21, day22, day23, day24, day25
-);
-
-benchmark!(year2019
-    day01, day02, day03, day04, day05, day06, day07, day08, day09, day10, day11, day12, day13,
-    day14, day15, day16, day17, day18, day19, day20, day21, day22, day23, day24, day25
-);
-
-benchmark!(year2020
-    day01, day02, day03, day04, day05, day06, day07, day08, day09, day10, day11, day12, day13,
-    day14, day15, day16, day17, day18, day19, day20, day21, day22, day23, day24, day25
-);
-
-benchmark!(year2021
-    day01, day02, day03, day04, day05, day06, day07, day08, day09, day10, day11, day12, day13,
-    day14, day15, day16, day17, day18, day19, day20, day21, day22, day23, day24, day25
-);
-
-benchmark!(year2022
-    day01, day02, day03, day04, day05, day06, day07, day08, day09, day10, day11, day12, day13,
-    day14, day15, day16, day17, day18, day19, day20, day21, day22, day23, day24, day25
-);
-
-benchmark!(year2023
-    day01, day02, day03, day04, day05, day06, day07, day08, day09, day10, day11, day12, day13,
-    day14, day15, day16, day17, day18, day19, day20, day21, day22, day23, day24, day25
-);
-
-benchmark!(year2024
-    day01, day02, day03, day04, day05, day06, day07, day08, day09, day10, day11, day12, day13,
-    day14, day15, day16, day17, day18, day19, day20, day21, day22, day23, day24, day25
-);
-
-benchmark!(year2025
-    day01, day02, day03, day04, day05, day06, day07, day08, day09, day10, day11, day12
-);
+aoc::solutions!(benchmark);

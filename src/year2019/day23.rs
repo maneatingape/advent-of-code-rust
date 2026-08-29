@@ -3,7 +3,7 @@
 //! Solves both part one and two simultaneously. A nice benefit of our intcode computer is that it
 //! returns [`State::Input`] when the input queue is empty, making it easy to detect an
 //! idle network.
-use super::intcode::*;
+use crate::util::intcode::*;
 use crate::util::parse::*;
 
 type Input = (i64, i64);

@@ -1,7 +1,7 @@
 //! # Sensor Boost
 //!
 //! This problem is essentially a unit test for the full intcode computer.
-use super::intcode::*;
+use crate::util::intcode::*;
 use crate::util::parse::*;
 
 pub fn parse(input: &str) -> Vec<i64> {

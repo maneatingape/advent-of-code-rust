@@ -27,7 +27,7 @@
 //! Although it may seem that checking could grow exponentially to 8¹⁶ potential values,
 //! in practice filtering by correct digit keeps the total less than 50.
 //!
-//! [`Intcode`]: crate::year2019::intcode
+//! [`Intcode`]: crate::util::intcode
 use std::ops::ControlFlow;
 
 use crate::util::parse::*;

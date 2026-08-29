@@ -7,7 +7,7 @@
 //! "--features frivolity" is enabled.
 //!
 //! [`signum`]: i64::signum
-use super::intcode::*;
+use crate::util::intcode::*;
 use crate::util::parse::*;
 
 pub fn parse(input: &str) -> Vec<i64> {

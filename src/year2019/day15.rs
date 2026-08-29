@@ -11,8 +11,8 @@
 //! algorithm to eventually trace our way through the entire maze back to the starting point.
 use std::collections::VecDeque;
 
-use super::intcode::*;
 use crate::util::hash::*;
+use crate::util::intcode::*;
 use crate::util::parse::*;
 use crate::util::point::*;
 

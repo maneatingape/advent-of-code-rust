@@ -1,9 +1,9 @@
 //! # Space Police
 //!
 //! This problem is a variant of [Langton's Ant](https://en.wikipedia.org/wiki/Langton%27s_ant).
-use super::intcode::*;
 use crate::util::grid::*;
 use crate::util::hash::*;
+use crate::util::intcode::*;
 use crate::util::parse::*;
 use crate::util::point::*;
 
