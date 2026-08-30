@@ -7,8 +7,6 @@
 
 // Portable SIMD API is enabled by "simd" feature.
 #![cfg_attr(feature = "simd", allow(unstable_features), feature(portable_simd))]
-// Configure rustdoc.
-#![doc(html_logo_url = "https://maneatingape.github.io/advent-of-code-rust/logo.png")]
 
 /// Enumerates all combinations of years and days, passing them to a callback macro.
 /// Used by `benchmark.rs`, `main.rs` and `test.rs`.

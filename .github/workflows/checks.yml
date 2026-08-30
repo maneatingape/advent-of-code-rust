@@ -23,12 +23,12 @@ jobs:
         - name: rustfmt
           toolchain: "1.98"
           command: cargo fmt --check -- `find . -name "*.rs"`
-        - name: test-stable
-          toolchain: "1.98"
-          command: cargo test
         - name: test-nightly
           toolchain: nightly
           command: cargo test --features simd
+        - name: test-stable
+          toolchain: "1.98"
+          command: cargo test
     steps:
     - uses: actions/checkout@v7
     - run: rustup install ${{ matrix.toolchain }} --profile default

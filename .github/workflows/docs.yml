@@ -15,10 +15,7 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
     - uses: actions/checkout@v7
-    - run: |
-        rustup default 1.98
-        RUSTDOCFLAGS="--document-private-items --default-theme=ayu --deny warnings" cargo doc
-        cp docs/* target/doc
+    - run: RUSTDOCFLAGS="--document-private-items --default-theme=ayu --deny warnings" cargo doc
     - uses: actions/upload-pages-artifact@v5
       with:
         path: 'target/doc'
