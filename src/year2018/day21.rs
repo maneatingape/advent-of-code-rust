@@ -53,7 +53,7 @@
 //! the seed value is chosen so that this hash does not appear outside the cycle). For example:
 //!
 //! ```none
-//! 0 => 7 => 1 =>  [4 = > 5 => 3 => 2] => [4 => ...]
+//! 0 => 7 => 1 =>  [4 => 5 => 3 => 2] => [4 => ...]
 //! ```
 //!
 //! The cycle starts with `4` and ends with `2`, so the answer is `2`.

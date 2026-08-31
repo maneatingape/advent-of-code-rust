@@ -26,13 +26,13 @@
 //! the work to √116099 = 341 table entries (as one of the factors of `20201227-1`) is harder to
 //! maintain, when this solution is already fast enough.
 //!
-//! [Diffie-Hellman-Merkle](https://en.wikipedia.org/wiki/Diffie%E2%80%93Hellman_key_exchange)
-//! [modular exponentiation](https://en.wikipedia.org/wiki/Modular_exponentiation)
-//! [exponentiation by squaring](https://en.wikipedia.org/wiki/Exponentiation_by_squaring)
-//! [Baby-step giant-step algorithm](https://en.wikipedia.org/wiki/Baby-step_giant-step)
-//! [Pohlig-Hellman](https://en.wikipedia.org/wiki/Pohlig-Hellman_algorithm)
-//! [Fermat's Little Theorem](https://en.wikipedia.org/wiki/Fermat%27s_little_theorem)
-//! [Chinese Remainder Theorem](https://en.wikipedia.org/wiki/Chinese_remainder_theorem)
+//! [Diffie-Hellman-Merkle]: https://en.wikipedia.org/wiki/Diffie%E2%80%93Hellman_key_exchange
+//! [modular exponentiation]: https://en.wikipedia.org/wiki/Modular_exponentiation
+//! [exponentiation by squaring]: https://en.wikipedia.org/wiki/Exponentiation_by_squaring
+//! [Baby-step giant-step algorithm]: https://en.wikipedia.org/wiki/Baby-step_giant-step
+//! [Pohlig-Hellman]: https://en.wikipedia.org/wiki/Pohlig-Hellman_algorithm
+//! [Fermat's Little Theorem]: https://en.wikipedia.org/wiki/Fermat%27s_little_theorem
+//! [Chinese Remainder Theorem]: https://en.wikipedia.org/wiki/Chinese_remainder_theorem
 use crate::util::hash::*;
 use crate::util::iter::*;
 use crate::util::math::*;

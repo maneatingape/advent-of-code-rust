@@ -239,7 +239,7 @@ fn attack(grid: &Grid<Option<usize>>, units: &[Unit], point: Point, kind: Kind) 
 }
 
 /// Performs two BFS searches. The first search from the current unit finds the nearest target
-/// in reading order. The second reverse search from the target to the current unit, finds the
+/// in reading order. The second reverse search from the target to the current unit finds the
 /// correct direction to move.
 fn double_bfs(mut walls: [u32; 32], units: &[Unit], point: Point, kind: Kind) -> Option<Point> {
     let frontier = &mut [0; 32];

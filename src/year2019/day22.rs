@@ -82,8 +82,8 @@
 //! power. Let's look at the first few powers
 //! * ax + c
 //! * a × (ax + c) + c = a²x + ac + c
-//! * a × (a²x + ac + c) = a³x + a²c + ac + c
-//! * a × (a³x + a²c + ac + c) = a⁴x + a³c + a²c + ac + c
+//! * a × (a²x + ac + c) + c = a³x + a²c + ac + c
+//! * a × (a³x + a²c + ac + c) + c = a⁴x + a³c + a²c + ac + c
 //!
 //! We notice that the constant terms are the sum of a [geometric series](https://en.wikipedia.org/wiki/Geometric_series)
 //! which is given by the closed-form formula:

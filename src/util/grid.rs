@@ -56,7 +56,7 @@ impl Grid<u8> {
     pub fn parse_with_border(input: &str) -> Self {
         // Size things large enough so that both orthogonal and diagonal access hits a newline.
         // This shifts 0,0 to 1,1. Non-newline iteration would be `1..height-1` and `1..width`,
-        // although it still often faster to iterate `0..height` and `0..width` when visiting
+        // although it is still often faster to iterate `0..height` and `0..width` when visiting
         // newline is harmless. For convenience, the allocation is oversized to compensate for unit
         // tests that omit a trailing newline.
         let width = input.lines().next().unwrap().len() + 1;

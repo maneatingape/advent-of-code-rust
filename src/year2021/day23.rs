@@ -14,8 +14,8 @@
 //! * Detecting deadlocked states where an amphipod in the hallway prevents any possible solution.
 //!   Exploring any further is a waste of time.
 //!
-//! Thirdly low-level bit manipulation is used to represent the burrow state size compactly
-//! in only 16 bytes for faster copying and hashing.
+//! Thirdly low-level bit manipulation is used to represent the burrow state compactly in only 16
+//! bytes for faster copying and hashing.
 use std::array::from_fn;
 use std::hash::*;
 

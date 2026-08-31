@@ -35,7 +35,7 @@
 //!
 //! The test value is equal to the last term which means that the equation is valid.
 //!
-//! Inverse concatenation can be implemented without time consuming conversion to or from
+//! Inverse concatenation can be implemented without time-consuming conversion to or from
 //! strings by dividing the left term by the next power of ten greater than the right term.
 //! For example:
 //!

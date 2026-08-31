@@ -5,7 +5,7 @@
 //! path from start to end. The cheating rules allow us to "warp" up to `n` squares away to any
 //! empty space as measured by [Manhattan distance](https://en.wikipedia.org/wiki/Taxicab_geometry).
 //!
-//! For part one this is a distance of 2. When checking surrounding squares we make 2 optimizations:
+//! For part one this is a distance of 2. When checking surrounding squares we make 3 optimizations:
 //!
 //! * Don't check any squares only 1 away as we can always just move to these normally.
 //! * Checking from point `p => q` is always the negative of `q => p`, e.g. if `p = 30, q = 50` then

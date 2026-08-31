@@ -6,8 +6,8 @@
 //!
 //! To speed things up, 2 strategies are used, one high-level and one low-level:
 //! * [Memoization](https://en.wikipedia.org/wiki/Memoization) (or caching) of the possible paths
-//!   from each position, taking into account previously visited caves is the high-level strategy to
-//!   reuse work and save time.
+//!   from each position, taking into account previously visited caves, is the high-level strategy
+//!   to reuse work and save time.
 //! * [Bit Manipulation](https://en.wikipedia.org/wiki/Bit_manipulation) to store both the graph of cave
 //!   connections as an [adjacency matrix](https://en.wikipedia.org/wiki/Adjacency_matrix) and the
 //!   list of visited caves compressed into a single `u32` is the low-level strategy to quickly and

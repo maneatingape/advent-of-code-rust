@@ -8,7 +8,7 @@
 //! off the time needed.
 //!
 //! The second optimization is far more critical and reduces the time needed by 85%. The
-//! observation is that components with two ports the same, for example `7/7` are always optimal
+//! observation is that components with two ports the same, for example `7/7`, are always optimal
 //! to pick first, as they increase strength and length without changing the port number.
 //!
 //! If we can place such a component then there's no need to consider further components which
@@ -121,7 +121,7 @@ fn build(state: &mut State, current: usize, used: usize, strength: usize, length
         } else {
             build(state, next, new_used, new_strength, new_length);
             // Critical optimization. If this is a component with two ports of the same values,
-            // for example 5/5 or 7/7 then it's always optimal to add it to the bridge.
+            // for example 5/5 or 7/7, then it's always optimal to add it to the bridge.
             // We don't need to consider further options.
             if current == next {
                 break;

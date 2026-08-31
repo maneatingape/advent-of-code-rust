@@ -73,7 +73,7 @@ pub fn part1(input: &Input) -> i32 {
                         //    ..L.............
                         continue;
                     } else if delta == -width {
-                        // Left coordinate is equal from its center leftwards
+                        // Left coordinate is equal from its center leftwards.
                         // Replace with special marker value.
                         //
                         //    ...rrrrrrrrrrrrr

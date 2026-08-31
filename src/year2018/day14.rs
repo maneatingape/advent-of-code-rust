@@ -316,7 +316,7 @@ fn unpack(first: usize, second: usize) -> (usize, usize, usize) {
     let digits = sum - 10 * tens;
 
     // Columns greater than 10 will take 2 bytes when written to recipes. Each index is
-    // offset by the number of 10s before it. Adding the normal increase indices gives the
+    // offset by the number of 10s before it. Adding the normal increasing indices gives the
     // final location of each byte.
     //
     // tens       | 00 | 00 | 01 | 01 | 00 | 00 | 01 | 00 |

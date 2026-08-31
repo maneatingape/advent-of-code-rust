@@ -9,7 +9,7 @@
 //! the x and y coordinates lie outside. Once we identify an edge past the initial discontinuities,
 //! scaling along the lines buys more accuracy and thus fewer later intcode runs.
 //!
-//! For part 2, we can further speed up the process by using geometry to hone in on a viable
+//! For part 2, we can further speed up the process by using geometry to home in on a viable
 //! target to start searching at. Our target point `(x,y)` is related to our two slopes as:
 //! ```none
 //! scale*y = upper*(x+99)

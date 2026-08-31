@@ -29,7 +29,7 @@ pub fn part1(input: &Input) -> u64 {
 }
 
 /// Split the route into 3 segments. The answer is the number of paths in each segment
-/// *multiplied* by each other. Since the input is an acyclic directed graph (DAG),
+/// *multiplied* by each other. Since the input is a directed acyclic graph (DAG),
 /// only one of these paths will be possible.
 pub fn part2(input: &Input) -> u64 {
     let fft_to_dac = paths(input, "fft", "dac");

@@ -43,7 +43,7 @@
 //! * Robot location is also stored the same way. Robots can only ever be in their initial location
 //!   or at a key, so this gives a max of 26 + 4 = 30 locations. As a nice bonus this allows part
 //!   one and part two to share the same code.
-//! * For fast lookup of distance between keys, the maze is stored as [adjacency matrix](https://en.wikipedia.org/wiki/Adjacency_matrix).
+//! * For fast lookup of distance between keys, the maze is stored as an [adjacency matrix](https://en.wikipedia.org/wiki/Adjacency_matrix).
 //!   `a` is index 0, `b` is index 1 and robots' initial positions are from 26 to 29 inclusive. For
 //!   example (simplifying by moving robot from index 26 to 2):
 //!
@@ -84,8 +84,8 @@ struct Door {
 ///
 /// `masks` maps the set of keys in the same quadrant, for prefiltering in part 2.
 /// `minimum` is the smallest distance from a key to any of its neighbors, for the part1 heuristic.
-/// `matrix` is the adjacency of distances and doors between each pair of keys and the robots'
-/// starting locations.
+/// `matrix` is the adjacency matrix of distances and doors between each pair of keys and the
+/// robots' starting locations.
 struct Maze {
     initial: State,
     masks: [u32; 30],
@@ -114,7 +114,7 @@ pub fn part2(input: &Grid<u8>) -> u32 {
     patch("###", 0);
     patch("@#@", 1);
 
-    // Select the O(n) A* heuristic, since each robot vists about one-fourth of the keys.
+    // Select the O(n) A* heuristic, since each robot visits about one-fourth of the keys.
     explore::<true>(input.width as usize, &modified)
 }
 

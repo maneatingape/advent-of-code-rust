@@ -16,7 +16,7 @@
 //! `a & b`
 //!
 //! To obtain the score we can use the [`trailing_zeros`] method to find the first set bit. On most
-//! architectures this also compiles down to a single instruction (`LZCNT` on x86 or `CLZ` on ARM)
+//! architectures this also compiles down to a single instruction (`TZCNT` on x86 or `CTZ` on ARM)
 //! that is blazing fast.
 //!
 //! Notes:

@@ -23,7 +23,7 @@
 //! 1 |  0  0  0  0  0  0  0  0 [0  1  3  6 10]
 //! ```
 //!
-//! Each pattern updates the total at the index one *after* its end, if it can fit at that location
+//! Each pattern updates the total at the index one *after* its end, if it can fit at that location.
 //! For example, the first spring can only match at indices `[1, 2, 3]` so it updates the total
 //! at index 4 to 1.
 //!

@@ -19,7 +19,7 @@
 //! initial upwards velocity is one less, our starting velocity of 5.
 //!
 //! The maximum height is `5 + 4 + 3 + 2 + 1`, which is the sum from 1 to n given by the formula for
-//! triangular numbers [`(n * (n + 1) / 2`](https://en.wikipedia.org/wiki/Triangular_number#Formula).
+//! triangular numbers [`(n * (n + 1)) / 2`](https://en.wikipedia.org/wiki/Triangular_number#Formula).
 //!
 //! ## Part Two
 //! A brute force solution would check every possible combination of `x` and `y` for a total
