@@ -99,7 +99,7 @@ pub fn parse(input: &str) -> u32 {
 
     // Find all items, and set an entry in state.pairs for each element name.
     let mut floor = 1;
-    let words: Vec<_> = input.split(&[' ', ',', '.', '-']).skip(3).collect();
+    let words: Vec<_> = input.split([' ', ',', '.', '-']).skip(3).collect();
 
     for &[first, second] in words.array_windows() {
         match second {

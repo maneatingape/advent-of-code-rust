@@ -26,19 +26,19 @@ pub fn parse(input: &str) -> Input {
 
 /// Process each seed individually.
 pub fn part1(input: &Input) -> u64 {
-    let mut seeds = input.seeds.clone();
-
-    for stage in &input.stages {
-        for seed in &mut seeds {
-            if let Some(&[dest, start, _]) =
-                stage.iter().find(|&&[_, start, end]| start <= *seed && *seed < end)
-            {
-                *seed = *seed - start + dest;
-            }
-        }
-    }
-
-    seeds.into_iter().min().unwrap()
+    input
+        .seeds
+        .iter()
+        .map(|&seed| {
+            input.stages.iter().fold(seed, |seed, stage| {
+                stage
+                    .iter()
+                    .find(|&&[_, start, end]| (start..end).contains(&seed))
+                    .map_or(seed, |&[dest, start, _]| seed - start + dest)
+            })
+        })
+        .min()
+        .unwrap()
 }
 
 /// Process ranges.

@@ -134,9 +134,9 @@ pub fn parse(input: &str) -> Input {
 
     let monkeys: Vec<_> = lines
         .chunks(7)
-        .map(|chunk: &[&str]| {
+        .map(|chunk| {
             let items = chunk[1].iter_unsigned().collect();
-            let tokens: Vec<_> = chunk[2].split(' ').rev().take(2).collect();
+            let tokens: Vec<_> = chunk[2].rsplit(' ').take(2).collect();
             let operation = match tokens[..] {
                 ["old", _] => Operation::Square,
                 [y, "*"] => Operation::Multiply(y.unsigned()),
@@ -206,7 +206,7 @@ fn play(monkeys: &[Monkey], mut from: usize, mut item: usize) -> Business {
     let mut seen = FastMap::new();
 
     path.push(business);
-    seen.insert((from, item), path.len() - 1);
+    seen.insert((from, item), round);
 
     while round < 10_000 {
         item = monkeys[from].inspect(item) % product;
@@ -221,7 +221,7 @@ fn play(monkeys: &[Monkey], mut from: usize, mut item: usize) -> Business {
             path.push(business);
 
             // If we have found a cycle, then short circuit and return the final result.
-            if let Some(previous) = seen.insert((to, item), path.len() - 1) {
+            if let Some(previous) = seen.insert((to, item), round) {
                 let cycle_width = round - previous;
 
                 let offset = 10_000 - round;

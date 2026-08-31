@@ -101,10 +101,12 @@ pub fn parse(input: &str) -> Input {
 /// Calculate the risk level of the relevant subset of the overall cave grid.
 pub fn part1(input: &Input) -> i32 {
     let Input { cave, height, width } = input;
+    let (height, width) = (*height as usize, *width as usize);
+
     cave.bytes
         .chunks(cave.width as usize)
-        .take(*height as usize + 1)
-        .map(|row| row.iter().take(*width as usize + 1).map(|point| *point as i32).sum::<i32>())
+        .take(height + 1)
+        .map(|row| row[..width + 1].iter().map(|&level| level as i32).sum::<i32>())
         .sum()
 }
 

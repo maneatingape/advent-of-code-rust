@@ -5,9 +5,9 @@
 //! if an octopus has flashed this turn. Each time an octopus flashes it bumps its neighbors'
 //! energy levels, which can propagate recursively through the entire grid.
 //!
+//! The 10x10 grid is padded by 1 on either side so that we can avoid boundary checks.
+//!
 //! [`Day 9`]: crate::year2021::day09
-
-/// Pad the 10x10 grid by 1 on either side so that we can avoid boundary checks.
 use crate::util::parse::*;
 
 type Input = [u8; 144];

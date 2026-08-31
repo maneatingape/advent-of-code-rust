@@ -103,9 +103,9 @@ pub fn part2(grid: &Grid<i32>) -> String {
         }
 
         // Remove the latest blocking byte then try to make a little more progress in flood fill.
-        let (first, saved) = heap.pop().unwrap();
-        time = -first;
-        last = saved;
-        todo.push_back(saved);
+        let (negated, blocked) = heap.pop().unwrap();
+        time = -negated;
+        last = blocked;
+        todo.push_back(blocked);
     }
 }

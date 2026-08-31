@@ -47,7 +47,6 @@ pub fn parse(input: &str) -> Input {
 
             let mut area = 0;
             let mut perimeter = 0;
-            let mut sides = 0;
 
             todo.push(point);
             seen[point] = true;
@@ -72,12 +71,12 @@ pub fn parse(input: &str) -> Input {
             }
 
             // Sum sides for all plots in the region.
-            for &(p, d) in &edge {
-                let r = d.clockwise();
-                let l = d.counter_clockwise();
+            let mut sides = 0;
 
-                sides += (!check(p + l) || check(p + l + d)) as usize;
-                sides += (!check(p + r) || check(p + r + d)) as usize;
+            for &(p, d) in &edge {
+                for t in [d.clockwise(), d.counter_clockwise()] {
+                    sides += usize::from(!check(p + t) || check(p + t + d));
+                }
             }
 
             todo.clear();

@@ -142,8 +142,8 @@ fn follow(graph: &mut Graph, mut position: Point, mut direction: Point) -> u32 {
             // If we have already travelled on this path then this must be an exit from a splitter
             // node already computed. The energized tiles can be at most equal so exit early.
             _ => {
-                let index = (direction == LEFT || direction == RIGHT) as usize;
-                if graph.seen[position][index] {
+                let axis = usize::from(direction.y == 0);
+                if graph.seen[position][axis] {
                     return 0;
                 }
             }
@@ -187,11 +187,11 @@ fn beam(graph: &mut Graph, node: &mut Node, mut position: Point, mut direction: 
             // we have travelled in the same orientation before, then we're in a loop so break.
             // Beams can cross perpendicularly without causing a cycle.
             _ => {
-                let index = (direction == LEFT || direction == RIGHT) as usize;
-                if graph.seen[position][index] {
+                let axis = usize::from(direction.y == 0);
+                if graph.seen[position][axis] {
                     break;
                 }
-                graph.seen[position][index] = true;
+                graph.seen[position][axis] = true;
             }
         }
 

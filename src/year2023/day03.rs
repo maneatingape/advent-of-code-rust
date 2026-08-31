@@ -17,9 +17,10 @@ pub fn parse(input: &str) -> Input {
     let mut seen: Grid<usize> = grid.same_size_with(0);
     // Stores each unique part number. The first value is a dummy placeholder.
     let mut parts = vec![0];
-    let mut number = 0;
 
     for y in 0..grid.height {
+        let mut number = 0;
+
         for x in 0..grid.width {
             let p = Point::new(x, y);
             let b = grid[p];
@@ -37,7 +38,6 @@ pub fn parse(input: &str) -> Input {
         // Actual corner case if the last number is in the bottom-right corner.
         if number > 0 {
             parts.push(number);
-            number = 0;
         }
     }
 

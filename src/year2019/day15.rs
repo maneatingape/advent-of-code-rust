@@ -74,36 +74,29 @@ pub fn parse(input: &str) -> Input {
 
 /// BFS from the starting point until we find the oxygen system.
 pub fn part1(input: &Input) -> i32 {
-    let (mut maze, oxygen_system) = input.clone();
-    let mut todo = VecDeque::from([(ORIGIN, 0)]);
-
-    maze.remove(&ORIGIN);
-
-    while let Some((point, cost)) = todo.pop_front() {
-        if point == oxygen_system {
-            return cost;
-        }
-
-        for next in ORTHOGONAL.map(|o| point + o) {
-            if maze.remove(&next) {
-                todo.push_back((next, cost + 1));
-            }
-        }
-    }
-
-    unreachable!()
+    let (maze, oxygen_system) = input.clone();
+    bfs(maze, ORIGIN, Some(oxygen_system))
 }
 
-/// BFS from the oxygen system to all points in the maze.
+/// BFS from the oxygen system to every point in the maze.
 pub fn part2(input: &Input) -> i32 {
-    let (mut maze, oxygen_system) = input.clone();
-    let mut todo = VecDeque::from([(oxygen_system, 0)]);
-    let mut minutes = 0;
+    let (maze, oxygen_system) = input.clone();
+    bfs(maze, oxygen_system, None)
+}
 
-    maze.remove(&oxygen_system);
+/// Returns the cost to reach `end` or the cost to reach the furthest point if there is no target.
+fn bfs(mut maze: FastSet<Point>, start: Point, end: Option<Point>) -> i32 {
+    let mut todo = VecDeque::from([(start, 0)]);
+    let mut result = 0;
+
+    maze.remove(&start);
 
     while let Some((point, cost)) = todo.pop_front() {
-        minutes = cost;
+        result = cost;
+
+        if end == Some(point) {
+            break;
+        }
 
         for next in ORTHOGONAL.map(|o| point + o) {
             if maze.remove(&next) {
@@ -112,5 +105,5 @@ pub fn part2(input: &Input) -> i32 {
         }
     }
 
-    minutes
+    result
 }

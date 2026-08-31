@@ -9,14 +9,16 @@
 use crate::util::iter::*;
 use crate::util::parse::*;
 
-const SIZE: usize = 24;
+const SIZE: isize = 24;
+const NEIGHBORS: [isize; 6] = [-1, 1, -SIZE, SIZE, -SIZE * SIZE, SIZE * SIZE];
 
 pub fn parse(input: &str) -> Vec<u8> {
-    let mut cube = vec![0; SIZE * SIZE * SIZE];
+    let size = SIZE as usize;
+    let mut cube = vec![0; size * size * size];
     // Leave a 1 layer boundary around the outside for the part two flood fill
     // and also so that we don't have to use boundary checks when checking neighbors.
     input.iter_unsigned().chunk::<3>().for_each(|[x, y, z]: [usize; 3]| {
-        cube[(x + 1) * SIZE * SIZE + (y + 1) * SIZE + (z + 1)] = 1;
+        cube[(x + 1) * size * size + (y + 1) * size + (z + 1)] = 1;
     });
     cube
 }
@@ -36,14 +38,7 @@ pub fn part2(input: &[u8]) -> u32 {
 
     while let Some(index) = todo.pop() {
         // We may wrap around but that index will be out of bounds.
-        for next in [
-            index.wrapping_sub(1),
-            index + 1,
-            index.wrapping_sub(SIZE),
-            index + SIZE,
-            index.wrapping_sub(SIZE * SIZE),
-            index + SIZE * SIZE,
-        ] {
+        for next in NEIGHBORS.map(|n| index.wrapping_add_signed(n)) {
             if next < cube.len() && cube[next] == 0 {
                 cube[next] = 8;
                 todo.push(next);
@@ -56,20 +51,12 @@ pub fn part2(input: &[u8]) -> u32 {
 }
 
 fn count(cube: &[u8], adjust: fn(u32) -> u32) -> u32 {
-    let mut total = 0;
-
-    for (i, &cell) in cube.iter().enumerate() {
-        if cell == 1 {
+    cube.iter()
+        .enumerate()
+        .filter(|&(_, &cell)| cell == 1)
+        .map(|(index, _)| {
             // No need for boundary checks as all cubes are at least 1 away from the edge.
-            let neighbors = cube[i - 1] as u32
-                + cube[i + 1] as u32
-                + cube[i - SIZE] as u32
-                + cube[i + SIZE] as u32
-                + cube[i - SIZE * SIZE] as u32
-                + cube[i + SIZE * SIZE] as u32;
-            total += adjust(neighbors);
-        }
-    }
-
-    total
+            adjust(NEIGHBORS.iter().map(|&n| cube[index.wrapping_add_signed(n)] as u32).sum())
+        })
+        .sum()
 }

@@ -78,11 +78,11 @@ pub fn parse(input: &str) -> Input {
             // subset to m, and then m to k. All table[subset] references were filled in prior
             // iterations of the outer loop or the singleton base cases.
             for m in subset.biterator() {
-                let prior = table[subset * stride + m];
-                let distance = prior.0 + happiness[m * stride + k];
+                let (prior, prior_start) = table[subset * stride + m];
+                let distance = prior + happiness[m * stride + k];
                 if distance > longest {
                     longest = distance;
-                    start = prior.1;
+                    start = prior_start;
                 }
             }
             table[set * stride + k] = (longest, start);
@@ -94,9 +94,9 @@ pub fn parse(input: &str) -> Input {
     // Part two can be directly read off the table.
     let mut part_one = i16::MIN;
     let mut part_two = i16::MIN;
-    for (k, &prior) in table[table.len() - stride..].iter().enumerate() {
-        part_one = part_one.max(prior.0 + happiness[prior.1 as usize * stride + k]);
-        part_two = part_two.max(prior.0);
+    for (k, &(total, start)) in table[table.len() - stride..].iter().enumerate() {
+        part_one = part_one.max(total + happiness[start as usize * stride + k]);
+        part_two = part_two.max(total);
     }
 
     (part_one, part_two)

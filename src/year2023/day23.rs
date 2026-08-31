@@ -412,7 +412,7 @@ fn dfs(
     current: Row,
     start: usize,
     gap: bool,
-    horizontal: u32,
+    mut horizontal: u32,
     vertical: u32,
 ) {
     // We're done, push the result to the possible successors.
@@ -427,8 +427,6 @@ fn dfs(
         if !gap {
             dfs(result, previous, current, start + 1, true, horizontal, vertical);
         }
-
-        let mut horizontal = horizontal;
 
         for end in (start + 1)..6 {
             horizontal |= 1 << (end - 1);
@@ -458,8 +456,6 @@ fn dfs(
         let mut next = current;
         next[start] = previous[start];
         dfs(result, previous, next, start + 1, gap, horizontal, vertical | (1 << start));
-
-        let mut horizontal = horizontal;
 
         for end in (start + 1)..6 {
             horizontal |= 1 << (end - 1);

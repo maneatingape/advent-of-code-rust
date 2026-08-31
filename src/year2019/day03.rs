@@ -31,13 +31,7 @@ struct Line {
 }
 
 pub fn parse(input: &str) -> Input {
-    // Map a line into an iterator of direction and distance pairs.
-    let lines: Vec<_> = input.lines().collect();
-    let steps = |i: usize| {
-        let first = lines[i].bytes().filter(u8::is_ascii_alphabetic);
-        let second = lines[i].iter_signed::<i32>();
-        first.zip(second)
-    };
+    let (first, second) = input.split_once('\n').unwrap();
 
     // Build two maps, one for vertical segments and one for horizontal.
     let mut start = ORIGIN;
@@ -45,7 +39,7 @@ pub fn parse(input: &str) -> Input {
     let mut vertical = BTreeMap::new();
     let mut horizontal = BTreeMap::new();
 
-    for (direction, amount) in steps(0) {
+    for (direction, amount) in steps(first) {
         let delta = Point::from(direction);
         let end = start + delta * amount;
         let line = Line { start, end, distance };
@@ -66,7 +60,7 @@ pub fn parse(input: &str) -> Input {
     let mut manhattan = i32::MAX;
     let mut delay = i32::MAX;
 
-    for (direction, amount) in steps(1) {
+    for (direction, amount) in steps(second) {
         let delta = Point::from(direction);
         let end = start + delta * amount;
 
@@ -112,6 +106,13 @@ pub fn part1(input: &Input) -> i32 {
 
 pub fn part2(input: &Input) -> i32 {
     input.1
+}
+
+/// Map a wire into an iterator of direction and distance pairs.
+fn steps(wire: &str) -> impl Iterator<Item = (u8, i32)> {
+    let directions = wire.bytes().filter(u8::is_ascii_alphabetic);
+    let amounts = wire.iter_signed::<i32>();
+    directions.zip(amounts)
 }
 
 fn signum(a: Point, b: Point) -> Point {

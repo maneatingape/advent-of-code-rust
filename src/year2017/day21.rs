@@ -68,11 +68,8 @@ pub fn parse(input: &str) -> Vec<u32> {
 
         if line.len() == 20 {
             // 2x2 to 3x3.
-            let indices = [0, 1, 3, 4];
-            let from = indices.map(bit);
-
-            let indices = [9, 10, 11, 13, 14, 15, 17, 18, 19];
-            let value = indices.map(bit);
+            let from = [0, 1, 3, 4].map(bit);
+            let value = [9, 10, 11, 13, 14, 15, 17, 18, 19].map(bit);
 
             let pattern = todo.len();
             todo.push(to_index(&value));
@@ -83,11 +80,8 @@ pub fn parse(input: &str) -> Vec<u32> {
             }
         } else {
             // 3x3 to 4x4.
-            let indices = [0, 1, 2, 4, 5, 6, 8, 9, 10];
-            let from = indices.map(bit);
-
-            let indices = [15, 16, 17, 18, 20, 21, 22, 23, 25, 26, 27, 28, 30, 31, 32, 33];
-            let value = indices.map(bit);
+            let from = [0, 1, 2, 4, 5, 6, 8, 9, 10].map(bit);
+            let value = [15, 16, 17, 18, 20, 21, 22, 23, 25, 26, 27, 28, 30, 31, 32, 33].map(bit);
 
             for key in three_by_three_permutations(from) {
                 three_to_four[key] = value;

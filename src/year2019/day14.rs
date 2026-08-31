@@ -42,9 +42,8 @@ pub fn parse(input: &str) -> Vec<Reaction> {
 
     for line in lines {
         let mut tokens = line
-            .split(|c: char| !c.is_ascii_alphanumeric())
+            .rsplit(|c: char| !c.is_ascii_alphanumeric())
             .filter(|s| !s.is_empty())
-            .rev()
             .chunk::<2>();
 
         // Assigns other indices in the arbitrary order that chemicals are encountered.

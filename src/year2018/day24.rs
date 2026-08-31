@@ -96,9 +96,7 @@ pub fn part2(input: &Input) -> i32 {
 
 fn worker(input: &Input, iter: &AtomicIter) -> Option<(u32, i32)> {
     while let Some(boost) = iter.next() {
-        // If the reindeer wins then set the score and signal all threads to stop.
-        // Use a channel to queue all potential scores as another thread may already have sent a
-        // different value.
+        // If the reindeer wins then signal all threads to stop.
         let (kind, units) = fight(input, boost as i32);
 
         if kind == Kind::Immune {

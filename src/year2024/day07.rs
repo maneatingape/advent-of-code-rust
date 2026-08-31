@@ -53,11 +53,13 @@ pub fn parse(input: &str) -> Input {
         equation.clear();
         equation.extend(line.iter_unsigned::<u64>());
 
+        let (test_value, last) = (equation[0], equation.len() - 1);
+
         // If an equation is valid for part one then it's also valid for part two.
-        if valid(&equation, equation[0], equation.len() - 1, false) {
-            (part_one + equation[0], part_two + equation[0])
-        } else if valid(&equation, equation[0], equation.len() - 1, true) {
-            (part_one, part_two + equation[0])
+        if valid(&equation, test_value, last, false) {
+            (part_one + test_value, part_two + test_value)
+        } else if valid(&equation, test_value, last, true) {
+            (part_one, part_two + test_value)
         } else {
             (part_one, part_two)
         }

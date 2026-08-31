@@ -270,7 +270,7 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 | 9 | [Sensor Boost](https://adventofcode.com/2019/day/9) | [Source](src/year2019/day09.rs) | 1008 |
 | 10 | [Monitoring Station](https://adventofcode.com/2019/day/10) | [Source](src/year2019/day10.rs) | 342 |
 | 11 | [Space Police](https://adventofcode.com/2019/day/11) | [Source](src/year2019/day11.rs) | 320 |
-| 12 | [The N-Body Problem](https://adventofcode.com/2019/day/12) | [Source](src/year2019/day12.rs) | 838 |
+| 12 | [The N-Body Problem](https://adventofcode.com/2019/day/12) | [Source](src/year2019/day12.rs) | 638 |
 | 13 | [Care Package](https://adventofcode.com/2019/day/13) | [Source](src/year2019/day13.rs) | 2527 |
 | 14 | [Space Stoichiometry](https://adventofcode.com/2019/day/14) | [Source](src/year2019/day14.rs) | 17 |
 | 15 | [Oxygen System](https://adventofcode.com/2019/day/15) | [Source](src/year2019/day15.rs) | 291 |

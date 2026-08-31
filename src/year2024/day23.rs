@@ -50,7 +50,7 @@ pub fn part1(input: &Input) -> usize {
             seen[n1] = true;
 
             for (i, &n2) in neighbors.iter().enumerate() {
-                for &n3 in neighbors.iter().skip(i) {
+                for &n3 in &neighbors[i + 1..] {
                     // Skip nodes if we've already seen them.
                     if !seen[n2] && !seen[n3] && edges[n2][n3] {
                         triangles += 1;

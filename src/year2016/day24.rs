@@ -80,14 +80,16 @@ pub fn parse(input: &str) -> Input {
     // Initialize a table for each part: 2ⁿ⁻¹ sets with n-1 distances per set. Default each g({k},k)
     // singleton to distance[0][k+1] (since bit 0 maps to node 1), while the initial value of other
     // sets does not matter.
+    let others = found.len() - 1;
     let mut table = [[0_u16; 7]; 1 << 7];
-    for k in 0..found.len() - 1 {
+
+    for k in 0..others {
         table[1 << k][k] = distance[0][k + 1];
     }
 
     // Visit each non-empty set in order, with no work to do for singleton sets. Start from 3,
     // since 1 and 2 are singleton sets.
-    for set in 3_usize..(1 << (found.len() - 1)) {
+    for set in 3_usize..(1 << others) {
         if set.is_power_of_two() {
             continue;
         }
@@ -110,9 +112,8 @@ pub fn parse(input: &str) -> Input {
     // With the sets now built, we have 7 candidates for each answer.
     let mut part_one = u16::MAX;
     let mut part_two = u16::MAX;
-    for (k, &path_len) in
-        table[(1 << (found.len() - 1)) - 1].iter().take(found.len() - 1).enumerate()
-    {
+
+    for (k, &path_len) in table[(1 << others) - 1].iter().take(others).enumerate() {
         part_one = part_one.min(path_len);
         part_two = part_two.min(path_len + distance[k + 1][0]);
     }

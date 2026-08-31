@@ -15,7 +15,7 @@ pub fn parse(input: &str) -> Input {
 
     while index < memory.len() {
         // Skip junk characters.
-        if memory[index] != b'm' && memory[index] != b'd' {
+        if !matches!(memory[index], b'm' | b'd') {
             index += 1;
             continue;
         }

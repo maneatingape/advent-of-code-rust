@@ -181,25 +181,20 @@ fn combat(mut deck1: Deck, mut deck2: Deck, cache: &mut Cache, depth: usize) -> 
 
         let (card1, card2) = (deck1.pop_front(), deck2.pop_front());
 
-        if deck1.size() < card1 || deck2.size() < card2 {
-            if card1 > card2 {
-                deck1.push_back(card1);
-                deck1.push_back(card2);
-            } else {
-                deck2.push_back(card2);
-                deck2.push_back(card1);
-            }
+        // If either player lacks enough cards to recurse then the higher card simply wins.
+        let player1_wins = if deck1.size() < card1 || deck2.size() < card2 {
+            card1 > card2
         } else {
-            match combat(deck1.copy(card1), deck2.copy(card2), cache, depth + 1) {
-                Winner::Player1(_) => {
-                    deck1.push_back(card1);
-                    deck1.push_back(card2);
-                }
-                Winner::Player2(_) => {
-                    deck2.push_back(card2);
-                    deck2.push_back(card1);
-                }
-            }
+            let sub_game = combat(deck1.copy(card1), deck2.copy(card2), cache, depth + 1);
+            matches!(sub_game, Winner::Player1(_))
+        };
+
+        if player1_wins {
+            deck1.push_back(card1);
+            deck1.push_back(card2);
+        } else {
+            deck2.push_back(card2);
+            deck2.push_back(card1);
         }
     }
 

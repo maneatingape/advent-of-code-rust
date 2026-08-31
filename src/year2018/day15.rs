@@ -144,9 +144,7 @@ pub fn part2(input: &Input) -> i32 {
 
 fn worker(input: &Input, iter: &AtomicIter) -> Option<(u32, i32)> {
     while let Some(power) = iter.next() {
-        // If the Elves win then set the score and signal all threads to stop.
-        // Use a channel to queue all potential scores as another thread may already have sent a
-        // different value.
+        // If the Elves win then signal all threads to stop.
         if let Some(score) = fight(input, power as i32, true) {
             iter.stop();
             return Some((power, score));

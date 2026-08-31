@@ -42,14 +42,11 @@ pub fn part2(grid: &Grid<u8>) -> u32 {
             let point = Point::new(x, y);
 
             if grid[point] == b'A' {
-                let ul = grid[Point::new(x - 1, y - 1)];
-                let ur = grid[Point::new(x + 1, y - 1)];
-                let dl = grid[Point::new(x - 1, y + 1)];
-                let dr = grid[Point::new(x + 1, y + 1)];
                 // ASCII "M" is 77 and "S" is 83 so the absolute difference is 6.
                 // No other combination of letters causes this difference.
                 // "MS" on both diagonals is a match.
-                result += (ul.abs_diff(dr) == 6 && ur.abs_diff(dl) == 6) as u32;
+                let diagonal = |corner| grid[point + corner].abs_diff(grid[point - corner]);
+                result += u32::from(diagonal(UP + LEFT) == 6 && diagonal(UP + RIGHT) == 6);
             }
         }
     }

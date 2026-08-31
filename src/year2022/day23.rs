@@ -52,7 +52,7 @@ pub fn part1(input: &Input) -> usize {
     }
 
     // Find the total number of elves and the bounding rectangle.
-    let grid = input.grid;
+    let grid = &input.grid;
     let elves = grid.iter().flat_map(U256::as_array).map(u8::count_ones).sum::<u32>() as usize;
 
     // Vertical bounds.
@@ -91,17 +91,19 @@ fn step(input: &mut Input, order: &mut [Direction]) -> bool {
 
     let mut moved = false;
 
-    let mut prev;
     // Find horizontal neighbors in each row. To make movement calculations easier
     // we invert so that a 1 bit means movement is *possible*.
-    let mut cur = grid[0].shr().or(grid[0]).or(grid[0].shl()).not();
-    let mut next = grid[1].shr().or(grid[1]).or(grid[1].shl()).not();
+    let horizontal = |row: U256| row.shr().or(row).or(row.shl()).not();
+
+    let mut prev;
+    let mut cur = horizontal(grid[0]);
+    let mut next = horizontal(grid[1]);
 
     for i in start..end {
         // Calculating neighbors is relatively expensive so reuse results between rows.
         prev = cur;
         cur = next;
-        next = grid[i + 1].shr().or(grid[i + 1]).or(grid[i + 1].shl()).not();
+        next = horizontal(grid[i + 1]);
 
         let mut up = prev;
         let mut down = next;
@@ -145,14 +147,11 @@ fn step(input: &mut Input, order: &mut [Direction]) -> bool {
     // Due to the movement rules we only need to check horizontal and vertical movement into
     // the same spot (horizontal and vertical movement can never collide with each other).
     for i in start..end {
-        let up = north[i];
-        let down = south[i];
-        let left = west[i];
-        let right = east[i];
-        north[i] = north[i].and(down.not());
-        south[i] = south[i].and(up.not());
-        west[i] = west[i].and(right.not());
-        east[i] = east[i].and(left.not());
+        let (up, down, left, right) = (north[i], south[i], west[i], east[i]);
+        north[i] = up.and(down.not());
+        south[i] = down.and(up.not());
+        west[i] = left.and(right.not());
+        east[i] = right.and(left.not());
     }
 
     for i in start..end {

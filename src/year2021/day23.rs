@@ -207,7 +207,7 @@ fn organize(burrow: Burrow) -> usize {
         if changed {
             // If amphipods moved back to their home burrow in the condense phase then
             // check if we're fully organized.
-            if burrow.rooms.iter().enumerate().all(|(i, r)| open[i] && r.size() == 4) {
+            if burrow.rooms.iter().zip(open).all(|(room, open)| open && room.size() == 4) {
                 return energy;
             }
 

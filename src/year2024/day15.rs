@@ -47,12 +47,8 @@ pub fn part1(input: &Input<'_>) -> i32 {
 
     // Treat moves as a single string ignoring any newline characters.
     for b in moves.bytes() {
-        match b {
-            b'<' => narrow(&mut grid, &mut position, LEFT),
-            b'>' => narrow(&mut grid, &mut position, RIGHT),
-            b'^' => narrow(&mut grid, &mut position, UP),
-            b'v' => narrow(&mut grid, &mut position, DOWN),
-            _ => (),
+        if b != b'\n' {
+            narrow(&mut grid, &mut position, Point::from(b));
         }
     }
 
@@ -175,9 +171,8 @@ fn gps(grid: &Grid<u8>, needle: u8) -> i32 {
 
     for y in 0..grid.height {
         for x in 0..grid.width {
-            let point = Point::new(x, y);
-            if grid[point] == needle {
-                result += 100 * point.y + point.x;
+            if grid[Point::new(x, y)] == needle {
+                result += 100 * y + x;
             }
         }
     }

@@ -67,16 +67,14 @@ struct State<'a> {
 
 impl State<'_> {
     fn new(input: &[u8]) -> State<'_> {
-        // Rocks and jets repeat endlessly.
         // 13,000 is the maximum possible height that the tower could reach after 5000 rocks.
-        let mut state = State {
-            rocks: ROCKS.iter().copied().cycle(),
-            jets: input.iter().copied().cycle(),
-            tower: vec![0; 13_000],
-            height: 0,
-        };
-        state.tower[0] = FLOOR;
-        state
+        let mut tower = vec![0; 13_000];
+        tower[0] = FLOOR;
+
+        // Rocks and jets repeat endlessly.
+        let rocks = ROCKS.iter().copied().cycle();
+        let jets = input.iter().copied().cycle();
+        State { rocks, jets, tower, height: 0 }
     }
 }
 

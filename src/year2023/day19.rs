@@ -14,13 +14,14 @@
 //! 1, 2 or 3 new ranges, then sends those ranges to the respective rule.
 //!
 //! [`Day 5`]: crate::year2023::day05
+use std::ops::Range;
+
 use crate::util::hash::*;
 use crate::util::iter::*;
 use crate::util::parse::*;
 
 pub struct Rule<'a> {
-    start: u32,
-    end: u32,
+    range: Range<u32>,
     category: usize,
     next: &'a str,
 }
@@ -45,7 +46,7 @@ pub fn parse(input: &str) -> Input<'_> {
         for [first, second] in iter.chunk::<2>() {
             let rule = if second.is_empty() {
                 // The last rule will match everything so pick category 0 arbitrarily.
-                Rule { start: 1, end: 4001, category: 0, next: first }
+                Rule { range: 1..4001, category: 0, next: first }
             } else {
                 // Map each category to an index for convenience so that we can store a part
                 // in a fixed-size array.
@@ -62,8 +63,8 @@ pub fn parse(input: &str) -> Input<'_> {
 
                 // Convert each rule into a half open range.
                 match first.as_bytes()[1] {
-                    b'<' => Rule { start: 1, end: value, category, next },
-                    b'>' => Rule { start: value + 1, end: 4001, category, next },
+                    b'<' => Rule { range: 1..value, category, next },
+                    b'>' => Rule { range: value + 1..4001, category, next },
                     _ => unreachable!(),
                 }
             };
@@ -91,9 +92,7 @@ pub fn part1(input: &Input<'_>) -> u32 {
                 // Find the first matching rule.
                 key = workflows[key]
                     .iter()
-                    .find(|rule| {
-                        rule.start <= part[rule.category] && part[rule.category] < rule.end
-                    })
+                    .find(|rule| rule.range.contains(&part[rule.category]))
                     .unwrap()
                     .next;
             }
@@ -117,12 +116,13 @@ pub fn part2(input: &Input<'_>) -> u64 {
             continue;
         }
 
-        let Rule { start: s2, end: e2, category, next } = workflows[key][index];
+        let Rule { range, category, next } = &workflows[key][index];
+        let category = *category;
         let (s1, e1) = part[category];
 
         // x1 and x2 are the possible overlap.
-        let x1 = s1.max(s2);
-        let x2 = e1.min(e2);
+        let x1 = s1.max(range.start);
+        let x2 = e1.min(range.end);
 
         if x1 >= x2 {
             // No overlap. Check the next rating.

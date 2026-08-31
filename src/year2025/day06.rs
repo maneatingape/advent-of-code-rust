@@ -30,12 +30,10 @@ pub fn parse(input: &str) -> Input {
 
         // Use iterators directly.
         let plus = grid[Point::new(left, bottom)] == b'+';
-        let first: u64 = if plus { rows.sum() } else { rows.product() };
-        let second: u64 = if plus { cols.sum() } else { cols.product() };
+        part_one += if plus { rows.sum::<u64>() } else { rows.product() };
+        part_two += if plus { cols.sum::<u64>() } else { cols.product() };
 
         right = left - 1;
-        part_one += first;
-        part_two += second;
     }
 
     (part_one, part_two)

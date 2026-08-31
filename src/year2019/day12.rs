@@ -48,7 +48,7 @@ pub fn part2(input: &Input) -> usize {
     let update = |axis: &mut Axis, period: &mut usize, count: usize| {
         if *period == 0 {
             *axis = step(*axis);
-            if stopped(*axis) {
+            if axis[4..] == [0; 4] {
                 *period = count;
             }
         }
@@ -82,8 +82,4 @@ fn step(axis: Axis) -> Axis {
     let n3 = v3 - c - e - f;
 
     [p0 + n0, p1 + n1, p2 + n2, p3 + n3, n0, n1, n2, n3]
-}
-
-fn stopped(axis: Axis) -> bool {
-    axis[4] == 0 && axis[5] == 0 && axis[6] == 0 && axis[7] == 0
 }

@@ -87,9 +87,7 @@ impl Add for Point3D {
     type Output = Self;
 
     fn add(self, rhs: Self) -> Self {
-        let Self(x1, y1, z1) = self;
-        let Self(x2, y2, z2) = rhs;
-        Self(x1 + x2, y1 + y2, z1 + z2)
+        Self(self.0 + rhs.0, self.1 + rhs.1, self.2 + rhs.2)
     }
 }
 
@@ -97,9 +95,7 @@ impl Sub for Point3D {
     type Output = Self;
 
     fn sub(self, rhs: Self) -> Self {
-        let Self(x1, y1, z1) = self;
-        let Self(x2, y2, z2) = rhs;
-        Self(x1 - x2, y1 - y2, z1 - z2)
+        Self(self.0 - rhs.0, self.1 - rhs.1, self.2 - rhs.2)
     }
 }
 
@@ -158,7 +154,7 @@ impl Located {
         // that we can build "chains" of scanners, for example A -> B -> C, where A and B overlap,
         // B and C overlap, but not A and C.
         let beacons: Vec<_> =
-            beacons.iter().map(|b| b.transform(orientation) + translation).collect();
+            beacons.into_iter().map(|b| b.transform(orientation) + translation).collect();
         let oriented = beacons.iter().copied().collect();
 
         Self { beacons, signature, oriented, translation }

@@ -17,24 +17,20 @@
 //! code to be reused.
 //!
 //! [`count_ones`]: u32::count_ones
-use crate::util::grid::*;
-use crate::util::point::*;
-
 type Input = Vec<(Vec<u32>, Vec<u32>)>;
 
 pub fn parse(input: &str) -> Input {
     input
         .split("\n\n")
         .map(|block| {
-            let grid = Grid::parse(block);
-            let bit = |point| u32::from(grid[point] == b'#');
+            let grid: Vec<_> = block.lines().map(str::as_bytes).collect();
+            let (width, height) = (grid[0].len(), grid.len());
+            let bit = |x: usize, y: usize| u32::from(grid[y][x] == b'#');
 
-            let rows: Vec<_> = (0..grid.height)
-                .map(|y| (0..grid.width).fold(0, |n, x| (n << 1) | bit(Point::new(x, y))))
-                .collect();
-            let columns: Vec<_> = (0..grid.width)
-                .map(|x| (0..grid.height).fold(0, |n, y| (n << 1) | bit(Point::new(x, y))))
-                .collect();
+            let rows =
+                (0..height).map(|y| (0..width).fold(0, |n, x| (n << 1) | bit(x, y))).collect();
+            let columns =
+                (0..width).map(|x| (0..height).fold(0, |n, y| (n << 1) | bit(x, y))).collect();
 
             (rows, columns)
         })
