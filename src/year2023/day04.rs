@@ -26,7 +26,9 @@ pub fn part2(input: &[usize]) -> u32 {
     let mut copies = vec![1; input.len()];
 
     for (i, &n) in input.iter().enumerate() {
-        (0..n).for_each(|j| copies[i + j + 1] += copies[i]);
+        for j in 0..n {
+            copies[i + j + 1] += copies[i];
+        }
     }
 
     copies.iter().sum()

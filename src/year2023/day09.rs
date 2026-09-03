@@ -43,8 +43,8 @@ type Input = (i64, i64);
 
 pub fn parse(input: &str) -> Input {
     // Determine how many numbers are on each row. Assume each row has the same amount.
-    let (prefix, _) = input.split_once('\n').unwrap();
-    let row = prefix.iter_signed::<i64>().count() as i64;
+    let first = input.lines().next().unwrap();
+    let row = first.iter_signed::<i64>().count() as i64;
 
     // Calculate [Pascal's Triangle](https://en.wikipedia.org/wiki/Pascal%27s_triangle)
     // for the required row, flipping the sign on each second coefficient.

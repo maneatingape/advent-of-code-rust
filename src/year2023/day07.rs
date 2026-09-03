@@ -43,7 +43,7 @@ pub fn part2(input: &[Hand]) -> usize {
     sort(input, 1)
 }
 
-fn sort(input: &[Hand], j: usize) -> usize {
+fn sort(input: &[Hand], jack: usize) -> usize {
     let mut hands: Vec<_> = input
         .iter()
         .map(|&Hand { cards, bid }| {
@@ -51,7 +51,7 @@ fn sort(input: &[Hand], j: usize) -> usize {
                 b'A' => 14,
                 b'K' => 13,
                 b'Q' => 12,
-                b'J' => j,
+                b'J' => jack,
                 b'T' => 10,
                 _ => b.to_decimal(),
             });
