@@ -9,7 +9,7 @@
 #![cfg_attr(feature = "simd", allow(unstable_features), feature(portable_simd))]
 
 /// Enumerates all combinations of years and days, passing them to a callback macro.
-/// Used by `benchmark.rs`, `main.rs` and `test.rs`.
+/// Used by `benchmark.rs`, `lib.rs`, `main.rs` and `test.rs`.
 #[macro_export]
 macro_rules! solutions {
     ($callback:ident) => {
@@ -60,7 +60,14 @@ macro_rules! solutions {
     };
 }
 
-#[doc(hidden)]
+/// Declares a public module for each year documented with its description and containing a
+/// sub-module for each day.
+///
+/// Two interesting things:
+/// * Module declaration is possible via macro.
+/// * Rust allows the day sub-module declarations directly without needing an intermediate `mod.rs`
+///   in each year folder.
+#[macro_export]
 macro_rules! library {
     ($($year:ident $description:literal $($day:ident)*),*) => {
         $(pub mod $year {

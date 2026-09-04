@@ -2,6 +2,7 @@ use std::env::args;
 use std::fs::read_to_string;
 use std::time::{Duration, Instant};
 
+use aoc::solutions;
 use aoc::util::ansi::*;
 use aoc::util::parse::*;
 
@@ -36,11 +37,8 @@ fn main() {
     let mut iter = args().skip(1).flat_map(|arg| arg.iter_unsigned().collect::<Vec<u32>>());
     let (year, day) = (iter.next(), iter.next());
 
-    // Build list of all solutions.
-    let solutions = aoc::solutions!(run);
-
-    // Run selected solutions.
-    let (stars, duration) = solutions
+    // Build list of all solutions, then filter to run only selected solutions.
+    let (stars, duration) = solutions!(run)
         .into_iter()
         .filter(|s| year.is_none_or(|y| y == s.year))
         .filter(|s| day.is_none_or(|d| d == s.day))

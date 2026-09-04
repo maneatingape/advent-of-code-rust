@@ -28,12 +28,6 @@
 //     assert_eq!(part2(&input), 456);
 // }
 
-macro_rules! test {
-    ($($year:ident $description:literal $($day:ident)*),*) => {
-        $(pub mod $year {
-            $(pub mod $day;)*
-        })*
-    }
-}
+use aoc::{library, solutions};
 
-aoc::solutions!(test);
+solutions!(library);
