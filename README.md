@@ -137,7 +137,7 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 | 4 | [Scratchcards](https://adventofcode.com/2023/day/4) | [Source](src/year2023/day04.rs) | 20 |
 | 5 | [If You Give A Seed A Fertilizer](https://adventofcode.com/2023/day/5) | [Source](src/year2023/day05.rs) | 18 |
 | 6 | [Wait For It](https://adventofcode.com/2023/day/6) | [Source](src/year2023/day06.rs) | 1 |
-| 7 | [Camel Cards](https://adventofcode.com/2023/day/7) | [Source](src/year2023/day07.rs) | 71 |
+| 7 | [Camel Cards](https://adventofcode.com/2023/day/7) | [Source](src/year2023/day07.rs) | 57 |
 | 8 | [Haunted Wasteland](https://adventofcode.com/2023/day/8) | [Source](src/year2023/day08.rs) | 21 |
 | 9 | [Mirage Maintenance](https://adventofcode.com/2023/day/9) | [Source](src/year2023/day09.rs) | 18 |
 | 10 | [Pipe Maze](https://adventofcode.com/2023/day/10) | [Source](src/year2023/day10.rs) | 35 |

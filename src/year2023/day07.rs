@@ -1,20 +1,19 @@
 //! # Camel Cards
 //!
-//! The types of each hand are computed from the frequency of the cards ordered in descending order.
-//! For example, a full house would have 1 card with a frequency of 3 and a second with a
-//! frequency of 2, giving `[3, 2]`. Similarly, two pair would be `[2, 2, 1]`.
-//! Array comparisons will sort the hand types in order.
-//!
-//! To make comparisons faster the frequencies and the card ranks are packed into a `usize`:
+//! The type of each hand is computed from the frequency of its cards in descending order.
+//! For example, a full house has 1 card with a frequency of 3 and a second with a frequency of 2,
+//! giving `[3, 2]`. Similarly, two pair is `[2, 2, 1]`. To make comparisons faster the frequencies
+//! and the card ranks are packed into a `usize`, for example:
 //!
 //! * `55222` => `0x3200055222`
 //! * `32T3K` => `0x2111032a3d`
 //!
-//! For part two we add the number of jokers to the highest frequency (which could already be
-//! jokers!).
+//! For part two, the strongest hand type is always made by adding the number of jokers to the
+//! highest frequency card (which could also be jokers in the case of `JJJJJ`).
 //!
 //! * `QQQJA` => `0x41000ccc1a`
 use std::cmp::Reverse;
+use std::mem::replace;
 
 use crate::util::parse::*;
 
@@ -36,18 +35,18 @@ pub fn parse(input: &str) -> Vec<Hand> {
 }
 
 pub fn part1(input: &[Hand]) -> usize {
-    sort(input, 11)
+    winnings(input, 11)
 }
 
 pub fn part2(input: &[Hand]) -> usize {
-    sort(input, 1)
+    winnings(input, 1)
 }
 
-fn sort(input: &[Hand], jack: usize) -> usize {
+fn winnings(input: &[Hand], jack: usize) -> usize {
     let mut hands: Vec<_> = input
         .iter()
         .map(|&Hand { cards, bid }| {
-            let rank = cards.map(|b| match b {
+            let ranks = cards.map(|b| match b {
                 b'A' => 14,
                 b'K' => 13,
                 b'Q' => 12,
@@ -56,24 +55,25 @@ fn sort(input: &[Hand], jack: usize) -> usize {
                 _ => b.to_decimal(),
             });
 
-            let mut freq = [0; 15];
-            for r in rank {
-                freq[r] += 1;
+            let mut frequency = [0; 15];
+            for rank in ranks {
+                frequency[rank] += 1;
             }
 
-            let jokers = freq[1];
-            freq[1] = 0;
-            freq.sort_unstable_by_key(|&card| Reverse(card));
-            freq[0] += jokers;
+            // Set jokers aside so that they increase the biggest group.
+            let jokers = replace(&mut frequency[1], 0);
 
-            // To speed up comparisons, pack the frequencies and card ranks
-            // into the nibbles of a `usize`.
-            let key = freq[..5].iter().chain(&rank).fold(0, |key, &value| (key << 4) | value);
+            // Each card contributes its frequency once, then zero for any duplicates.
+            let mut groups = ranks.map(|rank| replace(&mut frequency[rank], 0));
+            groups.sort_unstable_by_key(|&count| Reverse(count));
+            groups[0] += jokers;
 
+            // To speed up comparisons, pack the groups and card ranks into hex nibbles.
+            let key = groups.iter().chain(&ranks).fold(0, |key, &value| (key << 4) | value);
             (key, bid)
         })
         .collect();
 
     hands.sort_unstable();
-    hands.iter().zip(1..).map(|((_, bid), rank)| bid * rank).sum()
+    hands.into_iter().zip(1..).map(|((_, bid), rank)| bid * rank).sum()
 }
