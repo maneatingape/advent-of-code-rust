@@ -46,7 +46,7 @@ macro_rules! solutions {
                 day01 day02 day03 day04 day05 day06 day07 day08 day09 day10 day11 day12
                 day13 day14 day15 day16 day17 day18 day19 day20 day21 day22 day23 day24 day25,
 
-            year2023 "Restore global snow production."
+            year2023 "Restore global snow production with an island hopping odyssey."
                 day01 day02 day03 day04 day05 day06 day07 day08 day09 day10 day11 day12
                 day13 day14 day15 day16 day17 day18 day19 day20 day21 day22 day23 day24 day25,
 
