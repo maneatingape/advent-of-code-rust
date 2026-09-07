@@ -26,7 +26,7 @@ pub fn parse(input: &str) -> Input {
     let (prefix, suffix) = input.split_once("\n\n").unwrap();
     let mut nodes = FastMap::with_capacity(1_000);
 
-    for line in suffix.lines() {
+    for line in suffix.as_bytes().chunks(17) {
         nodes.insert(&line[0..3], [&line[7..10], &line[12..15]]);
     }
 
@@ -35,14 +35,14 @@ pub fn parse(input: &str) -> Input {
     let mut todo = VecDeque::new();
     let mut seen = FastSet::new();
 
-    for &start in nodes.keys().filter(|k| k.ends_with('A')) {
+    for &start in nodes.keys().filter(|key| key.ends_with(b"A")) {
         // Find the length of the cycle using a BFS from each start node.
         todo.push_back((start, 0));
         seen.insert(start);
 
         while let Some((node, cost)) = todo.pop_front() {
-            if node.ends_with('Z') {
-                if start == "AAA" {
+            if node.ends_with(b"Z") {
+                if start == b"AAA" {
                     part_one = part_one.lcm(cost);
                 }
                 part_two = part_two.lcm(cost);
