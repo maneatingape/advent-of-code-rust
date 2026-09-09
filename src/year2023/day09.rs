@@ -37,6 +37,10 @@
 //! Let `n` be the number of values and `k` the index of each value. The coefficient for each value
 //! is `(n k)` if `k` is even or `-(n k)` if `k` is odd. For part one we then flip the sign of the
 //! sum when `n` is odd.
+//!
+//! Each row of input represents points along a polynomial. Summing all rows together also forms a
+//! sequence of points from a polynomial, and extending the terms of that summation gives the same
+//! results as summing the extension of each row in isolation, but with less overall work.
 use crate::util::parse::*;
 
 type Input = (i64, i64);
@@ -44,27 +48,26 @@ type Input = (i64, i64);
 pub fn parse(input: &str) -> Input {
     // Determine how many numbers are on each row. Assume each row has the same amount.
     let first = input.lines().next().unwrap();
-    let row = first.iter_signed::<i64>().count() as i64;
+    let count = first.iter_signed::<i64>().count();
+
+    // Sum all rows together before extrapolating terms.
+    let mut terms = vec![0_i64; count];
+    for (i, value) in (0..count).cycle().zip(input.iter_signed::<i64>()) {
+        terms[i] += value;
+    }
 
     // Calculate [Pascal's Triangle](https://en.wikipedia.org/wiki/Pascal%27s_triangle)
     // for the required row, flipping the sign on each second coefficient.
     let mut coefficient = 1;
-    let mut triangle = vec![1];
-
-    for i in 0..row {
-        coefficient = (coefficient * (i - row)) / (i + 1);
-        triangle.push(coefficient);
-    }
-
-    // Use adjusted binomial coefficients to calculate answers for each row.
     let mut part_one = 0;
     let mut part_two = 0;
 
-    for line in input.lines() {
-        for (k, value) in line.iter_signed::<i64>().enumerate() {
-            part_one += value * triangle[k];
-            part_two += value * triangle[k + 1];
-        }
+    for (value, k) in terms.iter().zip(0..) {
+        part_one += value * coefficient;
+
+        coefficient = (coefficient * (k - count as i64)) / (k + 1);
+
+        part_two += value * coefficient;
     }
 
     (part_one, part_two)
