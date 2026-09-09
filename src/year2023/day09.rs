@@ -44,15 +44,16 @@ type Input = (i64, i64);
 pub fn parse(input: &str) -> Input {
     // Determine how many numbers are on each row. Assume each row has the same amount.
     let first = input.lines().next().unwrap();
-    let row = first.iter_signed::<i64>().count() as i64;
+    let count = first.iter_signed::<i64>().count();
 
     // Calculate [Pascal's Triangle](https://en.wikipedia.org/wiki/Pascal%27s_triangle)
     // for the required row, flipping the sign on each second coefficient.
+    let n = count as i64;
     let mut coefficient = 1;
     let mut triangle = vec![1];
 
-    for i in 0..row {
-        coefficient = (coefficient * (i - row)) / (i + 1);
+    for k in 0..n {
+        coefficient = coefficient * (k - n) / (k + 1);
         triangle.push(coefficient);
     }
 
@@ -60,11 +61,9 @@ pub fn parse(input: &str) -> Input {
     let mut part_one = 0;
     let mut part_two = 0;
 
-    for line in input.lines() {
-        for (k, value) in line.iter_signed::<i64>().enumerate() {
-            part_one += value * triangle[k];
-            part_two += value * triangle[k + 1];
-        }
+    for (k, value) in (0..count).cycle().zip(input.iter_signed::<i64>()) {
+        part_one += value * triangle[k];
+        part_two += value * triangle[k + 1];
     }
 
     (part_one, part_two)
