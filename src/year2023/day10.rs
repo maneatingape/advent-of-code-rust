@@ -37,11 +37,9 @@ pub fn parse(input: &str) -> Input {
         }
 
         // Change direction at corner pieces.
-        direction = match (grid[position], direction) {
-            (b'7', UP) | (b'J', DOWN) => LEFT,
-            (b'F', UP) | (b'L', DOWN) => RIGHT,
-            (b'7' | b'F', _) => DOWN,
-            (b'J' | b'L', _) => UP,
+        direction = match grid[position] {
+            b'7' | b'L' => Point::new(direction.y, direction.x),
+            b'J' | b'F' => Point::new(-direction.y, -direction.x),
             _ => {
                 // We've looped all the way back to the start.
                 area += determinant(corner, position);
