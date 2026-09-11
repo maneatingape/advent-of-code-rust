@@ -17,9 +17,14 @@
 //! * `d - c + d - b + d - a` => `3d - (a + b + c)` => `2c - (a + b)`
 //! * Total: `2 * [2c - (a + b)]`
 //!
-//! This implies that we only need the *count* of the number of galaxies at each coordinate and
-//! can multiply the total value by that count. This also finds gaps with no galaxies to
-//! calculate the expanded coordinates.
+//! This implies that we only need the *count* of the number of galaxies at each coordinate. A
+//! further simplification is looking at the incremental difference between galaxies.
+//!
+//! | Distance         | Delta (row minus previous row) |
+//! | ---------------- | ------------------------------ |
+//! | 1b - (a)         | 1(b - a)                       |
+//! | 2c - (a + b)     | 2(c - b)                       |
+//! | 3d - (a + b + c) | 3(d - c)                       |
 pub struct Input {
     xs: [usize; 140],
     ys: [usize; 140],
@@ -42,29 +47,22 @@ pub fn parse(input: &str) -> Input {
 }
 
 pub fn part1(input: &Input) -> usize {
-    axis(&input.xs, 1) + axis(&input.ys, 1)
+    axis(&input.xs, 2) + axis(&input.ys, 2)
 }
 
 pub fn part2(input: &Input) -> usize {
-    axis(&input.xs, 999999) + axis(&input.ys, 999999)
+    axis(&input.xs, 1_000_000) + axis(&input.ys, 1_000_000)
 }
 
-fn axis(counts: &[usize], factor: usize) -> usize {
-    let mut gaps = 0;
+fn axis(counts: &[usize], empty_space: usize) -> usize {
     let mut result = 0;
-    let mut prefix_sum = 0;
-    let mut prefix_items = 0;
+    let mut galaxies = 0;
+    let mut sum = 0;
 
-    for (i, &count) in counts.iter().enumerate() {
-        if count > 0 {
-            let expanded = i + factor * gaps;
-            let extra = prefix_items * expanded - prefix_sum;
-            result += count * extra;
-            prefix_sum += count * expanded;
-            prefix_items += count;
-        } else {
-            gaps += 1;
-        }
+    for &count in counts {
+        result += count * sum;
+        galaxies += count;
+        sum += galaxies * if count > 0 { 1 } else { empty_space };
     }
 
     result
