@@ -42,29 +42,24 @@ pub fn parse(input: &str) -> Input {
 }
 
 pub fn part1(input: &Input) -> usize {
-    axis(&input.xs, 1) + axis(&input.ys, 1)
+    axis(&input.xs, 2) + axis(&input.ys, 2)
 }
 
 pub fn part2(input: &Input) -> usize {
-    axis(&input.xs, 999999) + axis(&input.ys, 999999)
+    axis(&input.xs, 1_000_000) + axis(&input.ys, 1_000_000)
 }
 
-fn axis(counts: &[usize], factor: usize) -> usize {
-    let mut gaps = 0;
+fn axis(counts: &[usize], empty_space: usize) -> usize {
     let mut result = 0;
     let mut prefix_sum = 0;
-    let mut prefix_items = 0;
+    let mut galaxies = 0;
+    let mut coordinate = 0;
 
-    for (i, &count) in counts.iter().enumerate() {
-        if count > 0 {
-            let expanded = i + factor * gaps;
-            let extra = prefix_items * expanded - prefix_sum;
-            result += count * extra;
-            prefix_sum += count * expanded;
-            prefix_items += count;
-        } else {
-            gaps += 1;
-        }
+    for &count in counts {
+        result += count * (galaxies * coordinate - prefix_sum);
+        prefix_sum += count * coordinate;
+        galaxies += count;
+        coordinate += if count > 0 { 1 } else { empty_space };
     }
 
     result
