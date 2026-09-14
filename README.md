@@ -145,7 +145,7 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 | 12 | [Hot Springs](https://adventofcode.com/2023/day/12) | [Source](src/year2023/day12.rs) | 455 |
 | 13 | [Point of Incidence](https://adventofcode.com/2023/day/13) | [Source](src/year2023/day13.rs) | 66 |
 | 14 | [Parabolic Reflector Dish](https://adventofcode.com/2023/day/14) | [Source](src/year2023/day14.rs) | 632 |
-| 15 | [Lens Library](https://adventofcode.com/2023/day/15) | [Source](src/year2023/day15.rs) | 84 |
+| 15 | [Lens Library](https://adventofcode.com/2023/day/15) | [Source](src/year2023/day15.rs) | 48 |
 | 16 | [The Floor Will Be Lava](https://adventofcode.com/2023/day/16) | [Source](src/year2023/day16.rs) | 153 |
 | 17 | [Clumsy Crucible](https://adventofcode.com/2023/day/17) | [Source](src/year2023/day17.rs) | 2379 |
 | 18 | [Lavaduct Lagoon](https://adventofcode.com/2023/day/18) | [Source](src/year2023/day18.rs) | 11 |
