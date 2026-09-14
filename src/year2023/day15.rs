@@ -1,41 +1,53 @@
 //! # Lens Library
 //!
-//! Calculates part one and two at the same time as a speed optimization.
+//! Calculates part one and two at the same time as a speed optimization. Assumes labels are always
+//! 8 characters or fewer.
 use std::array::from_fn;
 
 use crate::util::parse::*;
 
 type Input = (usize, usize);
 
-struct Item<'a> {
-    label: &'a [u8],
+struct Item {
+    label: usize,
     lens: usize,
 }
 
 pub fn parse(input: &str) -> Input {
+    let input = input.trim();
+    let bytes = input.as_bytes();
+
     let mut part_one = 0;
     let mut part_two = 0;
-    let mut boxes: [Vec<Item<'_>>; 256] = from_fn(|_| Vec::new());
+    let mut hash = 0;
+    let mut label = 0;
+    let mut boxes: [Vec<Item>; 256] = from_fn(|_| Vec::new());
 
-    for step in input.trim().as_bytes().split(|&b| b == b',') {
-        part_one += hash(step);
-        let (&last, rest) = step.split_last().unwrap();
-
-        if last == b'-' {
-            // If the label exists then remove it.
-            boxes[hash(rest)].retain(|item| item.label != rest);
-        } else {
-            let label = &rest[..rest.len() - 1];
-            let slot = &mut boxes[hash(label)];
-            let lens = last.to_decimal();
-
-            // Replace or append new lens.
-            if let Some(i) = slot.iter().position(|item| item.label == label) {
-                slot[i].lens = lens;
-            } else {
-                slot.push(Item { label, lens });
+    for (i, b) in input.bytes().enumerate() {
+        match b {
+            b',' => {
+                part_one += hash;
+                hash = 0;
+                label = 0;
+                continue;
             }
+            b'-' => boxes[hash].retain(|item| item.label != label),
+            b'=' => {
+                let lens = bytes[i + 1].to_decimal();
+                let slot = &mut boxes[hash];
+
+                if let Some(item) = slot.iter_mut().find(|item| item.label == label) {
+                    item.lens = lens;
+                } else {
+                    slot.push(Item { label, lens });
+                }
+            }
+            _ => (),
         }
+
+        let u = usize::from(b);
+        hash = ((hash + u) * 17) & 0xff;
+        label = (label << 8) | u;
     }
 
     for (i, next) in boxes.iter().enumerate() {
@@ -44,7 +56,8 @@ pub fn parse(input: &str) -> Input {
         }
     }
 
-    (part_one, part_two)
+    // The final step has no trailing comma.
+    (part_one + hash, part_two)
 }
 
 pub fn part1(input: &Input) -> usize {
@@ -53,10 +66,4 @@ pub fn part1(input: &Input) -> usize {
 
 pub fn part2(input: &Input) -> usize {
     input.1
-}
-
-/// Custom hash function.
-#[inline]
-fn hash(slice: &[u8]) -> usize {
-    slice.iter().fold(0, |acc, &b| ((acc + b as usize) * 17) & 0xff)
 }
