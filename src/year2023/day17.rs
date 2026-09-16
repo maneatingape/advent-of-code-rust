@@ -4,10 +4,6 @@
 //! This [fantastic blog](https://www.redblobgames.com/pathfinding/a-star/introduction.html)
 //! is a great introduction to this algorithm.
 //!
-//! The heuristic is the [Manhattan distance](https://en.wikipedia.org/wiki/Taxicab_geometry)
-//! to the bottom right corner. This will never overestimate the actual distance which is an
-//! essential characteristic in the heuristic.
-//!
 //! A crucial insight speeds things up. We only need to store `(position, direction)` pairs in
 //! the map of previously seen costs and do not also need to store the number of steps.
 //! The reason is that each time we generate new states from the current state we loop over all
@@ -19,163 +15,189 @@
 //! implicitly going to make a left or right turn immediately, entering a square from the opposite
 //! direction is equivalent. This reduces the storage space and time by half.
 //!
-//! To speed things up even further we use a trick. Classic A* uses a generic priority queue that
-//! can be implemented in Rust using a [`BinaryHeap`]. However, the total cost follows a strictly
-//! increasing order in a constrained range of values, so we can use a much faster
-//! [bucket queue](https://en.wikipedia.org/wiki/Bucket_queue). The maximum possible increase in
-//! heuristic is 10 × 9 from heat plus 10 for the distance change for a total of 100 buckets.
+//! ## Heuristic
+//!
+//! The obvious heuristic is the [Manhattan distance](https://en.wikipedia.org/wiki/Taxicab_geometry)
+//! to the bottom right corner. This never overestimates the actual cost, however it is so weak that
+//! the search ends up visiting almost every state in the grid.
+//!
+//! Instead we spend a little time up front computing a much sharper bound. Relaxing the puzzle by
+//! dropping the straight line rule entirely leaves a plain grid shortest path problem. Any real
+//! crucible route is also a valid route in the relaxed problem, so the relaxed distance from each
+//! square to the bottom right corner can never exceed the true remaining cost. The relaxed
+//! distances are computed once during parsing with a backwards [Dijkstra](https://en.wikipedia.org/wiki/Dijkstra's_algorithm)
+//! from the bottom right corner then shared with both parts.
+//!
+//! ## Implementation
+//!
+//! Classic A* uses a generic priority queue that can be implemented in Rust using a [`BinaryHeap`].
+//! However the total cost follows a strictly increasing order in a constrained range of values, so
+//! we can use a much faster [bucket queue](https://en.wikipedia.org/wiki/Bucket_queue).
+//!
+//! As the buckets are drained in increasing cost order, an entry is stale if its cost no longer
+//! agrees with the bucket it was found in. Checking this skips roughly half the states in part two.
+//!
+//! Finally the grid is surrounded by a border of zero cost squares. A square is only worth visiting
+//! if it improves on the previous best cost, and nothing improves on zero, so the search can move
+//! blindly in a straight line without a single bounds check.
 //!
 //! [`BinaryHeap`]: std::collections::BinaryHeap
-use std::iter::repeat_with;
+use std::array::from_fn;
 
 use crate::util::grid::*;
 use crate::util::parse::*;
 
-/// Parse the input into a 2D grid of `u8` then convert to `u32` for convenience.
-pub fn parse(input: &str) -> Grid<i32> {
-    let Grid { width, height, bytes } = Grid::parse(input);
-    let bytes = bytes.into_iter().map(u8::to_decimal).collect();
-    Grid { width, height, bytes }
+/// Border is the size of the longest possible straight line.
+const BORDER: usize = 10;
+
+pub struct Input {
+    size: usize,
+    stride: usize,
+    start: usize,
+    end: usize,
+    heat: Vec<u8>,
+    heuristic: Vec<u16>,
+}
+
+/// Parse the input into a bordered grid then precompute the heuristic shared by both parts.
+pub fn parse(input: &str) -> Input {
+    let grid = Grid::parse(input);
+    let size = grid.width as usize;
+    let stride = size + 2 * BORDER;
+    let start = stride * BORDER + BORDER;
+    let end = stride * stride - start - 1;
+
+    let mut heat = vec![0; stride * stride];
+    let mut heuristic = vec![0; stride * stride];
+
+    for y in 0..size {
+        for x in 0..size {
+            heat[start + y * stride + x] = grid.bytes[y * size + x].to_decimal();
+            heuristic[start + y * stride + x] = u16::MAX;
+        }
+    }
+
+    let mut input = Input { size, stride, start, end, heat, heuristic };
+    dijkstra(&mut input);
+    input
 }
 
 /// Search with a maximum of 3 steps in any direction.
-pub fn part1(grid: &Grid<i32>) -> i32 {
-    astar::<1, 3>(grid)
+pub fn part1(input: &Input) -> u16 {
+    astar::<1, 3>(input)
 }
 
 /// Search with a minimum of 4 and maximum of 10 steps in any direction. Using const generics
 /// to specify the limits allows the compiler to optimize and unroll loops, speeding things
-/// up by about 25%, versus specifying the loop limits as regular parameters.
-pub fn part2(grid: &Grid<i32>) -> i32 {
-    astar::<4, 10>(grid)
+/// up by about 5%, versus specifying the loop limits as regular parameters.
+pub fn part2(input: &Input) -> u16 {
+    astar::<4, 10>(input)
+}
+
+/// Cost to each square from the bottom right corner if the crucible could turn freely.
+///
+/// Entering a square always costs that square's heat, so the reverse edge from a square to each
+/// of its neighbours has the same weight in every direction.
+fn dijkstra(input: &mut Input) {
+    let Input { size, stride, end, .. } = *input;
+    let Input { heat, heuristic, .. } = input;
+
+    let mut loss = 0;
+    let mut remaining = size * size;
+    let mut todo: [_; 10] = from_fn(|_| Vec::with_capacity(100));
+
+    heuristic[end] = 0;
+    todo[0].push(end);
+
+    while remaining > 0 {
+        while let Some(position) = todo[loss % 10].pop() {
+            // Skip stale entries.
+            if heuristic[position] as usize == loss {
+                remaining -= 1;
+
+                let cost = loss as u16 + heat[position] as u16;
+                let bucket = cost as usize % 10;
+
+                for next in [position - 1, position + 1, position - stride, position + stride] {
+                    if cost < heuristic[next] {
+                        heuristic[next] = cost;
+                        todo[bucket].push(next);
+                    }
+                }
+            }
+        }
+
+        loss += 1;
+    }
 }
 
 /// Optimized A* search.
-fn astar<const L: i32, const U: i32>(grid: &Grid<i32>) -> i32 {
-    let size = grid.width;
-    let stride = size as usize;
-    let heat = &grid.bytes;
+fn astar<const L: usize, const U: usize>(input: &Input) -> u16 {
+    let Input { size, stride, start, end, .. } = *input;
+    let Input { heat, heuristic, .. } = input;
 
-    let mut index = 0;
-    let mut todo: Vec<_> = repeat_with(|| Vec::with_capacity(1_000)).take(100).collect();
-    let mut cost = vec![[i32::MAX; 2]; heat.len()];
+    // The border remains zero so that squares outside the grid are never visited.
+    let mut cost = vec![[0; 2]; heat.len()];
 
-    // Start from the top left corner checking both vertical and horizontal directions.
-    todo[0].push((0, 0, 0));
-    todo[0].push((0, 0, 1));
+    for y in 0..size {
+        let from = start + y * stride;
+        cost[from..from + size].fill([u16::MAX; 2]);
+    }
 
-    cost[0][0] = 0;
-    cost[0][1] = 0;
+    // Total cost of both starting states is the heuristic alone.
+    let mut loss = heuristic[start] as usize;
+    let mut todo: [_; 100] = from_fn(|_| Vec::with_capacity(1_000));
+
+    // We arbitrarily pick `0` to mean vertical and `1` to mean horizontal, stored in the lowest
+    // bit of the state alongside the position.
+    todo[loss % 100].push(start << 1);
+    todo[loss % 100].push((start << 1) | 1);
+    cost[start] = [0; 2];
 
     loop {
         // All items in the same bucket have the same priority.
-        while let Some((x, y, direction)) = todo[index % 100].pop() {
-            // Retrieve cost for our current location and direction.
-            let index = (size * y + x) as usize;
-            let steps = cost[index][direction];
+        while let Some(state) = todo[loss % 100].pop() {
+            let position = state >> 1;
+            let direction = state & 1;
+            let steps = cost[position][direction];
 
-            // The heuristic is used as an index into the bucket priority queue.
-            // Prefer heading toward the bottom right corner, except if we're in the top left
-            // quadrant where all directions are considered equally. This prevents a pathological
-            // dual frontier on some inputs that takes twice the time.
-            let heuristic = |x: i32, y: i32, cost: i32| {
-                let priority = (2 * size - x - y).min(size + size / 2);
-                ((cost + priority) % 100) as usize
-            };
+            // A cheaper route to this state was found after it was added to the queue.
+            if steps as usize + heuristic[position] as usize != loss {
+                continue;
+            }
 
             // Check if we've reached the end.
-            if x == size - 1 && y == size - 1 {
+            if position == end {
                 return steps;
             }
 
-            // Alternate directions each turn. We arbitrarily pick `0` to mean vertical and `1` to
-            // mean horizontal. These constants are used as offsets into the `cost` array.
-            if direction == 0 {
-                // We just moved vertically so now check both left and right directions.
+            // Alternate directions each turn, so a vertical arrival leaves horizontally
+            // and vice-versa.
+            let turn = 1 - direction;
+            let delta = if direction == 0 { 1 } else { stride };
 
-                // Each direction loop is the same:
-                // * Check to see if we've gone out of bounds
-                // * Increase the cost by the "heat" of the square we've just moved into.
-                // * Check if we've already been to this location with a lower cost.
-                // * Add new state to priority queue.
-
-                // Right
-                let mut next = index;
+            // Both directions along the new axis are the same:
+            // * Increase the cost by the "heat" of the square we've just moved into.
+            // * Check if we've already been to this square with a lower cost.
+            // * Add new state to priority queue.
+            for delta in [delta, delta.wrapping_neg()] {
+                let mut next = position;
                 let mut extra = steps;
 
                 for i in 1..U + 1 {
-                    if x + i >= size {
-                        break;
-                    }
+                    next = next.wrapping_add(delta);
+                    extra += heat[next] as u16;
 
-                    next += 1;
-                    extra += heat[next];
-
-                    if i >= L && extra < cost[next][1] {
-                        todo[heuristic(x + i, y, extra)].push((x + i, y, 1));
-                        cost[next][1] = extra;
-                    }
-                }
-
-                // Left
-                let mut next = index;
-                let mut extra = steps;
-
-                for i in 1..U + 1 {
-                    if i > x {
-                        break;
-                    }
-
-                    next -= 1;
-                    extra += heat[next];
-
-                    if i >= L && extra < cost[next][1] {
-                        todo[heuristic(x - i, y, extra)].push((x - i, y, 1));
-                        cost[next][1] = extra;
-                    }
-                }
-            } else {
-                // We just moved horizontally so now check both up and down directions.
-
-                // Down
-                let mut next = index;
-                let mut extra = steps;
-
-                for i in 1..U + 1 {
-                    if y + i >= size {
-                        break;
-                    }
-
-                    next += stride;
-                    extra += heat[next];
-
-                    if i >= L && extra < cost[next][0] {
-                        todo[heuristic(x, y + i, extra)].push((x, y + i, 0));
-                        cost[next][0] = extra;
-                    }
-                }
-
-                // Up
-                let mut next = index;
-                let mut extra = steps;
-
-                for i in 1..U + 1 {
-                    if i > y {
-                        break;
-                    }
-
-                    next -= stride;
-                    extra += heat[next];
-
-                    if i >= L && extra < cost[next][0] {
-                        todo[heuristic(x, y - i, extra)].push((x, y - i, 0));
-                        cost[next][0] = extra;
+                    if i >= L && extra < cost[next][turn] {
+                        cost[next][turn] = extra;
+                        let bucket = (extra as usize + heuristic[next] as usize) % 100;
+                        todo[bucket].push((next << 1) | turn);
                     }
                 }
             }
         }
 
         // Bump priority by one to check the next bucket.
-        index += 1;
+        loss += 1;
     }
 }
