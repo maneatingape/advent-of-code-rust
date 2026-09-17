@@ -2,10 +2,10 @@
 %%{init: {"themeVariables": { "pie1": "#7cb5ec", "pie2": "#c6cdd5", "pie3": "#90ed7d", "pie4": "#f7a35c"}}}%%
 pie
     title Year 2023 benchmark time by % of total
-    "Day 17" : 2413
-    "Others" : 1274
-    "Day 14" : 614
-    "Day 12" : 451
+    "Day 17" : 1108
+    "Others" : 1167
+    "Day 14" : 610
+    "Day 12" : 456
 -->
 <svg viewBox="0 0 1350 450" preserveAspectRatio="xMidYMin" xmlns="http://www.w3.org/2000/svg">
     <style>
@@ -17,14 +17,14 @@ pie
     </style>
     <g transform="translate(675,225)">
         <circle class="pieOuterCircle" cx="0" cy="0" r="186"/>
-        <path class="pieCircle" d="M0,-185A185,185,0,1,1,-9.047,184.779L0,0Z" fill="#7cb5ec"/>
-        <path class="pieCircle" d="M-9.047,184.779A185,185,0,0,1,-182.559,-29.955L0,0Z" fill="#c6cdd5"/>
-        <path class="pieCircle" d="M-182.559,-29.955A185,185,0,0,1,-103.896,-153.07L0,0Z" fill="#90ed7d"/>
-        <path class="pieCircle" d="M-103.896,-153.07A185,185,0,0,1,0,-185L0,0Z" fill="#f7a35c"/>
-        <text class="slice" style="text-anchor: middle;" transform="translate(138.70849201311532,3.393632780300278)">51%</text>
-        <text class="slice" style="text-anchor: middle;" transform="translate(-107.92130485069077,87.20409657421072)">27%</text>
-        <text class="slice" style="text-anchor: middle;" transform="translate(-116.92188898374494,-74.70498227342556)">13%</text>
-        <text class="slice" style="text-anchor: middle;" transform="translate(-40.75951688807885,-132.6281428771828)">9%</text>
+        <path class="pieCircle" d="M0,-185A185,185,0,0,1,161.191,90.787L0,0Z" fill="#7cb5ec"/>
+        <path class="pieCircle" d="M161.191,90.787A185,185,0,0,1,-167.852,77.786L0,0Z" fill="#c6cdd5"/>
+        <path class="pieCircle" d="M-167.852,77.786A185,185,0,0,1,-139.907,-121.042L0,0Z" fill="#90ed7d"/>
+        <path class="pieCircle" d="M-139.907,-121.042A185,185,0,0,1,0,-185L0,0Z" fill="#f7a35c"/>
+        <text class="slice" style="text-anchor: middle;" transform="translate(119.789659335909,-70.01428437245413)">33%</text>
+        <text class="slice" style="text-anchor: middle;" transform="translate(-5.478261731231968,138.64180880385294)">35%</text>
+        <text class="slice" style="text-anchor: middle;" transform="translate(-137.3994927777736,-19.311703301639344)">18%</text>
+        <text class="slice" style="text-anchor: middle;" transform="translate(-57.68737909134798,-126.1892578374685)">14%</text>
         <text class="pieTitleText" x="0" y="-200">Year 2023 benchmark time by % of total</text>
         <g transform="translate(216,-44)">
             <rect height="18" style="fill: rgb(124, 181, 236); stroke: rgb(124, 181, 236);" width="18"/>
