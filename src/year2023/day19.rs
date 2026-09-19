@@ -99,7 +99,7 @@ pub fn part1(input: &Input<'_>) -> u32 {
 
             key == "A"
         })
-        .map(|part| part.iter().sum::<u32>())
+        .flatten()
         .sum()
 }
 

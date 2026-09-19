@@ -56,7 +56,7 @@ pub fn part2(input: &[Instruction]) -> u32 {
 }
 
 fn worker_one(input: &[Instruction], iter: ParIter<'_, usize>) -> u32 {
-    iter.map(|row| {
+    iter.flat_map(|row| {
         let mut grid = [0_u8; 1_024];
 
         for &Instruction { command, x1, x2, y1, y2 } in input {
@@ -70,13 +70,13 @@ fn worker_one(input: &[Instruction], iter: ParIter<'_, usize>) -> u32 {
             }
         }
 
-        grid.into_iter().map(u32::from).sum::<u32>()
+        grid.into_iter().map(u32::from)
     })
     .sum()
 }
 
 fn worker_two(input: &[Instruction], iter: ParIter<'_, usize>) -> u32 {
-    iter.map(|row| {
+    iter.flat_map(|row| {
         let mut grid = [0_u8; 1_024];
 
         for &Instruction { command, x1, x2, y1, y2 } in input {
@@ -90,7 +90,7 @@ fn worker_two(input: &[Instruction], iter: ParIter<'_, usize>) -> u32 {
             }
         }
 
-        grid.into_iter().map(u32::from).sum::<u32>()
+        grid.into_iter().map(u32::from)
     })
     .sum()
 }

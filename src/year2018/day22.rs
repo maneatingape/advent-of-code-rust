@@ -106,7 +106,7 @@ pub fn part1(input: &Input) -> i32 {
     cave.bytes
         .chunks(cave.width as usize)
         .take(height + 1)
-        .map(|row| row[..width + 1].iter().map(|&level| level as i32).sum::<i32>())
+        .flat_map(|row| row[..width + 1].iter().map(|&level| level as i32))
         .sum()
 }
 
