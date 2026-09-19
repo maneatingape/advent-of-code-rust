@@ -286,16 +286,14 @@ fn heuristic(
     matrix: &Matrix,
     cache: &mut FastMap<(usize, u32), u32>,
 ) -> u32 {
-    let mut heur = 0;
-
-    for bot in state.position.biterator() {
-        let reachable = state.remaining & masks[bot];
-
-        let dist = *cache.entry((bot, reachable)).or_insert_with(|| {
-            reachable.biterator().map(|key| matrix[bot][key].distance).max().unwrap_or(0)
-        });
-
-        heur += dist;
-    }
-    heur
+    state
+        .position
+        .biterator()
+        .map(|bot| {
+            let reachable = state.remaining & masks[bot];
+            *cache.entry((bot, reachable)).or_insert_with(|| {
+                reachable.biterator().map(|key| matrix[bot][key].distance).max().unwrap_or(0)
+            })
+        })
+        .sum()
 }

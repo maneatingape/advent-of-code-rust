@@ -183,8 +183,7 @@ pub fn part2(input: &[i32]) -> i32 {
     //     z₂ = y₂⁻¹ mod n₂ = 2⁻¹ mod 5 = 3
     //     x ≡ a₁y₁z₁ + a₂y₂z₂ (mod 10) ≡ 5a₁ + 6a₂ (mod 10)
     //
-    let result: Vec<_> = first.into_iter().zip(second).map(|(f, s)| (5 * f + 6 * s) % 10).collect();
-    fold_decimal(&result)
+    first.into_iter().zip(second).fold(0, |acc, (f, s)| 10 * acc + (5 * f + 6 * s) % 10)
 }
 
 /// Quickly computes a digit taking advantage of the fact

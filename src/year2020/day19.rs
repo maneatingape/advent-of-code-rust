@@ -129,7 +129,7 @@ fn check(rules: &[Rule], rule: usize, message: &[u8], index: usize) -> Option<us
     let sequence = |a, b| apply(a).and_then(|next| check(rules, b, message, next));
 
     match rules[rule] {
-        Letter(l) => (index < message.len() && message[index] == l).then_some(index + 1),
+        Letter(l) => (message.get(index) == Some(&l)).then_some(index + 1),
         Follow(a) => apply(a),
         Choice(a, b) => apply(a).or_else(|| apply(b)),
         Sequence(a, b) => sequence(a, b),

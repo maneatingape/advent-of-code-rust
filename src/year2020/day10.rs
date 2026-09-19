@@ -33,11 +33,7 @@ pub fn part2(input: &[usize]) -> usize {
     sum[0] = 1;
 
     for &i in input {
-        sum[i] = match i {
-            1 => sum[i - 1],
-            2 => sum[i - 1] + sum[i - 2],
-            _ => sum[i - 1] + sum[i - 2] + sum[i - 3],
-        };
+        sum[i] = sum[i.saturating_sub(3)..i].iter().sum();
     }
 
     sum[last]

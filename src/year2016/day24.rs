@@ -97,15 +97,15 @@ pub fn parse(input: &str) -> Input {
         // For a given set, compute each g(set,k) for all k in the set.
         for k in set.biterator() {
             let subset = set ^ (1 << k);
-            let mut shortest = u16::MAX;
 
             // For a given destination k, find which other bit m gives the best path from the
             // subset to m, and then m to k. All table[subset] references were filled in prior
             // iterations of the outer loop or the singleton base cases.
-            for m in subset.biterator() {
-                shortest = shortest.min(table[subset][m] + distance[m + 1][k + 1]);
-            }
-            table[set][k] = shortest;
+            table[set][k] = subset
+                .biterator()
+                .map(|m| table[subset][m] + distance[m + 1][k + 1])
+                .min()
+                .unwrap();
         }
     }
 

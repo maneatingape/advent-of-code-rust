@@ -16,16 +16,14 @@ pub fn part1(input: &[i64]) -> i64 {
     let mut computer = Computer::new(input);
 
     let sequence = |slice: &[i64]| {
-        let mut signal = 0;
-
         // Send exactly 2 inputs and receive exactly 1 output per amplifier.
-        for &phase in slice {
+        let signal = slice.iter().fold(0, |signal, &phase| {
             computer.reset();
             computer.input(phase);
             computer.input(signal);
             let State::Output(next) = computer.run() else { unreachable!() };
-            signal = next;
-        }
+            next
+        });
 
         result = result.max(signal);
     };

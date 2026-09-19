@@ -42,29 +42,26 @@ fn dfs(cache: &mut Cache, combinations: &Combinations, code: &str, depth: usize)
 
     // All keypads start with `A`, either the initial position of the keypad or the trailing `A`
     // from the previous sequence at this level.
-    let mut previous = 'A';
-    let mut result = 0;
+    once('A')
+        .chain(code.chars())
+        .zip(code.chars())
+        .map(|(previous, current)| {
+            // Check each pair of characters, memoizing results.
+            let key = (previous, current, depth);
 
-    for current in code.chars() {
-        // Check each pair of characters, memoizing results.
-        let key = (previous, current, depth);
-
-        result += cache.get(&key).copied().unwrap_or_else(|| {
-            // Each transition has either 1 or 2 possibilities.
-            // Pick the sequence that results in the minimum keypresses.
-            let presses = combinations[&(previous, current)]
-                .iter()
-                .map(|next| dfs(cache, combinations, next, depth - 1))
-                .min()
-                .unwrap();
-            cache.insert(key, presses);
-            presses
-        });
-
-        previous = current;
-    }
-
-    result
+            cache.get(&key).copied().unwrap_or_else(|| {
+                // Each transition has either 1 or 2 possibilities.
+                // Pick the sequence that results in the minimum keypresses.
+                let presses = combinations[&(previous, current)]
+                    .iter()
+                    .map(|next| dfs(cache, combinations, next, depth - 1))
+                    .min()
+                    .unwrap();
+                cache.insert(key, presses);
+                presses
+            })
+        })
+        .sum()
 }
 
 /// Compute keypresses needed for all possible transitions for both numeric and directional

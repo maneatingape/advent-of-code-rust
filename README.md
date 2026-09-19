@@ -148,7 +148,7 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 | 15 | [Lens Library](https://adventofcode.com/2023/day/15) | [Source](src/year2023/day15.rs) | 48 |
 | 16 | [The Floor Will Be Lava](https://adventofcode.com/2023/day/16) | [Source](src/year2023/day16.rs) | 153 |
 | 17 | [Clumsy Crucible](https://adventofcode.com/2023/day/17) | [Source](src/year2023/day17.rs) | 1072 |
-| 18 | [Lavaduct Lagoon](https://adventofcode.com/2023/day/18) | [Source](src/year2023/day18.rs) | 11 |
+| 18 | [Lavaduct Lagoon](https://adventofcode.com/2023/day/18) | [Source](src/year2023/day18.rs) | 10 |
 | 19 | [Aplenty](https://adventofcode.com/2023/day/19) | [Source](src/year2023/day19.rs) | 100 |
 | 20 | [Pulse Propagation](https://adventofcode.com/2023/day/20) | [Source](src/year2023/day20.rs) | 6 |
 | 21 | [Step Counter](https://adventofcode.com/2023/day/21) | [Source](src/year2023/day21.rs) | 176 |
@@ -245,7 +245,7 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 | 16 | [Ticket Translation](https://adventofcode.com/2020/day/16) | [Source](src/year2020/day16.rs) | 104 |
 | 17 | [Conway Cubes](https://adventofcode.com/2020/day/17) | [Source](src/year2020/day17.rs) | 102 |
 | 18 | [Operation Order](https://adventofcode.com/2020/day/18) | [Source](src/year2020/day18.rs) | 24 |
-| 19 | [Monster Messages](https://adventofcode.com/2020/day/19) | [Source](src/year2020/day19.rs) | 462 |
+| 19 | [Monster Messages](https://adventofcode.com/2020/day/19) | [Source](src/year2020/day19.rs) | 420 |
 | 20 | [Jurassic Jigsaw](https://adventofcode.com/2020/day/20) | [Source](src/year2020/day20.rs) | 42 |
 | 21 | [Allergen Assessment](https://adventofcode.com/2020/day/21) | [Source](src/year2020/day21.rs) | 45 |
 | 22 | [Crab Combat](https://adventofcode.com/2020/day/22) | [Source](src/year2020/day22.rs) | 5333 |
@@ -306,7 +306,7 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 | 13 | [Mine Cart Madness](https://adventofcode.com/2018/day/13) | [Source](src/year2018/day13.rs) | 349 |
 | 14 | [Chocolate Charts](https://adventofcode.com/2018/day/14) | [Source](src/year2018/day14.rs) | 24000 |
 | 15 | [Beverage Bandits](https://adventofcode.com/2018/day/15) | [Source](src/year2018/day15.rs) | 563 |
-| 16 | [Chronal Classification](https://adventofcode.com/2018/day/16) | [Source](src/year2018/day16.rs) | 37 |
+| 16 | [Chronal Classification](https://adventofcode.com/2018/day/16) | [Source](src/year2018/day16.rs) | 58 |
 | 17 | [Reservoir Research](https://adventofcode.com/2018/day/17) | [Source](src/year2018/day17.rs) | 118 |
 | 18 | [Settlers of The North Pole](https://adventofcode.com/2018/day/18) | [Source](src/year2018/day18.rs) | 384 |
 | 19 | [Go With The Flow](https://adventofcode.com/2018/day/19) | [Source](src/year2018/day19.rs) | 1 |
@@ -378,7 +378,7 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 | 21 | [Scrambled Letters and Hash](https://adventofcode.com/2016/day/21) | [Source](src/year2016/day21.rs) | 10 |
 | 22 | [Grid Computing](https://adventofcode.com/2016/day/22) | [Source](src/year2016/day22.rs) | 20 |
 | 23 | [Safe Cracking](https://adventofcode.com/2016/day/23) | [Source](src/year2016/day23.rs) | 1 |
-| 24 | [Air Duct Spelunking](https://adventofcode.com/2016/day/24) | [Source](src/year2016/day24.rs) | 117 |
+| 24 | [Air Duct Spelunking](https://adventofcode.com/2016/day/24) | [Source](src/year2016/day24.rs) | 90 |
 | 25 | [Clock Signal](https://adventofcode.com/2016/day/25) | [Source](src/year2016/day25.rs) | 1 |
 
 ## 2015

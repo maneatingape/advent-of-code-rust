@@ -118,8 +118,8 @@ pub fn parse(input: &str) -> Vec<Instruction> {
     input
         .lines()
         .map(|line| {
-            if line.starts_with("mask") {
-                Instruction::mask(&line[7..])
+            if let Some(pattern) = line.strip_prefix("mask = ") {
+                Instruction::mask(pattern)
             } else {
                 let (address, value) = line[4..].split_once("] = ").unwrap();
                 Instruction::Mem { address: address.unsigned(), value: value.unsigned() }

@@ -41,18 +41,12 @@ pub fn parse(input: &str) -> [usize; 64] {
 
     // First optimization. If a port value appears in only 2 components (excluding zero)
     // then fuse the components together.
-    let mut indices = Vec::new();
-
     for n in 1..64 {
-        indices.clear();
+        let mut indices = components.iter().enumerate().filter_map(|(index, component)| {
+            (component.left == n || component.right == n).then_some(index)
+        });
 
-        for (index, component) in components.iter().enumerate() {
-            if component.left == n || component.right == n {
-                indices.push(index);
-            }
-        }
-
-        if let [a, b] = indices[..] {
+        if let (Some(a), Some(b), None) = (indices.next(), indices.next(), indices.next()) {
             let second = components.swap_remove(b);
             let first = components.swap_remove(a);
 

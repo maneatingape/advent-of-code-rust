@@ -22,8 +22,7 @@ pub fn part1(input: &str) -> u32 {
 }
 
 pub fn part2(input: &str) -> String {
-    let mut lengths: Vec<_> = input.bytes().map(|b| b as usize).collect();
-    lengths.extend([17, 31, 73, 47, 23]);
+    let lengths: Vec<_> = input.bytes().map(usize::from).chain([17, 31, 73, 47, 23]).collect();
 
     let knot = hash(&lengths, 64);
     knot.chunks_exact(16).fold(String::new(), |mut result, chunk| {

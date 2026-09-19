@@ -53,12 +53,12 @@ pub fn parse(input: &str) -> Input {
         equation.clear();
         equation.extend(line.iter_unsigned::<u64>());
 
-        let (test_value, last) = (equation[0], equation.len() - 1);
+        let (&test_value, terms) = equation.split_first().unwrap();
 
         // If an equation is valid for part one then it's also valid for part two.
-        if valid(&equation, test_value, last, false) {
+        if valid(terms, test_value, false) {
             (part_one + test_value, part_two + test_value)
-        } else if valid(&equation, test_value, last, true) {
+        } else if valid(terms, test_value, true) {
             (part_one, part_two + test_value)
         } else {
             (part_one, part_two)
@@ -74,18 +74,16 @@ pub fn part2(input: &Input) -> u64 {
     input.1
 }
 
-fn valid(terms: &[u64], test_value: u64, index: usize, concat: bool) -> bool {
-    if index == 1 {
-        test_value == terms[1]
+fn valid(terms: &[u64], test_value: u64, concat: bool) -> bool {
+    let (&last, rest) = terms.split_last().unwrap();
+
+    if rest.is_empty() {
+        test_value == last
     } else {
-        let pow = next_power_of_ten(terms[index]);
-        (concat
-            && test_value % pow == terms[index]
-            && valid(terms, test_value / pow, index - 1, concat))
-            || (test_value.is_multiple_of(terms[index])
-                && valid(terms, test_value / terms[index], index - 1, concat))
-            || (test_value >= terms[index]
-                && valid(terms, test_value - terms[index], index - 1, concat))
+        let pow = next_power_of_ten(last);
+        (concat && test_value % pow == last && valid(rest, test_value / pow, concat))
+            || (test_value.is_multiple_of(last) && valid(rest, test_value / last, concat))
+            || (test_value >= last && valid(rest, test_value - last, concat))
     }
 }
 

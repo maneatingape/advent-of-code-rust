@@ -14,8 +14,8 @@
 type Input = (u64, u64);
 
 pub fn parse(input: &str) -> Input {
-    let lines: Vec<_> = input.lines().map(str::as_bytes).collect();
-    let width = lines[0].len();
+    let mut lines = input.lines().map(str::as_bytes);
+    let width = lines.next().unwrap().len();
     let center = width / 2;
 
     let mut splits = 0;
@@ -24,7 +24,7 @@ pub fn parse(input: &str) -> Input {
 
     // Only process every second line and every second tile on each line,
     // starting in the center and growing in a triangle by 1 tile in each direction.
-    for (y, row) in lines.iter().skip(2).step_by(2).enumerate() {
+    for (y, row) in lines.skip(1).step_by(2).enumerate() {
         for x in ((center - y)..(center + y + 1)).step_by(2) {
             let count = timelines[x];
 

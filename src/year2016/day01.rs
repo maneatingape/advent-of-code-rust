@@ -73,10 +73,8 @@ pub fn part2(input: &[Pair]) -> i32 {
         // Exclude the current location from the next segment to track.
         let segment = Segment::new(position + direction, target);
 
-        for other in &other_axis {
-            if let Some(point) = segment.intersects(other) {
-                return point.manhattan(ORIGIN);
-            }
+        if let Some(point) = other_axis.iter().find_map(|other| segment.intersects(other)) {
+            return point.manhattan(ORIGIN);
         }
         this_axis.push(segment);
         (this_axis, other_axis, position) = (other_axis, this_axis, target);

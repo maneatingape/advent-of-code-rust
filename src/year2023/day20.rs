@@ -79,7 +79,7 @@ pub fn part1(input: &Input) -> u32 {
     // Each conjunction feeds back into the chained flip-flops in the inverse pattern
     // to the flip-flops feeding into the conjunction, except for the least significant
     // flip-flop which is always set. Thus the total is 12 - count_ones + 1.
-    let pairs: Vec<_> = input.iter().map(|n| (n, 13 - n.count_ones())).collect();
+    let pairs = input.map(|n| (n, 13 - n.count_ones()));
 
     // The button and broadcaster contribute 5 low pulses each press.
     let mut low = 5000;
@@ -94,7 +94,7 @@ pub fn part1(input: &Input) -> u32 {
         let falling: u32 = n & !(n + 1);
         low += 4 * falling.count_ones();
 
-        for &(number, feedback) in &pairs {
+        for (number, feedback) in pairs {
             // Factor is the number of high pulses sent to the conjunction.
             // For each pulse the conjunction feeds a high pulse back to "feedback" flip-flops.
             // In addition, the penultimate conjunction in each row receives "factor" high pulses,

@@ -77,12 +77,8 @@ pub fn parse(input: &str) -> Vec<Compressed> {
 
 /// Add all snailfish numbers, reducing to a single magnitude.
 pub fn part1(input: &[Compressed]) -> i32 {
-    let mut sum = add(&input[0], &input[1]);
-
-    for next in &input[2..] {
-        sum = add(&compress(sum), next);
-    }
-
+    let first = add(&input[0], &input[1]);
+    let sum = input[2..].iter().fold(first, |sum, next| add(&compress(sum), next));
     magnitude(sum)
 }
 

@@ -46,7 +46,6 @@ pub fn parse(input: &str) -> Input {
             let check = |point| grid[point] == kind;
 
             let mut area = 0;
-            let mut perimeter = 0;
 
             todo.push(point);
             seen[point] = true;
@@ -65,7 +64,6 @@ pub fn parse(input: &str) -> Input {
                         }
                     } else {
                         edge.push((point, direction));
-                        perimeter += 1;
                     }
                 }
             }
@@ -79,11 +77,11 @@ pub fn parse(input: &str) -> Input {
                 }
             }
 
+            part_one += area * edge.len();
+            part_two += area * (sides / 2);
+
             todo.clear();
             edge.clear();
-
-            part_one += area * perimeter;
-            part_two += area * (sides / 2);
         }
     }
 

@@ -28,8 +28,6 @@
 //! in practice filtering by correct digit keeps the total less than 50.
 //!
 //! [`Intcode`]: crate::util::intcode
-use std::ops::ControlFlow;
-
 use crate::util::parse::*;
 
 struct Computer<'a> {
@@ -108,23 +106,18 @@ pub fn part1(input: &[u64]) -> String {
 
 pub fn part2(input: &[u64]) -> u64 {
     // Start with known final value of `a`.
-    helper(input, input.len() - 1, 0).break_value().unwrap()
+    helper(input, input.len() - 1, 0).unwrap()
 }
 
-fn helper(program: &[u64], index: usize, a: u64) -> ControlFlow<u64> {
+fn helper(program: &[u64], index: usize, a: u64) -> Option<u64> {
     if index == 2 {
-        return ControlFlow::Break(a);
+        return Some(a);
     }
 
     // Try all 8 combinations of lower 3 bits.
-    for i in 0..8 {
+    (0..8).find_map(|i| {
         let next_a = (a << 3) | i;
         let out = Computer::new(program, next_a).run().unwrap();
-
-        if out == program[index] {
-            helper(program, index - 1, next_a)?;
-        }
-    }
-
-    ControlFlow::Continue(())
+        if out == program[index] { helper(program, index - 1, next_a) } else { None }
+    })
 }

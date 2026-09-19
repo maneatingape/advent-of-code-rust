@@ -159,19 +159,21 @@ fn inverse(input: &Input, index: usize, value: i64) -> i64 {
         // so we have to handle unknowns on the right and left differently.
         Monkey::Result(left, operation, right) => {
             if unknown[left] {
-                match operation {
-                    Operation::Add => inverse(input, left, value - yell[right]),
-                    Operation::Sub => inverse(input, left, value + yell[right]),
-                    Operation::Mul => inverse(input, left, value / yell[right]),
-                    Operation::Div => inverse(input, left, value * yell[right]),
-                }
+                let value = match operation {
+                    Operation::Add => value - yell[right],
+                    Operation::Sub => value + yell[right],
+                    Operation::Mul => value / yell[right],
+                    Operation::Div => value * yell[right],
+                };
+                inverse(input, left, value)
             } else {
-                match operation {
-                    Operation::Add => inverse(input, right, value - yell[left]),
-                    Operation::Sub => inverse(input, right, yell[left] - value),
-                    Operation::Mul => inverse(input, right, value / yell[left]),
-                    Operation::Div => inverse(input, right, yell[left] / value),
-                }
+                let value = match operation {
+                    Operation::Add => value - yell[left],
+                    Operation::Sub => yell[left] - value,
+                    Operation::Mul => value / yell[left],
+                    Operation::Div => yell[left] / value,
+                };
+                inverse(input, right, value)
             }
         }
     }

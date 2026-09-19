@@ -140,8 +140,7 @@ fn perfect_minimal_hash(lookup: &mut [usize], nodes: &mut Vec<Vec<usize>>, slice
 
 /// BFS across the graph to find the furthest nodes from start.
 fn furthest(input: &Input, start: usize) -> usize {
-    let mut todo = VecDeque::new();
-    todo.push_back(start);
+    let mut todo = VecDeque::from([start]);
 
     // The node indices are also their key so we can use a vec instead of a HashSet for speed.
     let mut seen = vec![false; input.nodes.len()];

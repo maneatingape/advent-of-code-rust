@@ -86,14 +86,13 @@ struct Valve<'a> {
 impl Valve<'_> {
     /// We're only interested in uppercase valve names and digits for the flow.
     fn parse(line: &str) -> Valve<'_> {
-        let mut tokens: Vec<_> = line
+        let mut tokens = line
             .split(|c: char| !c.is_ascii_uppercase() && !c.is_ascii_digit())
             .filter(|s| !s.is_empty())
-            .collect();
-        let name = tokens[1];
-        let flow = tokens[2].unsigned();
-        tokens.drain(..3);
-        Valve { name, flow, edges: tokens }
+            .skip(1);
+        let name = tokens.next().unwrap();
+        let flow = tokens.next().unwrap().unsigned();
+        Valve { name, flow, edges: tokens.collect() }
     }
 
     /// Order valves in descending order of flow then ascending alphabetical order of names.
@@ -145,9 +144,7 @@ pub fn parse(input: &str) -> Input {
         for i in 0..size {
             for j in 0..size {
                 let candidate = distance[i * size + k].saturating_add(distance[k * size + j]);
-                if candidate < distance[i * size + j] {
-                    distance[i * size + j] = candidate;
-                }
+                distance[i * size + j] = distance[i * size + j].min(candidate);
             }
         }
     }

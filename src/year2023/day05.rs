@@ -43,14 +43,11 @@ pub fn part1(input: &Input) -> u64 {
 
 /// Process ranges.
 pub fn part2(input: &Input) -> u64 {
-    let mut current = Vec::new();
+    // Convert input pairs to ranges.
+    let mut current: Vec<_> =
+        input.seeds.chunks_exact(2).map(|pair| [pair[0], pair[0] + pair[1]]).collect();
     let mut next = Vec::new();
     let mut next_stage = Vec::new();
-
-    // Convert input pairs to ranges.
-    for [start, length] in input.seeds.iter().copied().chunk::<2>() {
-        current.push([start, start + length]);
-    }
 
     for stage in &input.stages {
         for &[dest, s2, e2] in stage {

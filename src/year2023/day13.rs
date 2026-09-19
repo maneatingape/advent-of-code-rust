@@ -56,12 +56,10 @@ fn reflect(input: &Input, target: u32) -> usize {
 }
 
 fn reflect_axis(axis: &[u32], target: u32) -> Option<usize> {
-    let size = axis.len();
-
-    (1..size).find(|&i| {
-        // Only consider rows/columns within the boundary of the grid.
+    (1..axis.len()).find(|&i| {
+        // Zip stops when either side reaches the boundary of the grid.
         let smudges: u32 =
-            (0..i.min(size - i)).map(|j| (axis[i - j - 1] ^ axis[i + j]).count_ones()).sum();
+            axis[..i].iter().rev().zip(&axis[i..]).map(|(a, b)| (a ^ b).count_ones()).sum();
 
         smudges == target
     })

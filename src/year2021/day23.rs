@@ -136,7 +136,7 @@ struct Burrow {
 
 impl Burrow {
     fn new(rooms: [[usize; 4]; 4]) -> Self {
-        Self { hallway: Hallway::new(), rooms: from_fn(|i| Room::new(rooms[i])) }
+        Self { hallway: Hallway::new(), rooms: rooms.map(Room::new) }
     }
 }
 

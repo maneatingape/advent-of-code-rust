@@ -18,7 +18,7 @@ macro_rules! run {
             Solution {
                 year: stringify!($year).unsigned(),
                 day: stringify!($day).unsigned(),
-                wrapper: |data: &str| {
+                wrapper: |data| {
                     use aoc::$year::$day::*;
 
                     let input = parse(data);

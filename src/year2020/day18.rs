@@ -45,10 +45,8 @@ pub fn part2(input: &[&str]) -> u64 {
             if operation == b'+' {
                 total += value(bytes, helper);
             } else {
-                // Implicitly insert '(' and ')' around the remaining sub-expression so when it
-                // finishes we break too.
-                total *= helper(bytes);
-                break;
+                // Implicitly parenthesize the remaining sub-expression and finish this one.
+                return total * helper(bytes);
             }
         }
 

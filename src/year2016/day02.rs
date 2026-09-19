@@ -31,17 +31,16 @@ fn code(input: &[&str], keypad: &str, start: Point, inside: impl Fn(Point) -> bo
     let center = Point::new(digits.width / 2, digits.height / 2);
 
     let mut position = start;
-    let mut result = String::new();
-
-    for line in input {
-        for b in line.bytes() {
-            let next = position + Point::from(b);
-            if inside(next) {
-                position = next;
+    input
+        .iter()
+        .map(|line| {
+            for b in line.bytes() {
+                let next = position + Point::from(b);
+                if inside(next) {
+                    position = next;
+                }
             }
-        }
-        result.push(digits[position + center] as char);
-    }
-
-    result
+            digits[position + center] as char
+        })
+        .collect()
 }

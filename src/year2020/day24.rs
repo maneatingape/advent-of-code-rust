@@ -39,15 +39,11 @@ pub fn parse(input: &str) -> FastSet<Hex> {
                 b'w' => q -= 1,
                 b'n' => {
                     r -= 1;
-                    if iter.next().unwrap() == b'e' {
-                        q += 1;
-                    }
+                    q += i32::from(iter.next().unwrap() == b'e');
                 }
                 b's' => {
                     r += 1;
-                    if iter.next().unwrap() == b'w' {
-                        q -= 1;
-                    }
+                    q -= i32::from(iter.next().unwrap() == b'w');
                 }
                 _ => unreachable!(),
             }

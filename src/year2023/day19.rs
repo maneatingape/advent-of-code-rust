@@ -3,7 +3,7 @@
 //! Each rule is converted into a half-open interval, including the start but excluding the end.
 //! For example:
 //!
-//! * `x > 10` => `10..4001`
+//! * `x > 10` => `11..4001`
 //! * `m < 20` => `1..20`
 //! * `A` => `1..4001`
 //!
@@ -99,7 +99,7 @@ pub fn part1(input: &Input<'_>) -> u32 {
 
             key == "A"
         })
-        .map(|part| part.iter().sum::<u32>())
+        .flatten()
         .sum()
 }
 

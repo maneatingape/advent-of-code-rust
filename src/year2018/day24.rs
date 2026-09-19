@@ -149,17 +149,17 @@ fn fight(input: &Input, boost: i32) -> (Kind, i32) {
         target_selection(&infection, &mut immune, Kind::Infection);
 
         // Attacking phase.
-        let mut killed = 0;
-
-        for next in &mut attacks {
-            if let Some((kind, from, to)) = next.take() {
+        let killed: i32 = attacks
+            .iter_mut()
+            .filter_map(Option::take)
+            .map(|(kind, from, to)| {
                 if kind == Kind::Immune {
-                    killed += immune[from].attack(&mut infection[to]);
+                    immune[from].attack(&mut infection[to])
                 } else {
-                    killed += infection[from].attack(&mut immune[to]);
+                    infection[from].attack(&mut immune[to])
                 }
-            }
-        }
+            })
+            .sum();
 
         // It's possible to deadlock if groups become too weak to do any more damage.
         if killed == 0 {

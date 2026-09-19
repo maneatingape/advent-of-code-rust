@@ -14,6 +14,8 @@
 //! For all but the few manual overflow cases, it is very fast to find the highest nibble
 //! using bitwise logic. To detect the cycle a [`FastMap`] stores each previously seen
 //! memory layout along with the cycle in which it first appeared.
+use std::array::from_fn;
+
 use crate::util::hash::*;
 use crate::util::parse::*;
 
@@ -83,12 +85,7 @@ pub fn parse(input: &str) -> Input {
             // cycles, with at most two adjacent overflows per encounter, with all overflows
             // before cycle 200, well before the first repeated configuration. Thus, it is
             // okay to not cache these states in seen.
-            let mut array = [0; 16];
-
-            for slot in array.iter_mut().rev() {
-                *slot = memory & 0xf;
-                memory >>= 4;
-            }
+            let mut array: [_; 16] = from_fn(|i| (memory >> (4 * (15 - i))) & 0xf);
 
             while array.iter().any(|&n| n >= 15) {
                 let max = *array.iter().max().unwrap();

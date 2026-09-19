@@ -205,7 +205,7 @@ pub fn part2(input: &[Tile]) -> u32 {
 
         for _ in 0..(96 - width + 1) {
             for window in image.windows(height) {
-                if monster.iter().enumerate().all(|(i, &n)| n & window[i] == n) {
+                if monster.iter().zip(window).all(|(&mask, &row)| mask & row == mask) {
                     rough -= 15;
                 }
             }
