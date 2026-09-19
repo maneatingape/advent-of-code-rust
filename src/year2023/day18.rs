@@ -1,6 +1,6 @@
 //! # Lavaduct Lagoon
 //!
-//! Similar approach to [`Day 10`] using the [Shoelace formula](https://en.wikipedia.org/wiki/Shoelace_formula)
+//! Similar approach to [`Day 10`] using the [Shoelace formula](https://en.wikipedia.org/wiki/Shoelace_formula#Trapezoid_formula)
 //! and [Pick's theorem](https://en.wikipedia.org/wiki/Pick%27s_theorem).
 //!
 //! One nuance is that we want the number of interior *and* boundary points so the final formula is:
@@ -12,7 +12,7 @@ use crate::util::iter::*;
 use crate::util::parse::*;
 use crate::util::point::*;
 
-type Move = (Point, i32);
+type Move = (Point, i64);
 type Input = (Vec<Move>, Vec<Move>);
 
 pub fn parse(input: &str) -> Input {
@@ -31,8 +31,8 @@ pub fn parse(input: &str) -> Input {
                 b'3' => UP,
                 _ => unreachable!(),
             };
-            let hex = &c[2..c.len() - 2];
-            let second = (direction, i32::from_str_radix(hex, 16).unwrap());
+            let hex = &c[2..7];
+            let second = (direction, i64::from_str_radix(hex, 16).unwrap());
 
             (first, second)
         })
@@ -49,22 +49,20 @@ pub fn part2(input: &Input) -> i64 {
 
 /// Find the volume of the lava which is the number of interior and boundary points.
 fn lava(moves: &[Move]) -> i64 {
-    let mut position = ORIGIN;
-    let mut area = 0;
+    let mut height = 0;
+    let mut half_area = 0;
     let mut perimeter = 0;
 
+    // Instead of computing the area by the shoelace formula (a determinant per vertex), it is
+    // faster to use the trapezoid formula: sum((y[i]+y[i+1])*(x[i]-x[i+1])). But all vertical
+    // segments have x[i]-x[i+1]=0, so only the horizontal segments, where y[i]+y[i+1]=2y,
+    // actually contribute to the area.
     for &(direction, amount) in moves {
-        let previous = position;
-        position += direction * amount;
-        area += determinant(previous, position);
-        perimeter += amount as i64;
+        half_area += amount * height * direction.x as i64;
+        height += amount * direction.y as i64;
+        perimeter += amount;
     }
 
     // Pick's theorem counting both interior and boundary points.
-    area / 2 + perimeter / 2 + 1
-}
-
-/// Find the determinant of each pair of points casting to `i64` to prevent overflow.
-fn determinant(a: Point, b: Point) -> i64 {
-    (a.x as i64) * (b.y as i64) - (a.y as i64) * (b.x as i64)
+    half_area.abs() + perimeter / 2 + 1
 }
