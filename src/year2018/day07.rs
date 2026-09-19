@@ -66,10 +66,10 @@ pub fn part2_testable(input: &Input, max_workers: usize, base_duration: usize) -
     let mut workers = Vec::new();
 
     // Loop until there are no more steps available and all workers are idle.
-    while next_ready(&steps).is_some() || !workers.is_empty() {
+    loop {
         // Assign any steps to available workers until one or the other runs out first.
-        while let Some(i) = next_ready(&steps)
-            && workers.len() < max_workers
+        while workers.len() < max_workers
+            && let Some(i) = next_ready(&steps)
         {
             // Prevent this step from being considered again.
             steps[i].todo = false;
@@ -86,7 +86,7 @@ pub fn part2_testable(input: &Input, max_workers: usize, base_duration: usize) -
         // Fast forward time until the earliest available worker finishes their step.
         // This may not unblock a dependent step right away, in which case the outer loop will
         // bring things back here for another worker to complete.
-        let (finish, i) = workers.pop().unwrap();
+        let Some((finish, i)) = workers.pop() else { break time };
         time = finish;
 
         // Update dependent tasks the same as part one.
@@ -94,8 +94,6 @@ pub fn part2_testable(input: &Input, max_workers: usize, base_duration: usize) -
             steps[j].from ^= 1 << i;
         }
     }
-
-    time
 }
 
 fn to_index(b: u8) -> usize {

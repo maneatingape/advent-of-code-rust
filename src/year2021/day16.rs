@@ -12,6 +12,7 @@
 //!
 //! The decoded packet data is stored as a tree-like struct allowing recursive solutions to part one
 //! and part two to reuse the same decoded input.
+use std::iter::{from_fn, repeat_with};
 use std::str::Bytes;
 
 use crate::util::parse::*;
@@ -68,19 +69,13 @@ impl Packet {
 
             Self::Literal { version, value }
         } else {
-            let mut packets = Vec::new();
-
-            if bit_stream.next(1) == 0 {
+            let packets = if bit_stream.next(1) == 0 {
                 let target = bit_stream.next(15) + bit_stream.read;
-                while bit_stream.read < target {
-                    packets.push(Self::from(bit_stream));
-                }
+                from_fn(|| (bit_stream.read < target).then(|| Self::from(bit_stream))).collect()
             } else {
-                let sub_packets = bit_stream.next(11);
-                for _ in 0..sub_packets {
-                    packets.push(Self::from(bit_stream));
-                }
-            }
+                let sub_packets = bit_stream.next(11) as usize;
+                repeat_with(|| Self::from(bit_stream)).take(sub_packets).collect()
+            };
 
             Self::Operator { version, type_id, packets }
         }

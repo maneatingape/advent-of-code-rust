@@ -17,11 +17,11 @@
 //! but makes the indexing easier.
 use std::iter::repeat_with;
 
+use crate::util::parse::*;
+
 /// [Triangular numbers](https://en.wikipedia.org/wiki/Triangular_number) offset by two.
 /// Files can be a max size of 9 so we only need the first 10 values, including zero to make
 /// indexing easier.
-use crate::util::parse::*;
-
 const TRIANGLE: [usize; 10] = [0, 0, 1, 3, 6, 10, 15, 21, 28, 36];
 
 /// Remove any trailing newlines and convert to `usize`.

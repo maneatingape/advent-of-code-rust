@@ -38,7 +38,7 @@ pub fn parse(input: &str) -> Vec<usize> {
             indices[hash] = current;
             current += 1;
         }
-        indices[hash] as usize
+        usize::from(indices[hash])
     };
 
     // Build parent-child relationships for each object. Add one extra for the unused 0 special

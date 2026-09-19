@@ -46,7 +46,7 @@ pub fn part2(input: &[&str]) -> usize {
 fn letter_frequency(token: &str) -> [u8; 32] {
     let mut freq = [0; 32];
     for b in token.bytes() {
-        freq[(b - b'a') as usize] += 1;
+        freq[usize::from(b - b'a')] += 1;
     }
     freq
 }

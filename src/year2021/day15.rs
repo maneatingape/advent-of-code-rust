@@ -66,7 +66,7 @@ pub fn part2(input: &Square) -> usize {
     for (i, &b) in bytes.iter().enumerate() {
         let x1 = i % size;
         let y1 = i / size;
-        let base = b as usize;
+        let base = usize::from(b);
 
         for x2 in 0..5 {
             for y2 in 0..5 {
@@ -97,7 +97,7 @@ fn build_estimates(square: &Square) -> Vec<u32> {
     estimate[0] = u32::MAX; // Larger than any possible other estimate.
 
     // Give the target its own risk level.
-    estimate[end] = bytes[end] as u32;
+    estimate[end] = u32::from(bytes[end]);
 
     // Visit the grid by diagonals, starting closest to the target.
     for diag in (1..edge * 2).rev() {
@@ -112,7 +112,7 @@ fn build_estimates(square: &Square) -> Vec<u32> {
             let row = diag - col;
             let value =
                 estimate[coord(col + 1, row)].min(estimate[coord(col, row + 1)]).min(best_diag + 2)
-                    + bytes[coord(col, row)] as u32;
+                    + u32::from(bytes[coord(col, row)]);
             estimate[coord(col, row)] = value;
             best_diag = (best_diag + 2).min(value);
         }
@@ -123,7 +123,7 @@ fn build_estimates(square: &Square) -> Vec<u32> {
         for col in (start..end).rev() {
             let row = diag - col;
             let value =
-                estimate[coord(col, row)].min(best_diag + 2 + bytes[coord(col, row)] as u32);
+                estimate[coord(col, row)].min(best_diag + 2 + u32::from(bytes[coord(col, row)]));
             estimate[coord(col, row)] = value;
             best_diag = (best_diag + 2).min(value);
         }
@@ -169,7 +169,7 @@ fn astar(square: &Square, mut grid_data: Vec<u32>) -> usize {
             }
 
             let mut check = |next: usize| {
-                let next_cost = risk + bytes[next] as usize;
+                let next_cost = risk + usize::from(bytes[next]);
                 if next_cost < grid_data[next] as usize & 0xffff {
                     let next_f = risk + (grid_data[next] >> 16) as usize;
                     // Cope if this resulted in the rare backward jump.

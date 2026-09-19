@@ -84,26 +84,24 @@ pub fn part1(input: &Dance) -> String {
 /// Repeatedly applying a transformation to itself allows the computation of exponentially
 /// more dances, until reaching the complete 1 billion transformations.
 pub fn part2(input: &Dance) -> String {
-    let mut dance = *input;
-
     // 1 billion is 0b00111011_10011010_11001010_00000000, which is 30 bits, with 13 set. Typical
     // exponentiation by squaring would be 30 doubles and 13 additions, or 43 calls to
     // compose. Since one billion is a power of ten, we can do better by 9 cycles of
     // reaching each next power of ten by two doubles, one addition, and one more double
     // per cycle, for a total of only 36 calls to compose.
-    for _ in 0..9 {
+    let dance = (0..9).fold(*input, |dance, _| {
         let dance2 = dance.compose(dance);
         let dance5 = dance2.compose(dance2).compose(dance);
-        dance = dance5.compose(dance5);
-    }
+        dance5.compose(dance5)
+    });
 
     dance.apply()
 }
 
 fn from_byte(b: u8) -> usize {
-    (b - b'a') as usize
+    usize::from(b - b'a')
 }
 
 fn to_char(i: usize) -> char {
-    ((i as u8) + b'a') as char
+    char::from(i as u8 + b'a')
 }

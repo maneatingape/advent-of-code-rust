@@ -39,14 +39,10 @@ pub fn parse(input: &str) -> Input {
         .chunk::<3>()
         .map(|[before, instruction, after]| {
             let [unknown, a, b, c] = instruction;
-            let mut mask = 0;
-
             // Build set of possible opcodes.
-            for opcode in 0..16 {
-                if cpu(opcode, a, b, &before) == after[c] {
-                    mask |= 1 << opcode;
-                }
-            }
+            let mask = (0..16)
+                .filter(|&opcode| cpu(opcode, a, b, &before) == after[c])
+                .fold(0, |mask, opcode| mask | (1 << opcode));
 
             (unknown, mask)
         })

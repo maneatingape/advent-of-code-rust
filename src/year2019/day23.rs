@@ -18,27 +18,22 @@ pub fn parse(input: &str) -> Input {
         })
         .collect();
 
-    let mut sent = Vec::new();
     let mut nat_x = 0;
     let mut nat_y = 0;
     let mut first_y = None;
     let mut idle_y = None;
 
     loop {
-        let mut index = 0;
         let mut empty = 0;
 
-        while index < 50 {
+        for index in 0..50 {
             let computer = &mut network[index];
 
             match computer.run() {
-                State::Output(value) => {
-                    // Loop until we have accumulated a full packet of 3 values.
-                    sent.push(value);
-                    let [address, x, y] = sent[..] else {
-                        continue;
-                    };
-                    sent.clear();
+                State::Output(address) => {
+                    // Each packet contains a destination address followed by x and y.
+                    let State::Output(x) = computer.run() else { unreachable!() };
+                    let State::Output(y) = computer.run() else { unreachable!() };
 
                     if address == 255 {
                         // Handle part one.
@@ -58,8 +53,6 @@ pub fn parse(input: &str) -> Input {
                 }
                 State::Halted => unreachable!(),
             }
-
-            index += 1;
         }
 
         if empty == 50 {

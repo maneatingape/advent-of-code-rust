@@ -106,7 +106,7 @@ pub fn part1(input: &Input) -> i32 {
     cave.bytes
         .chunks(cave.width as usize)
         .take(height + 1)
-        .map(|row| row[..width + 1].iter().map(|&level| level as i32).sum::<i32>())
+        .flat_map(|row| row[..width + 1].iter().map(|&level| i32::from(level)))
         .sum()
 }
 
@@ -126,7 +126,7 @@ pub fn part2(input: &Input) -> i32 {
     // always be greater than zero.
     let mut cave = Grid::new(erosion.width, erosion.height, [i32::MAX; 3]);
     for (i, &level) in erosion.bytes.iter().enumerate() {
-        cave.bytes[i][level as usize] = 0;
+        cave.bytes[i][usize::from(level)] = 0;
     }
 
     // Start at origin with the torch equipped.

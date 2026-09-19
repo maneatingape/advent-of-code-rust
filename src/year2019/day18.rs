@@ -271,11 +271,11 @@ fn explore<const PART_TWO: bool>(width: usize, bytes: &[u8]) -> u32 {
 
 // Convenience functions to find keys and robots.
 fn is_key(b: u8) -> Option<usize> {
-    b.is_ascii_lowercase().then(|| (b - b'a') as usize)
+    b.is_ascii_lowercase().then(|| usize::from(b - b'a'))
 }
 
 fn is_door(b: u8) -> Option<usize> {
-    b.is_ascii_uppercase().then(|| (b - b'A') as usize)
+    b.is_ascii_uppercase().then(|| usize::from(b - b'A'))
 }
 
 // Compute part two heuristic of the sum of the furthest key remaining per robot. For part one,
@@ -286,16 +286,14 @@ fn heuristic(
     matrix: &Matrix,
     cache: &mut FastMap<(usize, u32), u32>,
 ) -> u32 {
-    let mut heur = 0;
-
-    for bot in state.position.biterator() {
-        let reachable = state.remaining & masks[bot];
-
-        let dist = *cache.entry((bot, reachable)).or_insert_with(|| {
-            reachable.biterator().map(|key| matrix[bot][key].distance).max().unwrap_or(0)
-        });
-
-        heur += dist;
-    }
-    heur
+    state
+        .position
+        .biterator()
+        .map(|bot| {
+            let reachable = state.remaining & masks[bot];
+            *cache.entry((bot, reachable)).or_insert_with(|| {
+                reachable.biterator().map(|key| matrix[bot][key].distance).max().unwrap_or(0)
+            })
+        })
+        .sum()
 }

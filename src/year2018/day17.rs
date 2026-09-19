@@ -93,7 +93,7 @@ fn flow(scan: &mut Scan, index: usize) -> Kind {
         Moving
     } else {
         // Tile is stopped (either clay or still water) so water flows both left and right.
-        let left = (0..index).rev().find(|&i| !spread(scan, i)).unwrap();
+        let left = (0..index).rfind(|&i| !spread(scan, i)).unwrap();
         let right = (index + 1..scan.bottom).find(|&i| !spread(scan, i)).unwrap();
 
         if scan.kind[left] == Stopped && scan.kind[right] == Stopped {

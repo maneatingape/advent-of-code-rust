@@ -91,5 +91,5 @@ fn rules(checksum: &[u8], freq: &[usize], fof: &mut [i32]) -> bool {
 }
 
 fn to_index(b: u8) -> usize {
-    (b - b'a') as usize
+    usize::from(b - b'a')
 }

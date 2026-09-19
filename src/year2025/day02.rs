@@ -73,31 +73,28 @@ pub fn part2(input: &[Pair]) -> u64 {
 /// Generate the start and end values for a set,
 /// then sum the number of values contained in the given id range.
 fn sum(ranges: &[Range], input: &[Pair]) -> u64 {
-    let mut result = 0;
+    ranges
+        .iter()
+        .flat_map(|&[digits, size]| {
+            // Generate the sequence of invalid digit ids numerically.
+            let digits_power = 10_u64.pow(digits);
+            let size_power = 10_u64.pow(size);
 
-    for &[digits, size] in ranges {
-        // Generate the sequence of invalid digit ids numerically.
-        let digits_power = 10_u64.pow(digits);
-        let size_power = 10_u64.pow(size);
+            let step = (digits_power - 1) / (size_power - 1);
+            let start = step * (size_power / 10);
+            let end = step * (size_power - 1);
 
-        let step = (digits_power - 1) / (size_power - 1);
-        let start = step * (size_power / 10);
-        let end = step * (size_power - 1);
+            input.iter().filter_map(move |&[from, to]| {
+                // Find the first and last multiple of the step size,
+                // clamping to the start and end of the set.
+                let lower = from.next_multiple_of(step).max(start);
+                let upper = to.min(end);
 
-        for &[from, to] in input {
-            // Find the first and last multiple of the step size,
-            // clamping to the start and end of the set.
-            let lower = from.next_multiple_of(step).max(start);
-            let upper = to.min(end);
-
-            // Sum invalid ids using triangular number formula.
-            if lower <= upper {
-                let n = (upper - lower) / step;
+                // Skip disjoint ranges, then sum invalid ids using the triangular number formula.
+                let n = upper.checked_sub(lower)? / step;
                 let triangular = n * (n + 1) / 2;
-                result += lower * (n + 1) + step * triangular;
-            }
-        }
-    }
-
-    result
+                Some(lower * (n + 1) + step * triangular)
+            })
+        })
+        .sum()
 }

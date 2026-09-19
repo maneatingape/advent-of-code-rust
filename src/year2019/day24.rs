@@ -122,7 +122,7 @@ pub fn parse(input: &str) -> u32 {
         .bytes()
         .rev()
         .filter(|b| !b.is_ascii_whitespace())
-        .fold(0, |acc, b| (acc << 1) | (b & 1) as u32)
+        .fold(0, |acc, b| (acc << 1) | u32::from(b & 1))
 }
 
 pub fn part1(input: &u32) -> u32 {

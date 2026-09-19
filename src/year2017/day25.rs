@@ -33,7 +33,7 @@ impl Rule {
     fn parse(block: &[&[u8]]) -> Self {
         let next_tape = block[0][22] == b'1';
         let advance = block[1][27] == b'r';
-        let next_state = (block[2][26] - b'A') as usize;
+        let next_state = usize::from(block[2][26] - b'A');
         Self { next_state, next_tape, advance }
     }
 }
@@ -49,7 +49,7 @@ struct Skip {
 pub fn parse(input: &str) -> Input {
     let lines: Vec<_> = input.lines().map(str::as_bytes).collect();
 
-    let state = (lines[0][15] - b'A') as usize;
+    let state = usize::from(lines[0][15] - b'A');
     let steps = input.unsigned();
     let rules: Vec<_> = lines[3..]
         .chunks(10)

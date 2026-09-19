@@ -43,19 +43,16 @@ pub fn part2(input: &Input) -> u64 {
 
 fn paths(input: &Input, from: &str, to: &str) -> u64 {
     let mut cache = vec![u64::MAX; input.len()];
-    dfs(input, &mut cache, to_index(from), to_index(to))
+    cache[to_index(to)] = 1;
+    dfs(input, &mut cache, to_index(from))
 }
 
-fn dfs(input: &Input, cache: &mut [u64], node: usize, end: usize) -> u64 {
-    if node == end {
-        1
-    } else if cache[node] == u64::MAX {
-        let result = input[node].iter().map(|&next| dfs(input, cache, next, end)).sum();
-        cache[node] = result;
-        result
-    } else {
-        cache[node]
+fn dfs(input: &Input, cache: &mut [u64], node: usize) -> u64 {
+    if cache[node] == u64::MAX {
+        cache[node] = input[node].iter().map(|&next| dfs(input, cache, next)).sum();
     }
+
+    cache[node]
 }
 
 /// Convert 3-letter name to index.

@@ -124,14 +124,10 @@ pub fn part1(input: &Input) -> i32 {
         }
 
         // Any coordinates that are closest to the bounding box edges are infinite.
-        let left = candidates[0].0;
-        if left != marker {
-            finite[left] = false;
-        }
-
-        let right = candidates.last().unwrap().0;
-        if right != marker {
-            finite[right] = false;
+        for edge in [candidates[0].0, candidates.last().unwrap().0] {
+            if edge != marker {
+                finite[edge] = false;
+            }
         }
 
         // Only consider finite coordinates.

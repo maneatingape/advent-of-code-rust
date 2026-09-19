@@ -46,7 +46,7 @@ impl Pots {
         // Apply rules and build up new state.
         // Pad zeros onto the end to make handling next state easier.
         for b in self.prev_state[start..=end].iter().copied().chain(repeat_n(0, 4)) {
-            mask = ((mask << 1) | b as usize) & 0b11111;
+            mask = ((mask << 1) | usize::from(b)) & 0b11111;
             self.state.push(rules[mask]);
         }
 
@@ -56,7 +56,7 @@ impl Pots {
 
     /// Returns the sum of the numbers of all pots containing plants.
     fn sum(&self) -> i64 {
-        self.state.iter().enumerate().map(|(i, &s)| (self.pos + i as i64) * s as i64).sum()
+        self.state.iter().enumerate().map(|(i, &s)| (self.pos + i as i64) * i64::from(s)).sum()
     }
 }
 

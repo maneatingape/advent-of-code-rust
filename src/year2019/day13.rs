@@ -19,9 +19,7 @@ pub fn part1(input: &[i64]) -> usize {
     let mut blocks = 0;
 
     while let [_, _, State::Output(t)] = [computer.run(), computer.run(), computer.run()] {
-        if t == 2 {
-            blocks += 1;
-        }
+        blocks += usize::from(t == 2);
     }
 
     blocks
@@ -101,12 +99,10 @@ fn draw(tiles: &[i64], stride: i64, score: i64, blocks: i64) {
 
     let s = &mut String::new();
     let _ = writeln!(s, "{WHITE}{BOLD}Blocks: {blocks}\tScore: {score} {RESET}");
-    let mut y = 0;
 
-    while stride * y < tiles.len() as i64 {
-        for x in 0..stride {
-            let index = (stride * y + x) as usize;
-            let _unused = match tiles[index] {
+    for (y, row) in tiles.chunks(stride as usize).enumerate() {
+        for tile in row {
+            let _unused = match tile {
                 0 => write!(s, " "),
                 1 if y == 0 => write!(s, "{GREEN}_{RESET}"),
                 1 => write!(s, "{GREEN}|{RESET}"),
@@ -117,7 +113,6 @@ fn draw(tiles: &[i64], stride: i64, score: i64, blocks: i64) {
             };
         }
         s.push('\n');
-        y += 1;
     }
 
     println!("{HOME}{CLEAR}{s}");

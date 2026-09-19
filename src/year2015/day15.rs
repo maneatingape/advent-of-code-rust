@@ -21,15 +21,19 @@ pub fn parse(input: &str) -> Input {
     for a in 0..101 {
         let first: Ingredient = from_fn(|i| a * recipe[0][i]);
 
-        'outer: for b in 0..(101 - a) {
+        for b in 0..(101 - a) {
             let second: Ingredient = from_fn(|i| first[i] + b * recipe[1][i]);
 
             // Check if any ingredient can never be greater than zero.
             // This makes the entire score zero, so we can skip.
-            for ((x, y), z) in second.iter().zip(recipe[2]).zip(recipe[3]).take(4) {
-                if x + y.max(z) * (100 - a - b) <= 0 {
-                    continue 'outer;
-                }
+            if second
+                .iter()
+                .zip(recipe[2])
+                .zip(recipe[3])
+                .take(4)
+                .any(|((x, y), z)| x + y.max(z) * (100 - a - b) <= 0)
+            {
+                continue;
             }
 
             for c in 0..(101 - a - b) {

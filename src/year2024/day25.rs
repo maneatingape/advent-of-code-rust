@@ -24,7 +24,7 @@ pub fn part1(input: &str) -> u32 {
     let mut keys = Vec::with_capacity(250);
 
     for slice in input.as_bytes().chunks(43) {
-        let bits = slice[6..35].iter().fold(0, |bits, &n| (bits << 1) | (n & 1) as u32);
+        let bits = slice[6..35].iter().fold(0, |bits, &n| (bits << 1) | u32::from(n & 1));
 
         if slice[0] == b'#' {
             locks.push(bits);

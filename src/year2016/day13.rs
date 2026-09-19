@@ -30,9 +30,7 @@ pub fn parse(input: &str) -> Input {
     };
 
     let mut part_two = 0;
-    let mut todo = VecDeque::new();
-
-    todo.push_back((1, 1, 0));
+    let mut todo = VecDeque::from([(1, 1, 0)]);
 
     while let Some((x, y, cost)) = todo.pop_front() {
         // Target is at least 68 moves from the start. Since we're doing a BFS we're guaranteed

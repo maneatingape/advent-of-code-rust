@@ -27,12 +27,12 @@ pub fn parse(input: &str) -> Input {
 
     while digits <= end {
         // Build a 5 bit binary mask with a `1` if two adjacent digits are equal.
-        let mask = digits.array_windows().fold(0, |acc, &[a, b]| (acc << 1) | (a == b) as u32);
+        let mask = digits.array_windows().fold(0, |acc, &[a, b]| (acc << 1) | u32::from(a == b));
 
         // Password must contain at least one pair.
-        part_one += (mask != 0) as u32;
+        part_one += u32::from(mask != 0);
         // Password must contain at least one pair that's not part of a larger group.
-        part_two += (mask & !(mask >> 1) & !(mask << 1) != 0) as u32;
+        part_two += u32::from(mask & !(mask >> 1) & !(mask << 1) != 0);
 
         // Find the next number with all digits in non-decreasing order.
         let index = digits.iter().rposition(|&d| d < b'9').unwrap();

@@ -168,8 +168,8 @@ pub fn part2(input: &[i32]) -> i32 {
     let start = fold_decimal(&input[..7]) as usize;
     assert!(lower <= start && start < upper - 8);
 
-    let first = compute(input, start, upper, BINOMIAL_MOD_2.iter().copied().cycle(), 128);
-    let second = compute(input, start, upper, BINOMIAL_MOD_5.iter().copied().cycle(), 125);
+    let first = compute(input, start, upper, BINOMIAL_MOD_2.into_iter().cycle(), 128);
+    let second = compute(input, start, upper, BINOMIAL_MOD_5.into_iter().cycle(), 125);
 
     // Computes C(n, k) % 10
     // Solving the Chinese remainder theorem for the special case of two congruences:
@@ -183,8 +183,7 @@ pub fn part2(input: &[i32]) -> i32 {
     //     z₂ = y₂⁻¹ mod n₂ = 2⁻¹ mod 5 = 3
     //     x ≡ a₁y₁z₁ + a₂y₂z₂ (mod 10) ≡ 5a₁ + 6a₂ (mod 10)
     //
-    let result: Vec<_> = first.into_iter().zip(second).map(|(f, s)| (5 * f + 6 * s) % 10).collect();
-    fold_decimal(&result)
+    first.into_iter().zip(second).fold(0, |acc, (f, s)| 10 * acc + (5 * f + 6 * s) % 10)
 }
 
 /// Quickly computes a digit taking advantage of the fact

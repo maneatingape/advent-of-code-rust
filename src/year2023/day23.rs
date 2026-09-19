@@ -479,11 +479,8 @@ fn dfs(
                     (b'E', b'E') => {
                         let mut next = current;
 
-                        for i in (0..start).rev() {
-                            if current[i] == b'S' {
-                                next[i] = b'E';
-                                break;
-                            }
+                        if let Some(i) = current[..start].iter().rposition(|&b| b == b'S') {
+                            next[i] = b'E';
                         }
 
                         dfs(result, previous, next, end + 1, gap, horizontal, vertical);
@@ -494,15 +491,14 @@ fn dfs(
                         let mut level = 0;
 
                         for i in (end + 1)..6 {
-                            if previous[i] == b'S' {
-                                level += 1;
-                            }
-                            if previous[i] == b'E' {
-                                if level == 0 {
+                            match previous[i] {
+                                b'S' => level += 1,
+                                b'E' if level == 0 => {
                                     modified[i] = b'S';
                                     break;
                                 }
-                                level -= 1;
+                                b'E' => level -= 1,
+                                _ => (),
                             }
                         }
 

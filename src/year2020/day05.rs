@@ -14,7 +14,7 @@ pub struct Input {
 
 pub fn parse(input: &str) -> Input {
     let (min, max, xor) = input.lines().fold((u32::MAX, u32::MIN, 0), |(min, max, xor), line| {
-        let id = line.bytes().fold(0, |acc, b| (acc << 1) | (b == b'B' || b == b'R') as u32);
+        let id = line.bytes().fold(0, |acc, b| (acc << 1) | u32::from(b == b'B' || b == b'R'));
         (min.min(id), max.max(id), xor ^ id)
     });
 

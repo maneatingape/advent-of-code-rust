@@ -106,9 +106,9 @@ pub fn part2(input: &Input) -> String {
 }
 
 fn to_usize(b: u8) -> usize {
-    (b - b'a') as usize
+    usize::from(b - b'a')
 }
 
 fn to_char(u: usize) -> char {
-    ((u as u8) + b'a') as char
+    char::from(u as u8 + b'a')
 }

@@ -59,12 +59,12 @@ pub fn parse(input: &str) -> Haversack {
 
     let perfect_minimal_hash = |first: &str, second: &str| {
         let first = first.as_bytes();
-        let a = first[0] as usize;
-        let b = first[1] as usize;
+        let a = usize::from(first[0]);
+        let b = usize::from(first[1]);
 
         let second = second.as_bytes();
-        let c = second[0] as usize;
-        let d = (second[1] as usize) + (second.len() % 2);
+        let c = usize::from(second[0]);
+        let d = usize::from(second[1]) + (second.len() % 2);
 
         first_indices[26 * a + b - 2619] + 18 * second_indices[26 * c + d - 2619]
     };

@@ -120,9 +120,7 @@ pub fn parse(input: &str) -> Maze {
                 if seen[next_index] != start {
                     match tiles[next_index] {
                         Tile::Wall => (),
-                        Tile::Open => {
-                            todo.push_back((next_index, next_steps));
-                        }
+                        Tile::Open => todo.push_back((next_index, next_steps)),
                         Tile::Portal(key, kind) => {
                             let to = map[&key];
                             edges.push(Edge { to, kind, distance: next_steps });
@@ -140,8 +138,7 @@ pub fn parse(input: &str) -> Maze {
 
 /// Straight BFS with no caching or any optimization tricks.
 pub fn part1(input: &Maze) -> u32 {
-    let mut todo = VecDeque::new();
-    todo.push_back((0, input.start));
+    let mut todo = VecDeque::from([(0, input.start)]);
 
     while let Some((steps, index)) = todo.pop_front() {
         for &Edge { to, kind, distance } in &input.portals[index] {
@@ -161,8 +158,7 @@ pub fn part1(input: &Maze) -> u32 {
 /// BFS with memoization of previously seen states.
 pub fn part2(input: &Maze) -> u32 {
     let mut cache = FastMap::with_capacity(2_000);
-    let mut todo = VecDeque::new();
-    todo.push_back((0, input.start, 0));
+    let mut todo = VecDeque::from([(0, input.start, 0)]);
 
     while let Some((steps, index, level)) = todo.pop_front() {
         let best = cache.entry((index, level)).or_insert(u32::MAX);

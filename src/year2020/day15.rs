@@ -9,6 +9,8 @@
 //! expensive reads to main memory and halves the time needed for the solution.
 //!
 //! Zero occurs the most so storing it as a dedicated variable saves another 2% of execution time.
+use std::mem::replace;
+
 use crate::util::parse::*;
 
 const THRESHOLD: usize = 0x10000;
@@ -44,13 +46,11 @@ fn play(input: &[usize], rounds: usize) -> usize {
     for i in input.len()..rounds {
         if last == 0 {
             // Handle zero specially as it occurs the most.
-            let previous = zeroth;
-            zeroth = i;
+            let previous = replace(&mut zeroth, i);
             last = if previous == 0 { 0 } else { i - previous };
         } else if last < THRESHOLD {
             // Smaller numbers occur frequently so skip previously seen bitset check.
-            let previous = spoken[last] as usize;
-            spoken[last] = i as u32;
+            let previous = replace(&mut spoken[last], i as u32) as usize;
             last = if previous == 0 { 0 } else { i - previous };
         } else {
             // An array of 30 million `u32`s needs 120 MB of memory which exceeds most caches.
@@ -65,8 +65,7 @@ fn play(input: &[usize], rounds: usize) -> usize {
                 spoken[last] = i as u32;
                 last = 0;
             } else {
-                let previous = spoken[last] as usize;
-                spoken[last] = i as u32;
+                let previous = replace(&mut spoken[last], i as u32) as usize;
                 last = i - previous;
             }
         }

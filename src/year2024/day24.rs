@@ -107,51 +107,38 @@ pub fn part1(input: &Input<'_>) -> u64 {
     (to_index("z00")..to_index("z46"))
         .rev()
         .filter(|&i| cache[i] != u8::MAX)
-        .fold(0, |result, i| (result << 1) | (cache[i] as u64))
+        .fold(0, |result, i| (result << 1) | u64::from(cache[i]))
 }
 
 pub fn part2(input: &Input<'_>) -> String {
     let (_, gates) = input;
 
-    let mut output = FastSet::new();
+    // Track the kind of gate that each wire label outputs to.
+    let output: FastSet<_> =
+        gates.iter().flat_map(|&[left, kind, right, _, _]| [(left, kind), (right, kind)]).collect();
     let mut swapped = FastSet::new();
 
-    // Track the kind of gate that each wire label outputs to.
-    for &[left, kind, right, _, _] in gates {
-        output.insert((left, kind));
-        output.insert((right, kind));
-    }
-
     for &[left, kind, right, _, to] in gates {
-        match kind {
-            "AND" => {
-                // Check that all AND gates point to an OR, except for first AND.
-                if left != "x00" && right != "x00" && !output.contains(&(to, "OR")) {
-                    swapped.insert(to);
-                }
-            }
-            "OR" => {
-                // Check that only XOR gates point to output, except for last carry which is OR.
-                if to.starts_with('z') && to != "z45" {
-                    swapped.insert(to);
-                }
-                // OR can never point to OR.
-                if output.contains(&(to, "OR")) {
-                    swapped.insert(to);
-                }
-            }
+        let invalid = match kind {
+            // All AND gates must point to an OR, except for first AND.
+            "AND" => left != "x00" && right != "x00" && !output.contains(&(to, "OR")),
+            // Only XOR gates can point to output, except for last carry which is OR.
+            // OR can never point to OR.
+            "OR" => (to.starts_with('z') && to != "z45") || output.contains(&(to, "OR")),
             "XOR" => {
                 if left.starts_with('x') || right.starts_with('x') {
-                    // Check that first level XOR points to second level XOR, except for first XOR.
-                    if left != "x00" && right != "x00" && !output.contains(&(to, "XOR")) {
-                        swapped.insert(to);
-                    }
-                } else if !to.starts_with('z') {
+                    // First level XOR must point to second level XOR, except for first XOR.
+                    left != "x00" && right != "x00" && !output.contains(&(to, "XOR"))
+                } else {
                     // Second level XOR must point to output.
-                    swapped.insert(to);
+                    !to.starts_with('z')
                 }
             }
             _ => unreachable!(),
+        };
+
+        if invalid {
+            swapped.insert(to);
         }
     }
 

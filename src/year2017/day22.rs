@@ -121,7 +121,7 @@ pub fn part2(input: &Grid<u8>) -> usize {
     // Memoized blocks can combine up to 8 steps. Handle the last few steps individually to
     // prevent overshooting the step target and overcounting the infected node transitions.
     while remaining > 8 {
-        let state = grid[index] as usize;
+        let state = usize::from(grid[index]);
         let packed = cache[quadrant][direction][state];
 
         // With 10 million repetitions, saving time inside this hot loop is essential.
@@ -169,7 +169,7 @@ fn compute_block(grid: &mut [u8], mut quadrant: usize, mut direction: usize, sta
     let next_index = index + SIZE - CENTER;
 
     // Pack six fields into a single `u32`, maximizing cache locality by minimizing space.
-    next_state as u32
+    u32::from(next_state)
         | (quadrant << 8) as u32
         | (direction << 10) as u32
         | (infected << 12) as u32
@@ -191,7 +191,7 @@ fn step(grid: &mut [u8], index: usize, quadrant: usize, direction: usize) -> [us
     let next_node = (node + 1) % 4;
     // Direction changes based on the *previous* value of the node. In clockwise order:
     // 0 = Up, 1 = Right, 2 = Down, 3 = Left
-    let next_direction = (direction + node as usize + 3) % 4;
+    let next_direction = (direction + usize::from(node) + 3) % 4;
 
     // Update the 2 bits representing the current node.
     let mask = !(0b11 << shift);

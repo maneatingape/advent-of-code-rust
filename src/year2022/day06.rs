@@ -37,7 +37,7 @@ fn find(input: &str, marker: usize) -> usize {
 
     for (i, b) in input.bytes().enumerate() {
         // Use the character as an index into the array.
-        let index = (b - b'a') as usize;
+        let index = usize::from(b - b'a');
         let previous = seen[index];
         // Positions are 1-based.
         seen[index] = i + 1;

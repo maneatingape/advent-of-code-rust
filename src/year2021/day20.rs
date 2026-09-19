@@ -75,7 +75,7 @@ mod implementation {
                     } else {
                         default
                     };
-                    (result as usize) << shift
+                    usize::from(result) << shift
                 };
 
                 // If the edge pixels are 1 then the initial edge will look like
@@ -103,7 +103,7 @@ mod implementation {
             default = if default == 0 { algorithm[0] } else { algorithm[511] };
         }
 
-        pixels.bytes.iter().map(|&b| b as u32).sum()
+        pixels.bytes.iter().map(|&b| u32::from(b)).sum()
     }
 }
 
@@ -164,7 +164,7 @@ mod implementation {
 
                     let base = (pixels.width * y + x) as usize;
                     for (i, j) in indices.to_array().into_iter().enumerate() {
-                        next.bytes[base + i] = algorithm[j as usize];
+                        next.bytes[base + i] = algorithm[usize::from(j)];
                     }
                 }
             }
@@ -180,7 +180,7 @@ mod implementation {
 
         for y in 1..end - 1 {
             for x in 1..end - 1 {
-                result += pixels[Point::new(x, y)] as u32;
+                result += u32::from(pixels[Point::new(x, y)]);
             }
         }
 

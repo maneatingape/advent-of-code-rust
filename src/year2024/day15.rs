@@ -29,15 +29,17 @@ use std::mem::swap;
 use crate::util::grid::*;
 use crate::util::point::*;
 
-type Input<'a> = (Grid<u8>, &'a str);
+type Input = (Grid<u8>, Vec<u8>);
 
-pub fn parse(input: &str) -> Input<'_> {
+pub fn parse(input: &str) -> Input {
     let (prefix, suffix) = input.split_once("\n\n").unwrap();
     let grid = Grid::parse(prefix);
-    (grid, suffix)
+    // Treat moves as a single string ignoring any newline characters.
+    let moves = suffix.bytes().filter(|&b| b != b'\n').collect();
+    (grid, moves)
 }
 
-pub fn part1(input: &Input<'_>) -> i32 {
+pub fn part1(input: &Input) -> i32 {
     let (grid, moves) = input;
 
     // We don't need to move the robot symbol so mark as empty space once located.
@@ -45,17 +47,14 @@ pub fn part1(input: &Input<'_>) -> i32 {
     let mut position = grid.find(b'@').unwrap();
     grid[position] = b'.';
 
-    // Treat moves as a single string ignoring any newline characters.
-    for b in moves.bytes() {
-        if b != b'\n' {
-            narrow(&mut grid, &mut position, Point::from(b));
-        }
+    for &b in moves {
+        narrow(&mut grid, &mut position, Point::from(b));
     }
 
     gps(&grid, b'O')
 }
 
-pub fn part2(input: &Input<'_>) -> i32 {
+pub fn part2(input: &Input) -> i32 {
     let (grid, moves) = input;
 
     let mut grid = stretch(grid);
@@ -66,11 +65,11 @@ pub fn part2(input: &Input<'_>) -> i32 {
     let mut todo = Vec::with_capacity(50);
 
     // Horizontal moves reuse the part one logic, vertical moves need to cascade.
-    for b in moves.bytes() {
+    for &b in moves {
         match b {
             b'<' | b'>' => narrow(&mut grid, &mut position, Point::from(b)),
             b'^' | b'v' => wide(&mut grid, &mut position, Point::from(b), &mut todo),
-            _ => (),
+            _ => unreachable!(),
         }
     }
 

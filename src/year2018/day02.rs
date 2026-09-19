@@ -11,10 +11,10 @@ pub fn part1(input: &[&str]) -> u32 {
         let mut freq = [0; 26];
 
         for b in id.bytes() {
-            freq[(b - b'a') as usize] += 1;
+            freq[usize::from(b - b'a')] += 1;
         }
 
-        (twos + freq.contains(&2) as u32, threes + freq.contains(&3) as u32)
+        (twos + u32::from(freq.contains(&2)), threes + u32::from(freq.contains(&3)))
     });
 
     twos * threes

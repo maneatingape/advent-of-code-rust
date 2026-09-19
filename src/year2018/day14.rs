@@ -80,7 +80,7 @@ fn reader(rx: Receiver<&[u8]>, done: &AtomicBool, input: &str) -> (String, usize
 
                 // Push each digit into a string as there could be leading zeroes.
                 let digit = history[index][offset];
-                result.push((digit + b'0') as char);
+                result.push(char::from(digit + b'0'));
                 offset += 1;
             }
 
@@ -91,7 +91,7 @@ fn reader(rx: Receiver<&[u8]>, done: &AtomicBool, input: &str) -> (String, usize
         // handle cases when the target is split between two slices.
         if part_two_result.is_none() {
             for (i, n) in slice.iter().copied().enumerate() {
-                pattern = ((pattern << 4) | (n as u32)) & 0xffffff;
+                pattern = ((pattern << 4) | u32::from(n)) & 0xffffff;
 
                 if pattern == part_two_target {
                     part_two_result = Some(total - slice.len() + i - 5);
@@ -173,20 +173,20 @@ fn writer<'a>(tx: Sender<&'a [u8]>, done: &AtomicBool, mut recipes: &'a mut [u8]
 
             if needed < size {
                 let digit = recipes[needed - base];
-                needed += 1 + digit as usize;
+                needed += 1 + usize::from(digit);
 
                 snack[write] = digit;
                 write += 1;
             }
 
             // Wrap around to start if necessary.
-            elf1 += 1 + recipe1 as usize;
+            elf1 += 1 + usize::from(recipe1);
             if elf1 >= size {
                 elf1 -= size;
                 index1 = 0;
             }
 
-            elf2 += 1 + recipe2 as usize;
+            elf2 += 1 + usize::from(recipe2);
             if elf2 >= size {
                 elf2 -= size;
                 index2 = 0;
@@ -233,7 +233,7 @@ fn writer<'a>(tx: Sender<&'a [u8]>, done: &AtomicBool, mut recipes: &'a mut [u8]
             // contiguous vec.
             while needed < size {
                 let digit = recipes[needed - base];
-                needed += 1 + digit as usize;
+                needed += 1 + usize::from(digit);
 
                 snack[write] = digit;
                 write += 1;

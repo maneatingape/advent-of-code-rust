@@ -56,7 +56,7 @@ fn count(cube: &[u8], adjust: fn(u32) -> u32) -> u32 {
         .filter(|&(_, &cell)| cell == 1)
         .map(|(index, _)| {
             // No need for boundary checks as all cubes are at least 1 away from the edge.
-            adjust(NEIGHBORS.iter().map(|&n| cube[index.wrapping_add_signed(n)] as u32).sum())
+            adjust(NEIGHBORS.iter().map(|&n| u32::from(cube[index.wrapping_add_signed(n)])).sum())
         })
         .sum()
 }

@@ -9,26 +9,26 @@ use crate::util::hash::*;
 use crate::util::parse::*;
 use crate::util::point::*;
 
-type Input<'a> = (Vec<(&'a str, usize)>, Combinations);
+type Input = (Vec<(String, usize)>, Combinations);
 type Combinations = FastMap<(char, char), Vec<String>>;
 type Cache = FastMap<(char, char, usize), usize>;
 
 /// Convert codes to pairs of the sequence itself with the numeric part.
 /// The pad combinations are the same between both parts so only need to be computed once.
-pub fn parse(input: &str) -> Input<'_> {
-    let pairs = input.lines().zip(input.iter_unsigned()).collect();
+pub fn parse(input: &str) -> Input {
+    let pairs = input.lines().map(String::from).zip(input.iter_unsigned()).collect();
     (pairs, pad_combinations())
 }
 
-pub fn part1(input: &Input<'_>) -> usize {
+pub fn part1(input: &Input) -> usize {
     chain(input, 3)
 }
 
-pub fn part2(input: &Input<'_>) -> usize {
+pub fn part2(input: &Input) -> usize {
     chain(input, 26)
 }
 
-fn chain(input: &Input<'_>, depth: usize) -> usize {
+fn chain(input: &Input, depth: usize) -> usize {
     let (pairs, combinations) = input;
     let cache = &mut FastMap::with_capacity(500);
     pairs.iter().map(|(code, numeric)| dfs(cache, combinations, code, depth) * numeric).sum()
@@ -42,29 +42,26 @@ fn dfs(cache: &mut Cache, combinations: &Combinations, code: &str, depth: usize)
 
     // All keypads start with `A`, either the initial position of the keypad or the trailing `A`
     // from the previous sequence at this level.
-    let mut previous = 'A';
-    let mut result = 0;
+    once('A')
+        .chain(code.chars())
+        .zip(code.chars())
+        .map(|(previous, current)| {
+            // Check each pair of characters, memoizing results.
+            let key = (previous, current, depth);
 
-    for current in code.chars() {
-        // Check each pair of characters, memoizing results.
-        let key = (previous, current, depth);
-
-        result += cache.get(&key).copied().unwrap_or_else(|| {
-            // Each transition has either 1 or 2 possibilities.
-            // Pick the sequence that results in the minimum keypresses.
-            let presses = combinations[&(previous, current)]
-                .iter()
-                .map(|next| dfs(cache, combinations, next, depth - 1))
-                .min()
-                .unwrap();
-            cache.insert(key, presses);
-            presses
-        });
-
-        previous = current;
-    }
-
-    result
+            cache.get(&key).copied().unwrap_or_else(|| {
+                // Each transition has either 1 or 2 possibilities.
+                // Pick the sequence that results in the minimum keypresses.
+                let presses = combinations[&(previous, current)]
+                    .iter()
+                    .map(|next| dfs(cache, combinations, next, depth - 1))
+                    .min()
+                    .unwrap();
+                cache.insert(key, presses);
+                presses
+            })
+        })
+        .sum()
 }
 
 /// Compute keypresses needed for all possible transitions for both numeric and directional

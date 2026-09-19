@@ -78,7 +78,7 @@ impl Tile {
 
         // The ASCII code for "#" 35 is odd and the code for "." 46 is even
         // so we can convert to a 1 or 0 bit using bitwise AND with 1.
-        let binary = |row: usize, col: usize| (pixels[row][col] & 1) as usize;
+        let binary = |row: usize, col: usize| usize::from(pixels[row][col] & 1);
         let (t, l, b, r) = (0..10).fold((0, 0, 0, 0), |(t, l, b, r), i| {
             (
                 (t << 1) | binary(0, i),
@@ -109,16 +109,14 @@ impl Tile {
         let [a, b, c, d, e, f] = Self::COEFFICIENTS[permutation];
 
         for row in 0..8 {
-            let mut acc = 0;
-
-            for col in 0..8 {
+            let acc = (0..8).fold(0, |acc, col| {
                 let x = a * col + b * row + c;
                 let y = d * col + e * row + f;
                 let b = self.pixels[y as usize][x as usize];
-                acc = (acc << 1) | (b & 1);
-            }
+                (acc << 1) | (b & 1)
+            });
 
-            image[row as usize] = (image[row as usize] << 8) | (acc as u128);
+            image[row as usize] = (image[row as usize] << 8) | u128::from(acc);
         }
     }
 }
@@ -157,17 +155,13 @@ pub fn part2(input: &[Tile]) -> u32 {
         }
     }
 
-    let mut find_arbitrary_corner = || {
-        for tile in input {
-            for (&top, &left) in tile.top.iter().zip(&tile.left) {
-                if freq[top] == 1 && freq[left] == 1 {
-                    freq[top] += 1;
-                    return top;
-                }
-            }
-        }
-        unreachable!()
-    };
+    let mut next_top = input
+        .iter()
+        .flat_map(|tile| tile.top.iter().zip(&tile.left))
+        .find_map(|(&top, &left)| (freq[top] == 1 && freq[left] == 1).then_some(top))
+        .unwrap();
+    freq[next_top] += 1;
+
     let mut find_matching_tile = |edge: usize| {
         let [first, second] = edge_to_tile[edge];
         let next = if placed[first] { second } else { first };
@@ -176,7 +170,6 @@ pub fn part2(input: &[Tile]) -> u32 {
     };
 
     // Assemble the image.
-    let mut next_top = find_arbitrary_corner();
     let mut image = [0; 96];
     let mut index = 0;
 
@@ -205,7 +198,7 @@ pub fn part2(input: &[Tile]) -> u32 {
 
         for _ in 0..(96 - width + 1) {
             for window in image.windows(height) {
-                if monster.iter().enumerate().all(|(i, &n)| n & window[i] == n) {
+                if monster.iter().zip(window).all(|(&mask, &row)| mask & row == mask) {
                     rough -= 15;
                 }
             }
@@ -224,10 +217,8 @@ pub fn part2(input: &[Tile]) -> u32 {
         [0b00010010010010010010, 0b11100001100001100001, 0b01000000000000000000],
     ];
 
-    for monster in &mut monsters {
-        if let Some(rough) = find(monster, 20, 3) {
-            return rough;
-        }
+    if let Some(rough) = monsters.iter_mut().find_map(|monster| find(monster, 20, 3)) {
+        return rough;
     }
 
     // Hardcoded bit patterns for [R, RH, RV, RHV].
@@ -238,11 +229,5 @@ pub fn part2(input: &[Tile]) -> u32 {
         [2, 6, 2, 1, 0, 0, 1, 2, 2, 1, 0, 0, 1, 2, 2, 1, 0, 0, 1, 2],
     ];
 
-    for monster in &mut monsters {
-        if let Some(rough) = find(monster, 3, 20) {
-            return rough;
-        }
-    }
-
-    unreachable!()
+    monsters.iter_mut().find_map(|monster| find(monster, 3, 20)).unwrap()
 }

@@ -48,7 +48,7 @@ pub fn parse(input: &str) -> Vec<usize> {
     let mut ones = vec![0];
 
     for b in input.trim().bytes() {
-        sum += (b & 1) as usize;
+        sum += usize::from(b & 1);
         ones.push(sum);
     }
 

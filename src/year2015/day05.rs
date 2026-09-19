@@ -38,7 +38,7 @@ pub fn part1(input: &[&[u8]]) -> usize {
         .iter()
         .filter(|line| {
             let mut vowels = 0;
-            let mut pairs = 0;
+            let mut pair = false;
             let mut previous = 0;
 
             for &c in line.iter() {
@@ -50,14 +50,12 @@ pub fn part1(input: &[&[u8]]) -> usize {
                 if VOWEL_MASK & current != 0 {
                     vowels += 1;
                 }
-                if previous == current {
-                    pairs += 1;
-                }
+                pair |= previous == current;
 
                 previous = current;
             }
 
-            vowels >= 3 && pairs >= 1
+            vowels >= 3 && pair
         })
         .count()
 }
@@ -76,7 +74,7 @@ pub fn part2(input: &[&[u8]]) -> usize {
             let mut split_pair = false;
 
             for (offset, &c) in line.iter().enumerate() {
-                let third = (c - b'a' + 1) as usize;
+                let third = usize::from(c - b'a' + 1);
                 let index = 27 * second + third;
 
                 let position = base * 1000 + offset;
@@ -89,12 +87,9 @@ pub fn part2(input: &[&[u8]]) -> usize {
                     // No overlapping means that the distance must be at least two.
                     two_pair = true;
                 }
-                if first == third {
-                    split_pair = true;
-                }
+                split_pair |= first == third;
 
-                first = second;
-                second = third;
+                (first, second) = (second, third);
             }
 
             two_pair && split_pair

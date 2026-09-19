@@ -70,5 +70,5 @@ fn check(report: &[i32]) -> (u32, u32) {
 /// Convert each pair of levels to either +1 for increase, -1 for decrease or 0 for invalid range.
 fn delta(a: i32, b: i32) -> i32 {
     let diff = b - a;
-    (diff.abs() <= 3) as i32 * diff.signum()
+    i32::from(diff.abs() <= 3) * diff.signum()
 }

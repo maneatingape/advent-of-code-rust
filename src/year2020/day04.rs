@@ -20,7 +20,7 @@ pub fn parse(input: &str) -> Input {
             .extend(block.split([':', ' ', '\n']).chunk::<2>().filter(|&[key, _]| key != "cid"));
 
         if passport.len() == 7 {
-            (part_one + 1, part_two + passport.iter().all(validate_field) as u32)
+            (part_one + 1, part_two + u32::from(passport.iter().all(validate_field)))
         } else {
             (part_one, part_two)
         }

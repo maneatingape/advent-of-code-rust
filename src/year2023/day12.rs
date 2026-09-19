@@ -144,14 +144,13 @@ pub fn part2(input: &[Spring<'_>]) -> u64 {
 }
 
 fn solve<'a>(iter: impl Iterator<Item = &'a Spring<'a>>, repeat: usize) -> u64 {
-    let mut result = 0;
     let mut pattern = Vec::new();
     let mut springs = Vec::new();
     // Exact size is not too important as long as there's enough space.
     let mut broken = vec![0; 200];
     let mut table = vec![0; 200 * 50];
 
-    for (first, second) in iter {
+    iter.map(|(first, second)| {
         // Create input sequence reusing the buffers to minimize memory allocations.
         pattern.clear();
         springs.clear();
@@ -174,9 +173,7 @@ fn solve<'a>(iter: impl Iterator<Item = &'a Spring<'a>>, repeat: usize) -> u64 {
         let mut sum = 0;
 
         for (i, &b) in pattern.iter().enumerate() {
-            if b != b'.' {
-                sum += 1;
-            }
+            sum += usize::from(b != b'.');
             broken[i + 1] = sum;
         }
 
@@ -238,8 +235,7 @@ fn solve<'a>(iter: impl Iterator<Item = &'a Spring<'a>>, repeat: usize) -> u64 {
 
         // The final value of sum (the bottom right of the table) is the number of possible
         // arrangements of the pattern.
-        result += sum;
-    }
-
-    result
+        sum
+    })
+    .sum()
 }

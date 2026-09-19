@@ -6,7 +6,7 @@
 /// Map each line from one of the 9 possible combinations ("A", "B" or "C" followed by "X", "Y" or
 /// "Z") to between 0 and 8 inclusive.
 pub fn parse(input: &str) -> Vec<usize> {
-    input.as_bytes().chunks_exact(4).map(|c| (3 * (c[0] - b'A') + c[2] - b'X') as usize).collect()
+    input.as_bytes().chunks_exact(4).map(|c| usize::from(3 * (c[0] - b'A') + c[2] - b'X')).collect()
 }
 
 /// Map each index to a score using a small precomputed lookup table.

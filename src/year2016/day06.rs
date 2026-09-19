@@ -9,8 +9,8 @@ pub fn parse(input: &str) -> Input {
     let stride = width + 1;
     let input = input.as_bytes();
 
-    let to_index = |b: u8| (b - b'a') as usize;
-    let to_char = |i: usize| ((i as u8) + b'a') as char;
+    let to_index = |b: u8| usize::from(b - b'a');
+    let to_char = |i: usize| char::from(i as u8 + b'a');
 
     (0..width)
         .map(|offset| {

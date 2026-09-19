@@ -30,17 +30,15 @@ impl Op {
         let digit = |i: usize| tokens[i].unsigned();
         let letter = |i: usize| tokens[i].chars().next().unwrap();
 
-        match tokens[0] {
-            "reverse" => Self::Reverse(digit(2), digit(4)),
-            "move" => Self::Move(digit(2), digit(5)),
-            _ => match tokens[1] {
-                "position" => Self::SwapPosition(digit(2), digit(5)),
-                "letter" => Self::SwapLetter(letter(2), letter(5)),
-                "left" => Self::RotateLeft(digit(2)),
-                "right" => Self::RotateRight(digit(2)),
-                "based" => Self::RotateLetterRight(letter(6)),
-                _ => unreachable!(),
-            },
+        match (tokens[0], tokens[1]) {
+            ("reverse", "positions") => Self::Reverse(digit(2), digit(4)),
+            ("move", "position") => Self::Move(digit(2), digit(5)),
+            ("swap", "position") => Self::SwapPosition(digit(2), digit(5)),
+            ("swap", "letter") => Self::SwapLetter(letter(2), letter(5)),
+            ("rotate", "left") => Self::RotateLeft(digit(2)),
+            ("rotate", "right") => Self::RotateRight(digit(2)),
+            ("rotate", "based") => Self::RotateLetterRight(letter(6)),
+            _ => unreachable!(),
         }
     }
 

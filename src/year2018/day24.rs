@@ -149,17 +149,17 @@ fn fight(input: &Input, boost: i32) -> (Kind, i32) {
         target_selection(&infection, &mut immune, Kind::Infection);
 
         // Attacking phase.
-        let mut killed = 0;
-
-        for next in &mut attacks {
-            if let Some((kind, from, to)) = next.take() {
+        let killed: i32 = attacks
+            .iter_mut()
+            .filter_map(Option::take)
+            .map(|(kind, from, to)| {
                 if kind == Kind::Immune {
-                    killed += immune[from].attack(&mut infection[to]);
+                    immune[from].attack(&mut infection[to])
                 } else {
-                    killed += infection[from].attack(&mut immune[to]);
+                    infection[from].attack(&mut immune[to])
                 }
-            }
-        }
+            })
+            .sum();
 
         // It's possible to deadlock if groups become too weak to do any more damage.
         if killed == 0 {
@@ -207,13 +207,11 @@ fn parse_group<'a>(input: &'a str, mask: &mut impl FnMut(&'a str) -> u32) -> Vec
 /// There can be any number of weaknesses or immunities.
 fn parse_list<'a>(tokens: &[&'a str], start: &str, mask: &mut impl FnMut(&'a str) -> u32) -> u32 {
     let end = ["weak", "immune", "with"];
-    if let Some(index) = tokens.iter().position(|&t| t == start) {
-        // Skip over the "to" that follows, then take element names until the next section starts.
-        tokens[index + 2..]
-            .iter()
-            .take_while(|&&t| !end.contains(&t))
-            .fold(0, |elements, &t| elements | mask(t))
-    } else {
-        0
-    }
+    tokens
+        .iter()
+        .skip_while(|&&t| t != start)
+        // Skip the heading and "to", then take element names until the next section starts.
+        .skip(2)
+        .take_while(|&&t| !end.contains(&t))
+        .fold(0, |elements, &t| elements | mask(t))
 }

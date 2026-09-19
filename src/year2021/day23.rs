@@ -136,7 +136,7 @@ struct Burrow {
 
 impl Burrow {
     fn new(rooms: [[usize; 4]; 4]) -> Self {
-        Self { hallway: Hallway::new(), rooms: from_fn(|i| Room::new(rooms[i])) }
+        Self { hallway: Hallway::new(), rooms: rooms.map(Room::new) }
     }
 }
 
@@ -215,8 +215,7 @@ fn organize(burrow: Burrow) -> usize {
             // heuristic is calculated. For example, if we have spent 100 energy and the heuristic
             // is 100, spending 10 to move an amphipod would result in 110 energy spent and a
             // heuristic of 90.
-            let min = seen.get(&burrow).unwrap_or(&usize::MAX);
-            if energy < *min {
+            if seen.get(&burrow).is_none_or(|&min| energy < min) {
                 todo.push(energy, burrow);
                 seen.insert(burrow, energy);
             }
@@ -367,9 +366,8 @@ fn expand(
                 // Check that we haven't already seen this state before with lower energy
                 // in order to prune suboptimal duplicates.
                 let next_energy = energy + extra;
-                let min = seen.get(&next).unwrap_or(&usize::MAX);
 
-                if next_energy < *min {
+                if seen.get(&next).is_none_or(|&min| next_energy < min) {
                     todo.push(next_energy, next);
                     seen.insert(next, next_energy);
                 }

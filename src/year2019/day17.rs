@@ -20,7 +20,6 @@
 //! entire solution in parse thus reduces the overall runtime.
 use std::fmt::Write as _;
 use std::iter::once;
-use std::ops::ControlFlow;
 
 use crate::util::hash::*;
 use crate::util::intcode::*;
@@ -75,7 +74,7 @@ pub fn parse(input: &str) -> Input {
     let path = build_path(&scaffold, position, direction);
     let mut movement = Movement { routine: String::new(), functions: [None; 3] };
 
-    let _unused = compress(&path, &mut movement);
+    compress(&path, &mut movement);
 
     // Convert trailing comma ',' into a trailing newline '\n'
     let mut rules = String::new();
@@ -142,14 +141,14 @@ fn build_path(scaffold: &FastSet<Point>, mut position: Point, mut direction: Poi
 /// Uses a greedy backtracking algorithm that attempts to match as much of the remaining string
 /// as possible with known patterns, before trying combinations of a new pattern (up to the maximum
 /// movement function length of 20 characters).
-fn compress<'a>(path: &'a str, movement: &mut Movement<'a>) -> ControlFlow<()> {
+fn compress<'a>(path: &'a str, movement: &mut Movement<'a>) -> bool {
     // Nothing left to match, we've finished successfully.
     if path.is_empty() {
-        return ControlFlow::Break(());
+        return true;
     }
     // Safety check just in case very short sequences can match the entire input.
     if movement.routine.len() > 21 {
-        return ControlFlow::Continue(());
+        return false;
     }
 
     for (i, &name) in ['A', 'B', 'C'].iter().enumerate() {
@@ -158,14 +157,18 @@ fn compress<'a>(path: &'a str, movement: &mut Movement<'a>) -> ControlFlow<()> {
 
         if let Some(needle) = movement.functions[i] {
             // Try known patterns first.
-            if let Some(remaining) = path.strip_prefix(needle) {
-                compress(remaining, movement)?;
+            if let Some(remaining) = path.strip_prefix(needle)
+                && compress(remaining, movement)
+            {
+                return true;
             }
         } else {
             // Then combinations up to length 20 characters.
             for (needle, remaining) in segments(path) {
                 movement.functions[i] = Some(needle);
-                compress(remaining, movement)?;
+                if compress(remaining, movement) {
+                    return true;
+                }
                 movement.functions[i] = None;
             }
         }
@@ -174,7 +177,7 @@ fn compress<'a>(path: &'a str, movement: &mut Movement<'a>) -> ControlFlow<()> {
         movement.routine.pop();
     }
 
-    ControlFlow::Continue(())
+    false
 }
 
 /// Fun with iterators.
@@ -221,7 +224,7 @@ fn visit(mut computer: Computer) -> i64 {
 
     while let State::Output(next) = computer.run() {
         result = next;
-        let ascii = (next as u8) as char;
+        let ascii = char::from(next as u8);
 
         // Highlight the robot's position.
         match ascii {

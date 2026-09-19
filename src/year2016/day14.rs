@@ -11,8 +11,8 @@ use crate::util::md5::*;
 use crate::util::thread::*;
 
 /// Atomics can be safely shared between threads.
-struct Shared<'a> {
-    input: &'a str,
+struct Shared {
+    input: String,
     part_two: bool,
     iter: AtomicIter,
     mutex: Mutex<Exclusive>,
@@ -42,6 +42,7 @@ pub fn part2(input: &str) -> i32 {
 /// Find the first 64 keys that satisfy the rules.
 fn generate_pad(input: &str, part_two: bool) -> i32 {
     let step = if cfg!(feature = "simd") { 32 } else { 1 };
+    let input = input.to_owned();
 
     let exclusive =
         Exclusive { threes: BTreeMap::new(), fives: BTreeMap::new(), found: BTreeSet::new() };
@@ -72,7 +73,7 @@ fn format_string(prefix: &str, n: i32) -> ([u8; 64], usize) {
 #[inline]
 fn to_ascii(n: u32) -> [u8; 8] {
     // Spread each nibble into its own byte, for example `1234abcd` becomes `010203040a0b0c0d`.
-    let mut n = n as u64;
+    let mut n = u64::from(n);
     n = ((n << 16) & 0x0000ffff00000000) | (n & 0x000000000000ffff);
     n = ((n << 8) & 0x00ff000000ff0000) | (n & 0x000000ff000000ff);
     n = ((n << 4) & 0x0f000f000f000f00) | (n & 0x000f000f000f000f);
@@ -95,13 +96,13 @@ fn to_ascii(n: u32) -> [u8; 8] {
 mod implementation {
     use super::*;
 
-    pub(super) fn worker(shared: &Shared<'_>) {
+    pub(super) fn worker(shared: &Shared) {
         while let Some(n) = shared.iter.next() {
             // Get the next key to check.
             let n = n as i32;
 
             // Calculate the hash.
-            let (mut buffer, size) = format_string(shared.input, n);
+            let (mut buffer, size) = format_string(&shared.input, n);
             let mut result = hash(&mut buffer, size);
 
             if shared.part_two {
@@ -119,7 +120,7 @@ mod implementation {
     }
 
     /// Check for sequences of 3 or 5 consecutive matching digits.
-    fn check(shared: &Shared<'_>, n: i32, hash: [u32; 4]) {
+    fn check(shared: &Shared, n: i32, hash: [u32; 4]) {
         let [a, b, c, d] = hash;
 
         let mut prev = u32::MAX;
@@ -194,7 +195,7 @@ mod implementation {
     use crate::util::md5::simd::hash_fixed;
 
     /// Use SIMD to compute hashes in parallel in blocks of 32.
-    pub(super) fn worker(shared: &Shared<'_>) {
+    pub(super) fn worker(shared: &Shared) {
         let mut result = [Simd::splat(0); 4];
         let mut buffers = [[0; 64]; 32];
 
@@ -204,7 +205,7 @@ mod implementation {
 
             // Calculate the hash.
             for i in 0..32 {
-                let (mut buffer, size) = format_string(shared.input, start + i as i32);
+                let (mut buffer, size) = format_string(&shared.input, start + i as i32);
                 let [a, b, c, d] = hash(&mut buffer, size);
 
                 result[0][i] = a;
@@ -231,7 +232,7 @@ mod implementation {
 
     /// Check for sequences of 3 or 5 consecutive matching digits.
     #[inline]
-    fn check(shared: &Shared<'_>, start: i32, hash: &[Simd<u32, 32>; 4]) {
+    fn check(shared: &Shared, start: i32, hash: &[Simd<u32, 32>; 4]) {
         let &[a, b, c, d] = hash;
 
         let mut prev: Simd<u32, 32> = Simd::splat(u32::MAX);

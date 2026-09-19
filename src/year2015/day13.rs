@@ -95,7 +95,7 @@ pub fn parse(input: &str) -> Input {
     let mut part_one = i16::MIN;
     let mut part_two = i16::MIN;
     for (k, &(total, start)) in table[table.len() - stride..].iter().enumerate() {
-        part_one = part_one.max(total + happiness[start as usize * stride + k]);
+        part_one = part_one.max(total + happiness[usize::from(start) * stride + k]);
         part_two = part_two.max(total);
     }
 

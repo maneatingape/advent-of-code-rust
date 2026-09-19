@@ -86,19 +86,18 @@ struct Valve<'a> {
 impl Valve<'_> {
     /// We're only interested in uppercase valve names and digits for the flow.
     fn parse(line: &str) -> Valve<'_> {
-        let mut tokens: Vec<_> = line
+        let mut tokens = line
             .split(|c: char| !c.is_ascii_uppercase() && !c.is_ascii_digit())
             .filter(|s| !s.is_empty())
-            .collect();
-        let name = tokens[1];
-        let flow = tokens[2].unsigned();
-        tokens.drain(..3);
-        Valve { name, flow, edges: tokens }
+            .skip(1);
+        let name = tokens.next().unwrap();
+        let flow = tokens.next().unwrap().unsigned();
+        Valve { name, flow, edges: tokens.collect() }
     }
 
     /// Order valves in descending order of flow then ascending alphabetical order of names.
     /// This places all non-zero valves at the start followed immediately by valve `AA`.
-    fn cmp(&self, other: &Valve<'_>) -> Ordering {
+    fn cmp(&self, other: &Self) -> Ordering {
         other.flow.cmp(&self.flow).then(self.name.cmp(other.name))
     }
 }
@@ -145,9 +144,7 @@ pub fn parse(input: &str) -> Input {
         for i in 0..size {
             for j in 0..size {
                 let candidate = distance[i * size + k].saturating_add(distance[k * size + j]);
-                if candidate < distance[i * size + j] {
-                    distance[i * size + j] = candidate;
-                }
+                distance[i * size + j] = distance[i * size + j].min(candidate);
             }
         }
     }
@@ -249,14 +246,9 @@ pub fn part2(input: &Input) -> u32 {
             break;
         }
 
-        for j in (0..i).rev() {
-            let (mask2, elephant) = candidates[j];
-
-            // Find the best result where the two sets of valves are disjoint.
-            if mask1 & mask2 == 0 {
-                result = result.max(you + elephant);
-                break;
-            }
+        // Find the best result where the two sets of valves are disjoint.
+        if let Some((_, elephant)) = candidates[..i].iter().rfind(|(mask2, _)| mask1 & mask2 == 0) {
+            result = result.max(you + elephant);
         }
     }
 

@@ -14,27 +14,23 @@ pub fn parse(input: &str) -> Input {
     let amounts = input.iter_signed::<i32>();
 
     // Dial starts at fifty, not zero.
-    let mut dial = 50;
-    let mut part_one = 0;
-    let mut part_two = 0;
+    let (_, part_one, part_two) = directions.zip(amounts).fold(
+        (50, 0, 0),
+        |(dial, part_one, part_two), (direction, amount)| {
+            let (dial, zeros) = if direction == b'R' {
+                // Right (or positive) turns use normal modulo.
+                let total = dial + amount;
+                (total % 100, total / 100)
+            } else {
+                // To avoid an off-by-one error when the dial is already at zero during a left
+                // (or negative) turn, take the reflected value modulo 100.
+                let reversed = (100 - dial) % 100;
+                ((dial - amount).rem_euclid(100), (reversed + amount) / 100)
+            };
 
-    for (direction, amount) in directions.zip(amounts) {
-        if direction == b'R' {
-            // Right (or positive) turns use normal modulo.
-            let total = dial + amount;
-            part_two += total / 100;
-            dial = total % 100;
-        } else {
-            // To avoid an [off by one error](https://en.wikipedia.org/wiki/Off-by-one_error)
-            // when the dial is already at zero during a left (or negative) turn, we take the
-            // reflected value modulo 100.
-            let reversed = (100 - dial) % 100;
-            part_two += (reversed + amount) / 100;
-            dial = (dial - amount).rem_euclid(100);
-        }
-        // Compute part one simultaneously.
-        part_one += i32::from(dial == 0);
-    }
+            (dial, part_one + i32::from(dial == 0), part_two + zeros)
+        },
+    );
 
     (part_one, part_two)
 }

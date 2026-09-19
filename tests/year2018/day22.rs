@@ -21,6 +21,6 @@ fn part2_test() {
     let input = parse(EXAMPLE);
     assert_eq!(part2(&input), 45);
 
-    let input2 = parse(ALTERNATE);
-    assert_eq!(part2(&input2), 1100);
+    let input = parse(ALTERNATE);
+    assert_eq!(part2(&input), 1100);
 }

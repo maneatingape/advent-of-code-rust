@@ -16,16 +16,14 @@ pub fn part1(input: &[i64]) -> i64 {
     let mut computer = Computer::new(input);
 
     let sequence = |slice: &[i64]| {
-        let mut signal = 0;
-
         // Send exactly 2 inputs and receive exactly 1 output per amplifier.
-        for &phase in slice {
+        let signal = slice.iter().fold(0, |signal, &phase| {
             computer.reset();
             computer.input(phase);
             computer.input(signal);
             let State::Output(next) = computer.run() else { unreachable!() };
-            signal = next;
-        }
+            next
+        });
 
         result = result.max(signal);
     };
@@ -39,11 +37,9 @@ pub fn part2(input: &[i64]) -> i64 {
     let mut computers: [Computer; 5] = from_fn(|_| Computer::new(input));
 
     let feedback = |slice: &[i64]| {
-        // Reset state.
-        computers.iter_mut().for_each(Computer::reset);
-
-        // Send each initial phase setting exactly once.
+        // Reset state and send each initial phase setting exactly once.
         for (computer, &phase) in computers.iter_mut().zip(slice) {
+            computer.reset();
             computer.input(phase);
         }
 

@@ -43,6 +43,7 @@
 //! circuit the calculation early without having to calculate the entire 10,000 rounds.
 //!
 //! [`iter_unsigned`]: ParseOps::iter_unsigned
+use std::array::from_fn;
 use std::ops::{Add, Mul, Sub};
 
 use crate::util::hash::*;
@@ -101,9 +102,8 @@ impl Add for Business {
     type Output = Self;
 
     #[inline]
-    fn add(mut self, rhs: Self) -> Self {
-        self.0.iter_mut().zip(rhs.0).for_each(|(a, b)| *a += b);
-        self
+    fn add(self, rhs: Self) -> Self {
+        Self(from_fn(|i| self.0[i] + rhs.0[i]))
     }
 }
 
@@ -111,9 +111,8 @@ impl Sub for Business {
     type Output = Self;
 
     #[inline]
-    fn sub(mut self, rhs: Self) -> Self {
-        self.0.iter_mut().zip(rhs.0).for_each(|(a, b)| *a -= b);
-        self
+    fn sub(self, rhs: Self) -> Self {
+        Self(from_fn(|i| self.0[i] - rhs.0[i]))
     }
 }
 
@@ -121,9 +120,8 @@ impl Mul<usize> for Business {
     type Output = Self;
 
     #[inline]
-    fn mul(mut self, rhs: usize) -> Self {
-        self.0.iter_mut().for_each(|a| *a *= rhs);
-        self
+    fn mul(self, rhs: usize) -> Self {
+        Self(self.0.map(|n| n * rhs))
     }
 }
 

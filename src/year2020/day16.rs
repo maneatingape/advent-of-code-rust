@@ -104,7 +104,7 @@ fn solve_part_two(
     for ticket in nearby_tickets {
         let mut remaining = rules.to_vec();
 
-        for (&valid, &n) in valid.iter().zip(ticket.iter()) {
+        for (&valid, &n) in valid.iter().zip(ticket) {
             if valid {
                 remaining.retain(|rule| rule.check(n));
             }
@@ -119,7 +119,7 @@ fn solve_part_two(
                 let found = rules_by_column[i].pop().unwrap();
 
                 if found.departure {
-                    product *= your_ticket[i] as u64;
+                    product *= u64::from(your_ticket[i]);
                 }
 
                 for remaining in &mut rules_by_column {

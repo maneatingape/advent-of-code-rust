@@ -56,25 +56,19 @@ pub fn part2(input: &[Instruction]) -> isize {
     let mut seen = vec![false; input.len()];
 
     loop {
-        match input[pc] {
+        let (next, speculative) = match input[pc] {
             Instruction::Acc(arg) => {
                 pc += 1;
                 acc += arg;
+                continue;
             }
-            Instruction::Jmp(arg) => {
-                let speculative = pc + 1;
-                match execute(input, speculative, acc, &mut seen) {
-                    State::Infinite(_) => pc = pc.wrapping_add_signed(arg),
-                    State::Halted(acc) => break acc,
-                }
-            }
-            Instruction::Nop(arg) => {
-                let speculative = pc.wrapping_add_signed(arg);
-                match execute(input, speculative, acc, &mut seen) {
-                    State::Infinite(_) => pc += 1,
-                    State::Halted(acc) => break acc,
-                }
-            }
+            Instruction::Jmp(arg) => (pc.wrapping_add_signed(arg), pc + 1),
+            Instruction::Nop(arg) => (pc + 1, pc.wrapping_add_signed(arg)),
+        };
+
+        match execute(input, speculative, acc, &mut seen) {
+            State::Infinite(_) => pc = next,
+            State::Halted(acc) => break acc,
         }
     }
 }
@@ -94,12 +88,8 @@ fn execute(input: &[Instruction], mut pc: usize, mut acc: isize, seen: &mut [boo
                 pc += 1;
                 acc += arg;
             }
-            Instruction::Jmp(arg) => {
-                pc = pc.wrapping_add_signed(arg);
-            }
-            Instruction::Nop(_) => {
-                pc += 1;
-            }
+            Instruction::Jmp(arg) => pc = pc.wrapping_add_signed(arg),
+            Instruction::Nop(_) => pc += 1,
         }
     }
 }

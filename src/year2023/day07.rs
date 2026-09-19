@@ -13,7 +13,7 @@
 //!
 //! * `QQQJA` => `0x41000ccc1a`
 use std::cmp::Reverse;
-use std::mem::replace;
+use std::mem::take;
 
 use crate::util::parse::*;
 
@@ -61,10 +61,10 @@ fn winnings(input: &[Hand], jack: usize) -> usize {
             }
 
             // Set jokers aside so that they increase the biggest group.
-            let jokers = replace(&mut frequency[1], 0);
+            let jokers = take(&mut frequency[1]);
 
             // Each card contributes its frequency once, then zero for any duplicates.
-            let mut groups = ranks.map(|rank| replace(&mut frequency[rank], 0));
+            let mut groups = ranks.map(|rank| take(&mut frequency[rank]));
             groups.sort_unstable_by_key(|&count| Reverse(count));
             groups[0] += jokers;
 

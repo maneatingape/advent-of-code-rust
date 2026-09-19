@@ -83,7 +83,7 @@ impl Deck {
     // To make things easier, `start` and `end` never wrap around, so that `end` is always
     // greater than or equal to `start`.
     fn pop_front(&mut self) -> usize {
-        let card = self.cards[self.start % 64] as usize;
+        let card = usize::from(self.cards[self.start % 64]);
         self.sum -= card;
         self.score -= self.size() * card;
         self.start += 1;
@@ -116,7 +116,7 @@ impl Deck {
         for i in 0..amount {
             let card = self.cards[(self.start + i) % 64];
             copy.cards[i] = card;
-            copy.sum += card as usize;
+            copy.sum += usize::from(card);
             copy.score += copy.sum;
         }
 

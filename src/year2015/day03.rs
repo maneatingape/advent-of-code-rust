@@ -29,13 +29,9 @@ fn deliver(input: &[Point], predicate: fn(usize) -> bool) -> usize {
     set.insert(ORIGIN);
 
     for (index, &point) in input.iter().enumerate() {
-        if predicate(index) {
-            santa += point;
-            set.insert(santa);
-        } else {
-            robot += point;
-            set.insert(robot);
-        }
+        let position = if predicate(index) { &mut santa } else { &mut robot };
+        *position += point;
+        set.insert(*position);
     }
 
     set.len()

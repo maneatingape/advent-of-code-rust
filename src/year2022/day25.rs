@@ -37,15 +37,7 @@ fn to_snafu(mut n: i64) -> String {
     let mut digits = Vec::new();
 
     while n > 0 {
-        let next = match n % 5 {
-            0 => '0',
-            1 => '1',
-            2 => '2',
-            3 => '=',
-            4 => '-',
-            _ => unreachable!(),
-        };
-        digits.push(next);
+        digits.push(['0', '1', '2', '=', '-'][(n % 5) as usize]);
         // If the remainder of n is 3 or higher then this will add a carry digit to account
         // for the subtraction.
         n = (n + 2) / 5;

@@ -64,6 +64,10 @@ pub fn part2(input: &Input) -> usize {
 fn expedition(basin: &Basin, start: usize, forward: bool) -> usize {
     let Basin { width, height, left, right, vertical } = basin;
     let mut state = vec![0; width + 1];
+    let top = (0, 1 << (height - 1));
+    let bottom = (width - 1, 1);
+    let ((entrance, entrance_bit), (exit, exit_bit)) =
+        if forward { (top, bottom) } else { (bottom, top) };
 
     for time in start + 1.. {
         // Left and right offsets stay within the doubled arrays.
@@ -73,12 +77,11 @@ fn expedition(basin: &Basin, start: usize, forward: bool) -> usize {
 
         // We modify the state in-place as we process each column, so preserve the previous state
         // for subsequent calculations.
-        let mut prev;
         let mut cur = 0;
         let mut next = state[0];
 
         for i in 0..*width {
-            prev = cur;
+            let prev = cur;
             cur = next;
             next = state[i + 1];
             // The Elves frontier can spread out 1 in each orthogonal direction unless there
@@ -87,21 +90,11 @@ fn expedition(basin: &Basin, start: usize, forward: bool) -> usize {
                 (cur | (cur >> 1) | (cur << 1) | prev | next) & left[i] & right[i] & vertical[i];
         }
 
-        // Depending on the direction elves can wait indefinitely in the start or end positions.
-        if forward {
-            // Start position.
-            state[0] |= 1 << (height - 1);
-            // If we reached the end then stop.
-            if state[width - 1] & 1 != 0 {
-                return time + 1;
-            }
-        } else {
-            // End position.
-            state[width - 1] |= 1;
-            // If we've reached the start then stop.
-            if state[0] & (1 << (height - 1)) != 0 {
-                return time + 1;
-            }
+        // Elves can wait indefinitely at the entrance in either direction.
+        state[entrance] |= entrance_bit;
+        // Once we reach the exit, leaving the basin takes one more minute.
+        if state[exit] & exit_bit != 0 {
+            return time + 1;
         }
     }
 

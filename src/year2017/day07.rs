@@ -14,7 +14,7 @@ use std::collections::VecDeque;
 use crate::util::hash::*;
 use crate::util::parse::*;
 
-type Input<'a> = (&'a str, i32);
+type Input = (String, i32);
 
 #[derive(Clone, Copy, Default)]
 struct Node {
@@ -27,7 +27,7 @@ struct Node {
     sub_totals: [i32; 2],
 }
 
-pub fn parse(input: &str) -> Input<'_> {
+pub fn parse(input: &str) -> Input {
     // Split each line into the program name then the rest of the information.
     let pairs: Vec<_> = input.lines().map(|line| line.split_once(' ').unwrap()).collect();
     // Convert each program name into a fixed index so that we can use faster vec lookups
@@ -64,7 +64,7 @@ pub fn parse(input: &str) -> Input<'_> {
     while let Some(parent) = nodes[candidate].parent {
         candidate = parent;
     }
-    let part_one = pairs[candidate].0;
+    let part_one = pairs[candidate].0.to_owned();
     let mut part_two = 0;
 
     while let Some(index) = todo.pop_front() {
@@ -115,10 +115,10 @@ pub fn parse(input: &str) -> Input<'_> {
     (part_one, part_two)
 }
 
-pub fn part1<'a>(input: &Input<'a>) -> &'a str {
-    input.0
+pub fn part1(input: &Input) -> &str {
+    &input.0
 }
 
-pub fn part2(input: &Input<'_>) -> i32 {
+pub fn part2(input: &Input) -> i32 {
     input.1
 }

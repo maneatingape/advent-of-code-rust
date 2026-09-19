@@ -44,6 +44,8 @@
 //!
 //! The enhancement cycle can start again with each 3x3 image. This means that we only need to
 //! calculate 2 generations for the starting image and each 2x2 to 3x3 rule.
+use std::array::from_fn;
+
 struct Pattern {
     three: u32,
     four: u32,
@@ -111,8 +113,8 @@ pub fn parse(input: &str) -> Vec<u32> {
             });
 
             let three = index.count_ones();
-            let four = four.iter().sum::<u8>() as u32;
-            let six = six.iter().sum::<u8>() as u32;
+            let four = u32::from(four.iter().sum::<u8>());
+            let six = u32::from(six.iter().sum::<u8>());
 
             Pattern { three, four, six, nine }
         })
@@ -131,7 +133,7 @@ pub fn parse(input: &str) -> Vec<u32> {
         let mut six = 0;
         let mut next = vec![0; patterns.len()];
 
-        for (count, pattern) in current.iter().zip(patterns.iter()) {
+        for (count, pattern) in current.iter().zip(&patterns) {
             three += count * pattern.three;
             four += count * pattern.four;
             six += count * pattern.six;
@@ -139,9 +141,7 @@ pub fn parse(input: &str) -> Vec<u32> {
             pattern.nine.iter().for_each(|&i| next[i] += count);
         }
 
-        result.push(three);
-        result.push(four);
-        result.push(six);
+        result.extend([three, four, six]);
         current = next;
     }
 
@@ -159,11 +159,9 @@ pub fn part2(input: &[u32]) -> u32 {
 /// Generate an array of the 8 possible transformations from rotating and flipping
 /// the 2x2 input.
 fn two_by_two_permutations(mut a: [u8; 4]) -> [usize; 8] {
-    let mut indices = [0; 8];
-
-    for (i, index) in indices.iter_mut().enumerate() {
+    from_fn(|i| {
         // Convert pattern to binary to use as lookup index.
-        *index = to_index(&a);
+        let index = to_index(&a);
         // Rotate clockwise
         // 0 1 => 2 0
         // 2 3    3 1
@@ -174,19 +172,16 @@ fn two_by_two_permutations(mut a: [u8; 4]) -> [usize; 8] {
         if i == 3 {
             a = [a[2], a[3], a[0], a[1]];
         }
-    }
-
-    indices
+        index
+    })
 }
 
 /// Generate an array of the 8 possible transformations from rotating and flipping
 /// the 3x3 input.
 fn three_by_three_permutations(mut a: [u8; 9]) -> [usize; 8] {
-    let mut indices = [0; 8];
-
-    for (i, index) in indices.iter_mut().enumerate() {
+    from_fn(|i| {
         // Convert pattern to binary to use as lookup index.
-        *index = to_index(&a);
+        let index = to_index(&a);
         // Rotate clockwise
         // 0 1 2 => 6 3 0
         // 3 4 5    7 4 1
@@ -199,12 +194,11 @@ fn three_by_three_permutations(mut a: [u8; 9]) -> [usize; 8] {
         if i == 3 {
             a = [a[6], a[7], a[8], a[3], a[4], a[5], a[0], a[1], a[2]];
         }
-    }
-
-    indices
+        index
+    })
 }
 
 /// Convert a pattern slice of ones and zeroes to a binary number.
 fn to_index(a: &[u8]) -> usize {
-    a.iter().fold(0, |acc, &n| (acc << 1) | n as usize)
+    a.iter().fold(0, |acc, &n| (acc << 1) | usize::from(n))
 }

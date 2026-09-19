@@ -23,7 +23,7 @@ pub fn parse(input: &str) -> Vec<u8> {
 }
 
 pub fn part1(input: &[u8]) -> u32 {
-    input.iter().map(|&n| n as u32).sum()
+    input.iter().map(|&n| u32::from(n)).sum()
 }
 
 pub fn part2(input: &[u8]) -> usize {
@@ -41,8 +41,7 @@ fn worker(prefix: &str, iter: ParIter<'_, usize>) -> Vec<(usize, [u8; 128])> {
 /// Compute the knot hash for a row and expand into a fixed-size array.
 fn fill_row(prefix: &str, index: usize) -> [u8; 128] {
     let s = format!("{prefix}-{index}");
-    let mut lengths: Vec<_> = s.bytes().map(|b| b as usize).collect();
-    lengths.extend([17, 31, 73, 47, 23]);
+    let lengths: Vec<_> = s.bytes().map(usize::from).chain([17, 31, 73, 47, 23]).collect();
 
     let knot = knot_hash(&lengths);
     let mut result = [0; 128];

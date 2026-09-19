@@ -20,14 +20,14 @@ const SECOND_EXAMPLE: &str = "\
 fn part1_test() {
     let input = parse(EXAMPLE);
     assert_eq!(part1(&input), 3749);
-    let input2 = parse(SECOND_EXAMPLE);
-    assert_eq!(part1(&input2), 190);
+    let input = parse(SECOND_EXAMPLE);
+    assert_eq!(part1(&input), 190);
 }
 
 #[test]
 fn part2_test() {
     let input = parse(EXAMPLE);
     assert_eq!(part2(&input), 11387);
-    let input2 = parse(SECOND_EXAMPLE);
-    assert_eq!(part2(&input2), 11364);
+    let input = parse(SECOND_EXAMPLE);
+    assert_eq!(part2(&input), 11364);
 }

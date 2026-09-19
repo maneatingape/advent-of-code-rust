@@ -8,12 +8,12 @@ const EXAMPLE: &str = "\
 
 #[test]
 fn part1_test() {
-    let result = decrypt::<5>(EXAMPLE);
-    assert_eq!(result.0, 127);
+    let (part_one, _) = decrypt::<5>(EXAMPLE);
+    assert_eq!(part_one, 127);
 }
 
 #[test]
 fn part2_test() {
-    let result = decrypt::<5>(EXAMPLE);
-    assert_eq!(result.1, 62);
+    let (_, part_two) = decrypt::<5>(EXAMPLE);
+    assert_eq!(part_two, 62);
 }

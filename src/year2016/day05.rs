@@ -120,7 +120,6 @@ mod implementation {
     use crate::util::bitset::*;
     use crate::util::md5::simd::hash_fixed;
 
-    #[expect(clippy::needless_range_loop)]
     fn check_hash_simd<const N: usize>(
         buffers: &mut [[u8; 64]; N],
         size: usize,
@@ -129,11 +128,11 @@ mod implementation {
         shared: &Shared,
     ) {
         // Format macro is very slow, so update digits directly.
-        for i in 0..N {
+        for (i, buffer) in buffers.iter_mut().enumerate() {
             let n = offset + i as u32;
-            buffers[i][size - 3] = b'0' + (n / 100) as u8;
-            buffers[i][size - 2] = b'0' + ((n / 10) % 10) as u8;
-            buffers[i][size - 1] = b'0' + (n % 10) as u8;
+            buffer[size - 3] = b'0' + (n / 100) as u8;
+            buffer[size - 2] = b'0' + ((n / 10) % 10) as u8;
+            buffer[size - 1] = b'0' + (n % 10) as u8;
         }
 
         let [result, ..] = hash_fixed(buffers, size);

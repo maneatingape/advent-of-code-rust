@@ -59,18 +59,18 @@ pub fn part2(input: &[isize]) -> usize {
                 let j = index / 16;
                 let (next, steps, delta) = compute_block(compact[j], index % 16);
 
-                compact[j] = next as usize;
-                total += steps as usize;
-                index += delta as usize;
+                compact[j] = usize::from(next);
+                total += usize::from(steps);
+                index += usize::from(delta);
             }
 
             // Index lies within precomputed blocks.
             for value in &mut compact[(index / 16)..(coarse / 16)] {
                 let (next, steps, delta) = cache[index % 16][*value];
 
-                *value = next as usize;
-                total += steps as usize;
-                index += delta as usize;
+                *value = usize::from(next);
+                total += usize::from(steps);
+                index += usize::from(delta);
             }
         } else {
             // Fall back to part one approach.

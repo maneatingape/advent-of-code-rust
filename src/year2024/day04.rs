@@ -60,10 +60,10 @@ fn scan_line(grid: &Grid<u8>, mut point: Point, direction: Point, size: i32) -> 
     let mut result = 0;
 
     for _ in 0..size {
-        bytes = (bytes << 8) | (grid[point] as u32);
+        bytes = (bytes << 8) | u32::from(grid[point]);
         point += direction;
         // "XMAS" and "SAMX" in hex.
-        result += (bytes == 0x584d4153 || bytes == 0x53414d58) as u32;
+        result += u32::from(bytes == 0x584d4153 || bytes == 0x53414d58);
     }
 
     result

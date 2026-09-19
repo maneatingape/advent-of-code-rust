@@ -60,10 +60,15 @@ fn simulate<const N: usize>(input: &Input) -> u32 {
         for _ in 0..amount {
             rope[0] += step;
             for i in 1..N {
-                if !apart(rope[i - 1], rope[i]) {
+                let delta = rope[i - 1] - rope[i];
+
+                // Two knots are considered "apart" if they are not diagonally adjacent, that is
+                // the absolute distance in either x or y axes is greater than 1.
+                if delta.x.abs() <= 1 && delta.y.abs() <= 1 {
                     break;
                 }
-                rope[i] += signum(rope[i - 1], rope[i]);
+
+                rope[i] += Point::new(delta.x.signum(), delta.y.signum());
             }
 
             let tail = rope[N - 1];
@@ -77,14 +82,4 @@ fn simulate<const N: usize>(input: &Input) -> u32 {
     }
 
     distinct
-}
-
-/// Two knots are considered "apart" if they are not diagonally adjacent, that is the absolute
-/// distance in either x or y axes is greater than 1.
-fn apart(a: Point, b: Point) -> bool {
-    (a.x - b.x).abs() > 1 || (a.y - b.y).abs() > 1
-}
-
-fn signum(a: Point, b: Point) -> Point {
-    Point::new((a.x - b.x).signum(), (a.y - b.y).signum())
 }

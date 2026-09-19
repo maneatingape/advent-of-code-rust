@@ -78,9 +78,9 @@ impl Cube {
 
     /// Returns the volume of a cube, converting to `i64` to prevent overflow.
     fn volume(&self) -> i64 {
-        let w = (self.x2 - self.x1 + 1) as i64;
-        let h = (self.y2 - self.y1 + 1) as i64;
-        let d = (self.z2 - self.z1 + 1) as i64;
+        let w = i64::from(self.x2 - self.x1 + 1);
+        let h = i64::from(self.y2 - self.y1 + 1);
+        let d = i64::from(self.z2 - self.z1 + 1);
         w * h * d
     }
 }

@@ -44,10 +44,7 @@ fn play_manually(input: &[i64]) -> String {
 
     loop {
         match computer.run() {
-            State::Output(value) => {
-                let ascii = (value as u8) as char;
-                output.push(ascii);
-            }
+            State::Output(value) => output.push(char::from(value as u8)),
             State::Input => {
                 pretty_print(&output);
                 output.clear();
@@ -115,7 +112,7 @@ fn play_automatically(input: &[i64]) -> String {
     let mut too_light = Vec::with_capacity(combinations as usize);
     let mut too_heavy = Vec::with_capacity(combinations as usize);
 
-    'outer: for i in 1..combinations {
+    for i in 1..combinations {
         let current = gray_code(i);
         let previous = gray_code(i - 1);
         let changed = current ^ previous;
@@ -125,21 +122,17 @@ fn play_automatically(input: &[i64]) -> String {
         // too_light is still cheaper than the cost to emulate another take or drop, so it is worth
         // seeing if we can skip altering inventory to a given configuration.
         want ^= changed;
-        for heavy in &too_heavy {
-            if (want & heavy) == *heavy {
-                // Want is a superset of a known heavy configuration.
-                continue 'outer;
-            }
-        }
-        for light in &too_light {
-            if (want & light) == want {
-                // Want is a subset of a known light configuration.
-                continue 'outer;
-            }
+
+        // Skip supersets of known heavy configurations and subsets of known light ones.
+        if too_heavy.iter().any(|&heavy| want & heavy == heavy)
+            || too_light.iter().any(|&light| want & light == want)
+        {
+            continue;
         }
 
         sync_items(&mut computer, have, want, &inventory);
         have = want;
+
         if matches!(movement_noisy(&mut computer, &last, &mut output), State::Halted) {
             // Keep only the password digits from Santa's response.
             output.retain(|b| b.is_ascii_digit());
@@ -212,10 +205,7 @@ fn movement_noisy(computer: &mut Computer, direction: &str, output: &mut String)
     }
     loop {
         match computer.run() {
-            State::Output(value) => {
-                let ascii = (value as u8) as char;
-                output.push(ascii);
-            }
+            State::Output(value) => output.push(char::from(value as u8)),
             other => break other,
         }
     }

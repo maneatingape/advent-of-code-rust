@@ -114,7 +114,7 @@ fn game(players: usize, last: usize) -> u64 {
 
     for _ in 0..blocks {
         // Score the previous block.
-        scores[head as usize % players] += (head + pickup) as u64;
+        scores[head as usize % players] += u64::from(head + pickup);
         // The next marble picked up is from the current block.
         pickup = circle[tail + 18];
 

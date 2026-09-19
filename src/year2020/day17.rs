@@ -200,7 +200,7 @@ mod implementation {
         for z in 1..14 {
             for y in 1..21 {
                 for x in 1..21 {
-                    result += current[z][y][x] as usize;
+                    result += usize::from(current[z][y][x]);
                 }
             }
         }
@@ -285,7 +285,7 @@ mod implementation {
             for z in 1..14 {
                 for y in 1..21 {
                     for x in 1..21 {
-                        result += current[w][z][y][x] as usize;
+                        result += usize::from(current[w][z][y][x]);
                     }
                 }
             }

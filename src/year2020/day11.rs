@@ -87,7 +87,7 @@ mod implementation {
 
             (current, next) = (next, current);
             if current == next {
-                return current.bytes.iter().map(|&n| n as u32).sum();
+                return current.bytes.iter().map(|&n| u32::from(n)).sum();
             }
         }
     }
@@ -195,7 +195,7 @@ mod implementation {
 
             (current, next) = (next, current);
             if current == next {
-                return current.bytes.iter().map(|&b| b as u32).sum();
+                return current.bytes.iter().map(|&b| u32::from(b)).sum();
             }
         }
     }

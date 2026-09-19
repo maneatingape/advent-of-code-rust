@@ -91,7 +91,7 @@ pub fn parse(input: &str) -> Input {
 
         // Last element is the total possible combinations.
         let total = ways[size];
-        (part_one + (total > 0) as usize, part_two + total)
+        (part_one + usize::from(total > 0), part_two + total)
     })
 }
 
@@ -106,6 +106,6 @@ pub fn part2(input: &Input) -> usize {
 /// Hashes the five possible color values white (w), blue (u), black (b), red (r), or green (g)
 /// to 0, 2, 4, 5 and 1 respectively. This compresses the range to fit into an array of 6 elements.
 fn perfect_hash(b: u8) -> usize {
-    let n = b as usize;
+    let n = usize::from(b);
     (n ^ (n >> 4)) % 8
 }

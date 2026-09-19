@@ -7,6 +7,7 @@ macro_rules! benchmark {
         $(mod $year {
             $(mod $day {
                 use std::fs::read_to_string;
+                use std::hint::black_box;
                 use std::sync::LazyLock;
 
                 use test::Bencher;
@@ -22,20 +23,20 @@ macro_rules! benchmark {
 
                 #[bench]
                 fn parse_bench(b: &mut Bencher) {
-                    let input = &DATA;
-                    b.iter(|| parse(input));
+                    let input = DATA.as_str();
+                    b.iter(|| parse(black_box(input)));
                 }
 
                 #[bench]
                 fn part1_bench(b: &mut Bencher) {
                     let input = parse(&DATA);
-                    b.iter(|| part1(&input));
+                    b.iter(|| part1(black_box(&input)));
                 }
 
                 #[bench]
                 fn part2_bench(b: &mut Bencher) {
                     let input = parse(&DATA);
-                    b.iter(|| part2(&input));
+                    b.iter(|| part2(black_box(&input)));
                 }
             })*
         })*

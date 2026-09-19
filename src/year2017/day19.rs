@@ -28,7 +28,7 @@ pub fn parse(input: &str) -> Input {
                 direction = if grid[position + right] == b' ' { left } else { right };
             }
             b' ' => break,
-            _ if next.is_ascii_alphabetic() => part_one.push(next as char),
+            _ if next.is_ascii_alphabetic() => part_one.push(char::from(next)),
             _ => (),
         }
 

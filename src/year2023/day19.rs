@@ -3,7 +3,7 @@
 //! Each rule is converted into a half-open interval, including the start but excluding the end.
 //! For example:
 //!
-//! * `x > 10` => `10..4001`
+//! * `x > 10` => `11..4001`
 //! * `m < 20` => `1..20`
 //! * `A` => `1..4001`
 //!
@@ -39,15 +39,17 @@ pub fn parse(input: &str) -> Input<'_> {
     let mut workflows = FastMap::with_capacity(1_000);
 
     for line in prefix.lines() {
-        let mut rules = Vec::with_capacity(5);
         let mut iter = line.split(['{', ':', ',', '}']);
         let key = iter.next().unwrap();
 
-        for [first, second] in iter.chunk::<2>() {
-            let rule = if second.is_empty() {
-                // The last rule will match everything so pick category 0 arbitrarily.
-                Rule { range: 1..4001, category: 0, next: first }
-            } else {
+        let rules = iter
+            .chunk::<2>()
+            .map(|[first, second]| {
+                if second.is_empty() {
+                    // The last rule will match everything so pick category 0 arbitrarily.
+                    return Rule { range: 1..4001, category: 0, next: first };
+                }
+
                 // Map each category to an index for convenience so that we can store a part
                 // in a fixed-size array.
                 let category = match first.as_bytes()[0] {
@@ -58,19 +60,17 @@ pub fn parse(input: &str) -> Input<'_> {
                     _ => unreachable!(),
                 };
 
-                let value: u32 = first[2..].unsigned();
-                let next = second;
-
                 // Convert each rule into a half open range.
-                match first.as_bytes()[1] {
-                    b'<' => Rule { range: 1..value, category, next },
-                    b'>' => Rule { range: value + 1..4001, category, next },
+                let value: u32 = first[2..].unsigned();
+                let range = match first.as_bytes()[1] {
+                    b'<' => 1..value,
+                    b'>' => value + 1..4001,
                     _ => unreachable!(),
-                }
-            };
+                };
 
-            rules.push(rule);
-        }
+                Rule { range, category, next: second }
+            })
+            .collect();
 
         workflows.insert(key, rules);
     }
@@ -99,7 +99,7 @@ pub fn part1(input: &Input<'_>) -> u32 {
 
             key == "A"
         })
-        .map(|part| part.iter().sum::<u32>())
+        .flatten()
         .sum()
 }
 

@@ -119,7 +119,7 @@ fn paths(input: &Input, from: usize, visited: u32, twice: bool, cache: &mut [u32
     // Subtle nuance, by not multiplying "visited" by 2 and also dividing by 2 we ignore the
     // two least significant bits for start and end cave, as these will always be 0 and 1
     // respectively.
-    let index = twice as usize + 2 * from + (input.edges.len() * (visited as usize / 2));
+    let index = usize::from(twice) + 2 * from + (input.edges.len() * (visited as usize / 2));
     if cache[index] > 0 {
         return cache[index];
     }

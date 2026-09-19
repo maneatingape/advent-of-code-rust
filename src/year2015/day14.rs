@@ -37,7 +37,7 @@ pub fn part2_testable(input: &[Reindeer], time: u32) -> u32 {
         }
 
         for (score, &distance) in scores.iter_mut().zip(&distances) {
-            *score += (distance == furthest) as u32;
+            *score += u32::from(distance == furthest);
         }
     }
 

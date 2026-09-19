@@ -18,12 +18,11 @@ pub fn parse(input: &str) -> &str {
 pub fn part1(input: &str) -> u32 {
     let lengths: Vec<_> = input.iter_unsigned().collect();
     let knot = hash(&lengths, 1);
-    knot[0] as u32 * knot[1] as u32
+    u32::from(knot[0]) * u32::from(knot[1])
 }
 
 pub fn part2(input: &str) -> String {
-    let mut lengths: Vec<_> = input.bytes().map(|b| b as usize).collect();
-    lengths.extend([17, 31, 73, 47, 23]);
+    let lengths: Vec<_> = input.bytes().map(usize::from).chain([17, 31, 73, 47, 23]).collect();
 
     let knot = hash(&lengths, 64);
     knot.chunks_exact(16).fold(String::new(), |mut result, chunk| {

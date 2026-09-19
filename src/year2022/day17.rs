@@ -98,7 +98,7 @@ impl Iterator for State<'_> {
 
             // The neat part of using bitwise AND to compare is that we can check all four
             // rows in a single operation, including both walls and the existing tower.
-            chunk = (chunk << 8) | WALLS | (self.tower[index] as u32);
+            chunk = (chunk << 8) | WALLS | u32::from(self.tower[index]);
 
             if shape & chunk == 0 {
                 // Keep falling.

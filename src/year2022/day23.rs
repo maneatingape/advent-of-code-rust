@@ -95,13 +95,12 @@ fn step(input: &mut Input, order: &mut [Direction]) -> bool {
     // we invert so that a 1 bit means movement is *possible*.
     let horizontal = |row: U256| row.shr().or(row).or(row.shl()).not();
 
-    let mut prev;
     let mut cur = horizontal(grid[0]);
     let mut next = horizontal(grid[1]);
 
     for i in start..end {
         // Calculating neighbors is relatively expensive so reuse results between rows.
-        prev = cur;
+        let prev = cur;
         cur = next;
         next = horizontal(grid[i + 1]);
 
@@ -198,24 +197,24 @@ mod implementation {
             self.left != 0 || self.right != 0
         }
 
-        pub(super) fn shl(self) -> U256 {
-            U256 { left: (self.left << 1) | (self.right >> 127), right: (self.right << 1) }
+        pub(super) fn shl(self) -> Self {
+            Self { left: (self.left << 1) | (self.right >> 127), right: (self.right << 1) }
         }
 
-        pub(super) fn shr(self) -> U256 {
-            U256 { left: (self.left >> 1), right: (self.left << 127) | (self.right >> 1) }
+        pub(super) fn shr(self) -> Self {
+            Self { left: (self.left >> 1), right: (self.left << 127) | (self.right >> 1) }
         }
 
-        pub(super) fn and(self, rhs: U256) -> U256 {
-            U256 { left: self.left & rhs.left, right: self.right & rhs.right }
+        pub(super) fn and(self, rhs: Self) -> Self {
+            Self { left: self.left & rhs.left, right: self.right & rhs.right }
         }
 
-        pub(super) fn or(self, rhs: U256) -> U256 {
-            U256 { left: self.left | rhs.left, right: self.right | rhs.right }
+        pub(super) fn or(self, rhs: Self) -> Self {
+            Self { left: self.left | rhs.left, right: self.right | rhs.right }
         }
 
-        pub(super) fn not(self) -> U256 {
-            U256 { left: !self.left, right: !self.right }
+        pub(super) fn not(self) -> Self {
+            Self { left: !self.left, right: !self.right }
         }
     }
 }

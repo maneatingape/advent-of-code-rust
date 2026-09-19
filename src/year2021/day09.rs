@@ -57,7 +57,7 @@ pub fn part2(basins: &[Basin]) -> u32 {
 }
 
 fn flood_fill(grid: &mut Grid<u8>, point: Point) -> Basin {
-    let mut lowest = (grid[point] & 0xf) as u32;
+    let mut lowest = u32::from(grid[point] & 0xf);
     let mut size = 1;
     grid[point] = b'9';
 

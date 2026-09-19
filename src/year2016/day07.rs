@@ -44,8 +44,8 @@ pub fn part2(input: &[&[u8]]) -> usize {
             for [x, y, z] in line.array_windows() {
                 if x.is_ascii_lowercase() {
                     if x == z && x != y && y.is_ascii_lowercase() {
-                        let first = (x - b'a') as usize;
-                        let second = (y - b'a') as usize;
+                        let first = usize::from(x - b'a');
+                        let second = usize::from(y - b'a');
 
                         if inside_brackets {
                             // Reverse the order of letters.
