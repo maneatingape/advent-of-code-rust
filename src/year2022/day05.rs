@@ -28,7 +28,7 @@ pub fn parse(input: &str) -> Input {
     let (prefix, suffix) = input.split_once("\n\n").unwrap();
     let width = prefix.lines().next().unwrap().len().div_ceil(4);
 
-    let mut stack: Stack = vec![Vec::new(); width];
+    let mut stack = vec![Vec::new(); width];
     for row in prefix.lines().rev().skip(1) {
         for (i, c) in row.chars().skip(1).step_by(4).enumerate() {
             if c.is_ascii_alphabetic() {
@@ -37,7 +37,7 @@ pub fn parse(input: &str) -> Input {
         }
     }
 
-    let moves: Vec<_> = suffix
+    let moves = suffix
         .iter_unsigned()
         .chunk::<3>()
         .map(|[amount, from, to]| [amount, from - 1, to - 1])

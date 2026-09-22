@@ -141,7 +141,7 @@ fn writer<'a>(tx: Sender<&'a [u8]>, done: &AtomicBool, mut recipes: &'a mut [u8]
 
     // Store the smaller subset of recipes used by the elves.
     let mut write = 0;
-    let mut snack: Vec<u8> = vec![0; 5_000_000];
+    let mut snack = vec![0; 5_000_000];
 
     while !done.load(Ordering::Relaxed) {
         // Cold loop to handle start and end transitions.

@@ -111,7 +111,7 @@ pub fn part2(input: &Input) -> i32 {
 /// Map a wire into an iterator of direction and distance pairs.
 fn steps(wire: &str) -> impl Iterator<Item = (u8, i32)> {
     let directions = wire.bytes().filter(u8::is_ascii_alphabetic);
-    let amounts = wire.iter_signed::<i32>();
+    let amounts = wire.iter_signed();
     directions.zip(amounts)
 }
 

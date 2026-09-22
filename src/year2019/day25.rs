@@ -105,7 +105,7 @@ fn play_automatically(input: &[i64]) -> String {
     // As an optimization we keep track of combinations of items that are too heavy or too light.
     // If we are adding an item to a collection that is already too heavy or vice-versa,
     // then we can skip the pressure plate check.
-    let combinations: u32 = 1 << inventory.len();
+    let combinations = 1 << inventory.len();
     let mut have = combinations - 1;
     let mut want = have;
     let mut output = String::new();

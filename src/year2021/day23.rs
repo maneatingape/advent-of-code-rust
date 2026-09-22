@@ -190,7 +190,7 @@ fn organize(burrow: Burrow) -> usize {
     todo.push(best_possible(&burrow), burrow);
 
     while let Some((energy, mut burrow)) = todo.pop() {
-        let open: [bool; 4] = from_fn(|i| burrow.rooms[i].open(i));
+        let open: [_; 4] = from_fn(|i| burrow.rooms[i].open(i));
 
         // Process each burrow that is open in left to right order. More than one amphipod may move.
         let mut changed = false;

@@ -156,9 +156,9 @@ pub fn parse(input: &str) -> Input {
     // Binary mask of all initial unopened valves not including AA.
     let all_valves = (1 << aa) - 1;
     // Extract flow information.
-    let flow: Vec<_> = valves.iter().take(size).map(|v| v.flow).collect();
+    let flow = valves.iter().take(size).map(|v| v.flow).collect();
     // Closest neighbor to each valve.
-    let closest: Vec<_> = distance
+    let closest = distance
         .chunks_exact(size)
         .map(|chunk| *chunk.iter().filter(|&&d| d > 1).min().unwrap())
         .collect();
@@ -171,7 +171,7 @@ pub fn parse(input: &str) -> Input {
 pub fn part1(input: &Input) -> u32 {
     let mut score = 0;
     // Return the current high score for the heuristic.
-    let mut high_score = |_, pressure: u32| {
+    let mut high_score = |_, pressure| {
         score = score.max(pressure);
         score
     };
@@ -190,7 +190,7 @@ pub fn part2(input: &Input) -> u32 {
     let mut you = 0;
     let mut remaining = 0;
     // Keep track of the unopened valves associated with the high score.
-    let mut high_score = |todo: usize, pressure: u32| {
+    let mut high_score = |todo, pressure| {
         if pressure > you {
             you = pressure;
             remaining = todo;
@@ -205,7 +205,7 @@ pub fn part2(input: &Input) -> u32 {
     // Find the highest possible score when only allowing the unopened valves from the
     // previous run. This will set a minimum baseline score for the heuristic.
     let mut elephant = 0;
-    let mut high_score = |_, pressure: u32| {
+    let mut high_score = |_, pressure| {
         elephant = elephant.max(pressure);
         elephant
     };
@@ -218,7 +218,7 @@ pub fn part2(input: &Input) -> u32 {
     // Instead of a single score, store the high score for each of the `2ⁱ` possible combinations
     // of valves. The index of the score is the bitmask of the *opened* valves.
     let mut score = vec![0; input.all_valves + 1];
-    let mut high_score = |todo: usize, pressure: u32| {
+    let mut high_score = |todo: usize, pressure| {
         let done = input.all_valves ^ todo;
         score[done] = score[done].max(pressure);
         // Always return the elephant value from step 2 for the heuristic.

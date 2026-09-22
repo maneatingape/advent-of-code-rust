@@ -81,7 +81,7 @@ pub fn parse(input: &str) -> Input {
     // singleton to distance[0][k+1] (since bit 0 maps to node 1), while the initial value of other
     // sets does not matter.
     let others = found.len() - 1;
-    let mut table = [[0_u16; 7]; 1 << 7];
+    let mut table = [[0; 7]; 1 << 7];
 
     for k in 0..others {
         table[1 << k][k] = distance[0][k + 1];

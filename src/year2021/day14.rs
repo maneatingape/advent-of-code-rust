@@ -42,7 +42,7 @@ pub fn parse(input: &str) -> Input {
     let mut pairs = [0; 26 * 26];
     prefix.array_windows().for_each(|&[a, b]| pairs[pair(a, b)] += 1);
 
-    let rules: Vec<_> =
+    let rules =
         suffix.bytes().filter(u8::is_ascii_uppercase).chunk::<3>().map(Rule::parse).collect();
 
     Input { elements, pairs, rules }
@@ -67,7 +67,7 @@ fn steps(input: &Input, rounds: usize) -> u64 {
     let mut pairs = input.pairs;
 
     for _ in 0..rounds {
-        let mut next: Pairs = [0; 26 * 26];
+        let mut next = [0; 26 * 26];
 
         for rule in &input.rules {
             let n = pairs[rule.from];

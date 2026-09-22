@@ -35,7 +35,7 @@ pub fn part2(input: &str) -> String {
 /// Performs the knot hash algorithm using a fixed-size array for better performance.
 #[inline]
 fn hash(lengths: &[usize], rounds: usize) -> [u8; 256] {
-    let mut knot: [u8; 256] = from_fn(|i| i as u8);
+    let mut knot: [_; 256] = from_fn(|i| i as u8);
     let mut position = 0;
     let mut skip = 0;
 

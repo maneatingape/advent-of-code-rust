@@ -8,7 +8,7 @@ use crate::util::intcode::*;
 use crate::util::parse::*;
 
 pub fn parse(input: &str) -> Vec<i64> {
-    input.iter_signed::<i64>().collect()
+    input.iter_signed().collect()
 }
 
 pub fn part1(input: &[i64]) -> i64 {
@@ -34,7 +34,7 @@ pub fn part1(input: &[i64]) -> i64 {
 
 pub fn part2(input: &[i64]) -> i64 {
     let mut result = 0;
-    let mut computers: [Computer; 5] = from_fn(|_| Computer::new(input));
+    let mut computers: [_; 5] = from_fn(|_| Computer::new(input));
 
     let feedback = |slice: &[i64]| {
         // Reset state and send each initial phase setting exactly once.

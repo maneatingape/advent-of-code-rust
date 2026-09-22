@@ -43,7 +43,7 @@ impl Op {
     }
 
     fn transform(self, password: &mut Vec<char>) {
-        let position = |a: char| password.iter().position(|&b| a == b).unwrap();
+        let position = |a| password.iter().position(|&b| a == b).unwrap();
 
         match self {
             Self::SwapPosition(first, second) => password.swap(first, second),

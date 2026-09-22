@@ -8,7 +8,7 @@
 use std::cmp::Ordering;
 use std::collections::BinaryHeap;
 
-struct Wrapper<K: Ord, V> {
+struct Wrapper<K, V> {
     key: K,
     value: V,
 }

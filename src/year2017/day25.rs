@@ -51,7 +51,7 @@ pub fn parse(input: &str) -> Input {
 
     let state = usize::from(lines[0][15] - b'A');
     let steps = input.unsigned();
-    let rules: Vec<_> = lines[3..]
+    let rules = lines[3..]
         .chunks(10)
         .map(|chunk| [Rule::parse(&chunk[2..5]), Rule::parse(&chunk[6..9])])
         .collect();

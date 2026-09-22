@@ -28,7 +28,7 @@ struct Pots {
 impl Pots {
     /// Parses the initial state into a bit vector.
     fn from(initial_state: &[u8]) -> Self {
-        let state: Vec<_> = initial_state.iter().map(|&b| u8::from(b == b'#')).collect();
+        let state = initial_state.iter().map(|&b| u8::from(b == b'#')).collect();
         Self { state, prev_state: Vec::new(), pos: 0 }
     }
 

@@ -45,9 +45,9 @@ pub fn parse(input: &str) -> Dance {
 
     // Start from the identity transformation.
     let mut offset = 0;
-    let mut lookup: [usize; 16] = from_fn(|i| i);
-    let mut position: [usize; 16] = from_fn(|i| i);
-    let mut exchange: [usize; 16] = from_fn(|i| i);
+    let mut lookup: [_; 16] = from_fn(|i| i);
+    let mut position: [_; 16] = from_fn(|i| i);
+    let mut exchange: [_; 16] = from_fn(|i| i);
 
     while let Some(op) = letters.next() {
         match op {

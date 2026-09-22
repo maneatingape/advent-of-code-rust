@@ -111,7 +111,7 @@ pub fn parse(input: &str) -> u32 {
     }
 
     // Optimize search by pre-handling item pairs starting on non-empty floor 1.
-    let mut floors = [0_u8; 8];
+    let mut floors = [0; 8];
     let mut non_empty = false;
     let mut steps = 0;
     let mut i = 0;
@@ -155,7 +155,7 @@ fn bfs(start: State, steps: u32) -> u32 {
 
         // Iterate over items that can be moved.
         let items = state.pairs & (FLOOR1 << state.elevator);
-        let mut push = |up: bool, mask: u64| -> bool {
+        let mut push = |up, mask| {
             if let Some(next) = state.move_floor(up, mask)
                 && seen.insert(next)
             {

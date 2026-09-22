@@ -83,10 +83,9 @@ pub fn parse(input: &str) -> Input {
     let lines: Vec<_> = input.lines().collect();
 
     // Assign each monkey an index on a first come first served basis.
-    let indices: FastMap<_, _> =
-        lines.iter().enumerate().map(|(index, line)| (&line[0..4], index)).collect();
+    let indices = lines.iter().enumerate().map(|(index, line)| (&line[0..4], index)).collect();
 
-    let monkeys: Vec<_> = lines.iter().map(|line| Monkey::parse(&line[6..], &indices)).collect();
+    let monkeys = lines.iter().map(|line| Monkey::parse(&line[6..], &indices)).collect();
 
     // We only need the specific indices of the root and human.
     let root = indices["root"];

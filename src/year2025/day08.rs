@@ -18,7 +18,7 @@ struct Node {
 }
 
 pub fn parse(input: &str) -> Input {
-    let boxes: Vec<_> = input.iter_unsigned::<usize>().chunk::<3>().collect();
+    let boxes: Vec<_> = input.iter_unsigned().chunk::<3>().collect();
     let mut buckets = vec![Vec::new(); BUCKETS];
 
     for result in spawn_parallel_iterator(&boxes, |iter| worker(&boxes, iter)) {

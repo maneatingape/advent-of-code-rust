@@ -38,7 +38,7 @@ use crate::util::point::*;
 pub fn parse(input: &str) -> Grid<i32> {
     let mut grid = Grid::new(71, 71, i32::MAX);
 
-    for (i, [x, y]) in input.iter_signed::<i32>().chunk::<2>().enumerate() {
+    for (i, [x, y]) in input.iter_signed().chunk::<2>().enumerate() {
         grid[Point::new(x, y)] = i as i32;
     }
 

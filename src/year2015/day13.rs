@@ -38,7 +38,7 @@ pub fn parse(input: &str) -> Input {
 
     // Calculate the happiness values. Note that the values are not reciprocal a => b != b => a.
     let stride = indices.len();
-    let mut happiness = vec![0_i16; stride * stride];
+    let mut happiness = vec![0; stride * stride];
 
     for &[from, _, gain_lose, value, .., to, _] in &tokens {
         let start = indices[from];
@@ -55,7 +55,7 @@ pub fn parse(input: &str) -> Input {
     // Initialize a shared table for both parts: 2ⁿ sets with n distances per set. Default 0 matches
     // g({k},k) for all singleton sets of zero distance from yourself, but tracking k as the start
     // of the path. The initial value of other sets does not matter.
-    let zero = (0_i16, 0_u8);
+    let zero = (0, 0);
     let mut table = vec![zero; stride * (1 << stride)];
     for k in 0..stride {
         table[(1 << k) * stride + k].1 = k as u8;

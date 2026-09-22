@@ -28,7 +28,7 @@ pub fn part1(input: &[u8]) -> u32 {
 
 pub fn part2(input: &[u8]) -> usize {
     let mut grid = input.to_vec();
-    let connect = |i: usize| (grid[i] == 1).then(|| dfs(&mut grid, i));
+    let connect = |i| (grid[i] == 1).then(|| dfs(&mut grid, i));
     (0..input.len()).filter_map(connect).count()
 }
 
@@ -60,7 +60,7 @@ fn fill_row(prefix: &str, index: usize) -> [u8; 128] {
 /// Uses a fixed-size array for better performance.
 #[inline]
 fn knot_hash(lengths: &[usize]) -> [u8; 256] {
-    let mut knot: [u8; 256] = from_fn(|i| i as u8);
+    let mut knot: [_; 256] = from_fn(|i| i as u8);
     let mut position = 0;
     let mut skip = 0;
 

@@ -13,7 +13,7 @@ type Input = (i32, i32, Point, Vec<Pair>);
 /// a two-dimensional grid.
 pub fn parse(input: &str) -> Input {
     let first = input.bytes().filter(u8::is_ascii_alphabetic).map(Point::from);
-    let second = input.iter_signed::<i32>();
+    let second = input.iter_signed();
     let pairs: Vec<_> = first.zip(second).collect();
 
     // Determine maximum extents.

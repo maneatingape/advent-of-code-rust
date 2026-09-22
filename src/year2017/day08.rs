@@ -14,7 +14,7 @@ pub fn parse(input: &str) -> Input {
 
     for [a, b, c, _, e, f, g] in input.split_ascii_whitespace().chunk::<7>() {
         let first = registers[to_index(e)];
-        let second: i32 = g.signed();
+        let second = g.signed();
 
         let predicate = match f {
             "==" => first == second,

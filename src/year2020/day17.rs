@@ -159,9 +159,9 @@ mod implementation {
             }
         }
 
-        let zero: Vector = Simd::splat(0);
-        let one: Vector = Simd::splat(1);
-        let three: Vector = Simd::splat(3);
+        let zero = Simd::splat(0);
+        let one = Simd::splat(1);
+        let three = Simd::splat(3);
 
         for round in 0..6 {
             // Each round state boundary expands by 1 in both positive and negative direction.
@@ -226,9 +226,9 @@ mod implementation {
             }
         }
 
-        let zero: Vector = Simd::splat(0);
-        let one: Vector = Simd::splat(1);
-        let three: Vector = Simd::splat(3);
+        let zero = Simd::splat(0);
+        let one = Simd::splat(1);
+        let three = Simd::splat(3);
 
         for round in 0..6 {
             // Each round state boundary expands by 1 in both positive and negative direction.

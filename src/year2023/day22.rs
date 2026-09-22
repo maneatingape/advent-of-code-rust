@@ -73,7 +73,7 @@ pub fn parse(input: &str) -> Input {
 
     // Calculate the answer to both parts simultaneously for efficiency.
     let mut safe = vec![true; bricks.len()];
-    let mut dominator: Vec<(usize, usize)> = Vec::with_capacity(bricks.len());
+    let mut dominator = Vec::with_capacity(bricks.len());
 
     // Sort ascending by lowest z coordinate.
     bricks.sort_unstable_by_key(|b| b[2]);

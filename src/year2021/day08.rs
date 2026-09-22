@@ -45,7 +45,7 @@ pub fn part2(input: &Input) -> u32 {
 }
 
 fn descramble(line: &str) -> [u32; 4] {
-    let mut freq = [0_u8; 104];
+    let mut freq = [0; 104];
     let bytes = line.as_bytes();
     bytes[..58].iter().for_each(|&b| freq[usize::from(b)] += 1);
     bytes[61..]

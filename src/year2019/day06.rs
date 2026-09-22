@@ -18,7 +18,7 @@ pub fn parse(input: &str) -> Vec<usize> {
     };
 
     // Hash each 3 character object name.
-    let perfect_hash = |object: &str| -> usize {
+    let perfect_hash = |object: &str| {
         let bytes = object.as_bytes();
         digit(bytes[0]) + 36 * digit(bytes[1]) + 1296 * digit(bytes[2])
     };
@@ -32,7 +32,7 @@ pub fn parse(input: &str) -> Vec<usize> {
 
     // Assign sequential indices to each object the first time that we encounter it.
     // 0 is used as a special "empty" value.
-    let mut lookup = |s: &str| {
+    let mut lookup = |s| {
         let hash = perfect_hash(s);
         if indices[hash] == 0 {
             indices[hash] = current;
@@ -78,7 +78,7 @@ pub fn part1(input: &[usize]) -> usize {
 /// trace our path to the root. As soon as we encounter a non-zero distance then we've hit
 /// the first common ancestor and can calculate the required transfers.
 pub fn part2(input: &[usize]) -> u16 {
-    let mut distance = vec![0_u16; input.len()];
+    let mut distance = vec![0; input.len()];
     let mut index = 2; // SAN
     let mut count = 0;
 

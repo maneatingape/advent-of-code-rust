@@ -91,7 +91,7 @@ pub fn part1(input: &Input) -> u32 {
         high += 4 * rising.count_ones();
 
         // Flip flop changing from on to off emits a low pulse.
-        let falling: u32 = n & !(n + 1);
+        let falling = n & !(n + 1);
         low += 4 * falling.count_ones();
 
         for (number, feedback) in pairs {

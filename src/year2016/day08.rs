@@ -11,7 +11,7 @@ use crate::util::parse::*;
 use crate::util::point::*;
 
 pub fn parse(input: &str) -> Vec<Point> {
-    let amounts = input.iter_signed::<i32>().chunk::<2>();
+    let amounts = input.iter_signed().chunk::<2>();
     let mut points = Vec::new();
 
     for (line, [a, b]) in input.lines().zip(amounts) {

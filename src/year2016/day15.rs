@@ -14,7 +14,7 @@ use crate::util::parse::*;
 type Pair = [usize; 2];
 
 pub fn parse(input: &str) -> Pair {
-    let disks: Vec<Pair> = input.iter_unsigned().skip(1).step_by(2).chunk::<2>().collect();
+    let disks: Vec<_> = input.iter_unsigned().skip(1).step_by(2).chunk::<2>().collect();
     let (part1, step) = solve(&disks, 0, 0, 1);
     let (part2, _step) = solve(&[[11, 0]], disks.len(), part1, step);
     [part1, part2]

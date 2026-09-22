@@ -50,7 +50,7 @@ pub fn parse(input: &str) -> &str {
 /// each in their own 3x3 space with no overlap.
 pub fn part1(input: &str) -> usize {
     input
-        .iter_unsigned::<u32>()
+        .iter_unsigned()
         .skip(6)
         .chunk::<8>()
         .filter(|[w, h, presents @ ..]| (w / 3) * (h / 3) >= presents.iter().sum::<u32>())

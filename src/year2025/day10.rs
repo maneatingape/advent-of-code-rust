@@ -189,7 +189,7 @@ fn gaussian_elimination(machine: &Machine) -> Subspace {
 
     let nullity = width - rank;
     let rhs = from_fn(|row| equations[row][width]);
-    let basis: Vec<_> = (0..nullity)
+    let basis = (0..nullity)
         .map(|col| {
             let limit = equations[height][col + rank];
             let vs = from_fn(|row| equations[row][rank + col]);

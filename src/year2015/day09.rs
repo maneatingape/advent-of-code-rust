@@ -62,7 +62,7 @@ pub fn parse(input: &str) -> Result {
     }
 
     let stride = indices.len();
-    let mut distances = vec![0_u16; stride * stride];
+    let mut distances = vec![0; stride * stride];
 
     for [start, _, end, _, distance] in &tokens {
         let start = indices[start];
@@ -75,8 +75,8 @@ pub fn parse(input: &str) -> Result {
 
     // Initialize a table for each part: 2ⁿ sets with n distances per set. Default 0 matches
     // g({k},k) of zero for all singleton sets. Initial value of other sets does not matter.
-    let mut table_one = vec![0_u16; stride * (1 << stride)];
-    let mut table_two = vec![0_u16; stride * (1 << stride)];
+    let mut table_one = vec![0; stride * (1 << stride)];
+    let mut table_two = vec![0; stride * (1 << stride)];
 
     // Visit each non-empty set in order, with no work to do for singleton sets. Start from 3,
     // since 1 and 2 are singleton sets.

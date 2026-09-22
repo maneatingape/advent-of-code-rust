@@ -40,7 +40,7 @@ impl Interval {
 }
 
 pub fn parse(input: &str) -> Vec<Tile> {
-    let mut tiles: Vec<_> = input.iter_unsigned::<u32>().chunk::<2>().collect();
+    let mut tiles: Vec<_> = input.iter_unsigned().chunk::<2>().collect();
     tiles.sort_unstable_by_key(|&[x, y]| (y, x));
     tiles
 }
@@ -56,7 +56,7 @@ pub fn part1(tiles: &[Tile]) -> u64 {
 
 pub fn part2(tiles: &[Tile]) -> u64 {
     // Track the largest area so far during scanning.
-    let mut largest_area: u64 = 0;
+    let mut largest_area = 0;
 
     // Each red tile (`x`, `y`) becomes a candidate for being a top corner of the largest area, and
     // during the scan, the `interval` containing the maximum possible width is updated.
@@ -64,7 +64,7 @@ pub fn part2(tiles: &[Tile]) -> u64 {
 
     // Maintain an ordered list of descending edges, i.e. [begin_interval_0, end_interval_0,
     // begin_interval_1, end_interval_1, ...].
-    let mut descending_edges: Vec<u32> = Vec::new();
+    let mut descending_edges = Vec::new();
     let mut intervals_from_descending_edges = Vec::new();
 
     // Invariants on the input data (defined by the puzzle) result in points arriving in pairs on
@@ -222,7 +222,7 @@ fn find_largest_from_all_corners(corner: &[Tile], opposite_corner: &[Tile], top_
     // divide and conquer for O(n log n) work by repeatedly dividing the set corner against
     // the partitions of opposite_corner that correspond to the best result from the halfway
     // point of corner.
-    let mut largest = 0_u64;
+    let mut largest = 0;
     let start = Work { p_lo: 0, p_hi: corner.len() - 1, q_lo: 0, q_hi: opposite_corner.len() - 1 };
     let mut work = vec![start];
 
@@ -232,7 +232,7 @@ fn find_largest_from_all_corners(corner: &[Tile], opposite_corner: &[Tile], top_
         let p_mid = usize::midpoint(job.p_lo, job.p_hi);
         let p = corner[p_mid];
         let mut best_i = None;
-        let mut max_size = 0_u64;
+        let mut max_size = 0;
         let mut q_lim = job.q_lo;
 
         for (q_i, q) in opposite_corner.iter().enumerate().take(job.q_hi + 1).skip(job.q_lo) {

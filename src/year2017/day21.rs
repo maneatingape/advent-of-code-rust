@@ -66,7 +66,7 @@ pub fn parse(input: &str) -> Vec<u32> {
     for line in input.lines().map(str::as_bytes) {
         // The ASCII code for "#" 35 is odd and the code for "." 46 is even
         // so we can convert to a 1 or 0 bit using bitwise AND with 1.
-        let bit = |i: usize| line[i] & 1;
+        let bit = |i| line[i] & 1;
 
         if line.len() == 20 {
             // 2x2 to 3x3.

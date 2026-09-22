@@ -5,7 +5,7 @@
 //! the most common situations. Once [`array_chunks`] is stabilized this module can be removed.
 //!
 //! [`array_chunks`]: std::iter::Iterator::array_chunks
-pub struct Chunk<I: Iterator, const N: usize> {
+pub struct Chunk<I, const N: usize> {
     iter: I,
 }
 

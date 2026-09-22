@@ -8,7 +8,7 @@ type Input = (String, i32);
 
 pub fn parse(input: &str) -> Input {
     let (mut points, velocity): (Vec<_>, Vec<_>) = input
-        .iter_signed::<i32>()
+        .iter_signed()
         .chunk::<4>()
         .map(|[x, y, dx, dy]| (Point::new(x, y), Point::new(dx, dy)))
         .unzip();

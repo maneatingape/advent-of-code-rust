@@ -32,9 +32,9 @@ pub struct Input {
 pub fn parse(input: &str) -> Input {
     let (prefix, suffix) = input.split_once("\n\n").unwrap();
 
-    let points: Vec<_> = prefix.iter_signed().chunk::<2>().map(|[x, y]| Point::new(x, y)).collect();
+    let points = prefix.iter_signed().chunk::<2>().map(|[x, y]| Point::new(x, y)).collect();
 
-    let folds: Vec<_> = suffix
+    let folds = suffix
         .lines()
         .map(|line| match line.split_once('=').unwrap() {
             ("fold along x", x) => Fold::Horizontal(x.signed()),

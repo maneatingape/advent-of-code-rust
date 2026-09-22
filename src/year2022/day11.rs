@@ -148,7 +148,7 @@ pub fn parse(input: &str) -> Input {
         })
         .collect();
 
-    let pairs: Vec<_> = monkeys
+    let pairs = monkeys
         .iter()
         .enumerate()
         .flat_map(|(from, monkey)| monkey.items.iter().map(move |&item| (from, item)))

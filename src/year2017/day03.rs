@@ -66,7 +66,7 @@ pub fn part2(input: &u32) -> u32 {
             for _ in 0..steps {
                 position += direction;
 
-                let next: u32 = DIAGONAL.iter().filter_map(|&d| values.get(&(position + d))).sum();
+                let next = DIAGONAL.iter().filter_map(|&d| values.get(&(position + d))).sum();
 
                 if next > target {
                     return next;

@@ -39,7 +39,7 @@ pub fn part1(input: &[i32]) -> i32 {
 
 pub fn part2(input: &[i32]) -> i32 {
     // The frequencies increase by this amount each pass through the list of deltas.
-    let total: i32 = input.iter().sum();
+    let total = input.iter().sum();
 
     // Calculate tuples of `(frequency gap, index, frequency)` then sort to group frequencies that
     // can collide together.

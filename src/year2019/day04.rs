@@ -9,7 +9,7 @@ use crate::util::parse::*;
 type Input = (u32, u32);
 
 pub fn parse(input: &str) -> Input {
-    let [start, end] = input.iter_unsigned::<u32>().chunk::<2>().next().unwrap();
+    let [start, end] = input.iter_unsigned().chunk::<2>().next().unwrap();
 
     let mut digits = to_digits(start);
     let end = to_digits(end);

@@ -9,7 +9,7 @@
 //!   m efficiently using [exponentiation by squaring](https://en.wikipedia.org/wiki/Exponentiation_by_squaring).
 use crate::util::integer::*;
 
-pub trait MathOps<T: Integer> {
+pub trait MathOps<T> {
     #[must_use]
     fn gcd(self, b: T) -> T;
     #[must_use]

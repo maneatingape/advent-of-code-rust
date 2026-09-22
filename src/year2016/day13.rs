@@ -20,7 +20,7 @@ pub fn parse(input: &str) -> Input {
     // Lazy evaluation. Set maze[x][y] to true once a point is visited.
     let mut maze = [[false; 52]; 52];
     maze[1][1] = true;
-    let mut visit = |x: usize, y: usize| -> bool {
+    let mut visit = |x: usize, y: usize| {
         if maze[x][y] {
             return false;
         }

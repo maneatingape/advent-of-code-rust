@@ -64,12 +64,12 @@ pub struct Input {
 pub fn parse(input: &str) -> Input {
     // The puzzle describes the input as X,Y, but it is more efficient to use the numbers as
     // row,column, rearranged to have row-major iteration.
-    let [depth, target_row, target_col] = input.iter_signed::<i32>().chunk::<3>().next().unwrap();
+    let [depth, target_row, target_col] = input.iter_signed().chunk::<3>().next().unwrap();
 
     let target = Point::new(target_col, target_row);
 
     let mut row = vec![0; (target_col + SLOP_WIDTH) as usize];
-    let mut grid = Grid::new(target_col + SLOP_WIDTH, target_row + SLOP_HEIGHT, 0_u8);
+    let mut grid = Grid::new(target_col + SLOP_WIDTH, target_row + SLOP_HEIGHT, 0);
 
     // Erosion levels in the first row (when puzzle X is zero) are set to a scaled geologic index.
     for c in 0..row.len() {

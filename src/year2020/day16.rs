@@ -44,7 +44,7 @@ impl Rule {
 pub fn parse(input: &str) -> Input {
     let [first, second, third] = input.splitn(3, "\n\n").chunk::<3>().next().unwrap();
     let rules: Vec<_> = first.lines().map(Rule::from).collect();
-    let your_ticket: Ticket = second.iter_unsigned().collect();
+    let your_ticket = second.iter_unsigned().collect();
     let mut nearby_tickets = vec![Vec::new(); rules.len()];
 
     for (i, n) in third.iter_unsigned().enumerate() {

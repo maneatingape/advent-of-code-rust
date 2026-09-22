@@ -126,7 +126,7 @@ pub fn parse(input: &str) -> Result {
 
     // Build list of decay chains.
     let sizes: Vec<_> = elements.iter().map(|e| e[0].len()).collect();
-    let decays: Vec<Vec<_>> =
+    let decays: Vec<_> =
         elements.iter().map(|e| e[4..].iter().map(|t| indices[t]).collect()).collect();
 
     // Each input is a single element.

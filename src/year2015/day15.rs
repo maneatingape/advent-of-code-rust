@@ -41,7 +41,7 @@ pub fn parse(input: &str) -> Input {
                 let third: Ingredient = from_fn(|i| second[i] + c * recipe[2][i]);
                 let fourth: Ingredient = from_fn(|i| third[i] + d * recipe[3][i]);
 
-                let score: i32 = fourth[..4].iter().map(|&x| x.max(0)).product();
+                let score = fourth[..4].iter().map(|&x| x.max(0)).product();
                 let calories = fourth[4];
 
                 part_one = part_one.max(score);

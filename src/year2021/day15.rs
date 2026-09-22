@@ -87,11 +87,11 @@ fn build_estimates(square: &Square) -> Vec<u32> {
     let edge = size - 1;
     let end = size * size - 1;
 
-    let mut estimate = vec![0_u32; size * size];
+    let mut estimate = vec![0; size * size];
     // Produce a coordinate in estimate, or 0 if x or y out of bounds. Since the origin does
     // not contribute to the overall risk level, we use it instead to hold an effective infinity
     // to make processing easier at the ends of diagonals.
-    let coord = |col: usize, row: usize| -> usize {
+    let coord = |col, row| {
         if col > edge || row > edge { 0 } else { row * size + col }
     };
     estimate[0] = u32::MAX; // Larger than any possible other estimate.
@@ -144,7 +144,7 @@ fn astar(square: &Square, mut grid_data: Vec<u32>) -> usize {
     // Initialize our specialized priority queue with 32 vecs. Chosen to be large enough
     // to cover the largest gap (actual risk increasing by 9 on the same step that the
     // heuristic jumps by 9), but also safe against the infrequent backwards jump by 1.
-    let mut todo: [Vec<u32>; 32] = from_fn(|_| Vec::with_capacity(1_000));
+    let mut todo: [_; 32] = from_fn(|_| Vec::with_capacity(1_000));
 
     // On entry, grid_data contains estimates in the low 16 bits. As long as all estimates
     // are transformed uniformly by a constant, the sequence of nodes visited will be identical.
@@ -168,7 +168,7 @@ fn astar(square: &Square, mut grid_data: Vec<u32>) -> usize {
                 return risk;
             }
 
-            let mut check = |next: usize| {
+            let mut check = |next| {
                 let next_cost = risk + usize::from(bytes[next]);
                 if next_cost < grid_data[next] as usize & 0xffff {
                     let next_f = risk + (grid_data[next] >> 16) as usize;

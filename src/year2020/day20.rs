@@ -74,7 +74,7 @@ impl Tile {
     fn from(chunk: &[&str]) -> Self {
         let id = chunk[0][5..9].unsigned();
 
-        let pixels: [[u8; 10]; 10] = from_fn(|i| chunk[i + 1].as_bytes().try_into().unwrap());
+        let pixels: [[_; 10]; 10] = from_fn(|i| chunk[i + 1].as_bytes().try_into().unwrap());
 
         // The ASCII code for "#" 35 is odd and the code for "." 46 is even
         // so we can convert to a 1 or 0 bit using bitwise AND with 1.
@@ -162,7 +162,7 @@ pub fn part2(input: &[Tile]) -> u32 {
         .unwrap();
     freq[next_top] += 1;
 
-    let mut find_matching_tile = |edge: usize| {
+    let mut find_matching_tile = |edge| {
         let [first, second] = edge_to_tile[edge];
         let next = if placed[first] { second } else { first };
         placed[next] = true;
@@ -192,7 +192,7 @@ pub fn part2(input: &[Tile]) -> u32 {
     }
 
     // Common search logic.
-    let sea: u32 = image.iter().map(|n| n.count_ones()).sum();
+    let sea = image.iter().map(|n| n.count_ones()).sum();
     let find = |monster: &mut [u128], width: usize, height: usize| {
         let mut rough = sea;
 

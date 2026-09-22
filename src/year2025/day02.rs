@@ -59,7 +59,7 @@ type Range = [u32; 2];
 type Pair = [u64; 2];
 
 pub fn parse(input: &str) -> Vec<Pair> {
-    input.iter_unsigned::<u64>().chunk::<2>().collect()
+    input.iter_unsigned().chunk::<2>().collect()
 }
 
 pub fn part1(input: &[Pair]) -> u64 {

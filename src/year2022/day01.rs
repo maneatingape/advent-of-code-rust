@@ -10,7 +10,7 @@ use crate::util::parse::*;
 
 /// Parse and group lines.
 pub fn parse(input: &str) -> Vec<u32> {
-    let mut elves: Vec<u32> = input.split("\n\n").map(|s| s.iter_unsigned::<u32>().sum()).collect();
+    let mut elves: Vec<_> = input.split("\n\n").map(|s| s.iter_unsigned::<u32>().sum()).collect();
     elves.sort_unstable();
     elves
 }

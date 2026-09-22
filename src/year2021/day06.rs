@@ -11,7 +11,7 @@ use crate::util::parse::*;
 type Input = [u64; 9];
 
 pub fn parse(input: &str) -> Input {
-    let mut fish = [0_u64; 9];
+    let mut fish = [0; 9];
     input.iter_unsigned().for_each(|i: usize| fish[i] += 1);
     fish
 }

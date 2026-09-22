@@ -27,7 +27,7 @@ pub fn part2(input: &[&[u8]]) -> u32 {
     input
         .iter()
         .map(|line| {
-            let digit = |i: usize| -> Option<u32> {
+            let digit = |i: usize| {
                 if line[i].is_ascii_digit() {
                     return Some(line[i].to_decimal());
                 }

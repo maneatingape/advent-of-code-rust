@@ -61,7 +61,7 @@ pub fn parse(input: &str) -> Input<'_> {
                 };
 
                 // Convert each rule into a half open range.
-                let value: u32 = first[2..].unsigned();
+                let value = first[2..].unsigned();
                 let range = match first.as_bytes()[1] {
                     b'<' => 1..value,
                     b'>' => value + 1..4001,
@@ -83,7 +83,7 @@ pub fn part1(input: &Input<'_>) -> u32 {
 
     // We only care about the numbers and can ignore all delimiters and whitespace.
     parts
-        .iter_unsigned::<u32>()
+        .iter_unsigned()
         .chunk::<4>()
         .filter(|part| {
             let mut key = "in";

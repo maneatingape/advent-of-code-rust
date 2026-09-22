@@ -23,7 +23,7 @@ pub fn parse(input: &str) -> Input {
         .chunk::<4>()
         .partition(|&[x1, y1, x2, y2]| x1 == x2 || y1 == y2);
 
-    let mut grid = vec![0_u8; 1_000_000];
+    let mut grid = vec![0; 1_000_000];
     let first = vents(&orthogonal, &mut grid);
     let second = vents(&diagonal, &mut grid);
 

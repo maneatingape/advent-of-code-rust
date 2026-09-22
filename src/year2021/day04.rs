@@ -40,7 +40,7 @@ pub fn parse(input: &str) -> Vec<Board> {
     boards
         .chunks_exact(BOARD_SIZE)
         .map(|board| {
-            let turns: [usize; BOARD_SIZE] = from_fn(|i| number_to_turn[board[i]]);
+            let turns: [_; BOARD_SIZE] = from_fn(|i| number_to_turn[board[i]]);
             let max = |&(skip, step)| *turns.iter().skip(skip).step_by(step).take(5).max().unwrap();
 
             let winning_turn = ROWS_AND_COLS.iter().map(max).min().unwrap();

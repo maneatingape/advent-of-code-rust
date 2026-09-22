@@ -24,11 +24,7 @@ use crate::util::parse::*;
 
 pub fn parse(input: &str) -> Vec<usize> {
     // Collapse inputs into a single positive base-23 number offset from -11,-11,-11,-11.
-    input
-        .iter_signed::<i32>()
-        .chunk::<4>()
-        .map(|[x, y, z, w]| flatten(x, y, z, w, 11) as usize)
-        .collect()
+    input.iter_signed().chunk::<4>().map(|[x, y, z, w]| flatten(x, y, z, w, 11) as usize).collect()
 }
 
 pub fn part1(input: &[usize]) -> usize {

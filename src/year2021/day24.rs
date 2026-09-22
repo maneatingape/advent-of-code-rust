@@ -108,7 +108,7 @@ pub fn parse(input: &str) -> Vec<Constraint> {
 
     for (index, block) in lines.chunks(18).enumerate() {
         // Register names contain no digits, so each line holds at most a single number.
-        let helper = |i: usize| block[i].signed::<i32>();
+        let helper = |i: usize| block[i].signed();
 
         // The 5th instruction in "push" blocks is always a `div z 1`
         // that we can use to figure out what type of block we're dealing with.
