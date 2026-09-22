@@ -74,7 +74,7 @@ macro_rules! library {
             #![doc = concat!("# ", $description)]
             $(pub mod $day;)*
         })*
-    }
+    };
 }
 
 library!(util "Utility modules to handle common recurring Advent of Code patterns."

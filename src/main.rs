@@ -29,7 +29,7 @@ macro_rules! run {
                 }
             }
         ,)*)*]
-    }
+    };
 }
 
 fn main() {

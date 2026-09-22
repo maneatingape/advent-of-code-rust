@@ -173,7 +173,7 @@ pub fn part2_testable(input: &u32, minutes: usize) -> u32 {
             let mut acc = 0;
 
             macro_rules! repeat {
-                ($other:ident, $mask:ident, $($i:literal)*) => ($(
+                ($other:ident $mask:ident $($i:literal)*) => {$(
                     let mask = 1 << $i;
                     let bug = level & mask;
                     let adjacent = (level & LEVEL[$i]).count_ones()
@@ -182,11 +182,11 @@ pub fn part2_testable(input: &u32, minutes: usize) -> u32 {
                     if adjacent == 1 || (bug == 0 && adjacent == 2) {
                         acc |= mask;
                     }
-                )*)
+                )*};
             }
 
-            repeat!(outer, OUTER, 0 1 2 3 4 5 9 10 14 15 19 20 21 22 23 24);
-            repeat!(inner, INNER, 6 7 8 11 13 16 17 18);
+            repeat!(outer OUTER 0 1 2 3 4 5 9 10 14 15 19 20 21 22 23 24);
+            repeat!(inner INNER 6 7 8 11 13 16 17 18);
             next[i] = acc;
         }
 

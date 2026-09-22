@@ -2,6 +2,8 @@
 #![feature(test)]
 extern crate test;
 
+use aoc::solutions;
+
 macro_rules! benchmark {
     ($($year:ident $description:literal $($day:ident)*),*) => {
         $(mod $year {
@@ -40,7 +42,7 @@ macro_rules! benchmark {
                 }
             })*
         })*
-    }
+    };
 }
 
-aoc::solutions!(benchmark);
+solutions!(benchmark);
