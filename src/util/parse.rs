@@ -13,7 +13,7 @@
 //!
 //! [`iter_unsigned`]: ParseOps::iter_unsigned
 //! [`iter_signed`]: ParseOps::iter_signed
-use std::marker::PhantomData;
+use std::iter::from_fn;
 
 use crate::util::integer::*;
 
@@ -52,54 +52,14 @@ impl<S: AsRef<str> + ?Sized> ParseOps for S {
 
     #[inline]
     fn iter_unsigned<T: Unsigned>(&self) -> impl Iterator<Item = T> {
-        let bytes = self.as_ref().bytes();
-        ParseUnsigned { bytes, phantom: PhantomData }
+        let mut bytes = self.as_ref().bytes();
+        from_fn(move || try_unsigned(&mut bytes))
     }
 
     #[inline]
     fn iter_signed<T: Signed>(&self) -> impl Iterator<Item = T> {
-        let bytes = self.as_ref().bytes();
-        ParseSigned { bytes, phantom: PhantomData }
-    }
-}
-
-struct ParseUnsigned<I, T> {
-    bytes: I,
-    phantom: PhantomData<T>,
-}
-
-impl<I: Iterator<Item = u8>, T: Unsigned> Iterator for ParseUnsigned<I, T> {
-    type Item = T;
-
-    #[inline]
-    fn size_hint(&self) -> (usize, Option<usize>) {
-        let (lower, upper) = self.bytes.size_hint();
-        (lower / 3, upper.map(|u| u / 3))
-    }
-
-    #[inline]
-    fn next(&mut self) -> Option<Self::Item> {
-        try_unsigned(&mut self.bytes)
-    }
-}
-
-struct ParseSigned<I, T> {
-    bytes: I,
-    phantom: PhantomData<T>,
-}
-
-impl<I: Iterator<Item = u8>, T: Signed> Iterator for ParseSigned<I, T> {
-    type Item = T;
-
-    #[inline]
-    fn size_hint(&self) -> (usize, Option<usize>) {
-        let (lower, upper) = self.bytes.size_hint();
-        (lower / 3, upper.map(|u| u / 3))
-    }
-
-    #[inline]
-    fn next(&mut self) -> Option<Self::Item> {
-        try_signed(&mut self.bytes)
+        let mut bytes = self.as_ref().bytes();
+        from_fn(move || try_signed(&mut bytes))
     }
 }
 
