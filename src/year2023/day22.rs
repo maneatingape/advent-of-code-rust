@@ -87,7 +87,7 @@ pub fn parse(input: &str) -> Input {
 
         // Find the highest z coordinate underneath the brick looking downwards along the z axis
         // so only considering x and y coordinates.
-        let top = (start..end + 1).step_by(step).map(|j| heights[j]).max().unwrap();
+        let top = (start..=end).step_by(step).map(|j| heights[j]).max().unwrap();
 
         // Track what's underneath the brick.
         let mut previous = usize::MAX;
@@ -95,7 +95,7 @@ pub fn parse(input: &str) -> Input {
         let mut parent = 0;
         let mut depth = 0;
 
-        for j in (start..end + 1).step_by(step) {
+        for j in (start..=end).step_by(step) {
             if heights[j] == top {
                 let index = indices[j];
                 if index != previous {

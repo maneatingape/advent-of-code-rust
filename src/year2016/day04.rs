@@ -86,7 +86,7 @@ fn rules(checksum: &[u8], freq: &[usize], fof: &mut [i32]) -> bool {
         let end = freq[to_index(a)];
         let start = freq[to_index(b)];
         fof[end] -= 1;
-        !(start > end || (start == end && b <= a) || (start + 1..end + 1).any(|i| fof[i] != 0))
+        !(start > end || (start == end && b <= a) || (start + 1..=end).any(|i| fof[i] != 0))
     })
 }
 

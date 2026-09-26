@@ -196,7 +196,7 @@ pub fn part2(input: &[Tile]) -> u32 {
     let find = |monster: &mut [u128], width: usize, height: usize| {
         let mut rough = sea;
 
-        for _ in 0..(96 - width + 1) {
+        for _ in 0..=(96 - width) {
             for window in image.windows(height) {
                 if monster.iter().zip(window).all(|(&mask, &row)| mask & row == mask) {
                     rough -= 15;

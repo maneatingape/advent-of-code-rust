@@ -53,11 +53,11 @@ pub fn parse(input: &str) -> Scan {
     // Draw each of the clay veins.
     for (x1, x2, y1, y2) in clay {
         if x1 == x2 {
-            for y in y1..y2 + 1 {
+            for y in y1..=y2 {
                 kind[width * y + x1 - min_x + 1] = Stopped;
             }
         } else {
-            for x in x1..x2 + 1 {
+            for x in x1..=x2 {
                 kind[width * y1 + x - min_x + 1] = Stopped;
             }
         }

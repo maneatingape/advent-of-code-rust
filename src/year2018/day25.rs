@@ -39,11 +39,11 @@ pub fn part1(input: &[usize]) -> usize {
     let mut offsets = Vec::with_capacity(128);
     for x in -3_i32..4 {
         let lim_y = 3 - x.abs();
-        for y in -lim_y..lim_y + 1 {
+        for y in -lim_y..=lim_y {
             let lim_z = lim_y - y.abs();
-            for z in -lim_z..lim_z + 1 {
+            for z in -lim_z..=lim_z {
                 let lim_w = lim_z - z.abs();
-                for w in -lim_w..lim_w + 1 {
+                for w in -lim_w..=lim_w {
                     if x != 0 || y != 0 || z != 0 || w != 0 {
                         offsets.push(flatten(x, y, z, w, 0) as isize);
                     }

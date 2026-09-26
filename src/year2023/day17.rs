@@ -184,7 +184,7 @@ fn astar<const L: usize, const U: usize>(input: &Input) -> u16 {
                 let mut next = position;
                 let mut extra = steps;
 
-                for i in 1..U + 1 {
+                for i in 1..=U {
                     next = next.wrapping_add(delta);
                     extra += heat[next] as u16;
 
