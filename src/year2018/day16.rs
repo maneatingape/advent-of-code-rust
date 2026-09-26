@@ -89,22 +89,22 @@ pub fn part2(input: &Input) -> usize {
 
 fn cpu(opcode: usize, a: usize, b: usize, register: &[usize; 4]) -> usize {
     match opcode {
-        0 => register[a] + register[b],              // addr
-        1 => register[a] + b,                        // addi
-        2 => register[a] * register[b],              // mulr
-        3 => register[a] * b,                        // muli
-        4 => register[a] & register[b],              // banr
-        5 => register[a] & b,                        // bani
-        6 => register[a] | register[b],              // borr
-        7 => register[a] | b,                        // bori
-        8 => register[a],                            // setr
-        9 => a,                                      // seti
-        10 => (a > register[b]) as usize,            // gtir
-        11 => (register[a] > b) as usize,            // gtri
-        12 => (register[a] > register[b]) as usize,  // gtrr
-        13 => (a == register[b]) as usize,           // eqir
-        14 => (register[a] == b) as usize,           // eqri
-        15 => (register[a] == register[b]) as usize, // eqrr
+        0 => register[a] + register[b],                // addr
+        1 => register[a] + b,                          // addi
+        2 => register[a] * register[b],                // mulr
+        3 => register[a] * b,                          // muli
+        4 => register[a] & register[b],                // banr
+        5 => register[a] & b,                          // bani
+        6 => register[a] | register[b],                // borr
+        7 => register[a] | b,                          // bori
+        8 => register[a],                              // setr
+        9 => a,                                        // seti
+        10 => usize::from(a > register[b]),            // gtir
+        11 => usize::from(register[a] > b),            // gtri
+        12 => usize::from(register[a] > register[b]),  // gtrr
+        13 => usize::from(a == register[b]),           // eqir
+        14 => usize::from(register[a] == b),           // eqri
+        15 => usize::from(register[a] == register[b]), // eqrr
         _ => unreachable!(),
     }
 }

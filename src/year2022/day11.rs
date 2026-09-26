@@ -200,11 +200,8 @@ fn play(monkeys: &[Monkey], mut from: usize, mut item: usize) -> Business {
     let mut round = 0;
     let mut business = Business::default();
 
-    let mut path = Vec::new();
-    let mut seen = FastMap::new();
-
-    path.push(business);
-    seen.insert((from, item), round);
+    let mut path = vec![business];
+    let mut seen = FastMap::build([((from, item), round)]);
 
     while round < 10_000 {
         item = monkeys[from].inspect(item) % product;

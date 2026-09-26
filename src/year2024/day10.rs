@@ -43,12 +43,7 @@ fn dfs(grid: &Grid<u8>, distinct: bool, seen: &mut Grid<i32>, id: i32, point: Po
     for next in ORTHOGONAL.map(|o| point + o) {
         if grid[next] + 1 == grid[point] && (distinct || seen[next] != id) {
             seen[next] = id;
-
-            if grid[next] == b'0' {
-                result += 1;
-            } else {
-                result += dfs(grid, distinct, seen, id, next);
-            }
+            result += if grid[next] == b'0' { 1 } else { dfs(grid, distinct, seen, id, next) };
         }
     }
 

@@ -53,7 +53,7 @@ pub fn part1(basins: &[Basin]) -> u32 {
 
 pub fn part2(basins: &[Basin]) -> u32 {
     // The list of basins is not sorted overall, but does have the largest three at the end.
-    basins[basins.len() - 3..].iter().map(|b| b.size).product()
+    basins.iter().rev().take(3).map(|b| b.size).product()
 }
 
 fn flood_fill(grid: &mut Grid<u8>, point: Point) -> Basin {

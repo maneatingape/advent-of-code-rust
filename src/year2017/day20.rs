@@ -74,13 +74,14 @@ pub fn parse(input: &str) -> Vec<Particle> {
     input
         .iter_signed()
         .chunk::<3>()
+        .map(Vector::new)
         .chunk::<3>()
         .enumerate()
-        .map(|(id, [p, v, a])| Particle {
+        .map(|(id, [position, velocity, acceleration])| Particle {
             id,
-            position: Vector::new(p),
-            velocity: Vector::new(v),
-            acceleration: Vector::new(a),
+            position,
+            velocity,
+            acceleration,
         })
         .collect()
 }

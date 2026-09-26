@@ -132,11 +132,7 @@ mod implementation {
             for _ in 0..8 {
                 let next = word & 0xf;
 
-                if next == prev {
-                    same += 1;
-                } else {
-                    same = 1;
-                }
+                same = if next == prev { same + 1 } else { 1 };
 
                 if same == 3 {
                     three = 1 << next;

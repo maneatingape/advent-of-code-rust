@@ -122,8 +122,8 @@ pub fn parse(input: &str) -> Input {
 
     groups.push((first, second, 0));
 
-    for i in 1..points.len() {
-        if angle(points[i], points[i - 1]) == Ordering::Greater {
+    for (&[previous, current], i) in points.array_windows().zip(1..) {
+        if angle(current, previous) == Ordering::Greater {
             first = 0;
             second += 1;
         } else {

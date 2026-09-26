@@ -23,8 +23,7 @@ struct Bot {
 }
 
 pub fn parse(input: &str) -> Input {
-    let tokens: Vec<_> = input.split_ascii_whitespace().collect();
-    let mut tokens = &tokens[..];
+    let mut tokens = input.split_ascii_whitespace();
 
     let mut todo = VecDeque::with_capacity(500);
     let mut bots = FastMap::with_capacity(500);
@@ -32,20 +31,18 @@ pub fn parse(input: &str) -> Input {
     let mut part_one = u32::MAX;
     let mut part_two = 1;
 
-    while !tokens.is_empty() {
-        if tokens[0] == "value" {
-            let value = tokens[1].unsigned();
-            let dest = to_dest(tokens[4], tokens[5]);
+    while let Some(command) = tokens.next() {
+        if command == "value" {
+            let value = tokens.next().unwrap().unsigned();
+            let dest = to_dest(tokens.nth(2).unwrap(), tokens.next().unwrap());
 
             todo.push_back((dest, value));
-            tokens = &tokens[6..];
         } else {
-            let key: u32 = tokens[1].unsigned();
-            let low = to_dest(tokens[5], tokens[6]);
-            let high = to_dest(tokens[10], tokens[11]);
+            let key: u32 = tokens.next().unwrap().unsigned();
+            let low = to_dest(tokens.nth(3).unwrap(), tokens.next().unwrap());
+            let high = to_dest(tokens.nth(3).unwrap(), tokens.next().unwrap());
 
             bots.insert(key, Bot { low, high, chip: None });
-            tokens = &tokens[12..];
         }
     }
 

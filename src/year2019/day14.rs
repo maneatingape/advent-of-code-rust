@@ -31,9 +31,7 @@ pub fn parse(input: &str) -> Vec<Reaction> {
             .collect();
 
     // Assign FUEL and ORE known indices as we'll need to look them up later.
-    let mut indices = FastMap::new();
-    indices.insert("FUEL", 0);
-    indices.insert("ORE", 1);
+    let mut indices = FastMap::build([("FUEL", 0), ("ORE", 1)]);
 
     let mut lookup = |s| {
         let size = indices.len();

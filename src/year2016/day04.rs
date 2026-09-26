@@ -15,42 +15,39 @@ pub struct Room<'a> {
 }
 
 pub fn parse(input: &str) -> Vec<Room<'_>> {
-    let mut valid = Vec::new();
+    input
+        .lines()
+        .filter_map(|line| {
+            // The sector id and checksum are fixed size leaving whatever is left over as the name.
+            let size = line.len();
+            let name = &line[..size - 11];
+            let checksum = &line.as_bytes()[size - 6..size - 1];
 
-    for line in input.lines() {
-        // The sector id and checksum are fixed size leaving whatever is left over as the name.
-        let size = line.len();
-        let name = &line[..size - 11];
-        let checksum = &line.as_bytes()[size - 6..size - 1];
+            // Count the frequency of each digit, the frequency of each frequency `fof` and the
+            // highest total frequency.
+            let mut freq = [0; 26];
+            let mut fof = [0; 26];
+            let mut highest = 0;
 
-        // Count the frequency of each digit, the frequency of each frequency `fof` and the
-        // highest total frequency.
-        let mut freq = [0; 26];
-        let mut fof = [0; 26];
-        let mut highest = 0;
+            for b in name.bytes() {
+                if b != b'-' {
+                    let index = to_index(b);
+                    let current = freq[index];
+                    let next = current + 1;
 
-        for b in name.bytes() {
-            if b != b'-' {
-                let index = to_index(b);
-                let current = freq[index];
-                let next = current + 1;
+                    freq[index] = next;
+                    fof[current] -= 1;
+                    fof[next] += 1;
 
-                freq[index] = next;
-                fof[current] -= 1;
-                fof[next] += 1;
-
-                highest = highest.max(next);
+                    highest = highest.max(next);
+                }
             }
-        }
 
-        // Filter real rooms vs decoys.
-        if freq[to_index(checksum[0])] == highest && rules(checksum, &freq, &mut fof) {
-            let sector_id = line[size - 10..size - 7].unsigned();
-            valid.push(Room { name, sector_id });
-        }
-    }
-
-    valid
+            // Filter real rooms vs decoys.
+            let valid = freq[to_index(checksum[0])] == highest && rules(checksum, &freq, &mut fof);
+            valid.then(|| Room { name, sector_id: line[size - 10..size - 7].unsigned() })
+        })
+        .collect()
 }
 
 pub fn part1(input: &[Room<'_>]) -> u32 {

@@ -50,15 +50,12 @@ pub fn part2(input: &Input) -> usize {
     let (boxes, buckets) = input;
     let mut nodes: Vec<_> = (0..boxes.len()).map(|i| Node { parent: i, size: 1 }).collect();
 
-    for (i, j, ..) in flatten(buckets) {
-        let (i, j) = (i as usize, j as usize);
-
-        if union(&mut nodes, i, j) == boxes.len() {
-            return boxes[i][0] * boxes[j][0];
-        }
-    }
-
-    unreachable!()
+    flatten(buckets)
+        .find_map(|(i, j, ..)| {
+            let (i, j) = (i as usize, j as usize);
+            (union(&mut nodes, i, j) == boxes.len()).then(|| boxes[i][0] * boxes[j][0])
+        })
+        .unwrap()
 }
 
 fn worker(boxes: &[Box], iter: ParIter<'_, Box>) -> Vec<Vec<Pair>> {

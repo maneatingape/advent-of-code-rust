@@ -89,11 +89,9 @@ fn valid(terms: &[u64], test_value: u64, concat: bool) -> bool {
 
 #[inline]
 fn next_power_of_ten(n: u64) -> u64 {
-    if n < 10 {
-        10
-    } else if n < 100 {
-        100
-    } else {
-        1000
+    match n {
+        0..10 => 10,
+        10..100 => 100,
+        _ => 1000,
     }
 }

@@ -81,7 +81,7 @@ fn narrow(grid: &mut Grid<u8>, start: &mut Point, direction: Point) {
     let mut size = 1;
 
     // Search for the next wall or open space.
-    while grid[position] != b'.' && grid[position] != b'#' {
+    while !matches!(grid[position], b'.' | b'#') {
         position += direction;
         size += 1;
     }
@@ -145,24 +145,18 @@ fn wide(grid: &mut Grid<u8>, start: &mut Point, direction: Point, todo: &mut Vec
 }
 
 fn stretch(grid: &Grid<u8>) -> Grid<u8> {
-    let mut next = Grid::new(grid.width * 2, grid.height, b'.');
+    let bytes = grid
+        .bytes
+        .iter()
+        .flat_map(|&b| match b {
+            b'#' => *b"##",
+            b'O' => *b"[]",
+            b'@' => *b"@.",
+            _ => *b"..",
+        })
+        .collect();
 
-    for y in 0..grid.height {
-        for x in 0..grid.width {
-            // Grid is already filled with '.', so only need to handle other kinds.
-            let (left, right) = match grid[Point::new(x, y)] {
-                b'#' => (b'#', b'#'),
-                b'O' => (b'[', b']'),
-                b'@' => (b'@', b'.'),
-                _ => continue,
-            };
-
-            next[Point::new(2 * x, y)] = left;
-            next[Point::new(2 * x + 1, y)] = right;
-        }
-    }
-
-    next
+    Grid { width: grid.width * 2, height: grid.height, bytes }
 }
 
 fn gps(grid: &Grid<u8>, needle: u8) -> i32 {

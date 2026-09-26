@@ -52,27 +52,18 @@ fn execute(input: &[Op], mut a: u64) -> u64 {
     let mut pc = 0;
     let mut b = 0;
 
-    while pc < input.len() {
-        match input[pc] {
-            Op::Hlf => {
-                a /= 2;
-                pc += 1;
-            }
-            Op::Tpl => {
-                a *= 3;
-                pc += 1;
-            }
-            Op::IncA => {
-                a += 1;
-                pc += 1;
-            }
-            Op::IncB => {
-                b += 1;
-                pc += 1;
-            }
+    while let Some(op) = input.get(pc) {
+        pc += 1;
+
+        match *op {
+            Op::Hlf => a /= 2,
+            Op::Tpl => a *= 3,
+            Op::IncA => a += 1,
+            Op::IncB => b += 1,
             Op::Jmp(index) => pc = index,
-            Op::Jie(index) => pc = if a.is_multiple_of(2) { index } else { pc + 1 },
-            Op::Jio(index) => pc = if a == 1 { index } else { pc + 1 },
+            Op::Jie(index) if a.is_multiple_of(2) => pc = index,
+            Op::Jio(index) if a == 1 => pc = index,
+            Op::Jie(_) | Op::Jio(_) => (),
         }
     }
 

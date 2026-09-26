@@ -37,8 +37,8 @@ fn play(&[ax, ay, bx, by, px, py]: &Claw, offset: i64) -> i64 {
     let (px, py) = (px + offset, py + offset);
 
     // If determinant is zero there's no solution.
-    let det = ax * by - ay * bx;
-    if det == 0 {
+    let determinant = ax * by - ay * bx;
+    if determinant == 0 {
         return 0;
     }
 
@@ -46,9 +46,5 @@ fn play(&[ax, ay, bx, by, px, py]: &Claw, offset: i64) -> i64 {
     let b = ax * py - ay * px;
 
     // Integer solutions only.
-    if a % det != 0 || b % det != 0 {
-        return 0;
-    }
-
-    (3 * a + b) / det
+    if a % determinant == 0 && b % determinant == 0 { (3 * a + b) / determinant } else { 0 }
 }

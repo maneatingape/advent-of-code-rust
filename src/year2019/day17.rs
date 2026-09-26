@@ -77,13 +77,10 @@ pub fn parse(input: &str) -> Input {
     compress(&path, &mut movement);
 
     // Convert trailing comma ',' into a trailing newline '\n'
-    let mut rules = String::new();
-    let parts = once(movement.routine.as_str()).chain(movement.functions.into_iter().flatten());
-    for s in parts {
-        rules.push_str(s);
-        rules.pop();
-        rules.push('\n');
-    }
+    let rules: String = once(movement.routine.as_str())
+        .chain(movement.functions.into_iter().flatten())
+        .flat_map(|s| [s.trim_end_matches(','), "\n"])
+        .collect();
 
     computer.input_ascii(&rules);
     let score = visit(computer);

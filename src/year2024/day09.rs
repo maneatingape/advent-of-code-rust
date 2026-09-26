@@ -111,9 +111,7 @@ pub fn part2(disk: &[usize]) -> usize {
         // We can make smaller free blocks from bigger blocks but not the other way around.
         // As an optimization if all blocks of the biggest size are after our position then
         // we can ignore them.
-        if free.last().is_some_and(|h| *h.last().unwrap() > block) {
-            free.pop();
-        }
+        free.pop_if(|h| *h.last().unwrap() > block);
 
         // Update the checksum with the file's location (possibly unchanged).
         let id = index / 2;
@@ -129,13 +127,8 @@ pub fn part2(disk: &[usize]) -> usize {
             // is technically `O(n)`, in practice it's faster than a real heap.
             let to = next_index - size;
             if to > 0 {
-                let mut i = free[to].len();
                 let value = next_block + size;
-
-                while free[to][i - 1] < value {
-                    i -= 1;
-                }
-
+                let i = free[to].iter().rposition(|&b| b >= value).unwrap() + 1;
                 free[to].insert(i, value);
             }
         }

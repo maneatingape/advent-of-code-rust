@@ -116,33 +116,33 @@ pub fn part2(input: &Input<'_>) -> String {
     // Track the kind of gate that each wire label outputs to.
     let output: FastSet<_> =
         gates.iter().flat_map(|&[left, kind, right, _, _]| [(left, kind), (right, kind)]).collect();
-    let mut swapped = FastSet::new();
 
-    for &[left, kind, right, _, to] in gates {
-        let invalid = match kind {
-            // All AND gates must point to an OR, except for first AND.
-            "AND" => left != "x00" && right != "x00" && !output.contains(&(to, "OR")),
-            // Only XOR gates can point to output, except for last carry which is OR.
-            // OR can never point to OR.
-            "OR" => (to.starts_with('z') && to != "z45") || output.contains(&(to, "OR")),
-            "XOR" => {
-                if left.starts_with('x') || right.starts_with('x') {
-                    // First level XOR must point to second level XOR, except for first XOR.
-                    left != "x00" && right != "x00" && !output.contains(&(to, "XOR"))
-                } else {
-                    // Second level XOR must point to output.
-                    !to.starts_with('z')
+    let mut swapped: Vec<_> = gates
+        .iter()
+        .filter_map(|&[left, kind, right, _, to]| {
+            let invalid = match kind {
+                // All AND gates must point to an OR, except for first AND.
+                "AND" => left != "x00" && right != "x00" && !output.contains(&(to, "OR")),
+                // Only XOR gates can point to output, except for last carry which is OR.
+                // OR can never point to OR.
+                "OR" => (to.starts_with('z') && to != "z45") || output.contains(&(to, "OR")),
+                "XOR" => {
+                    if left.starts_with('x') || right.starts_with('x') {
+                        // First level XOR must point to second level XOR, except for first XOR.
+                        left != "x00" && right != "x00" && !output.contains(&(to, "XOR"))
+                    } else {
+                        // Second level XOR must point to output.
+                        !to.starts_with('z')
+                    }
                 }
-            }
-            _ => unreachable!(),
-        };
+                _ => unreachable!(),
+            };
 
-        if invalid {
-            swapped.insert(to);
-        }
-    }
+            invalid.then_some(to)
+        })
+        .collect();
 
-    let mut result: Vec<_> = swapped.into_iter().collect();
-    result.sort_unstable();
-    result.join(",")
+    swapped.sort_unstable();
+    swapped.dedup();
+    swapped.join(",")
 }

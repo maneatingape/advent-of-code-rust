@@ -16,7 +16,9 @@ pub fn parse(input: &str) -> Vec<i32> {
 }
 
 pub fn part1(input: &[i32]) -> i32 {
-    let median = median(input);
+    let mut crabs = input.to_vec();
+    let middle = crabs.len() / 2;
+    let median = *crabs.select_nth_unstable(middle).1;
     input.iter().map(|n| (n - median).abs()).sum()
 }
 
@@ -31,18 +33,6 @@ pub fn part2(input: &[i32]) -> i32 {
             .sum()
     };
 
-    let mean = mean(input);
+    let mean = input.iter().sum::<i32>() / input.len() as i32;
     fuel(mean).min(fuel(mean + 1))
-}
-
-fn median(input: &[i32]) -> i32 {
-    // A radix sort followed by a short-circuiting .position() would also work, but takes
-    // more lines of code without much more speed.
-    let mut crabs = input.to_vec();
-    let middle = crabs.len() / 2;
-    *crabs.select_nth_unstable(middle).1
-}
-
-fn mean(input: &[i32]) -> i32 {
-    input.iter().sum::<i32>() / (input.len() as i32)
 }

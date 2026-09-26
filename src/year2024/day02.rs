@@ -38,37 +38,39 @@ pub fn part2(input: &Input) -> u32 {
 }
 
 fn check(report: &[i32]) -> (u32, u32) {
-    let size = report.len();
+    let end = report.len() - 1;
+    let target = end as i32;
     let score: i32 = report.array_windows().map(|&[a, b]| delta(a, b)).sum();
 
-    if score.abs() == (size - 1) as i32 {
+    if score.abs() == target {
         return (1, 1);
     }
 
-    for i in 0..size {
+    let dampened = (0..=end).any(|i| {
         let mut score = score;
 
         // Snip out each level and replace with a new level computed from neighbors on either side.
         if i > 0 {
             score -= delta(report[i - 1], report[i]);
         }
-        if i < size - 1 {
+        if i < end {
             score -= delta(report[i], report[i + 1]);
         }
-        if i > 0 && i < size - 1 {
+        if i > 0 && i < end {
             score += delta(report[i - 1], report[i + 1]);
         }
 
-        if score.abs() == (size - 2) as i32 {
-            return (0, 1);
-        }
-    }
+        score.abs() == target - 1
+    });
 
-    (0, 0)
+    (0, u32::from(dampened))
 }
 
 /// Convert each pair of levels to either +1 for increase, -1 for decrease or 0 for invalid range.
 fn delta(a: i32, b: i32) -> i32 {
-    let diff = b - a;
-    i32::from(diff.abs() <= 3) * diff.signum()
+    match b - a {
+        1..=3 => 1,
+        -3..=-1 => -1,
+        _ => 0,
+    }
 }

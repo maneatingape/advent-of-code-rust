@@ -40,7 +40,7 @@ pub fn parse(input: &str) -> Vec<u32> {
 
     let mut found = shared.mutex.into_inner().unwrap().found;
     found.sort_unstable();
-    found.iter().map(|&(_, n)| n).collect()
+    found.into_iter().map(|(_, n)| n).collect()
 }
 
 pub fn part1(input: &[u32]) -> String {

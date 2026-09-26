@@ -70,7 +70,7 @@ mod implementation {
                 // If the pixel is within current bounds then return it, or else use the `default`
                 // edge value specified by the enhancement algorithm.
                 let helper = |sx, sy, shift| {
-                    let result = if sx < end && start <= sy && sy < end {
+                    let result = if sx < end && (start..end).contains(&sy) {
                         pixels[Point::new(sx, sy)]
                     } else {
                         default

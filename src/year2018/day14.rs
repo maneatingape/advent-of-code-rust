@@ -243,9 +243,8 @@ fn writer<'a>(tx: Sender<&'a [u8]>, done: &AtomicBool, mut recipes: &'a mut [u8]
         // Split the mutable `recipes` slice into two parts. This allows the reader thread to
         // access the head in parallel while the writer thread continues to write to the tail,
         // ensuring unique ownership of each part of memory to prevent any concurrency issues.
-        let (head, tail) = recipes.split_at_mut(size - base);
+        let head = recipes.split_off_mut(..size - base).unwrap();
         let _unused = tx.send(head);
-        recipes = tail;
         base = size;
     }
 

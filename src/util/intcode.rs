@@ -33,7 +33,7 @@ impl Computer {
     }
 
     pub fn input_ascii(&mut self, ascii: &str) {
-        self.input.extend(ascii.bytes().map(|b| b as usize));
+        self.input.extend(ascii.bytes().map(usize::from));
     }
 
     /// Resets state *except* for memory which may have been modified.

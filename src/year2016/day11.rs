@@ -141,10 +141,8 @@ pub fn part2(input: &u32) -> u32 {
 }
 
 fn bfs(start: State, steps: u32) -> u32 {
-    let mut todo = VecDeque::new();
+    let mut todo = VecDeque::from([(start, steps)]);
     let mut seen = FastSet::with_capacity(500);
-
-    todo.push_back((start, steps));
     seen.insert(start);
 
     while let Some((state, steps)) = todo.pop_front() {

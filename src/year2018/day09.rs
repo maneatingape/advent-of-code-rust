@@ -96,7 +96,7 @@ fn game(players: usize, last: usize) -> u64 {
     // The number of marbles needed for scoring.
     let needed = 2 + 16 * blocks;
     // Each block adds 37 marbles, so allow a little extra capacity to prevent reallocation.
-    let mut circle: Vec<u32> = vec![0; needed + 37];
+    let mut circle = vec![0_u32; needed + 37];
     // The score for each block is deterministic so the number of players only affects how scores
     // are distributed. Type is `u64` to prevent overflow during part two.
     let mut scores = vec![0; players];

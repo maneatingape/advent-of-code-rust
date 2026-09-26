@@ -100,7 +100,7 @@ mod implementation {
         }
 
         for _ in 0..6 {
-            let mut state: Vec<u8> = vec![0; size as usize];
+            let mut state = vec![0_u8; size as usize];
 
             for &cube in &active {
                 for &offset in &neighbors {

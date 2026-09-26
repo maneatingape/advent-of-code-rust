@@ -66,9 +66,8 @@ pub fn part1(input: &Input) -> i64 {
 
     // Scan all remaining points. This works even on lines with no integer hits.
     for y in 1..50 {
-        let left = (1..50).find(|&x| inside(input, x, y));
-        let right = (left.unwrap_or(50)..50).rfind(|&x| inside(input, x, y));
-        if let Some((left, right)) = left.zip(right) {
+        if let Some(left) = (1..50).find(|&x| inside(input, x, y)) {
+            let right = (left..50).rfind(|&x| inside(input, x, y)).unwrap();
             result += right - left + 1;
         }
     }

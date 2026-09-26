@@ -85,7 +85,7 @@ pub fn part2(input: &Input) -> u32 {
         let period = 2 * (range - 1);
         let next_lcm = lcm.lcm(period);
 
-        // Check each multiple of the current `end` against the new scanner.
+        // Check each multiple of the current period against the new scanner.
         for extra in (0..next_lcm).step_by(lcm as usize) {
             for &delay in &current {
                 if !(delay + extra + depth).is_multiple_of(period) {

@@ -22,11 +22,12 @@ fn decompress(mut slice: &[u8], part_two: bool) -> usize {
     while let Some(start) = slice.iter().position(|&b| b == b'(') {
         let (next, amount) = number(&slice[start + 1..]);
         let (next, repeat) = number(next);
+        let (data, rest) = next.split_at(amount);
 
         // For part two, recursively decompress data.
-        let result = if part_two { decompress(&next[..amount], true) } else { amount };
+        let result = if part_two { decompress(data, true) } else { amount };
 
-        slice = &next[amount..];
+        slice = rest;
         length += start + result * repeat;
     }
 

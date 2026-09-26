@@ -12,31 +12,33 @@ pub fn parse(input: &str) -> Input {
     let mut registers = vec![0; 27 * 27 * 27];
     let mut part_two = 0;
 
-    for [a, b, c, _, e, f, g] in input.split_ascii_whitespace().chunk::<7>() {
-        let first = registers[to_index(e)];
-        let second = g.signed();
+    for [target, operation, amount, _, source, comparison, threshold] in
+        input.split_ascii_whitespace().chunk::<7>()
+    {
+        let value = registers[to_index(source)];
+        let threshold = threshold.signed();
 
-        let predicate = match f {
-            "==" => first == second,
-            "!=" => first != second,
-            ">=" => first >= second,
-            "<=" => first <= second,
-            ">" => first > second,
-            "<" => first < second,
+        let predicate = match comparison {
+            "==" => value == threshold,
+            "!=" => value != threshold,
+            ">=" => value >= threshold,
+            "<=" => value <= threshold,
+            ">" => value > threshold,
+            "<" => value < threshold,
             _ => unreachable!(),
         };
 
         if predicate {
-            let third = &mut registers[to_index(a)];
-            let fourth: i32 = c.signed();
+            let register = &mut registers[to_index(target)];
+            let amount: i32 = amount.signed();
 
-            match b {
-                "inc" => *third += fourth,
-                "dec" => *third -= fourth,
+            match operation {
+                "inc" => *register += amount,
+                "dec" => *register -= amount,
                 _ => unreachable!(),
             }
 
-            part_two = part_two.max(*third);
+            part_two = part_two.max(*register);
         }
     }
 

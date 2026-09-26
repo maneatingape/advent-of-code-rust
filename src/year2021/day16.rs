@@ -83,8 +83,7 @@ impl Packet {
 }
 
 pub fn parse(input: &str) -> Packet {
-    let mut bit_stream = BitStream::from(input);
-    Packet::from(&mut bit_stream)
+    Packet::from(&mut BitStream::from(input))
 }
 
 pub fn part1(packet: &Packet) -> u64 {

@@ -100,8 +100,8 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 | Day | Problem | Solution | Benchmark (μs) |
 | --- | --- | --- | --: |
 | 1 | [Historian Hysteria](https://adventofcode.com/2024/day/1) | [Source](src/year2024/day01.rs) | 21 |
-| 2 | [Red-Nosed Reports](https://adventofcode.com/2024/day/2) | [Source](src/year2024/day02.rs) | 40 |
-| 3 | [Mull It Over](https://adventofcode.com/2024/day/3) | [Source](src/year2024/day03.rs) | 8 |
+| 2 | [Red-Nosed Reports](https://adventofcode.com/2024/day/2) | [Source](src/year2024/day02.rs) | 33 |
+| 3 | [Mull It Over](https://adventofcode.com/2024/day/3) | [Source](src/year2024/day03.rs) | 7 |
 | 4 | [Ceres Search](https://adventofcode.com/2024/day/4) | [Source](src/year2024/day04.rs) | 74 |
 | 5 | [Print Queue](https://adventofcode.com/2024/day/5) | [Source](src/year2024/day05.rs) | 18 |
 | 6 | [Guard Gallivant](https://adventofcode.com/2024/day/6) | [Source](src/year2024/day06.rs) | 405 |
@@ -364,7 +364,7 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 | 7 | [Internet Protocol Version 7](https://adventofcode.com/2016/day/7) | [Source](src/year2016/day07.rs) | 364 |
 | 8 | [Two-Factor Authentication](https://adventofcode.com/2016/day/8) | [Source](src/year2016/day08.rs) | 9 |
 | 9 | [Explosives in Cyberspace](https://adventofcode.com/2016/day/9) | [Source](src/year2016/day09.rs) | 7 |
-| 10 | [Balance Bots](https://adventofcode.com/2016/day/10) | [Source](src/year2016/day10.rs) | 14 |
+| 10 | [Balance Bots](https://adventofcode.com/2016/day/10) | [Source](src/year2016/day10.rs) | 11 |
 | 11 | [Radioisotope Thermoelectric Generators](https://adventofcode.com/2016/day/11) | [Source](src/year2016/day11.rs) | 2 |
 | 12 | [Leonardo's Monorail](https://adventofcode.com/2016/day/12) | [Source](src/year2016/day12.rs) | 1 |
 | 13 | [A Maze of Twisty Little Cubicles](https://adventofcode.com/2016/day/13) | [Source](src/year2016/day13.rs) | 2 |
@@ -396,7 +396,7 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 | 7 | [Some Assembly Required](https://adventofcode.com/2015/day/7) | [Source](src/year2015/day07.rs) | 8 |
 | 8 | [Matchsticks](https://adventofcode.com/2015/day/8) | [Source](src/year2015/day08.rs) | 5 |
 | 9 | [All in a Single Night](https://adventofcode.com/2015/day/9) | [Source](src/year2015/day09.rs) | 7 |
-| 10 | [Elves Look, Elves Say](https://adventofcode.com/2015/day/10) | [Source](src/year2015/day10.rs) | 17 |
+| 10 | [Elves Look, Elves Say](https://adventofcode.com/2015/day/10) | [Source](src/year2015/day10.rs) | 15 |
 | 11 | [Corporate Policy](https://adventofcode.com/2015/day/11) | [Source](src/year2015/day11.rs) | 1 |
 | 12 | [JSAbacusFramework.io](https://adventofcode.com/2015/day/12) | [Source](src/year2015/day12.rs) | 71 |
 | 13 | [Knights of the Dinner Table](https://adventofcode.com/2015/day/13) | [Source](src/year2015/day13.rs) | 10 |

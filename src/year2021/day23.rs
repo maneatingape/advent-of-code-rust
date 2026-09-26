@@ -50,8 +50,8 @@ struct Room {
 
 impl Room {
     /// Pack state into a compact `u16` representation.
-    fn new(spaces: [usize; 4]) -> Self {
-        let packed = (1 << 12) | (spaces[0] << 9) | (spaces[1] << 6) | (spaces[2] << 3) | spaces[3];
+    fn new([a, b, c, d]: [usize; 4]) -> Self {
+        let packed = (1 << 12) | (a << 9) | (b << 6) | (c << 3) | d;
         Self { packed: packed as u16 }
     }
 
@@ -63,12 +63,12 @@ impl Room {
 
     /// Find the type of an amphipod closest to the hallway.
     fn peek(self) -> Option<usize> {
-        (self.packed > 1).then_some((self.packed & 0b111) as usize)
+        (self.packed > 1).then_some(usize::from(self.packed & 0b111))
     }
 
     /// Remove the top amphipod.
     fn pop(&mut self) -> usize {
-        let pod = (self.packed & 0b111) as usize;
+        let pod = usize::from(self.packed & 0b111);
         self.packed >>= 3;
         pod
     }
@@ -96,7 +96,7 @@ impl Room {
     /// 0 is the bottom amphipod furthest from the hallway, 1 the next closest and so on.
     fn spaces(self, index: usize) -> usize {
         let adjusted = 3 * (self.size() - 1 - index);
-        ((self.packed >> adjusted) & 0b111) as usize
+        usize::from((self.packed >> adjusted) & 0b111)
     }
 }
 
@@ -145,7 +145,7 @@ impl Burrow {
 pub fn parse(input: &str) -> Vec<Vec<usize>> {
     input
         .lines()
-        .map(|line| line.bytes().map(|b| b.saturating_sub(b'A') as usize).collect())
+        .map(|line| line.bytes().map(|b| usize::from(b.saturating_sub(b'A'))).collect())
         .collect()
 }
 

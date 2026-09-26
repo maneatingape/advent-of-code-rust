@@ -309,7 +309,7 @@ fn expand(walls: &[u32], frontier: &mut [u32]) -> bool {
 fn intersect(in_range: &[u32], frontier: &[u32]) -> Option<Point> {
     (1..31).find_map(|i| {
         let both = in_range[i] & frontier[i];
-        (both != 0).then(|| Point::new(both.trailing_zeros() as i32, i as i32))
+        both.lowest_one().map(|x| Point::new(x as i32, i as i32))
     })
 }
 

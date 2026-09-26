@@ -126,9 +126,7 @@ fn receiver(shared: &Shared, rx: &Receiver<Block>) -> Input {
         // Blocks could be received in any order, as there's no guarantee threads will finish
         // processing at the same time. The `start` field of the block defines the order they
         // must be added to the vec.
-        while let Ok(block) = rx.try_recv() {
-            out_of_order.insert(block.start, block);
-        }
+        out_of_order.extend(rx.try_iter().map(|block| (block.start, block)));
 
         while let Some(block) = out_of_order.remove(&required) {
             required += BLOCK;

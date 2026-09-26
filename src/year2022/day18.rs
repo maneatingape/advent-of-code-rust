@@ -13,14 +13,14 @@ const SIZE: isize = 24;
 const NEIGHBORS: [isize; 6] = [-1, 1, -SIZE, SIZE, -SIZE * SIZE, SIZE * SIZE];
 
 pub fn parse(input: &str) -> Vec<u8> {
-    let size = SIZE as usize;
-    let mut cube = vec![0; size * size * size];
+    const N: usize = SIZE as usize;
+    let mut cube = vec![[[0; N]; N]; N];
     // Leave a 1 layer boundary around the outside for the part two flood fill
     // and also so that we don't have to use boundary checks when checking neighbors.
     input.iter_unsigned().chunk::<3>().for_each(|[x, y, z]: [usize; 3]| {
-        cube[(x + 1) * size * size + (y + 1) * size + (z + 1)] = 1;
+        cube[x + 1][y + 1][z + 1] = 1;
     });
-    cube
+    cube.into_flattened().into_flattened()
 }
 
 pub fn part1(input: &[u8]) -> u32 {

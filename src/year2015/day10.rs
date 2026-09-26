@@ -114,20 +114,28 @@ const ELEMENTS: &str = "\
 type Result = (usize, usize);
 
 pub fn parse(input: &str) -> Result {
-    let elements: Vec<Vec<_>> =
-        ELEMENTS.lines().map(|line| line.split_ascii_whitespace().collect()).collect();
-    let mut indices = FastMap::with_capacity(92 * 2);
+    let elements: Vec<_> = ELEMENTS
+        .lines()
+        .map(|line| {
+            let (sequence, rest) = line.split_once(" -> ").unwrap();
+            let (name, decay) = rest.split_once(" -> ").unwrap();
+            (sequence, name, decay)
+        })
+        .collect();
 
     // Map both sequence and element name to indices.
-    for (i, tokens) in elements.iter().enumerate() {
-        indices.insert(tokens[0], i);
-        indices.insert(tokens[2], i);
-    }
+    let indices: FastMap<_, _> = elements
+        .iter()
+        .enumerate()
+        .flat_map(|(i, &(sequence, name, _))| [(sequence, i), (name, i)])
+        .collect();
 
     // Build list of decay chains.
-    let sizes: Vec<_> = elements.iter().map(|e| e[0].len()).collect();
-    let decays: Vec<_> =
-        elements.iter().map(|e| e[4..].iter().map(|t| indices[t]).collect()).collect();
+    let sizes: Vec<_> = elements.iter().map(|(sequence, ..)| sequence.len()).collect();
+    let decays: Vec<_> = elements
+        .iter()
+        .map(|&(_, _, decay)| decay.split_ascii_whitespace().map(|name| indices[name]).collect())
+        .collect();
 
     // Each input is a single element.
     let mut current = [0; 92];

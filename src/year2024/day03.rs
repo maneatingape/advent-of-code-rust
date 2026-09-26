@@ -37,21 +37,11 @@ pub fn parse(input: &str) -> Input {
         }
 
         // Parse first number.
-        let first = parse_number(memory, &mut index);
-
-        // First delimiter.
-        if memory[index] != b',' {
-            continue;
-        }
+        let Some(first) = parse_number(memory, &mut index, b',') else { continue };
         index += 1;
 
         // Parse second number.
-        let second = parse_number(memory, &mut index);
-
-        // Second delimiter.
-        if memory[index] != b')' {
-            continue;
-        }
+        let Some(second) = parse_number(memory, &mut index, b')') else { continue };
         index += 1;
 
         // Multiply.
@@ -71,11 +61,13 @@ pub fn part2(input: &Input) -> u32 {
     input.1
 }
 
-fn parse_number(memory: &[u8], index: &mut usize) -> u32 {
+fn parse_number(memory: &[u8], index: &mut usize, delimiter: u8) -> Option<u32> {
     let mut number = 0;
+
     while memory[*index].is_ascii_digit() {
         number = 10 * number + memory[*index].to_decimal::<u32>();
         *index += 1;
     }
-    number
+
+    (memory[*index] == delimiter).then_some(number)
 }

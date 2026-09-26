@@ -17,7 +17,7 @@ type Input = (usize, usize);
 
 pub fn parse(input: &str) -> Input {
     // The `->` separator rules out `iter_signed`, so convert to `i32` after parsing instead.
-    let (orthogonal, diagonal): (Vec<[i32; 4]>, Vec<_>) = input
+    let (orthogonal, diagonal): (Vec<_>, Vec<_>) = input
         .iter_unsigned::<u32>()
         .map(|n| n as i32)
         .chunk::<4>()

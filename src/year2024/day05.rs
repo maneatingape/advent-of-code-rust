@@ -19,24 +19,20 @@ pub fn parse(input: &str) -> Input {
     }
 
     let mut update = Vec::new();
-    let mut part_one = 0;
-    let mut part_two = 0;
 
-    for line in suffix.lines() {
+    suffix.lines().fold((0, 0), |(part_one, part_two), line| {
         update.clear();
         update.extend(line.iter_unsigned::<usize>());
         let middle = update.len() / 2;
 
         if update.is_sorted_by(|&from, &to| order[from][to] == Less) {
-            part_one += update[middle];
+            (part_one + update[middle], part_two)
         } else {
             // We only need the middle index so this is slightly faster than "sort_unstable_by"
             update.select_nth_unstable_by(middle, |&from, &to| order[from][to]);
-            part_two += update[middle];
+            (part_one, part_two + update[middle])
         }
-    }
-
-    (part_one, part_two)
+    })
 }
 
 pub fn part1(input: &Input) -> usize {

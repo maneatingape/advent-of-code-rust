@@ -23,9 +23,7 @@ pub fn parse(input: &str) -> Vec<Robot> {
     input
         .iter_signed::<i32>()
         .chunk::<4>()
-        .map(|[x, y, dx, dy]| {
-            [x as usize, y as usize, dx.rem_euclid(101) as usize, dy.rem_euclid(103) as usize]
-        })
+        .map(|[x, y, dx, dy]| [x, y, dx.rem_euclid(101), dy.rem_euclid(103)].map(|n| n as usize))
         .collect()
 }
 
@@ -75,9 +73,7 @@ pub fn part2(robots: &[Robot]) -> usize {
     }
 
     // If there's only one combination then return answer.
-    if rows.len() == 1 && columns.len() == 1 {
-        let t = columns[0];
-        let u = rows[0];
+    if let ([t], [u]) = (&columns[..], &rows[..]) {
         // Combine indices using the Chinese Remainder Theorem to get index mod 10_403.
         return (5_253 * t + 5_151 * u) % 10_403;
     }
@@ -85,24 +81,19 @@ pub fn part2(robots: &[Robot]) -> usize {
     // Backup check looking for time when all robot positions are unique.
     let mut floor = vec![0; 10_403];
 
-    for &t in &columns {
-        'outer: for &u in &rows {
-            let time = (5_253 * t + 5_151 * u) % 10_403;
-
-            for &[x, y, dx, dy] in robots {
+    columns
+        .iter()
+        .flat_map(|&t| rows.iter().map(move |&u| (5_253 * t + 5_151 * u) % 10_403))
+        .find(|&time| {
+            robots.iter().all(|&[x, y, dx, dy]| {
                 let x = (x + time * dx) % 101;
                 let y = (y + time * dy) % 103;
 
                 let index = 101 * y + x;
-                if floor[index] == time {
-                    continue 'outer;
-                }
+                let unique = floor[index] != time;
                 floor[index] = time;
-            }
-
-            return time;
-        }
-    }
-
-    unreachable!()
+                unique
+            })
+        })
+        .unwrap()
 }

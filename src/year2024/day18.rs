@@ -48,10 +48,9 @@ pub fn parse(input: &str) -> Grid<i32> {
 /// BFS from start to exit using a fixed time of 1024.
 pub fn part1(grid: &Grid<i32>) -> u32 {
     let mut grid = grid.clone();
-    let mut todo = VecDeque::new();
+    let mut todo = VecDeque::from([(ORIGIN, 0)]);
 
     grid[ORIGIN] = 0;
-    todo.push_back((ORIGIN, 0));
 
     while let Some((position, cost)) = todo.pop_front() {
         if position == Point::new(70, 70) {
@@ -76,11 +75,10 @@ pub fn part2(grid: &Grid<i32>) -> String {
     let mut time = i32::MAX - 1;
     let mut last = ORIGIN;
     let mut grid = grid.clone();
-    let mut todo = VecDeque::new();
+    let mut todo = VecDeque::from([ORIGIN]);
     let mut heap = MinHeap::new();
 
     grid[ORIGIN] = 0;
-    todo.push_back(ORIGIN);
 
     loop {
         // Incremental flood fill that makes as much progress as possible.

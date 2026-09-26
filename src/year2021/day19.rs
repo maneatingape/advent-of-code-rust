@@ -110,9 +110,8 @@ impl Scanner {
     /// Calculate the signature as the set of Euclidean distance squared between every possible
     /// pair of beacons.
     fn parse(block: &str) -> Self {
-        // Each beacon header results in 5 mangled numbers at the start that should be skipped.
-        let beacons: Vec<_> =
-            block.iter_signed().skip(5).chunk::<3>().map(Point3D::parse).collect();
+        let (_, coordinates) = block.split_once('\n').unwrap();
+        let beacons: Vec<_> = coordinates.iter_signed().chunk::<3>().map(Point3D::parse).collect();
 
         // Include indices of the points so that we can match translation and rotation for
         // points that have the same signature. Use indices so that we don't need to recalculate
@@ -175,12 +174,11 @@ impl Located {
 /// A and C.
 pub fn parse(input: &str) -> Vec<Located> {
     let mut unknown: Vec<_> = input.split("\n\n").map(Scanner::parse).collect();
-    let mut todo = Vec::new();
-    let mut done = Vec::new();
-
     let scanner = unknown.pop().unwrap();
     let found = Found { orientation: 0, translation: Point3D(0, 0, 0) };
-    todo.push(Located::new(scanner, found));
+
+    let mut todo = vec![Located::new(scanner, found)];
+    let mut done = Vec::new();
 
     while let Some(known) = todo.pop() {
         let mut next_unknown = Vec::new();
@@ -243,7 +241,7 @@ fn detailed_check(known: &Located, scanner: &Scanner, points: [Point3D; 4]) -> O
     let [a, b, x, y] = points;
     let delta = a - b;
 
-    for orientation in 0..24 {
+    (0..24).find_map(|orientation| {
         let rotate_x = x.transform(orientation);
         let rotate_y = y.transform(orientation);
 
@@ -252,7 +250,7 @@ fn detailed_check(known: &Located, scanner: &Scanner, points: [Point3D; 4]) -> O
         } else if rotate_y - rotate_x == delta {
             b - rotate_x
         } else {
-            continue;
+            return None;
         };
 
         let count = scanner
@@ -264,10 +262,6 @@ fn detailed_check(known: &Located, scanner: &Scanner, points: [Point3D; 4]) -> O
             .take(12)
             .count();
 
-        if count == 12 {
-            return Some(Found { orientation, translation });
-        }
-    }
-
-    None
+        (count == 12).then_some(Found { orientation, translation })
+    })
 }
