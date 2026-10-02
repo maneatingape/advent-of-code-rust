@@ -8,10 +8,6 @@
 use std::collections::{HashMap, HashSet};
 use std::hash::{BuildHasher, Hash, Hasher};
 
-/// Simplified implementation. In particular, running on a system with 64-bit `usize` is assumed.
-///
-/// Check out the [Firefox code](https://searchfox.org/mozilla-central/rev/633345116df55e2d37be9be6555aa739656c5a7d/mfbt/HashFunctions.h#109-153)
-/// for a full description.
 const K: u64 = 0x517cc1b727220a95;
 
 /// Type alias for [`HashSet`] using [`FxHasher`].
@@ -85,6 +81,10 @@ impl BuildHasher for BuildFxHasher {
     }
 }
 
+/// Simplified implementation. In particular, running on a system with 64-bit `usize` is assumed.
+///
+/// Check out the [Firefox code](https://searchfox.org/mozilla-central/rev/633345116df55e2d37be9be6555aa739656c5a7d/mfbt/HashFunctions.h#109-153)
+/// for a full description.
 pub struct FxHasher {
     hash: u64,
 }
@@ -99,17 +99,17 @@ impl FxHasher {
 impl Hasher for FxHasher {
     #[inline]
     fn write(&mut self, mut bytes: &[u8]) {
-        while bytes.len() >= 8 {
-            self.add(u64::from_ne_bytes(bytes[..8].try_into().unwrap()));
-            bytes = &bytes[8..];
+        while let Some((&head, tail)) = bytes.split_first_chunk() {
+            self.add(u64::from_ne_bytes(head));
+            bytes = tail;
         }
-        if bytes.len() >= 4 {
-            self.add(u32::from_ne_bytes(bytes[..4].try_into().unwrap()) as u64);
-            bytes = &bytes[4..];
+        if let Some((&head, tail)) = bytes.split_first_chunk() {
+            self.add(u32::from_ne_bytes(head) as u64);
+            bytes = tail;
         }
-        if bytes.len() >= 2 {
-            self.add(u16::from_ne_bytes(bytes[..2].try_into().unwrap()) as u64);
-            bytes = &bytes[2..];
+        if let Some((&head, tail)) = bytes.split_first_chunk() {
+            self.add(u16::from_ne_bytes(head) as u64);
+            bytes = tail;
         }
         if !bytes.is_empty() {
             self.add(bytes[0] as u64);
