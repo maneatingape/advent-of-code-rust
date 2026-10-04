@@ -16,7 +16,7 @@ jobs:
     steps:
     - uses: actions/checkout@v7
     - run: rustup default 1.99
-    - run: RUSTDOCFLAGS="--document-private-items --default-theme=ayu --deny warnings" cargo doc
+    - run: RUSTDOCFLAGS="--html-in-header docs/analytics.html --document-private-items --default-theme=ayu --deny warnings" cargo doc
     - uses: actions/upload-pages-artifact@v5
       with:
         path: 'target/doc'
