@@ -25,26 +25,21 @@ pub fn parse(input: &str) -> Vec<Claw> {
 }
 
 pub fn part1(input: &[Claw]) -> i64 {
-    input.iter().map(|row| play(row, 0)).sum()
+    input.iter().filter_map(|row| play(row, 0)).sum()
 }
 
 pub fn part2(input: &[Claw]) -> i64 {
-    input.iter().map(|row| play(row, 10_000_000_000_000)).sum()
+    input.iter().filter_map(|row| play(row, 10_000_000_000_000)).sum()
 }
 
 /// Invert the 2 x 2 matrix representing the system of linear equations.
-fn play(&[ax, ay, bx, by, px, py]: &Claw, offset: i64) -> i64 {
+fn play(&[ax, ay, bx, by, px, py]: &Claw, offset: i64) -> Option<i64> {
     let (px, py) = (px + offset, py + offset);
 
-    // If determinant is zero there's no solution.
-    let determinant = ax * by - ay * bx;
-    if determinant == 0 {
-        return 0;
-    }
-
+    let det = ax * by - ay * bx;
     let a = by * px - bx * py;
     let b = ax * py - ay * px;
 
-    // Integer solutions only.
-    if a % determinant == 0 && b % determinant == 0 { (3 * a + b) / determinant } else { 0 }
+    // If determinant is zero there's no solution. Integer solutions only.
+    (det != 0 && a % det == 0 && b % det == 0).then(|| (3 * a + b) / det)
 }
