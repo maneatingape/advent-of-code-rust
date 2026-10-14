@@ -4,11 +4,8 @@
 //! The image appears in part two when the positions of all robots are unique.
 //!
 //! The x coordinates repeat every 101 seconds and the y coordinates repeat every 103 seconds.
-//! First we check for times when the robot x coordinates could form the left and right columns
-//! of the tree's bounding box. This gives a time `t` mod 101.
-//!
-//! Then we check the y coordinates looking for the top and bottom rows of the bounding box,
-//! giving a time `u` mod 103.
+//! For part two, we can treat the coordinates independently, searching for a time when the
+//! [variance](https://en.wikipedia.org/wiki/Variance) of the robots' coordinates is at a minimum.
 //!
 //! Using the [Chinese Remainder Theorem](https://en.wikipedia.org/wiki/Chinese_remainder_theorem)
 //! we combine the two times into a single time mod 10,403 that is the answer.
@@ -17,22 +14,27 @@ use std::cmp::Ordering::*;
 use crate::util::iter::*;
 use crate::util::parse::*;
 
-type Robot = [usize; 4];
+const WIDTH: i32 = 101;
+const HEIGHT: i32 = 103;
 
-pub fn parse(input: &str) -> Vec<Robot> {
+type Axis = Vec<(i32, i32)>;
+type Input = (Axis, Axis);
+
+pub fn parse(input: &str) -> Input {
     input
         .iter_signed::<i32>()
         .chunk::<4>()
-        .map(|[x, y, dx, dy]| [x, y, dx.rem_euclid(101), dy.rem_euclid(103)].map(|n| n as usize))
-        .collect()
+        .map(|[x, y, dx, dy]| ((x, dx.rem_euclid(WIDTH)), (y, dy.rem_euclid(HEIGHT))))
+        .unzip()
 }
 
-pub fn part1(input: &[Robot]) -> i32 {
+pub fn part1(input: &Input) -> i32 {
+    let (xs, ys) = input;
     let mut quadrants = [0; 4];
 
-    for &[x, y, dx, dy] in input {
-        let x = (x + 100 * dx) % 101;
-        let y = (y + 100 * dy) % 103;
+    for (&(x, dx), &(y, dy)) in xs.iter().zip(ys) {
+        let x = (x + 100 * dx) % WIDTH;
+        let y = (y + 100 * dy) % HEIGHT;
 
         match (x.cmp(&50), y.cmp(&51)) {
             (Less, Less) => quadrants[0] += 1,
@@ -46,54 +48,37 @@ pub fn part1(input: &[Robot]) -> i32 {
     quadrants.iter().product()
 }
 
-pub fn part2(robots: &[Robot]) -> usize {
-    // Search for times mod 101 when the tree could possibly exist using x coordinates only,
-    // and times mod 103 when the tree could possibly exist using y coordinates only.
-    let mut rows = Vec::new();
-    let mut columns = Vec::new();
+pub fn part2(input: &Input) -> i32 {
+    let (xs, ys) = input;
 
-    for time in 0..103 {
-        let mut xs = [0; 101];
-        let mut ys = [0; 103];
+    // Search for times modulo WIDTH when the tree could possibly exist using x coordinates only,
+    // and times modulo HEIGHT when the tree could possibly exist using y coordinates only.
+    let t = minimum_variance::<WIDTH>(xs);
+    let u = minimum_variance::<HEIGHT>(ys);
 
-        for &[x, y, dx, dy] in robots {
-            let x = (x + time * dx) % 101;
-            xs[x] += 1;
-            let y = (y + time * dy) % 103;
-            ys[y] += 1;
-        }
+    // Combine indices using the Chinese Remainder Theorem to get index mod 10,403.
+    (5_253 * t + 5_151 * u) % (WIDTH * HEIGHT)
+}
 
-        // Tree bounding box is 31x33.
-        if time < 101 && xs.iter().filter(|&&c| c >= 33).count() >= 2 {
-            columns.push(time);
-        }
-        if ys.iter().filter(|&&c| c >= 31).count() >= 2 {
-            rows.push(time);
-        }
-    }
+/// Calculate the [population variance](https://en.wikipedia.org/wiki/Variance#Population_variance)
+/// for each time in the period, returning the time when at the minimum variance.
+///
+/// Const generics allow the compiler to optimize the modulus calculation, making it 3 times faster.
+fn minimum_variance<const PERIOD: i32>(axis: &Axis) -> i32 {
+    let n = axis.len() as i32;
+    (0..PERIOD)
+        .min_by_key(|time| {
+            let mut sum = 0;
+            let mut sum2 = 0;
 
-    // If there's only one combination then return answer.
-    if let ([t], [u]) = (&columns[..], &rows[..]) {
-        // Combine indices using the Chinese Remainder Theorem to get index mod 10_403.
-        return (5_253 * t + 5_151 * u) % 10_403;
-    }
+            for &(position, velocity) in axis {
+                let robot = (position + velocity * time) % PERIOD;
+                sum += robot;
+                sum2 += robot * robot;
+            }
 
-    // Backup check looking for time when all robot positions are unique.
-    let mut floor = vec![0; 10_403];
-
-    columns
-        .iter()
-        .flat_map(|&t| rows.iter().map(move |&u| (5_253 * t + 5_151 * u) % 10_403))
-        .find(|&time| {
-            robots.iter().all(|&[x, y, dx, dy]| {
-                let x = (x + time * dx) % 101;
-                let y = (y + time * dy) % 103;
-
-                let index = 101 * y + x;
-                let unique = floor[index] != time;
-                floor[index] = time;
-                unique
-            })
+            // Variance scaled by n² in order to keep values integer.
+            n * sum2 - sum * sum
         })
         .unwrap()
 }
