@@ -90,8 +90,9 @@ fn expedition(basin: &Basin, start: usize, forward: bool) -> usize {
                 (cur | (cur >> 1) | (cur << 1) | prev | next) & left[i] & right[i] & vertical[i];
         }
 
-        // Elves can wait indefinitely at the entrance in either direction.
-        state[entrance] |= entrance_bit;
+        // Elves can wait indefinitely at the entrance in either direction, but only step into the
+        // basin when no blizzard is on the first cell.
+        state[entrance] |= entrance_bit & left[entrance] & right[entrance] & vertical[entrance];
         // Once we reach the exit, leaving the basin takes one more minute.
         if state[exit] & exit_bit != 0 {
             return time + 1;
