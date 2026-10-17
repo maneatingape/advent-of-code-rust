@@ -1,70 +1,51 @@
 //! # Ceres Search
 //!
-//! For part one we search each vertical, horizontal and diagonal line individually.
-//! By using a `u32` bitmask of ASCII values we can check in both directions efficiently at the
-//! same time.
+//! For part one we search each vertical, horizontal and diagonal direction one at a time over the
+//! whole grid, checking for both "XMAS" and "SAMX" at every position. The newline padding prevents
+//! false positives at boundaries.
 //!
 //! For part two the difference of the ASCII values of "M" and "S" is 6. No other combination of
-//! letters has this value, so if both diagonals are a 6 then we have a match.
-use crate::util::grid::*;
-use crate::util::point::*;
-
-pub fn parse(input: &str) -> Grid<u8> {
-    Grid::parse(input)
+//! letters has this value, so if both diagonals are 6 then we have a match.
+//!
+//! Both parts are written without branches, so the compiler auto-vectorizes each loop.
+pub fn parse(input: &str) -> &[u8] {
+    input.as_bytes()
 }
 
-pub fn part1(grid: &Grid<u8>) -> u32 {
-    let size = grid.width;
-    let mut result = 0;
+pub fn part1(bytes: &[u8]) -> u32 {
+    let width = bytes.iter().position(|&b| b == b'\n').unwrap() + 1;
 
-    // Horizontal and vertical.
-    for i in 0..size {
-        result += scan_line(grid, Point::new(i, 0), DOWN, size);
-        result += scan_line(grid, Point::new(0, i), RIGHT, size);
-    }
-
-    // Diagonals.
-    for i in 0..size - 3 {
-        result += scan_line(grid, Point::new(i, 0), DOWN + RIGHT, size - i);
-        result += scan_line(grid, Point::new(0, i + 1), DOWN + RIGHT, size - 1 - i);
-        result += scan_line(grid, Point::new(size - 1 - i, 0), DOWN + LEFT, size - i);
-        result += scan_line(grid, Point::new(size - 1, i + 1), DOWN + LEFT, size - 1 - i);
-    }
-
-    result
+    // Offsets for horizontal, vertical and both diagonals. Sweep the whole whole grid so that each
+    // loop auto-vectorizes. The newline separators prevent false positives on boundaries.
+    [1, width, width - 1, width + 1]
+        .iter()
+        .flat_map(|&step| {
+            bytes.iter().zip(&bytes[step..]).zip(&bytes[2 * step..]).zip(&bytes[3 * step..])
+        })
+        .map(|(((&a, &b), &c), &d)| {
+            let forward = a == b'X' && b == b'M' && c == b'A' && d == b'S';
+            let backward = a == b'S' && b == b'A' && c == b'M' && d == b'X';
+            u32::from(forward || backward)
+        })
+        .sum()
 }
 
-pub fn part2(grid: &Grid<u8>) -> u32 {
-    let mut result = 0;
+pub fn part2(bytes: &[u8]) -> u32 {
+    let width = bytes.iter().position(|&b| b == b'\n').unwrap() + 1;
 
-    for y in 1..grid.height - 1 {
-        for x in 1..grid.width - 1 {
-            let point = Point::new(x, y);
-
-            if grid[point] == b'A' {
-                // ASCII "M" is 77 and "S" is 83 so the absolute difference is 6.
-                // No other combination of letters causes this difference.
-                // "MS" on both diagonals is a match.
-                let diagonal = |corner| grid[point + corner].abs_diff(grid[point - corner]);
-                result += u32::from(diagonal(UP + LEFT) == 6 && diagonal(UP + RIGHT) == 6);
-            }
-        }
-    }
-
-    result
-}
-
-/// Searches a horizontal, vertical or diagonal line in both directions at once.
-fn scan_line(grid: &Grid<u8>, mut point: Point, direction: Point, size: i32) -> u32 {
-    let mut bytes = 0;
-    let mut result = 0;
-
-    for _ in 0..size {
-        bytes = (bytes << 8) | u32::from(grid[point]);
-        point += direction;
-        // "XMAS" and "SAMX" in hex.
-        result += u32::from(bytes == 0x584d4153 || bytes == 0x53414d58);
-    }
-
-    result
+    // ASCII "M" is 77 and "S" is 83 so the absolute difference is 6.
+    // No other combination of letters causes this difference.
+    // "MS" on both diagonals is a match.
+    bytes
+        .iter()
+        .zip(&bytes[2..])
+        .zip(&bytes[width + 1..])
+        .zip(&bytes[2 * width..])
+        .zip(&bytes[2 * width + 2..])
+        .map(|((((&up_left, &up_right), &center), &down_left), &down_right)| {
+            let first = u32::from(up_left.abs_diff(down_right) == 6);
+            let second = u32::from(up_right.abs_diff(down_left) == 6);
+            u32::from(center == b'A') & first & second
+        })
+        .sum()
 }
