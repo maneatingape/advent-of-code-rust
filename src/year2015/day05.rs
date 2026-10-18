@@ -77,7 +77,8 @@ pub fn part2(input: &[&[u8]]) -> usize {
                 let third = usize::from(c - b'a' + 1);
                 let index = 27 * second + third;
 
-                let position = base * 1000 + offset;
+                // Start at 1, as zero in the array means the pair hasn't been seen yet.
+                let position = base * 1000 + offset + 1;
                 let delta = position - pairs[index];
 
                 if delta > offset {
