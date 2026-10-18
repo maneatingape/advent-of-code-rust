@@ -92,7 +92,7 @@ pub fn part2(grid: &Grid<i32>) -> String {
                     if time < grid[next] {
                         grid[next] = 0;
                         todo.push_back(next);
-                    } else if grid[next] < i32::MAX {
+                    } else {
                         // Use negative value to convert min-heap to max-heap.
                         heap.push(-grid[next], next);
                     }
