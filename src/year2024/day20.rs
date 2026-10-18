@@ -41,7 +41,8 @@ pub fn parse(input: &str) -> Grid<i32> {
     let start = grid.find(b'S').unwrap();
     let end = grid.find(b'E').unwrap();
 
-    let mut time = grid.same_size_with(i32::MAX);
+    // Add padding to avoid boundary checks.
+    let mut time = Grid::new(grid.width + 20, grid.height + 20, i32::MAX);
     let mut elapsed = 0;
 
     // Find starting direction, assuming start position is surrounded by 3 walls.
@@ -65,68 +66,43 @@ pub fn parse(input: &str) -> Grid<i32> {
 }
 
 pub fn part1(time: &Grid<i32>) -> u32 {
-    let mut cheats = 0;
-
-    for y in 1..time.height - 1 {
-        for x in 1..time.width - 1 {
-            let point = Point::new(x, y);
-
-            // We only need to check 2 points to the right and down as previous empty squares
-            // have already checked up and to the left.
-            if time[point] != i32::MAX {
-                cheats += check(time, point, Point::new(2, 0));
-                cheats += check(time, point, Point::new(0, 2));
-            }
-        }
-    }
-
-    cheats
+    [Point::new(2, 0), Point::new(0, 2)].iter().map(|&delta| cheats(time, delta)).sum()
 }
 
 /// Searches for all cheats up to distance 20, parallelizing the work over multiple threads.
 pub fn part2(time: &Grid<i32>) -> u32 {
-    let mut items = Vec::with_capacity(10_000);
+    let mut deltas = Vec::with_capacity(419);
 
-    for y in 1..time.height - 1 {
-        for x in 1..time.width - 1 {
-            let point = Point::new(x, y);
+    for x in 2..21 {
+        deltas.push(Point::new(x, 0));
+    }
 
-            if time[point] != i32::MAX {
-                items.push(point);
-            }
+    for y in 1..21 {
+        for x in (y - 20)..(21 - y) {
+            deltas.push(Point::new(x, y));
         }
     }
 
-    // Use as many cores as possible to parallelize the remaining search.
-    let result = spawn_parallel_iterator(&items, |iter| worker(time, iter));
-    result.into_iter().sum()
+    // // Use as many cores as possible to parallelize the remaining search.
+    spawn_parallel_iterator(&deltas, |iter| iter.map(|&delta| cheats(time, delta)).sum::<u32>())
+        .into_iter()
+        .sum()
 }
 
-fn worker(time: &Grid<i32>, iter: ParIter<'_, Point>) -> u32 {
-    let mut cheats = 0;
+/// Compare two slices against each other so that the compiler can auto-vectorize the loops.
+/// Boundary checks are not needed due to the padding on the right and bottom of the grid.
+fn cheats(time: &Grid<i32>, delta: Point) -> u32 {
+    let start = Point::new(1, 1);
+    let maximum = time.width * time.height;
+    let threshold = 100 + delta.manhattan(ORIGIN);
+    let slice_from = |point: Point| &time.bytes[(time.width * point.y + point.x) as usize..];
 
-    // (p1, p2) is the reciprocal of (p2, p1) so we only need to check each pair once.
-    for &point in iter {
-        for x in 2..21 {
-            cheats += check(time, point, Point::new(x, 0));
-        }
-
-        for y in 1..21 {
-            for x in (y - 20)..(21 - y) {
-                cheats += check(time, point, Point::new(x, y));
-            }
-        }
-    }
-
-    cheats
-}
-
-// Check if we save enough time warping to another square.
-#[inline]
-fn check(time: &Grid<i32>, first: Point, delta: Point) -> u32 {
-    let second = first + delta;
-
-    (time.contains(second)
-        && time[second] != i32::MAX
-        && (time[first] - time[second]).abs() - first.manhattan(second) >= 100) as u32
+    slice_from(start)
+        .iter()
+        .zip(slice_from(start + delta))
+        .map(|(&from, &to)| {
+            let saved = (from - to).abs();
+            u32::from(threshold <= saved && saved <= maximum)
+        })
+        .sum()
 }
