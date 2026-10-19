@@ -102,6 +102,14 @@ pub fn part2(input: &[Row]) -> u32 {
 fn game_of_life(input: &[Row], part_two: bool) -> u32 {
     let mut grid = input.to_vec();
 
+    // Corner lights are also stuck on in the initial state.
+    if part_two {
+        grid[0].even |= LEFT_CORNER;
+        grid[0].odd |= RIGHT_CORNER;
+        grid[99].even |= LEFT_CORNER;
+        grid[99].odd |= RIGHT_CORNER;
+    }
+
     for _ in 0..100 {
         let mut above;
         let mut row = Row::default();
