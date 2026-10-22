@@ -87,7 +87,7 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 | 5 | [Cafeteria](https://adventofcode.com/2025/day/5) | [Source](src/year2025/day05.rs) | 20 |
 | 6 | [Trash Compactor](https://adventofcode.com/2025/day/6) | [Source](src/year2025/day06.rs) | 20 |
 | 7 | [Laboratories](https://adventofcode.com/2025/day/7) | [Source](src/year2025/day07.rs) | 5 |
-| 8 | [Playground](https://adventofcode.com/2025/day/8) | [Source](src/year2025/day08.rs) | 441 |
+| 8 | [Playground](https://adventofcode.com/2025/day/8) | [Source](src/year2025/day08.rs) | 432 |
 | 9 | [Movie Theater](https://adventofcode.com/2025/day/9) | [Source](src/year2025/day09.rs) | 40 |
 | 10 | [Factory](https://adventofcode.com/2025/day/10) | [Source](src/year2025/day10.rs) | 194 |
 | 11 | [Reactor](https://adventofcode.com/2025/day/11) | [Source](src/year2025/day11.rs) | 59 |
@@ -104,7 +104,7 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 | 3 | [Mull It Over](https://adventofcode.com/2024/day/3) | [Source](src/year2024/day03.rs) | 7 |
 | 4 | [Ceres Search](https://adventofcode.com/2024/day/4) | [Source](src/year2024/day04.rs) | 14 |
 | 5 | [Print Queue](https://adventofcode.com/2024/day/5) | [Source](src/year2024/day05.rs) | 18 |
-| 6 | [Guard Gallivant](https://adventofcode.com/2024/day/6) | [Source](src/year2024/day06.rs) | 405 |
+| 6 | [Guard Gallivant](https://adventofcode.com/2024/day/6) | [Source](src/year2024/day06.rs) | 447 |
 | 7 | [Bridge Repair](https://adventofcode.com/2024/day/7) | [Source](src/year2024/day07.rs) | 136 |
 | 8 | [Resonant Collinearity](https://adventofcode.com/2024/day/8) | [Source](src/year2024/day08.rs) | 8 |
 | 9 | [Disk Fragmenter](https://adventofcode.com/2024/day/9) | [Source](src/year2024/day09.rs) | 106 |
@@ -118,9 +118,9 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 | 17 | [Chronospatial Computer](https://adventofcode.com/2024/day/17) | [Source](src/year2024/day17.rs) | 2 |
 | 18 | [RAM Run](https://adventofcode.com/2024/day/18) | [Source](src/year2024/day18.rs) | 42 |
 | 19 | [Linen Layout](https://adventofcode.com/2024/day/19) | [Source](src/year2024/day19.rs) | 110 |
-| 20 | [Race Condition](https://adventofcode.com/2024/day/20) | [Source](src/year2024/day20.rs) | 347 |
+| 20 | [Race Condition](https://adventofcode.com/2024/day/20) | [Source](src/year2024/day20.rs) | 328 |
 | 21 | [Keypad Conundrum](https://adventofcode.com/2024/day/21) | [Source](src/year2024/day21.rs) | 19 |
-| 22 | [Monkey Market](https://adventofcode.com/2024/day/22) | [Source](src/year2024/day22.rs) | 688 |
+| 22 | [Monkey Market](https://adventofcode.com/2024/day/22) | [Source](src/year2024/day22.rs) | 657 |
 | 23 | [LAN Party](https://adventofcode.com/2024/day/23) | [Source](src/year2024/day23.rs) | 43 |
 | 24 | [Crossed Wires](https://adventofcode.com/2024/day/24) | [Source](src/year2024/day24.rs) | 23 |
 | 25 | [Code Chronicle](https://adventofcode.com/2024/day/25) | [Source](src/year2024/day25.rs) | 8 |
@@ -142,7 +142,7 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 | 9 | [Mirage Maintenance](https://adventofcode.com/2023/day/9) | [Source](src/year2023/day09.rs) | 16 |
 | 10 | [Pipe Maze](https://adventofcode.com/2023/day/10) | [Source](src/year2023/day10.rs) | 33 |
 | 11 | [Cosmic Expansion](https://adventofcode.com/2023/day/11) | [Source](src/year2023/day11.rs) | 10 |
-| 12 | [Hot Springs](https://adventofcode.com/2023/day/12) | [Source](src/year2023/day12.rs) | 455 |
+| 12 | [Hot Springs](https://adventofcode.com/2023/day/12) | [Source](src/year2023/day12.rs) | 425 |
 | 13 | [Point of Incidence](https://adventofcode.com/2023/day/13) | [Source](src/year2023/day13.rs) | 66 |
 | 14 | [Parabolic Reflector Dish](https://adventofcode.com/2023/day/14) | [Source](src/year2023/day14.rs) | 632 |
 | 15 | [Lens Library](https://adventofcode.com/2023/day/15) | [Source](src/year2023/day15.rs) | 48 |
@@ -173,7 +173,7 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 | 8 | [Treetop Tree House](https://adventofcode.com/2022/day/8) | [Source](src/year2022/day08.rs) | 51 |
 | 9 | [Rope Bridge](https://adventofcode.com/2022/day/9) | [Source](src/year2022/day09.rs) | 99 |
 | 10 | [Cathode-Ray Tube](https://adventofcode.com/2022/day/10) | [Source](src/year2022/day10.rs) | 2 |
-| 11 | [Monkey in the Middle](https://adventofcode.com/2022/day/11) | [Source](src/year2022/day11.rs) | 244 |
+| 11 | [Monkey in the Middle](https://adventofcode.com/2022/day/11) | [Source](src/year2022/day11.rs) | 211 |
 | 12 | [Hill Climbing Algorithm](https://adventofcode.com/2022/day/12) | [Source](src/year2022/day12.rs) | 22 |
 | 13 | [Distress Signal](https://adventofcode.com/2022/day/13) | [Source](src/year2022/day13.rs) | 15 |
 | 14 | [Regolith Reservoir](https://adventofcode.com/2022/day/14) | [Source](src/year2022/day14.rs) | 146 |
@@ -212,7 +212,7 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 | 15 | [Chiton](https://adventofcode.com/2021/day/15) | [Source](src/year2021/day15.rs) | 2290 |
 | 16 | [Packet Decoder](https://adventofcode.com/2021/day/16) | [Source](src/year2021/day16.rs) | 6 |
 | 17 | [Trick Shot](https://adventofcode.com/2021/day/17) | [Source](src/year2021/day17.rs) | 3 |
-| 18 | [Snailfish](https://adventofcode.com/2021/day/18) | [Source](src/year2021/day18.rs) | 284 |
+| 18 | [Snailfish](https://adventofcode.com/2021/day/18) | [Source](src/year2021/day18.rs) | 277 |
 | 19 | [Beacon Scanner](https://adventofcode.com/2021/day/19) | [Source](src/year2021/day19.rs) | 378 |
 | 20 | [Trench Map](https://adventofcode.com/2021/day/20) | [Source](src/year2021/day20.rs) | 511 |
 | 21 | [Dirac Dice](https://adventofcode.com/2021/day/21) | [Source](src/year2021/day21.rs) | 337 |
@@ -301,7 +301,7 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 | 8 | [Memory Maneuver](https://adventofcode.com/2018/day/8) | [Source](src/year2018/day08.rs) | 23 |
 | 9 | [Marble Mania](https://adventofcode.com/2018/day/9) | [Source](src/year2018/day09.rs) | 909 |
 | 10 | [The Stars Align](https://adventofcode.com/2018/day/10) | [Source](src/year2018/day10.rs) | 11 |
-| 11 | [Chronal Charge](https://adventofcode.com/2018/day/11) | [Source](src/year2018/day11.rs) | 542 |
+| 11 | [Chronal Charge](https://adventofcode.com/2018/day/11) | [Source](src/year2018/day11.rs) | 505 |
 | 12 | [Subterranean Sustainability](https://adventofcode.com/2018/day/12) | [Source](src/year2018/day12.rs) | 22 |
 | 13 | [Mine Cart Madness](https://adventofcode.com/2018/day/13) | [Source](src/year2018/day13.rs) | 349 |
 | 14 | [Chocolate Charts](https://adventofcode.com/2018/day/14) | [Source](src/year2018/day14.rs) | 24000 |
@@ -336,7 +336,7 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 | 11 | [Hex Ed](https://adventofcode.com/2017/day/11) | [Source](src/year2017/day11.rs) | 13 |
 | 12 | [Digital Plumber](https://adventofcode.com/2017/day/12) | [Source](src/year2017/day12.rs) | 59 |
 | 13 | [Packet Scanners](https://adventofcode.com/2017/day/13) | [Source](src/year2017/day13.rs) | 1 |
-| 14 | [Disk Defragmentation](https://adventofcode.com/2017/day/14) | [Source](src/year2017/day14.rs) | 488 |
+| 14 | [Disk Defragmentation](https://adventofcode.com/2017/day/14) | [Source](src/year2017/day14.rs) | 436 |
 | 15 | [Dueling Generators](https://adventofcode.com/2017/day/15) | [Source](src/year2017/day15.rs) | 20000 |
 | 16 | [Permutation Promenade](https://adventofcode.com/2017/day/16) | [Source](src/year2017/day16.rs) | 68 |
 | 17 | [Spinlock](https://adventofcode.com/2017/day/17) | [Source](src/year2017/day17.rs) | 23 |

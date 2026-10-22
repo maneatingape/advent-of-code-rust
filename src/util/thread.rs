@@ -32,7 +32,7 @@ impl<'a, T> Iterator for ParIter<'a, T> {
         loop {
             // Find worker with the most remaining items, breaking out of the loop
             // and returning `None` if there is no work remaining.
-            let (other, current, size) = self
+            let (other, current, _) = self
                 .workers
                 .iter()
                 .filter_map(|other| {
@@ -40,22 +40,22 @@ impl<'a, T> Iterator for ParIter<'a, T> {
                     let (start, end) = unpack(current);
                     let size = end.saturating_sub(start);
 
-                    (size > 0).then_some((other, current, size))
+                    (size > 1).then_some((other, current, size))
                 })
-                .max_by_key(|&(_, _, size)| size)?;
+                .max_by_key(|&(.., size)| size)?;
 
             // Split the work items into two roughly equal piles.
             let (start, end) = unpack(current);
-            let middle = start + size.div_ceil(2);
+            let middle = start.midpoint(end);
 
-            let next = pack(middle, end);
-            let stolen = pack(start + 1, middle);
+            let next = pack(start, middle);
+            let stolen = pack(middle + 1, end);
 
             // We could be preempted by another thread stealing or by the owning worker
             // thread finishing an item, so check indices are still unmodified.
             if other.compare_exchange(current, next) {
                 worker.store(stolen);
-                break Some(&self.items[start]);
+                break Some(&self.items[middle]);
             }
         }
     }
