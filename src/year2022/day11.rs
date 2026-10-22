@@ -42,7 +42,7 @@
 //! repeating the same path through the monkeys. Once we find a cycle for an item, then we short
 //! circuit the calculation early without having to calculate the entire 10,000 rounds.
 //!
-//! [`iter_unsigned`]: ParseOps::iter_unsigned
+//! [`iter_unsigned`]: ParseExt::iter_unsigned
 use std::array::from_fn;
 use std::ops::{Add, Mul, Sub};
 

@@ -2,12 +2,12 @@
 //! the respective bit is set. For example `1101` would return 0, 2 and 3.
 use crate::util::integer::*;
 
-pub trait BitOps<T> {
+pub trait BiteratorExt<T> {
     #[must_use]
     fn biterator(self) -> Bitset<T>;
 }
 
-impl<T: Integer> BitOps<T> for T {
+impl<T: Integer> BiteratorExt<T> for T {
     fn biterator(self) -> Bitset<T> {
         Bitset { t: self }
     }

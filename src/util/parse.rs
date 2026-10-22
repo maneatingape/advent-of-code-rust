@@ -11,8 +11,8 @@
 //! reason for the separate methods is that some Advent of Code inputs contain the `-` character
 //! as a delimiter and this would cause numbers to be incorrectly parsed as negative.
 //!
-//! [`iter_unsigned`]: ParseOps::iter_unsigned
-//! [`iter_signed`]: ParseOps::iter_signed
+//! [`iter_unsigned`]: ParseExt::iter_unsigned
+//! [`iter_signed`]: ParseExt::iter_signed
 use std::iter::from_fn;
 
 use crate::util::integer::*;
@@ -30,14 +30,14 @@ impl ParseByte for u8 {
     }
 }
 
-pub trait ParseOps {
+pub trait ParseExt {
     fn unsigned<T: Unsigned>(&self) -> T;
     fn signed<T: Signed>(&self) -> T;
     fn iter_unsigned<T: Unsigned>(&self) -> impl Iterator<Item = T>;
     fn iter_signed<T: Signed>(&self) -> impl Iterator<Item = T>;
 }
 
-impl<S: AsRef<str> + ?Sized> ParseOps for S {
+impl<S: AsRef<str> + ?Sized> ParseExt for S {
     #[inline]
     fn unsigned<T: Unsigned>(&self) -> T {
         let mut bytes = self.as_ref().bytes();

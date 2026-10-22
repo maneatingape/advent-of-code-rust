@@ -22,8 +22,8 @@ type Input = (Stack, Vec<Move>);
 /// at the end of the `vec` which is a more natural location for mutation (as removing elements from
 /// the start of a `vec` involves moving all remaining elements).
 ///
-/// [`iter_unsigned`]: ParseOps::iter_unsigned
-/// [`chunk`]: ChunkOps::chunk
+/// [`iter_unsigned`]: ParseExt::iter_unsigned
+/// [`chunk`]: ChunkExt::chunk
 pub fn parse(input: &str) -> Input {
     let (prefix, suffix) = input.split_once("\n\n").unwrap();
     let width = prefix.lines().next().unwrap().len().div_ceil(4);

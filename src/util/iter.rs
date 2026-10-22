@@ -9,11 +9,11 @@ pub struct Chunk<I, const N: usize> {
     iter: I,
 }
 
-pub trait ChunkOps: Iterator + Sized {
+pub trait ChunkExt: Iterator + Sized {
     fn chunk<const N: usize>(self) -> Chunk<Self, N>;
 }
 
-impl<I: Iterator> ChunkOps for I {
+impl<I: Iterator> ChunkExt for I {
     fn chunk<const N: usize>(self) -> Chunk<Self, N> {
         Chunk { iter: self }
     }
