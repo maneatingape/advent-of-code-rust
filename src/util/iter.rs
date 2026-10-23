@@ -10,6 +10,7 @@ pub struct Chunk<I, const N: usize> {
 }
 
 pub trait ChunkExt: Iterator + Sized {
+    #[must_use]
     fn chunk<const N: usize>(self) -> Chunk<Self, N>;
 }
 

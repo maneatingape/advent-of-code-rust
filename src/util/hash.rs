@@ -17,7 +17,7 @@ pub type FastSet<T> = HashSet<T, BuildFxHasher>;
 pub type FastMap<K, V> = HashMap<K, V, BuildFxHasher>;
 
 /// Convenience methods to construct a [`FastSet`].
-pub trait FastSetBuilder<T> {
+pub trait FastSetExt<T> {
     #[must_use]
     fn new() -> Self;
     #[must_use]
@@ -26,7 +26,7 @@ pub trait FastSetBuilder<T> {
     fn build<const N: usize>(array: [T; N]) -> Self;
 }
 
-impl<T: Eq + Hash> FastSetBuilder<T> for FastSet<T> {
+impl<T: Eq + Hash> FastSetExt<T> for FastSet<T> {
     fn new() -> Self {
         Self::with_hasher(BuildFxHasher)
     }
@@ -43,7 +43,7 @@ impl<T: Eq + Hash> FastSetBuilder<T> for FastSet<T> {
 }
 
 /// Convenience methods to construct a [`FastMap`].
-pub trait FastMapBuilder<K, V> {
+pub trait FastMapExt<K, V> {
     #[must_use]
     fn new() -> Self;
     #[must_use]
@@ -52,7 +52,7 @@ pub trait FastMapBuilder<K, V> {
     fn build<const N: usize>(array: [(K, V); N]) -> Self;
 }
 
-impl<K: Eq + Hash, V> FastMapBuilder<K, V> for FastMap<K, V> {
+impl<K: Eq + Hash, V> FastMapExt<K, V> for FastMap<K, V> {
     fn new() -> Self {
         Self::with_hasher(BuildFxHasher)
     }

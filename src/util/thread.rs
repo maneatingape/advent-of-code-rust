@@ -107,10 +107,12 @@ pub struct AtomicIter {
 }
 
 impl AtomicIter {
+    #[must_use]
     pub fn new(start: u32, step: u32) -> Self {
         Self { running: AtomicBool::new(true), index: AtomicU32::from(start), step }
     }
 
+    #[must_use]
     pub fn next(&self) -> Option<u32> {
         self.running.load(Relaxed).then(|| self.index.fetch_add(self.step, Relaxed))
     }
@@ -121,6 +123,7 @@ impl AtomicIter {
 }
 
 /// Usually the number of physical cores.
+#[must_use]
 pub fn threads() -> usize {
     available_parallelism().unwrap().get()
 }
@@ -143,6 +146,7 @@ where
 /// than others to process, used by popular libraries such as [rayon](https://github.com/rayon-rs/rayon).
 /// Processing at different rates also happens on many modern CPUs with
 /// [heterogeneous performance and efficiency cores](https://en.wikipedia.org/wiki/ARM_big.LITTLE).
+#[must_use]
 pub fn spawn_parallel_iterator<F, R, T>(items: &[T], f: F) -> Vec<R>
 where
     F: Fn(ParIter<'_, T>) -> R + Copy + Send,

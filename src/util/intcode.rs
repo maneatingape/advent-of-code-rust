@@ -20,6 +20,7 @@ pub struct Computer {
 }
 
 impl Computer {
+    #[must_use]
     pub fn new(input: &[i64]) -> Self {
         let mut code = Vec::with_capacity(input.len() + EXTRA);
         code.extend(input.iter().map(|&i| i as usize));
@@ -45,6 +46,7 @@ impl Computer {
 
     /// Runs until either the program needs input, outputs a value or encounters the halt opcode.
     /// In the first two cases, the computer can be resumed by calling `run` again.
+    #[must_use]
     pub fn run(&mut self) -> State {
         loop {
             let op = self.code[self.pc];

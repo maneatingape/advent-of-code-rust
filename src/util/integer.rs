@@ -19,7 +19,9 @@ pub trait Integer:
     const ONE: Self;
     const TEN: Self;
 
+    #[must_use]
     fn lowest_one(self) -> Option<u32>;
+    #[must_use]
     fn minmax(self, rhs: Self) -> (Self, Self);
 }
 

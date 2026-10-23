@@ -16,6 +16,7 @@ pub fn buffer_size(n: usize) -> usize {
 }
 
 #[inline]
+#[must_use]
 pub fn hash(buffer: &mut [u8], size: usize) -> [u32; 4] {
     let end = buffer.len() - 8;
     let bits = size * 8;
@@ -143,6 +144,7 @@ pub mod simd {
     use std::simd::prelude::*;
 
     #[inline]
+    #[must_use]
     pub fn hash_fixed<const N: usize>(
         buffers: &mut [[u8; 64]; N],
         size: usize,
