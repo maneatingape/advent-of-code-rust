@@ -149,8 +149,8 @@ fn is_open(hash: u32, shift: u32) -> bool {
 
 /// Convenience function to generate new path.
 fn extend(src: &[u8], size: usize, b: u8) -> Vec<u8> {
-    // Leave room for MD5 padding.
-    let mut next = vec![0; buffer_size(size + 1)];
+    // Leave room for 1 new byte plus 9 bytes of MD5 padding.
+    let mut next = vec![0; (size + 1 + 9).next_multiple_of(64)];
     // Copy existing path and next step.
     next[..size].copy_from_slice(&src[..size]);
     next[size] = b;

@@ -4,17 +4,13 @@
 //! The hash is returned as a tuple of four `u32` values.
 //!
 //! The slice is modified in place and must be a multiple of 64 bytes long with at least 9 bytes
-//! spare for the MD5 padding. The [`buffer_size`] method calculates the necessary size.
+//! spare for the MD5 padding.
 //!
 //! To maximize speed, the loop for each of the four rounds used to create the hash is unrolled and
 //! all internal utility functions marked as
 //! [`#[inline]`](https://doc.rust-lang.org/reference/attributes/codegen.html#the-inline-attribute).
 //!
 //! An optional SIMD variant that computes multiple hashes in parallel is also implemented.
-pub fn buffer_size(n: usize) -> usize {
-    (n + 9).next_multiple_of(64)
-}
-
 #[inline]
 #[must_use]
 pub fn hash(buffer: &mut [u8], size: usize) -> [u32; 4] {
