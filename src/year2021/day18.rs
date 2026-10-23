@@ -183,23 +183,21 @@ fn split(tree: &mut Snailfish) {
             } else {
                 i += 1;
             }
-        } else {
-            if tree[i] >= 10 {
-                // Avoid going too deep by performing the followup explode now.
-                if i > 16 {
-                    let value = tree[i] / 2;
-                    augment_leaf(tree, value, i - 1);
-                }
-                if i < 31 {
-                    let value = (tree[i] + 1) / 2;
-                    augment_leaf(tree, value, i + 1);
-                }
-                tree[i] = 0;
-                // Left node could now be over 10 and needs rechecking.
-                i = (i - 1).max(16);
-            } else {
-                i += 1;
+        } else if tree[i] >= 10 {
+            // Avoid going too deep by performing the followup explode now.
+            if i > 16 {
+                let value = tree[i] / 2;
+                augment_leaf(tree, value, i - 1);
             }
+            if i < 31 {
+                let value = (tree[i] + 1) / 2;
+                augment_leaf(tree, value, i + 1);
+            }
+            tree[i] = 0;
+            // Left node could now be over 10 and needs rechecking.
+            i = (i - 1).max(16);
+        } else {
+            i += 1;
         }
     }
 }
