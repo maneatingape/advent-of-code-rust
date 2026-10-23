@@ -28,7 +28,7 @@ Place input files in `input/yearYYYY/dayDD.txt` including leading zeroes. For ex
 * Specific year `cargo run year2023`
 * Specific day `cargo run year2023::day01`
 * Release profile (faster) `cargo run --release`
-* Enable SIMD feature `cargo run --features simd`
+* Enable SIMD feature `cargo +nightly run --features simd`
 * Optimized for current CPU architecture (fastest) `RUSTFLAGS="-C target-cpu=native" cargo run --release`
 
 **Test**
@@ -38,12 +38,12 @@ Place input files in `input/yearYYYY/dayDD.txt` including leading zeroes. For ex
 * Show STDOUT for debugging `cargo test -- --nocapture`
 
 **Benchmark**
-* Everything `cargo bench`
-* Specific year `cargo bench year2023`
-* Specific day `cargo bench year2023::day01`
+* Everything `cargo +nightly bench`
+* Specific year `cargo +nightly bench year2023`
+* Specific day `cargo +nightly bench year2023::day01`
 
 **Linting and Formatting**
-* Clippy lints `cargo clippy --all-targets --all-features`
+* Clippy lints `cargo +nightly clippy --all-targets --all-features`
 * Consistent code formatting ``cargo fmt -- `find . -name "*.rs"` ``
 
 **Document**
