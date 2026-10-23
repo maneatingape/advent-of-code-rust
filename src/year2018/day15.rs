@@ -92,7 +92,6 @@ enum Kind {
     Goblin,
 }
 
-#[derive(Clone, Copy)]
 struct Unit {
     position: Point,
     kind: Kind,

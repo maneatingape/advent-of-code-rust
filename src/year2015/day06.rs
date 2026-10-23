@@ -23,7 +23,6 @@ impl Command {
     }
 }
 
-#[derive(Clone, Copy)]
 pub struct Instruction {
     command: Command,
     x1: usize,

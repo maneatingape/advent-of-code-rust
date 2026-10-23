@@ -54,7 +54,7 @@ const FLOOR3: u64 = FLOOR2 << 1;
 const FLOOR4: u64 = FLOOR3 << 1;
 const PAIR1: u8 = (1 << 4) | 1;
 
-#[derive(Clone, Copy, Default, Eq, Hash, PartialEq)]
+#[derive(Clone, Copy, Eq, Hash, PartialEq)]
 struct State {
     elevator: u8, // 0-3
     pairs: u64,   // One-hot encoded floors for up to 5 item pairs.

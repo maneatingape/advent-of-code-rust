@@ -33,7 +33,7 @@
 use self::Kind::*;
 use crate::util::parse::*;
 
-#[derive(Clone, Copy, Eq, PartialEq)]
+#[derive(Clone, Copy)]
 enum Kind {
     Air,
     Falling,

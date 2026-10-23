@@ -33,7 +33,7 @@ use std::ops::{Index, IndexMut};
 
 use crate::util::point::*;
 
-#[derive(Clone, Eq, Hash, PartialEq)]
+#[derive(Clone, Eq, PartialEq)]
 pub struct Grid<T> {
     pub width: i32,
     pub height: i32,

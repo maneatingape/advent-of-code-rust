@@ -24,7 +24,6 @@ struct Subspace {
     basis: Vec<Basis>,
 }
 
-#[derive(Clone, Copy)]
 struct Basis {
     limit: i32,
     cost: i32,
