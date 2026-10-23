@@ -129,7 +129,7 @@ fn build_path(scaffold: &FastSet<Point>, mut position: Point, mut direction: Poi
         }
 
         let direction = if direction == left { 'L' } else { 'R' };
-        let _ = write!(path, "{direction},{magnitude},");
+        write!(path, "{direction},{magnitude},").unwrap();
     }
 }
 
@@ -225,9 +225,7 @@ fn visit(mut computer: Computer) -> i64 {
 
         // Highlight the robot's position.
         match ascii {
-            '^' | 'v' | '<' | '>' => {
-                let _ = write!(&mut buffer, "{BOLD}{YELLOW}{ascii}{RESET}");
-            }
+            '^' | 'v' | '<' | '>' => write!(buffer, "{BOLD}{YELLOW}{ascii}{RESET}").unwrap(),
             _ => buffer.push(ascii),
         }
 

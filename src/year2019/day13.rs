@@ -98,11 +98,11 @@ fn draw(tiles: &[i64], stride: i64, score: i64, blocks: i64) {
     }
 
     let s = &mut String::new();
-    let _ = writeln!(s, "{WHITE}{BOLD}Blocks: {blocks}\tScore: {score} {RESET}");
+    writeln!(s, "{WHITE}{BOLD}Blocks: {blocks}\tScore: {score} {RESET}").unwrap();
 
     for (y, row) in tiles.chunks(stride as usize).enumerate() {
         for tile in row {
-            let _unused = match tile {
+            let result = match tile {
                 0 => write!(s, " "),
                 1 if y == 0 => write!(s, "{GREEN}_{RESET}"),
                 1 => write!(s, "{GREEN}|{RESET}"),
@@ -111,6 +111,7 @@ fn draw(tiles: &[i64], stride: i64, score: i64, blocks: i64) {
                 4 => write!(s, "{YELLOW}{BOLD}o{RESET}"),
                 _ => unreachable!(),
             };
+            result.unwrap();
         }
         s.push('\n');
     }

@@ -27,7 +27,7 @@ pub fn part2(input: &str) -> String {
     let knot = hash(&lengths, 64);
     knot.chunks_exact(16).fold(String::new(), |mut result, chunk| {
         let reduced = chunk.iter().fold(0, |acc, n| acc ^ n);
-        let _ = write!(&mut result, "{reduced:02x}");
+        write!(result, "{reduced:02x}").unwrap();
         result
     })
 }

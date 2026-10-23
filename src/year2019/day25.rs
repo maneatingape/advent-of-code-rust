@@ -70,9 +70,9 @@ fn pretty_print(output: &str) {
 
     for line in output.lines() {
         if line.starts_with('=') {
-            let _ = write!(&mut buffer, "{BOLD}{WHITE}{line}{RESET}");
+            write!(buffer, "{BOLD}{WHITE}{line}{RESET}").unwrap();
         } else if line.starts_with('-') {
-            let _ = write!(&mut buffer, "{item}{line}{RESET}");
+            write!(buffer, "{item}{line}{RESET}").unwrap();
         } else if line.starts_with("Items here:") {
             item = YELLOW;
             buffer.push_str(line);
