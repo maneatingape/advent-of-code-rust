@@ -33,7 +33,7 @@ pub fn part1(input: &str) -> u32 {
         }
     }
 
-    locks.iter().map(|lock| keys.iter().map(|key| u32::from(lock & key == 0)).sum::<u32>()).sum()
+    locks.iter().flat_map(|lock| keys.iter().map(move |key| u32::from(lock & key == 0))).sum()
 }
 
 pub fn part2(_input: &str) -> &'static str {
