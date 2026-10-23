@@ -17,7 +17,6 @@
 //! Thirdly low-level bit manipulation is used to represent the burrow state compactly in only 16
 //! bytes for faster copying and hashing.
 use std::array::from_fn;
-use std::hash::*;
 
 use crate::util::hash::*;
 use crate::util::heap::*;
