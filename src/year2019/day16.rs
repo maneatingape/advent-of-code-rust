@@ -164,9 +164,11 @@ pub fn part2(input: &[i32]) -> i32 {
     let lower = size * 5_000;
     let upper = size * 10_000;
 
-    // This approach will only work if the index is in the second half of the input.
     let start = fold_decimal(&input[..7]) as usize;
-    assert!(lower <= start && start < upper - 8);
+    assert!(
+        lower <= start && start < upper - 8,
+        "This approach will only work if the index is in the second half of the input."
+    );
 
     let first = compute(input, start, upper, BINOMIAL_MOD_2.into_iter().cycle(), 128);
     let second = compute(input, start, upper, BINOMIAL_MOD_5.into_iter().cycle(), 125);

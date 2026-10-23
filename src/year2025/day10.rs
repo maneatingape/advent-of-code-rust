@@ -128,8 +128,6 @@ fn gaussian_elimination(machine: &Machine) -> Subspace {
     let width = buttons.len();
     let height = joltages.len();
 
-    assert!(width < MAX_BUTTONS);
-    assert!(height < MAX_JOLTAGES);
     let mut equations = [[0; MAX_BUTTONS]; MAX_JOLTAGES];
 
     for row in 0..height {

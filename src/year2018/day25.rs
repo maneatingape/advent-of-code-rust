@@ -51,7 +51,6 @@ pub fn part1(input: &[usize]) -> usize {
             }
         }
     }
-    assert_eq!(offsets.len(), 128);
 
     // Choose arbitrary point and start a new constellation.
     for &point in input {

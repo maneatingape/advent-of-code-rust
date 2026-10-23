@@ -181,6 +181,6 @@ fn mod_inv(n: i128, m: i128) -> i128 {
         (r, new_r) = (new_r, r - quotient * new_r);
     }
 
-    assert!(r <= 1);
+    assert!(r <= 1, "{n} has no inverse modulo {m} as they are not coprime");
     if t < 0 { t + m } else { t }
 }

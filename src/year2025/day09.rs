@@ -19,8 +19,7 @@ struct Interval {
 
 impl Interval {
     fn new(l: u32, r: u32) -> Self {
-        debug_assert!(l <= r);
-
+        debug_assert!(l <= r, "interval [{l}, {r}] is empty");
         Self { l, r }
     }
 
@@ -29,8 +28,7 @@ impl Interval {
     }
 
     fn intersection(self, other: Self) -> Self {
-        debug_assert!(self.intersects(other));
-
+        debug_assert!(self.intersects(other), "Disjoint intervals have no intersection");
         Self::new(self.l.max(other.l), self.r.min(other.r))
     }
 
@@ -70,7 +68,7 @@ pub fn part2(tiles: &[Tile]) -> u64 {
     // Invariants on the input data (defined by the puzzle) result in points arriving in pairs on
     // the same y line.
     for [&[x0, y], &[x1, y1]] in tiles.iter().chunk::<2>() {
-        debug_assert_eq!(y, y1);
+        debug_assert_eq!(y, y1, "red tiles must arrive in pairs on the same row");
 
         // Update the descending edges. Since we are scanning from top to bottom, and within each
         // line left to right, when we, starting from outside of the region, hit a corner

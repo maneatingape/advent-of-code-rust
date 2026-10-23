@@ -72,9 +72,11 @@ pub fn parse(input: &str) -> Input {
 
 /// Use bitwise logic to count pulses.
 pub fn part1(input: &Input) -> u32 {
-    // Counting only works correctly if there are no resets from 1 to 1000
-    // so that we can assume all rows increment exactly the same.
-    assert!(input.iter().all(|&n| n > 1000));
+    assert!(
+        input.iter().all(|&n| n > 1000),
+        "Counting only works correctly if there are no resets from 1 to 1000 \
+         so that we can assume all rows increment exactly the same."
+    );
 
     // Each conjunction feeds back into the chained flip-flops in the inverse pattern
     // to the flip-flops feeding into the conjunction, except for the least significant

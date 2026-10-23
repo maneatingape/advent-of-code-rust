@@ -21,12 +21,15 @@ type Input = [Password; 2];
 pub fn parse(input: &str) -> Input {
     let password = clean(input.trim().as_bytes().try_into().unwrap());
 
-    // No pairs in the first 4 characters.
-    assert!(!password[..4].array_windows().any(|&[a, b]| a == b));
-    // No straights in the first 4 characters.
-    assert!(!password[..4].array_windows().any(|&[a, b, c]| a + 1 == b && b + 1 == c));
-    // No potential carry in the third character.
-    assert_ne!(password[2], b'z');
+    assert!(
+        !password[..4].array_windows().any(|&[a, b]| a == b),
+        "No pairs in the first 4 characters"
+    );
+    assert!(
+        !password[..4].array_windows().any(|&[a, b, c]| a + 1 == b && b + 1 == c),
+        "No straights in the first 4 characters"
+    );
+    assert_ne!(password[2], b'z', "No potential carry in the third character");
 
     let first = next_password(password);
     let second = next_password(first);
