@@ -46,7 +46,7 @@ impl RebootStep {
 /// Technically this is actually a [rectangular cuboid](https://en.wikipedia.org/wiki/Cuboid#Rectangular_cuboid)
 /// but that was longer to type!
 #[derive(Clone, Copy)]
-pub struct Cube {
+struct Cube {
     x1: i32,
     x2: i32,
     y1: i32,

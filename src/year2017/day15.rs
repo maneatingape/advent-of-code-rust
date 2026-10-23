@@ -39,7 +39,7 @@ const BLOCK: usize = 50_000;
 type Input = (usize, usize);
 
 /// State shared between all threads.
-pub struct Shared {
+struct Shared {
     first: usize,
     second: usize,
     iter: AtomicIter,

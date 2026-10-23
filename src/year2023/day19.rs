@@ -20,7 +20,7 @@ use crate::util::hash::*;
 use crate::util::iter::*;
 use crate::util::parse::*;
 
-pub struct Rule<'a> {
+struct Rule<'a> {
     range: Range<u32>,
     category: usize,
     next: &'a str,

@@ -39,7 +39,7 @@ const SECOND_HASH: [usize; 33] = [
 type Bag = [Option<Rule>; 4];
 
 #[derive(Clone, Copy)]
-pub struct Rule {
+struct Rule {
     amount: u32,
     next: usize,
 }

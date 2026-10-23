@@ -18,7 +18,7 @@ use crate::util::parse::*;
 use crate::util::point::*;
 
 #[derive(Clone, Copy)]
-pub enum Fold {
+enum Fold {
     Horizontal(i32),
     Vertical(i32),
 }

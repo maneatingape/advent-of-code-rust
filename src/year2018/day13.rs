@@ -13,7 +13,7 @@ pub struct Input {
 }
 
 #[derive(Clone, Copy)]
-pub struct Cart {
+struct Cart {
     position: Point,
     direction: Point,
     turns: u8,

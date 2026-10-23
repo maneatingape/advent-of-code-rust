@@ -65,7 +65,7 @@ impl<'a, T> Iterator for ParIter<'a, T> {
 /// on its own cache line. This reduces contention and improves performance for common
 /// CPU caching protocols such as [MESI](https://en.wikipedia.org/wiki/MESI_protocol).
 #[repr(align(128))]
-pub struct CachePadding {
+struct CachePadding {
     atomic: AtomicUsize,
 }
 

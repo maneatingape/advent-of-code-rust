@@ -54,7 +54,7 @@ pub struct Input<'a> {
 }
 
 #[derive(Clone, Copy, Default)]
-pub struct Ingredient {
+struct Ingredient {
     food: usize,
     candidates: usize,
 }

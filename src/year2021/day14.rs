@@ -12,7 +12,7 @@ use crate::util::iter::*;
 type Elements = [u64; 26];
 type Pairs = [u64; 26 * 26];
 
-pub struct Rule {
+struct Rule {
     from: usize,
     to_left: usize,
     to_right: usize,

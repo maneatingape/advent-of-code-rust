@@ -79,7 +79,7 @@ enum Move {
     Forward(u32),
 }
 
-pub struct Grid {
+struct Grid {
     width: usize,
     height: usize,
     tiles: Vec<Tile>,

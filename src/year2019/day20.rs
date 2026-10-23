@@ -21,7 +21,7 @@ use crate::util::point::*;
 type Key = ((u8, u8), Kind);
 
 #[derive(Clone, Copy, Eq, Hash, PartialEq)]
-pub enum Kind {
+enum Kind {
     Inner,
     Outer,
     Start,

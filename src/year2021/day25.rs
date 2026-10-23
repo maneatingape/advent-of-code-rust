@@ -19,7 +19,7 @@ use std::ops::{BitAnd, BitOr, Not};
 
 /// Duct tape two `u128` together to make a 256 bit wide integer.
 #[derive(Clone, Copy, Default)]
-pub struct U256 {
+struct U256 {
     left: u128,
     right: u128,
 }
