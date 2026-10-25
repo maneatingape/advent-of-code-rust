@@ -64,10 +64,11 @@ pub fn part2(input: &Input) -> u64 {
 /// `AB` and `BC`, then increment the amount of element `B`.
 fn steps(input: &Input, rounds: usize) -> u64 {
     let mut elements = input.elements;
-    let mut pairs = input.pairs;
+    let mut pairs = input.pairs.to_vec();
+    let mut next = vec![0; 26 * 26];
 
     for _ in 0..rounds {
-        let mut next = [0; 26 * 26];
+        next.fill(0);
 
         for rule in &input.rules {
             let n = pairs[rule.from];
@@ -76,7 +77,7 @@ fn steps(input: &Input, rounds: usize) -> u64 {
             elements[rule.element] += n;
         }
 
-        pairs = next;
+        (pairs, next) = (next, pairs);
     }
 
     let max = elements.iter().max().unwrap();

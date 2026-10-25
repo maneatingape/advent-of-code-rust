@@ -36,7 +36,7 @@ pub fn part2([a, b, c]: &Input) -> i32 {
 
 fn check(code: &[usize], first: usize, second: usize) -> i32 {
     let mut pc = 0;
-    let code = &mut code.to_vec()[..];
+    let code = &mut *code.to_vec();
 
     code[1] = first;
     code[2] = second;

@@ -24,7 +24,7 @@ pub fn parse(input: &str) -> Vec<usize> {
     };
 
     // Pre-seed known indices for objects that we need to specifically lookup later.
-    let mut indices = [0_u16; 36 * 36 * 36];
+    let mut indices = vec![0_u16; 36 * 36 * 36];
     indices[perfect_hash("COM")] = 1;
     indices[perfect_hash("SAN")] = 2;
     indices[perfect_hash("YOU")] = 3;

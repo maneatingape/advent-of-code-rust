@@ -46,13 +46,13 @@ struct Rule {
 
 pub struct Haversack {
     shiny_gold: usize,
-    bags: [Bag; 594],
+    bags: Vec<Bag>,
 }
 
 pub fn parse(input: &str) -> Haversack {
     let mut first_indices = [0; 676];
     let mut second_indices = [0; 676];
-    let mut bags = [[None; 4]; 594];
+    let mut bags = vec![[None; 4]; 594];
 
     FIRST_HASH.iter().enumerate().for_each(|(i, &h)| first_indices[h] = i);
     SECOND_HASH.iter().enumerate().for_each(|(i, &h)| second_indices[h] = i);

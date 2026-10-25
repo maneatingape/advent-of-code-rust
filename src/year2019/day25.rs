@@ -169,10 +169,10 @@ fn explore(
             if opposite(suffix) == "none" {
                 if !dangerous(suffix) {
                     take_item(computer, suffix);
-                    inventory.push(suffix.to_string());
+                    inventory.push(suffix.to_owned());
                 }
             } else if suffix != reverse {
-                stack.push(suffix.to_string());
+                stack.push(suffix.to_owned());
                 explore(computer, stack, path, inventory);
                 stack.pop();
             }

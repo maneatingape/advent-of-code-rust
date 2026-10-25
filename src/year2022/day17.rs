@@ -83,13 +83,13 @@ impl Iterator for State<'_> {
     type Item = usize;
 
     fn next(&mut self) -> Option<Self::Item> {
-        let Rock { size, mut shape } = self.rocks.next().unwrap();
+        let Rock { size, mut shape } = self.rocks.next()?;
         let mut chunk = WALLS;
         // Start 3 rows above the current top of the tower.
         let mut index = self.height + 3;
 
         loop {
-            let jet = self.jets.next().unwrap();
+            let jet = self.jets.next()?;
             let candidate = if jet == b'<' { shape.rotate_left(1) } else { shape.rotate_right(1) };
             // Check for a horizontal collision (this does not prevent downwards movement).
             if candidate & chunk == 0 {
