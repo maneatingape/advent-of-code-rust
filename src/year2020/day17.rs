@@ -145,10 +145,10 @@ mod implementation {
         // Each dimension can expand by at most two in each axis per round. Adding padding at the
         // edges to avoid boundary checks gives a maximum width of 8 + 2 * (6 + 1) = 22 for the x
         // and y dimensions and 1 + 2 * (6 + 1) = 15 for the z and w dimensions.
-        let mut current = [[[0; 32]; 22]; 15];
-        let mut next = current;
+        let mut current = vec![[[0; 32]; 22]; 15];
+        let mut next = current.clone();
         // Temporary intermediate state.
-        let mut first = current;
+        let mut first = current.clone();
 
         // Set initial cubes offset from the edges to allow for growth.
         for y in 0..input.height {
@@ -211,11 +211,11 @@ mod implementation {
     #[expect(clippy::needless_range_loop)]
     pub(super) fn four_dimensions(input: &Grid<u8>) -> usize {
         // Same size logic as part one with added `w` dimension.
-        let mut current = [[[[0; 32]; 22]; 15]; 15];
-        let mut next = current;
+        let mut current = vec![[[[0; 32]; 22]; 15]; 15];
+        let mut next = current.clone();
         // Temporary intermediate state.
-        let mut first = current;
-        let mut second = current;
+        let mut first = current.clone();
+        let mut second = current.clone();
 
         // Set initial cubes offset from the edges to allow for growth.
         for y in 0..input.height {

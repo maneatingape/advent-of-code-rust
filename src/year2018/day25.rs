@@ -32,7 +32,7 @@ pub fn part1(input: &[usize]) -> usize {
     let mut todo = Vec::with_capacity(input.len());
 
     // Populate a hashtable of all points that still need a constellation.
-    let mut remaining = [false; 23_usize.pow(4)];
+    let mut remaining = vec![false; 23_usize.pow(4)];
     input.iter().for_each(|&point| remaining[point] = true);
 
     // Build up the list of interesting offsets.
