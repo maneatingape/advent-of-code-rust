@@ -72,7 +72,7 @@ pub fn checksum(input: &[usize], disk_size: usize) -> String {
     let step_size = disk_size.isolate_lowest_one();
     let blocks = disk_size / step_size;
 
-    let counts: Vec<_> = (0..=blocks).map(|i| count(input, i * step_size)).collect();
+    let counts = Vec::from_fn(blocks + 1, |i| count(input, i * step_size));
     counts.array_windows().map(|&[a, b]| if (b - a) % 2 == 0 { '1' } else { '0' }).collect()
 }
 

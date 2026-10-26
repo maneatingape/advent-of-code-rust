@@ -186,14 +186,12 @@ fn gaussian_elimination(machine: &Machine) -> Subspace {
 
     let nullity = width - rank;
     let rhs = from_fn(|row| equations[row][width]);
-    let basis = (0..nullity)
-        .map(|col| {
-            let limit = equations[height][col + rank];
-            let vs = from_fn(|row| equations[row][rank + col]);
-            let cost = lcm - vs[..rank].iter().sum::<i32>();
-            Basis { limit, cost, vs }
-        })
-        .collect();
+    let basis = Vec::from_fn(nullity, |col| {
+        let limit = equations[height][col + rank];
+        let vs = from_fn(|row| equations[row][rank + col]);
+        let cost = lcm - vs[..rank].iter().sum::<i32>();
+        Basis { limit, cost, vs }
+    });
 
     Subspace { rank, nullity, lcm, rhs, basis }
 }

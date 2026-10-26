@@ -56,15 +56,15 @@ pub fn part2(input: &[Instruction]) -> u32 {
 
 fn worker_one(input: &[Instruction], iter: ParIter<'_, usize>) -> u32 {
     iter.flat_map(|row| {
-        let mut grid = [0_u8; 1_024];
+        let mut grid = [false; 1_024];
 
         for &Instruction { command, x1, x2, y1, y2 } in input {
             if (y1..y2).contains(row) {
                 let iter = grid[x1..x2].iter_mut();
                 match command {
-                    Command::On => iter.for_each(|b| *b = 1),
-                    Command::Off => iter.for_each(|b| *b = 0),
-                    Command::Toggle => iter.for_each(|b| *b ^= 1),
+                    Command::On => iter.for_each(|b| *b = true),
+                    Command::Off => iter.for_each(|b| *b = false),
+                    Command::Toggle => iter.for_each(bool::toggle),
                 }
             }
         }

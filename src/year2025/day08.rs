@@ -36,7 +36,7 @@ pub fn part1(input: &Input) -> usize {
 
 pub fn part1_testable(input: &Input, limit: usize) -> usize {
     let (boxes, buckets) = input;
-    let mut nodes: Vec<_> = (0..boxes.len()).map(|i| Node { parent: i, size: 1 }).collect();
+    let mut nodes = Vec::from_fn(boxes.len(), |i| Node { parent: i, size: 1 });
 
     for (i, j, ..) in flatten(buckets).take(limit) {
         union(&mut nodes, i as usize, j as usize);
@@ -48,7 +48,7 @@ pub fn part1_testable(input: &Input, limit: usize) -> usize {
 
 pub fn part2(input: &Input) -> usize {
     let (boxes, buckets) = input;
-    let mut nodes: Vec<_> = (0..boxes.len()).map(|i| Node { parent: i, size: 1 }).collect();
+    let mut nodes = Vec::from_fn(boxes.len(), |i| Node { parent: i, size: 1 });
 
     flatten(buckets)
         .find_map(|(i, j, ..)| {

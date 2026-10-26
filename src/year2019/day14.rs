@@ -2,8 +2,6 @@
 //!
 //! Sorting the reactions in [topological order](https://en.wikipedia.org/wiki/Topological_sorting)
 //! from `FUEL` at the start to `ORE` at the end, allows us to process each reaction only once.
-use std::iter::repeat_with;
-
 use crate::util::hash::*;
 use crate::util::iter::*;
 use crate::util::parse::*;
@@ -25,10 +23,11 @@ pub fn parse(input: &str) -> Vec<Reaction> {
     let lines: Vec<_> = input.lines().collect();
 
     // Default chemical is ORE, other chemicals will overwrite.
-    let mut reactions: Vec<_> =
-        repeat_with(|| Reaction { amount: 0, chemical: 1, ingredients: Vec::new() })
-            .take(lines.len() + 1)
-            .collect();
+    let mut reactions = Vec::from_fn(lines.len() + 1, |_| Reaction {
+        amount: 0,
+        chemical: 1,
+        ingredients: Vec::new(),
+    });
 
     // Assign FUEL and ORE known indices as we'll need to look them up later.
     let mut indices = FastMap::build([("FUEL", 0), ("ORE", 1)]);

@@ -27,12 +27,10 @@ pub fn parse(input: &str) -> Input {
 
     // For part one, track the index every node had when inserted.
     let mut index = 0;
-    let indices: Vec<_> = (1..=2017)
-        .map(|n| {
-            index = (index + step) % n;
-            index
-        })
-        .collect();
+    let indices = Vec::from_fn(2017, |i| {
+        index = (index + step) % (i + 1);
+        index
+    });
 
     // Now back up to find the prior node that shares the same index, accounting for when
     // the index moved because an intermediate number was assigned an earlier index.

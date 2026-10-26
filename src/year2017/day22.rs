@@ -77,7 +77,7 @@ pub fn part1(input: &Grid<u8>) -> u32 {
             infected += 1;
             direction.counter_clockwise()
         };
-        grid[position] = !grid[position];
+        grid[position].toggle();
         position += direction;
     }
 

@@ -9,8 +9,6 @@
 //!
 //! Interestingly, the total number of distinct cached blocks is very low, approximately 200.
 //! The cursor also doesn't move too far, only covering a range of about 6,000 steps.
-use std::iter::repeat_with;
-
 use crate::util::hash::*;
 use crate::util::parse::*;
 
@@ -65,7 +63,7 @@ pub fn part1(input: &Input) -> u32 {
     let mut tape = 0;
     let mut left = Vec::new();
     let mut right = Vec::new();
-    let mut cache: Vec<_> = repeat_with(FastMap::new).take(input.rules.len()).collect();
+    let mut cache = Vec::from_fn(input.rules.len(), |_| FastMap::new());
 
     loop {
         // Lookup the next batch state transition.

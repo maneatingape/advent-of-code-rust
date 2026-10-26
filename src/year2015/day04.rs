@@ -17,7 +17,7 @@
 //!
 //! [`MD5`]: crate::util::md5
 //! [`format!`]: std::format
-use core::fmt::NumBuffer;
+use std::fmt::NumBuffer;
 use std::sync::atomic::{AtomicU32, Ordering};
 
 use self::implementation::*;

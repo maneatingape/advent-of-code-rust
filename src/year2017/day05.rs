@@ -51,7 +51,7 @@ pub fn part2(input: &[isize]) -> u64 {
     // Precompute all possible combinations for each binary starting number from 0 to 2¹⁶,
     // starting at any offset from 0..2.
     let cache: Vec<[_; 0x10000]> =
-        (0..3).map(|offset| from_fn(|value| compute_block(value, offset))).collect();
+        Vec::from_fn(3, |offset| from_fn(|value| compute_block(value, offset)));
 
     while index < jump.len() {
         if index < coarse {

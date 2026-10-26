@@ -10,13 +10,11 @@ type Input = (i64, i64);
 
 pub fn parse(input: &str) -> Input {
     let code: Vec<_> = input.iter_signed().collect();
-    let mut network: Vec<_> = (0..50)
-        .map(|address| {
-            let mut computer = Computer::new(&code);
-            computer.input(address);
-            computer
-        })
-        .collect();
+    let mut network = Vec::from_fn(50, |address| {
+        let mut computer = Computer::new(&code);
+        computer.input(address as i64);
+        computer
+    });
 
     let mut nat_x = 0;
     let mut nat_y = 0;

@@ -4,7 +4,7 @@
 //! possible in parallel in blocks of 1000 at a time.
 //!
 //! [`Year 2015 Day 4`]: crate::year2015::day04
-use core::fmt::NumBuffer;
+use std::fmt::NumBuffer;
 use std::sync::Mutex;
 
 use self::implementation::*;

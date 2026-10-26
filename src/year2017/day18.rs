@@ -53,8 +53,6 @@
 //! jgz f -16       }
 //! jgz a -19       // Jump to deadlock section.
 //! ```
-use std::iter::repeat_with;
-
 use crate::util::parse::*;
 
 /// Generate a pseudorandom sequence of 127 numbers, based on a
@@ -63,14 +61,12 @@ pub fn parse(input: &str) -> Vec<u64> {
     // Read the starting seed from the input.
     let mut p: u64 = input.lines().nth(9).unwrap().unsigned();
     // Generate pseudorandom sequence.
-    repeat_with(|| {
+    Vec::from_fn(127, |_| {
         // Here, we could reuse fast_mod from day 15, but this generator is not on the hot path.
         p = (p * 8505) % 0x7fffffff;
         p = (p * 129749 + 12345) % 0x7fffffff;
         p % 10000
     })
-    .take(127)
-    .collect()
 }
 
 /// Part one is the last number sent in the sequence.

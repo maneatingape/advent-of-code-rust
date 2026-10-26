@@ -107,10 +107,9 @@ pub fn part2(input: &Input) -> String {
                 if occupied[next] {
                     // Mark both carts as crashed.
                     carts.iter_mut().filter(|c| c.position == next).for_each(|c| c.active = false);
-                    occupied[next] = false;
-                } else {
-                    occupied[next] = true;
                 }
+
+                occupied[next].toggle();
             }
         }
 

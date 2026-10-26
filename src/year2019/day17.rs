@@ -79,7 +79,7 @@ pub fn parse(input: &str) -> Input {
     // Convert trailing comma ',' into a trailing newline '\n'.
     let rules: String = once(movement.routine.as_str())
         .chain(movement.functions.into_iter().flatten())
-        .flat_map(|s| [s.trim_end_matches(','), "\n"])
+        .flat_map(|s| [s.trim_suffix(','), "\n"])
         .collect();
 
     computer.input_ascii(&rules);

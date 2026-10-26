@@ -11,7 +11,6 @@
 //! (similar to a [glider](https://en.wikipedia.org/wiki/Glider_(Conway%27s_Game_of_Life)))
 //! that moves by the same amount each generation. Once two subsequent generations are the same,
 //! except for the starting position, we extrapolate 50 billion generations into the future.
-use std::iter::repeat_n;
 use std::mem::swap;
 
 type Input = (i64, i64);
@@ -45,7 +44,7 @@ impl Pots {
 
         // Apply rules and build up new state.
         // Pad zeros onto the end to make handling next state easier.
-        for b in self.prev_state[start..=end].iter().copied().chain(repeat_n(0, 4)) {
+        for b in self.prev_state[start..=end].iter().copied().chain([0; 4]) {
             mask = ((mask << 1) | usize::from(b)) & 0b11111;
             self.state.push(rules[mask]);
         }

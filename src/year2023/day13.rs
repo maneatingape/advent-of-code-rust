@@ -27,10 +27,8 @@ pub fn parse(input: &str) -> Input {
             let (width, height) = (grid[0].len(), grid.len());
             let bit = |x: usize, y: usize| u32::from(grid[y][x] == b'#');
 
-            let rows =
-                (0..height).map(|y| (0..width).fold(0, |n, x| (n << 1) | bit(x, y))).collect();
-            let columns =
-                (0..width).map(|x| (0..height).fold(0, |n, y| (n << 1) | bit(x, y))).collect();
+            let rows = Vec::from_fn(height, |y| (0..width).fold(0, |n, x| (n << 1) | bit(x, y)));
+            let columns = Vec::from_fn(width, |x| (0..height).fold(0, |n, y| (n << 1) | bit(x, y)));
 
             (rows, columns)
         })

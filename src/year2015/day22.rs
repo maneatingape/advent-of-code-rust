@@ -68,11 +68,13 @@ pub fn parse(input: &str) -> Input {
 }
 
 pub fn part1(input: &Input) -> i16 {
-    play(*input, false).break_value().unwrap()
+    let ControlFlow::Break(spent) = play(*input, false);
+    spent
 }
 
 pub fn part2(input: &Input) -> i16 {
-    play(*input, true).break_value().unwrap()
+    let ControlFlow::Break(spent) = play(*input, true);
+    spent
 }
 
 fn heuristic(spent: i16, boss_hp: i16) -> i16 {
@@ -88,7 +90,8 @@ fn heuristic(spent: i16, boss_hp: i16) -> i16 {
     spent + (boss_hp + (damage_per_turn - 1) - 6) / damage_per_turn * mana_per_turn
 }
 
-fn play(input: Input, hard_mode: bool) -> ControlFlow<i16> {
+/// The search always ends with a win, so the never type `!` rules out `Continue`.
+fn play(input: Input, hard_mode: bool) -> ControlFlow<i16, !> {
     let [boss_hp, boss_damage] = input;
     let start = State {
         boss_hp,

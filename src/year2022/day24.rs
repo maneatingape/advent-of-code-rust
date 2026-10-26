@@ -22,9 +22,9 @@ pub fn parse(input: &str) -> Input {
 
     // For each blizzard type set a `0` bit in the corresponding integer. Later on we can AND this
     // with elves to eliminate possible positions.
-    let build = |kind| -> Vec<_> {
+    let build = |kind| {
         let fold = |x| (1..=height).fold(0, |acc, y| (acc << 1) | u64::from(raw[y][x] != kind));
-        (1..=width).map(fold).collect()
+        Vec::from_fn(width, |x| fold(x + 1))
     };
 
     // Horizontal blizzards repeat every `width` minutes. Storing two copies of the pattern turns

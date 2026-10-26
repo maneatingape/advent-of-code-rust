@@ -2,8 +2,8 @@
 //!
 //! Brute force slog through all possible keys, parallelized as much as possible. An optimization
 //! for part two is a quick method to convert `u32` to 8 ASCII digits.
-use core::fmt::NumBuffer;
 use std::collections::{BTreeMap, BTreeSet};
+use std::fmt::NumBuffer;
 use std::sync::Mutex;
 
 use self::implementation::*;

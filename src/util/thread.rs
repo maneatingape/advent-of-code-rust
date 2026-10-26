@@ -2,7 +2,6 @@
 //! [scoped](https://doc.rust-lang.org/stable/std/thread/fn.scope.html)
 //! threads equal to the number of cores on the machine. Unlike normal threads, scoped threads
 //! can borrow data from their environment.
-use std::iter::repeat_with;
 use std::sync::atomic::Ordering::Relaxed;
 use std::sync::atomic::{AtomicBool, AtomicU32, AtomicUsize};
 use std::thread::*;
@@ -135,7 +134,7 @@ where
     R: Send,
 {
     scope(|scope| {
-        let handles: Vec<_> = repeat_with(|| scope.spawn(f)).take(threads()).collect();
+        let handles = Vec::from_fn(threads(), |_| scope.spawn(f));
         handles.into_iter().flat_map(ScopedJoinHandle::join).collect()
     })
 }
@@ -157,18 +156,16 @@ where
     let size = items.len().div_ceil(threads);
 
     // Initially divide work as evenly as possible among the worker threads.
-    let workers: Vec<_> = (0..threads)
-        .map(|id| {
-            let start = (id * size).min(items.len());
-            let end = (start + size).min(items.len());
-            CachePadding::new(pack(start, end))
-        })
-        .collect();
+    let workers = Vec::from_fn(threads, |id| {
+        let start = (id * size).min(items.len());
+        let end = (start + size).min(items.len());
+        CachePadding::new(pack(start, end))
+    });
     let workers = workers.as_slice();
 
     scope(|scope| {
-        let handles: Vec<_> =
-            (0..threads).map(|id| scope.spawn(move || f(ParIter { id, items, workers }))).collect();
+        let handles =
+            Vec::from_fn(threads, |id| scope.spawn(move || f(ParIter { id, items, workers })));
         handles.into_iter().flat_map(ScopedJoinHandle::join).collect()
     })
 }

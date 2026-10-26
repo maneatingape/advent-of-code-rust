@@ -15,8 +15,6 @@
 //!
 //! [`day 5`]: crate::year2020::day05
 //! [`count_ones`]: u32::count_ones
-use std::iter::once;
-
 type Input = (u32, u32);
 
 pub fn parse(input: &str) -> Input {
@@ -28,7 +26,7 @@ pub fn parse(input: &str) -> Input {
     let mut check_group = false;
 
     // End the input with a double newline, to include last group in the total.
-    for ch in input.bytes().chain(once(b'\n')) {
+    for ch in input.bytes().chain(*b"\n") {
         match ch {
             b'\n' if check_group => {
                 // A second newline ends one group and prepares for the next.
