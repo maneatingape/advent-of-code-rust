@@ -11,7 +11,7 @@ pub fn parse(input: &str) -> Input {
         .iter_signed()
         .chunk::<4>()
         .map(|[x, y, dx, dy]| (Point::new(x, y), Point::new(dx, dy)))
-        .unzip();
+        .collect();
 
     // Find two points traveling in opposite directions.
     let up = velocity.iter().position(|v| v.y < 0).unwrap();

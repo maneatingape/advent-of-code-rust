@@ -25,7 +25,7 @@ pub fn parse(input: &str) -> Input {
         .iter_signed::<i32>()
         .chunk::<4>()
         .map(|[x, y, dx, dy]| ((x, dx.rem_euclid(WIDTH)), (y, dy.rem_euclid(HEIGHT))))
-        .unzip()
+        .collect()
 }
 
 pub fn part1(input: &Input) -> i32 {

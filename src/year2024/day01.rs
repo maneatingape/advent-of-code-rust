@@ -9,7 +9,7 @@ use crate::util::parse::*;
 type Input = (Vec<u32>, Vec<u32>);
 
 pub fn parse(input: &str) -> Input {
-    input.iter_unsigned::<u32>().chunk::<2>().map(|[l, r]| (l, r)).unzip()
+    input.iter_unsigned::<u32>().chunk::<2>().map(|[l, r]| (l, r)).collect()
 }
 
 pub fn part1(input: &Input) -> u32 {

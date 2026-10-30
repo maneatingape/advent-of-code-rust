@@ -119,7 +119,7 @@ pub fn parse(input: &str) -> State {
 
             (across, down)
         })
-        .unzip();
+        .collect();
 
     State { width, height, across, down }
 }

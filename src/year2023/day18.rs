@@ -36,7 +36,7 @@ pub fn parse(input: &str) -> Input {
 
             (first, second)
         })
-        .unzip()
+        .collect()
 }
 
 pub fn part1(input: &Input) -> i64 {

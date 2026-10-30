@@ -21,7 +21,7 @@ pub fn parse(input: &str) -> Input {
             let min = (0..26).filter(|&i| freq[i] > 0).min_by_key(|&i| freq[i]).unwrap();
             (to_char(max), to_char(min))
         })
-        .unzip()
+        .collect()
 }
 
 pub fn part1(input: &Input) -> &str {
