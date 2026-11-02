@@ -47,6 +47,7 @@ use std::array::from_fn;
 use std::ops::{Add, Mul, Sub};
 
 use crate::util::hash::*;
+use crate::util::iter::*;
 use crate::util::parse::*;
 use crate::util::thread::*;
 
@@ -134,8 +135,7 @@ pub fn parse(input: &str) -> Input {
         .chunks(7)
         .map(|chunk| {
             let items = chunk[1].iter_unsigned().collect();
-            let tokens: Vec<_> = chunk[2].rsplit(' ').take(2).collect();
-            let operation = match tokens[..] {
+            let operation = match chunk[2].rsplit(' ').chunk::<2>().next().unwrap() {
                 ["old", _] => Operation::Square,
                 [y, "*"] => Operation::Multiply(y.unsigned()),
                 [y, "+"] => Operation::Add(y.unsigned()),

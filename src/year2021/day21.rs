@@ -66,11 +66,11 @@ pub fn part1(input: &State) -> usize {
 /// can fit in an array with perfect hashing, instead of using a slower `HashMap`.
 pub fn part2(input: &State) -> usize {
     let mut cache = vec![None; 44_100];
-    let (win, lose) = dirac(*input, &mut cache);
+    let (win, lose) = dirac(&mut cache, *input);
     win.max(lose)
 }
 
-fn dirac(state: State, cache: &mut [Option<Pair>]) -> Pair {
+fn dirac(cache: &mut [Option<Pair>], state: State) -> Pair {
     let ((player_position, player_score), (other_position, other_score)) = state;
 
     // Calculate the perfect hash of the state and lookup the cache in case we've seen this before.
@@ -91,7 +91,7 @@ fn dirac(state: State, cache: &mut [Option<Pair>]) -> Pair {
             // We swap the order of player's state each turn, so that turns alternate
             // and record the result as (lose, win) instead of (win, lose).
             let next_state = ((other_position, other_score), (next_position, next_score));
-            let (next_lose, next_win) = dirac(next_state, cache);
+            let (next_lose, next_win) = dirac(cache, next_state);
             (win + frequency * next_win, lose + frequency * next_lose)
         }
     };

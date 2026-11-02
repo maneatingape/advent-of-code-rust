@@ -116,7 +116,7 @@ pub fn part2(input: &Input<'_>) -> usize {
                 }
             }
 
-            index == message.len() && second >= 1 && first > second
+            index == message.len() && 1 <= second && second < first
         })
         .count()
 }

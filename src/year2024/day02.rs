@@ -56,7 +56,7 @@ fn check(report: &[i32]) -> (u32, u32) {
         if i < end {
             score -= delta(report[i], report[i + 1]);
         }
-        if i > 0 && i < end {
+        if 0 < i && i < end {
             score += delta(report[i - 1], report[i + 1]);
         }
 

@@ -56,11 +56,11 @@ pub fn parse(input: &str) -> Input {
     }
 
     let mut cache = vec![u32::MAX; 729];
-    let part_one = signal(to_index("a"), &circuit, &mut cache);
+    let part_one = signal(&circuit, &mut cache, to_index("a"));
 
     cache.fill(u32::MAX);
     cache[to_index("b")] = part_one;
-    let part_two = signal(to_index("a"), &circuit, &mut cache);
+    let part_two = signal(&circuit, &mut cache, to_index("a"));
 
     (part_one, part_two)
 }
@@ -73,20 +73,20 @@ pub fn part2(input: &Input) -> u32 {
     input.1
 }
 
-fn signal(key: usize, circuit: &[Gate], cache: &mut [u32]) -> u32 {
+fn signal(circuit: &[Gate], cache: &mut [u32], key: usize) -> u32 {
     if cache[key] != u32::MAX {
         return cache[key];
     }
 
     let result = match circuit[key] {
         Constant(c) => c,
-        Wire(w) => signal(w, circuit, cache),
-        Not(w) => 0xffff & !signal(w, circuit, cache),
-        Bit(r) => 1 & signal(r, circuit, cache),
-        And(l, r) => signal(l, circuit, cache) & signal(r, circuit, cache),
-        Or(l, r) => signal(l, circuit, cache) | signal(r, circuit, cache),
-        LeftShift(w, n) => 0xffff & (signal(w, circuit, cache) << n),
-        RightShift(w, n) => signal(w, circuit, cache) >> n,
+        Wire(w) => signal(circuit, cache, w),
+        Not(w) => 0xffff & !signal(circuit, cache, w),
+        Bit(r) => 1 & signal(circuit, cache, r),
+        And(l, r) => signal(circuit, cache, l) & signal(circuit, cache, r),
+        Or(l, r) => signal(circuit, cache, l) | signal(circuit, cache, r),
+        LeftShift(w, n) => 0xffff & (signal(circuit, cache, w) << n),
+        RightShift(w, n) => signal(circuit, cache, w) >> n,
     };
 
     cache[key] = result;

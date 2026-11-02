@@ -155,12 +155,12 @@ pub fn part1(input: &Input) -> usize {
 pub fn part2(input: &Input) -> usize {
     let (deck1, deck2) = *input;
 
-    match combat(deck1, deck2, &mut Vec::new(), 0) {
+    match combat(&mut Vec::new(), deck1, deck2, 0) {
         Winner::Player1(deck) | Winner::Player2(deck) => deck.score,
     }
 }
 
-fn combat(mut deck1: Deck, mut deck2: Deck, cache: &mut Cache, depth: usize) -> Winner {
+fn combat(cache: &mut Cache, mut deck1: Deck, mut deck2: Deck, depth: usize) -> Winner {
     // Player 1 always wins recursive games if they have the high card.
     if depth > 0 && deck1.max() > deck2.max() {
         return Winner::Player1(deck1);
@@ -185,7 +185,7 @@ fn combat(mut deck1: Deck, mut deck2: Deck, cache: &mut Cache, depth: usize) -> 
         let player1_wins = if deck1.size() < card1 || deck2.size() < card2 {
             card1 > card2
         } else {
-            let sub_game = combat(deck1.copy(card1), deck2.copy(card2), cache, depth + 1);
+            let sub_game = combat(cache, deck1.copy(card1), deck2.copy(card2), depth + 1);
             matches!(sub_game, Winner::Player1(_))
         };
 

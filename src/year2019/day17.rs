@@ -76,7 +76,7 @@ pub fn parse(input: &str) -> Input {
 
     compress(&path, &mut movement);
 
-    // Convert trailing comma ',' into a trailing newline '\n'
+    // Convert trailing comma ',' into a trailing newline '\n'.
     let rules: String = once(movement.routine.as_str())
         .chain(movement.functions.into_iter().flatten())
         .flat_map(|s| [s.trim_end_matches(','), "\n"])

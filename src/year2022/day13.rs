@@ -40,7 +40,7 @@ impl Iterator for Packet<'_> {
         self.extra.pop().or_else(|| {
             let (index, slice) = (self.index, self.slice);
 
-            // Replace occurrences of "10" with "A"
+            // Replace occurrences of "10" with "A".
             if slice[index] == b'1' && slice[index + 1] == b'0' {
                 self.index += 2;
                 Some(b'A')

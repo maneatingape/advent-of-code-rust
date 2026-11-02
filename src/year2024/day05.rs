@@ -28,7 +28,7 @@ pub fn parse(input: &str) -> Input {
         if update.is_sorted_by(|&from, &to| order[from][to] == Less) {
             (part_one + update[middle], part_two)
         } else {
-            // We only need the middle index so this is slightly faster than "sort_unstable_by"
+            // We only need the middle index so this is slightly faster than "sort_unstable_by".
             update.select_nth_unstable_by(middle, |&from, &to| order[from][to]);
             (part_one, part_two + update[middle])
         }

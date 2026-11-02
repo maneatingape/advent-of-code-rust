@@ -152,7 +152,7 @@ fn is_cycle(
         position = match direction {
             UP => {
                 let next = shortcut.up[position];
-                if position.x == obstacle.x && position.y > obstacle.y && obstacle.y >= next.y {
+                if position.x == obstacle.x && next.y <= obstacle.y && obstacle.y < position.y {
                     obstacle - UP
                 } else {
                     next
@@ -168,7 +168,7 @@ fn is_cycle(
             }
             LEFT => {
                 let next = shortcut.left[position];
-                if position.y == obstacle.y && position.x > obstacle.x && obstacle.x >= next.x {
+                if position.y == obstacle.y && next.x <= obstacle.x && obstacle.x < position.x {
                     obstacle - LEFT
                 } else {
                     next

@@ -232,7 +232,7 @@ fn recurse(subspace: &Subspace, mut rhs: Column, remaining: u32, presses: i32) -
         }
 
         let size = upper - lower + 1;
-        if size > 0 && size < min_value {
+        if 0 < size && size < min_value {
             min_value = size;
             min_index = i;
             global_lower = lower;
