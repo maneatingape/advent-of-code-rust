@@ -2,8 +2,6 @@
 //!
 //! Calculates part one and two at the same time as a speed optimization. Assumes labels are always
 //! 8 characters or fewer.
-use std::array::from_fn;
-
 use crate::util::parse::*;
 
 type Input = (usize, usize);
@@ -20,7 +18,7 @@ pub fn parse(input: &str) -> Input {
     let mut part_two = 0;
     let mut hash = 0;
     let mut label = 0;
-    let mut boxes: [Vec<Item>; 256] = from_fn(|_| Vec::new());
+    let mut boxes: [Vec<Item>; 256] = [const { Vec::new() }; 256];
 
     for (i, &b) in input.iter().enumerate() {
         match b {
