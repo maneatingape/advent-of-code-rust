@@ -13,7 +13,7 @@
 use crate::util::iter::*;
 use crate::util::parse::*;
 
-type Input = (usize, usize);
+type Input = (u64, u64);
 
 pub fn parse(input: &str) -> Input {
     // The `->` separator rules out `iter_signed`, so convert to `i32` after parsing instead.
@@ -30,15 +30,15 @@ pub fn parse(input: &str) -> Input {
     (first, first + second)
 }
 
-pub fn part1(input: &Input) -> usize {
+pub fn part1(input: &Input) -> u64 {
     input.0
 }
 
-pub fn part2(input: &Input) -> usize {
+pub fn part2(input: &Input) -> u64 {
     input.1
 }
 
-fn vents(input: &[[i32; 4]], grid: &mut [u8]) -> usize {
+fn vents(input: &[[i32; 4]], grid: &mut [u8]) -> u64 {
     let mut result = 0;
 
     for &[x1, y1, x2, y2] in input {
@@ -47,7 +47,7 @@ fn vents(input: &[[i32; 4]], grid: &mut [u8]) -> usize {
         let mut index = y1 * 1000 + x1;
 
         for _ in 0..count + 1 {
-            result += usize::from(grid[index as usize] == 1);
+            result += u64::from(grid[index as usize] == 1);
             grid[index as usize] += 1;
             index += delta;
         }

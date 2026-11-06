@@ -24,17 +24,17 @@ pub fn parse(input: &str) -> Input {
     grid
 }
 
-pub fn part1(input: &Input) -> usize {
+pub fn part1(input: &Input) -> u64 {
     let (total, _) = simulate(input, |_, steps| steps < 100);
     total
 }
 
-pub fn part2(input: &Input) -> usize {
+pub fn part2(input: &Input) -> u64 {
     let (_, steps) = simulate(input, |flashes, _| flashes < 100);
     steps
 }
 
-fn simulate(input: &Input, predicate: fn(usize, usize) -> bool) -> (usize, usize) {
+fn simulate(input: &Input, predicate: fn(u64, u64) -> bool) -> (u64, u64) {
     let mut grid = *input;
     let mut flashed = [true; 144];
     let mut todo = Vec::with_capacity(100);

@@ -26,7 +26,7 @@ pub fn parse(input: &str) -> Vec<Game> {
 }
 
 /// Sum the ids for all valid games.
-pub fn part1(input: &[Game]) -> usize {
+pub fn part1(input: &[Game]) -> u64 {
     input
         .iter()
         .zip(1..)

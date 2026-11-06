@@ -19,7 +19,7 @@ use crate::util::parse::*;
 
 pub struct Hand {
     cards: [u8; 5],
-    bid: usize,
+    bid: u64,
 }
 
 pub fn parse(input: &str) -> Vec<Hand> {
@@ -34,15 +34,15 @@ pub fn parse(input: &str) -> Vec<Hand> {
         .collect()
 }
 
-pub fn part1(input: &[Hand]) -> usize {
+pub fn part1(input: &[Hand]) -> u64 {
     winnings(input, 11)
 }
 
-pub fn part2(input: &[Hand]) -> usize {
+pub fn part2(input: &[Hand]) -> u64 {
     winnings(input, 1)
 }
 
-fn winnings(input: &[Hand], jack: usize) -> usize {
+fn winnings(input: &[Hand], jack: usize) -> u64 {
     let mut hands: Vec<_> = input
         .iter()
         .map(|&Hand { cards, bid }| {

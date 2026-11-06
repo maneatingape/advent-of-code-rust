@@ -52,19 +52,19 @@ use crate::util::parse::*;
 use crate::util::thread::*;
 
 type Input = (Vec<Monkey>, Vec<Pair>);
-type Pair = (usize, usize);
+type Pair = (usize, u64);
 
 pub struct Monkey {
-    items: Vec<usize>,
+    items: Vec<u64>,
     operation: Operation,
-    test: usize,
+    test: u64,
     yes: usize,
     no: usize,
 }
 
 impl Monkey {
     /// Inspecting an item raises its worry level.
-    fn inspect(&self, item: usize) -> usize {
+    fn inspect(&self, item: u64) -> u64 {
         match self.operation {
             Operation::Square => item * item,
             Operation::Multiply(y) => item * y,
@@ -73,15 +73,15 @@ impl Monkey {
     }
 
     /// The divisibility test decides which monkey receives the item next.
-    fn throw(&self, item: usize) -> usize {
+    fn throw(&self, item: u64) -> usize {
         if item.is_multiple_of(self.test) { self.yes } else { self.no }
     }
 }
 
 enum Operation {
     Square,
-    Multiply(usize),
-    Add(usize),
+    Multiply(u64),
+    Add(u64),
 }
 
 #[derive(Clone, Copy, Default)]
@@ -194,8 +194,8 @@ pub fn part2(input: &Input) -> usize {
 
 /// Play 10,000 rounds adjusting the worry level modulo the product of all the monkey's test values.
 /// Look for cycles in each path so that we don't have to process the entire 10,000 rounds.
-fn play(monkeys: &[Monkey], mut from: usize, mut item: usize) -> Business {
-    let product: usize = monkeys.iter().map(|m| m.test).product();
+fn play(monkeys: &[Monkey], mut from: usize, mut item: u64) -> Business {
+    let product: u64 = monkeys.iter().map(|m| m.test).product();
 
     let mut round = 0;
     let mut business = Business::default();

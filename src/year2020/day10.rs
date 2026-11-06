@@ -16,7 +16,7 @@ pub fn parse(input: &str) -> Vec<usize> {
     adapters
 }
 
-pub fn part1(input: &[usize]) -> usize {
+pub fn part1(input: &[usize]) -> u64 {
     let mut total = [0, 0, 0, 1];
     total[input[0]] += 1;
 
@@ -27,7 +27,7 @@ pub fn part1(input: &[usize]) -> usize {
     total[1] * total[3]
 }
 
-pub fn part2(input: &[usize]) -> usize {
+pub fn part2(input: &[usize]) -> u64 {
     let last = *input.last().unwrap();
     let mut sum = vec![0; last + 1];
     sum[0] = 1;

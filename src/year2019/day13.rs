@@ -14,12 +14,12 @@ pub fn parse(input: &str) -> Vec<i64> {
     input.iter_signed().collect()
 }
 
-pub fn part1(input: &[i64]) -> usize {
+pub fn part1(input: &[i64]) -> u64 {
     let mut computer = Computer::new(input);
     let mut blocks = 0;
 
     while let [_, _, State::Output(t)] = [computer.run(), computer.run(), computer.run()] {
-        blocks += usize::from(t == 2);
+        blocks += u64::from(t == 2);
     }
 
     blocks

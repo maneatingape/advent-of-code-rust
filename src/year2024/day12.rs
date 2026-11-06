@@ -11,7 +11,7 @@
 use crate::util::grid::*;
 use crate::util::point::*;
 
-type Input = (usize, usize);
+type Input = (u64, u64);
 
 pub fn parse(input: &str) -> Input {
     // A newline border allows us to avoid boundary checks.
@@ -56,7 +56,7 @@ pub fn parse(input: &str) -> Input {
                     } else {
                         let clockwise = direction.clockwise();
                         perimeter += 1;
-                        sides += usize::from(!same(point + clockwise) || same(next + clockwise));
+                        sides += u64::from(!same(point + clockwise) || same(next + clockwise));
                     }
                 }
             }
@@ -69,10 +69,10 @@ pub fn parse(input: &str) -> Input {
     (part_one, part_two)
 }
 
-pub fn part1(input: &Input) -> usize {
+pub fn part1(input: &Input) -> u64 {
     input.0
 }
 
-pub fn part2(input: &Input) -> usize {
+pub fn part2(input: &Input) -> u64 {
     input.1
 }

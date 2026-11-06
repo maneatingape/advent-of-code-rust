@@ -26,8 +26,8 @@
 //! | 2c - (a + b)     | 2(c - b)                       |
 //! | 3d - (a + b + c) | 3(d - c)                       |
 pub struct Input {
-    xs: [usize; 140],
-    ys: [usize; 140],
+    xs: [u64; 140],
+    ys: [u64; 140],
 }
 
 pub fn parse(input: &str) -> Input {
@@ -46,15 +46,15 @@ pub fn parse(input: &str) -> Input {
     Input { xs, ys }
 }
 
-pub fn part1(input: &Input) -> usize {
+pub fn part1(input: &Input) -> u64 {
     axis(&input.xs, 2) + axis(&input.ys, 2)
 }
 
-pub fn part2(input: &Input) -> usize {
+pub fn part2(input: &Input) -> u64 {
     axis(&input.xs, 1_000_000) + axis(&input.ys, 1_000_000)
 }
 
-fn axis(counts: &[usize], empty_space: usize) -> usize {
+fn axis(counts: &[u64], empty_space: u64) -> u64 {
     let mut result = 0;
     let mut galaxies = 0;
     let mut sum = 0;

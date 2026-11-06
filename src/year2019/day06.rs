@@ -57,8 +57,8 @@ pub fn parse(input: &str) -> Vec<usize> {
 
 /// Recursively follow parent relationships all the way to the root COM object. Cache each object's
 /// depth in order to avoid unnecessary work.
-pub fn part1(input: &[usize]) -> usize {
-    fn orbits(parent: &[usize], cache: &mut [Option<usize>], index: usize) -> usize {
+pub fn part1(input: &[usize]) -> u64 {
+    fn orbits(parent: &[usize], cache: &mut [Option<u64>], index: usize) -> u64 {
         if let Some(result) = cache[index] {
             result
         } else {

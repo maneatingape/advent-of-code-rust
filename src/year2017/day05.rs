@@ -24,7 +24,7 @@ pub fn parse(input: &str) -> Vec<isize> {
 }
 
 /// Brute force implementation.
-pub fn part1(input: &[isize]) -> usize {
+pub fn part1(input: &[isize]) -> u64 {
     let mut jump = input.to_vec();
     let mut total = 0;
     let mut index = 0;
@@ -39,7 +39,7 @@ pub fn part1(input: &[isize]) -> usize {
     total
 }
 
-pub fn part2(input: &[isize]) -> usize {
+pub fn part2(input: &[isize]) -> u64 {
     let mut jump = input.to_vec();
     let mut total = 0;
     let mut index = 0;
@@ -60,7 +60,7 @@ pub fn part2(input: &[isize]) -> usize {
                 let (next, steps, delta) = compute_block(compact[j], index % 16);
 
                 compact[j] = usize::from(next);
-                total += usize::from(steps);
+                total += u64::from(steps);
                 index += usize::from(delta);
             }
 
@@ -69,7 +69,7 @@ pub fn part2(input: &[isize]) -> usize {
                 let (next, steps, delta) = cache[index % 16][*value];
 
                 *value = usize::from(next);
-                total += usize::from(steps);
+                total += u64::from(steps);
                 index += usize::from(delta);
             }
         } else {

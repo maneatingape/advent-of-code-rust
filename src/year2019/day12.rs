@@ -40,12 +40,12 @@ pub fn part1(input: &Input) -> i32 {
     p0 * v0 + p1 * v1 + p2 * v2 + p3 * v3
 }
 
-pub fn part2(input: &Input) -> usize {
+pub fn part2(input: &Input) -> u64 {
     let [mut x, mut y, mut z] = *input;
     let [mut a, mut b, mut c] = [0, 0, 0];
     let mut count = 0;
 
-    let update = |axis: &mut Axis, period: &mut usize, count: usize| {
+    let update = |axis: &mut Axis, period: &mut u64, count: u64| {
         if *period == 0 {
             *axis = step(*axis);
             if axis[4..] == [0; 4] {
