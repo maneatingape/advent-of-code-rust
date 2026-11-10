@@ -9,12 +9,11 @@ use crate::util::parse::*;
 const DIRAC: [Pair; 7] = [(3, 1), (4, 3), (5, 6), (6, 7), (7, 6), (8, 3), (9, 1)];
 
 type Pair = (usize, usize);
-type State = (Pair, Pair);
 
 /// Extract the starting position for both players converting to zero-based indices.
-pub fn parse(input: &str) -> State {
+pub fn parse(input: &str) -> Pair {
     let [_, one, _, two]: [usize; 4] = input.iter_unsigned().chunk::<4>().next().unwrap();
-    ((one - 1, 0), (two - 1, 0))
+    (one - 1, two - 1)
 }
 
 /// The initial deterministic dice roll total is 6 (1 + 2 + 3) and increases by 9 each turn.
@@ -22,21 +21,20 @@ pub fn parse(input: &str) -> State {
 /// also increase the dice total modulo 10, as (a + b) % 10 = (a % 10) + (b % 10). Additionally,
 /// both players end up back in the same position every 10 moves, so we can compute the score per
 /// batch of 10 moves before simulating only the remainder.
-pub fn part1(input: &State) -> usize {
+pub fn part1(input: &Pair) -> usize {
     let mut dice = 6;
-    let ((player_position, _), (other_position, _)) = *input;
+    let (player, other) = *input;
 
     // Utilize the periodic visitation pattern to compute the 10-turn score increase per player.
     let batch_score = |position, offsets: &[usize]| -> usize {
         offsets.iter().map(|offset| (position + offset) % 10 + 1).sum()
     };
-    let player_batch = batch_score(player_position, &[6, 0, 2, 2, 0, 6, 0, 2, 2, 0]);
-    let other_batch = batch_score(other_position, &[5, 8, 9, 8, 5, 0, 3, 4, 3, 0]);
+    let player_batch = batch_score(player, &[6, 0, 2, 2, 0, 6, 0, 2, 2, 0]);
+    let other_batch = batch_score(other, &[5, 8, 9, 8, 5, 0, 3, 4, 3, 0]);
 
     let batches = 999 / player_batch.max(other_batch);
     let mut rolls = batches * 60; // 2 players * 3 dice * 10 turns per batch.
-    let mut state =
-        ((player_position, player_batch * batches), (other_position, other_batch * batches));
+    let mut state = ((player, player_batch * batches), (other, other_batch * batches));
 
     loop {
         // Player position is 0 based from 0 to 9, but score is 1 based from 1 to 10.
@@ -57,47 +55,39 @@ pub fn part1(input: &State) -> usize {
     }
 }
 
-/// [Memoization](https://en.wikipedia.org/wiki/Memoization) is the key to solving part two in a
-/// reasonable time. For each possible starting universe we record the number of winning and losing
-/// recursive universes so that we can reuse the result and avoid unnecessary calculations.
-///
-/// Each player can be in position 1 to 10 and can have a score from 0 to 20 (as a score of 21
-/// ends the game). This is a total of (10 × 21)² = 44,100 possible states. For speed this
-/// can fit in an array with perfect hashing, instead of using a slower `HashMap`.
-pub fn part2(input: &State) -> usize {
-    let mut cache = vec![None; 44_100];
-    let (win, lose) = dirac(&mut cache, *input);
-    win.max(lose)
-}
+/// Handle each player seperately. The number of universes for each player grows independently.
+/// When a player wins, then multiply the number of states by the other player's states.
+pub fn part2(input: &Pair) -> usize {
+    let (player, other) = *input;
 
-fn dirac(cache: &mut [Option<Pair>], state: State) -> Pair {
-    let ((player_position, player_score), (other_position, other_score)) = state;
+    let mut current = [[[0; 21]; 10], [[0; 21]; 10]];
+    let mut wins = [0; 2];
+    let mut universes = 1;
+    let mut turn = 0;
 
-    // Calculate the perfect hash of the state and lookup the cache in case we've seen this before.
-    let index = player_position + 10 * other_position + 100 * player_score + 2100 * other_score;
-    if let Some(result) = cache[index] {
-        return result;
+    current[0][player][0] = 1;
+    current[1][other][0] = 1;
+
+    while universes > 0 {
+        let mut next = [[0; 21]; 10];
+
+        for (dice, frequency) in DIRAC {
+            for (position, row) in current[turn].iter().enumerate() {
+                let next_position = (position + dice) % 10;
+                let (todo, won) = row.split_at(20 - next_position);
+
+                for (score, &amount) in todo.iter().enumerate() {
+                    next[next_position][score + next_position + 1] += frequency * amount;
+                }
+
+                wins[turn] += universes * frequency * won.iter().sum::<usize>();
+            }
+        }
+
+        current[turn] = next;
+        universes = current[turn].iter().flatten().sum();
+        turn ^= 1;
     }
 
-    let helper = |(win, lose), &(dice, frequency)| {
-        let advance = player_position + dice;
-        let next_position = if advance >= 10 { advance - 10 } else { advance };
-        let next_score = player_score + next_position + 1;
-
-        if next_score >= 21 {
-            (win + frequency, lose)
-        } else {
-            // Sneaky trick here to handle both players with the same function.
-            // We swap the order of player's state each turn, so that turns alternate
-            // and record the result as (lose, win) instead of (win, lose).
-            let next_state = ((other_position, other_score), (next_position, next_score));
-            let (next_lose, next_win) = dirac(cache, next_state);
-            (win + frequency * next_win, lose + frequency * next_lose)
-        }
-    };
-
-    // Compute the number of wins and losses from this position and add to the cache.
-    let result = DIRAC.iter().fold((0, 0), helper);
-    cache[index] = Some(result);
-    result
+    wins[0].max(wins[1])
 }
