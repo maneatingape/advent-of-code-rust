@@ -47,11 +47,11 @@ use crate::util::iter::*;
 use crate::util::parse::*;
 
 /// Each robot generates 1 mineral of a particular type.
-const ZERO: Mineral = Mineral::from(0, 0, 0, 0);
-const ORE_BOT: Mineral = Mineral::from(1, 0, 0, 0);
-const CLAY_BOT: Mineral = Mineral::from(0, 1, 0, 0);
-const OBSIDIAN_BOT: Mineral = Mineral::from(0, 0, 1, 0);
-const GEODE_BOT: Mineral = Mineral::from(0, 0, 0, 1);
+const ZERO: Mineral = Mineral::new(0, 0, 0, 0);
+const ORE_BOT: Mineral = Mineral::new(1, 0, 0, 0);
+const CLAY_BOT: Mineral = Mineral::new(0, 1, 0, 0);
+const OBSIDIAN_BOT: Mineral = Mineral::new(0, 0, 1, 0);
+const GEODE_BOT: Mineral = Mineral::new(0, 0, 0, 1);
 
 #[derive(Clone, Copy)]
 struct Mineral {
@@ -62,7 +62,7 @@ struct Mineral {
 }
 
 impl Mineral {
-    const fn from(ore: u32, clay: u32, obsidian: u32, geode: u32) -> Self {
+    const fn new(ore: u32, clay: u32, obsidian: u32, geode: u32) -> Self {
         Self { ore, clay, obsidian, geode }
     }
 
@@ -111,23 +111,23 @@ pub struct Blueprint {
 }
 
 impl Blueprint {
-    fn from(chunk: [u32; 7]) -> Self {
+    fn new(chunk: [u32; 7]) -> Self {
         let [id, ore1, ore2, ore3, clay, ore4, obsidian] = chunk;
         Self {
             id,
             max_ore: ore1.max(ore2).max(ore3).max(ore4),
             max_clay: clay,
             max_obsidian: obsidian,
-            ore_cost: Mineral::from(ore1, 0, 0, 0),
-            clay_cost: Mineral::from(ore2, 0, 0, 0),
-            obsidian_cost: Mineral::from(ore3, clay, 0, 0),
-            geode_cost: Mineral::from(ore4, 0, obsidian, 0),
+            ore_cost: Mineral::new(ore1, 0, 0, 0),
+            clay_cost: Mineral::new(ore2, 0, 0, 0),
+            obsidian_cost: Mineral::new(ore3, clay, 0, 0),
+            geode_cost: Mineral::new(ore4, 0, obsidian, 0),
         }
     }
 }
 
 pub fn parse(input: &str) -> Vec<Blueprint> {
-    input.iter_unsigned().chunk::<7>().map(Blueprint::from).collect()
+    input.iter_unsigned().chunk::<7>().map(Blueprint::new).collect()
 }
 
 pub fn part1(input: &[Blueprint]) -> u32 {

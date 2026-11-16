@@ -36,9 +36,7 @@ impl<T: Eq + Hash> FastSetExt<T> for FastSet<T> {
     }
 
     fn build<const N: usize>(array: [T; N]) -> Self {
-        let mut set = Self::new();
-        set.extend(array);
-        set
+        Self::from_iter(array)
     }
 }
 
@@ -62,9 +60,7 @@ impl<K: Eq + Hash, V> FastMapExt<K, V> for FastMap<K, V> {
     }
 
     fn build<const N: usize>(array: [(K, V); N]) -> Self {
-        let mut map = Self::new();
-        map.extend(array);
-        map
+        Self::from_iter(array)
     }
 }
 

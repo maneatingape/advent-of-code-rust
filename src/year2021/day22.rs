@@ -38,8 +38,8 @@ pub struct RebootStep {
 }
 
 impl RebootStep {
-    fn from((command, points): (&str, [i32; 6])) -> Self {
-        Self { on: command == "on", cube: Cube::from(points) }
+    fn new((command, points): (&str, [i32; 6])) -> Self {
+        Self { on: command == "on", cube: Cube::new(points) }
     }
 }
 
@@ -58,7 +58,7 @@ struct Cube {
 impl Cube {
     /// Keeping the coordinates in ascending order per axis makes calculating intersections
     /// and volume easier.
-    fn from([a, b, c, d, e, f]: [i32; 6]) -> Self {
+    fn new([a, b, c, d, e, f]: [i32; 6]) -> Self {
         let (x1, x2) = a.minmax(b);
         let (y1, y2) = c.minmax(d);
         let (z1, z2) = e.minmax(f);
@@ -88,7 +88,7 @@ impl Cube {
 pub fn parse(input: &str) -> Vec<RebootStep> {
     let first = input.split_ascii_whitespace().step_by(2);
     let second = input.iter_signed().chunk::<6>();
-    first.zip(second).map(RebootStep::from).collect()
+    first.zip(second).map(RebootStep::new).collect()
 }
 
 /// We reuse the logic between part one and two, by first intersecting all cubes with

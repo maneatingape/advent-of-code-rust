@@ -66,24 +66,16 @@ pub fn parse(input: &str) -> Grid<i32> {
 }
 
 pub fn part1(time: &Grid<i32>) -> u32 {
-    [Point::new(2, 0), Point::new(0, 2)].iter().map(|&delta| cheats(time, delta)).sum()
+    cheats(time, Point::new(2, 0)) + cheats(time, Point::new(0, 2))
 }
 
 /// Searches for all cheats up to distance 20, parallelizing the work over multiple threads.
 pub fn part2(time: &Grid<i32>) -> u32 {
-    let mut deltas = Vec::with_capacity(419);
+    let right = (2..21).map(|x| Point::new(x, 0));
+    let below = (1..21).flat_map(|y| ((y - 20)..(21 - y)).map(move |x| Point::new(x, y)));
+    let deltas: Vec<_> = right.chain(below).collect();
 
-    for x in 2..21 {
-        deltas.push(Point::new(x, 0));
-    }
-
-    for y in 1..21 {
-        for x in (y - 20)..(21 - y) {
-            deltas.push(Point::new(x, y));
-        }
-    }
-
-    // // Use as many cores as possible to parallelize the remaining search.
+    // Use as many cores as possible to parallelize the remaining search.
     spawn_parallel_iterator(&deltas, |iter| iter.map(|&delta| cheats(time, delta)).sum::<u32>())
         .into_iter()
         .sum()

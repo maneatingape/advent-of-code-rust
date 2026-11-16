@@ -15,7 +15,7 @@ pub fn parse(input: &str) -> &[u8] {
 pub fn part1(bytes: &[u8]) -> u32 {
     let width = bytes.iter().position(|&b| b == b'\n').unwrap() + 1;
 
-    // Offsets for horizontal, vertical and both diagonals. Sweep the whole whole grid so that each
+    // Offsets for horizontal, vertical and both diagonals. Sweep the whole grid so that each
     // loop auto-vectorizes. The newline separators prevent false positives on boundaries.
     [1, width, width - 1, width + 1]
         .iter()

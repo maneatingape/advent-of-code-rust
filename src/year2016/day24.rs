@@ -27,8 +27,7 @@ type Input = (u16, u16);
 
 pub fn parse(input: &str) -> Input {
     let grid = Grid::parse(input);
-    let found: Vec<_> =
-        grid.bytes.iter().enumerate().filter(|(_, b)| b.is_ascii_digit()).map(|(i, _)| i).collect();
+    let found: Vec<_> = (0..grid.bytes.len()).filter(|&i| grid.bytes[i].is_ascii_digit()).collect();
 
     let width = grid.width as isize;
     // There are 8 locations.

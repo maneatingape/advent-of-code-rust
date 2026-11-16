@@ -9,21 +9,17 @@ pub fn parse(input: &str) -> &[u8] {
 
 /// Each layer is 25 × 6 = 150 bytes and there are 100 layers total.
 pub fn part1(input: &[u8]) -> u32 {
-    let mut most = 0;
-    let mut result = 0;
+    let (ones, twos) = input
+        .chunks_exact(LAYER_SIZE)
+        .map(|layer| {
+            layer.iter().fold((0, 0), |(ones, twos), &b| {
+                (ones + u32::from(b & 1), twos + u32::from((b >> 1) & 1))
+            })
+        })
+        .max_by_key(|&(ones, twos)| ones + twos)
+        .unwrap();
 
-    for layer in input.chunks_exact(LAYER_SIZE) {
-        let (ones, twos) = layer.iter().fold((0, 0), |(ones, twos), &b| {
-            (ones + u32::from(b & 1), twos + u32::from((b >> 1) & 1))
-        });
-
-        if ones + twos > most {
-            most = ones + twos;
-            result = ones * twos;
-        }
-    }
-
-    result
+    ones * twos
 }
 
 /// Since a black or white pixel covers those in lower layers, it's faster to check each pixel

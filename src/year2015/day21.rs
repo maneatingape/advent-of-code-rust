@@ -29,8 +29,7 @@ impl Add for Item {
 }
 
 pub fn parse(input: &str) -> Input {
-    let [boss_health, boss_damage, boss_armor]: [_; 3] =
-        input.iter_unsigned().chunk::<3>().next().unwrap();
+    let [boss_health, boss_damage, boss_armor] = input.iter_unsigned().chunk::<3>().next().unwrap();
 
     let weapon = [
         Item { cost: 8, damage: 4, armor: 0 },

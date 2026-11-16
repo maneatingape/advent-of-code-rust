@@ -36,7 +36,7 @@ pub struct Nanobot {
 }
 
 impl Nanobot {
-    fn from([x, y, z, r]: [i32; 4]) -> Self {
+    fn new([x, y, z, r]: [i32; 4]) -> Self {
         Self { x, y, z, r }
     }
 
@@ -46,7 +46,7 @@ impl Nanobot {
 }
 
 pub fn parse(input: &str) -> Vec<Nanobot> {
-    input.iter_signed().chunk::<4>().map(Nanobot::from).collect()
+    input.iter_signed().chunk::<4>().map(Nanobot::new).collect()
 }
 
 pub fn part1(input: &[Nanobot]) -> usize {

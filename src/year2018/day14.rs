@@ -274,8 +274,7 @@ fn lsb(u: usize) -> usize {
 /// s += (s >> 32)  |   a   | Σa..b | Σa..c | Σa..d | Σa..e | Σa..f | Σa..g | Σa..h |
 /// ```
 #[inline]
-fn prefix_sum(u: usize) -> usize {
-    let mut s = u;
+fn prefix_sum(mut s: usize) -> usize {
     s += s >> 8;
     s += s >> 16;
     s += s >> 32;

@@ -55,8 +55,7 @@ pub fn parse(input: &str) -> Input {
     // Initialize a shared table for both parts: 2ⁿ sets with n distances per set. Default 0 matches
     // g({k},k) for all singleton sets of zero distance from yourself, but tracking k as the start
     // of the path. The initial value of other sets does not matter.
-    let zero = (0, 0);
-    let mut table = vec![zero; stride * (1 << stride)];
+    let mut table = vec![(0, 0); stride * (1 << stride)];
     for k in 0..stride {
         table[(1 << k) * stride + k].1 = k as u8;
     }

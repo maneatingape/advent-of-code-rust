@@ -1,7 +1,7 @@
 # Advent of Code [![checks-badge]][checks-link] [![docs-badge]][docs-link]
 
 Blazing fast Rust solutions for every [Advent of Code] puzzle from 2015 to 2025, taking
-**460 milliseconds** to solve all 524 stars. Each solution is carefully optimized for performance
+**459 milliseconds** to solve all 524 stars. Each solution is carefully optimized for performance
 while ensuring the code remains concise, readable, and idiomatic.
 
 ## Features
@@ -72,7 +72,7 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 
 | Year | [2024](#2024) | [2023](#2023) | [2022](#2022) | [2021](#2021) | [2020](#2020) | [2019](#2019) | [2018](#2018) | [2017](#2017) | [2016](#2016) | [2015](#2015) |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Benchmark (ms) | 4 | 4 | 5 | 7 | 220 | 10 | 33 | 56 | 107 | 13 |
+| Benchmark (ms) | 4 | 4 | 5 | 7 | 220 | 10 | 32 | 56 | 107 | 13 |
 
 ## 2025
 
@@ -314,7 +314,7 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 | 21 | [Chronal Conversion](https://adventofcode.com/2018/day/21) | [Source](src/year2018/day21.rs) | 66 |
 | 22 | [Mode Maze](https://adventofcode.com/2018/day/22) | [Source](src/year2018/day22.rs) | 1994 |
 | 23 | [Experimental Emergency Teleportation](https://adventofcode.com/2018/day/23) | [Source](src/year2018/day23.rs) | 44 |
-| 24 | [Immune System Simulator 20XX](https://adventofcode.com/2018/day/24) | [Source](src/year2018/day24.rs) | 1943 |
+| 24 | [Immune System Simulator 20XX](https://adventofcode.com/2018/day/24) | [Source](src/year2018/day24.rs) | 1126 |
 | 25 | [Four-Dimensional Adventure](https://adventofcode.com/2018/day/25) | [Source](src/year2018/day25.rs) | 97 |
 
 ## 2017

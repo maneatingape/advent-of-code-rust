@@ -25,7 +25,7 @@ pub enum Op {
 }
 
 impl Op {
-    fn from(line: &str) -> Self {
+    fn new(line: &str) -> Self {
         let tokens: Vec<_> = line.split_ascii_whitespace().collect();
         let digit = |i: usize| tokens[i].unsigned();
         let letter = |i: usize| tokens[i].chars().next().unwrap();
@@ -86,7 +86,7 @@ impl Op {
 }
 
 pub fn parse(input: &str) -> Vec<Op> {
-    input.lines().map(Op::from).collect()
+    input.lines().map(Op::new).collect()
 }
 
 pub fn part1(input: &[Op]) -> String {

@@ -34,36 +34,22 @@ pub fn parse(input: &str) -> Input {
     let (first, second) = input.split_once('\n').unwrap();
 
     // Build two maps, one for vertical segments and one for horizontal.
-    let mut start = ORIGIN;
-    let mut distance = 0;
     let mut vertical = BTreeMap::new();
     let mut horizontal = BTreeMap::new();
 
-    for (direction, amount) in steps(first) {
-        let delta = Point::from(direction);
-        let end = start + delta * amount;
-        let line = Line { start, end, distance };
-
-        if start.x == end.x {
-            vertical.insert(start.x, line);
+    for line in lines(first) {
+        if line.start.x == line.end.x {
+            vertical.insert(line.start.x, line);
         } else {
-            horizontal.insert(start.y, line);
+            horizontal.insert(line.start.y, line);
         }
-
-        start = end;
-        distance += amount;
     }
 
     // Trace the steps of the second wire, checking for intersections.
-    let mut start = ORIGIN;
-    let mut distance = 0;
     let mut manhattan = i32::MAX;
     let mut delay = i32::MAX;
 
-    for (direction, amount) in steps(second) {
-        let delta = Point::from(direction);
-        let end = start + delta * amount;
-
+    for Line { start, end, distance } in lines(second) {
         // Checks for intersections, ignoring the initial intersection at the origin.
         let mut update = |line: &Line, candidate: Point| {
             if candidate.manhattan(line.start) < line.end.manhattan(line.start)
@@ -92,9 +78,6 @@ pub fn parse(input: &str) -> Input {
                 update(line, Point::new(x, start.y));
             }
         }
-
-        start = end;
-        distance += amount;
     }
 
     (manhattan, delay)
@@ -108,11 +91,19 @@ pub fn part2(input: &Input) -> i32 {
     input.1
 }
 
-/// Map a wire into an iterator of direction and distance pairs.
-fn steps(wire: &str) -> impl Iterator<Item = (u8, i32)> {
+/// Map a wire into an iterator of line segments, each with the distance so far to its start.
+fn lines(wire: &str) -> impl Iterator<Item = Line> {
     let directions = wire.bytes().filter(u8::is_ascii_alphabetic);
     let amounts = wire.iter_signed();
-    directions.zip(amounts)
+    let mut start = ORIGIN;
+    let mut distance = 0;
+
+    directions.zip(amounts).map(move |(direction, amount)| {
+        let line = Line { start, end: start + Point::from(direction) * amount, distance };
+        start = line.end;
+        distance += amount;
+        line
+    })
 }
 
 fn signum(a: Point, b: Point) -> Point {

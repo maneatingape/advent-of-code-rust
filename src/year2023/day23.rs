@@ -225,12 +225,9 @@ pub fn part2(input: &Input) -> u32 {
     let end = [0, 0, 0, 0, 0, b'S', 0, 0];
 
     // Compute all possible different 76 rows and the next possible row.
-    let mut todo = VecDeque::new();
-    let mut seen = FastSet::new();
+    let mut todo = VecDeque::from([start]);
+    let mut seen = FastSet::build([start]);
     let mut graph = FastMap::new();
-
-    todo.push_back(start);
-    seen.insert(start);
 
     while let Some(row) = todo.pop_front() {
         let mut neighbors = Vec::new();
@@ -247,10 +244,8 @@ pub fn part2(input: &Input) -> u32 {
 
     // Step through each row of the grid, keeping track of the maximum value for each
     // row type.
-    let mut current = FastMap::new();
+    let mut current = FastMap::build([((start, false), 0)]);
     let mut next = FastMap::new();
-
-    current.insert((start, false), 0);
 
     for y in 0..6 {
         for ((row, gap), steps) in current.drain() {
@@ -292,12 +287,11 @@ fn compress(input: &str) -> Graph {
     grid[end + DOWN] = b'#';
 
     // BFS to find distances between POIs. Points of interest are the start, the end and junctions.
-    let mut poi = VecDeque::new();
+    let mut poi = VecDeque::from([start]);
     let mut seen = FastSet::new();
     let mut edges = FastMap::new();
     let mut weight = FastMap::new();
 
-    poi.push_back(start);
     grid[end] = b'P';
 
     while let Some(from) = poi.pop_front() {

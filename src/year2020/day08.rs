@@ -21,7 +21,7 @@ pub enum Instruction {
 }
 
 impl Instruction {
-    fn from([a, b]: [&str; 2]) -> Self {
+    fn new([a, b]: [&str; 2]) -> Self {
         let amount = b.signed();
         match a {
             "acc" => Self::Acc(amount),
@@ -38,7 +38,7 @@ enum State {
 }
 
 pub fn parse(input: &str) -> Vec<Instruction> {
-    input.split_ascii_whitespace().chunk::<2>().map(Instruction::from).collect()
+    input.split_ascii_whitespace().chunk::<2>().map(Instruction::new).collect()
 }
 
 pub fn part1(input: &[Instruction]) -> isize {

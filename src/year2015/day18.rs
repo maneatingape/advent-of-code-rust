@@ -78,17 +78,13 @@ pub struct Row {
 
 /// Pack the lights into 1 bit each in [big-endian order](https://en.wikipedia.org/wiki/Endianness).
 pub fn parse(input: &str) -> Vec<Row> {
-    let mut grid = Vec::with_capacity(101);
     let pack = |acc, b| (acc << 1) | u64::from(b & 1);
+    let row = |line: &str| Row {
+        even: line.bytes().step_by(2).fold(0, pack),
+        odd: line.bytes().skip(1).step_by(2).fold(0, pack),
+    };
 
-    for line in input.lines() {
-        let even = line.bytes().step_by(2).fold(0, pack);
-        let odd = line.bytes().skip(1).step_by(2).fold(0, pack);
-        grid.push(Row { even, odd });
-    }
-
-    grid.push(Row::default());
-    grid
+    input.lines().map(row).chain([Row::default()]).collect()
 }
 
 pub fn part1(input: &[Row]) -> u32 {

@@ -15,7 +15,7 @@ pub struct ParIter<'a, T> {
 impl<'a, T> Iterator for ParIter<'a, T> {
     type Item = &'a T;
 
-    fn next(&mut self) -> Option<&'a T> {
+    fn next(&mut self) -> Option<Self::Item> {
         // First try taking from our own queue.
         let worker = &self.workers[self.id];
         let current = worker.increment();
@@ -108,7 +108,7 @@ pub struct AtomicIter {
 impl AtomicIter {
     #[must_use]
     pub fn new(start: u32, step: u32) -> Self {
-        Self { running: AtomicBool::new(true), index: AtomicU32::from(start), step }
+        Self { running: AtomicBool::new(true), index: AtomicU32::new(start), step }
     }
 
     #[must_use]

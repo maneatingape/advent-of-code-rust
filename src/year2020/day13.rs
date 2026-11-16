@@ -39,12 +39,11 @@ pub fn part1(input: &Input) -> usize {
 }
 
 pub fn part2(input: &Input) -> usize {
-    let (mut time, mut step) = input.buses[0];
+    let mut time = 0;
+    let mut step = 1;
 
-    for (offset, id) in &input.buses[1..] {
-        let remainder = id - offset % id;
-
-        while time % id != remainder {
+    for &(offset, id) in &input.buses {
+        while (time + offset) % id != 0 {
             time += step;
         }
 

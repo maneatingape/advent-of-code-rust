@@ -27,7 +27,7 @@ struct Shortcut {
 }
 
 impl Shortcut {
-    fn from(grid: &Grid<u8>) -> Self {
+    fn new(grid: &Grid<u8>) -> Self {
         let mut up = grid.same_size_with(ORIGIN);
         let mut down = grid.same_size_with(ORIGIN);
         let mut left = grid.same_size_with(ORIGIN);
@@ -120,7 +120,7 @@ pub fn part2(grid: &Grid<u8>) -> usize {
     }
 
     // Use as many cores as possible to parallelize the remaining search.
-    let shortcut = Shortcut::from(&grid);
+    let shortcut = Shortcut::new(&grid);
     let result = spawn_parallel_iterator(&path, |iter| worker(&shortcut, iter));
     result.into_iter().sum()
 }
@@ -148,43 +148,21 @@ fn is_cycle(
             return true;
         }
 
-        // The tricky part is checking for the newly introduced time-traveling obstacle.
-        position = match direction {
-            UP => {
-                let next = shortcut.up[position];
-                if position.x == obstacle.x && next.y <= obstacle.y && obstacle.y < position.y {
-                    obstacle - UP
-                } else {
-                    next
-                }
-            }
-            DOWN => {
-                let next = shortcut.down[position];
-                if position.x == obstacle.x && position.y < obstacle.y && obstacle.y <= next.y {
-                    obstacle - DOWN
-                } else {
-                    next
-                }
-            }
-            LEFT => {
-                let next = shortcut.left[position];
-                if position.y == obstacle.y && next.x <= obstacle.x && obstacle.x < position.x {
-                    obstacle - LEFT
-                } else {
-                    next
-                }
-            }
-            RIGHT => {
-                let next = shortcut.right[position];
-                if position.y == obstacle.y && position.x < obstacle.x && obstacle.x <= next.x {
-                    obstacle - RIGHT
-                } else {
-                    next
-                }
-            }
+        let next = match direction {
+            UP => shortcut.up[position],
+            DOWN => shortcut.down[position],
+            LEFT => shortcut.left[position],
+            RIGHT => shortcut.right[position],
             _ => unreachable!(),
         };
 
+        // The tricky part is checking for the newly introduced time-traveling obstacle. It's in
+        // the way if it's straight ahead and no further than the square we would shortcut to.
+        let distance = position.manhattan(obstacle);
+        let blocked =
+            distance <= position.manhattan(next) && position + direction * distance == obstacle;
+
+        position = if blocked { obstacle - direction } else { next };
         direction = direction.clockwise();
     }
 

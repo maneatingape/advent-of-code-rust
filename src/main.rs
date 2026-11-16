@@ -42,8 +42,7 @@ fn main() {
         .into_iter()
         .filter(|s| year.is_none_or(|y| y == s.year))
         .filter(|s| day.is_none_or(|d| d == s.day))
-        .fold((0, Duration::ZERO), |(stars, duration), solution| {
-            let Solution { year, day, wrapper } = solution;
+        .fold((0, Duration::ZERO), |(stars, duration), Solution { year, day, wrapper }| {
             let path = format!("input/year{year}/day{day:02}.txt");
 
             if let Ok(data) = read_to_string(&path) {

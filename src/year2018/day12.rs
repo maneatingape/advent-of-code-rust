@@ -26,7 +26,7 @@ struct Pots {
 
 impl Pots {
     /// Parses the initial state into a bit vector.
-    fn from(initial_state: &[u8]) -> Self {
+    fn new(initial_state: &[u8]) -> Self {
         let state = initial_state.iter().map(|&b| u8::from(b == b'#')).collect();
         Self { state, prev_state: Vec::new(), pos: 0 }
     }
@@ -62,7 +62,7 @@ impl Pots {
 pub fn parse(input: &str) -> Input {
     // Parse initial state.
     let (prefix, suffix) = input.split_once("\n\n").unwrap();
-    let mut pots = Pots::from(&prefix.as_bytes()[15..]);
+    let mut pots = Pots::new(&prefix.as_bytes()[15..]);
 
     // Parse rules into a table with all possible 2⁵=32 patterns.
     let mut rules = [0; 32];

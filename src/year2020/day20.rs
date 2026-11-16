@@ -71,7 +71,7 @@ impl Tile {
         [0, -1, 8, 1, 0, 1],
     ];
 
-    fn from(chunk: &[&str]) -> Self {
+    fn new(chunk: &[&str]) -> Self {
         let id = chunk[0][5..9].unsigned();
 
         let pixels: [[_; 10]; 10] = from_fn(|i| chunk[i + 1].as_bytes().try_into().unwrap());
@@ -88,11 +88,7 @@ impl Tile {
             )
         });
 
-        let reverse = |edge: usize| edge.reverse_bits() >> 54;
-        let rt = reverse(t);
-        let rl = reverse(l);
-        let rb = reverse(b);
-        let rr = reverse(r);
+        let [rt, rl, rb, rr] = [t, l, b, r].map(|edge: usize| edge.reverse_bits() >> 54);
 
         // Same transform sequence as coefficients:
         // [O, H, V, HV, R, RH, RV, RHV]
@@ -108,7 +104,7 @@ impl Tile {
     fn transform(&self, image: &mut [u128], permutation: usize) {
         let [a, b, c, d, e, f] = Self::COEFFICIENTS[permutation];
 
-        for row in 0..8 {
+        for (row, line) in (0..8).zip(image) {
             let acc = (0..8).fold(0, |acc, col| {
                 let x = a * col + b * row + c;
                 let y = d * col + e * row + f;
@@ -116,14 +112,14 @@ impl Tile {
                 (acc << 1) | (b & 1)
             });
 
-            image[row as usize] = (image[row as usize] << 8) | u128::from(acc);
+            *line = (*line << 8) | u128::from(acc);
         }
     }
 }
 
 pub fn parse(input: &str) -> Vec<Tile> {
     let lines: Vec<_> = input.lines().collect();
-    lines.chunks(12).map(Tile::from).collect()
+    lines.chunks(12).map(Tile::new).collect()
 }
 
 pub fn part1(input: &[Tile]) -> u64 {

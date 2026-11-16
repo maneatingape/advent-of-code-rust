@@ -162,23 +162,18 @@ fn beam(graph: &mut Graph, node: &mut Node, mut position: Point, mut direction: 
         match graph.grid[position] {
             // A newline border ends the path.
             b'\n' => break,
-            b'|' => {
-                // If we encounter the pointy edge of a splitter then this additional splitter is
-                // also part of this node. Nodes can contain multiple splitters in the same path.
-                if direction == UP || direction == DOWN {
-                    node.from.insert(position);
-                } else {
-                    node.to.insert(position);
-                    break;
-                }
+            // If we encounter the pointy edge of a splitter then this additional splitter is
+            // also part of this node. Nodes can contain multiple splitters in the same path.
+            b'|' if direction == UP || direction == DOWN => {
+                node.from.insert(position);
             }
-            b'-' => {
-                if direction == LEFT || direction == RIGHT {
-                    node.from.insert(position);
-                } else {
-                    node.to.insert(position);
-                    break;
-                }
+            b'-' if direction == LEFT || direction == RIGHT => {
+                node.from.insert(position);
+            }
+            // The flat side of a splitter is a child node that ends the path.
+            b'|' | b'-' => {
+                node.to.insert(position);
+                break;
             }
             // Mirrors change direction.
             b'\\' => direction = Point::new(direction.y, direction.x),

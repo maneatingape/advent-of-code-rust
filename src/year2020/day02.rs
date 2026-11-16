@@ -21,7 +21,7 @@ pub struct Rule<'a> {
 }
 
 impl Rule<'_> {
-    fn from([a, b, c, d]: [&str; 4]) -> Rule<'_> {
+    fn new([a, b, c, d]: [&str; 4]) -> Rule<'_> {
         Rule {
             start: a.unsigned(),
             end: b.unsigned(),
@@ -36,7 +36,7 @@ pub fn parse(input: &str) -> Vec<Rule<'_>> {
         .split(['-', ':', ' ', '\n'])
         .filter(|s| !s.is_empty())
         .chunk::<4>()
-        .map(Rule::from)
+        .map(Rule::new)
         .collect()
 }
 

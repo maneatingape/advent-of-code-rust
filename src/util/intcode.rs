@@ -1,5 +1,6 @@
 //! Implementation of the full Intcode computer specification.
 use std::collections::VecDeque;
+use std::iter::repeat_n;
 
 /// [SWAG](https://en.wikipedia.org/wiki/Scientific_wild-ass_guess)
 /// It's possible that some inputs will need more space than this.
@@ -22,10 +23,7 @@ pub struct Computer {
 impl Computer {
     #[must_use]
     pub fn new(input: &[i64]) -> Self {
-        let mut code = Vec::with_capacity(input.len() + EXTRA);
-        code.extend(input.iter().map(|&i| i as usize));
-        code.resize(code.len() + EXTRA, 0);
-
+        let code = input.iter().map(|&i| i as usize).chain(repeat_n(0, EXTRA)).collect();
         Self { pc: 0, base: 0, code, input: VecDeque::new() }
     }
 

@@ -53,6 +53,8 @@
 //!
 //! Since we don't need to handle the general input case (a common pattern in Advent of Code) we can
 //! implement this rule directly in code.
+use std::iter::successors;
+
 use self::Rule::*;
 use crate::util::parse::*;
 
@@ -100,21 +102,16 @@ pub fn part2(input: &Input<'_>) -> usize {
     messages
         .iter()
         .filter(|message| {
-            let mut index = 0;
-            let mut first = 0;
-            let mut second = 0;
+            // Count consecutive matches of a rule, also returning the index after the last match.
+            let repeat = |rule, start| {
+                successors(Some(start), |&index| check(rules, rule, message, index))
+                    .enumerate()
+                    .last()
+                    .unwrap()
+            };
 
-            while let Some(next) = check(rules, 42, message, index) {
-                index = next;
-                first += 1;
-            }
-
-            if first >= 2 {
-                while let Some(next) = check(rules, 31, message, index) {
-                    index = next;
-                    second += 1;
-                }
-            }
+            let (first, index) = repeat(42, 0);
+            let (second, index) = if first >= 2 { repeat(31, index) } else { (0, index) };
 
             index == message.len() && 1 <= second && second < first
         })

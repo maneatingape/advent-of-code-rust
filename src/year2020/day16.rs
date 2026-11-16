@@ -30,7 +30,7 @@ struct Rule {
 }
 
 impl Rule {
-    fn from(line: &str) -> Self {
+    fn new(line: &str) -> Self {
         let departure = line.starts_with("departure");
         let [a, b, c, d] = line.iter_unsigned().chunk::<4>().next().unwrap();
         Self { departure, a, b, c, d }
@@ -43,7 +43,7 @@ impl Rule {
 
 pub fn parse(input: &str) -> Input {
     let [first, second, third] = input.splitn(3, "\n\n").chunk::<3>().next().unwrap();
-    let rules: Vec<_> = first.lines().map(Rule::from).collect();
+    let rules: Vec<_> = first.lines().map(Rule::new).collect();
     let your_ticket = second.iter_unsigned().collect();
     let mut nearby_tickets = vec![Vec::new(); rules.len()];
 
@@ -113,19 +113,15 @@ fn solve_part_two(
         rules_by_column.push(remaining);
     }
 
-    while rules_by_column.iter().any(|rules| rules.len() > 1) {
-        for i in 0..rules_by_column.len() {
-            if rules_by_column[i].len() == 1 {
-                let found = rules_by_column[i].pop().unwrap();
+    while let Some(i) = rules_by_column.iter().position(|rules| rules.len() == 1) {
+        let found = rules_by_column[i][0];
 
-                if found.departure {
-                    product *= u64::from(your_ticket[i]);
-                }
+        if found.departure {
+            product *= u64::from(your_ticket[i]);
+        }
 
-                for remaining in &mut rules_by_column {
-                    remaining.retain(|&rule| rule != found);
-                }
-            }
+        for remaining in &mut rules_by_column {
+            remaining.retain(|&rule| rule != found);
         }
     }
 

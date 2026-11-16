@@ -170,8 +170,8 @@ pub fn part2(input: &[i32]) -> i32 {
         "This approach will only work if the index is in the second half of the input."
     );
 
-    let first = compute(input, start, upper, BINOMIAL_MOD_2.into_iter().cycle(), 128);
-    let second = compute(input, start, upper, BINOMIAL_MOD_5.into_iter().cycle(), 125);
+    let first = compute(input, start, upper, &BINOMIAL_MOD_2);
+    let second = compute(input, start, upper, &BINOMIAL_MOD_5);
 
     // Computes C(n, k) % 10
     // Solving the Chinese remainder theorem for the special case of two congruences:
@@ -190,10 +190,11 @@ pub fn part2(input: &[i32]) -> i32 {
 
 /// Quickly computes a digit taking advantage of the fact
 /// that the LCM is much smaller than the whole range.
-fn compute<I>(input: &[i32], start: usize, upper: usize, mut nck: I, size: usize) -> [i32; 8]
-where
-    I: Iterator<Item = (i32, usize)>,
-{
+fn compute(input: &[i32], start: usize, upper: usize, nck: &[(i32, usize)]) -> [i32; 8] {
+    // The skip values add up to the length of the cycle.
+    let size: usize = nck.iter().map(|&(_, skip)| skip).sum();
+    let mut nck = nck.iter().copied().cycle();
+
     from_fn(|offset| {
         let start = start + offset;
         let total = upper - start;

@@ -14,7 +14,7 @@ type Ingredient = [i32; 5];
 type Input = (i32, i32);
 
 pub fn parse(input: &str) -> Input {
-    let recipe: Vec<Ingredient> = input.iter_signed().chunk::<5>().collect();
+    let recipe: [Ingredient; 4] = input.iter_signed().chunk::<5>().chunk::<4>().next().unwrap();
     let mut part_one = 0;
     let mut part_two = 0;
 
@@ -26,13 +26,7 @@ pub fn parse(input: &str) -> Input {
 
             // Check if any ingredient can never be greater than zero.
             // This makes the entire score zero, so we can skip.
-            if second
-                .iter()
-                .zip(recipe[2])
-                .zip(recipe[3])
-                .take(4)
-                .any(|((x, y), z)| x + y.max(z) * (100 - a - b) <= 0)
-            {
+            if (0..4).any(|i| second[i] + recipe[2][i].max(recipe[3][i]) * (100 - a - b) <= 0) {
                 continue;
             }
 

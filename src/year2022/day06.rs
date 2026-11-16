@@ -35,20 +35,18 @@ fn find(input: &str, marker: usize) -> usize {
     let mut start = 0;
     let mut seen = [0; 26];
 
-    for (i, b) in input.bytes().enumerate() {
-        // Use the character as an index into the array.
-        let index = usize::from(b - b'a');
-        let previous = seen[index];
-        // Positions are 1-based.
-        seen[index] = i + 1;
-
-        // There's a duplicate so advance the start of the window one character past it.
-        start = start.max(previous);
-        // We've reached the desired packet size with no duplicates so finish.
-        if i + 1 - start == marker {
-            return i + 1;
-        }
-    }
-
-    unreachable!()
+    // Positions are 1-based.
+    input
+        .bytes()
+        .zip(1..)
+        .find_map(|(b, position)| {
+            // Use the character as an index into the array.
+            let index = usize::from(b - b'a');
+            // There's a duplicate so advance the start of the window one character past it.
+            start = start.max(seen[index]);
+            seen[index] = position;
+            // We've reached the desired packet size with no duplicates so finish.
+            (position - start == marker).then_some(position)
+        })
+        .unwrap()
 }

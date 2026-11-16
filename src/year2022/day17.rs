@@ -35,8 +35,7 @@
 //! We choose an arbitrary length and generate a sequence of that size then search
 //! for repeating patterns. Once we find the length of the cycle then we can extrapolate for
 //! any `n` greater than the start of the cycle.
-use std::iter::{Copied, Cycle, once};
-use std::slice::Iter;
+use std::iter::once;
 
 /// Encode pieces one row per byte, highest row in the most significant position.
 const FLOOR: u8 = 0xff;
@@ -49,73 +48,9 @@ const ROCKS: [Rock; 5] = [
     Rock { size: 2, shape: 0x00003030 },
 ];
 
-/// Convenience alias to shorten type name.
-type Wrapper<'a, T> = Cycle<Copied<Iter<'a, T>>>;
-
-#[derive(Clone, Copy)]
 struct Rock {
     size: usize,
     shape: u32,
-}
-
-struct State<'a> {
-    rocks: Wrapper<'a, Rock>,
-    jets: Wrapper<'a, u8>,
-    tower: Vec<u8>,
-    height: usize,
-}
-
-impl State<'_> {
-    fn new(input: &[u8]) -> State<'_> {
-        // 13,000 is the maximum possible height that the tower could reach after 5000 rocks.
-        let mut tower = vec![0; 13_000];
-        tower[0] = FLOOR;
-
-        // Rocks and jets repeat endlessly.
-        let rocks = ROCKS.iter().copied().cycle();
-        let jets = input.iter().copied().cycle();
-        State { rocks, jets, tower, height: 0 }
-    }
-}
-
-/// Implement as an iterator for ergonomics.
-impl Iterator for State<'_> {
-    type Item = usize;
-
-    fn next(&mut self) -> Option<Self::Item> {
-        let Rock { size, mut shape } = self.rocks.next()?;
-        let mut chunk = WALLS;
-        // Start 3 rows above the current top of the tower.
-        let mut index = self.height + 3;
-
-        loop {
-            let jet = self.jets.next()?;
-            let candidate = if jet == b'<' { shape.rotate_left(1) } else { shape.rotate_right(1) };
-            // Check for a horizontal collision (this does not prevent downwards movement).
-            if candidate & chunk == 0 {
-                shape = candidate;
-            }
-
-            // The neat part of using bitwise AND to compare is that we can check all four
-            // rows in a single operation, including both walls and the existing tower.
-            chunk = (chunk << 8) | WALLS | u32::from(self.tower[index]);
-
-            if shape & chunk == 0 {
-                // Keep falling.
-                index -= 1;
-            } else {
-                // Add the new piece to the tower.
-                let bytes = shape.to_le_bytes();
-                self.tower[index + 1] |= bytes[0];
-                self.tower[index + 2] |= bytes[1];
-                self.tower[index + 3] |= bytes[2];
-                self.tower[index + 4] |= bytes[3];
-                // Rock may have fallen far enough to not add any additional height.
-                self.height = self.height.max(index + size);
-                break Some(self.height);
-            }
-        }
-    }
 }
 
 pub fn parse(input: &str) -> &[u8] {
@@ -123,7 +58,7 @@ pub fn parse(input: &str) -> &[u8] {
 }
 
 pub fn part1(input: &[u8]) -> usize {
-    State::new(input).nth(2021).unwrap()
+    simulate(input).nth(2021).unwrap()
 }
 
 pub fn part2(input: &[u8]) -> usize {
@@ -131,7 +66,7 @@ pub fn part2(input: &[u8]) -> usize {
     // * 1000 row deltas are enough to form a unique prefix
     // * The tower pattern will repeat in a cycle in the first 5000 rows.
     let guess = 1000;
-    let height: Vec<_> = State::new(input).take(5 * guess).collect();
+    let height: Vec<_> = simulate(input).take(5 * guess).collect();
     // We compare based on the *delta* between rows instead of absolute heights.
     let deltas: Vec<_> =
         once(height[0]).chain(height.array_windows().map(|[a, b]| b - a)).collect();
@@ -150,4 +85,49 @@ pub fn part2(input: &[u8]) -> usize {
     let quotient = offset / cycle_width;
     let remainder = offset % cycle_width;
     (quotient * cycle_height) + height[start + remainder]
+}
+
+/// Returns an endless iterator of the tower's height after each rock comes to rest.
+fn simulate(input: &[u8]) -> impl Iterator<Item = usize> {
+    // 13,000 is the maximum possible height that the tower could reach after 5000 rocks.
+    let mut tower = vec![0; 13_000];
+    let mut height = 0;
+    tower[0] = FLOOR;
+
+    // Rocks and jets repeat endlessly.
+    let mut jets = input.iter().copied().cycle();
+
+    ROCKS.iter().cycle().map(move |&Rock { size, mut shape }| {
+        let mut chunk = WALLS;
+        // Start 3 rows above the current top of the tower.
+        let mut index = height + 3;
+
+        loop {
+            let jet = jets.next().unwrap();
+            let candidate = if jet == b'<' { shape.rotate_left(1) } else { shape.rotate_right(1) };
+            // Check for a horizontal collision (this does not prevent downwards movement).
+            if candidate & chunk == 0 {
+                shape = candidate;
+            }
+
+            // The neat part of using bitwise AND to compare is that we can check all four
+            // rows in a single operation, including both walls and the existing tower.
+            chunk = (chunk << 8) | WALLS | u32::from(tower[index]);
+
+            if shape & chunk == 0 {
+                // Keep falling.
+                index -= 1;
+            } else {
+                // Add the new piece to the tower.
+                let bytes = shape.to_le_bytes();
+                tower[index + 1] |= bytes[0];
+                tower[index + 2] |= bytes[1];
+                tower[index + 3] |= bytes[2];
+                tower[index + 4] |= bytes[3];
+                // Rock may have fallen far enough to not add any additional height.
+                height = height.max(index + size);
+                break height;
+            }
+        }
+    })
 }

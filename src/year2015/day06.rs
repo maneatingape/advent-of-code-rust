@@ -14,7 +14,7 @@ enum Command {
 }
 
 impl Command {
-    fn from(bytes: &[u8]) -> Self {
+    fn new(bytes: &[u8]) -> Self {
         match bytes[6] {
             b'n' => Self::On,
             b'f' => Self::Off,
@@ -33,15 +33,15 @@ pub struct Instruction {
 
 impl Instruction {
     /// Add one to both x2 and y2 to make ranges easier.
-    fn from((bytes, [x1, y1, x2, y2]): (&[u8], [usize; 4])) -> Self {
-        Self { command: Command::from(bytes), x1, x2: x2 + 1, y1, y2: y2 + 1 }
+    fn new((bytes, [x1, y1, x2, y2]): (&[u8], [usize; 4])) -> Self {
+        Self { command: Command::new(bytes), x1, x2: x2 + 1, y1, y2: y2 + 1 }
     }
 }
 
 pub fn parse(input: &str) -> Vec<Instruction> {
     let first = input.lines().map(str::as_bytes);
     let second = input.iter_unsigned().chunk::<4>();
-    first.zip(second).map(Instruction::from).collect()
+    first.zip(second).map(Instruction::new).collect()
 }
 
 pub fn part1(input: &[Instruction]) -> u32 {

@@ -25,7 +25,7 @@ struct BitStream<'a> {
 }
 
 impl BitStream<'_> {
-    fn from(s: &str) -> BitStream<'_> {
+    fn new(s: &str) -> BitStream<'_> {
         BitStream { available: 0, bits: 0, read: 0, iter: s.bytes() }
     }
 
@@ -54,7 +54,7 @@ pub enum Packet {
 }
 
 impl Packet {
-    fn from(bit_stream: &mut BitStream<'_>) -> Self {
+    fn new(bit_stream: &mut BitStream<'_>) -> Self {
         let version = bit_stream.next(3);
         let type_id = bit_stream.next(3);
 
@@ -71,10 +71,10 @@ impl Packet {
         } else {
             let packets = if bit_stream.next(1) == 0 {
                 let target = bit_stream.next(15) + bit_stream.read;
-                from_fn(|| (bit_stream.read < target).then(|| Self::from(bit_stream))).collect()
+                from_fn(|| (bit_stream.read < target).then(|| Self::new(bit_stream))).collect()
             } else {
                 let sub_packets = bit_stream.next(11) as usize;
-                Vec::from_fn(sub_packets, |_| Self::from(bit_stream))
+                Vec::from_fn(sub_packets, |_| Self::new(bit_stream))
             };
 
             Self::Operator { version, type_id, packets }
@@ -83,7 +83,7 @@ impl Packet {
 }
 
 pub fn parse(input: &str) -> Packet {
-    Packet::from(&mut BitStream::from(input))
+    Packet::new(&mut BitStream::new(input))
 }
 
 pub fn part1(packet: &Packet) -> u64 {

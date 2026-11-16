@@ -16,6 +16,7 @@
 //! It would be possible (but less fun) to precompute all possible 92 answers into a
 //! lookup table.
 use crate::util::hash::*;
+use crate::util::iter::*;
 
 const ELEMENTS: &str = "\
 22 -> H -> H
@@ -114,27 +115,21 @@ const ELEMENTS: &str = "\
 type Result = (usize, usize);
 
 pub fn parse(input: &str) -> Result {
-    let elements: Vec<_> = ELEMENTS
-        .lines()
-        .map(|line| {
-            let (sequence, rest) = line.split_once(" -> ").unwrap();
-            let (name, decay) = rest.split_once(" -> ").unwrap();
-            (sequence, name, decay)
-        })
-        .collect();
+    let elements: Vec<_> =
+        ELEMENTS.lines().flat_map(|line| line.split(" -> ")).chunk::<3>().collect();
 
     // Map both sequence and element name to indices.
     let indices: FastMap<_, _> = elements
         .iter()
         .enumerate()
-        .flat_map(|(i, &(sequence, name, _))| [(sequence, i), (name, i)])
+        .flat_map(|(i, &[sequence, name, _])| [(sequence, i), (name, i)])
         .collect();
 
     // Build list of decay chains.
-    let sizes: Vec<_> = elements.iter().map(|(sequence, ..)| sequence.len()).collect();
+    let sizes: Vec<_> = elements.iter().map(|[sequence, ..]| sequence.len()).collect();
     let decays: Vec<_> = elements
         .iter()
-        .map(|&(_, _, decay)| decay.split_ascii_whitespace().map(|name| indices[name]).collect())
+        .map(|&[.., decay]| decay.split_ascii_whitespace().map(|name| indices[name]).collect())
         .collect();
 
     // Each input is a single element.

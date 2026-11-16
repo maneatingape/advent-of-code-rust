@@ -7,7 +7,6 @@
 //! minimum boost value with a multithreaded parallel search.
 //!
 //! [`Day 15`]: crate::year2018::day15
-use crate::util::hash::*;
 use crate::util::parse::*;
 use crate::util::thread::*;
 
@@ -67,16 +66,9 @@ impl Group {
 }
 
 pub fn parse(input: &str) -> Input {
-    // Use a bitmask to store each possible attack type.
-    let mut elements = FastMap::new();
-    let mut mask = |key| {
-        let next = 1 << elements.len();
-        *elements.entry(key).or_insert(next)
-    };
-
     let (first, second) = input.split_once("\n\n").unwrap();
-    let immune = parse_group(first, &mut mask);
-    let infection = parse_group(second, &mut mask);
+    let immune = parse_group(first);
+    let infection = parse_group(second);
     Input { immune, infection }
 }
 
@@ -182,7 +174,7 @@ fn fight(input: &Input, boost: i32) -> (Kind, i32) {
 }
 
 /// Parsing the input relatively cleanly is a challenge by itself.
-fn parse_group<'a>(input: &'a str, mask: &mut impl FnMut(&'a str) -> u32) -> Vec<Group> {
+fn parse_group(input: &str) -> Vec<Group> {
     let delimiters = [' ', '(', ')', ',', ';'];
     input
         .lines()
@@ -195,8 +187,8 @@ fn parse_group<'a>(input: &'a str, mask: &mut impl FnMut(&'a str) -> u32) -> Vec
             let damage = tokens[tokens.len() - 6].signed();
             let initiative = tokens[tokens.len() - 1].signed();
             let attack = mask(tokens[tokens.len() - 5]);
-            let weak = parse_list(&tokens, "weak", mask);
-            let immune = parse_list(&tokens, "immune", mask);
+            let weak = parse_list(&tokens, "weak");
+            let immune = parse_list(&tokens, "immune");
             let chosen = 0;
 
             Group { units, hit_points, damage, initiative, weak, immune, attack, chosen }
@@ -205,7 +197,7 @@ fn parse_group<'a>(input: &'a str, mask: &mut impl FnMut(&'a str) -> u32) -> Vec
 }
 
 /// There can be any number of weaknesses or immunities.
-fn parse_list<'a>(tokens: &[&'a str], start: &str, mask: &mut impl FnMut(&'a str) -> u32) -> u32 {
+fn parse_list(tokens: &[&str], start: &str) -> u32 {
     let end = ["weak", "immune", "with"];
     tokens
         .iter()
@@ -213,5 +205,13 @@ fn parse_list<'a>(tokens: &[&'a str], start: &str, mask: &mut impl FnMut(&'a str
         // Skip the heading and "to", then take element names until the next section starts.
         .skip(2)
         .take_while(|&&t| !end.contains(&t))
+        // Consecutive delimiters result in empty tokens.
+        .filter(|t| !t.is_empty())
         .fold(0, |elements, &t| elements | mask(t))
+}
+
+/// Use a bitmask to store each possible attack type. Assumes that each type starts with a
+/// different letter, for example `bludgeoning`, `cold`, `fire`, `radiation` and `slashing`.
+fn mask(element: &str) -> u32 {
+    1 << (element.as_bytes()[0] - b'a')
 }
