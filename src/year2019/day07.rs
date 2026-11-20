@@ -15,9 +15,9 @@ pub fn part1(input: &[i64]) -> i64 {
     let mut result = 0;
     let mut computer = Computer::new(input);
 
-    let sequence = |slice: &[i64]| {
+    let mut sequence = |phases: [i64; 5]| {
         // Send exactly 2 inputs and receive exactly 1 output per amplifier.
-        let signal = slice.iter().fold(0, |signal, &phase| {
+        let signal = phases.iter().fold(0, |signal, &phase| {
             computer.reset();
             computer.input(phase);
             computer.input(signal);
@@ -28,7 +28,7 @@ pub fn part1(input: &[i64]) -> i64 {
         result = result.max(signal);
     };
 
-    permutations(&mut [0, 1, 2, 3, 4], sequence);
+    permutations([0, 1, 2, 3, 4], 0, &mut sequence);
     result
 }
 
@@ -36,9 +36,9 @@ pub fn part2(input: &[i64]) -> i64 {
     let mut result = 0;
     let mut computers: [_; 5] = from_fn(|_| Computer::new(input));
 
-    let feedback = |slice: &[i64]| {
+    let mut feedback = |phases: [i64; 5]| {
         // Reset state and send each initial phase setting exactly once.
-        for (computer, &phase) in computers.iter_mut().zip(slice) {
+        for (computer, phase) in computers.iter_mut().zip(phases) {
             computer.reset();
             computer.input(phase);
         }
@@ -57,31 +57,19 @@ pub fn part2(input: &[i64]) -> i64 {
         result = result.max(signal);
     };
 
-    permutations(&mut [5, 6, 7, 8, 9], feedback);
+    permutations([5, 6, 7, 8, 9], 0, &mut feedback);
     result
 }
 
-/// Generates all possible permutations of a mutable slice, passing them one at a time to a
-/// callback function.
-/// Uses [Heap's algorithm](https://en.wikipedia.org/wiki/Heap%27s_algorithm) for efficiency,
-/// modifying the slice in place.
-fn permutations(slice: &mut [i64], mut callback: impl FnMut(&[i64])) {
-    callback(slice);
-
-    let n = slice.len();
-    let mut c = vec![0; n];
-    let mut i = 1;
-
-    while i < n {
-        if c[i] < i {
-            let swap_index = if i.is_multiple_of(2) { 0 } else { c[i] };
-            slice.swap(swap_index, i);
-            callback(slice);
-            c[i] += 1;
-            i = 1;
-        } else {
-            c[i] = 0;
-            i += 1;
+/// Generates all possible permutations of the array, passing them to a callback function.
+fn permutations<F: FnMut([i64; 5])>(mut array: [i64; 5], i: usize, f: &mut F) {
+    if i == 5 {
+        f(array);
+    } else {
+        for j in i..5 {
+            array.swap(i, j);
+            permutations(array, i + 1, f);
+            array.swap(i, j);
         }
     }
 }
