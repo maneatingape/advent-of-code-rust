@@ -22,10 +22,10 @@ pub struct Reaction {
 pub fn parse(input: &str) -> Vec<Reaction> {
     let lines: Vec<_> = input.lines().collect();
 
-    // Default chemical is ORE, other chemicals will overwrite.
-    let mut reactions = Vec::from_fn(lines.len() + 1, |_| Reaction {
+    // Reactions are indexed by output chemical. ORE has no reaction so keeps the default.
+    let mut reactions = Vec::from_fn(lines.len() + 1, |chemical| Reaction {
         amount: 0,
-        chemical: 1,
+        chemical,
         ingredients: Vec::new(),
     });
 
@@ -49,7 +49,6 @@ pub fn parse(input: &str) -> Vec<Reaction> {
 
         let reaction = &mut reactions[chemical];
         reaction.amount = amount.unsigned();
-        reaction.chemical = chemical;
 
         for [kind, amount] in tokens {
             let chemical = lookup(kind);

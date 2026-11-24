@@ -110,10 +110,9 @@ fn play(input: Input, hard_mode: bool) -> ControlFlow<i16, !> {
     cache.insert(start);
 
     while let Some((_, mut state)) = todo.pop() {
-        let spent = state.spent;
         // Check winning condition.
         if state.apply_spell_effects() {
-            return ControlFlow::Break(spent);
+            return ControlFlow::Break(state.spent);
         }
 
         // Part two
@@ -125,8 +124,12 @@ fn play(input: Input, hard_mode: bool) -> ControlFlow<i16, !> {
             }
         }
 
-        // Apply spell effects and boss turn, returning the winning mana spent if the boss dies.
-        let mut try_cast = |mut next: State| {
+        // Pay for the spell, then apply spell effects and boss turn, returning the winning mana
+        // spent if the boss dies.
+        let mut try_cast = |cost: i16, mut next: State| {
+            next.player_mana -= cost;
+            next.spent += cost;
+
             if next.apply_spell_effects() {
                 return ControlFlow::Break(next.spent);
             }
@@ -138,58 +141,29 @@ fn play(input: Input, hard_mode: bool) -> ControlFlow<i16, !> {
 
         // Magic Missile
         if state.player_mana >= 53 {
-            let next = State {
-                boss_hp: state.boss_hp - 4,
-                player_mana: state.player_mana - 53,
-                spent: spent + 53,
-                ..state
-            };
-            try_cast(next)?;
+            try_cast(53, State { boss_hp: state.boss_hp - 4, ..state })?;
         }
 
         // Drain
         if state.player_mana >= 73 {
-            let next = State {
-                boss_hp: state.boss_hp - 2,
-                player_hp: state.player_hp + 2,
-                player_mana: state.player_mana - 73,
-                spent: spent + 73,
-                ..state
-            };
-            try_cast(next)?;
+            let next =
+                State { boss_hp: state.boss_hp - 2, player_hp: state.player_hp + 2, ..state };
+            try_cast(73, next)?;
         }
 
         // Shield
         if state.player_mana >= 113 && state.shield_effect == 0 {
-            let next = State {
-                player_mana: state.player_mana - 113,
-                shield_effect: 6,
-                spent: spent + 113,
-                ..state
-            };
-            try_cast(next)?;
+            try_cast(113, State { shield_effect: 6, ..state })?;
         }
 
         // Poison
         if state.player_mana >= 173 && state.poison_effect == 0 {
-            let next = State {
-                player_mana: state.player_mana - 173,
-                poison_effect: 6,
-                spent: spent + 173,
-                ..state
-            };
-            try_cast(next)?;
+            try_cast(173, State { poison_effect: 6, ..state })?;
         }
 
         // Recharge
         if state.player_mana >= 229 && state.recharge_effect == 0 {
-            let next = State {
-                player_mana: state.player_mana - 229,
-                recharge_effect: 5,
-                spent: spent + 229,
-                ..state
-            };
-            try_cast(next)?;
+            try_cast(229, State { recharge_effect: 5, ..state })?;
         }
     }
 

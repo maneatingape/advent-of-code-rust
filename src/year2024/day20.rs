@@ -84,14 +84,13 @@ pub fn part2(time: &Grid<i32>) -> u32 {
 /// Compare two slices against each other so that the compiler can auto-vectorize the loops.
 /// Boundary checks are not needed due to the padding on the right and bottom of the grid.
 fn cheats(time: &Grid<i32>, delta: Point) -> u32 {
-    let start = Point::new(1, 1);
     let maximum = time.width * time.height;
     let threshold = 100 + delta.manhattan(ORIGIN);
-    let slice_from = |point: Point| &time.bytes[(time.width * point.y + point.x) as usize..];
+    let offset = (time.width * delta.y + delta.x) as usize;
 
-    slice_from(start)
+    time.bytes
         .iter()
-        .zip(slice_from(start + delta))
+        .zip(&time.bytes[offset..])
         .map(|(&from, &to)| {
             let saved = (from - to).abs();
             u32::from(threshold <= saved && saved <= maximum)

@@ -9,8 +9,6 @@
 //! so that we can disambiguate.
 //!
 //! [`Rc`]: std::rc::Rc
-use std::collections::VecDeque;
-
 use crate::util::hash::*;
 use crate::util::parse::*;
 
@@ -35,8 +33,6 @@ pub fn parse(input: &str) -> Input {
     let indices: FastMap<_, _> = pairs.iter().enumerate().map(|(i, &(key, _))| (key, i)).collect();
     // Create a vec of the correct size with default values.
     let mut nodes = vec![Node::default(); indices.len()];
-    // We'll process nodes from leaf to root.
-    let mut todo = VecDeque::new();
 
     for (i, &(_, suffix)) in pairs.iter().enumerate() {
         // Remove delimiters.
@@ -51,11 +47,6 @@ pub fn parse(input: &str) -> Input {
             let child = indices[edge];
             nodes[child].parent = Some(i);
         }
-
-        // Start with leaf nodes.
-        if nodes[i].children == 0 {
-            todo.push_back(i);
-        }
     }
 
     // The root is the only node without a parent. Start from any node, and walk up the
@@ -67,7 +58,10 @@ pub fn parse(input: &str) -> Input {
     let part_one = pairs[candidate].0.to_owned();
     let mut part_two = 0;
 
-    while let Some(index) = todo.pop_front() {
+    // Process nodes from leaf to root, starting with leaf nodes.
+    let mut todo: Vec<_> = (0..nodes.len()).filter(|&i| nodes[i].children == 0).collect();
+
+    while let Some(index) = todo.pop() {
         let Node { parent, weight, total, .. } = nodes[index];
         let parent = parent.unwrap();
         let node = &mut nodes[parent];
@@ -106,9 +100,9 @@ pub fn parse(input: &str) -> Input {
         node.total += total;
         node.processed += 1;
 
-        // If we've processed all children then add to the queue and check balance.
+        // If we've processed all children then add to the stack and check balance.
         if node.processed == node.children {
-            todo.push_back(parent);
+            todo.push(parent);
         }
     }
 

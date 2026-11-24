@@ -55,7 +55,6 @@ pub fn parse(input: &str) -> Maze {
         grid.bytes.iter().map(|&b| if b == b'.' { Tile::Open } else { Tile::Wall }).collect();
     let mut map = FastMap::new();
     let mut found = Vec::new();
-    let mut start = usize::MAX;
 
     // Find all labels.
     for y in (1..grid.height - 1).step_by(2) {
@@ -86,10 +85,7 @@ pub fn parse(input: &str) -> Maze {
                 (Kind::Inner, Kind::Outer)
             } else {
                 match pair {
-                    (b'A', b'A') => {
-                        start = found.len();
-                        (Kind::Start, Kind::Start)
-                    }
+                    (b'A', b'A') => (Kind::Start, Kind::Start),
                     (b'Z', b'Z') => (Kind::End, Kind::End),
                     _ => (Kind::Outer, Kind::Inner),
                 }
@@ -133,7 +129,7 @@ pub fn parse(input: &str) -> Maze {
         portals.push(edges);
     }
 
-    Maze { start, portals }
+    Maze { start: map[&((b'A', b'A'), Kind::Start)], portals }
 }
 
 /// Straight BFS with no caching or any optimization tricks.

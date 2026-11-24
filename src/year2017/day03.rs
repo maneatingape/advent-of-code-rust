@@ -41,12 +41,8 @@ pub fn parse(input: &str) -> u32 {
 
 pub fn part1(input: &u32) -> u32 {
     let target = *input;
-    let mut a = 3;
-
-    // Find the donut that contains the value.
-    while a * a < target {
-        a += 2;
-    }
+    // Find the donut that contains the value, the smallest odd width at least sqrt(target).
+    let a = (target - 1).isqrt().next_multiple_of(2) + 1;
     let b = a - 1;
     let c = a - 2;
 
@@ -59,22 +55,21 @@ pub fn part2(input: &u32) -> u32 {
     let mut values = FastMap::build([(ORIGIN, 1)]);
     let mut position = ORIGIN;
     let mut direction = RIGHT;
-    let mut steps = 1;
 
     loop {
-        for _ in 0..2 {
-            for _ in 0..steps {
-                position += direction;
+        position += direction;
 
-                let next = DIAGONAL.iter().filter_map(|&d| values.get(&(position + d))).sum();
+        let next = DIAGONAL.iter().filter_map(|&d| values.get(&(position + d))).sum();
 
-                if next > target {
-                    return next;
-                }
-                values.insert(position, next);
-            }
-            direction = direction.counter_clockwise();
+        if next > target {
+            return next;
         }
-        steps += 1;
+        values.insert(position, next);
+
+        // Turn left whenever the square on that side is still empty.
+        let left = direction.counter_clockwise();
+        if !values.contains_key(&(position + left)) {
+            direction = left;
+        }
     }
 }

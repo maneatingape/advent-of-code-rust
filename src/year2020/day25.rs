@@ -1,14 +1,13 @@
 //! # Combo Breaker
 //!
-//! The puzzle description for today describes the [Diffie-Hellman-Merkle] handshake, which your
-//! browser uses every day for encrypted traffic. It relies on the fact that if you use the
-//! product of two prime numbers as your encryption key, where each of the two parties in
-//! the transaction only knows one of the two prime numbers, then modular arithmetic allows
-//! both sides to efficiently compute the same results, while an eavesdropper would have
-//! exponentially more work to do to first factor the product into the original components. Here,
-//! we are playing the role of the eavesdropper, so we are doing exponential work. But since
-//! 2²⁵ is small, brute force is tolerable, when compared to more typical Diffie-Hellman parameters
-//! of 2⁵¹² or larger (these days, anything less than 2048 bits is insecure).
+//! The puzzle description describes the [Diffie-Hellman-Merkle] handshake, which browsers use to
+//! encrypt traffic. It relies on the fact that if each of the two parties in the transaction raises
+//! a shared base to the power of their own secret exponent, then modular arithmetic allows both
+//! sides to efficiently compute the same results, while an eavesdropper would have exponentially
+//! more work to do to first recover a secret exponent from its public key, known as the
+//! [discrete logarithm] problem. Here, we are playing the role of the eavesdropper, so we are doing
+//! exponential work. But since 2²⁵ is small, brute force is tolerable, when compared to more
+//! typical Diffie-Hellman parameters of 2⁵¹² or larger (anything less than 2048 bits is insecure).
 //!
 //! The common encryption key is then calculated efficiently by [modular exponentiation] using
 //! [exponentiation by squaring].
@@ -21,12 +20,13 @@
 //! See also [this alternative patch](https://github.com/maneatingape/advent-of-code-rust/pull/88)
 //! that can further speed things up to less than one-tenth of the work by using the
 //! [Pohlig-Hellman] algorithm (yes, the same Hellman that described secure key exchange also
-//! described how to speed up the factoring of that key). However, the complexity required to
-//! exploit properties from [Fermat's Little Theorem] and the [Chinese Remainder Theorem] to reduce
-//! the work to √116099 = 341 table entries (as one of the factors of `20201227-1`) is harder to
-//! maintain, when this solution is already fast enough.
+//! described how to speed up computing the discrete logarithm of that key). However, the
+//! complexity required to exploit properties from [Fermat's Little Theorem] and the
+//! [Chinese Remainder Theorem] to reduce the work to √116099 = 341 table entries (as one of the
+//! factors of `20201227-1`) is harder to maintain, when this solution is already fast enough.
 //!
 //! [Diffie-Hellman-Merkle]: https://en.wikipedia.org/wiki/Diffie%E2%80%93Hellman_key_exchange
+//! [discrete logarithm]: https://en.wikipedia.org/wiki/Discrete_logarithm
 //! [modular exponentiation]: https://en.wikipedia.org/wiki/Modular_exponentiation
 //! [exponentiation by squaring]: https://en.wikipedia.org/wiki/Exponentiation_by_squaring
 //! [Baby-step giant-step algorithm]: https://en.wikipedia.org/wiki/Baby-step_giant-step

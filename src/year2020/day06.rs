@@ -4,7 +4,7 @@
 //!
 //! We can store each passenger's answers as an implicit set in a `u32` since the cardinality
 //! is only 26. For each yes answer we set a bit, shifting left based on the letter. For example
-//! `acf` would be represented as `100101`.
+//! `acf` would be represented as `1001010`.
 //!
 //! For part one to find groups where any person answered yes, we reduce the group using
 //! [bitwise OR](https://en.wikipedia.org/wiki/Bitwise_operation) then count the number of ones

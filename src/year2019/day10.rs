@@ -60,23 +60,12 @@ pub fn parse(input: &str) -> Input {
     let height = grid.height;
 
     // Convert asteroids to `Point` objects.
-    let mut points = Vec::new();
-
-    for y in 0..height {
-        for x in 0..width {
-            let point = Point::new(x, y);
-            if grid[point] == b'#' {
-                points.push(point);
-            }
-        }
-    }
+    let mut points: Vec<_> = grid.points().filter(|&point| grid[point] == b'#').collect();
 
     // Find asteroid with the highest visibility.
     let mut seen = Grid::new(2 * width, height, 0);
     let mut cache = seen.same_size_with(ORIGIN);
     let mut visible = vec![0; points.len()];
-    let mut max_visible = 0;
-    let mut max_index = 0;
 
     for i in 0..(points.len() - 1) {
         for j in (i + 1)..points.len() {
@@ -102,12 +91,9 @@ pub fn parse(input: &str) -> Input {
                 visible[j] += 1;
             }
         }
-
-        if visible[i] > max_visible {
-            max_visible = visible[i];
-            max_index = i;
-        }
     }
+
+    let (max_index, &max_visible) = visible.iter().enumerate().max_by_key(|&(_, v)| v).unwrap();
 
     // Remove our new base of operations, then sort remaining asteroids in clockwise order to
     // group by angle.

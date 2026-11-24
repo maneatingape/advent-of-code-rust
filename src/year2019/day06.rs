@@ -8,20 +8,11 @@
 //! This is twice as fast as using a [`FastMap`] to lookup the indices.
 //!
 //! [`FastMap`]: crate::util::hash
-use crate::util::parse::*;
 
 /// Convert 3 character object names to contiguous indices for faster lookup.
 pub fn parse(input: &str) -> Vec<usize> {
-    // Convert 'A'..'Z' and '0'..'9' to a number between 0 and 36.
-    let digit = |b: u8| {
-        if b.is_ascii_digit() { b.to_decimal() } else { usize::from(10 + b - b'A') }
-    };
-
-    // Hash each 3 character object name.
-    let perfect_hash = |object: &str| {
-        let bytes = object.as_bytes();
-        digit(bytes[0]) + 36 * digit(bytes[1]) + 1296 * digit(bytes[2])
-    };
+    // Hash each 3 character object name as a base 36 number.
+    let perfect_hash = |object| usize::from_str_radix(object, 36).unwrap();
 
     // Pre-seed known indices for objects that we need to specifically lookup later.
     let mut indices = vec![0_u16; 36 * 36 * 36];
@@ -59,13 +50,11 @@ pub fn parse(input: &str) -> Vec<usize> {
 /// depth in order to avoid unnecessary work.
 pub fn part1(input: &[usize]) -> u64 {
     fn orbits(parent: &[usize], cache: &mut [Option<u64>], index: usize) -> u64 {
-        if let Some(result) = cache[index] {
-            result
-        } else {
+        cache[index].unwrap_or_else(|| {
             let result = 1 + orbits(parent, cache, parent[index]);
             cache[index] = Some(result);
             result
-        }
+        })
     }
 
     let cache = &mut vec![None; input.len()];

@@ -68,7 +68,7 @@ fn decrypt(input: &[i64], key: i64, rounds: usize) -> i64 {
     }
 
     for _ in 0..rounds {
-        'mix: for index in 0..input.len() {
+        for index in 0..input.len() {
             // Quickly find the leaf vector storing the number.
             let number = numbers[index];
             let second = lookup[index];
@@ -93,26 +93,27 @@ fn decrypt(input: &[i64], key: i64, rounds: usize) -> i64 {
 
             // Find our new destination, by checking `vec`s in order until the total elements
             // are greater than our new index.
-            for (first, outer) in mixed.chunks_exact_mut(16).enumerate() {
-                if next > skip[first] {
-                    next -= skip[first];
-                } else {
-                    for (second, inner) in outer.iter_mut().enumerate() {
-                        if next > inner.size {
-                            next -= inner.size;
-                        } else {
-                            // Insert number into its new home.
-                            inner.size += 1;
-                            inner.vec.insert(next, index as u16);
-                            inner.vec.resize(inner.size.next_multiple_of(64), 0);
-                            // Update location.
-                            skip[first] += 1;
-                            lookup[index] = 16 * first + second;
-                            continue 'mix;
-                        }
-                    }
-                }
+            let mut first = 0;
+            while next > skip[first] {
+                next -= skip[first];
+                first += 1;
             }
+
+            let mut second = 16 * first;
+            while next > mixed[second].size {
+                next -= mixed[second].size;
+                second += 1;
+            }
+
+            // Insert number into its new home.
+            let inner = &mut mixed[second];
+            inner.size += 1;
+            inner.vec.insert(next, index as u16);
+            inner.vec.resize(inner.size.next_multiple_of(64), 0);
+
+            // Update location.
+            skip[first] += 1;
+            lookup[index] = second;
         }
     }
 

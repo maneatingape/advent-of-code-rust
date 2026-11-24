@@ -150,8 +150,7 @@ fn astar<const L: usize, const U: usize>(input: &Input) -> u16 {
 
     // We arbitrarily pick `0` to mean vertical and `1` to mean horizontal, stored in the lowest
     // bit of the state alongside the position.
-    todo[loss % 100].push(start << 1);
-    todo[loss % 100].push((start << 1) | 1);
+    todo[loss % 100].extend([start << 1, (start << 1) | 1]);
     cost[start] = [0; 2];
 
     loop {

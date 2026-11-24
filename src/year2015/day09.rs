@@ -8,7 +8,7 @@
 //! length as c->b->a). Computing the shortest and longest path is then done by completing the
 //! cycle for each permutation, then discarding the longest or shortest edge seen along the way.
 //! Skipping lexically reversed permutations is possible with
-//! [Steinhaus-Johnson-Trotter][Steinhaus-Johnson-Trotter's algorithm].
+//! [Steinhaus-Johnson-Trotter's algorithm][Steinhaus-Johnson-Trotter].
 //!
 //! However, since the graph is complete (every node has a distance to every other node), this
 //! particular problem can be solved even faster, by avoiding the overhead of permutations and

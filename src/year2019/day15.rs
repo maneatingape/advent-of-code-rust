@@ -26,17 +26,15 @@ pub fn parse(input: &str) -> Input {
     let mut paths = FastSet::with_capacity(1_000);
     let mut walls = FastSet::with_capacity(1_000);
 
-    let mut first = true;
-    let mut direction = UP;
+    let mut direction = RIGHT;
     let mut position = ORIGIN;
     let mut oxygen_system = ORIGIN;
 
     loop {
-        direction = if first { direction.clockwise() } else { direction.counter_clockwise() };
         let next = position + direction;
 
         if walls.contains(&next) {
-            first = false;
+            direction = direction.counter_clockwise();
             continue;
         }
 
@@ -50,13 +48,13 @@ pub fn parse(input: &str) -> Input {
 
         match computer.run() {
             State::Output(0) => {
-                first = false;
                 walls.insert(next);
+                direction = direction.counter_clockwise();
             }
             State::Output(result) => {
-                first = true;
                 position = next;
                 paths.insert(next);
+                direction = direction.clockwise();
 
                 if result == 2 {
                     oxygen_system = position;

@@ -55,7 +55,7 @@ impl Pots {
 
     /// Returns the sum of the numbers of all pots containing plants.
     fn sum(&self) -> i64 {
-        self.state.iter().enumerate().map(|(i, &s)| (self.pos + i as i64) * i64::from(s)).sum()
+        self.state.iter().zip(self.pos..).map(|(&s, i)| i * i64::from(s)).sum()
     }
 }
 
@@ -67,10 +67,8 @@ pub fn parse(input: &str) -> Input {
     // Parse rules into a table with all possible 2⁵=32 patterns.
     let mut rules = [0; 32];
     for line in suffix.lines().map(str::as_bytes) {
-        if line[9] == b'#' {
-            let binary = (0..5).fold(0, |acc, i| (acc << 1) | usize::from(line[i] == b'#'));
-            rules[binary] = 1;
-        }
+        let binary = (0..5).fold(0, |acc, i| (acc << 1) | usize::from(line[i] == b'#'));
+        rules[binary] = u8::from(line[9] == b'#');
     }
 
     // Part one - Simulate the first 20 steps.

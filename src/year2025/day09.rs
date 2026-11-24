@@ -63,7 +63,6 @@ pub fn part2(tiles: &[Tile]) -> u64 {
     // Maintain an ordered list of descending edges, i.e. [begin_interval_0, end_interval_0,
     // begin_interval_1, end_interval_1, ...].
     let mut descending_edges = Vec::new();
-    let mut intervals_from_descending_edges = Vec::new();
 
     // Invariants on the input data (defined by the puzzle) result in points arriving in pairs on
     // the same y line.
@@ -88,13 +87,6 @@ pub fn part2(tiles: &[Tile]) -> u64 {
             toggle_value_membership_in_ordered_list(&mut descending_edges, x);
         }
 
-        // Every pair of descending edges in the ordered list defines a region. Find the resulting
-        // intervals on this line.
-        update_intervals_from_descending_edges(
-            &descending_edges,
-            &mut intervals_from_descending_edges,
-        );
-
         // Check the rectangles this red tile could be a bottom tile for, with the current
         // candidates.
         for candidate in &candidates {
@@ -110,18 +102,14 @@ pub fn part2(tiles: &[Tile]) -> u64 {
         // Update candidates when their interval shrinks due to descending edge changes, and drop
         // them when their interval becomes empty.
         candidates.retain_mut(|candidate| {
-            intervals_from_descending_edges
-                .iter()
-                .find(|i| i.contains(candidate.x))
+            containing_interval(&descending_edges, candidate.x)
                 .inspect(|i| candidate.interval = i.intersection(candidate.interval))
                 .is_some()
         });
 
         // Add any new candidates.
         for x in [x0, x1] {
-            if let Some(&containing) =
-                intervals_from_descending_edges.iter().find(|i| i.contains(x))
-            {
+            if let Some(containing) = containing_interval(&descending_edges, x) {
                 candidates.push(Candidate { x, y, interval: containing });
             }
         }
@@ -275,10 +263,8 @@ fn toggle_value_membership_in_ordered_list(ordered_list: &mut Vec<u32>, value: u
     }
 }
 
-// Changes the list of descending edges, [begin_interval_0, end_interval_0, begin_interval_1,
-// end_interval_1, ...], into a vector containing the intervals.
-#[inline]
-fn update_intervals_from_descending_edges(descending_edges: &[u32], to_update: &mut Vec<Interval>) {
-    to_update.clear();
-    to_update.extend(descending_edges.chunks_exact(2).map(|c| Interval::new(c[0], c[1])));
+// Every pair of descending edges in the ordered list, [begin_interval_0, end_interval_0,
+// begin_interval_1, end_interval_1, ...], defines an interval. Finds the one containing `x`.
+fn containing_interval(descending_edges: &[u32], x: u32) -> Option<Interval> {
+    descending_edges.chunks_exact(2).map(|c| Interval::new(c[0], c[1])).find(|i| i.contains(x))
 }

@@ -67,24 +67,9 @@ fn reader(rx: Receiver<&[u8]>, done: &AtomicBool, input: &str) -> (String, usize
         // from the same contiguous slice, this thread has no way to know that or reassemble
         // the original. The result could potentially be split over two or more slices.
         if part_one_result.is_none() && total >= part_one_target {
-            let mut index = 0;
-            let mut offset = part_one_target - 10;
-            let mut result = String::new();
-
-            for _ in 0..10 {
-                // If we go past the end of a slice then check the next one.
-                while offset >= history[index].len() {
-                    offset -= history[index].len();
-                    index += 1;
-                }
-
-                // Push each digit into a string as there could be leading zeroes.
-                let digit = history[index][offset];
-                result.push(char::from(digit + b'0'));
-                offset += 1;
-            }
-
-            part_one_result = Some(result);
+            // Push each digit into a string as there could be leading zeroes.
+            let digits = history.iter().copied().flatten().skip(part_one_target - 10).take(10);
+            part_one_result = Some(digits.map(|&digit| char::from(digit + b'0')).collect());
         }
 
         // Simple brute force pattern matching. Slices are received in order so the pattern will

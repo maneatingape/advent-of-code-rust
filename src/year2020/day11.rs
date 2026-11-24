@@ -35,7 +35,6 @@ mod implementation {
 
     struct Seat {
         point: Point,
-        size: usize,
         neighbors: [Point; 8],
     }
 
@@ -49,25 +48,18 @@ mod implementation {
                     continue;
                 }
 
-                let mut size = 0;
-                let mut neighbors = [ORIGIN; 8];
-
-                for direction in DIAGONAL {
+                // Part one considers only the adjacent square. Part two skips over any
+                // floor until reaching the first visible seat or the edge of the grid.
+                // Non-seats map to the origin, which is never occupied so always adds zero.
+                let neighbors = DIAGONAL.map(|direction| {
                     let mut next = point + direction;
-
-                    // Part one considers only the adjacent square. Part two skips over any
-                    // floor until reaching the first visible seat or the edge of the grid.
                     while part_two && input[next] == FLOOR {
                         next += direction;
                     }
+                    if input[next] == SEAT { next } else { ORIGIN }
+                });
 
-                    if input[next] == SEAT {
-                        neighbors[size] = next;
-                        size += 1;
-                    }
-                }
-
-                seats.push(Seat { point, size, neighbors });
+                seats.push(Seat { point, neighbors });
             }
         }
 
@@ -76,7 +68,7 @@ mod implementation {
 
         loop {
             for seat in &seats {
-                let total: u8 = seat.neighbors[..seat.size].iter().map(|&i| current[i]).sum();
+                let total: u8 = seat.neighbors.iter().map(|&i| current[i]).sum();
 
                 next[seat.point] = if current[seat.point] == 0 {
                     u8::from(total == 0)

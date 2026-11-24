@@ -42,20 +42,17 @@ fn race(first: &str, second: &str) -> u128 {
         .iter_unsigned::<u128>()
         .zip(second.iter_unsigned::<u128>())
         .map(|(time, distance)| {
-            // Use the quadratic formula to find the start and end positions.
+            // Use the quadratic formula to find the start position.
             let root = (time * time - 4 * distance).isqrt();
             let mut start = (time - root).div_ceil(2);
-            let mut end = time.midpoint(root);
 
             // As we're using integer math we may need to adjust 1 step.
             if start * (time - start) > distance {
                 start -= 1;
             }
-            if end * (time - end) > distance {
-                end += 1;
-            }
 
-            end - start - 1
+            // Distance is symmetric about the midpoint, so the end position is `time - start`.
+            time - 2 * start - 1
         })
         .product()
 }

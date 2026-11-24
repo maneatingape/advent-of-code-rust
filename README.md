@@ -139,9 +139,9 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 | 5 | [If You Give A Seed A Fertilizer](https://adventofcode.com/2023/day/5) | [Source](src/year2023/day05.rs) | 18 |
 | 6 | [Wait For It](https://adventofcode.com/2023/day/6) | [Source](src/year2023/day06.rs) | 1 |
 | 7 | [Camel Cards](https://adventofcode.com/2023/day/7) | [Source](src/year2023/day07.rs) | 57 |
-| 8 | [Haunted Wasteland](https://adventofcode.com/2023/day/8) | [Source](src/year2023/day08.rs) | 21 |
+| 8 | [Haunted Wasteland](https://adventofcode.com/2023/day/8) | [Source](src/year2023/day08.rs) | 19 |
 | 9 | [Mirage Maintenance](https://adventofcode.com/2023/day/9) | [Source](src/year2023/day09.rs) | 16 |
-| 10 | [Pipe Maze](https://adventofcode.com/2023/day/10) | [Source](src/year2023/day10.rs) | 33 |
+| 10 | [Pipe Maze](https://adventofcode.com/2023/day/10) | [Source](src/year2023/day10.rs) | 25 |
 | 11 | [Cosmic Expansion](https://adventofcode.com/2023/day/11) | [Source](src/year2023/day11.rs) | 10 |
 | 12 | [Hot Springs](https://adventofcode.com/2023/day/12) | [Source](src/year2023/day12.rs) | 425 |
 | 13 | [Point of Incidence](https://adventofcode.com/2023/day/13) | [Source](src/year2023/day13.rs) | 66 |
@@ -206,11 +206,11 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 | 8 | [Seven Segment Search](https://adventofcode.com/2021/day/8) | [Source](src/year2021/day08.rs) | 14 |
 | 9 | [Smoke Basin](https://adventofcode.com/2021/day/9) | [Source](src/year2021/day09.rs) | 32 |
 | 10 | [Syntax Scoring](https://adventofcode.com/2021/day/10) | [Source](src/year2021/day10.rs) | 14 |
-| 11 | [Dumbo Octopus](https://adventofcode.com/2021/day/11) | [Source](src/year2021/day11.rs) | 55 |
+| 11 | [Dumbo Octopus](https://adventofcode.com/2021/day/11) | [Source](src/year2021/day11.rs) | 48 |
 | 12 | [Passage Pathing](https://adventofcode.com/2021/day/12) | [Source](src/year2021/day12.rs) | 25 |
 | 13 | [Transparent Origami](https://adventofcode.com/2021/day/13) | [Source](src/year2021/day13.rs) | 12 |
 | 14 | [Extended Polymerization](https://adventofcode.com/2021/day/14) | [Source](src/year2021/day14.rs) | 9 |
-| 15 | [Chiton](https://adventofcode.com/2021/day/15) | [Source](src/year2021/day15.rs) | 2290 |
+| 15 | [Chiton](https://adventofcode.com/2021/day/15) | [Source](src/year2021/day15.rs) | 2132 |
 | 16 | [Packet Decoder](https://adventofcode.com/2021/day/16) | [Source](src/year2021/day16.rs) | 6 |
 | 17 | [Trick Shot](https://adventofcode.com/2021/day/17) | [Source](src/year2021/day17.rs) | 3 |
 | 18 | [Snailfish](https://adventofcode.com/2021/day/18) | [Source](src/year2021/day18.rs) | 277 |
@@ -265,11 +265,11 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 | 3 | [Crossed Wires](https://adventofcode.com/2019/day/3) | [Source](src/year2019/day03.rs) | 17 |
 | 4 | [Secure Container](https://adventofcode.com/2019/day/4) | [Source](src/year2019/day04.rs) | 7 |
 | 5 | [Sunny with a Chance of Asteroids](https://adventofcode.com/2019/day/5) | [Source](src/year2019/day05.rs) | 3 |
-| 6 | [Universal Orbit Map](https://adventofcode.com/2019/day/6) | [Source](src/year2019/day06.rs) | 29 |
+| 6 | [Universal Orbit Map](https://adventofcode.com/2019/day/6) | [Source](src/year2019/day06.rs) | 31 |
 | 7 | [Amplification Circuit](https://adventofcode.com/2019/day/7) | [Source](src/year2019/day07.rs) | 79 |
 | 8 | [Space Image Format](https://adventofcode.com/2019/day/8) | [Source](src/year2019/day08.rs) | 4 |
 | 9 | [Sensor Boost](https://adventofcode.com/2019/day/9) | [Source](src/year2019/day09.rs) | 1008 |
-| 10 | [Monitoring Station](https://adventofcode.com/2019/day/10) | [Source](src/year2019/day10.rs) | 342 |
+| 10 | [Monitoring Station](https://adventofcode.com/2019/day/10) | [Source](src/year2019/day10.rs) | 306 |
 | 11 | [Space Police](https://adventofcode.com/2019/day/11) | [Source](src/year2019/day11.rs) | 320 |
 | 12 | [The N-Body Problem](https://adventofcode.com/2019/day/12) | [Source](src/year2019/day12.rs) | 638 |
 | 13 | [Care Package](https://adventofcode.com/2019/day/13) | [Source](src/year2019/day13.rs) | 2527 |

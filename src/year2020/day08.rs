@@ -44,10 +44,8 @@ pub fn parse(input: &str) -> Vec<Instruction> {
 pub fn part1(input: &[Instruction]) -> isize {
     let mut seen = vec![false; input.len()];
 
-    match execute(input, 0, 0, &mut seen) {
-        State::Infinite(acc) => acc,
-        State::Halted(_) => unreachable!(),
-    }
+    let State::Infinite(acc) = execute(input, 0, 0, &mut seen) else { unreachable!() };
+    acc
 }
 
 pub fn part2(input: &[Instruction]) -> isize {

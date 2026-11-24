@@ -204,24 +204,19 @@ fn compute(input: &[i32], start: usize, upper: usize, nck: &[(i32, usize)]) -> [
         let quotient = (total / lcm) as i32;
         let remainder = total % lcm;
 
-        // Sum partial range first.
+        // Sum partial range first, then the rest of the full range.
         let mut index = start;
-        let mut partial = 0;
-
-        while index < start + remainder {
-            let (coefficient, skip) = nck.next().unwrap();
-            partial += input[index % input.len()] * coefficient;
-            index += skip;
-        }
-
-        // Then the full range.
-        let mut full = partial;
-
-        while index < start + lcm {
-            let (coefficient, skip) = nck.next().unwrap();
-            full += input[index % input.len()] * coefficient;
-            index += skip;
-        }
+        let mut sum_to = |end| {
+            let mut sum = 0;
+            while index < end {
+                let (coefficient, skip) = nck.next().unwrap();
+                sum += input[index % input.len()] * coefficient;
+                index += skip;
+            }
+            sum
+        };
+        let partial = sum_to(start + remainder);
+        let full = partial + sum_to(start + lcm);
 
         // Calculate sum for the entire range.
         quotient * full + partial

@@ -38,7 +38,7 @@
 //! Then we check every possible pair formed by those values, considering only the pairs
 //! where the sets of valves are [disjoint](https://en.wikipedia.org/wiki/Disjoint_sets),
 //! which is when you and the elephant have visited different sets of valves.
-use std::cmp::Ordering;
+use std::cmp::Reverse;
 
 use crate::util::bitset::*;
 use crate::util::hash::*;
@@ -49,8 +49,8 @@ use crate::util::parse::*;
 /// This descending order is used by the heuristic to prune branches.
 ///
 /// * `size` Number of non-zero valves plus 1 for `AA`.
-/// * `todo` Bitmask with a `1` for each initial unopened non-zero valve. For example, if there are
-///   5 valves this would be binary `11111`.
+/// * `all_valves` Bitmask with a `1` for each initial unopened non-zero valve. For example, if
+///   there are 5 valves this would be binary `11111`.
 /// * `flow` Stores the flow for each valve.
 /// * `distance` Adjacency matrix of distances between each pair of valves.
 pub struct Input {
@@ -94,18 +94,13 @@ impl Valve<'_> {
         let flow = tokens.next().unwrap().unsigned();
         Valve { name, flow, edges: tokens.collect() }
     }
-
-    /// Order valves in descending order of flow then ascending alphabetical order of names.
-    /// This places all non-zero valves at the start followed immediately by valve `AA`.
-    fn cmp(&self, other: &Self) -> Ordering {
-        other.flow.cmp(&self.flow).then(self.name.cmp(other.name))
-    }
 }
 
 pub fn parse(input: &str) -> Input {
-    // Sort valves so that non-zero valves are at the start.
+    // Sort valves in descending order of flow then ascending alphabetical order of names.
+    // This places all non-zero valves at the start followed immediately by valve `AA`.
     let mut valves: Vec<_> = input.lines().map(Valve::parse).collect();
-    valves.sort_unstable_by(Valve::cmp);
+    valves.sort_unstable_by_key(|v| (Reverse(v.flow), v.name));
 
     // We only care about non-zero valves with the exception of `AA`.
     let size = valves.iter().filter(|v| v.flow > 0).count() + 1;
@@ -123,15 +118,13 @@ pub fn parse(input: &str) -> Input {
         // Follow "tunnels" of zero valves to our non-zero neighbors.
         for edge in &valve.edges {
             let mut prev = valve.name;
-            let mut cur = edge;
-            let mut to = indices[cur];
+            let mut to = indices[edge];
             let mut total = 1;
 
             while to >= size {
                 let next = valves[to].edges.iter().find(|&&e| e != prev).unwrap();
-                prev = cur;
-                cur = next;
-                to = indices[cur];
+                prev = valves[to].name;
+                to = indices[next];
                 total += 1;
             }
 

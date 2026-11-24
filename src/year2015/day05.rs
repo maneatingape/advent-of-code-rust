@@ -6,7 +6,7 @@
 //! ## Part One
 //! Each string consists only of lowercase ASCII characters so the cardinality is 26. We can
 //! test for vowels and invalid characters more quickly by converting each character into a bitmask
-//! that fits into a `i32`. For example `a` becomes `1`, `b` becomes `10` and so on.
+//! that fits into a `u32`. For example `a` becomes `1`, `b` becomes `10` and so on.
 //!
 //! To check if a character is a vowel we logically `AND` against `100000100000100010001` which is
 //! "aeiou" converted to a bitmask. Similarly, to check for the invalid sequence "ab" we `AND`
@@ -47,9 +47,7 @@ pub fn part1(input: &[&[u8]]) -> usize {
                 if FORBIDDEN_MASK & current & (previous << 1) != 0 {
                     return false;
                 }
-                if VOWEL_MASK & current != 0 {
-                    vowels += 1;
-                }
+                vowels += usize::from(VOWEL_MASK & current != 0);
                 pair |= previous == current;
 
                 previous = current;

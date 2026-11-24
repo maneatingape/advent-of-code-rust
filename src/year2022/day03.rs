@@ -34,13 +34,7 @@ pub fn parse(input: &str) -> Vec<&str> {
 
 /// Split each line into 2 equal halves, then compute the set intersection.
 pub fn part1(input: &[&str]) -> u32 {
-    input
-        .iter()
-        .map(|&rucksack| {
-            let (a, b) = rucksack.split_at(rucksack.len() / 2);
-            priority(mask(a) & mask(b))
-        })
-        .sum()
+    input.iter().map(|s| s.split_at(s.len() / 2)).map(|(a, b)| priority(mask(a) & mask(b))).sum()
 }
 
 /// Group lines into chunks of 3, then compute the mutual set intersection.

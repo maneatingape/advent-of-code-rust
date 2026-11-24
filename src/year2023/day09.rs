@@ -36,7 +36,7 @@
 //!
 //! Let `n` be the number of values and `k` the index of each value. The coefficient for each value
 //! is `(n k)` if `k` is even or `-(n k)` if `k` is odd. For part one we then flip the sign of the
-//! sum when `n` is odd.
+//! sum when `n` is even.
 use crate::util::parse::*;
 
 type Input = (i64, i64);

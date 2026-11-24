@@ -85,7 +85,6 @@ mod implementation {
 
         let mut active = Vec::with_capacity(5_000);
         let mut candidates = Vec::with_capacity(5_000);
-        let mut next_active = Vec::with_capacity(5_000);
 
         // To prevent negative array indices offset the starting cells by seven units in each
         // dimension. This allows six for growth, plus one for padding to prevent needing edge
@@ -104,8 +103,8 @@ mod implementation {
 
             for &cube in &active {
                 for &offset in &neighbors {
-                    // Earlier we converted the offsets from signed `i32` to unsigned `usize`. To
-                    // achieve subtraction for negative indices, we use a `wrapping_add` that
+                    // Earlier we converted the offsets from `i32` to signed `isize`. To achieve
+                    // subtraction for negative indices, we use a `wrapping_add_signed` that
                     // performs [two's complement](https://en.wikipedia.org/wiki/Two%27s_complement) arithmetic.
                     let index = cube.wrapping_add_signed(offset);
                     state[index] += 1;
@@ -117,14 +116,10 @@ mod implementation {
             }
 
             // Active cubes remain active with both two and three neighbors.
-            next_active.extend(active.iter().filter(|&&cube| state[cube] == 2));
+            active.retain(|&cube| state[cube] == 2);
             // Inactive cubes with exactly three neighbors become active.
-            next_active.extend(candidates.iter().filter(|&&cube| state[cube] == 3));
-
-            // Swap to make next generation the current generation.
-            (active, next_active) = (next_active, active);
-            candidates.clear();
-            next_active.clear();
+            candidates.retain(|&cube| state[cube] == 3);
+            active.append(&mut candidates);
         }
 
         active.len()
@@ -140,7 +135,6 @@ mod implementation {
     const LANE_WIDTH: usize = 32;
     type Vector = Simd<u8, LANE_WIDTH>;
 
-    #[expect(clippy::needless_range_loop)]
     pub(super) fn three_dimensions(input: &Grid<u8>) -> usize {
         // Each dimension can expand by at most two in each axis per round. Adding padding at the
         // edges to avoid boundary checks gives a maximum width of 8 + 2 * (6 + 1) = 22 for the x
@@ -195,20 +189,9 @@ mod implementation {
             (current, next) = (next, current);
         }
 
-        let mut result = 0;
-
-        for z in 1..14 {
-            for y in 1..21 {
-                for x in 1..21 {
-                    result += usize::from(current[z][y][x]);
-                }
-            }
-        }
-
-        result
+        current.iter().flatten().flatten().map(|&b| usize::from(b)).sum()
     }
 
-    #[expect(clippy::needless_range_loop)]
     pub(super) fn four_dimensions(input: &Grid<u8>) -> usize {
         // Same size logic as part one with added `w` dimension.
         let mut current = vec![[[[0; 32]; 22]; 15]; 15];
@@ -279,19 +262,7 @@ mod implementation {
             (current, next) = (next, current);
         }
 
-        let mut result = 0;
-
-        for w in 1..14 {
-            for z in 1..14 {
-                for y in 1..21 {
-                    for x in 1..21 {
-                        result += usize::from(current[w][z][y][x]);
-                    }
-                }
-            }
-        }
-
-        result
+        current.iter().flatten().flatten().flatten().map(|&b| usize::from(b)).sum()
     }
 
     #[inline]

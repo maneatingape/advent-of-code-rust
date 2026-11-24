@@ -121,47 +121,14 @@ fn game(players: usize, last: usize) -> u64 {
         // Generate the next block only until we have enough marbles to finish the game.
         if placed <= needed {
             // Extending a vector from a slice is faster than adding elements one at a time.
-            let slice = &[
-                circle[tail],
-                head + 1,
-                circle[tail + 1],
-                head + 2,
-                circle[tail + 2],
-                head + 3,
-                circle[tail + 3],
-                head + 4,
-                circle[tail + 4],
-                head + 5,
-                circle[tail + 5],
-                head + 6,
-                circle[tail + 6],
-                head + 7,
-                circle[tail + 7],
-                head + 8,
-                circle[tail + 8],
-                head + 9,
-                circle[tail + 9],
-                head + 10,
-                circle[tail + 10],
-                head + 11,
-                circle[tail + 11],
-                head + 12,
-                circle[tail + 12],
-                head + 13,
-                circle[tail + 13],
-                head + 14,
-                circle[tail + 14],
-                head + 15,
-                circle[tail + 15],
-                head + 16,
-                circle[tail + 16],
-                head + 17,
-                circle[tail + 17],
-                head + 18,
-                // circle[tail + 18] 19th marble is picked up and removed.
-                head + 19,
-            ];
-            circle[placed..placed + 37].copy_from_slice(slice);
+            let mut slice = [0; 37];
+            for i in 0..18 {
+                slice[2 * i] = circle[tail + i];
+                slice[2 * i + 1] = head + 1 + i as u32;
+            }
+            // circle[tail + 18] 19th marble is picked up and removed.
+            slice[36] = head + 19;
+            circle[placed..placed + 37].copy_from_slice(&slice);
 
             // Overwrite the tail for the 20th, 21st and 22nd marbles.
             let slice = &[

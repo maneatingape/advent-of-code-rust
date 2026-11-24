@@ -8,7 +8,7 @@
 //! an `Iterator` of tokens, then use our utility [`chunk`] method to group the tokens into an
 //! array of size 4.
 //!
-//! [`split`]: slice::split
+//! [`split`]: str::split
 //! [`chunk`]: crate::util::iter
 use crate::util::iter::*;
 use crate::util::parse::*;

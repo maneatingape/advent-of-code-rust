@@ -32,8 +32,8 @@ pub fn parse(input: &str) -> Input {
 
     let mut part_one = prefix.len();
     let mut part_two = prefix.len();
-    let mut todo = VecDeque::new();
-    let mut seen = FastSet::new();
+    let mut todo = VecDeque::with_capacity(1_000);
+    let mut seen = FastSet::with_capacity(1_000);
 
     for &start in nodes.keys().filter(|key| key.ends_with(b"A")) {
         // Find the length of the cycle using a BFS from each start node.
@@ -56,7 +56,6 @@ pub fn parse(input: &str) -> Input {
             }
         }
 
-        todo.clear();
         seen.clear();
     }
 

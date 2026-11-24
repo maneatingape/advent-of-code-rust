@@ -122,16 +122,16 @@ pub fn part2(input: &[RebootStep]) -> i64 {
 
         // Apply the inclusion/exclusion principle recursively, considering overlaps of
         // increasingly higher order until there are no more overlaps remaining.
-        total += cube.volume() + subsets(&cube, -1, &candidates);
+        total += cube.volume() - subsets(&cube, &candidates);
         candidates.clear();
     }
 
     total
 }
 
-// Apply inclusion/exclusion principle. The sign of the result alternates with each level,
+// Apply inclusion/exclusion principle. Each level subtracts the result of the level below,
 // so that we subtract single overlaps, then add double, subtract triple, and so on.
-fn subsets(cube: &Cube, sign: i64, candidates: &[Cube]) -> i64 {
+fn subsets(cube: &Cube, candidates: &[Cube]) -> i64 {
     let mut total = 0;
 
     for (i, other) in candidates.iter().enumerate() {
@@ -139,7 +139,7 @@ fn subsets(cube: &Cube, sign: i64, candidates: &[Cube]) -> i64 {
             // Subtle nuance here. Similar to the main input we only need to consider higher level
             // overlaps of inputs *after* this one, as any overlaps with previous cubes
             // have already been considered.
-            total += sign * next.volume() + subsets(&next, -sign, &candidates[(i + 1)..]);
+            total += next.volume() - subsets(&next, &candidates[(i + 1)..]);
         }
     }
 

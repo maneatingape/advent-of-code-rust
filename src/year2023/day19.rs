@@ -52,13 +52,7 @@ pub fn parse(input: &str) -> Input<'_> {
 
                 // Map each category to an index for convenience so that we can store a part
                 // in a fixed-size array.
-                let category = match first.as_bytes()[0] {
-                    b'x' => 0,
-                    b'm' => 1,
-                    b'a' => 2,
-                    b's' => 3,
-                    _ => unreachable!(),
-                };
+                let category = b"xmas".iter().position(|&b| b == first.as_bytes()[0]).unwrap();
 
                 // Convert each rule into a half open range.
                 let value = first[2..].unsigned();

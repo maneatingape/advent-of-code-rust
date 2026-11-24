@@ -61,17 +61,12 @@ pub fn part1(input: &Square) -> usize {
 pub fn part2(input: &Square) -> usize {
     let Square { size, bytes } = input;
 
-    let mut expanded = Square { size: 5 * size, bytes: vec![0; 25 * size * size] };
+    let mut expanded = Square { size: 5 * size, bytes: Vec::with_capacity(25 * size * size) };
 
-    for (i, &b) in bytes.iter().enumerate() {
-        let x1 = i % size;
-        let y1 = i / size;
-        let base = usize::from(b);
-
-        for x2 in 0..5 {
-            for y2 in 0..5 {
-                let index = (5 * size) * (y2 * size + y1) + (x2 * size + x1);
-                expanded.bytes[index] = (1 + (base - 1 + x2 + y2) % 9) as u8;
+    for y2 in 0..5 {
+        for row in bytes.chunks_exact(*size) {
+            for x2 in 0..5 {
+                expanded.bytes.extend(row.iter().map(|b| 1 + (b - 1 + x2 + y2) % 9));
             }
         }
     }

@@ -21,7 +21,7 @@ pub fn parse(input: &str) -> Vec<i32> {
 /// Converts between the 0-based indexing produced by the `parse` function and the 1-based indexing
 /// used by the problem statement.
 pub fn part1(input: &[i32]) -> i32 {
-    input.iter().enumerate().skip(19).step_by(40).map(|(i, &x)| ((i + 1) as i32) * x).sum()
+    input.iter().zip(1..).skip(19).step_by(40).map(|(&x, i)| x * i).sum()
 }
 
 /// Returns pixels as a multi-line [`String`] so that the entire function can be integration tested.
@@ -30,8 +30,8 @@ pub fn part2(input: &[i32]) -> String {
 
     for row in input.chunks_exact(40) {
         result.push('\n');
-        for (i, &c) in row.iter().enumerate() {
-            result.push(if ((i as i32) - c).abs() <= 1 { '#' } else { '.' });
+        for (&c, i) in row.iter().zip(0..) {
+            result.push(if (i - c).abs() <= 1 { '#' } else { '.' });
         }
     }
 

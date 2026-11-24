@@ -52,9 +52,10 @@ pub fn parse(input: &str) -> Input {
     for Line { start, end, distance } in lines(second) {
         // Checks for intersections, ignoring the initial intersection at the origin.
         let mut update = |line: &Line, candidate: Point| {
-            if candidate.manhattan(line.start) < line.end.manhattan(line.start)
-                && signum(candidate, line.start) == signum(line.end, line.start)
-                && candidate.manhattan(ORIGIN) > 0
+            let length = line.start.manhattan(line.end);
+            if candidate.manhattan(line.start) < length
+                && candidate.manhattan(line.end) < length
+                && candidate != ORIGIN
             {
                 manhattan = manhattan.min(candidate.manhattan(ORIGIN));
                 delay = delay.min(
@@ -104,8 +105,4 @@ fn lines(wire: &str) -> impl Iterator<Item = Line> {
         distance += amount;
         line
     })
-}
-
-fn signum(a: Point, b: Point) -> Point {
-    Point::new((a.x - b.x).signum(), (a.y - b.y).signum())
 }

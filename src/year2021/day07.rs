@@ -24,13 +24,7 @@ pub fn part1(input: &[i32]) -> i32 {
 
 pub fn part2(input: &[i32]) -> i32 {
     let fuel = |target: i32| -> i32 {
-        input
-            .iter()
-            .map(|x| {
-                let n = (x - target).abs();
-                (n * (n + 1)) / 2
-            })
-            .sum()
+        input.iter().map(|x| (x - target).abs()).map(|n| (n * (n + 1)) / 2).sum()
     };
 
     let mean = input.iter().sum::<i32>() / input.len() as i32;

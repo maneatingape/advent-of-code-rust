@@ -22,11 +22,7 @@ pub fn part1(bytes: &[u8]) -> u32 {
         .flat_map(|&step| {
             bytes.iter().zip(&bytes[step..]).zip(&bytes[2 * step..]).zip(&bytes[3 * step..])
         })
-        .map(|(((&a, &b), &c), &d)| {
-            let forward = a == b'X' && b == b'M' && c == b'A' && d == b'S';
-            let backward = a == b'S' && b == b'A' && c == b'M' && d == b'X';
-            u32::from(forward || backward)
-        })
+        .map(|(((&a, &b), &c), &d)| u32::from(matches!(&[a, b, c, d], b"XMAS" | b"SAMX")))
         .sum()
 }
 

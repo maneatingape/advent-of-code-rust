@@ -26,13 +26,12 @@ pub fn parse(input: &str) -> Input {
     // Forwards Dijkstra. Since turns are so much more expensive than moving forward, we can
     // treat this as a glorified BFS using two priority queues. This is much faster than using
     // an actual min heap.
-    let mut todo_first = VecDeque::new();
+    let mut todo_first = VecDeque::from([(start, 0, 0)]);
     let mut todo_second = VecDeque::new();
     // State is `(position, direction)`.
     let mut seen = grid.same_size_with([i32::MAX; 4]);
     let mut lowest = i32::MAX;
 
-    todo_first.push_back((start, 0, 0));
     seen[start][0] = 0;
 
     while !todo_first.is_empty() {

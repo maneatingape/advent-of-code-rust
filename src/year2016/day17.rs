@@ -80,21 +80,18 @@ fn worker(shared: &Shared) {
             state.inflight -= 1;
             shared.not_empty.notify_all();
 
-            loop {
-                // Pickup available work.
-                if let Some(item) = state.todo.pop() {
-                    state.inflight += 1;
-                    local.todo.push(item);
-                    break;
-                }
-                // If no work available and no other thread is doing anything, then we're done.
-                if state.inflight == 0 {
-                    return;
-                }
-                // Put the thread to sleep until another thread notifies us that work is available.
-                // This avoids busy looping on the mutex.
-                state = shared.not_empty.wait(state).unwrap();
-            }
+            // Put the thread to sleep until another thread notifies us that work is available
+            // or that every thread is idle. This avoids busy looping on the mutex.
+            state = shared
+                .not_empty
+                .wait_while(state, |state| state.todo.is_empty() && state.inflight > 0)
+                .unwrap();
+
+            // If no work available and no other thread is doing anything, then we're done.
+            let Some(item) = state.todo.pop() else { return };
+            // Pickup available work.
+            state.inflight += 1;
+            local.todo.push(item);
         } else {
             // Redistribute excess local work items back to the global queue then notify all other
             // threads that there is new work available.

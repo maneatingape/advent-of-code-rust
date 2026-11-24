@@ -22,32 +22,28 @@ use crate::util::iter::*;
 
 struct Packet<'a> {
     slice: &'a [u8],
-    index: usize,
     extra: Vec<u8>,
 }
 
 impl Packet<'_> {
     fn new(str: &str) -> Packet<'_> {
-        Packet { slice: str.as_bytes(), index: 0, extra: Vec::new() }
+        Packet { slice: str.as_bytes(), extra: Vec::new() }
     }
 }
 
 impl Iterator for Packet<'_> {
     type Item = u8;
 
-    // Rely on the fact that all input is valid to avoid bounds checks.
     fn next(&mut self) -> Option<Self::Item> {
         self.extra.pop().or_else(|| {
-            let (index, slice) = (self.index, self.slice);
-
             // Replace occurrences of "10" with "A".
-            if slice[index] == b'1' && slice[index + 1] == b'0' {
-                self.index += 2;
-                Some(b'A')
-            } else {
-                self.index += 1;
-                Some(slice[index])
-            }
+            let (next, rest) = match self.slice {
+                [b'1', b'0', rest @ ..] => (b'A', rest),
+                [next, rest @ ..] => (*next, rest),
+                [] => return None,
+            };
+            self.slice = rest;
+            Some(next)
         })
     }
 }

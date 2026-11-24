@@ -147,18 +147,14 @@ pub fn part1(input: &State) -> usize {
         let last_mask = across[0] | down[0];
         let mut moved = down[height - 1] & !last_mask;
 
-        for i in 0..(height - 1) {
+        for i in 0..height {
             changed |= moved.non_zero();
-            let mask = across[i + 1] | down[i + 1];
+            let mask = if i + 1 < height { across[i + 1] | down[i + 1] } else { last_mask };
             let stay = down[i] & mask;
             let next_moved = down[i] & !mask;
             down[i] = moved | stay;
             moved = next_moved;
         }
-
-        changed |= moved.non_zero();
-        let stay = down[height - 1] & last_mask;
-        down[height - 1] = moved | stay;
     }
 
     count

@@ -116,7 +116,6 @@ pub fn part2(input: &Input) -> i32 {
     let target = Point::new(input.width, input.height);
 
     // Initialize bucket queue with pre-allocated capacity to reduce reallocations needed.
-    let mut base = 0;
     let mut todo: [_; BUCKETS] = from_fn(|_| Vec::with_capacity(1_000));
 
     // Populate times for the cave, which already has extra width and height so the search does
@@ -124,16 +123,16 @@ pub fn part2(input: &Input) -> i32 {
     // Subtle trick here. By setting the time to zero for the tool that cannot be used,
     // we implicitly disallow it during the A* search as the time to reach the square will
     // always be greater than zero.
-    let mut cave = Grid::new(erosion.width, erosion.height, [i32::MAX; 3]);
-    for (i, &level) in erosion.bytes.iter().enumerate() {
-        cave.bytes[i][usize::from(level)] = 0;
+    let mut cave = erosion.same_size_with([i32::MAX; 3]);
+    for (times, &level) in cave.bytes.iter_mut().zip(&erosion.bytes) {
+        times[usize::from(level)] = 0;
     }
 
     // Start at origin with the torch equipped.
     todo[0].push((ORIGIN, TORCH));
     cave[ORIGIN][TORCH] = 0;
 
-    loop {
+    for base in 0.. {
         // All items in the same bucket have the same priority.
         while let Some((point, tool)) = todo[base % BUCKETS].pop() {
             let time = cave[point][tool];
@@ -167,7 +166,7 @@ pub fn part2(input: &Input) -> i32 {
                 }
             }
         }
-
-        base += 1;
     }
+
+    unreachable!()
 }

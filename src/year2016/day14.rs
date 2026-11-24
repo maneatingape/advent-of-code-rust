@@ -147,35 +147,32 @@ mod implementation {
         }
 
         if three != 0 || five != 0 {
-            let mut exclusive = shared.mutex.lock().unwrap();
-            let mut candidates = Vec::new();
+            let Exclusive { threes, fives, found } = &mut *shared.mutex.lock().unwrap();
 
             // Compare against all 5 digit sequences.
             if three != 0 {
-                exclusive.threes.insert(n, three);
+                threes.insert(n, three);
 
-                for (_, mask) in exclusive.fives.range(n + 1..n + 1001) {
+                for (_, mask) in fives.range(n + 1..n + 1001) {
                     if three & mask != 0 {
-                        candidates.push(n);
+                        found.insert(n);
                     }
                 }
             }
 
             // Compare against all 3 digit sequences.
             if five != 0 {
-                exclusive.fives.insert(n, five);
+                fives.insert(n, five);
 
-                for (&index, &mask) in exclusive.threes.range(n - 1000..n) {
+                for (&index, &mask) in threes.range(n - 1000..n) {
                     if five & mask != 0 {
-                        candidates.push(index);
+                        found.insert(index);
                     }
                 }
             }
 
-            // Add any matching keys found, finishing once we have at least 64 keys.
-            exclusive.found.extend(candidates);
-
-            if exclusive.found.len() >= 64 {
+            // Finish once we have found at least 64 keys.
+            if found.len() >= 64 {
                 shared.iter.stop();
             }
         }
@@ -253,21 +250,18 @@ mod implementation {
         let five_mask = five.simd_ne(Simd::splat(0)).to_bitmask();
 
         if three_mask != 0 || five_mask != 0 {
-            let mut exclusive = shared.mutex.lock().unwrap();
-            let mut candidates = Vec::new();
+            let Exclusive { threes, fives, found } = &mut *shared.mutex.lock().unwrap();
 
             for i in three_mask.biterator() {
                 let three = three[i];
                 let n = start + i as i32;
 
                 // Compare against all 5 digit sequences.
-                if three != 0 {
-                    exclusive.threes.insert(n, three);
+                threes.insert(n, three);
 
-                    for (_, mask) in exclusive.fives.range(n + 1..n + 1001) {
-                        if three & mask != 0 {
-                            candidates.push(n);
-                        }
+                for (_, mask) in fives.range(n + 1..n + 1001) {
+                    if three & mask != 0 {
+                        found.insert(n);
                     }
                 }
             }
@@ -277,21 +271,17 @@ mod implementation {
                 let n = start + i as i32;
 
                 // Compare against all 3 digit sequences.
-                if five != 0 {
-                    exclusive.fives.insert(n, five);
+                fives.insert(n, five);
 
-                    for (&index, &mask) in exclusive.threes.range(n - 1000..n) {
-                        if five & mask != 0 {
-                            candidates.push(index);
-                        }
+                for (&index, &mask) in threes.range(n - 1000..n) {
+                    if five & mask != 0 {
+                        found.insert(index);
                     }
                 }
             }
 
-            // Add any matching keys found, finishing once we have at least 64 keys.
-            exclusive.found.extend(candidates);
-
-            if exclusive.found.len() >= 64 {
+            // Finish once we have found at least 64 keys.
+            if found.len() >= 64 {
                 shared.iter.stop();
             }
         }

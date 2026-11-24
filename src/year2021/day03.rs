@@ -13,7 +13,7 @@ pub struct Input {
     size: usize,       // Total number of binary digits in each number.
     entries: usize,    // Number of entries in the file.
     lanes: Vec<usize>, // Contains size counters, one for each digit lane.
-    tree: Vec<usize>,  // Contains a balanced binary tree with 2**(width+1) nodes.
+    tree: Vec<usize>,  // Contains a balanced binary tree with 2 ^ (size+1) nodes.
 }
 
 pub fn parse(input: &str) -> Input {
@@ -23,7 +23,7 @@ pub fn parse(input: &str) -> Input {
 
     // Allocate frequency counters based on size of each input.
     let mut lanes = vec![0; size];
-    let mut tree = vec![0; 1 << (size + 1)];
+    let mut tree = vec![0; 2 * offset];
 
     // Update frequency counters and leaf nodes for each number in the input.
     for chunk in input.as_bytes().chunks(size + 1) {

@@ -44,7 +44,7 @@ pub fn part1_testable(input: &[Input], row: i32) -> i32 {
     fn build_range(input: &Input, row: i32) -> Option<Range<i32>> {
         let Input { sensor, manhattan, .. } = input;
         let extra = manhattan - (sensor.y - row).abs();
-        (extra >= 0).then(|| (sensor.x - extra)..(sensor.x + extra))
+        (extra >= 0).then(|| (sensor.x - extra)..(sensor.x + extra + 1))
     }
 
     // Sort the ranges first.
@@ -54,18 +54,11 @@ pub fn part1_testable(input: &[Input], row: i32) -> i32 {
     let mut total = 0;
     let mut max = i32::MIN;
 
-    // Compare each range to the next.
+    // Only add the part of each range that extends past the end of all previous ranges.
+    // (it's possible that there is no extra length)
     for Range { start, end } in ranges {
-        if start > max {
-            // If there is no overlap with the previous range, then add the entire length.
-            total += end - start + 1;
-            max = end;
-        } else {
-            // If some part of the range overlaps, then only add any extra length.
-            // (it's possible that there is no extra length)
-            total += (end - max).max(0);
-            max = max.max(end);
-        }
+        total += (end - max.max(start)).max(0);
+        max = max.max(end);
     }
 
     // Returns the x position of all beacons that are located on the specified row.

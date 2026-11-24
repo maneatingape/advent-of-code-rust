@@ -155,17 +155,15 @@ fn solve<'a>(iter: impl Iterator<Item = &'a Spring<'a>>, repeat: usize) -> u64 {
         pattern.clear();
         springs.clear();
 
-        for _ in 1..repeat {
+        for _ in 0..repeat {
             pattern.extend_from_slice(first);
             pattern.push(b'?');
             springs.extend_from_slice(second);
         }
 
-        // Add a trailing '.' so that we don't have to check bounds when testing the last pattern.
-        // This has no effect on the number of possible combinations.
-        pattern.extend_from_slice(first);
-        pattern.push(b'.');
-        springs.extend_from_slice(second);
+        // Replace the final '?' with a trailing '.' so that we don't have to check bounds when
+        // testing the last pattern. This has no effect on the number of possible combinations.
+        *pattern.last_mut().unwrap() = b'.';
 
         // Calculate prefix sum of the number of broken springs and unknowns before each index
         // to quickly check if a range can contain a broken spring without checking every element.
@@ -217,13 +215,11 @@ fn solve<'a>(iter: impl Iterator<Item = &'a Spring<'a>>, repeat: usize) -> u64 {
 
             for i in start..start + wiggle {
                 // As a minor optimization only check the pattern if the previous row
-                // will contribute a non-zero value.
+                // will contribute a non-zero value. A '#' immediately before the pattern
+                // needs no separate check as the previous row is always zero there.
                 if pattern[i + size] == b'#' {
                     sum = 0;
-                } else if table[previous + i - 1] > 0
-                    && pattern[i - 1] != b'#'
-                    && broken[i + size] - broken[i] == size
-                {
+                } else if table[previous + i - 1] > 0 && broken[i + size] - broken[i] == size {
                     sum += table[previous + i - 1];
                 }
 

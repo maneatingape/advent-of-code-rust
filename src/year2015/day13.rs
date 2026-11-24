@@ -70,21 +70,18 @@ pub fn parse(input: &str) -> Input {
         // For a given set, compute each g(set,k) for all k in the set.
         for k in set.biterator() {
             let subset = set ^ (1 << k);
-            let mut longest = i16::MIN;
-            let mut start = u8::MAX;
 
             // For a given destination k, find which other bit m gives the best path from the
             // subset to m, and then m to k. All table[subset] references were filled in prior
             // iterations of the outer loop or the singleton base cases.
-            for m in subset.biterator() {
-                let (prior, prior_start) = table[subset * stride + m];
-                let distance = prior + happiness[m * stride + k];
-                if distance > longest {
-                    longest = distance;
-                    start = prior_start;
-                }
-            }
-            table[set * stride + k] = (longest, start);
+            table[set * stride + k] = subset
+                .biterator()
+                .map(|m| {
+                    let (prior, start) = table[subset * stride + m];
+                    (prior + happiness[m * stride + k], start)
+                })
+                .reduce(|best, next| if next.0 > best.0 { next } else { best })
+                .unwrap();
         }
     }
 

@@ -211,17 +211,10 @@ pub fn part2(input: &Input) -> i32 {
         // Here's the really neat part. Our new 3D direction will *always* be `k`.
         // We can find the relative orientation in the plane of the face by checking against
         // `i` and `j`. This also tells us which edge we're entering.
-        let next_direction = if k == next_i {
-            RIGHT
-        } else if k == -next_i {
-            LEFT
-        } else if k == next_j {
-            DOWN
-        } else if k == -next_j {
-            UP
-        } else {
-            unreachable!()
-        };
+        let (_, next_direction) = [(next_i, RIGHT), (-next_i, LEFT), (next_j, DOWN), (-next_j, UP)]
+            .into_iter()
+            .find(|&(vector, _)| vector == k)
+            .unwrap();
         // 4 possible leaving edges and 4 possible entering edges gives 16 total possible
         // combinations.
         let next_offset = match (direction, next_direction) {

@@ -20,26 +20,24 @@ type Input = (Vec<Range<u64>>, Vec<u64>);
 
 pub fn parse(input: &str) -> Input {
     let (prefix, suffix) = input.split_once("\n\n").unwrap();
-    let mut ranges: Vec<_> = prefix.iter_unsigned().chunk::<2>().collect();
+    let mut ranges: Vec<Range<u64>> =
+        prefix.iter_unsigned().chunk::<2>().map(|[from, to]| from..to + 1).collect();
     let mut ids: Vec<_> = suffix.iter_unsigned().collect();
-    let mut range = 0..0;
-    let mut merged = Vec::new();
 
-    ranges.sort_unstable();
+    ranges.sort_unstable_by_key(|range| range.start);
     ids.sort_unstable();
 
     // Merge ranges together.
-    for [from, to] in ranges {
-        if from < range.end {
-            range.end = range.end.max(to + 1);
+    ranges.dedup_by(|next, range| {
+        if next.start < range.end {
+            range.end = range.end.max(next.end);
+            true
         } else {
-            merged.push(range);
-            range = from..to + 1;
+            false
         }
-    }
+    });
 
-    merged.push(range);
-    (merged, ids)
+    (ranges, ids)
 }
 
 pub fn part1(input: &Input) -> usize {

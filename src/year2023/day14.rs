@@ -110,59 +110,32 @@ pub fn parse(input: &str) -> Input {
     let mut roll_south = Vec::new();
     let mut roll_east = Vec::new();
 
-    // Starting index of each rounded ball.
+    // For each direction, store the next index that a ball will roll to in that direction.
+    let update = |fixed: &mut Grid<i16>, roll: &mut Vec<i16>, point: Point| {
+        if grid[point] == b'#' {
+            roll.push((grid.width * point.y + point.x) as i16);
+        }
+        fixed[point] = (roll.len() - 1) as i16;
+    };
+
+    // North and south are intentionally iterated in column-major order, south from the bottom.
+    for x in 0..grid.width {
+        for y in 0..grid.height {
+            update(&mut north, &mut roll_north, Point::new(x, y));
+            update(&mut south, &mut roll_south, Point::new(x, grid.height - 1 - y));
+        }
+    }
+
+    // West and east are iterated in row-major order, east from the right. Also store the
+    // starting index of each rounded ball.
     for y in 0..grid.height {
         for x in 0..grid.width {
             let point = Point::new(x, y);
             if grid[point] == b'O' {
                 rounded.push((grid.width * point.y + point.x) as i16);
             }
-        }
-    }
-
-    // For each direction, store the next index that a ball will roll to in that direction.
-
-    // North is intentionally iterated in column-major order.
-    for x in 0..grid.width {
-        for y in 0..grid.height {
-            let point = Point::new(x, y);
-            if grid[point] == b'#' {
-                roll_north.push((grid.width * point.y + point.x) as i16);
-            }
-            north[point] = (roll_north.len() - 1) as i16;
-        }
-    }
-
-    // West
-    for y in 0..grid.height {
-        for x in 0..grid.width {
-            let point = Point::new(x, y);
-            if grid[point] == b'#' {
-                roll_west.push((grid.width * point.y + point.x) as i16);
-            }
-            west[point] = (roll_west.len() - 1) as i16;
-        }
-    }
-
-    // South is intentionally iterated in reverse column-major order.
-    for x in 0..grid.width {
-        for y in (0..grid.height).rev() {
-            let point = Point::new(x, y);
-            if grid[point] == b'#' {
-                roll_south.push((grid.width * point.y + point.x) as i16);
-            }
-            south[point] = (roll_south.len() - 1) as i16;
-        }
-    }
-
-    // East
-    for y in 0..grid.height {
-        for x in (0..grid.width).rev() {
-            let point = Point::new(x, y);
-            if grid[point] == b'#' {
-                roll_east.push((grid.width * point.y + point.x) as i16);
-            }
-            east[point] = (roll_east.len() - 1) as i16;
+            update(&mut west, &mut roll_west, point);
+            update(&mut east, &mut roll_east, Point::new(grid.width - 1 - x, y));
         }
     }
 
@@ -182,16 +155,17 @@ pub fn parse(input: &str) -> Input {
 }
 
 pub fn part1(input: &Input) -> i32 {
-    let Input { width, height, fixed_north, roll_north, .. } = input;
+    let Input { width, height, .. } = *input;
+    let Input { fixed_north, roll_north, .. } = input;
 
     // Tilt north only once.
     let mut result = 0;
     let rounded = &mut input.rounded.clone();
-    let state = tilt(rounded, fixed_north, roll_north, *width as i16);
+    let state = tilt(rounded, fixed_north, roll_north, width as i16);
 
     // Find vertical distance of each ball from the bottom, remembering that the grid is 2 bigger.
-    for (&a, &b) in input.roll_north.iter().zip(state.iter()) {
-        for index in (a..b).step_by(input.width as usize) {
+    for (&a, &b) in roll_north.iter().zip(&state) {
+        for index in (a..b).step_by(width as usize) {
             let y = (index as i32) / width;
             result += height - 2 - y;
         }
@@ -201,16 +175,16 @@ pub fn part1(input: &Input) -> i32 {
 }
 
 pub fn part2(input: &Input) -> i32 {
-    let Input { width, height, .. } = input;
+    let Input { width, height, .. } = *input;
 
     let rounded = &mut input.rounded.clone();
     let mut seen = FastMap::with_capacity(100);
 
     // Simulate tilting until a cycle is found.
     let (start, end) = loop {
-        tilt(rounded, &input.fixed_north, &input.roll_north, *width as i16);
+        tilt(rounded, &input.fixed_north, &input.roll_north, width as i16);
         tilt(rounded, &input.fixed_west, &input.roll_west, 1);
-        tilt(rounded, &input.fixed_south, &input.roll_south, -(*width) as i16);
+        tilt(rounded, &input.fixed_south, &input.roll_south, -(width) as i16);
         let state = tilt(rounded, &input.fixed_east, &input.roll_east, -1);
 
         if let Some(previous) = seen.insert(state, seen.len()) {

@@ -65,10 +65,7 @@ mod implementation {
         let mut part_two = vec![0; 130_321];
         let mut seen = vec![u16::MAX; 130_321];
 
-        for (id, &number) in iter.enumerate() {
-            let id = id as u16;
-
-            let zeroth = number;
+        for (&zeroth, id) in iter.zip(0..) {
             let first = hash(zeroth);
             let second = hash(first);
             let third = hash(second);

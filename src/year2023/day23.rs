@@ -275,12 +275,10 @@ pub fn part2(input: &Input) -> u32 {
 /// Convert maze to undirected graph.
 fn compress(input: &str) -> Graph {
     let mut grid = Grid::parse(input);
-    let width = grid.width;
-    let height = grid.height;
 
     // Move start and end away from edge.
     let start = Point::new(1, 1);
-    let end = Point::new(width - 2, height - 2);
+    let end = Point::new(grid.width - 2, grid.height - 2);
 
     // Modify edge of grid to remove the need for boundary checks.
     grid[start + UP] = b'#';

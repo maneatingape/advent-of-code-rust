@@ -96,35 +96,29 @@ pub fn parse(input: &str) -> Input {
         let mut depth = 0;
 
         for j in (start..=end).step_by(step) {
-            if heights[j] == top {
-                let index = indices[j];
-                if index != previous {
-                    previous = index;
-                    underneath += 1;
+            if heights[j] == top && indices[j] != previous {
+                previous = indices[j];
+                underneath += 1;
 
-                    if underneath == 1 {
-                        (parent, depth) = dominator[previous];
-                    } else {
-                        // Find common ancestor.
-                        let (mut a, mut b) = (parent, depth);
-                        let (mut x, mut y) = dominator[previous];
+                if underneath == 1 {
+                    (parent, depth) = dominator[previous];
+                } else {
+                    // Find common ancestor.
+                    let (mut x, mut y) = dominator[previous];
 
-                        // The depth must be the same.
-                        while b > y {
-                            (a, b) = dominator[a];
-                        }
-                        while y > b {
-                            (x, y) = dominator[x];
-                        }
+                    // The depth must be the same.
+                    while depth > y {
+                        (parent, depth) = dominator[parent];
+                    }
+                    while y > depth {
+                        (x, y) = dominator[x];
+                    }
 
-                        // Bricks at the same depth could still have different paths from the
-                        // root so we need to also check the indices match.
-                        while a != x {
-                            (a, b) = dominator[a];
-                            (x, _) = dominator[x];
-                        }
-
-                        (parent, depth) = (a, b);
+                    // Bricks at the same depth could still have different paths from the
+                    // root so we need to also check the indices match.
+                    while parent != x {
+                        (parent, depth) = dominator[parent];
+                        (x, _) = dominator[x];
                     }
                 }
             }

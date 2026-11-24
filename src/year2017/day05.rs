@@ -45,7 +45,6 @@ pub fn part2(input: &[isize]) -> u64 {
     let mut index = 0;
 
     let mut fine = 0;
-    let mut coarse = 0;
     let mut compact = Vec::new();
 
     // Precompute all possible combinations for each binary starting number from 0 to 2¹⁶,
@@ -54,7 +53,7 @@ pub fn part2(input: &[isize]) -> u64 {
         Vec::from_fn(3, |offset| from_fn(|value| compute_block(value, offset)));
 
     while index < jump.len() {
-        if index < coarse {
+        if index / 16 < compact.len() {
             if index % 16 >= 3 {
                 let j = index / 16;
                 let (next, steps, delta) = compute_block(compact[j], index % 16);
@@ -65,7 +64,7 @@ pub fn part2(input: &[isize]) -> u64 {
             }
 
             // Index lies within precomputed blocks.
-            for value in &mut compact[(index / 16)..(coarse / 16)] {
+            for value in &mut compact[index / 16..] {
                 let (next, steps, delta) = cache[index % 16][*value];
 
                 *value = usize::from(next);
@@ -83,8 +82,8 @@ pub fn part2(input: &[isize]) -> u64 {
             if jump[index] == 2 && index == fine {
                 fine += 1;
                 if fine.is_multiple_of(16) {
-                    let value = (coarse..fine).rev().fold(0, |acc, i| (acc << 1) | (jump[i] & 1));
-                    coarse = fine;
+                    let value =
+                        (fine - 16..fine).rev().fold(0, |acc, i| (acc << 1) | (jump[i] & 1));
                     compact.push(value as usize);
                 }
             }

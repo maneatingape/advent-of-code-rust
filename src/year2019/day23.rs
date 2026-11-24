@@ -55,7 +55,7 @@ pub fn parse(input: &str) -> Input {
 
         if empty == 50 {
             if idle_y == Some(nat_y) {
-                break;
+                break (first_y.unwrap(), nat_y);
             }
             idle_y = Some(nat_y);
 
@@ -64,8 +64,6 @@ pub fn parse(input: &str) -> Input {
             destination.input(nat_y);
         }
     }
-
-    (first_y.unwrap(), idle_y.unwrap())
 }
 
 pub fn part1(input: &Input) -> i64 {

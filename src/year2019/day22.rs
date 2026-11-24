@@ -155,12 +155,10 @@ fn deck(input: &str, m: i128) -> Technique {
                 Technique { a: m - 1, c: m - 1, m }
             } else if line.starts_with("cut") {
                 let n: i128 = line.signed();
-                let c = (-n).rem_euclid(m);
-                Technique { a: 1, c, m }
+                Technique { a: 1, c: (-n).rem_euclid(m), m }
             } else {
                 let n: i128 = line.signed();
-                let a = n.rem_euclid(m);
-                Technique { a, c: 0, m }
+                Technique { a: n.rem_euclid(m), c: 0, m }
             }
         })
         .reduce(|a, b| a.compose(&b))

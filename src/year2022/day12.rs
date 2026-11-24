@@ -45,7 +45,7 @@ pub fn parse(input: &str) -> Input {
             }
             if grid[next] >= height {
                 if grid[next] == b'a' {
-                    part_two = part_two.or(Some(cost));
+                    part_two.get_or_insert(cost);
                 }
                 todo.push_back((next, grid[next] - 1, cost + 1));
                 grid[next] = 0;

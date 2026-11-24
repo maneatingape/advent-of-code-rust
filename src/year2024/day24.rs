@@ -80,9 +80,7 @@ pub fn part1(input: &Input<'_>) -> u64 {
 
     // Add input signals to cache.
     for line in prefix.lines() {
-        let prefix = &line[..3];
-        let suffix = &line[5..];
-        cache[to_index(prefix)] = suffix.unsigned();
+        cache[to_index(&line[..3])] = line[5..].unsigned();
     }
 
     // If both inputs are available then add gate output to cache

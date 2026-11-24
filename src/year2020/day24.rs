@@ -85,7 +85,6 @@ mod implementation {
         let mut state = vec![0_u8; width * height];
         let mut active = Vec::with_capacity(5_000);
         let mut candidates = Vec::with_capacity(5_000);
-        let mut next_active = Vec::with_capacity(5_000);
 
         // Create initial active state, offsetting tiles so that all indices are positive.
         for hex in input {
@@ -114,14 +113,10 @@ mod implementation {
             }
 
             // Active tiles remain active with both one and two neighbors.
-            next_active.extend(active.iter().filter(|&&tile| state[tile] == 1));
+            active.retain(|&tile| state[tile] == 1);
             // Check that the neighbor count for inactive tiles hasn't exceeded two.
-            next_active.extend(candidates.iter().filter(|&&tile| state[tile] == 2));
-
-            // Swap to make next generation the current generation.
-            (active, next_active) = (next_active, active);
-            candidates.clear();
-            next_active.clear();
+            candidates.retain(|&tile| state[tile] == 2);
+            active.append(&mut candidates);
         }
 
         active.len()

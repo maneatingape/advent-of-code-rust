@@ -125,16 +125,14 @@ pub fn part2(_input: &Input) -> &'static str {
 fn perfect_minimal_hash(lookup: &mut [usize], nodes: &mut Vec<Vec<usize>>, slice: &[u8]) -> usize {
     // Base 26 index.
     let hash = slice[..3].iter().fold(0, |acc, b| 26 * acc + usize::from(b - b'a'));
-    let mut index = lookup[hash];
 
     // First time seeing this key so push a new node and return its index.
-    if index == usize::MAX {
-        index = nodes.len();
-        lookup[hash] = index;
+    if lookup[hash] == usize::MAX {
+        lookup[hash] = nodes.len();
         nodes.push(Vec::with_capacity(10));
     }
 
-    index
+    lookup[hash]
 }
 
 /// BFS across the graph to find the furthest nodes from start.

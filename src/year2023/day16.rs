@@ -120,7 +120,7 @@ pub fn part2(input: &Input) -> u32 {
 ///
 /// This does not mark paths in the grid to avoid corrupting potential future calculations.
 fn follow(graph: &mut Graph, mut position: Point, mut direction: Point) -> u32 {
-    let mut node = Node::new();
+    let mut tiles = BitSet::new();
 
     loop {
         match graph.grid[position] {
@@ -133,7 +133,7 @@ fn follow(graph: &mut Graph, mut position: Point, mut direction: Point) -> u32 {
                     Done(index) => index,
                     OnStack(_) => unreachable!(),
                 };
-                node.tiles.union(&graph.nodes[index].tiles);
+                tiles.union(&graph.nodes[index].tiles);
                 break;
             }
             // Mirrors change direction.
@@ -149,11 +149,11 @@ fn follow(graph: &mut Graph, mut position: Point, mut direction: Point) -> u32 {
             }
         }
 
-        node.tiles.insert(position);
+        tiles.insert(position);
         position += direction;
     }
 
-    node.tiles.size()
+    tiles.size()
 }
 
 /// Traces the path of a beam until we hit the flat side of another splitter or exit the grid.

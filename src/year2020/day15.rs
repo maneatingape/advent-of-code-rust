@@ -28,18 +28,17 @@ pub fn part2(input: &[usize]) -> usize {
 }
 
 fn play(input: &[usize], rounds: usize) -> usize {
-    let (last, starting) = input.split_last().unwrap();
+    let (&(mut last), starting) = input.split_last().unwrap();
 
-    let mut last = *last;
     let mut zeroth = 0;
     let mut spoken = vec![0; rounds];
     let mut seen = vec![0_u64; rounds / 64];
 
-    for (i, &n) in starting.iter().enumerate() {
+    for (&n, i) in starting.iter().zip(1..) {
         if n == 0 {
-            zeroth = i + 1;
+            zeroth = i;
         } else {
-            spoken[n] = (i + 1) as u32;
+            spoken[n] = i as u32;
         }
     }
 

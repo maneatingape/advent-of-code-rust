@@ -62,7 +62,7 @@ pub fn part2(input: &[i64]) -> i64 {
 }
 
 /// Generates all possible permutations of the array, passing them to a callback function.
-fn permutations<F: FnMut([i64; 5])>(mut array: [i64; 5], i: usize, f: &mut F) {
+fn permutations(mut array: [i64; 5], i: usize, f: &mut impl FnMut([i64; 5])) {
     if i == 5 {
         f(array);
     } else {

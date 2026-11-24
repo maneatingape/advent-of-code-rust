@@ -9,11 +9,14 @@ use std::array::from_fn;
 
 use crate::util::thread::*;
 
-/// Parallelize the hashing as each row is independent.
+/// Parallelize the hashing as each row is independent. Each worker thread chooses the next
+/// available row then computes the hash, and the final vec is patched with the results.
 pub fn parse(input: &str) -> Vec<u8> {
     let prefix = input.trim();
     let rows: Vec<_> = (0..128).collect();
-    let result = spawn_parallel_iterator(&rows, |iter| worker(prefix, iter));
+    let result = spawn_parallel_iterator(&rows, |iter| {
+        iter.map(|&index| (index, fill_row(prefix, index))).collect::<Vec<_>>()
+    });
 
     let mut grid = vec![[[0; 8]; 16]; 128];
     for (index, row) in result.into_iter().flatten() {
@@ -30,12 +33,6 @@ pub fn part2(input: &[u8]) -> usize {
     let mut grid = input.to_vec();
     let connect = |i| (grid[i] == 1).then(|| dfs(&mut grid, i));
     (0..input.len()).filter_map(connect).count()
-}
-
-/// Each worker thread chooses the next available index then computes the hash and patches the
-/// final vec with the result.
-fn worker(prefix: &str, iter: ParIter<'_, usize>) -> Vec<(usize, [[u8; 8]; 16])> {
-    iter.map(|&index| (index, fill_row(prefix, index))).collect()
 }
 
 /// Compute the knot hash for a row and expand into a fixed-size array.

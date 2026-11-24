@@ -219,13 +219,11 @@ pub fn part2(input: &[Located]) -> i32 {
 fn check(known: &Located, scanner: &Scanner) -> Option<Found> {
     let mut matching = 0;
 
-    for key in known.signature.keys() {
-        if scanner.signature.contains_key(key) {
+    for (key, &[a, b]) in &known.signature {
+        if let Some(&[x, y]) = scanner.signature.get(key) {
             matching += 1;
             if matching == 66 {
                 // Choose any arbitrary pair of points that have a matching signature.
-                let [a, b] = known.signature[key];
-                let [x, y] = scanner.signature[key];
                 let points =
                     [known.beacons[a], known.beacons[b], scanner.beacons[x], scanner.beacons[y]];
                 return detailed_check(known, scanner, points);

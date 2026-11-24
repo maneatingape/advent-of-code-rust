@@ -72,7 +72,7 @@ pub fn parse(input: &str) -> Input<'_> {
         }
 
         let mut mask = 0;
-        for allergen in suffix.split([' ', ',', ')']).filter(|a| !a.is_empty()) {
+        for allergen in suffix.trim_end_matches(')').split(", ") {
             let size = allergens.len();
             mask |= 1 << *allergens.entry(allergen).or_insert(size);
         }
@@ -111,18 +111,10 @@ pub fn part2(input: &Input<'_>) -> String {
         .collect();
     let mut done = BTreeMap::new();
 
-    // Eliminate known allergens from other ingredients.
-    while done.len() < todo.len() {
-        let mut mask = 0;
-
-        // There must be at least one ingredient with only one allergen.
-        for (name, candidates) in &todo {
-            if candidates.count_ones() == 1 {
-                done.insert(inverse_allergens[candidates], *name);
-                mask |= candidates;
-            }
-        }
-
+    // There must be at least one ingredient with only one allergen.
+    while let Some(&(name, mask)) = todo.iter().find(|(_, c)| c.count_ones() == 1) {
+        done.insert(inverse_allergens[&mask], name);
+        // Eliminate the known allergen from all ingredients, including this one.
         todo.iter_mut().for_each(|(_, candidates)| *candidates &= !mask);
     }
 

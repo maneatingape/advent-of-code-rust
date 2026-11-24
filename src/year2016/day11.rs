@@ -63,7 +63,7 @@ struct State {
 impl State {
     // Reject any inconsistent setup.
     fn valid(&self, floor: u8) -> bool {
-        let chips = (self.pairs) & (MASK << floor);
+        let chips = self.pairs & (MASK << floor);
         let gens = (self.pairs >> 4) & (MASK << floor);
         gens == 0 || (chips & !gens) == 0
     }
@@ -80,15 +80,11 @@ impl State {
     // Attempt to adjust state by moving one or two items up or down.
     fn move_floor(self, up: bool, item_mask: u64) -> Option<Self> {
         // Build the new state.
-        let mut state = self;
-
-        if up {
-            state.pairs += item_mask;
-            state.elevator += 1;
+        let state = if up {
+            Self { elevator: self.elevator + 1, pairs: self.pairs + item_mask }
         } else {
-            state.pairs -= item_mask >> 1;
-            state.elevator -= 1;
-        }
+            Self { elevator: self.elevator - 1, pairs: self.pairs - (item_mask >> 1) }
+        };
 
         (state.valid(self.elevator) && state.valid(state.elevator)).then(|| state.canon())
     }

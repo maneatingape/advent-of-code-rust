@@ -77,17 +77,16 @@ fn expedition(basin: &Basin, start: usize, forward: bool) -> usize {
 
         // We modify the state in-place as we process each column, so preserve the previous state
         // for subsequent calculations.
-        let mut cur = 0;
-        let mut next = state[0];
+        let mut prev = 0;
 
         for i in 0..*width {
-            let prev = cur;
-            cur = next;
-            next = state[i + 1];
+            let cur = state[i];
+            let next = state[i + 1];
             // The Elves frontier can spread out 1 in each orthogonal direction unless there
             // is a blizzard present.
             state[i] =
                 (cur | (cur >> 1) | (cur << 1) | prev | next) & left[i] & right[i] & vertical[i];
+            prev = cur;
         }
 
         // Elves can wait indefinitely at the entrance in either direction, but only step into the

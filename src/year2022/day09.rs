@@ -2,6 +2,7 @@
 //!
 //! This solution relies on the [`Point`] utility module. Two dimensional problems are common in
 //! Advent of Code, so having a decent `Point` (or `Coord` or `Pos`) implementation is convenient.
+use crate::util::grid::*;
 use crate::util::parse::*;
 use crate::util::point::*;
 
@@ -17,13 +18,11 @@ pub fn parse(input: &str) -> Input {
     let pairs: Vec<_> = first.zip(second).collect();
 
     // Determine maximum extents.
-    let (x1, y1, x2, y2, _) = pairs.iter().fold(
-        (i32::MAX, i32::MAX, i32::MIN, i32::MIN, ORIGIN),
-        |(x1, y1, x2, y2, point), &(step, amount)| {
+    let (x1, y1, x2, y2, _) =
+        pairs.iter().fold((0, 0, 0, 0, ORIGIN), |(x1, y1, x2, y2, point), &(step, amount)| {
             let next = point + step * amount;
             (x1.min(next.x), y1.min(next.y), x2.max(next.x), y2.max(next.y), next)
-        },
-    );
+        });
 
     let width = x2 - x1 + 1;
     let height = y2 - y1 + 1;
@@ -50,11 +49,12 @@ pub fn part2(input: &Input) -> u32 {
 /// Using const generics for the rope length allows the compiler to optimize the loop and speeds
 /// things up by about 40%.
 fn simulate<const N: usize>(input: &Input) -> u32 {
-    let (width, height, start, pairs) = input;
+    let (width, height, start, ..) = *input;
+    let (.., pairs) = input;
 
     let mut distinct = 0;
-    let mut rope = [*start; N];
-    let mut grid = vec![false; (width * height) as usize];
+    let mut rope = [start; N];
+    let mut grid = Grid::new(width, height, false);
 
     for &(step, amount) in pairs {
         for _ in 0..amount {
@@ -72,10 +72,9 @@ fn simulate<const N: usize>(input: &Input) -> u32 {
             }
 
             let tail = rope[N - 1];
-            let index = (width * tail.y + tail.x) as usize;
 
-            if !grid[index] {
-                grid[index] = true;
+            if !grid[tail] {
+                grid[tail] = true;
                 distinct += 1;
             }
         }

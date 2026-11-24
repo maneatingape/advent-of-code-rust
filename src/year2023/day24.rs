@@ -53,7 +53,7 @@
 //! Given the rock direction we can calculate the times that the two hailstones are intercepted
 //! then use this to determine the original position of the rock, as long as the two times
 //! are different.
-use std::ops::{Add, RangeInclusive, Sub};
+use std::ops::{RangeInclusive, Sub};
 
 use crate::util::iter::*;
 use crate::util::math::*;
@@ -66,14 +66,6 @@ struct Vector {
     x: i128,
     y: i128,
     z: i128,
-}
-
-impl Add for Vector {
-    type Output = Self;
-
-    fn add(self, rhs: Self) -> Self {
-        Self { x: self.x + rhs.x, y: self.y + rhs.y, z: self.z + rhs.z }
-    }
 }
 
 impl Sub for Vector {
@@ -173,10 +165,7 @@ pub fn part2(input: &[[i64; 6]]) -> i128 {
     let u = (p4.y * s.x - p4.x * s.y) / (v4.x * s.y - v4.y * s.x);
     assert_ne!(t, u, "Hailstones must intercept the rock at different times to extrapolate");
 
-    // Calculate the original position of the rock, remembering to add the first hailstone's
-    // position to convert back to absolute coordinates.
-    let a = (p0 + p3).sum();
-    let b = (p0 + p4).sum();
-    let c = (v3 - v4).sum();
-    (u * a - t * b + u * t * c) / (u - t)
+    // Calculate the original position of the rock from the absolute coordinates of the
+    // second and third hailstones at their respective intercept times.
+    (u * p1.sum() - t * p2.sum() + u * t * (v1 - v2).sum()) / (u - t)
 }

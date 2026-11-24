@@ -112,9 +112,7 @@ pub fn part2(disk: &[usize]) -> usize {
         free.pop_if(|h| *h.last().unwrap() > block);
 
         // Update the checksum with the file's location (possibly unchanged).
-        let id = index / 2;
-        let extra = next_block * size + TRIANGLE[size];
-        checksum += id * extra;
+        (checksum, _) = update(checksum, next_block, index, size);
 
         // If we used a free block, remove then add back any leftover space.
         if next_index != usize::MAX {

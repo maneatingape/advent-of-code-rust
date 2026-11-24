@@ -171,7 +171,7 @@ pub fn part2(input: &[Instruction]) -> u64 {
     for (i, set) in sets.iter().enumerate() {
         candidates.extend(sets[(i + 1)..].iter().filter_map(|other| set.intersect(other)));
 
-        let size = set.size() + subsets(set, -1, &candidates);
+        let size = set.size() - subsets(set, &candidates);
 
         total += size as u64 * set.weight;
         candidates.clear();
@@ -180,12 +180,12 @@ pub fn part2(input: &[Instruction]) -> u64 {
     total
 }
 
-fn subsets(cube: &Set, sign: i64, candidates: &[Set]) -> i64 {
+fn subsets(cube: &Set, candidates: &[Set]) -> i64 {
     let mut total = 0;
 
     for (i, other) in candidates.iter().enumerate() {
         if let Some(next) = cube.intersect(other) {
-            total += sign * next.size() + subsets(&next, -sign, &candidates[(i + 1)..]);
+            total += next.size() - subsets(&next, &candidates[(i + 1)..]);
         }
     }
 

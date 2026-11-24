@@ -4,7 +4,7 @@
 //! until the starting or ending digits are found.
 use crate::util::parse::*;
 
-/// Use the index of each digit as its implicit value.
+/// Use the index of each digit plus one as its implicit value.
 const DIGITS: [&[u8]; 9] =
     [b"one", b"two", b"three", b"four", b"five", b"six", b"seven", b"eight", b"nine"];
 

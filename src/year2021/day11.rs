@@ -1,11 +1,12 @@
 //! # Dumbo Octopus
 //!
 //! This puzzle resembles the [`Day 9`] flood fill a little. Since there are only 100 octopuses
-//! a fixed-size array is used both to track current energy levels and a second array to track
-//! if an octopus has flashed this turn. Each time an octopus flashes it bumps its neighbors'
-//! energy levels, which can propagate recursively through the entire grid.
+//! a fixed-size array is used to track current energy levels. Once every octopus has been bumped
+//! at the start of a turn, an energy level of zero means that the octopus has already flashed.
+//! Each time an octopus flashes it bumps its neighbors' energy levels, which can propagate
+//! recursively through the entire grid.
 //!
-//! The 10x10 grid is padded by 1 on either side so that we can avoid boundary checks.
+//! The 10x10 grid is padded by 1 on either side with zeroes so that we can avoid boundary checks.
 //!
 //! [`Day 9`]: crate::year2021::day09
 use crate::util::parse::*;
@@ -36,7 +37,6 @@ pub fn part2(input: &Input) -> u64 {
 
 fn simulate(input: &Input, predicate: fn(u64, u64) -> bool) -> (u64, u64) {
     let mut grid = *input;
-    let mut flashed = [true; 144];
     let mut todo = Vec::with_capacity(100);
 
     let mut flashes = 0;
@@ -50,8 +50,7 @@ fn simulate(input: &Input, predicate: fn(u64, u64) -> bool) -> (u64, u64) {
         for y in 0..10 {
             for x in 0..10 {
                 let index = 12 * (y + 1) + (x + 1);
-                flashed[index] = false;
-                bump_octopus(&mut grid, &mut flashed, &mut todo, index);
+                bump_octopus(&mut grid, &mut todo, index);
             }
         }
 
@@ -60,8 +59,8 @@ fn simulate(input: &Input, predicate: fn(u64, u64) -> bool) -> (u64, u64) {
             flashes += 1;
 
             for next in [i + 1, i + 11, i + 12, i + 13, i - 1, i - 11, i - 12, i - 13] {
-                if !flashed[next] {
-                    bump_octopus(&mut grid, &mut flashed, &mut todo, next);
+                if grid[next] > 0 {
+                    bump_octopus(&mut grid, &mut todo, next);
                 }
             }
         }
@@ -75,12 +74,11 @@ fn simulate(input: &Input, predicate: fn(u64, u64) -> bool) -> (u64, u64) {
 
 /// Increments an octopus's energy. If it reaches 10, it flashes and is added to the queue.
 #[inline]
-fn bump_octopus(grid: &mut [u8], flashed: &mut [bool], todo: &mut Vec<usize>, index: usize) {
+fn bump_octopus(grid: &mut [u8], todo: &mut Vec<usize>, index: usize) {
     if grid[index] < 9 {
         grid[index] += 1;
     } else {
         grid[index] = 0;
-        flashed[index] = true;
         todo.push(index);
     }
 }

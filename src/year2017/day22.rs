@@ -104,9 +104,9 @@ pub fn part2(input: &Grid<u8>) -> usize {
             if input[Point::new(x, y)] == b'#' {
                 let (adjusted_x, adjusted_y) = (x as usize + offset, y as usize + offset);
                 let index = SIZE * (adjusted_y / 2) + (adjusted_x / 2);
-                let offset = 4 * (adjusted_y % 2) + 2 * (adjusted_x % 2);
+                let shift = 4 * (adjusted_y % 2) + 2 * (adjusted_x % 2);
                 // Mark node as infected.
-                grid[index] |= 2 << offset;
+                grid[index] |= 2 << shift;
             }
         }
     }

@@ -48,15 +48,13 @@ pub fn parse(input: &str) -> Input {
                 for direction in ORTHOGONAL {
                     let next = point + direction;
 
-                    if same(next) {
-                        if !seen[next] {
-                            todo.push(next);
-                            seen[next] = true;
-                        }
-                    } else {
+                    if !same(next) {
                         let clockwise = direction.clockwise();
                         perimeter += 1;
                         sides += u64::from(!same(point + clockwise) || same(next + clockwise));
+                    } else if !seen[next] {
+                        todo.push(next);
+                        seen[next] = true;
                     }
                 }
             }

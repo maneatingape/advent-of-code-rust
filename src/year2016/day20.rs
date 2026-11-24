@@ -18,7 +18,6 @@ pub fn part1(input: &[Range]) -> u64 {
         if index < start {
             return index;
         }
-        // Ends are not sorted so only increase.
         index = index.max(end + 1);
     }
 
@@ -33,7 +32,6 @@ pub fn part2(input: &[Range]) -> u64 {
         if index < start {
             total += start - index;
         }
-        // Ends are not sorted so only increase.
         index = index.max(end + 1);
     }
 

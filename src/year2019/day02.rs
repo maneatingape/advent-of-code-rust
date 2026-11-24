@@ -14,9 +14,7 @@ type Input = [i32; 3];
 
 pub fn parse(input: &str) -> Input {
     let code: Vec<_> = input.iter_unsigned().collect();
-    let a = check(&code, 1, 0);
-    let b = check(&code, 0, 1);
-    let c = check(&code, 0, 0);
+    let [a, b, c] = [[1, 0], [0, 1], [0, 0]].map(|[noun, verb]| check(&code, noun, verb));
 
     [a - c, b - c, c]
 }

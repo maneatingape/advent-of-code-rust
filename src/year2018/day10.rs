@@ -32,14 +32,15 @@ pub fn parse(input: &str) -> Input {
         time += 1;
     }
 
-    // Move top left corner of points to origin.
-    adjust(&mut points);
+    // Find top left corner of points.
+    let (min_x, _, min_y, _) = bounding_box(&points);
+    let top_left = Point::new(min_x, min_y);
 
-    // Convert points to human readable string.
+    // Convert points to human readable string, moving top left corner to origin.
     let mut grid = Grid::new(63, 10, '.');
 
     (0..10).for_each(|y| grid[Point::new(0, y)] = '\n');
-    points.iter().for_each(|&p| grid[p + RIGHT] = '#');
+    points.iter().for_each(|&p| grid[p - top_left + RIGHT] = '#');
 
     let message = grid.bytes.iter().collect();
 
@@ -67,12 +68,6 @@ fn bounding_box(points: &[Point]) -> (i32, i32, i32, i32) {
 fn size(points: &[Point]) -> i32 {
     let (min_x, max_x, min_y, max_y) = bounding_box(points);
     (max_x - min_x + 1) * (max_y - min_y + 1)
-}
-
-fn adjust(points: &mut [Point]) {
-    let (min_x, _, min_y, _) = bounding_box(points);
-    let top_left = Point::new(min_x, min_y);
-    points.iter_mut().for_each(|p| *p -= top_left);
 }
 
 fn tick(points: &mut [Point], velocity: &[Point], time: i32) {

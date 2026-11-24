@@ -82,29 +82,21 @@ pub fn parse(input: &str) -> Input {
     let others = found.len() - 1;
     let mut table = [[0; 7]; 1 << 7];
 
-    for k in 0..others {
-        table[1 << k][k] = distance[0][k + 1];
-    }
-
-    // Visit each non-empty set in order, with no work to do for singleton sets. Start from 3,
-    // since 1 and 2 are singleton sets.
-    for set in 3_usize..(1 << others) {
-        if set.is_power_of_two() {
-            continue;
-        }
-
+    // Visit each non-empty set in order.
+    for set in 1_usize..(1 << others) {
         // For a given set, compute each g(set,k) for all k in the set.
         for k in set.biterator() {
             let subset = set ^ (1 << k);
 
             // For a given destination k, find which other bit m gives the best path from the
             // subset to m, and then m to k. All table[subset] references were filled in prior
-            // iterations of the outer loop or the singleton base cases.
+            // iterations of the outer loop. Singleton sets have an empty subset, so g({k},k) is
+            // the distance from node 0 to node k+1.
             table[set][k] = subset
                 .biterator()
                 .map(|m| table[subset][m] + distance[m + 1][k + 1])
                 .min()
-                .unwrap();
+                .unwrap_or(distance[0][k + 1]);
         }
     }
 

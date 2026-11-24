@@ -106,6 +106,13 @@ impl<T> Grid<T> {
     pub fn contains(&self, point: Point) -> bool {
         0 <= point.x && point.x < self.width && 0 <= point.y && point.y < self.height
     }
+
+    #[inline]
+    #[must_use = "Iterators are lazy and do nothing unless consumed"]
+    pub fn points(&self) -> impl Iterator<Item = Point> {
+        let (width, height) = (self.width, self.height);
+        (0..height).flat_map(move |y| (0..width).map(move |x| Point::new(x, y)))
+    }
 }
 
 impl<T> Index<Point> for Grid<T> {

@@ -107,21 +107,16 @@ fn play_automatically(input: &[i64]) -> String {
     // then we can skip the pressure plate check.
     let combinations = 1 << inventory.len();
     let mut have = combinations - 1;
-    let mut want = have;
     let mut output = String::new();
     let mut too_light = Vec::with_capacity(combinations as usize);
     let mut too_heavy = Vec::with_capacity(combinations as usize);
 
     for i in 1..combinations {
-        let current = gray_code(i);
-        let previous = gray_code(i - 1);
-        let changed = current ^ previous;
-
         // Since we start with all items in our possession, the meaning of bits in the Gray code is
         // reversed. 0 is take an item and 1 is drop an item. Iterating over too_heavy and
         // too_light is still cheaper than the cost to emulate another take or drop, so it is worth
         // seeing if we can skip altering inventory to a given configuration.
-        want ^= changed;
+        let want = (combinations - 1) ^ gray_code(i);
 
         // Skip supersets of known heavy configurations and subsets of known light ones.
         if too_heavy.iter().any(|&heavy| want & heavy == heavy)

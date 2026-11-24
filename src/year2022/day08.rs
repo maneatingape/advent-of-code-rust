@@ -60,34 +60,18 @@ pub fn part1(input: &Input) -> usize {
     let mut visible = vec![false; digits.len()];
 
     for i in 1..(width - 1) {
-        let mut left_max = -1;
-        let mut right_max = -1;
-        let mut top_max = -1;
-        let mut bottom_max = -1;
+        let mut maxes = [-1; 4];
 
         for j in 0..(width - 1) {
-            let left = (i * width) + j;
-            if digits[left] > left_max {
-                visible[left] = true;
-                left_max = digits[left];
-            }
+            let k = width - j - 1;
+            // Left, right, top and bottom
+            let indices = [i * width + j, i * width + k, j * width + i, k * width + i];
 
-            let right = (i * width) + (width - j - 1);
-            if digits[right] > right_max {
-                visible[right] = true;
-                right_max = digits[right];
-            }
-
-            let top = (j * width) + i;
-            if digits[top] > top_max {
-                visible[top] = true;
-                top_max = digits[top];
-            }
-
-            let bottom = (width - j - 1) * width + i;
-            if digits[bottom] > bottom_max {
-                visible[bottom] = true;
-                bottom_max = digits[bottom];
+            for (index, max) in indices.into_iter().zip(&mut maxes) {
+                if digits[index] > *max {
+                    visible[index] = true;
+                    *max = digits[index];
+                }
             }
         }
     }
@@ -141,27 +125,17 @@ pub fn part2(input: &Input) -> u64 {
     let mut scenic = vec![1; digits.len()];
 
     for i in 1..(width - 1) {
-        let mut left_max = ONES;
-        let mut right_max = ONES;
-        let mut top_max = ONES;
-        let mut bottom_max = ONES;
+        let mut maxes = [ONES; 4];
 
         for j in 1..(width - 1) {
-            let left = (i * width) + j;
-            scenic[left] *= (left_max >> digits[left]) & 0x3f;
-            left_max = (left_max & (MASK << digits[left])) + ONES;
+            let k = width - j - 1;
+            // Left, right, top and bottom
+            let indices = [i * width + j, i * width + k, j * width + i, k * width + i];
 
-            let right = (i * width) + (width - j - 1);
-            scenic[right] *= (right_max >> digits[right]) & 0x3f;
-            right_max = (right_max & (MASK << digits[right])) + ONES;
-
-            let top = (j * width) + i;
-            scenic[top] *= (top_max >> digits[top]) & 0x3f;
-            top_max = (top_max & (MASK << digits[top])) + ONES;
-
-            let bottom = (width - j - 1) * width + i;
-            scenic[bottom] *= (bottom_max >> digits[bottom]) & 0x3f;
-            bottom_max = (bottom_max & (MASK << digits[bottom])) + ONES;
+            for (index, max) in indices.into_iter().zip(&mut maxes) {
+                scenic[index] *= (*max >> digits[index]) & 0x3f;
+                *max = (*max & (MASK << digits[index])) + ONES;
+            }
         }
     }
 

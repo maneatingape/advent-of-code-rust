@@ -124,7 +124,7 @@ pub fn parse(input: &str) -> Input {
     Input { walls, elves, goblins }
 }
 
-/// Simulate a full fight until only Goblins remain.
+/// Simulate a full fight until only Elves or only Goblins remain.
 pub fn part1(input: &Input) -> i32 {
     fight(input, 3, false).unwrap()
 }

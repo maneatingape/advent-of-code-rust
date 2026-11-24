@@ -19,14 +19,7 @@ struct Node {
 
 pub fn parse(input: &str) -> Input {
     let boxes: Vec<_> = input.iter_unsigned().chunk::<3>().collect();
-    let mut buckets = vec![Vec::new(); BUCKETS];
-
-    for result in spawn_parallel_iterator(&boxes, |iter| worker(&boxes, iter)) {
-        for (bucket, pairs) in buckets.iter_mut().zip(result) {
-            bucket.push(pairs);
-        }
-    }
-
+    let buckets = spawn_parallel_iterator(&boxes, |iter| worker(&boxes, iter));
     (boxes, buckets)
 }
 
@@ -81,8 +74,11 @@ fn worker(boxes: &[Box], iter: ParIter<'_, Box>) -> Vec<Vec<Pair>> {
 }
 
 fn flatten(buckets: &[Vec<Vec<Pair>>]) -> impl Iterator<Item = Pair> {
-    buckets.iter().flat_map(|pairs| {
-        let mut merged = pairs.concat();
+    (0..BUCKETS).flat_map(move |index| {
+        let mut merged = Vec::new();
+        for result in buckets {
+            merged.extend_from_slice(&result[index]);
+        }
         merged.sort_unstable_by_key(|&(.., distance)| distance);
         merged
     })

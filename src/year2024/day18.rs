@@ -27,6 +27,7 @@
 //!   that we encountered blocking the way. Set `t` to the byte's time and push position to the
 //!   deque.
 //! * Restart flood fill from new position until we reach the exit.
+use std::cmp::Reverse;
 use std::collections::VecDeque;
 
 use crate::util::grid::*;
@@ -35,18 +36,18 @@ use crate::util::iter::*;
 use crate::util::parse::*;
 use crate::util::point::*;
 
-pub fn parse(input: &str) -> Grid<i32> {
-    let mut grid = Grid::new(71, 71, i32::MAX);
+pub fn parse(input: &str) -> Grid<u32> {
+    let mut grid = Grid::new(71, 71, u32::MAX);
 
-    for (i, [x, y]) in input.iter_signed().chunk::<2>().enumerate() {
-        grid[Point::new(x, y)] = i as i32;
+    for ([x, y], i) in input.iter_signed().chunk::<2>().zip(0..) {
+        grid[Point::new(x, y)] = i;
     }
 
     grid
 }
 
 /// BFS from start to exit using a fixed time of 1024.
-pub fn part1(grid: &Grid<i32>) -> u32 {
+pub fn part1(grid: &Grid<u32>) -> u32 {
     let mut grid = grid.clone();
     let mut todo = VecDeque::from([(ORIGIN, 0)]);
 
@@ -69,10 +70,10 @@ pub fn part1(grid: &Grid<i32>) -> u32 {
 }
 
 /// Incremental flood fill that removes one blocking byte at a time in descending order.
-pub fn part2(grid: &Grid<i32>) -> String {
+pub fn part2(grid: &Grid<u32>) -> String {
     let exit = Point::new(70, 70);
 
-    let mut time = i32::MAX - 1;
+    let mut time = u32::MAX - 1;
     let mut last = ORIGIN;
     let mut grid = grid.clone();
     let mut todo = VecDeque::from([ORIGIN]);
@@ -93,17 +94,14 @@ pub fn part2(grid: &Grid<i32>) -> String {
                         grid[next] = 0;
                         todo.push_back(next);
                     } else {
-                        // Use negative value to convert min-heap to max-heap.
-                        heap.push(-grid[next], next);
+                        heap.push(Reverse(grid[next]), next);
                     }
                 }
             }
         }
 
         // Remove the latest blocking byte then try to make a little more progress in flood fill.
-        let (negated, blocked) = heap.pop().unwrap();
-        time = -negated;
-        last = blocked;
-        todo.push_back(blocked);
+        (Reverse(time), last) = heap.pop().unwrap();
+        todo.push_back(last);
     }
 }

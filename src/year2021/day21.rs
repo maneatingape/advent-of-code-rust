@@ -55,12 +55,12 @@ pub fn part1(input: &Pair) -> usize {
     }
 }
 
-/// Handle each player seperately. The number of universes for each player grows independently.
+/// Handle each player separately. The number of universes for each player grows independently.
 /// When a player wins, then multiply the number of states by the other player's states.
 pub fn part2(input: &Pair) -> usize {
     let (player, other) = *input;
 
-    let mut current = [[[0; 21]; 10], [[0; 21]; 10]];
+    let mut current = [[[0; 21]; 10]; 2];
     let mut wins = [0; 2];
     let mut universes = 1;
     let mut turn = 0;

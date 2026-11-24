@@ -15,8 +15,6 @@
 use std::iter::from_fn;
 use std::str::Bytes;
 
-use crate::util::parse::*;
-
 struct BitStream<'a> {
     available: u64,
     bits: u64,
@@ -31,8 +29,11 @@ impl BitStream<'_> {
 
     fn next(&mut self, amount: u64) -> u64 {
         while self.available < amount {
+            let b = self.iter.next().unwrap();
+            let digit = char::from(b).to_digit(16).unwrap();
+
             self.available += 4;
-            self.bits = (self.bits << 4) | self.hex_to_binary();
+            self.bits = (self.bits << 4) | u64::from(digit);
         }
 
         self.available -= amount;
@@ -40,11 +41,6 @@ impl BitStream<'_> {
 
         let mask = (1 << amount) - 1;
         (self.bits >> self.available) & mask
-    }
-
-    fn hex_to_binary(&mut self) -> u64 {
-        let b = self.iter.next().unwrap();
-        if b.is_ascii_digit() { b.to_decimal() } else { u64::from(b - b'A' + 10) }
     }
 }
 

@@ -80,24 +80,17 @@ pub fn part2(input: &Input) -> i64 {
     let determinant = input.scale * input.scale - input.lower * input.upper;
     let mut x = 99 * (input.lower * input.upper + input.lower * input.scale) / determinant;
     let mut y = 99 * (input.lower * input.upper + input.upper * input.scale) / determinant;
-    let mut moved = true;
 
     // Increase the right and bottom edges of our box until they are both inside the beam.
-    while moved {
-        moved = false;
-
+    loop {
         while !inside(input, x, y + 99) {
             x += 1;
-            moved = true;
         }
-
-        while !inside(input, x + 99, y) {
-            y += 1;
-            moved = true;
+        if inside(input, x + 99, y) {
+            break 10000 * x + y;
         }
+        y += 1;
     }
-
-    10000 * x + y
 }
 
 /// Skip the relatively expensive intcode test if the point lies outside the beam's slopes.

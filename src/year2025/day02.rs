@@ -71,7 +71,7 @@ pub fn part2(input: &[Pair]) -> u64 {
 }
 
 /// Generate the start and end values for a set,
-/// then sum the number of values contained in the given id range.
+/// then sum the values contained in the given id range.
 fn sum(ranges: &[Range], input: &[Pair]) -> u64 {
     ranges
         .iter()

@@ -1,13 +1,13 @@
 //! # Adapter Array
 //!
-//! Part one uses the [`windows`] function to iterate over all pairs counting the differences.
+//! Part one uses the [`array_windows`] function to iterate over all pairs counting the differences.
 //!
 //! Part two is a classic [dynamic programming](https://en.wikipedia.org/wiki/Dynamic_programming)
 //! problem. The charging outlet can be arranged in exactly one way. Each subsequent adapter can be
 //! arranged in the sum of the number of ways that the adapters at -1, -2 and -3 jolts can be
 //! arranged.
 //!
-//! [`windows`]: slice::windows
+//! [`array_windows`]: slice::array_windows
 use crate::util::parse::*;
 
 pub fn parse(input: &str) -> Vec<usize> {

@@ -119,12 +119,10 @@ fn build_path(scaffold: &FastSet<Point>, mut position: Point, mut direction: Poi
             break path;
         }
 
-        let mut next = position + direction;
         let mut magnitude = 0;
 
-        while scaffold.contains(&next) {
-            position = next;
-            next += direction;
+        while scaffold.contains(&(position + direction)) {
+            position += direction;
             magnitude += 1;
         }
 

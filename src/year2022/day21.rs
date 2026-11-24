@@ -22,10 +22,10 @@
 //!
 //! ```none
 //! yell[c] = 4
-//! unknown[a] = true
+//! unknown[c] = true
 //! operation = "+"
 //! yell[d] = 4
-//! unknown[b] = false
+//! unknown[d] = false
 //! ```
 //!
 //! We know that `c + d` must equal 6 so this implies `c = 2`. We then recursively look at the
@@ -33,7 +33,7 @@
 //!
 //! ```none
 //! yell[humn] = 123
-//! unknown[a] = true
+//! unknown[humn] = true
 //! ```
 //!
 //! Once we finally reach the `humn` node the value that we currently have `2` is the answer.

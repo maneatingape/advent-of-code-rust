@@ -10,34 +10,26 @@ pub struct Input {
 }
 
 pub fn parse(input: &str) -> Input {
-    let grid = Grid::parse(input);
+    // The newline at the end of each row stops numbers wrapping onto the next row
+    // and the border keeps neighbor lookups in bounds.
+    let grid = Grid::parse_with_border(input);
     // In order to tell if we've already seen a number before, store its index at the location
     // of every digit, using zero to indicate no value. For example:
     // `467..114..` => `1110022200`
     let mut seen = grid.same_size_with(0);
     // Stores each unique part number. The first value is a dummy placeholder.
     let mut parts = vec![0];
+    let mut number = 0;
 
-    for y in 0..grid.height {
-        let mut number = 0;
-
-        for x in 0..grid.width {
-            let p = Point::new(x, y);
-            let b = grid[p];
-
-            if b.is_ascii_digit() {
-                // Parse contiguous groups of digits.
-                seen[p] = parts.len();
-                number = 10 * number + b.to_decimal::<u32>();
-            } else if number > 0 {
-                // If not a digit then finish the current number.
-                parts.push(number);
-                number = 0;
-            }
-        }
-        // Actual corner case if the last number is in the bottom-right corner.
-        if number > 0 {
+    for (i, &b) in grid.bytes.iter().enumerate() {
+        if b.is_ascii_digit() {
+            // Parse contiguous groups of digits.
+            seen.bytes[i] = parts.len();
+            number = 10 * number + b.to_decimal::<u32>();
+        } else if number > 0 {
+            // If not a digit then finish the current number.
             parts.push(number);
+            number = 0;
         }
     }
 
@@ -50,8 +42,9 @@ pub fn part1(input: &Input) -> u32 {
     let mut parts = parts.clone();
     let mut result = 0;
 
-    for y in 0..grid.height {
-        for x in 0..grid.width {
+    // Skip the newline border.
+    for y in 1..grid.height - 1 {
+        for x in 1..grid.width {
             let p = Point::new(x, y);
             let b = grid[p];
 
@@ -76,8 +69,8 @@ pub fn part2(input: &Input) -> u32 {
     let Input { grid, seen, parts } = input;
     let mut result = 0;
 
-    for y in 0..grid.height {
-        for x in 0..grid.width {
+    for y in 1..grid.height - 1 {
+        for x in 1..grid.width {
             let p = Point::new(x, y);
 
             if grid[p] == b'*' {

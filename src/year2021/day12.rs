@@ -99,8 +99,8 @@ fn explore(input: &Input, twice: bool) -> u32 {
 
 /// Core recursive DFS logic.
 ///
-/// First we check if we have either reached the `end` cave or seen this state before,
-/// returning early in either case with the respective result.
+/// First we check if we have seen this state before, returning early with the cached result.
+/// If the `end` cave is connected then it counts as one path and is not explored further.
 ///
 /// Next we use bit manipulation to quickly iterate through the caves connected to our current
 /// location. The [`trailing_zeros`] method returns the next set bit. This intrinsic compiles to
