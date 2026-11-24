@@ -6,10 +6,11 @@ while ensuring the code remains concise, readable, and idiomatic.
 
 ## Features
 
-* **Minimal** - Depends only on the standard library.
-* **High Quality** - Formatted with `rustfmt`, linted by `clippy` and continuously tested
+* **Streamlined** Depends only on the standard library. Minimal boilerplate so that solutions are
+  clear and readable.
+* **High Quality** Formatted with `rustfmt`, linted by `clippy` and continuously tested
   via [GitHub Actions][checks-link]. No `unsafe` code.
-* **Well Documented** - Every solution is comprehensively commented with
+* **Well Documented** Every solution is comprehensively commented with
   [rustdoc-generated documentation][docs-link] also available online.
 
 ## Quickstart
