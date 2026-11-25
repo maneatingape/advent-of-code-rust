@@ -160,15 +160,5 @@ fn stretch(grid: &Grid<u8>) -> Grid<u8> {
 }
 
 fn gps(grid: &Grid<u8>, needle: u8) -> i32 {
-    let mut result = 0;
-
-    for y in 0..grid.height {
-        for x in 0..grid.width {
-            if grid[Point::new(x, y)] == needle {
-                result += 100 * y + x;
-            }
-        }
-    }
-
-    result
+    grid.points().filter(|&point| grid[point] == needle).map(|point| 100 * point.y + point.x).sum()
 }

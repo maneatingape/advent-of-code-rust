@@ -30,12 +30,9 @@ pub fn parse(input: &str) -> Vec<Basin> {
     // Collect all basins in the grid. Masking with 15 turns '0' through '9' into their numeric
     // value, and '\n' into 10, so that we can use newline as a second barrier character.
     let mut basins = Vec::with_capacity(256);
-    for y in 0..grid.height {
-        for x in 0..grid.width {
-            let point = Point::new(x, y);
-            if grid[point] & 0xf < 9 {
-                basins.push(flood_fill(&mut grid, point));
-            }
+    for point in grid.points() {
+        if grid[point] & 0xf < 9 {
+            basins.push(flood_fill(&mut grid, point));
         }
     }
 

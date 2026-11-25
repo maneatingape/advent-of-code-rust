@@ -48,11 +48,10 @@ pub fn parse(input: &str) -> Input {
     let grid = Grid::parse(input);
     let mut carts = Vec::new();
 
-    for (i, &b) in grid.bytes.iter().enumerate() {
+    for point in grid.points() {
+        let b = grid[point];
         if matches!(b, b'^' | b'v' | b'<' | b'>') {
-            let x = i as i32 % grid.width;
-            let y = i as i32 / grid.width;
-            carts.push(Cart::new(Point::new(x, y), Point::from(b)));
+            carts.push(Cart::new(point, Point::from(b)));
         }
     }
 

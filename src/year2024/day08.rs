@@ -11,14 +11,11 @@ pub fn parse(input: &str) -> Input {
     let grid = Grid::parse(input);
     let mut antennas = FastMap::new();
 
-    for y in 0..grid.height {
-        for x in 0..grid.width {
-            let point = Point::new(x, y);
-            let frequency = grid[point];
+    for point in grid.points() {
+        let frequency = grid[point];
 
-            if frequency != b'.' {
-                antennas.entry(frequency).or_insert_with(Vec::new).push(point);
-            }
+        if frequency != b'.' {
+            antennas.entry(frequency).or_insert_with(Vec::new).push(point);
         }
     }
 

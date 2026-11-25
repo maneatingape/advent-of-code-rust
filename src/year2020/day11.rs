@@ -41,26 +41,23 @@ mod implementation {
     pub(super) fn simulate(input: &Grid<u8>, part_two: bool, limit: u8) -> u32 {
         let mut seats = Vec::new();
 
-        for y in 0..input.height {
-            for x in 0..input.width {
-                let point = Point::new(x, y);
-                if input[point] != SEAT {
-                    continue;
-                }
-
-                // Part one considers only the adjacent square. Part two skips over any
-                // floor until reaching the first visible seat or the edge of the grid.
-                // Non-seats map to the origin, which is never occupied so always adds zero.
-                let neighbors = DIAGONAL.map(|direction| {
-                    let mut next = point + direction;
-                    while part_two && input[next] == FLOOR {
-                        next += direction;
-                    }
-                    if input[next] == SEAT { next } else { ORIGIN }
-                });
-
-                seats.push(Seat { point, neighbors });
+        for point in input.points() {
+            if input[point] != SEAT {
+                continue;
             }
+
+            // Part one considers only the adjacent square. Part two skips over any
+            // floor until reaching the first visible seat or the edge of the grid.
+            // Non-seats map to the origin, which is never occupied so always adds zero.
+            let neighbors = DIAGONAL.map(|direction| {
+                let mut next = point + direction;
+                while part_two && input[next] == FLOOR {
+                    next += direction;
+                }
+                if input[next] == SEAT { next } else { ORIGIN }
+            });
+
+            seats.push(Seat { point, neighbors });
         }
 
         let mut current = input.same_size_with(0);
@@ -103,38 +100,32 @@ mod implementation {
         let height = 1 + input.width;
         let mut grid = Grid::new(width, height, 0);
 
-        for y in 0..input.height {
-            for x in 0..input.width {
-                let from = Point::new(x, y);
-                let to = Point::new(y, x);
-                grid[to] = u8::from(input[from] == SEAT);
-            }
+        for from in input.points() {
+            let to = Point::new(from.y, from.x);
+            grid[to] = u8::from(input[from] == SEAT);
         }
 
         // Build a list of seats that are non-adjacent but visible to each other.
         let mut visible = Vec::new();
 
         if part_two {
-            for y in 0..height {
-                for x in 0..width {
-                    let from = Point::new(x, y);
-                    if grid[from] == 0 {
+            for from in grid.points() {
+                if grid[from] == 0 {
+                    continue;
+                }
+
+                for direction in DIAGONAL {
+                    if grid[from + direction] == 1 {
                         continue;
                     }
 
-                    for direction in DIAGONAL {
-                        if grid[from + direction] == 1 {
-                            continue;
+                    let mut to = from + direction * 2;
+                    while grid.contains(to) {
+                        if grid[to] == 1 {
+                            visible.push((from, to));
+                            break;
                         }
-
-                        let mut to = from + direction * 2;
-                        while grid.contains(to) {
-                            if grid[to] == 1 {
-                                visible.push((from, to));
-                                break;
-                            }
-                            to += direction;
-                        }
+                        to += direction;
                     }
                 }
             }

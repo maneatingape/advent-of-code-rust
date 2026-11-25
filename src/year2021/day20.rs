@@ -51,11 +51,8 @@ mod implementation {
         let offset = Point::new(extra, extra);
         let mut pixels = Grid::new(grid.width + 2 * extra, grid.height + 2 * extra, 0);
 
-        for y in 0..grid.height {
-            for x in 0..grid.width {
-                let point = Point::new(x, y);
-                pixels[point + offset] = u8::from(grid[point] == b'#');
-            }
+        for point in grid.points() {
+            pixels[point + offset] = u8::from(grid[point] == b'#');
         }
 
         let mut next = pixels.clone();
@@ -127,11 +124,8 @@ mod implementation {
         let mut pixels =
             Grid::new(grid.width + 2 * extra + LANE_WIDTH as i32, grid.height + 2 * extra, 0);
 
-        for y in 0..grid.height {
-            for x in 0..grid.width {
-                let point = Point::new(x, y);
-                pixels[point + offset] = u8::from(grid[point] == b'#');
-            }
+        for point in grid.points() {
+            pixels[point + offset] = u8::from(grid[point] == b'#');
         }
 
         let mut next = pixels.clone();

@@ -62,11 +62,8 @@ pub fn part1(input: &Grid<u8>) -> u32 {
     let mut infected = 0;
 
     // Copy the smaller initial input grid to the center of the larger grid.
-    for y in 0..input.height {
-        for x in 0..input.width {
-            let point = Point::new(x, y);
-            grid[point + offset] = input[point] == b'#';
-        }
+    for point in input.points() {
+        grid[point + offset] = input[point] == b'#';
     }
 
     // The grid toggles between clean and infected.
@@ -99,15 +96,13 @@ pub fn part2(input: &Grid<u8>) -> usize {
     // packing 4 nodes into each byte.
     let offset = SIZE - (input.width / 2) as usize;
 
-    for y in 0..input.height {
-        for x in 0..input.width {
-            if input[Point::new(x, y)] == b'#' {
-                let (adjusted_x, adjusted_y) = (x as usize + offset, y as usize + offset);
-                let index = SIZE * (adjusted_y / 2) + (adjusted_x / 2);
-                let shift = 4 * (adjusted_y % 2) + 2 * (adjusted_x % 2);
-                // Mark node as infected.
-                grid[index] |= 2 << shift;
-            }
+    for point in input.points() {
+        if input[point] == b'#' {
+            let (adjusted_x, adjusted_y) = (point.x as usize + offset, point.y as usize + offset);
+            let index = SIZE * (adjusted_y / 2) + (adjusted_x / 2);
+            let shift = 4 * (adjusted_y % 2) + 2 * (adjusted_x % 2);
+            // Mark node as infected.
+            grid[index] |= 2 << shift;
         }
     }
 

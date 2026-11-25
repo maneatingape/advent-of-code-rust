@@ -13,7 +13,6 @@
 //! in lookup speed.
 use self::implementation::*;
 use crate::util::grid::*;
-use crate::util::point::*;
 
 /// Use our utility [`Grid`] module to parse the input.
 ///
@@ -35,6 +34,7 @@ pub fn part2(input: &Grid<u8>) -> usize {
 #[cfg(not(feature = "simd"))]
 mod implementation {
     use super::*;
+    use crate::util::point::*;
 
     /// x and y dimensions are in the plane of the input. Each dimension can expand by at most two
     /// in each axis per round (one positive and one negative). Adding padding at the edges to avoid
@@ -145,11 +145,9 @@ mod implementation {
         let mut first = current.clone();
 
         // Set initial cubes offset from the edges to allow for growth.
-        for y in 0..input.height {
-            for x in 0..input.width {
-                if input[Point::new(x, y)] == b'#' {
-                    current[7][y as usize + 7][x as usize + 7] = 1;
-                }
+        for point in input.points() {
+            if input[point] == b'#' {
+                current[7][point.y as usize + 7][point.x as usize + 7] = 1;
             }
         }
 
@@ -201,11 +199,9 @@ mod implementation {
         let mut second = current.clone();
 
         // Set initial cubes offset from the edges to allow for growth.
-        for y in 0..input.height {
-            for x in 0..input.width {
-                if input[Point::new(x, y)] == b'#' {
-                    current[7][7][y as usize + 7][x as usize + 7] = 1;
-                }
+        for point in input.points() {
+            if input[point] == b'#' {
+                current[7][7][point.y as usize + 7][point.x as usize + 7] = 1;
             }
         }
 

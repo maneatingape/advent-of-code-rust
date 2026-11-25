@@ -108,16 +108,12 @@ pub fn parse(input: &str) -> Input {
     let mut elves = Vec::new();
     let mut goblins = Vec::new();
 
-    for y in 0..grid.height {
-        for x in 0..grid.width {
-            let position = Point::new(x, y);
-
-            match grid[position] {
-                b'#' => set_bit(&mut walls, position),
-                b'E' => elves.push(position),
-                b'G' => goblins.push(position),
-                _ => (),
-            }
+    for position in grid.points() {
+        match grid[position] {
+            b'#' => set_bit(&mut walls, position),
+            b'E' => elves.push(position),
+            b'G' => goblins.push(position),
+            _ => (),
         }
     }
 

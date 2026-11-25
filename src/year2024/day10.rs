@@ -23,14 +23,10 @@ fn solve(grid: &Grid<u8>, distinct: bool) -> u32 {
     let mut result = 0;
     let mut seen = grid.same_size_with(-1);
 
-    // Iterate over every point, skipping the border.
-    for y in 1..grid.height - 1 {
-        for x in 1..grid.width {
-            let point = Point::new(x, y);
-            if grid[point] == b'9' {
-                let id = y * grid.width + x;
-                result += dfs(grid, distinct, &mut seen, id, point);
-            }
+    for point in grid.points() {
+        if grid[point] == b'9' {
+            let id = point.y * grid.width + point.x;
+            result += dfs(grid, distinct, &mut seen, id, point);
         }
     }
 

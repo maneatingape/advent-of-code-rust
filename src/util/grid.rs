@@ -109,7 +109,7 @@ impl<T> Grid<T> {
 
     #[inline]
     #[must_use = "Iterators are lazy and do nothing unless consumed"]
-    pub fn points(&self) -> impl Iterator<Item = Point> {
+    pub fn points(&self) -> impl Iterator<Item = Point> + use<T> {
         let (width, height) = (self.width, self.height);
         (0..height).flat_map(move |y| (0..width).map(move |x| Point::new(x, y)))
     }

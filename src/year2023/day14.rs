@@ -92,12 +92,9 @@ pub fn parse(input: &str) -> Input {
     let mut grid = Grid::new(inner.width + 2, inner.height + 2, b'#');
 
     // Copy inner grid.
-    for y in 0..inner.height {
-        for x in 0..inner.width {
-            let src = Point::new(x, y);
-            let dst = Point::new(x + 1, y + 1);
-            grid[dst] = inner[src];
-        }
+    for src in inner.points() {
+        let dst = src + Point::new(1, 1);
+        grid[dst] = inner[src];
     }
 
     let mut rounded = Vec::new();
@@ -128,15 +125,12 @@ pub fn parse(input: &str) -> Input {
 
     // West and east are iterated in row-major order, east from the right. Also store the
     // starting index of each rounded ball.
-    for y in 0..grid.height {
-        for x in 0..grid.width {
-            let point = Point::new(x, y);
-            if grid[point] == b'O' {
-                rounded.push((grid.width * point.y + point.x) as i16);
-            }
-            update(&mut west, &mut roll_west, point);
-            update(&mut east, &mut roll_east, Point::new(grid.width - 1 - x, y));
+    for point in grid.points() {
+        if grid[point] == b'O' {
+            rounded.push((grid.width * point.y + point.x) as i16);
         }
+        update(&mut west, &mut roll_west, point);
+        update(&mut east, &mut roll_east, Point::new(grid.width - 1 - point.x, point.y));
     }
 
     Input {
