@@ -11,23 +11,19 @@ const EXAMPLE: &str = "\
 21037: 9 7 18 13
 292: 11 6 16 20";
 
-const SECOND_EXAMPLE: &str = "\
+const EXAMPLE2: &str = "\
 190: 10 19
 11174: 15 8 9 79 74
 729: 6 6 7 37 650";
 
 #[test]
 fn part1_test() {
-    let input = parse(EXAMPLE);
-    assert_eq!(part1(&input), 3749);
-    let input = parse(SECOND_EXAMPLE);
-    assert_eq!(part1(&input), 190);
+    assert_eq!(part1(&parse(EXAMPLE)), 3749);
+    assert_eq!(part1(&parse(EXAMPLE2)), 190);
 }
 
 #[test]
 fn part2_test() {
-    let input = parse(EXAMPLE);
-    assert_eq!(part2(&input), 11387);
-    let input = parse(SECOND_EXAMPLE);
-    assert_eq!(part2(&input), 11364);
+    assert_eq!(part2(&parse(EXAMPLE)), 11387);
+    assert_eq!(part2(&parse(EXAMPLE2)), 11364);
 }

@@ -14,12 +14,10 @@ cut -1";
 
 #[test]
 fn part1_test() {
-    let input = parse(EXAMPLE);
-    assert_eq!(part1(input), 1219);
+    assert_eq!(part1(parse(EXAMPLE)), 1219);
 }
 
 #[test]
 fn part2_test() {
-    let input = parse(EXAMPLE);
-    assert_eq!(part2(input), 117607927195067);
+    assert_eq!(part2(parse(EXAMPLE)), 117607927195067);
 }

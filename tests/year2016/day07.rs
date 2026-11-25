@@ -1,12 +1,12 @@
 use aoc::year2016::day07::*;
 
-const FIRST_EXAMPLE: &str = "\
+const EXAMPLE1: &str = "\
 abba[mnop]qrst
 abcd[bddb]xyyx
 aaaa[qwer]tyui
 ioxxoj[asdfgh]zxcvbn";
 
-const SECOND_EXAMPLE: &str = "\
+const EXAMPLE2: &str = "\
 aba[bab]xyz
 xyx[xyx]xyx
 aaa[kek]eke
@@ -14,12 +14,10 @@ zazbz[bzb]cdb";
 
 #[test]
 fn part1_test() {
-    let input = parse(FIRST_EXAMPLE);
-    assert_eq!(part1(&input), 2);
+    assert_eq!(part1(&parse(EXAMPLE1)), 2);
 }
 
 #[test]
 fn part2_test() {
-    let input = parse(SECOND_EXAMPLE);
-    assert_eq!(part2(&input), 3);
+    assert_eq!(part2(&parse(EXAMPLE2)), 3);
 }

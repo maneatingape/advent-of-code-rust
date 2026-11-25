@@ -21,12 +21,10 @@ hdj{m>838:A,pv}
 
 #[test]
 fn part1_test() {
-    let input = parse(EXAMPLE);
-    assert_eq!(part1(&input), 19114);
+    assert_eq!(part1(&parse(EXAMPLE)), 19114);
 }
 
 #[test]
 fn part2_test() {
-    let input = parse(EXAMPLE);
-    assert_eq!(part2(&input), 167409079868000);
+    assert_eq!(part2(&parse(EXAMPLE)), 167409079868000);
 }

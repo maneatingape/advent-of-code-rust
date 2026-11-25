@@ -1,13 +1,13 @@
 use aoc::year2018::day13::*;
 
-const FIRST_EXAMPLE: &str = r"/->-\         .
+const EXAMPLE1: &str = r"/->-\         .
 |   |  /----\ .
 | /-+--+-\  | .
 | | |  | v  | .
 \-+-/  \-+--/ .
   \------/    .";
 
-const SECOND_EXAMPLE: &str = r"/>-<\   .
+const EXAMPLE2: &str = r"/>-<\   .
 |   |   .
 | /<+-\ .
 | | | v .
@@ -17,12 +17,10 @@ const SECOND_EXAMPLE: &str = r"/>-<\   .
 
 #[test]
 fn part1_test() {
-    let input = parse(FIRST_EXAMPLE);
-    assert_eq!(part1(&input), "7,3");
+    assert_eq!(part1(&parse(EXAMPLE1)), "7,3");
 }
 
 #[test]
 fn part2_test() {
-    let input = parse(SECOND_EXAMPLE);
-    assert_eq!(part2(&input), "6,4");
+    assert_eq!(part2(&parse(EXAMPLE2)), "6,4");
 }

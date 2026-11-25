@@ -18,12 +18,10 @@ Sensor at x=20, y=1: closest beacon is at x=15, y=3";
 
 #[test]
 fn part1_test() {
-    let input = parse(EXAMPLE);
-    assert_eq!(part1_testable(&input, 10), 26);
+    assert_eq!(part1_testable(&parse(EXAMPLE), 10), 26);
 }
 
 #[test]
 fn part2_test() {
-    let input = parse(EXAMPLE);
-    assert_eq!(part2_testable(&input, 20), 56000011);
+    assert_eq!(part2_testable(&parse(EXAMPLE), 20), 56000011);
 }

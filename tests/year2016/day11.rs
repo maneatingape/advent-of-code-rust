@@ -17,10 +17,8 @@ The fourth floor contains nothing relevant.";
 
 #[test]
 fn part1_test() {
-    let input = parse(EXAMPLE);
-    assert_eq!(part1(&input), 11);
-    let input = parse(INTERLOCKED);
-    assert_eq!(part1(&input), 25);
+    assert_eq!(part1(&parse(EXAMPLE)), 11);
+    assert_eq!(part1(&parse(INTERLOCKED)), 25);
 }
 
 #[test]
@@ -30,6 +28,5 @@ fn part2_test() {
     // 1 would be moving both generators, but since there are no other chips on higher floors,
     // there is nothing available that can be used to get the elevator back to the first floor
     // without frying the unprotected microchips.
-    let input = parse(INTERLOCKED);
-    assert_eq!(part2(&input), 49);
+    assert_eq!(part2(&parse(INTERLOCKED)), 49);
 }

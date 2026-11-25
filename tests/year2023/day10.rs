@@ -1,13 +1,13 @@
 use aoc::year2023::day10::*;
 
-const FIRST_EXAMPLE: &str = "\
+const EXAMPLE1: &str = "\
 .....
 .S-7.
 .|.|.
 .L-J.
 .....";
 
-const SECOND_EXAMPLE: &str = "\
+const EXAMPLE2: &str = "\
 ...........
 .S-------7.
 .|F-----7|.
@@ -20,12 +20,10 @@ const SECOND_EXAMPLE: &str = "\
 
 #[test]
 fn part1_test() {
-    let input = parse(FIRST_EXAMPLE);
-    assert_eq!(part1(&input), 4);
+    assert_eq!(part1(&parse(EXAMPLE1)), 4);
 }
 
 #[test]
 fn part2_test() {
-    let input = parse(SECOND_EXAMPLE);
-    assert_eq!(part2(&input), 4);
+    assert_eq!(part2(&parse(EXAMPLE2)), 4);
 }

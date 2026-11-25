@@ -111,12 +111,10 @@ Tile 3079:
 
 #[test]
 fn part1_test() {
-    let input = parse(EXAMPLE);
-    assert_eq!(part1(&input), 20899048083289);
+    assert_eq!(part1(&parse(EXAMPLE)), 20899048083289);
 }
 
 #[test]
 fn part2_test() {
-    let input = parse(EXAMPLE);
-    assert_eq!(part2(&input), 273);
+    assert_eq!(part2(&parse(EXAMPLE)), 273);
 }

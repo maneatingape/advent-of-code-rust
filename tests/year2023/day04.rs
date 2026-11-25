@@ -10,12 +10,10 @@ Card 6: 31 18 13 56 72 | 74 77 10 23 35 67 36 11";
 
 #[test]
 fn part1_test() {
-    let input = parse(EXAMPLE);
-    assert_eq!(part1(&input), 13);
+    assert_eq!(part1(&parse(EXAMPLE)), 13);
 }
 
 #[test]
 fn part2_test() {
-    let input = parse(EXAMPLE);
-    assert_eq!(part2(&input), 30);
+    assert_eq!(part2(&parse(EXAMPLE)), 30);
 }

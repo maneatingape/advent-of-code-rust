@@ -1,9 +1,9 @@
 #[test]
 fn part1_test() {
-    // Specific to real actual input.
+    // No example data
 }
 
 #[test]
 fn part2_test() {
-    // Not applicable.
+    // No example data
 }

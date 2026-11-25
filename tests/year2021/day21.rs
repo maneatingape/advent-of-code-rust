@@ -6,12 +6,10 @@ Player 2 starting position: 8";
 
 #[test]
 fn part1_test() {
-    let input = parse(EXAMPLE);
-    assert_eq!(part1(&input), 739785);
+    assert_eq!(part1(&parse(EXAMPLE)), 739785);
 }
 
 #[test]
 fn part2_test() {
-    let input = parse(EXAMPLE);
-    assert_eq!(part2(&input), 444356092776315);
+    assert_eq!(part2(&parse(EXAMPLE)), 444356092776315);
 }

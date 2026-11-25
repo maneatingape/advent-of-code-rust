@@ -9,12 +9,10 @@ const EXAMPLE: &str = "\
 
 #[test]
 fn part1_test() {
-    let input = parse(EXAMPLE);
-    assert_eq!(part1(&input), 126384);
+    assert_eq!(part1(&parse(EXAMPLE)), 126384);
 }
 
 #[test]
 fn part2_test() {
-    let input = parse(EXAMPLE);
-    assert_eq!(part2(&input), 154115708116294);
+    assert_eq!(part2(&parse(EXAMPLE)), 154115708116294);
 }

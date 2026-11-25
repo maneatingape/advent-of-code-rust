@@ -8,12 +8,10 @@ c inc -20 if c == 10";
 
 #[test]
 fn part1_test() {
-    let input = parse(EXAMPLE);
-    assert_eq!(part1(&input), 1);
+    assert_eq!(part1(&parse(EXAMPLE)), 1);
 }
 
 #[test]
 fn part2_test() {
-    let input = parse(EXAMPLE);
-    assert_eq!(part2(&input), 10);
+    assert_eq!(part2(&parse(EXAMPLE)), 10);
 }

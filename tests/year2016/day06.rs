@@ -20,12 +20,10 @@ enarar";
 
 #[test]
 fn part1_test() {
-    let input = parse(EXAMPLE);
-    assert_eq!(part1(&input), "easter");
+    assert_eq!(part1(&parse(EXAMPLE)), "easter");
 }
 
 #[test]
 fn part2_test() {
-    let input = parse(EXAMPLE);
-    assert_eq!(part2(&input), "advent");
+    assert_eq!(part2(&parse(EXAMPLE)), "advent");
 }

@@ -4,12 +4,10 @@ const EXAMPLE: &str = "389125467";
 
 #[test]
 fn part1_test() {
-    let input = parse(EXAMPLE);
-    assert_eq!(part1(&input), 67384529);
+    assert_eq!(part1(&parse(EXAMPLE)), 67384529);
 }
 
 #[test]
 fn part2_test() {
-    let input = parse(EXAMPLE);
-    assert_eq!(part2(&input), 149245887792);
+    assert_eq!(part2(&parse(EXAMPLE)), 149245887792);
 }

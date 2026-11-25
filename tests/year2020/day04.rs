@@ -1,6 +1,6 @@
 use aoc::year2020::day04::*;
 
-const FIRST_EXAMPLE: &str = "\
+const EXAMPLE1: &str = "\
 ecl:gry pid:860033327 eyr:2020 hcl:#fffffd
 byr:1937 iyr:2017 cid:147 hgt:183cm
 
@@ -15,7 +15,7 @@ hgt:179cm
 hcl:#cfa07d eyr:2025 pid:166559648
 iyr:2011 ecl:brn hgt:59in";
 
-const SECOND_EXAMPLE: &str = "\
+const EXAMPLE2: &str = "\
 eyr:1972 cid:100
 hcl:#18171d ecl:amb hgt:170 pid:186cm iyr:2018 byr:1926
 
@@ -45,12 +45,10 @@ iyr:2010 hgt:158cm hcl:#b6652a ecl:blu byr:1944 eyr:2021 pid:093154719";
 
 #[test]
 fn part1_test() {
-    let input = parse(FIRST_EXAMPLE);
-    assert_eq!(part1(&input), 2);
+    assert_eq!(part1(&parse(EXAMPLE1)), 2);
 }
 
 #[test]
 fn part2_test() {
-    let input = parse(SECOND_EXAMPLE);
-    assert_eq!(part2(&input), 4);
+    assert_eq!(part2(&parse(EXAMPLE2)), 4);
 }

@@ -8,12 +8,10 @@ C Z
 
 #[test]
 fn part1_test() {
-    let input = parse(EXAMPLE);
-    assert_eq!(part1(&input), 15);
+    assert_eq!(part1(&parse(EXAMPLE)), 15);
 }
 
 #[test]
 fn part2_test() {
-    let input = parse(EXAMPLE);
-    assert_eq!(part2(&input), 12);
+    assert_eq!(part2(&parse(EXAMPLE)), 12);
 }

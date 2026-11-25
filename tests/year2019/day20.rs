@@ -1,6 +1,6 @@
 use aoc::year2019::day20::*;
 
-const FIRST_EXAMPLE: &str = "\
+const EXAMPLE1: &str = "\
 @                  A               |
                    A               |
   #################.#############  |
@@ -39,7 +39,7 @@ YN......#               VT..#....QG|
            B   J   C               |
            U   P   P               |";
 
-const SECOND_EXAMPLE: &str = "\
+const EXAMPLE2: &str = "\
 @            Z L X W       C                 |
              Z P Q B       K                 |
   ###########.#.#.#.#######.###############  |
@@ -80,12 +80,10 @@ RE....#.#                           #......RF|
 
 #[test]
 fn part1_test() {
-    let input = parse(FIRST_EXAMPLE);
-    assert_eq!(part1(&input), 58);
+    assert_eq!(part1(&parse(EXAMPLE1)), 58);
 }
 
 #[test]
 fn part2_test() {
-    let input = parse(SECOND_EXAMPLE);
-    assert_eq!(part2(&input), 396);
+    assert_eq!(part2(&parse(EXAMPLE2)), 396);
 }

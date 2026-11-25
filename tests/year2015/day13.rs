@@ -16,12 +16,10 @@ David would gain 41 happiness units by sitting next to Carol.";
 
 #[test]
 fn part1_test() {
-    let input = parse(EXAMPLE);
-    assert_eq!(part1(&input), 330);
+    assert_eq!(part1(&parse(EXAMPLE)), 330);
 }
 
 #[test]
 fn part2_test() {
-    let input = parse(EXAMPLE);
-    assert_eq!(part2(&input), 286);
+    assert_eq!(part2(&parse(EXAMPLE)), 286);
 }

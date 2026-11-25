@@ -4,12 +4,10 @@ const EXAMPLE: &str = "ghijklmn";
 
 #[test]
 fn part1_test() {
-    let input = parse(EXAMPLE);
-    assert_eq!(part1(&input), "ghjaabcc");
+    assert_eq!(part1(&parse(EXAMPLE)), "ghjaabcc");
 }
 
 #[test]
 fn part2_test() {
-    let input = parse(EXAMPLE);
-    assert_eq!(part2(&input), "ghjbbcdd");
+    assert_eq!(part2(&parse(EXAMPLE)), "ghjbbcdd");
 }

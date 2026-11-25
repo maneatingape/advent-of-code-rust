@@ -14,12 +14,10 @@ gcafb gcf dcaebfg ecagb gf abcdeg gaef cafbge fdbac fegbdc | fgae cfgab fg bagce
 
 #[test]
 fn part1_test() {
-    let input = parse(EXAMPLE);
-    assert_eq!(part1(&input), 26);
+    assert_eq!(part1(&parse(EXAMPLE)), 26);
 }
 
 #[test]
 fn part2_test() {
-    let input = parse(EXAMPLE);
-    assert_eq!(part2(&input), 61229);
+    assert_eq!(part2(&parse(EXAMPLE)), 61229);
 }

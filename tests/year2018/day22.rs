@@ -12,15 +12,11 @@ target: 6,797";
 
 #[test]
 fn part1_test() {
-    let input = parse(EXAMPLE);
-    assert_eq!(part1(&input), 114);
+    assert_eq!(part1(&parse(EXAMPLE)), 114);
 }
 
 #[test]
 fn part2_test() {
-    let input = parse(EXAMPLE);
-    assert_eq!(part2(&input), 45);
-
-    let input = parse(ALTERNATE);
-    assert_eq!(part2(&input), 1100);
+    assert_eq!(part2(&parse(EXAMPLE)), 45);
+    assert_eq!(part2(&parse(ALTERNATE)), 1100);
 }

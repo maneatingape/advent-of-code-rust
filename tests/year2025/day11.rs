@@ -1,6 +1,6 @@
 use aoc::year2025::day11::*;
 
-const FIRST_EXAMPLE: &str = "\
+const EXAMPLE1: &str = "\
 aaa: you hhh
 you: bbb ccc
 bbb: ddd eee
@@ -12,7 +12,7 @@ ggg: out
 hhh: ccc fff iii
 iii: out";
 
-const SECOND_EXAMPLE: &str = "\
+const EXAMPLE2: &str = "\
 svr: aaa bbb
 aaa: fft
 fft: ccc
@@ -29,12 +29,10 @@ hhh: out";
 
 #[test]
 fn part1_test() {
-    let input = parse(FIRST_EXAMPLE);
-    assert_eq!(part1(&input), 5);
+    assert_eq!(part1(&parse(EXAMPLE1)), 5);
 }
 
 #[test]
 fn part2_test() {
-    let input = parse(SECOND_EXAMPLE);
-    assert_eq!(part2(&input), 2);
+    assert_eq!(part2(&parse(EXAMPLE2)), 2);
 }

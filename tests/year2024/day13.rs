@@ -19,12 +19,10 @@ Prize: X=18641, Y=10279";
 
 #[test]
 fn part1_test() {
-    let input = parse(EXAMPLE);
-    assert_eq!(part1(&input), 480);
+    assert_eq!(part1(&parse(EXAMPLE)), 480);
 }
 
 #[test]
 fn part2_test() {
-    let input = parse(EXAMPLE);
-    assert_eq!(part2(&input), 875318608908);
+    assert_eq!(part2(&parse(EXAMPLE)), 875318608908);
 }

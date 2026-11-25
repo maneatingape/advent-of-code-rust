@@ -13,12 +13,10 @@ move 1 from 1 to 2";
 
 #[test]
 fn part1_test() {
-    let input = parse(EXAMPLE);
-    assert_eq!(part1(&input), "CMZ");
+    assert_eq!(part1(&parse(EXAMPLE)), "CMZ");
 }
 
 #[test]
 fn part2_test() {
-    let input = parse(EXAMPLE);
-    assert_eq!(part2(&input), "MCD");
+    assert_eq!(part2(&parse(EXAMPLE)), "MCD");
 }

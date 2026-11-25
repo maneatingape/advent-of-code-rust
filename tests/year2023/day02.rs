@@ -9,12 +9,10 @@ Game 5: 6 red, 1 blue, 3 green; 2 blue, 1 red, 2 green";
 
 #[test]
 fn part1_test() {
-    let input = parse(EXAMPLE);
-    assert_eq!(part1(&input), 8);
+    assert_eq!(part1(&parse(EXAMPLE)), 8);
 }
 
 #[test]
 fn part2_test() {
-    let input = parse(EXAMPLE);
-    assert_eq!(part2(&input), 2286);
+    assert_eq!(part2(&parse(EXAMPLE)), 2286);
 }

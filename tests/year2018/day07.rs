@@ -11,12 +11,10 @@ Step F must be finished before step E can begin.";
 
 #[test]
 fn part1_test() {
-    let input = parse(EXAMPLE);
-    assert_eq!(part1(&input), "CABDFE");
+    assert_eq!(part1(&parse(EXAMPLE)), "CABDFE");
 }
 
 #[test]
 fn part2_test() {
-    let input = parse(EXAMPLE);
-    assert_eq!(part2_testable(&input, 2, 0), 15);
+    assert_eq!(part2_testable(&parse(EXAMPLE), 2, 0), 15);
 }

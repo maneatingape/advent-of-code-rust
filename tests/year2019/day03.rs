@@ -6,12 +6,10 @@ U7,R6,D4,L4";
 
 #[test]
 fn part1_test() {
-    let input = parse(EXAMPLE);
-    assert_eq!(part1(&input), 6);
+    assert_eq!(part1(&parse(EXAMPLE)), 6);
 }
 
 #[test]
 fn part2_test() {
-    let input = parse(EXAMPLE);
-    assert_eq!(part2(&input), 30);
+    assert_eq!(part2(&parse(EXAMPLE)), 30);
 }

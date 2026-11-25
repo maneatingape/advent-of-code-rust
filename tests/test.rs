@@ -18,14 +18,12 @@
 //
 // #[test]
 // fn part1_test() {
-//     let input = parse(EXAMPLE);
-//     assert_eq!(part1(&input), 123);
+//     assert_eq!(part1(&parse(EXAMPLE)), 123);
 // }
 //
 // #[test]
 // fn part2_test() {
-//     let input = parse(EXAMPLE);
-//     assert_eq!(part2(&input), 456);
+//     assert_eq!(part2(&parse(EXAMPLE)), 456);
 // }
 
 use aoc::{library, solutions};

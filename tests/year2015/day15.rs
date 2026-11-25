@@ -8,12 +8,10 @@ Filler 2: capacity -200, durability -300, flavor -600, texture -300, calories 0"
 
 #[test]
 fn part1_test() {
-    let input = parse(EXAMPLE);
-    assert_eq!(part1(&input), 62842880);
+    assert_eq!(part1(&parse(EXAMPLE)), 62842880);
 }
 
 #[test]
 fn part2_test() {
-    let input = parse(EXAMPLE);
-    assert_eq!(part2(&input), 57600000);
+    assert_eq!(part2(&parse(EXAMPLE)), 57600000);
 }

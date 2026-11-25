@@ -36,12 +36,10 @@ td-yn";
 
 #[test]
 fn part1_test() {
-    let input = parse(EXAMPLE);
-    assert_eq!(part1(&input), 7);
+    assert_eq!(part1(&parse(EXAMPLE)), 7);
 }
 
 #[test]
 fn part2_test() {
-    let input = parse(EXAMPLE);
-    assert_eq!(part2(&input), "co,de,ka,ta");
+    assert_eq!(part2(&parse(EXAMPLE)), "co,de,ka,ta");
 }

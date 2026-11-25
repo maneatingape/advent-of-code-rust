@@ -10,8 +10,7 @@ fn part1_test() {
     ];
 
     for (packet, expected) in cases {
-        let input = parse(packet);
-        assert_eq!(part1(&input), expected);
+        assert_eq!(part1(&parse(packet)), expected);
     }
 }
 
@@ -29,7 +28,6 @@ fn part2_test() {
     ];
 
     for (packet, expected) in cases {
-        let input = parse(packet);
-        assert_eq!(part2(&input), expected);
+        assert_eq!(part2(&parse(packet)), expected);
     }
 }

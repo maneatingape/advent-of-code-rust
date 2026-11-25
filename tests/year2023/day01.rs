@@ -1,12 +1,12 @@
 use aoc::year2023::day01::*;
 
-const FIRST_EXAMPLE: &str = "\
+const EXAMPLE1: &str = "\
 1abc2
 pqr3stu8vwx
 a1b2c3d4e5f
 treb7uchet";
 
-const SECOND_EXAMPLE: &str = "\
+const EXAMPLE2: &str = "\
 two1nine
 eightwothree
 abcone2threexyz
@@ -17,12 +17,10 @@ zoneight234
 
 #[test]
 fn part1_test() {
-    let input = parse(FIRST_EXAMPLE);
-    assert_eq!(part1(&input), 142);
+    assert_eq!(part1(&parse(EXAMPLE1)), 142);
 }
 
 #[test]
 fn part2_test() {
-    let input = parse(SECOND_EXAMPLE);
-    assert_eq!(part2(&input), 281);
+    assert_eq!(part2(&parse(EXAMPLE2)), 281);
 }

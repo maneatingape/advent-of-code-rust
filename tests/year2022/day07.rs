@@ -27,12 +27,10 @@ $ ls
 
 #[test]
 fn part1_test() {
-    let input = parse(EXAMPLE);
-    assert_eq!(part1(&input), 95437);
+    assert_eq!(part1(&parse(EXAMPLE)), 95437);
 }
 
 #[test]
 fn part2_test() {
-    let input = parse(EXAMPLE);
-    assert_eq!(part2(&input), 24933642);
+    assert_eq!(part2(&parse(EXAMPLE)), 24933642);
 }

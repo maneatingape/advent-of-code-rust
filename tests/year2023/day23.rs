@@ -1,9 +1,9 @@
 #[test]
 fn part1_test() {
-    // Dependent on actual input structure.
+    // No example data
 }
 
 #[test]
 fn part2_test() {
-    // Dependent on actual input structure.
+    // No example data
 }

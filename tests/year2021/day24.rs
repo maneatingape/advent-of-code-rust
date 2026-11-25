@@ -1,9 +1,9 @@
 #[test]
 fn part1_test() {
-    // No test
+    // No example data
 }
 
 #[test]
 fn part2_test() {
-    // No test
+    // No example data
 }

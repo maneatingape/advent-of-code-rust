@@ -15,12 +15,10 @@ Each geode robot costs 3 ore and 12 obsidian.";
 
 #[test]
 fn part1_test() {
-    let input = parse(EXAMPLE);
-    assert_eq!(part1(&input), 33);
+    assert_eq!(part1(&parse(EXAMPLE)), 33);
 }
 
 #[test]
 fn part2_test() {
-    let input = parse(EXAMPLE);
-    assert_eq!(part2(&input), 3472);
+    assert_eq!(part2(&parse(EXAMPLE)), 3472);
 }

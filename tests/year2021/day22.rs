@@ -64,12 +64,10 @@ off x=-93533..-4276,y=-16170..68771,z=-104985..-24507";
 
 #[test]
 fn part1_test() {
-    let input = parse(EXAMPLE);
-    assert_eq!(part1(&input), 474140);
+    assert_eq!(part1(&parse(EXAMPLE)), 474140);
 }
 
 #[test]
 fn part2_test() {
-    let input = parse(EXAMPLE);
-    assert_eq!(part2(&input), 2758514936282235);
+    assert_eq!(part2(&parse(EXAMPLE)), 2758514936282235);
 }

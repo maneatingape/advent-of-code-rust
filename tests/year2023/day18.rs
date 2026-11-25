@@ -18,12 +18,10 @@ U 2 (#7a21e3)";
 
 #[test]
 fn part1_test() {
-    let input = parse(EXAMPLE);
-    assert_eq!(part1(&input), 62);
+    assert_eq!(part1(&parse(EXAMPLE)), 62);
 }
 
 #[test]
 fn part2_test() {
-    let input = parse(EXAMPLE);
-    assert_eq!(part2(&input), 952408144115);
+    assert_eq!(part2(&parse(EXAMPLE)), 952408144115);
 }

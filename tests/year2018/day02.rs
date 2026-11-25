@@ -1,6 +1,6 @@
 use aoc::year2018::day02::*;
 
-const FIRST_EXAMPLE: &str = "\
+const EXAMPLE1: &str = "\
 abcdef
 bababc
 abbcde
@@ -9,7 +9,7 @@ aabcdd
 abcdee
 ababab";
 
-const SECOND_EXAMPLE: &str = "\
+const EXAMPLE2: &str = "\
 abcde
 fghij
 klmno
@@ -20,12 +20,10 @@ wvxyz";
 
 #[test]
 fn part1_test() {
-    let input = parse(FIRST_EXAMPLE);
-    assert_eq!(part1(&input), 12);
+    assert_eq!(part1(&parse(EXAMPLE1)), 12);
 }
 
 #[test]
 fn part2_test() {
-    let input = parse(SECOND_EXAMPLE);
-    assert_eq!(part2(&input), "fgij");
+    assert_eq!(part2(&parse(EXAMPLE2)), "fgij");
 }

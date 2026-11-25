@@ -1,13 +1,13 @@
 use aoc::year2023::day08::*;
 
-const FIRST_EXAMPLE: &str = "\
+const EXAMPLE1: &str = "\
 LLR
 
 AAA = (BBB, BBB)
 BBB = (AAA, ZZZ)
 ZZZ = (ZZZ, ZZZ)";
 
-const SECOND_EXAMPLE: &str = "\
+const EXAMPLE2: &str = "\
 LR
 
 11A = (11B, XXX)
@@ -21,12 +21,10 @@ XXX = (XXX, XXX)";
 
 #[test]
 fn part1_test() {
-    let input = parse(FIRST_EXAMPLE);
-    assert_eq!(part1(&input), 6);
+    assert_eq!(part1(&parse(EXAMPLE1)), 6);
 }
 
 #[test]
 fn part2_test() {
-    let input = parse(SECOND_EXAMPLE);
-    assert_eq!(part2(&input), 6);
+    assert_eq!(part2(&parse(EXAMPLE2)), 6);
 }
