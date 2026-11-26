@@ -68,6 +68,7 @@ impl<S: AsRef<str> + ?Sized> ParseExt for S {
     }
 }
 
+#[inline]
 fn try_unsigned<T: Unsigned>(bytes: &mut impl Iterator<Item = u8>) -> Option<T> {
     let mut n = loop {
         let digit = bytes.next()?.to_decimal();
@@ -87,6 +88,7 @@ fn try_unsigned<T: Unsigned>(bytes: &mut impl Iterator<Item = u8>) -> Option<T> 
     Some(n)
 }
 
+#[inline]
 fn try_signed<T: Signed>(bytes: &mut impl Iterator<Item = u8>) -> Option<T> {
     let (mut n, negative) = loop {
         let digit = bytes.next()?.to_decimal();
