@@ -27,14 +27,17 @@ pub trait FastSetExt<T> {
 }
 
 impl<T: Eq + Hash> FastSetExt<T> for FastSet<T> {
+    #[inline]
     fn new() -> Self {
         Self::with_hasher(BuildFxHasher)
     }
 
+    #[inline]
     fn with_capacity(capacity: usize) -> Self {
         Self::with_capacity_and_hasher(capacity, BuildFxHasher)
     }
 
+    #[inline]
     fn build<const N: usize>(array: [T; N]) -> Self {
         Self::from_iter(array)
     }
@@ -51,14 +54,17 @@ pub trait FastMapExt<K, V> {
 }
 
 impl<K: Eq + Hash, V> FastMapExt<K, V> for FastMap<K, V> {
+    #[inline]
     fn new() -> Self {
         Self::with_hasher(BuildFxHasher)
     }
 
+    #[inline]
     fn with_capacity(capacity: usize) -> Self {
         Self::with_capacity_and_hasher(capacity, BuildFxHasher)
     }
 
+    #[inline]
     fn build<const N: usize>(array: [(K, V); N]) -> Self {
         Self::from_iter(array)
     }

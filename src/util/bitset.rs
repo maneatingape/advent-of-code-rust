@@ -8,6 +8,7 @@ pub trait BiteratorExt<T> {
 }
 
 impl<T: Integer> BiteratorExt<T> for T {
+    #[inline]
     fn biterator(self) -> Bitset<T> {
         Bitset { t: self }
     }
