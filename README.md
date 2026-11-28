@@ -311,7 +311,7 @@ Performance is reasonable even on older hardware, for example a 2011 MacBook Pro
 | 17 | [Reservoir Research](https://adventofcode.com/2018/day/17) | [Source](src/year2018/day17.rs) | 118 |
 | 18 | [Settlers of The North Pole](https://adventofcode.com/2018/day/18) | [Source](src/year2018/day18.rs) | 384 |
 | 19 | [Go With The Flow](https://adventofcode.com/2018/day/19) | [Source](src/year2018/day19.rs) | 1 |
-| 20 | [A Regular Map](https://adventofcode.com/2018/day/20) | [Source](src/year2018/day20.rs) | 24 |
+| 20 | [A Regular Map](https://adventofcode.com/2018/day/20) | [Source](src/year2018/day20.rs) | 21 |
 | 21 | [Chronal Conversion](https://adventofcode.com/2018/day/21) | [Source](src/year2018/day21.rs) | 66 |
 | 22 | [Mode Maze](https://adventofcode.com/2018/day/22) | [Source](src/year2018/day22.rs) | 1994 |
 | 23 | [Experimental Emergency Teleportation](https://adventofcode.com/2018/day/23) | [Source](src/year2018/day23.rs) | 44 |

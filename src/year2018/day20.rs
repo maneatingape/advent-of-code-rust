@@ -23,6 +23,13 @@ pub fn parse(input: &str) -> Input {
 
     grid[index] = 0;
 
+    // Change in index for each direction.
+    let mut delta = [0; 256];
+    delta[b'N' as usize] = SIZE.wrapping_neg();
+    delta[b'S' as usize] = SIZE;
+    delta[b'W' as usize] = 1_usize.wrapping_neg();
+    delta[b'E' as usize] = 1;
+
     for b in input.bytes() {
         let distance = grid[index];
 
@@ -30,11 +37,7 @@ pub fn parse(input: &str) -> Input {
             b'(' => stack.push(index),
             b'|' => index = *stack.last().unwrap(),
             b')' => index = stack.pop().unwrap(),
-            b'N' => index -= SIZE,
-            b'S' => index += SIZE,
-            b'W' => index -= 1,
-            b'E' => index += 1,
-            _ => (),
+            _ => index = index.wrapping_add(delta[b as usize]),
         }
 
         grid[index] = grid[index].min(distance + 1);
