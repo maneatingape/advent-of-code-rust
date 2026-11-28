@@ -41,7 +41,6 @@ pub struct Grid<T> {
 }
 
 impl Grid<u8> {
-    #[inline]
     #[must_use]
     pub fn parse(input: &str) -> Self {
         let raw: Vec<_> = input.lines().map(str::as_bytes).collect();
@@ -53,7 +52,6 @@ impl Grid<u8> {
         Self { width, height, bytes }
     }
 
-    #[inline]
     #[must_use]
     pub fn parse_with_border(input: &str) -> Self {
         // Size things large enough so that both orthogonal and diagonal access hits a newline.
@@ -81,7 +79,6 @@ impl Grid<u8> {
 }
 
 impl<T: Copy + PartialEq> Grid<T> {
-    #[inline]
     #[must_use]
     pub fn find(&self, needle: T) -> Option<Point> {
         self.bytes
@@ -92,13 +89,11 @@ impl<T: Copy + PartialEq> Grid<T> {
 }
 
 impl<T: Copy> Grid<T> {
-    #[inline]
     #[must_use]
     pub fn new(width: i32, height: i32, value: T) -> Self {
         Self { width, height, bytes: vec![value; (width * height) as usize] }
     }
 
-    #[inline]
     #[must_use]
     pub fn same_size_with<U: Copy>(&self, value: U) -> Grid<U> {
         Grid::new(self.width, self.height, value)

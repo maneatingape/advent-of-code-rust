@@ -15,7 +15,6 @@ pub trait ChunkExt: Iterator + Sized {
 }
 
 impl<I: Iterator> ChunkExt for I {
-    #[inline]
     fn chunk<const N: usize>(self) -> Chunk<Self, N> {
         Chunk { iter: self }
     }

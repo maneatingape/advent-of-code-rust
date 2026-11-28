@@ -106,19 +106,16 @@ pub struct AtomicIter {
 }
 
 impl AtomicIter {
-    #[inline]
     #[must_use]
     pub fn new(start: u32, step: u32) -> Self {
         Self { running: AtomicBool::new(true), index: AtomicU32::new(start), step }
     }
 
-    #[inline]
     #[must_use]
     pub fn next(&self) -> Option<u32> {
         self.running.load(Relaxed).then(|| self.index.fetch_add(self.step, Relaxed))
     }
 
-    #[inline]
     pub fn stop(&self) {
         self.running.store(false, Relaxed);
     }
