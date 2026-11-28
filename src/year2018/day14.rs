@@ -190,9 +190,10 @@ fn writer<'a>(tx: Sender<&'a [u8]>, done: &AtomicBool, mut recipes: &'a mut [u8]
             let third = from_be_bytes(&snack, index1 + 8);
             let fourth = from_be_bytes(&snack, index2 + 8);
 
-            // Each elf will skip forward between 16 and 32 snacks.
-            elf1 += 16 + lsb(prefix_sum(first)) + lsb(prefix_sum(third));
-            elf2 += 16 + lsb(prefix_sum(second)) + lsb(prefix_sum(fourth));
+            // Each elf will skip forward between 16 and 32 snacks. Both halves can be added before
+            // the prefix sum, as the total of 16 digits is at most 144 so always fits in a byte.
+            elf1 += 16 + lsb(prefix_sum(first + third));
+            elf2 += 16 + lsb(prefix_sum(second + fourth));
             index1 += 16;
             index2 += 16;
 
@@ -202,17 +203,10 @@ fn writer<'a>(tx: Sender<&'a [u8]>, done: &AtomicBool, mut recipes: &'a mut [u8]
 
             // Scatter each digit into the correct location, leaving "holes" where ones should go.
             // This is handled correctly by prefilling `recipes` with ones when initializing.
-            for shift in (0..64).step_by(8) {
-                let digit = lsb(digits1 >> shift);
-                let index = lsb(indices1 >> shift);
-                recipes[size - base + index] = digit as u8;
-
-                let digit = lsb(digits2 >> shift);
-                let index = lsb(indices2 >> shift);
-                recipes[size - base + index + extra1] = digit as u8;
-            }
-
-            size += extra1 + extra2;
+            scatter(&mut recipes[size - base..], digits1, indices1);
+            size += extra1;
+            scatter(&mut recipes[size - base..], digits2, indices2);
+            size += extra2;
 
             // Write the recipes that will actually be used in subsequent loops to a smaller
             // contiguous vec.
@@ -241,6 +235,19 @@ fn writer<'a>(tx: Sender<&'a [u8]>, done: &AtomicBool, mut recipes: &'a mut [u8]
 #[inline]
 fn from_be_bytes(slice: &[u8], index: usize) -> usize {
     usize::from_be_bytes(slice[index..index + 8].try_into().unwrap())
+}
+
+/// Write each digit to its respective index. Indices are a single byte so always less than 256.
+/// Taking a fixed-size window allows the compiler to remove the bounds check for every write.
+#[inline]
+fn scatter(recipes: &mut [u8], digits: usize, indices: usize) {
+    let window = recipes.first_chunk_mut::<256>().unwrap();
+
+    for shift in (0..64).step_by(8) {
+        let digit = lsb(digits >> shift);
+        let index = lsb(indices >> shift);
+        window[index] = digit as u8;
+    }
 }
 
 /// Convenience function that returns least significant byte.
