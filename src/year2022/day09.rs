@@ -6,16 +6,15 @@ use crate::util::grid::*;
 use crate::util::parse::*;
 use crate::util::point::*;
 
-type Pair = (Point, i32);
-type Input = (i32, i32, Point, Vec<Pair>);
+type Input = (u32, u32);
 
 /// Converts input lines into a pair of [`Point`] and integer amount, to indicate direction and
 /// magnitude respectively. Then determines the maximum extent of the head so that we can allocate
 /// a two-dimensional grid.
 pub fn parse(input: &str) -> Input {
-    let first = input.bytes().filter(u8::is_ascii_alphabetic).map(Point::from);
-    let second = input.iter_signed();
-    let pairs: Vec<_> = first.zip(second).collect();
+    let steps = input.bytes().filter(u8::is_ascii_alphabetic).map(Point::from);
+    let amounts = input.iter_signed();
+    let pairs: Vec<_> = steps.zip(amounts).collect();
 
     // Determine maximum extents.
     let (x1, y1, x2, y2, _) =
@@ -24,61 +23,54 @@ pub fn parse(input: &str) -> Input {
             (x1.min(next.x), y1.min(next.y), x2.max(next.x), y2.max(next.y), next)
         });
 
-    let width = x2 - x1 + 1;
-    let height = y2 - y1 + 1;
+    let mut part_one = 1;
+    let mut part_two = 2;
     let start = Point::new(-x1, -y1);
-    (width, height, start, pairs)
-}
+    let mut rope = [start; 10];
+    let mut grid = Grid::new(x2 - x1 + 1, y2 - y1 + 1, 0_u8);
 
-/// Simulate a rope length of 2.
-pub fn part1(input: &Input) -> u32 {
-    simulate::<2>(input)
-}
+    // Knots only record their position after the second knot moves, so mark the starting square
+    // upfront for both parts.
+    grid[start] = 3;
 
-/// Simulate a rope length of 10.
-pub fn part2(input: &Input) -> u32 {
-    simulate::<10>(input)
-}
-
-/// Simulates a rope of arbitrary length.
-///
-/// The head knot always moves according to the instructions from the problem input. Remaining knots
-/// move according to their delta from the head (2nd knot) or the previous knot
-/// (3rd and subsequent knots).
-///
-/// Using const generics for the rope length allows the compiler to optimize the loop and speeds
-/// things up by about 40%.
-fn simulate<const N: usize>(input: &Input) -> u32 {
-    let (width, height, start, ..) = *input;
-    let (.., pairs) = input;
-
-    let mut distinct = 0;
-    let mut rope = [start; N];
-    let mut grid = Grid::new(width, height, false);
-
-    for &(step, amount) in pairs {
+    for (step, amount) in pairs {
         for _ in 0..amount {
+            let head = rope[0];
             rope[0] += step;
-            for i in 1..N {
-                let delta = rope[i - 1] - rope[i];
 
-                // Two knots are considered "apart" if they are not diagonally adjacent, that is
-                // the absolute distance in either x or y axes is greater than 1.
+            // The second knot only moves when the head pulls apart from it. As the head only moves
+            // horizontally or vertically, the second knot always lands on the head's old position.
+            let delta = rope[0] - rope[1];
+            if delta.x.abs() <= 1 && delta.y.abs() <= 1 {
+                continue;
+            }
+
+            rope[1] = head;
+            part_one += u32::from(!grid[head] & 1);
+            grid[head] |= 1;
+
+            // Two knots are considered "apart" if they are not diagonally adjacent, that is
+            // the absolute distance in either x or y axes is greater than 1.
+            for i in 2..10 {
+                let delta = rope[i - 1] - rope[i];
                 if delta.x.abs() <= 1 && delta.y.abs() <= 1 {
                     break;
                 }
-
                 rope[i] += Point::new(delta.x.signum(), delta.y.signum());
             }
 
-            let tail = rope[N - 1];
-
-            if !grid[tail] {
-                grid[tail] = true;
-                distinct += 1;
-            }
+            part_two += u32::from(!grid[rope[9]] & 2);
+            grid[rope[9]] |= 2;
         }
     }
 
-    distinct
+    (part_one, part_two >> 1)
+}
+
+pub fn part1(input: &Input) -> u32 {
+    input.0
+}
+
+pub fn part2(input: &Input) -> u32 {
+    input.1
 }
